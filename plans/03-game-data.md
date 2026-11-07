@@ -349,3 +349,47 @@ then `main-ba594da`):
   and two `Area`s) and of the matching `SimultaneousGroups`/`FarDeleteGroups`; the moved one was in none. The
   inference is that this pickup needs its logic group; it is not tested. Major items lying in the world need a
   different actor or the group.
+
+## 11. Round 3: size table, Gold Skulltulas, Treasure Chest Game, freestanding pick-ups (cs3b)
+
+How each was found and the scratch scripts: `plans/rounds/r3-census.md`. Build `e0f3ccfa`.
+
+**Resource size table** (`clawshot.formats.rstb`). Format: Tears of the Kingdom's RESTBL v1, plain zstd; 22-byte
+header (`RESTBL`, version, name field size 160, counts), 219,968 `(CRC32 of the path without .zs, size)` entries sorted
+by CRC, then 10 `(160-byte path, size)` entries, sorted by name, for paths whose CRC32 collides (none of them a
+placement file, event flow or pack). Entry = decompressed size rounded up to 32 bytes + an overhead per type, checked
+against every file of the type:
+
+| Type | Overhead | Fit |
+|---|---:|---|
+| `.bcett.byml` | 264 | 160 of 160 |
+| `.bfevfl` | 272 | 914 of 914 |
+| `.sarc` (`Mals/`) and `.pack` | 312 | 16 of 16, 8384 of 8384 |
+| `GameDataList` (`.byml`), `RSDB` tables | 264 | 1 of 1; 19 of 20 (`ActorInfo` +3064) |
+| `.ainb` | 376 for `Logic/` | not fixed elsewhere (`Sequence/LoadBancImpl` +392, `AI/` +376 to +416) |
+
+(Section 7's "`GameDataList` + 288" is the entry minus the raw size; minus the rounded size it is 264.)
+
+**Gold Skulltulas.** The data marks the kind of spot: `Enemy_Skulltula_Gold_IsMagicBeanSoil` with a
+`Gimmick_MagicBeanSoil_<Area>` presence flag (soft soil, 10: N64's 9 plus Zora's River's, which has none on N64), the
+module `Gimmick_SwayingTree_Skulltula_Gold` (a tree to roll into, 5), `Gimmick_BoxBroken_Skulltula` or a link from an
+`Obj_BrokenBox` (a crate, 5), and `Enemy_Skulltula_Gold_Nocturnal` with `Gimmick_Nighttime_Skulltula_Gold_Appear`
+(night, 24 of 100). 97 keep an N64 location (linked in `locations.toml`; several moved, e.g. `ZR GS Tree` is now the
+bean-seller soft soil and `Spirit Temple GS Sun on Floor Room` stands on the statue's hand); gone: `HF GS Cow Grotto`
+(the cow grotto exists, with webs and a Skulltula, but no Gold Skulltula), `LLR GS Rain Shed`, `LLR GS Back Wall`;
+new: a swaying tree in Hyrule Field near the Kokiri Forest entrance, an adult crate in a Hyrule Field grotto with a
+Skullwalltula, and Lon Lon Ranch's tower vines. Coordinates in Banc are +x east, +z south.
+
+**Treasure Chest Game.** The two reward boxes (`Obj_HrlCity_Shop_TBox_A_02`: Heart Piece, and a red rupee at the same
+spot) are a census kind of their own, `treasure_game_reward`; the logic module `MiniGame_SequentialChoiceTreasure_cbde`
+holds all twelve boxes. Every box names the model shown in it, `Dynamic.DropViewActor`; only five such view actors
+exist (`Obj_Heart_Piece_MiniGame`, `Obj_MiniGame_SmallKey`, three `Obj_OrnamentalRupee_*_MiniGame`).
+
+**Freestanding pick-ups.** All pick-ups inherit `Obj_Item_Base`; nothing a major pick-up's pack names is missing (the
+shared AI is in `Pack/AI.Global.Product.111.pack.zs`). Every major pick-up the game places (Fire Arrows, Ruto's letter,
+lures, keys, boss heart containers) is in a level prefab's logic group and `SimultaneousGroups`/`FarDeleteGroups`;
+heart pieces and placed rupees are in none. Round 2's crash signature is Hookshot issue #287 (a null NVN texture
+builder, also seen without mods; fix pending upstream). Major items with an `Obj_` pick-up: Fire Arrows, Deku and
+Hylian shields, Goron and Zora tunics, Ocarina of Time, Bombchus, Ruto's letter, the lure, Amiibo masks, small keys;
+the rest exist only as `Item_*` actors without pick-up components. Placed red rupees have `GameDataList` entries of
+the permanent type (24) under their own Hashes, like the heart pieces.

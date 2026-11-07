@@ -250,3 +250,123 @@ Tests: `tests/test_rstb.py` (synthetic: write order and read-back, name-before-C
 32-byte boundary, an unchecked type, six malformed tables, an over-long name); `tests/test_rstb_dump.py` (`-m dump`:
 the game's table writes back byte-identical; the formula fits every placement file, event flow, message archive and
 `Pack/Actor` pack: 160, 914, 16 and 8373 of the same).
+
+## Item 4: freestanding major items
+
+### What the data says
+
+**No `Obj_` pickup differs from the red rupee in a way that explains round 2's crash.** Compared (packs, their
+`ActorParam` chains, `RSDB/ActorInfo` and `GameActorInfo` rows) for `Obj_Arrow_Fire`, `Obj_Rupee_Red`,
+`Obj_Heart_Piece` and the other pickups:
+
+- Every pickup inherits `Obj_Item_Base` (root AI `DropItem.root.ain`, the pick-up event `PouchContent.event.root.ain`,
+  `ActorGameDataSetting` `NoRespawn`). The red rupee and the heart piece override the event (`..._EnableWarp`,
+  `PouchContentUtuwa`) and ship that AINB in their own pack; `Obj_Arrow_Fire` uses the base event, whose AINB is in
+  `Pack/AI.Global.Product.111.pack.zs`, as is `DropItem.root.ainb`. Nothing the Fire Arrows pick-up names is missing.
+- `Obj_Arrow_Fire`'s differences are those of any "Large" pick-up: manual pick-up (`PickUpItem` attention, the get
+  demo), the model of the item itself (`Item_Arrow_Fire`, bfres and textures in `Model/` and `Tex/`), its pouch item
+  `Item_Arrow_Fire`. `ActorInfo` rows carry the same fields for all of them (heap sizes, radii, model names).
+- **Every placed pick-up of a major item in the game is a member of a level prefab's logic group and of
+  `SimultaneousGroups`/`FarDeleteGroups`**: the Fire Arrows (`HyruleField_LakeHylia_Adult_Prefab_5313`, the sun-shot
+  event, which also holds an `EventRequestActor` for `GetFireArrow_FireArrowAppear`), Ruto's letter
+  (`HyruleField_LakeHylia_Child_Prefab_9e98`), the fishing lures, the dungeon keys, the Gerudo Fortress keys, every
+  boss heart container. Heart pieces are in no such group (each is only linked from its `HeartPieceAnchor`), and
+  neither are the 7 placed red rupees. So a lone major pick-up created when an area loads has no precedent in the game.
+- **The crash is Hookshot's.** Its signature (thread `OptimizeChangeBanc`, read of guest `0x4`, lr `0x809051ec`) is
+  `NotRexed/Hookshot#287`, also reported without mods (#284). Upstream traced it (comment of 2026-11-07 19:49) to
+  Hookshot's NVN layer: `nvnTextureBuilderGetStorageSize` called with no texture builder; the next release returns 0
+  there and logs `nvn: storage size of no texture builder (lr ...)` once. That fix is not on `NotRexed/Hookshot` main
+  yet (checked: no commit with that log line). The data cannot say why loading the Fire Arrows at area load asks for
+  that [inference: a texture of a model not otherwise loaded in Hyrule Field; rupees and heart pieces are].
+
+Major items with an `Obj_` pick-up (`PouchGetType` Large, pouch item named in the pack): `Obj_Arrow_Fire`,
+`Obj_Shield_Deku`, `Obj_Shield_Hylian`, `Obj_Armor_Goron`, `Obj_Armor_Zora`, `Obj_Ocarina_Time`, `Obj_Bombchu`,
+`Obj_Bottle_Letter`, `Obj_SinkingLure`, `Obj_Mask_Amiibo0/1`, the small keys. Most majors (Boomerang, Hookshot,
+Bow, bombs, Hammer, boots, songs, ...) have none: their `Item_*` pack has no collision, attention or pick-up event, so
+it cannot lie in the world as it is. For those, the candidate is a chest at the check's `Hash` (variant c below).
+
+**Does a red rupee at a heart piece save a flag?** Not answerable from the copies: no save was written after the
+pickup. Every `progress.sav` under `save-backups/` and `r2-test/user/` predates it (the newest, `slot_01` of
+`2026-11-07_llr-tower-before-pickup` at 17:50, has `IsGet.Obj_Heart_Piece` false and Hash 9814903750835309225 not
+set, and the `r2-test/user` slots have that backup's sizes and timestamps). What the data says: the flag key is
+the actor `Hash`, the `GameDataList` entry for 9814903750835309225 is `ResetTypeValue` 24 (permanent), and the 7 red
+rupees the game itself places have entries of the same type (24) under their own Hashes. So the rupee should set the
+heart piece's flag and stay gone [inference]; variant a checks it.
+
+### In-game tests for Kareem
+
+Folders `E:/OOTRemake/work/r3-census/ingame/<variant>/romfs/`, built by
+`E:/OOTRemake/work/r3-census/make_ingame.py` (each file read back and checked to differ from the original only at the
+heart piece; Hash 9814903750835309225, position and everything else unchanged). Each holds
+`Banc/HyruleField/HyruleField_Child_Static.bcett.byml.zs` and, because the file grows past its entry by the formula,
+the size table with that one entry raised (395,912 to 395,944, or 395,976 for c): so these also test a written size
+table in game.
+
+Launcher: `E:/OOTRemake/work/r3-census/Clawshot r3 freestanding test.bat <variant>`. Each run copies the save
+backup `2026-11-07_llr-tower-before-pickup` into a fresh test user folder `E:/OOTRemake/work/r3-census/user-<variant>`
+(his saves and install untouched), sets `HOS_FS_OVERLAY` to the variant, starts Hookshot (the `hookshot-main` build,
+as round 2's launcher) and writes the log to that folder's `hookshot_log.txt`. Load the latest save (child, by the
+tower), go into the Lon Lon Ranch tower where the heart piece is. In every run the log should show
+`fs: OpenFile(...HyruleField_Child_Static...): from the overlay` and the same for `...rsizetable...`.
+
+In this order:
+
+a. **`llr-tower-red-rupee`** (control): a red rupee where the heart piece was; pick it up (20 rupees). **Then save
+   (or leave the ranch so it autosaves) and quit.** Afterwards, the flag check:
+   `uv run python -c "import glob; from clawshot.save import load; [print(f, load(f).is_set(9814903750835309225)) for f in sorted(glob.glob('E:/OOTRemake/work/r3-census/user-llr-tower-red-rupee/save/*/slot_*/progress.sav'))]"`
+   (True in the newest slot = the rupee saved the heart piece's flag). Also: come back into the tower; it should stay
+   gone. If the game fails at boot or the area does not load here, the size table is the cause: delete that
+   variant's `romfs/System` folder and retry.
+b. **`llr-tower-hylian-shield`**: a Hylian Shield (`Obj_Shield_Hylian`) lying there; picking it up should show its get
+   message and put it in the gear menu. The save does not own one yet.
+c. **`llr-tower-chest-boomerang`**: a small chest (`Obj_TBox_A_01`) at the heart piece's spot (same Hash) holding
+   the Boomerang; opening it should give the Boomerang. Look at whether the chest sits on the floor, opens normally,
+   and stays open after leaving and returning. This is the fallback for majors that have no pick-up actor.
+d. **`llr-tower-deku-shield`**: a Deku Shield lying there (the save owns one already, so say what the pick-up does).
+e. **`llr-tower-fire-arrows`**: round 2's crash case, kept for the Hookshot build with the #287 fix. On today's build
+   it is expected to crash; on the fixed one, look for `nvn: storage size of no texture builder` in the log.
+
+A crash in b or d with the same `OptimizeChangeBanc` signature means it is not the Fire Arrows' model alone but any
+lone major pick-up at area load; then the chest (c) is the way for freestanding majors until the Hookshot fix.
+
+**Question for Kareem: run a to e on the LLR-tower save (a and b first), and tell us for each what appeared, what
+picking it up did, and whether it crashed.**
+
+## Provisional choices (for review)
+
+1. The reward boxes are a census kind (`treasure_game_reward`) rather than a field (item 2).
+2. Gold Skulltulas whose spot moved inside their area are linked to the N64 name by elimination (9 of them), with
+   their remake requirement listed for the world overrides, rather than left unlinked: the counts per area hold, and
+   the world needs either a link or an `n64_only` for every OoT Randomizer location.
+3. The three new Gold Skulltulas are named in OoT Randomizer's style (`HF GS Lone Tree`, `HF GS Wetland Grotto Crate`,
+   `LLR GS Tower`), so world files can use the same names.
+4. `rstb.required_size` covers only the four types whose formula fits every file and raises for the rest;
+   `GameDataList` and `RSDB` are left out though they mostly fit (264), because nothing changes them yet and
+   `ActorInfo` does not fit.
+5. The in-game variants carry the size table with the one raised entry, as a seed will, so they also test a written
+   table; variant a is the control for that.
+
+## Cross-track posts (thread `cs-r3`)
+
+- 18:02: item 2 (c476035): the new kind, the repeat box, `DropViewActor` for track A, `COVERED["Chest"]` for track C.
+- 18:06: item 1: the three gone Gold Skulltulas by OoT Randomizer name, with evidence.
+- 18:11: item 1 committed (2b3d23f): links, new names, the moved checks and the night note for track C.
+- 18:12, reviewer: the repeat box stays vanilla (recorded under item 2).
+- 18:15: item 3 committed (d481e07): the `rstb` API and the suggested use in the writer, for track A.
+
+## Left open
+
+- The in-game results of item 4 (above), including whether the red rupee saved the heart piece's flag.
+- Night rules: the data's nocturnal marker covers 24 Gold Skulltulas, fewer than OoT Randomizer's night rules; the
+  other logic groups were not decoded.
+- The weakest Gold Skulltula links (item 1), to settle by an in-game look if the names matter (hints).
+- `.ainb`, `GameDataList` and `RSDB` size formulas, when something needs to change them.
+
+## Gates (before the handoff)
+
+```
+uv run ruff format --check                               55 files already formatted
+uv run ruff check                                        All checks passed!
+uv run pytest                                            145 passed, 12 skipped
+OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump   11 passed, 146 deselected (27 s)
+```
