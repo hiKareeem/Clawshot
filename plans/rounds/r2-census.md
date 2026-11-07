@@ -428,7 +428,8 @@ The Hyrule Field file needs 32 more than its entry, the same margin round 1's Ko
   spots exist with changed offers, unlinked until left/right is known; not N64-only.
 - 16:15: theater scrubs linked by position on the reviewer's call (Left = bug-buying scrub, Right = the potion
   pair), inferred; LW now 5/9 (Near Shortcuts Grotto Chest and 3 GS open).
-- 16:15 (later): item 5 report (save reader, main slot, LLR heart piece not collected in the copy, Impa tests).
+- 16:21: item 5 report (save reader, main slot, LLR heart piece not collected in the copy, chests not in the key
+  list, Impa tests).
 
 ## Item 5: save reader and the heart-piece tests on Kareem's save
 
