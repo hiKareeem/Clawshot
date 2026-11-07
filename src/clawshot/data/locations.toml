@@ -2636,9 +2636,9 @@ oot_randomizer_name = "LW Deku Scrub Grotto Rear"
 id = "2569517939889411425"
 kind = "scrub"
 area = "LostWood"
-name = "Lost Wood Scrub"
+name = "LW Deku Scrub Near Deku Theater Left"
 vanilla_item = ""
-oot_randomizer_name = ""
+oot_randomizer_name = "LW Deku Scrub Near Deku Theater Left"
 
 [[location]]
 id = "4328741615941752705"
@@ -2660,17 +2660,17 @@ oot_randomizer_name = "LW Deku Scrub Near Bridge"
 id = "11385057993574159532"
 kind = "scrub"
 area = "LostWood"
-name = "Lost Wood Scrub (Obj_Heart)"
+name = "LW Deku Scrub Near Deku Theater Right [heart]"
 vanilla_item = "Obj_Heart"
-oot_randomizer_name = ""
+oot_randomizer_name = "LW Deku Scrub Near Deku Theater Right"
 
 [[location]]
 id = "15048088372638595204"
 kind = "scrub"
 area = "LostWood"
-name = "Lost Wood Scrub (Item_Bottle_RedPotion)"
+name = "LW Deku Scrub Near Deku Theater Right [potion]"
 vanilla_item = "Item_Bottle_RedPotion"
-oot_randomizer_name = ""
+oot_randomizer_name = "LW Deku Scrub Near Deku Theater Right"
 
 [[location]]
 id = "1775586642693927992"

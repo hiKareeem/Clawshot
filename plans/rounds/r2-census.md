@@ -11,7 +11,7 @@ Branch `r2/census`, from main `252b19c`. Owns `src/clawshot/census/`, `src/claws
 | `src/clawshot/census/ootr.py` | reads OoT Randomizer's `LocationList.py` as data (`ast`, nothing executed, Master Quest dropped) and links census locations to its names |
 | `src/clawshot/census/definitions.py` | reads and writes `locations.toml` (`load()`, `Definition`) |
 | `src/clawshot/census/write_locations.py` | `python -m clawshot.census.write_locations --romfs <dir> --ootr <LocationList.py> [--out] [--fresh]` |
-| `src/clawshot/data/locations.toml` | 477 locations, 232 with an `oot_randomizer_name` |
+| `src/clawshot/data/locations.toml` | 477 locations, 235 with an `oot_randomizer_name` |
 | `tests/test_census.py` | synthetic: merging, kinds, exclusions, errors, a synthetic romfs with a big-endian `GameDataList`, the matcher rules, the TOML file |
 | `tests/test_census_dump.py` | `-m dump`: `locations.toml` and `scan()` agree on ids, kinds, areas and vanilla items |
 
@@ -85,7 +85,7 @@ with "Master Quest without Vanilla Dungeons" as the MQ test, and did not chase t
 | InsideTheDekuTree | 6 | 0 | 4 | 0 | 1 | 0 | 0 | 11 | 6 | 7 | 7 |
 | KakarikoVillage | 3 | 0 | 6 | 2 | 0 | 0 | 32 | 43 | 3 | 4 | 2 |
 | KokiriForest | 7 | 0 | 3 | 0 | 0 | 2 | 24 | 36 | 7 | 6 | 6 |
-| LostWood | 1 | 0 | 3 | 0 | 0 | 9 | 0 | 13 | 1 | 6 | 3 |
+| LostWood | 1 | 0 | 3 | 0 | 0 | 9 | 0 | 13 | 1 | 6 | 5 |
 | Market | 0 | 12 | 1 | 0 | 0 | 0 | 32 | 45 | 12 | 11 | 11 |
 | SacredForestMeadow | 2 | 0 | 1 | 0 | 0 | 0 | 0 | 3 | 2 | 3 | 1 |
 | ShadowTemple | 14 | 0 | 5 | 1 | 1 | 1 | 0 | 22 | 14 | 18 | 6 |
@@ -94,7 +94,7 @@ with "Master Quest without Vanilla Dungeons" as the MQ test, and did not chase t
 | ZoraDomain | 1 | 0 | 1 | 0 | 0 | 0 | 24 | 26 | 1 | 1 | 1 |
 | ZoraFountain | 1 | 0 | 3 | 2 | 0 | 0 | 0 | 6 | 1 | 2 | 2 |
 | ZoraRiver | 1 | 0 | 4 | 2 | 0 | 0 | 0 | 7 | 1 | 5 | 3 |
-| **total** | 184 | 12 | 100 | 24 | 8 | 21 | 128 | 477 | 196 | 251 | 101 |
+| **total** | 184 | 12 | 100 | 24 | 8 | 21 | 128 | 477 | 196 | 251 | 103 |
 
 "chests in 03" = chests + treasure-game boxes from `03-game-data.md` sections 1 and 9: equal in every row. "OoTR" =
 OoT Randomizer locations of the compared kinds in that area, without Gold Skulltulas and shops (Gold Skulltulas are
@@ -215,9 +215,7 @@ needs an in-game look.
   chests; scrubs Left, Center-Left, Center-Right, Right.
 - **KakarikoVillage** (2): Open Grotto Chest; Redead Grotto Chest.
 - **KokiriForest**: none (Gold Skulltulas aside).
-- **LostWood** (3): Near Shortcuts Grotto Chest (that grotto room holds no check); Deku Scrub Near Deku Theater Left
-  and Right (two remake scrub spots stand 12 and 17 units from the theater: the bug-buying scrub and the two
-  potion/heart scrubs; which is "left" is not in the data).
+- **LostWood** (1): Near Shortcuts Grotto Chest (that grotto room holds no check).
 - **SacredForestMeadow** (2): Grotto scrubs Front, Rear.
 - **ShadowTemple** (12): Early Silver Rupee, Invisible Blades Visible and Invisible, Falling Spikes Lower, Upper and
   Switch, Invisible Spikes, Wind Hint, After Wind Enemy and Hidden, Spike Walls Left, Invisible Floormaster chests.
@@ -235,7 +233,7 @@ to confirm in game, not a matching gap.
 
 ### Remake checks with no OoT Randomizer name (Gold Skulltulas aside)
 
-245 of 477 are unlinked: 100 Gold Skulltulas, and these (id, vanilla item, room):
+242 of 477 are unlinked: 100 Gold Skulltulas, and these (id, vanilla item, room):
 
 - **BottomOfTheWell**: chests 631709185320708287 (blue, r1), 5429815628949128345 (blue, r1), 8397646530660039355
   (small key, r1), 8975637636514249074 (red, r1), 10905582354954996284 (red, r1), 12988877782812797760 (blue, r1),
@@ -277,9 +275,8 @@ to confirm in game, not a matching gap.
   copies), 12902291359202819102 (blue).
 - **KokiriForest**: chest 4349272251343787229 (purple, in the open by the stick-upgrade scrub); stick-upgrade scrub
   182031956235860994 (child) and 7488448334396031424 (adult).
-- **LostWood**: chest 17479747339356189279 (purple, in the open by the bridge scrub); scrubs 14619830301496284497
-  (arrows, adult; the adult copy of the Grotto Rear scrub, which sells seeds as child), 2569517939889411425 (no item,
-  child), 11385057993574159532 and 15048088372638595204 (two scrubs at one spot, child: heart and red potion).
+- **LostWood**: chest 17479747339356189279 (purple, in the open by the bridge scrub); scrub 14619830301496284497
+  (arrows, adult; the adult copy of the Grotto Rear scrub, which sells seeds as child).
 - **Market**: treasure-game red-rupee reward box 6781536951709667179.
 - **SacredForestMeadow**: chest 1764383515296652106 (scrub seed).
 - **ShadowTemple**: 10 chests: small keys (r6, r11, r16, r21), red x3 (r11, r31 x2), scrub seed (r15), green (r16),
@@ -333,9 +330,6 @@ to confirm in game, not a matching gap.
    for LH and LLR) and none in Ganon's Castle. Do you remember whether the remake removed them?**
 3. **Fire Temple: is the map in the chest you reach earlier (room 5) or later (room 16)?** This decides which N64
    location each is.
-4. **Deku Theater (Lost Woods, child): standing in front of the theater entrance, which business scrub is on your
-   left, the one that wants a bug or the one selling potions?** It decides which is OoT Randomizer's "Left" and
-   "Right" (section "Reviewer's question" below).
 
 ## In-game tests for Kareem
 
@@ -404,17 +398,21 @@ The Hyrule Field file needs 32 more than its entry, the same margin round 1's Ko
 - **KF Storms Grotto Chest exists** and is linked (9573d21, after the rebase): chest 14818888396401495482
   (`TBox_Rupee_Green`, both ages), 13 units below and 23 from KF's only grotto base, `Land_HidingHole_Base_I_01`
   at (-51.9, 116.6, -62.8).
-- **The two LW Deku Theater scrub spots exist, with different offers, and are left unlinked only because left and
-  right cannot be told from the data.** All 51 `Enemy_Scrub_Business` actors were listed (the other `Enemy_Scrub_*`
-  actors are the theater audience, Mad Scrubs and the Deku Tree's brothers; none sells). Of the 11 business scrubs in
-  both LW files, two spots stand by the Deku Theater (base `L_01` at (3.8, 94.3, -47.5), with the
-  `Enemy_Scrub_ForestStage*` actors), both in the child file only (N64's two are child-only too):
-  2569517939889411425 at 11.9 units (`Enemy_Scrub_Business_Item_SellBug`, sells nothing: it buys a bug), and
-  11385057993574159532 / 15048088372638595204 at 16.8 units (two scrubs at one spot, `Enemy_Scrub_Business_Potion`:
-  heart, heart bundle, magic jar / red potion, green potion, heart bundle). The adult file has no scrub near the
-  theater. No scrub in the game sells a single Deku Stick: the scrub flow `Enemy_Scrub_Business_Common` has no stick
-  entry at all. **Kareem: standing in front of the Deku Theater entrance as child, which scrub is on your left, the one
-  that wants a bug or the one selling potions?** With that answer both spots get linked.
+- **The two LW Deku Theater scrub spots exist, with different offers, and are linked by an inferred left/right.**
+  All 51 `Enemy_Scrub_Business` actors were listed (the other `Enemy_Scrub_*` actors are the theater audience, Mad
+  Scrubs and the Deku Tree's brothers; none sells). Of the 11 business scrubs in both LW files, two spots stand by
+  the Deku Theater (base `L_01` at (3.8, 94.3, -47.5), with the `Enemy_Scrub_ForestStage*` actors), both in the
+  child file only (N64's two are child-only too). The path to the theater runs west along z = -48 (a line of `Area`
+  actors from x 48 to 15, from the LW junction at x 24) to the hole at x 3.8. Walking it, and taking the engine as
+  right-handed with y up, the player's left is +z, so:
+  - **Left** = 2569517939889411425 at (12.2, -41.2) (`Enemy_Scrub_Business_Item_SellBug`: buys a bug, sells
+    nothing; N64 sells a Deku Stick).
+  - **Right** = 11385057993574159532 and 15048088372638595204 at (19.2, -51.2) (two scrubs at one spot,
+    `Enemy_Scrub_Business_Potion`: heart, heart bundle, magic jar / red potion, green potion, heart bundle; N64 sells
+    Deku Nuts). Both carry the name, like the age copies.
+  The mapping is inferred (handedness and the approach direction are not stated in the data). The adult file has no
+  scrub near the theater; no scrub in the game sells a single Deku Stick (`Enemy_Scrub_Business_Common` has no stick
+  entry). Scrubs are not shuffled in the first seeds (D15), so a wrong side costs nothing yet.
 
 ## Cross-track posts (thread `cs-r2`)
 
