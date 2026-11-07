@@ -366,7 +366,8 @@ def match(locations: Sequence[Location], ootr: Sequence[OotrLocation]) -> dict[i
 
     One-time checks are matched one spot to one OoT Randomizer location; every copy in a spot gets the name. Shop
     slots are matched by slot number within the same shop, the Treasure Chest Game by room (:func:`treasure_game`).
-    Gold Skulltulas are not matched: the remake moved them (plans/03-game-data.md, section 9).
+    Gold Skulltulas are not matched here: the remake moved several, so they are linked by hand in the definitions
+    file (plans/rounds/r3-census.md), and a rewrite keeps those links.
     """
     result: dict[int, Match] = {}
     names = {o.name for o in ootr}
