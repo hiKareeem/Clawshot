@@ -1,0 +1,26 @@
+# never commit the game or anything made from it
+*.zs
+*.nup
+*.nsp
+*.xci
+*.keys
+romfs/
+exefs/
+out/
+output/
+dump/
+work/
+*.bcett.byml
+*.bfevfl
+*.msbt
+*.sarc
+spoiler*.json
+
+# python
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+.ruff_cache/
+dist/
+build/
