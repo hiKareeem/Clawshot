@@ -1,11 +1,12 @@
-"""Write a patch plan as a mod folder: ``<out>/romfs/<romfs path>`` for each changed placement file, through
-``clawshot.formats``. Nothing under the romfs is written."""
+"""Write a patch plan as a mod folder: ``<out>/romfs/<romfs path>`` for each changed placement file, and the
+resource size table when a changed file needs a bigger entry, through ``clawshot.formats``. Nothing under the
+romfs is written."""
 
 from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
 
 from clawshot.census.scan import DEFAULT_CHEST_DROP
-from clawshot.formats import byml, zsdic
+from clawshot.formats import byml, rstb, zsdic
 from clawshot.patch.plan import DROP_KEY, EVENT_KEY, PatchError, Plan
 
 
@@ -16,6 +17,8 @@ class WrittenFile:
     new_size: int  # decompressed, after
     compressed_size: int
     new_compressed_size: int
+    entry: int | None = None  # its resource-size-table entry, before (None for the table itself)
+    new_entry: int | None = None  # and after
 
 
 def check_output_folder(romfs: Path, out: Path) -> None:
@@ -59,10 +62,16 @@ def patch_tree(tree: dict, path: str, plan: Plan) -> None:
 
 def write(plan: Plan, romfs: str | Path, out: str | Path) -> list[WrittenFile]:
     """Write every file the plan changes to ``<out>/romfs/``, compressed with the dictionary its name calls for.
-    Every file is built and read back against its changed tree first; nothing is written if one fails."""
+
+    Each changed file's resource-size-table entry is raised to ``rstb.required_size`` when it is short (never
+    lowered); the table is written only when an entry changed. Every file is built and read back first; nothing is
+    written if one fails."""
     romfs, out = Path(romfs), Path(out)
     check_output_folder(romfs, out)
     dicts = zsdic.Dictionaries.from_romfs(romfs)
+    table_compressed = (romfs / rstb.TABLE_PATH).read_bytes()
+    table_data = dicts.decompress(rstb.TABLE_PATH, table_compressed)
+    table = rstb.read(table_data)
     built: list[tuple[WrittenFile, bytes]] = []
     for path in plan.files():
         compressed = (romfs / PurePosixPath(path)).read_bytes()
@@ -75,9 +84,22 @@ def write(plan: Plan, romfs: str | Path, out: str | Path) -> list[WrittenFile]:
         new_compressed = dicts.compress(path, new_data)
         if dicts.decompress(path, new_compressed) != new_data:
             raise PatchError(f"{path}: the compressed file does not decompress to the written bytes")
-        built.append(
-            (WrittenFile(path, len(data), len(new_data), len(compressed), len(new_compressed)), new_compressed)
+        entry = table.get(path)
+        if entry is None:
+            raise PatchError(f"{path}: the resource size table has no entry for it")
+        new_entry = max(entry, rstb.required_size(path, len(new_data)))
+        table.set(path, new_entry)
+        info = WrittenFile(path, len(data), len(new_data), len(compressed), len(new_compressed), entry, new_entry)
+        built.append((info, new_compressed))
+    if any(info.entry != info.new_entry for info, _ in built):
+        new_table = rstb.write(table)
+        new_table_compressed = dicts.compress(rstb.TABLE_PATH, new_table)
+        if dicts.decompress(rstb.TABLE_PATH, new_table_compressed) != new_table:
+            raise PatchError("the compressed size table does not decompress to the written bytes")
+        info = WrittenFile(
+            rstb.TABLE_PATH, len(table_data), len(new_table), len(table_compressed), len(new_table_compressed)
         )
+        built.append((info, new_table_compressed))
     for info, content in built:
         target = out / "romfs" / PurePosixPath(info.path)
         target.parent.mkdir(parents=True, exist_ok=True)

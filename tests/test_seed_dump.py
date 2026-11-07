@@ -1,6 +1,7 @@
 """Seeds written from the dump (``-m dump``): every written file differs from the game's only where the patch plan
 says, field by field; the same seed gives the same folder in two processes; the data files fit the dump."""
 
+import copy
 import os
 import subprocess
 import sys
@@ -8,7 +9,7 @@ import sys
 import pytest
 
 from clawshot.census.scan import CHEST, scan
-from clawshot.formats import byml, zsdic
+from clawshot.formats import byml, rstb, zsdic
 from clawshot.generate import Settings
 from clawshot.patch import events as chest_events
 from clawshot.patch import items as item_actors
@@ -49,25 +50,38 @@ def expected_changes(plan: Plan, path: str) -> set:
 
 @pytest.mark.parametrize("seed_number", [1, 2, 3])
 def test_written_files_differ_only_where_the_plan_says(romfs, tmp_path, seed_number):
+    """Placement files: only the planned fields. The size table: each changed file's entry raised to what it needs
+    when short, nothing else; and the table is written only then."""
     output = make_seed(romfs, seed_number, Settings())
     out = tmp_path / "seed"
-    written = write_seed(output, romfs, out)
+    written = {f.path: f for f in write_seed(output, romfs, out)}
     plan = output.plan
     assert plan.changes, "a seed that changes nothing tests nothing"
-    files = sorted(p.relative_to(out).as_posix() for p in out.rglob("*") if p.is_file())
-    assert files == sorted(["spoiler.json", *(f"romfs/{path}" for path in plan.files())])
 
     dicts = zsdic.Dictionaries.from_romfs(romfs)
+    table = rstb.read(dicts.decompress(rstb.TABLE_PATH, (romfs / rstb.TABLE_PATH).read_bytes()))
+    expected_table = copy.deepcopy(table)
     print(f"\nseed {seed_number}: {len(plan.changes)} chest changes")
-    for f in written:
-        original = byml.read(dicts.decompress(f.path, (romfs / f.path).read_bytes()))
-        new = byml.read(dicts.decompress(f.path, (out / "romfs" / f.path).read_bytes()))
-        found = set(field_changes(original, new))
-        assert found == expected_changes(plan, f.path), f.path
+    for path in plan.files():
+        f = written[path]
+        original = byml.read(dicts.decompress(path, (romfs / path).read_bytes()))
+        new_data = dicts.decompress(path, (out / "romfs" / path).read_bytes())
+        assert set(field_changes(original, byml.read(new_data))) == expected_changes(plan, path), path
+        need = rstb.required_size(path, len(new_data))
+        expected_table.set(path, max(table.get(path), need))
         print(
-            f"  {f.path}: {f.size} -> {f.new_size} ({f.new_size - f.size:+d}), "
-            f"compressed {f.compressed_size} -> {f.new_compressed_size}"
+            f"  {path}: {f.size} -> {f.new_size} ({f.new_size - f.size:+d}), compressed {f.compressed_size} -> "
+            f"{f.new_compressed_size}, size-table entry {table.get(path)} -> {f.new_entry} (needs {need})"
         )
+
+    raised = expected_table != table
+    files = sorted(p.relative_to(out).as_posix() for p in out.rglob("*") if p.is_file())
+    table_file = [f"romfs/{rstb.TABLE_PATH}"] if raised else []
+    assert files == sorted(["spoiler.json", *(f"romfs/{path}" for path in plan.files()), *table_file])
+    if raised:
+        new_table = rstb.read(dicts.decompress(rstb.TABLE_PATH, (out / "romfs" / rstb.TABLE_PATH).read_bytes()))
+        assert new_table == expected_table
+    print(f"  size table {'written' if raised else 'not written: every entry fits'}")
 
 
 def test_same_seed_same_folder_in_two_processes(romfs, tmp_path):

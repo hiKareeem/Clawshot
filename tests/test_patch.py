@@ -6,7 +6,7 @@ import pytest
 
 from clawshot.census.definitions import Definition
 from clawshot.census.scan import CHEST, TREASURE_GAME_BOX, Location
-from clawshot.formats import byml, zsdic
+from clawshot.formats import byml, rstb, zsdic
 from clawshot.formats.byml import F32, U32, U64
 from clawshot.generate import Seed, Settings
 from clawshot.generate.fill import shuffled_locations
@@ -321,7 +321,19 @@ def fake_romfs(tmp_path, zsdic_pack):
     for path, tree in ((CHILD, village_tree(CHILD)), (ADULT, village_tree(ADULT)), (TEMPLE, TEMPLE_TREE)):
         (root / path).parent.mkdir(parents=True, exist_ok=True)
         (root / path).write_bytes(dicts.compress(path, byml.write(tree)))
+    write_size_table(root, dicts, {CHILD: ROOMY, ADULT: ROOMY, TEMPLE: ROOMY, "Other/File.bfevfl": 1234})
     return root
+
+
+ROOMY = 1 << 20  # an entry every synthetic file fits
+
+
+def write_size_table(root, dicts, entries: dict[str, int]) -> None:
+    table = rstb.ResourceSizeTable()
+    for path, size in entries.items():
+        table.set(path, size)
+    (root / rstb.TABLE_PATH).parent.mkdir(parents=True, exist_ok=True)
+    (root / rstb.TABLE_PATH).write_bytes(dicts.compress(rstb.TABLE_PATH, rstb.write(table)))
 
 
 def swap_plan(world, links):
@@ -361,6 +373,27 @@ def test_writer_refuses_a_file_that_is_not_what_the_census_saw(world, links, fak
     ):
         write(swap_plan(world, links), fake_romfs, out)
     assert not out.exists()  # nothing written, not even the files that were fine
+
+
+def test_writer_raises_short_size_entries_and_writes_the_table(world, links, fake_romfs, tmp_path, zsdic_pack):
+    dicts = zsdic.Dictionaries.from_pack(zsdic_pack)
+    write_size_table(fake_romfs, dicts, {CHILD: 1, ADULT: ROOMY, TEMPLE: 2, "Other/File.bfevfl": 1234})
+    out = tmp_path / "out"
+    written = {f.path: f for f in write(swap_plan(world, links), fake_romfs, out)}
+
+    child = written[CHILD]
+    need = rstb.required_size(CHILD, child.new_size)
+    assert (child.entry, child.new_entry) == (1, need)  # short: raised to what the file needs
+    assert (written[ADULT].entry, written[ADULT].new_entry) == (ROOMY, ROOMY)  # never lowered
+    assert rstb.TABLE_PATH in written
+    table = rstb.read(dicts.decompress(rstb.TABLE_PATH, (out / "romfs" / rstb.TABLE_PATH).read_bytes()))
+    assert [table.get(p) for p in (CHILD, ADULT, TEMPLE, "Other/File.bfevfl")] == [need, ROOMY, 2, 1234]
+
+
+def test_writer_leaves_the_size_table_out_when_every_entry_fits(world, links, fake_romfs, tmp_path):
+    written = write(swap_plan(world, links), fake_romfs, tmp_path / "out")
+    assert rstb.TABLE_PATH not in [f.path for f in written]
+    assert not (tmp_path / "out" / "romfs" / rstb.TABLE_PATH).exists()
 
 
 def test_writer_needs_an_empty_folder_outside_the_romfs(world, links, fake_romfs, tmp_path):

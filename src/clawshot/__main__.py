@@ -55,9 +55,15 @@ def main(argv: list[str] | None = None) -> int:
     seed = output.seed
     print(f"seed {seed.seed}: {len(seed.shuffled)} locations shuffled, {len(seed.spheres)} spheres")
     for f in written:
+        if f.entry is None:
+            entry = ""
+        elif f.new_entry == f.entry:
+            entry = f", size-table entry {f.entry} kept"
+        else:
+            entry = f", size-table entry {f.entry} -> {f.new_entry}"
         print(
             f"  {f.path}: {f.size} -> {f.new_size} bytes ({f.new_size - f.size:+d}), "
-            f"compressed {f.compressed_size} -> {f.new_compressed_size}"
+            f"compressed {f.compressed_size} -> {f.new_compressed_size}{entry}"
         )
     print(f"wrote {len(written)} files under {args.out / 'romfs'} and {args.out / 'spoiler.json'}")
     return 0
