@@ -1,7 +1,8 @@
 # Round 3, track A: seed output (cs3a)
 
-Branch `r3/seed`, from main `24512a7`. Owns `src/clawshot/patch/`, `src/clawshot/data/item_actors.toml`,
-`src/clawshot/__main__.py`, `src/clawshot/generate/`, `tests/test_patch*.py`, `tests/test_seed*.py` and this file.
+Branch `r3/seed`, rebased on main `32551cf` (track B's `formats.rstb` and census). Owns `src/clawshot/patch/`,
+`src/clawshot/data/item_actors.toml`, `src/clawshot/__main__.py`, `src/clawshot/generate/`, `tests/test_patch*.py`,
+`tests/test_seed*.py` and this file.
 
 ## What was built
 
@@ -10,7 +11,7 @@ Branch `r3/seed`, from main `24512a7`. Owns `src/clawshot/patch/`, `src/clawshot
 | keep_vanilla (reviewer's request for track C) | `generate/fill.py` `shuffled_locations`, test in `tests/test_generate.py` | 3dc8dbe, merged to main |
 | 1 Item to actor table | `src/clawshot/data/item_actors.toml`, `src/clawshot/patch/items.py` | done |
 | 2 Patch plan, story overrides | `src/clawshot/patch/plan.py`, `src/clawshot/patch/events.py`, `src/clawshot/patch/chest_events.toml` | done |
-| 3 Writer | `python -m clawshot`, `src/clawshot/patch/write.py`, `src/clawshot/patch/__init__.py`; dump tests | done |
+| 3 Writer, with the size table | `python -m clawshot`, `src/clawshot/patch/write.py`, `src/clawshot/patch/__init__.py`; dump tests | done |
 | 4 Three seeds for Kareem | `E:/OOTRemake/work/r3-seed/seed-{3,7,22}/` (outside the repo) | done |
 
 `python -m clawshot --romfs <dump> --seed <n> --out <dir> [--shuffle ...] [--dungeon-items ...] [--logic ...]`:
@@ -27,7 +28,10 @@ Branch `r3/seed`, from main `24512a7`. Owns `src/clawshot/patch/`, `src/clawshot
 5. writes `<dir>/romfs/<path>` for the changed files only (each built, re-read and compared with the changed tree
    before anything is written) and `<dir>/spoiler.json`: the generator's spoiler plus a `patch` section (each
    change with its files, old and new actor, removed override and the story state it set; unchanged chests; census
-   chests no world location names, which keep their items). `<dir>` must be empty or absent.
+   chests no world location names, which keep their items). `<dir>` must be empty or absent;
+6. the resource size table (`clawshot.formats.rstb`, track B): each changed file's entry is raised to
+   `rstb.required_size` when it is short, never lowered; the table goes into `<dir>/romfs/` only if an entry changed.
+   The command line prints each file's entry, kept or raised.
 
 `python -m clawshot.generate` is gone: its options moved to `python -m clawshot` (clean cutover).
 `plans/04-world-format.md` "Generating a seed" (track C's file) still names it; posted on the thread.
@@ -97,23 +101,28 @@ read). Each needs an event-flow edit (EVFL writing) before its chest can take an
 
 Track B (18:02 post): every Treasure Chest Game box has `Dynamic.DropViewActor`, the model shown. The plan
 changes only `Drop__DropActor`; when the reward chest joins (D17), the plan must change `DropViewActor` with it.
+Track B's census now has the kind `treasure_game_reward` for that chest; `plan.link` accepts census `chest` only, so
+a shuffled reward chest stops the plan with a message until the reward joins (and its `DropViewActor` with it).
 The writer checks every changed actor against the census (Gyaml, current drop, override) and fails otherwise.
 
 ## Item 3: how it was checked
 
 | Command | Result |
 |---|---|
-| `uv run pytest tests/test_patch.py` | 15 passed: table lookups and errors, links and their refusals (no definition, not in the census, a treasure-game box), remake pool (dungeon picks the map; copies that disagree stop), plan (only moved chests, both copies, tied override removed and kept one kept, unclassified override stops), writer (only the planned fields change in every copy, nothing written when one file does not match the census, refuses a non-empty folder or one inside the romfs, same bytes twice) |
+| `uv run pytest tests/test_patch.py` | 17 passed: table lookups and errors, links and their refusals (no definition, not in the census, a treasure-game box), remake pool (dungeon picks the map; copies that disagree stop), plan (only moved chests, both copies, tied override removed and kept one kept, unclassified override stops), writer (only the planned fields change in every copy, nothing written when one file does not match the census, refuses a non-empty folder or one inside the romfs, same bytes twice; a short size-table entry raised to `required_size`, a roomy one kept, the other entries untouched, and no table written when every entry fits) |
 | `uv run pytest tests/test_seed.py` | 1 passed: every shuffled chest of the ported world reads back to an item and the same actor |
-| `OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump tests/test_seed_dump.py -s` | 6 passed: seeds 1, 2, 3 written, every file read back and diffed field by field against the original (`Actors` matched by Hash): the set of changed fields equals the plan's (`Dynamic/Drop__DropActor`, and `Dynamic/GetEventName` removed where planned), and the folder holds exactly the planned files and `spoiler.json`; `python -m clawshot --seed 4242` in two processes (`PYTHONHASHSEED` 1 and 2) gives byte-identical folders; every table actor exists; every chest override is classified |
+| `OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump tests/test_seed_dump.py -s` | 6 passed: seeds 1, 2, 3 written, every file read back and diffed field by field against the original (`Actors` matched by Hash): the set of changed fields equals the plan's (`Dynamic/Drop__DropActor`, and `Dynamic/GetEventName` removed where planned); the size table in the output equals the game's with exactly the short entries of changed files raised to `required_size` (seed 1: both KF Dynamic files), and is absent when every entry fits (seeds 2 and 3); the folder holds exactly those files and `spoiler.json`; `python -m clawshot --seed 4242` in two processes (`PYTHONHASHSEED` 1 and 2) gives byte-identical folders; every table actor exists; every chest override is classified |
 | the four gates | see the end of this file |
 
 Size changes the dump test printed (decompressed bytes): seed 1: Deku Tree Dynamic -12, Static -88, KF Adult and
-Child Dynamic +60; seed 2: -12, -140, +8, KF Static files 0 and -4; seed 3: -4, -140, +4, 0, +4, -4.
+Child Dynamic +60 (entries 516,328 -> 516,360 and 511,176 -> 511,208); seed 2: -12, -140, +8, KF Static files 0 and
+-4; seed 3: -4, -140, +4, 0, +4, -4 (every entry kept).
 
 ## Item 4: three seeds for Kareem
 
-Made after commit 67cbe01 with a clean worktree (`git status --short` empty), from `E:/OOTRemake/clawshot-r3/seed`:
+Made after commit f04b910 (rebased on main, with the size table) with a clean worktree (`git status --short`
+empty), from `E:/OOTRemake/clawshot-r3/seed`; the first set (from 67cbe01, before the rebase and the size table) was deleted and
+made again, with the same placements:
 
 ```
 uv run python -m clawshot --romfs E:/Games/Hookshot/romfs --seed 3 --out E:/OOTRemake/work/r3-seed/seed-3
@@ -137,20 +146,21 @@ holds the Kokiri Sword and a Deku Shield. The shield is in the Kokiri shop for 4
 is always in Kokiri Forest (the logic needs it before Mido lets you pass), so a seed with the sword in the Deku Tree
 cannot come out. The Slingshot is needed for Queen Gohma (child reaches her through the basement back room).
 
-**Sizes against the size table** (throwaway reader `E:/OOTRemake/work/r3-seed/rstb_check.py`, read only; entry by
-`03-game-data.md`'s formula ceil32(size) + 264; the table is not changed):
+**Size table** (entries by `rstb.required_size`, ceil32(size) + 264 for placement files):
 
-| Seed | File | decompressed | entry | formula needs |
+| Seed | File | decompressed | entry in the game | entry written |
 |---|---|---|---:|---:|
-| 3 | KF Child Dynamic | 510,884 -> 510,888 | 511,176 | 511,176 (fits) |
-| 3 | KF Adult Dynamic | 516,036 -> 516,040 | 516,328 | 516,328 (fits) |
-| 7 | KF Child Dynamic | 510,884 -> 510,940 | 511,176 | 511,208 (32 over) |
-| 7 | KF Adult Dynamic | 516,036 -> 516,092 | 516,328 | 516,360 (32 over) |
-| 22 | KF Child Dynamic | 510,884 -> 510,944 | 511,176 | 511,208 (32 over) |
-| 22 | KF Adult Dynamic | 516,036 -> 516,096 | 516,328 | 516,360 (32 over) |
+| 3 | KF Child Dynamic | 510,884 -> 510,888 | 511,176 | kept (fits) |
+| 3 | KF Adult Dynamic | 516,036 -> 516,040 | 516,328 | kept (fits) |
+| 7 | KF Child Dynamic | 510,884 -> 510,940 | 511,176 | 511,208 |
+| 7 | KF Adult Dynamic | 516,036 -> 516,092 | 516,328 | 516,360 |
+| 22 | KF Child Dynamic | 510,884 -> 510,944 | 511,176 | 511,208 |
+| 22 | KF Adult Dynamic | 516,036 -> 516,096 | 516,328 | 516,360 |
 
-Every other written file (Deku Tree Static and Dynamic, KF Static) shrinks or stays and fits. 32 over is the same
-margin as round 1's chest file, which loaded.
+Every other written file (Deku Tree Static and Dynamic, KF Static) shrinks or stays and keeps its entry. So seeds 7
+and 22 carry `System/Resource/ResourceSizeTable.Product.111.Nin_Ounce_NVN2.rsizetable.zs` (1,761,406 bytes
+decompressed, the same size as the game's; two entries changed), seed 3 does not. This is the first in-game run of
+a replaced size table.
 
 ### In-game check for Kareem (one seed at a time, new game on an empty test user folder)
 
@@ -158,7 +168,9 @@ Through the round's copy of `E:/OOTRemake/work/r2-test/Clawshot test.bat`, with 
 `E:/OOTRemake/work/r3-seed/seed-<n>/romfs`. Each `play-note.md` says where everything is. What to see:
 
 1. Log: `fs: OpenFile(...KokiriForest_Child_Dynamic...): from the overlay` (and `..._Static` for seeds 3 and 7,
-   `InsideTheDekuTree_...` once inside the tree).
+   `InsideTheDekuTree_...` once inside the tree). Seeds 7 and 22 should also log the size table
+   (`...ResourceSizeTable...`) from the overlay, presumably at boot (round 1 track C saw the game open it), and
+   still boot and load Kokiri Forest.
 2. The Kokiri Sword chest plays the plain big-chest opening and gives its new item (seed 22: the Slingshot), **no
    sword cutscene, no sword**.
 3. The Kokiri Sword from a small chest in Mido's house, with its own get text; then the sword shows in the
@@ -199,17 +211,17 @@ Through the round's copy of `E:/OOTRemake/work/r2-test/Clawshot test.bat`, with 
 
 ## Left for later
 
-- The size table: track B's `formats/rstb` is not on main; the writer does not touch the table. The sizes above
-  are for that work (seeds 7 and 22 need 32 bytes more than the entry in both KF Dynamic files).
+- The size table is written now (f04b910); whether the game honours a raised entry, or needed it, shows in seeds 7
+  and 22 in game.
 - Round 4: the whole-world pool (the logic items above), event-flow edits for the four story overrides with state,
   the Treasure Chest Game reward chest's `DropViewActor`, and the three drop-less chests (the writer adds
   `Drop__DropActor` to them, untested in game).
 
-## Gates (before the handoff, on 67cbe01)
+## Gates (before the handoff, on f04b910, rebased on main 32551cf)
 
 ```
-uv run ruff format --check                                  59 files already formatted
+uv run ruff format --check                                  64 files already formatted
 uv run ruff check                                           All checks passed!
-uv run pytest                                               145 passed, 13 skipped
-OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump      12 passed, 146 deselected
+uv run pytest                                               164 passed, 18 skipped
+OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump      17 passed, 165 deselected
 ```
