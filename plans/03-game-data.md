@@ -388,8 +388,10 @@ exist (`Obj_Heart_Piece_MiniGame`, `Obj_MiniGame_SmallKey`, three `Obj_Ornamenta
 **Freestanding pick-ups.** All pick-ups inherit `Obj_Item_Base`; nothing a major pick-up's pack names is missing (the
 shared AI is in `Pack/AI.Global.Product.111.pack.zs`). Every major pick-up the game places (Fire Arrows, Ruto's letter,
 lures, keys, boss heart containers) is in a level prefab's logic group and `SimultaneousGroups`/`FarDeleteGroups`;
-heart pieces and placed rupees are in none. Round 2's crash signature is Hookshot issue #287 (a null NVN texture
-builder, also seen without mods; fix pending upstream). Major items with an `Obj_` pick-up: Fire Arrows, Deku and
+heart pieces and placed rupees are in none. Round 2's crash has the signature of Hookshot issue #287, but the fix
+made for #287 (a null NVN texture builder answered with 0, in `main-ba594da`) did not stop it: round 2's last two
+crashes ran that build and its log line never appeared, so the null read is elsewhere in the game's code. With a red
+rupee in the same spot the same route had no crash. Major items with an `Obj_` pick-up: Fire Arrows, Deku and
 Hylian shields, Goron and Zora tunics, Ocarina of Time, Bombchus, Ruto's letter, the lure, Amiibo masks, small keys;
 the rest exist only as `Item_*` actors without pick-up components. Placed red rupees have `GameDataList` entries of
 the permanent type (24) under their own Hashes, like the heart pieces.
