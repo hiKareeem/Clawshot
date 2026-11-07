@@ -84,9 +84,21 @@ def test_settings_fold_at_build_time():
 
 def test_a_branch_switched_off_is_not_compiled():
     # OoT Randomizer stops at the operand that decides an and/or, so a dead branch may name unsupported things.
-    assert access("not logic_trick or has_all_notes_for_song(Bow)")
-    with pytest.raises(WorldError, match="has_all_notes_for_song is not supported"):
-        world("logic_trick or has_all_notes_for_song(Bow)")
+    assert access("not logic_trick or has_item_goal(Bow)")
+    with pytest.raises(WorldError, match="has_item_goal is not supported"):
+        world("logic_trick or has_item_goal(Bow)")
+
+
+def test_ocarina_notes_and_trials():
+    # Unshuffled notes: OoT Randomizer holds every ocarina button from the start, so these always pass.
+    assert access("has_all_notes_for_song(Bow) and has_ocarina_buttons(2)")
+    with pytest.raises(WorldError, match="shuffle_individual_ocarina_notes is not supported"):
+        world("has_all_notes_for_song(Bow)", settings={"shuffle_individual_ocarina_notes": True})
+    trials = {"skipped_trials": {"Forest": True, "Light": False}}
+    assert access("skipped_trials[Forest]", flags=trials)
+    assert not access("skipped_trials[Light] or Bow", flags=trials)
+    with pytest.raises(WorldError, match="no true/false entry 'Water'"):
+        world("skipped_trials[Water]", flags=trials)
 
 
 def test_events_and_quoted_items():

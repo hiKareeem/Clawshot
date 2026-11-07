@@ -11,6 +11,7 @@ name things this engine does not support.
 import ast
 import operator
 import re
+import sys
 from collections.abc import Callable, Mapping
 from dataclasses import dataclass, field
 from typing import Any
@@ -41,17 +42,27 @@ class RuleError(ValueError):
     """A rule that does not parse or names something the world does not define."""
 
 
+def _constant(value: bool) -> Test:
+    return lambda c, a, t: value
+
+
 @dataclass(frozen=True)
 class Rule:
-    """A compiled requirement. ``test`` is a bool when the rule folded to a constant."""
+    """A compiled requirement. ``test`` is a bool when the rule folded to a constant; ``fn`` is always a callable
+    (the search's hot path calls it directly). ``reads`` names every count the rule looks at (items, events): its
+    result for one age and time of day changes only when one of them does. ``None``: not known."""
 
     text: str
     test: Test | bool
+    reads: frozenset[str] | None = None
+    fn: Test = field(init=False, repr=False, compare=False)
+
+    def __post_init__(self) -> None:
+        test = self.test
+        object.__setattr__(self, "fn", _constant(test) if isinstance(test, bool) else test)
 
     def __call__(self, counts: Counts, age: str | None, tod: int) -> bool:
-        if self.test is True or self.test is False:
-            return self.test
-        return self.test(counts, age, tod)
+        return self.fn(counts, age, tod)
 
     @property
     def always(self) -> bool:
@@ -106,9 +117,6 @@ _ARITHMETIC: dict[type, Callable[[Any, Any], Any]] = {
 # that names it, rather than a silent ``False``.
 UNSUPPORTED = frozenset(
     {
-        "has_all_notes_for_song",
-        "has_ocarina_buttons",
-        "region_has_shortcuts",
         "has_item_goal",
         "has_full_item_goal",
         "has_all_item_goals",
@@ -127,17 +135,20 @@ def _has(name: str, count: int = 1) -> Test:
 
 
 def _all(parts: list[Test]) -> Test:
-    def test(c: Counts, a: str | None, t: int) -> bool:
-        return all(part(c, a, t) for part in parts)
-
-    return test
+    # Two operands are the common case; a plain lambda is faster than all() over a generator.
+    if len(parts) == 2:
+        first, second = parts
+        return lambda c, a, t: first(c, a, t) and second(c, a, t)
+    frozen = tuple(parts)
+    return lambda c, a, t: all(part(c, a, t) for part in frozen)
 
 
 def _any(parts: list[Test]) -> Test:
-    def test(c: Counts, a: str | None, t: int) -> bool:
-        return any(part(c, a, t) for part in parts)
-
-    return test
+    if len(parts) == 2:
+        first, second = parts
+        return lambda c, a, t: first(c, a, t) or second(c, a, t)
+    frozen = tuple(parts)
+    return lambda c, a, t: any(part(c, a, t) for part in frozen)
 
 
 def _distinct_at_least(names: tuple[str, ...], count: int) -> Test | bool:
@@ -157,12 +168,14 @@ class Compiler:
     """Compiles rule strings against one world's items, helpers and settings.
 
     ``helpers`` maps a helper's signature (``"can_use(item)"`` or ``"is_child"``) to its body. ``settings`` holds
-    every setting, trick and world flag a rule may name.
+    every setting, trick and world flag a rule may name. ``key_counts`` caps a count asked of an item at the number
+    the world holds (the remake has fewer keys and locked doors than N64 in some dungeons).
     """
 
     items: ItemFacts
     helpers: Mapping[str, str]
     settings: Mapping[str, Any]
+    key_counts: Mapping[str, int] = field(default_factory=dict)
     subrules: list[Subrule] = field(default_factory=list)
     events_named: set[str] = field(default_factory=set)
     _escaped: dict[str, str] = field(init=False)
@@ -171,6 +184,7 @@ class Compiler:
     _subrule_count: dict[str, int] = field(init=False, default_factory=dict)
     _stack: list[str] = field(init=False, default_factory=list)
     _region: str | None = field(init=False, default=None)
+    _reads: set[str] = field(init=False, default_factory=set)
     _where: str = field(init=False, default="")
 
     def __post_init__(self) -> None:
@@ -187,12 +201,18 @@ class Compiler:
 
     def compile(self, text: str, region: str | None, where: str) -> Rule:
         """Compile ``text``. ``region`` is the region ``here()`` refers to; ``where`` names the rule in errors."""
-        self._region, self._where = region, where
-        return Rule(text, self._visit(self._parse(text)))
+        self._region, self._where, self._reads = region, where, set()
+        test = self._visit(self._parse(text))
+        return Rule(text, test, frozenset(self._reads))
 
     def compile_subrule(self, subrule: Subrule) -> Rule:
-        self._region, self._where = subrule.region, f"{subrule.name}"
-        return Rule(ast.unparse(subrule.node), self._visit(subrule.node))
+        self._region, self._where, self._reads = subrule.region, f"{subrule.name}", set()
+        test = self._visit(subrule.node)
+        return Rule(ast.unparse(subrule.node), test, frozenset(self._reads))
+
+    def _has(self, name: str, count: int = 1) -> Test:
+        self._reads.add(name)
+        return _has(name, count)
 
     def take_subrules(self) -> list[Subrule]:
         """Subrule events created since the last call, in creation order."""
@@ -249,7 +269,7 @@ class Compiler:
             name = f"{region} Subrule {number}"
             self._subrule_keys[key] = name
             self.subrules.append(Subrule(region, name, node))
-        return _has(name)
+        return self._has(name)
 
     def _value(self, node: ast.expr) -> Any:
         """A comparison operand or a built-in's argument: a constant, or ``_AGE``."""
@@ -285,7 +305,7 @@ class Compiler:
             case ast.Constant(value=bool() as value):
                 return value
             case ast.Constant(value=str() as value):
-                return _has(self._item_or_event(value))
+                return self._has(self._item_or_event(value))
             case ast.BoolOp():
                 return self._bool_op(node)
             case ast.UnaryOp(op=ast.Not(), operand=operand):
@@ -301,7 +321,20 @@ class Compiler:
                 return self._call(name, args, keywords, node)
             case ast.Compare():
                 return self._compare(node)
+            case ast.Subscript(value=ast.Name(id=table), slice=ast.Name(id=key)):
+                return self._setting_entry(table, key, node)
         raise self._error(f"unsupported expression ({type(node).__name__})", node)
+
+    def _setting_entry(self, table: str, key: str, node: ast.AST) -> bool:
+        """``skipped_trials[Forest]``: an entry of a setting that is a table, keyed as OoT Randomizer does
+        (``RuleParser.visit_Subscript``: underscores become spaces)."""
+        values = self.settings.get(table)
+        if not isinstance(values, Mapping):
+            raise self._error(f"{table} is not a setting holding a table", node)
+        entry = key.replace("_", " ")
+        if not isinstance(values.get(entry), bool):
+            raise self._error(f"{table} has no true/false entry {entry!r}", node)
+        return values[entry]
 
     def _bool_op(self, node: ast.BoolOp) -> Test | bool:
         is_or = isinstance(node.op, ast.Or)
@@ -325,7 +358,7 @@ class Compiler:
         if name in self._helpers:
             return self._expand(name, [], node)
         if name in self._escaped:
-            return _has(self._escaped[name])
+            return self._has(self._escaped[name])
         if name in self.settings:
             value = self.settings[name]
             if isinstance(value, str):
@@ -338,7 +371,7 @@ class Compiler:
         if _EVENT_NAME.fullmatch(name):
             event = name.replace("_", " ")
             self.events_named.add(event)
-            return _has(event)
+            return self._has(event)
         raise self._error(f"unknown name {name}", node)
 
     def _tuple(self, item: ast.expr, count: ast.expr, node: ast.AST) -> Test | bool:
@@ -354,8 +387,8 @@ class Compiler:
                 raise self._error(f"{item.id} is not an item", node)
         else:
             raise self._error("the first value of (item, count) must be an item", node)
-        n = self._count(count)
-        return True if n <= 0 else _has(name, n)
+        n = min(self._count(count), self.key_counts.get(name, sys.maxsize))
+        return True if n <= 0 else self._has(name, n)
 
     def _time_of_day(self, name: str) -> Test | bool:
         # Without entrance shuffle, OoT Randomizer assumes every time of day can be reached from where the player
@@ -366,6 +399,7 @@ class Compiler:
         if name == "at_dampe_time" or "Suns Song" not in self.items.names or "Ocarina" not in self.items.names:
             return lambda c, a, t, bit=bit: bool(t & bit)
         # Sun's Song turns day to night and back (RuleParser.at_day: Ocarina and Suns_Song).
+        self._reads.update(("Ocarina", "Suns Song"))
         return lambda c, a, t, bit=bit: bool(t & bit) or (c.get("Ocarina", 0) > 0 and c.get("Suns Song", 0) > 0)
 
     def _call(self, name: str, args: list[ast.expr], keywords: list[ast.keyword], node: ast.AST) -> Test | bool:
@@ -388,6 +422,7 @@ class Compiler:
         if name == "has_bottle":
             bottles = self.items.bottles
             has_letter = "Rutos Letter" in self.items.names
+            self._reads.update((*bottles, "Rutos Letter"))
 
             def test(c: Counts, a: str | None, t: int) -> bool:
                 return any(c.get(b, 0) > 0 for b in bottles) or (has_letter and c.get("Rutos Letter", 0) >= 2)
@@ -404,13 +439,27 @@ class Compiler:
                 "has_medallions": self.items.medallions,
                 "has_dungeon_rewards": self.items.stones + self.items.medallions,
             }[name]
+            self._reads.update(names)
             return _distinct_at_least(names, count)
         if name == "has_hearts":
             if len(args) != 1:
                 raise self._error("has_hearts takes one count", node)
             hearts = self._count(args[0])
+            self._reads.add("Piece of Heart")
             # OoT Randomizer counts pieces (a Heart Container is four, by alias) plus three starting hearts.
             return lambda c, a, t, hearts=hearts: c.get("Piece of Heart", 0) // 4 + 3 >= hearts
+        if name in ("has_all_notes_for_song", "has_ocarina_buttons"):
+            # Without shuffled notes OoT Randomizer collects every ocarina button at the start (ItemPool.py,
+            # get_pool_core), so both hold; with them, the buttons are items this engine does not track yet.
+            if self.settings.get("shuffle_individual_ocarina_notes", False):
+                raise self._error(f"built-in {name} with shuffle_individual_ocarina_notes is not supported yet", node)
+            return True
+        if name == "region_has_shortcuts":
+            # OoT Randomizer World.region_has_shortcuts: the region's dungeon is in dungeon_shortcuts. With none
+            # set it is False everywhere; naming a dungeon would need each boss room's dungeon, not tracked yet.
+            if self.settings.get("dungeon_shortcuts"):
+                raise self._error("built-in region_has_shortcuts with dungeon_shortcuts is not supported yet", node)
+            return False
         if name == "has_soul":
             return True  # OoT Randomizer's own State.has_soul: enemy souls are not shuffled
         if name == "can_live_dmg":

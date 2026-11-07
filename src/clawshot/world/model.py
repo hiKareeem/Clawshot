@@ -37,8 +37,11 @@ class Exit:
 @dataclass(frozen=True)
 class Location:
     """A check: one item, placed once. ``type`` is OoT Randomizer's location type (``Chest``, ``GS Token``, ...);
-    ``vanilla`` the item the unrandomized game puts there (with fixed items, the tier this check gives).
-    ``n64_only`` is the reason, with its evidence, when the check does not exist in the remake."""
+    ``vanilla`` the item the unrandomized game puts there (with fixed items, the tier this check gives). ``area``
+    is the remake's Banc folder the check lies in (its region's, unless the remake moved it).
+    ``n64_only`` is the reason, with its evidence, when the check does not exist in the remake; ``keep_vanilla`` the
+    reason a check of a shuffled type keeps its vanilla item; ``override`` the source of the remake overrides
+    applied to it (``remake.toml``)."""
 
     name: str
     region: str
@@ -46,7 +49,10 @@ class Location:
     type: str
     vanilla: str | None
     source: str
+    area: str | None = None
     n64_only: str | None = None
+    keep_vanilla: str | None = None
+    override: str | None = None
 
 
 @dataclass(frozen=True)
@@ -85,6 +91,8 @@ class World:
     start: str
     start_tod: int
     goal: Rule
+    start_items: tuple[str, ...] = ()
+    """Items held before any check (OoT Randomizer's precollected items: ocarina buttons, a Fire Temple key)."""
     dangling_exits: list[tuple[str, str]] = field(default_factory=list)
     """Exits whose target region is not in this world (a partial port): never taken."""
     undefined_events: list[str] = field(default_factory=list)

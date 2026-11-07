@@ -27,7 +27,8 @@ from clawshot.world.rules import ALL_TIMES, DAY, NIGHT, Compiler, ItemFacts, Rul
 
 DATA_DIR = Path(__file__).resolve().parents[1] / "data" / "world"
 
-_TIMES = {"day": DAY, "night": NIGHT, "all": ALL_TIMES}
+# OoT Randomizer's TimeOfDay (Region.py) calls the night bit DAMPE: at_night and at_dampe_time both test it.
+_TIMES = {"day": DAY, "night": NIGHT, "dampe": NIGHT, "all": ALL_TIMES}
 _NIGHT_STARTS = ("sunset", "evening", "midnight", "witching-hour")
 
 
@@ -42,7 +43,8 @@ def _read(path: Path) -> dict[str, Any]:
 
 def load_spec(directory: Path = DATA_DIR) -> dict[str, Any]:
     """Merge the data files named by ``<directory>/world.toml`` into one spec. ``world.toml``'s own ``[settings]``
-    and ``[items]`` (Clawshot's, not OoT Randomizer's) add to the generated tables; a name in both is an error."""
+    and ``[items]`` (Clawshot's, not OoT Randomizer's) add to the generated tables; a name in both is an error.
+    Its ``overrides`` file (the remake's differences, by hand) is applied last: :func:`apply_overrides`."""
     meta = _read(directory / "world.toml")
     spec: dict[str, Any] = {"start": meta["start"], "goal": meta["goal"], "regions": [], "locations": {}}
     for name in ("items", "helpers"):
@@ -63,7 +65,59 @@ def load_spec(directory: Path = DATA_DIR) -> dict[str, Any]:
             if location in spec["locations"]:
                 raise WorldError(f"{file}: location {location!r} is described twice")
             spec["locations"][location] = info
+    if "overrides" in meta:
+        apply_overrides(spec, _read(directory / meta["overrides"]), meta["overrides"])
     return spec
+
+
+# Fields an override may set on a location, besides ``source``; ``rule`` needs ``was``.
+_OVERRIDE_FIELDS = frozenset({"rule", "was", "type", "vanilla", "vanilla_fixed", "n64_only", "area", "keep_vanilla"})
+
+
+def apply_overrides(spec: dict[str, Any], overrides: Mapping[str, Any], label: str = "overrides") -> None:
+    """Apply the remake's differences to a spec merged from the translated files, in place.
+
+    ``[locations."<name>"]``: ``source`` (required: why, with the evidence) and any of ``rule`` (the remake's
+    requirement; ``was`` must repeat the translated rule, so a change upstream is noticed), ``type`` (the remake's
+    kind of check, as an OoT Randomizer location type), ``vanilla`` (the remake's vanilla item), ``vanilla_fixed``,
+    ``n64_only``, ``area`` (the census area, where the check lies outside its region's Banc folder) and
+    ``keep_vanilla`` (the reason a check of a shuffled type keeps its vanilla item). ``[key_counts]``:
+    ``"<key item>" = { count, source }``, the number of that key the remake has; a rule asking for more asks for
+    that many (:class:`~clawshot.world.rules.Compiler`).
+    """
+    unknown_tables = sorted(set(overrides) - {"locations", "key_counts"})
+    if unknown_tables:
+        raise WorldError(f"{label}: unknown tables {unknown_tables}")
+    rules: dict[str, dict[str, Any]] = {}
+    for region in spec["regions"]:
+        for name in region.get("locations", {}):
+            rules[name] = region["locations"]
+    for name, fields in overrides.get("locations", {}).items():
+        where = f"{label}: location {name!r}"
+        if name not in spec["locations"] or name not in rules:
+            raise WorldError(f"{where} is not in the world")
+        unknown = sorted(set(fields) - _OVERRIDE_FIELDS - {"source"})
+        if unknown:
+            raise WorldError(f"{where}: unknown fields {unknown}")
+        if not fields.get("source"):
+            raise WorldError(f"{where}: no source")
+        if ("rule" in fields) != ("was" in fields):
+            raise WorldError(f"{where}: rule and was go together")
+        if "rule" in fields:
+            current, _ = _rule_entry(rules[name][name], where)
+            if " ".join(current.split()) != " ".join(fields["was"].split()):
+                raise WorldError(f"{where}: was {fields['was']!r}, but the translated rule is {current!r}")
+            rules[name][name] = fields["rule"]
+        info = dict(spec["locations"][name])
+        info.update({k: v for k, v in fields.items() if k not in ("rule", "was", "source")})
+        info["override"] = fields["source"]
+        spec["locations"][name] = info
+    counts: dict[str, int] = {}
+    for item, entry in overrides.get("key_counts", {}).items():
+        if item not in spec["items"] or not isinstance(entry.get("count"), int) or not entry.get("source"):
+            raise WorldError(f"{label}: key_counts {item!r} needs a known item, a count and a source")
+        counts[item] = entry["count"]
+    spec["key_counts"] = counts
 
 
 def _item(name: str, info: Mapping[str, Any]) -> Item:
@@ -158,7 +212,7 @@ def build_world(spec: Mapping[str, Any], logic: Mapping[str, Any] | None = None)
         stones=tuple(n for n, i in items.items() if i.stone),
     )
     helpers = {name: _rule_entry(value, f"helper {name!r}")[0] for name, value in spec.get("helpers", {}).items()}
-    compiler = Compiler(facts, helpers, settings)
+    compiler = Compiler(facts, helpers, settings, dict(spec.get("key_counts", {})))
     location_info: Mapping[str, Mapping[str, Any]] = spec.get("locations", {})
 
     regions: dict[str, Region] = {}
@@ -209,7 +263,10 @@ def build_world(spec: Mapping[str, Any], logic: Mapping[str, Any] | None = None)
                     type=info["type"],
                     vanilla=vanilla,
                     source=info.get("source", region.source),
+                    area=info.get("area", region.area),
                     n64_only=info.get("n64_only"),
+                    keep_vanilla=info.get("keep_vanilla"),
+                    override=info.get("override"),
                 )
                 region.locations.append(location)
                 locations[location_name] = location
@@ -245,11 +302,36 @@ def build_world(spec: Mapping[str, Any], logic: Mapping[str, Any] | None = None)
         settings=settings,
         start=start,
         start_tod=NIGHT if settings.get("starting_tod") in _NIGHT_STARTS else DAY,
+        start_items=_start_items(settings, items),
         goal=goal,
         dangling_exits=[(r.name, e.target) for r in regions.values() for e in r.exits if e.target not in regions],
         undefined_events=sorted(compiler.events_named - defined),
         missing_regions=sorted({e.region for e in events if e.region not in regions}),
     )
+
+
+OCARINA_BUTTONS = (
+    "Ocarina A Button",
+    "Ocarina C down Button",
+    "Ocarina C right Button",
+    "Ocarina C left Button",
+    "Ocarina C up Button",
+)
+
+
+def _start_items(settings: Mapping[str, Any], items: Mapping[str, Item]) -> tuple[str, ...]:
+    """What the player holds before any check, as OoT Randomizer's ``ItemPool.get_pool_core`` collects it for
+    vanilla dungeons: the ocarina buttons when notes are not shuffled, Scarecrow's Song when it is free, and one
+    Fire Temple small key when keys stay in their dungeon (its rules count on it: ``(Small_Key_Fire_Temple, 8) or
+    (not keysanity)``). Only items the world's item table has are given."""
+    held: list[str] = []
+    if not settings.get("shuffle_individual_ocarina_notes", False):
+        held.extend(OCARINA_BUTTONS)
+    if settings.get("scarecrow_behavior") == "free":
+        held.append("Scarecrow Song")
+    if settings.get("keysanity") is False:
+        held.append("Small Key (Fire Temple)")
+    return tuple(name for name in held if name in items)
 
 
 def load_world(logic: Mapping[str, Any] | None = None, directory: Path = DATA_DIR) -> World:

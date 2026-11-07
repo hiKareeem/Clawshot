@@ -45,8 +45,8 @@ IGNORED_REGION_KEYS = frozenset({"savewarp", "is_boss_room", "alt_hint"})
 # Names the engine reads even when no rule names them.
 ALWAYS_SETTINGS = ("starting_age", "starting_tod", "damage_multiplier")
 ALWAYS_FLAGS = ("ensure_tod_access",)
-# Fields of a [locations] entry that are written by hand (plans/04-world-format.md); a rerun keeps them.
-HAND_FIELDS = ("vanilla_fixed", "n64_only")
+# OoT Randomizer's region files for Master Quest dungeons, left out of the port.
+MASTER_QUEST_SUFFIX = " MQ.json"
 
 
 class TranslateError(RuntimeError):
@@ -274,7 +274,20 @@ def port_settings(rules: Iterable[str], helper_names: set[str]) -> dict[str, dic
             continue
         if name in world.__dict__ and name not in ALWAYS_SETTINGS:
             value = world.__dict__[name]
-            if isinstance(value, bool | int | str):
+            if name == "skipped_trials":
+                # World.__init__ leaves every trial active; World.resolve_random_settings then skips all but
+                # `trials` of them, at random unless the count is 0 or 6 (all six: OoT Randomizer's default).
+                trials = defaults.settings_dict["trials"]
+                if defaults.settings_dict["trials_random"] or trials not in (0, len(value)):
+                    raise TranslateError(f"skipped_trials depends on the seed at trials = {trials}")
+                value = {trial: trials == 0 for trial in value}
+            elif name == "selected_adult_trade_item":
+                # World.__init__ picks one of adult_trade_start at random; the unshuffled game starts the adult
+                # trade sequence with the Pocket Egg.
+                if "Pocket Egg" not in defaults.settings_dict["adult_trade_start"]:
+                    raise TranslateError("adult_trade_start at its default no longer holds the Pocket Egg")
+                value = "Pocket Egg"
+            if isinstance(value, bool | int | str | dict):
                 out["flags"][name] = value
             continue
         if name in tricks:
@@ -344,14 +357,9 @@ def write_region_file(path: Path, commit: str, regions: list[PortedRegion], loca
                 lines.extend(_entry_lines(entries))
         lines.append("")
     names = [entry.name for region in regions for entry in region.locations]
-    kept: dict[str, dict[str, Any]] = {}
-    if path.exists():
-        with path.open("rb") as f:
-            for name, info in tomllib.load(f).get("locations", {}).items():
-                kept[name] = {k: info[k] for k in HAND_FIELDS if k in info}
     if names:
         lines.append("[locations]")
-        lines.extend(f"{_toml_key(n)} = {_toml_value(locations[n] | kept.get(n, {}))}" for n in names)
+        lines.extend(f"{_toml_key(n)} = {_toml_value(locations[n])}" for n in names)
         lines.append("")
     path.write_text("\n".join(lines), encoding="utf-8", newline="\n")
 
@@ -396,6 +404,22 @@ def _commit(ootr: Path) -> str:
     return out.stdout.strip()
 
 
+def unported_regions(ootr: Path, files: Mapping[str, Mapping[str, Any]]) -> list[str]:
+    """Regions of OoT Randomizer's region files (Master Quest aside) that no ``port.toml`` entry names."""
+    ported = {(src, name) for config in files.values() for src, names in config["regions"].items() for name in names}
+    out = []
+    for path in sorted((ootr / "data" / "World").glob("*.json")):
+        if path.name.endswith(MASTER_QUEST_SUFFIX):
+            continue
+        relative = f"data/World/{path.name}"
+        out.extend(
+            f"{path.name}: {r['region_name']}"
+            for r in read_logic_json(path)
+            if (relative, r["region_name"]) not in ported
+        )
+    return out
+
+
 def translate(ootr: Path, out: Path) -> dict[str, Any]:
     with (out / "port.toml").open("rb") as f:
         port_config = tomllib.load(f)
@@ -427,6 +451,7 @@ def translate(ootr: Path, out: Path) -> dict[str, Any]:
             for name, regions in port.regions.items()
         },
         "hints_left_out": len(port.skipped),
+        "regions_not_ported": unported_regions(ootr, port_config["files"]),
         "helpers": len(helpers),
         "items": len(items),
         "settings": {k: len(v) for k, v in settings.items()},
