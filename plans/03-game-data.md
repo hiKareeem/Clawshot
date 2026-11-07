@@ -300,5 +300,24 @@ M1 census job):
 - Changed contents: many N64 ammo, heart and ice-trap fills are rupees or `Item_ScrubBusinessSeed` here, and some
   dungeons have fewer keys in chests (Water Temple 4 against 6), so the key logic of each dungeon must be rebuilt
   from this data, not ported.
-- Changed placement (to confirm in game): Din's Fire at the Death Mountain Trail fountain and the magic meter at
-  Hyrule Castle (section 5).
+- Changed placement (confirmed in game by Kareem, 2026-11-07): Din's Fire at the Death Mountain Trail fountain and
+  the magic meter at Hyrule Castle (section 5).
+- Gold Skulltulas: the count per area matches, but Kareem reports they are not in the same places as on N64, so
+  token logic is built from the remake's positions, not ported per token. He also expects the Skulltula House
+  reward table to differ; the flow reads rewards at 10, 20, 30, 40 and 50 tokens (section 4, example 3), to
+  compare with what he has seen.
+
+## 10. In-game results (round 1, Kareem, 2026-11-07, Hookshot `movie-sync`)
+
+Overlay `Banc/KokiriForest/KokiriForest_Child_Dynamic.bcett.byml.zs` with two `Drop__DropActor` changes, loaded
+through `HOS_FS_OVERLAY` (log: `fs: OpenFile(...KokiriForest_Child_Dynamic...): from the overlay`):
+
+- A small chest in Mido's house (`Obj_TBox_A_01`, Hash 12786193094758345086) gave `Item_Boomerang` with the
+  Boomerang's own get text and model. A small chest can hold a big chest's item.
+- The Kokiri Sword chest (`Obj_TBox_A_02`, Hash 16757992849254467386) gave `TBox_Rupee_Red` with the rupee's text.
+  A big chest can hold a small item. **But its `GetEventName` (`Get_StoneOfForest_GetSword`) then played the sword
+  cutscene and put the Kokiri Sword in Link's hand, usable, though not shown in the inventory menu.** Story
+  overrides grant or equip their vanilla item themselves: the patch plan must replace them (default open event)
+  and handle the story state they set.
+- The changed file was 510,920 bytes against the original 510,884 (+36). By the size-table formula it needed an
+  entry of 511,208 and the table has 511,176; it loaded anyway, so small growth is tolerated. How much is untested.
