@@ -13,7 +13,7 @@ Branch `r2/world`. OoT Randomizer: `https://github.com/OoTRandomizer/OoT-Randomi
 | 2 Reachability (ages, Temple of Time as an event, time of day) | `src/clawshot/world/search.py` | done |
 | 3 Assumed fill, beatability search on every seed, JSON spoiler, determinism | `src/clawshot/generate/` (`python -m clawshot.generate`) | done |
 | 4 Synthetic tests | `tests/test_world_rules.py`, `test_world_search.py`, `test_generate.py` | done |
-| 5 Port of Kokiri Forest, Lost Woods, Deku Tree, credited in `NOTICE`; link to the census | `src/clawshot/data/world/*.toml`, `tests/test_world_data.py`, `test_world_translate.py`, `test_world_census.py` | done; 3 locations pending track A's answer (below) |
+| 5 Port of Kokiri Forest, Lost Woods, Deku Tree, credited in `NOTICE`; link to the census | `src/clawshot/data/world/*.toml`, `tests/test_world_data.py`, `test_world_translate.py`, `test_world_census.py` | done |
 | Fixed items (D16) | `world.toml` `[settings] progressive_items = false`, `[progressive]`; `vanilla_fixed` | done |
 
 **Rule language.** OoT Randomizer's syntax and meaning, so its region JSON is copied rule for rule: items and
@@ -41,10 +41,10 @@ Zora River, SFM, the warp songs, the Temple of Time, ...), and three events no p
 |---|---|
 | `uv run ruff format --check` | 48 files already formatted |
 | `uv run ruff check` | All checks passed |
-| `uv run pytest` | 117 passed, 6 skipped with `OOTR_DIR` set (the dump tests skip without `OOT_ROMFS`) |
+| `uv run pytest` | 116 passed, 7 skipped (the dump tests, and the translator test without `OOTR_DIR`) |
 | `OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump` | 6 passed (formats and census; this track touches neither) |
 | `OOTR_DIR=E:/OOTRemake/work/r2-world/OoT-Randomizer uv run pytest tests/test_world_translate.py` | 1 passed: rerunning the translator over the committed files changes no byte |
-| `uv run pytest -rP tests/test_world_census.py` | 4 passed; prints the 4 locations waiting for the census on `main` |
+| `uv run pytest tests/test_world_census.py` | 4 passed against `main` at ff51c22 |
 | `uv run python -m clawshot.generate --seed 12345 --out <work dir>`, twice, then `cmp` | identical `spoiler.json` |
 | `... --logic logic_deku_b1_skip=true` | exit 1, `trick logic_deku_b1_skip stays off until it is verified in the remake` |
 | 100 seeds shuffling every location type of the ported world (throwaway script) | 100 of 100 filled and beatable, 3.9 s |
@@ -122,18 +122,15 @@ evidence; Gold Skulltulas match by count per area; uncovered types are skipped b
 - **Covered types, checked one by one:** `Chest` (census `chest`, `treasure_game_box`), `BossHeart`
   (`heart_container`), `Scrub` and `GrottoScrub` (`scrub`), `Shop` (`shop_slot`), and `Freestanding` whose vanilla
   item is a Piece of Heart or a small key (`freestanding`). Each must be linked from a census definition of that
-  kind in the region's area, or be `n64_only`, or be on one of the test's two waiting lists. Every census
-  `oot_randomizer_name` in the ported areas must name a ported location. Result against `main` (57af7ff): all
-  linked except the four below.
-- **N64-only:** `LW Near Shortcuts Grotto Chest`, with track A's evidence (`plans/rounds/r2-census.md` on
-  `r2/census`): the remake's Lost Woods grotto room that would hold it holds no check, and the chest first matched
-  to it stands in the open by the bridge scrub. It is neither shuffled nor placed. On `main` the census still
-  links chest 17479747339356189279 to it, so it sits in the test's `AWAITING_UNLINK` list.
-- **`PENDING`** (unlinked on `main`, shown to exist by track A): `KF Storms Grotto Chest` (chest
-  14818888396401495482 in KF's only grotto room, linked on `r2/census`), `LW Deku Scrub Near Deku Theater Left`
-  and `Right` (track A links them by position).
-- Both lists are printed, and the test fails on an entry the census on `main` has caught up with, so once track A's
-  update is merged the rerun says which entries to delete (the reviewer will say when).
+  kind in the region's area, or be `n64_only`. Every census `oot_randomizer_name` in the ported areas must name a
+  ported location. Result against `main` at ff51c22 (track A's update): every covered location is linked, except
+  the one below.
+- **N64-only:** `LW Near Shortcuts Grotto Chest`, with track A's evidence (`plans/rounds/r2-census.md`): the
+  remake's Lost Woods grotto room that would hold it holds no check, and the chest first matched to it stands in
+  the open by the bridge scrub. It is neither shuffled nor placed.
+- Until track A's update reached `main`, the test carried two lists of locations waiting for it (`KF Storms Grotto
+  Chest` and the two Deku Theater scrubs to be linked, the grotto chest to be unlinked). After the rebase all four
+  were settled, so the lists and the mechanism are gone.
 - **Gold Skulltulas by count:** OoT Randomizer GS Token locations per area against census `gold_skulltula`:
   KokiriForest 3 = 3, LostWood 3 = 3, InsideTheDekuTree 4 = 4.
 - **Skipped by type** (the census has no placement for them): `Freestanding` rupees and recovery hearts (29 in the
@@ -146,5 +143,4 @@ evidence; Gold Skulltulas match by count per area; uncovered types are skipped b
 - D15 (Kareem): first seeds shuffle chests only; `Settings.shuffle` defaults to `("Chest",)`.
 - D16 (Kareem): fixed items now; `progressive_items` defaults to `false`, progressive stays as a setting.
 
-No open questions. Left: rerun `tests/test_world_census.py` when track A's census update is on `main`, and take
-the four entries out of `PENDING` and `AWAITING_UNLINK`.
+No open questions, nothing left for this round.

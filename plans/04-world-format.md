@@ -64,8 +64,8 @@ Two fields are written by hand, and the translator keeps them when it rewrites a
 
 `tests/test_world_census.py` holds the world to the census: every ported location of a type the census covers
 (`Chest`, `BossHeart`, `Scrub`, `GrottoScrub`, `Shop`, freestanding heart pieces and keys) is linked from a census
-definition of the matching kind and area, or is `n64_only`, or is on the test's explicit pending list (printed,
-each with why). Gold Skulltulas match by count per area until round 3 places them from the remake's positions.
+definition of the matching kind and area, or is `n64_only`. Gold Skulltulas match by count per area until round 3
+places them from the remake's positions.
 Other types are skipped by type: freestanding rupees and hearts, pots, beehives, wonder items, rupee towers (no
 remake placement to link), and NPC, cutscene, song and boss-reward gifts (event flows, round 3).
 
