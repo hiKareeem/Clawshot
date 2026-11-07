@@ -58,7 +58,8 @@ def swap_chest(romfs: Path, out: Path, file: str, actor_hash: int, item: str) ->
     dicts = zsdic.Dictionaries.from_romfs(romfs)
     compressed = (romfs / rel).read_bytes()
     data = dicts.decompress(rel.as_posix(), compressed)
-    tree = byml.read(data)
+    document = byml.load(data)
+    tree = document.root
     actor = _find_actor(tree, actor_hash, rel.as_posix())
     dynamic = actor.get("Dynamic")
     if not isinstance(dynamic, dict) or not isinstance(dynamic.get(DROP_KEY), str):
@@ -66,7 +67,7 @@ def swap_chest(romfs: Path, out: Path, file: str, actor_hash: int, item: str) ->
     old_item = dynamic[DROP_KEY]
     dynamic[DROP_KEY] = item
 
-    new_data = byml.write(tree)
+    new_data = byml.dump(document)
     if (d := byml.difference(tree, byml.read(new_data))) is not None:
         raise SwapError(f"the written file does not read back as the changed tree: {d}")
     new_compressed = dicts.compress(rel.as_posix(), new_data)

@@ -5,12 +5,15 @@ import pytest
 from clawshot.formats import byml
 from clawshot.formats.byml import F32, F64, I32, I64, U32, U64, Hash32Map, Hash64Map
 
+BYTE_ORDERS = pytest.mark.parametrize("order", ["little", "big"])
 
-def round_trip(tree):
-    data = byml.write(tree)
+
+def round_trip(tree, order="little"):
+    data = byml.write(tree, order)
+    assert byml.byte_order(data) == order
     back = byml.read(data)
     assert byml.difference(tree, back) is None, byml.difference(tree, back)
-    assert byml.write(back) == data
+    assert byml.write(back, order) == data
     return back
 
 
@@ -49,8 +52,9 @@ EVERY_TYPE = {
 }
 
 
-def test_every_node_type_round_trips_with_its_type():
-    back = round_trip(EVERY_TYPE)
+@BYTE_ORDERS
+def test_every_node_type_round_trips_with_its_type(order):
+    back = round_trip(EVERY_TYPE, order)
     assert type(back["i32_min"]) is I32
     assert type(back["f32"]) is F32
     assert type(back["u32_max"]) is U32
@@ -65,9 +69,29 @@ def test_every_node_type_round_trips_with_its_type():
     assert back["f32"] == struct.unpack("<f", struct.pack("<f", 0.1))[0]
 
 
+@BYTE_ORDERS
 @pytest.mark.parametrize("root", [[I32(5), "x"], Hash32Map({3: "y"}), Hash64Map({1 << 40: [I64(-2)]}), {}, []])
-def test_other_roots(root):
-    round_trip(root)
+def test_other_roots(root, order):
+    round_trip(root, order)
+
+
+def test_big_and_little_endian_hold_the_same_tree():
+    little, big = byml.write(EVERY_TYPE, "little"), byml.write(EVERY_TYPE, "big")
+    assert len(little) == len(big)
+    assert little[:2] == b"YB"
+    assert big[:2] == b"BY"
+    assert byml.same(byml.read(little), byml.read(big))
+
+
+@BYTE_ORDERS
+def test_load_and_dump_keep_the_byte_order(order):
+    data = byml.write({"a": [U64(1), "s"]}, order)
+    document = byml.load(data)
+    assert document.byte_order == order
+    document.root["a"].append(F64(2.5))
+    changed = byml.dump(document)
+    assert byml.byte_order(changed) == order
+    assert byml.same(byml.read(changed), {"a": [U64(1), "s", F64(2.5)]})
 
 
 def test_plain_python_numbers_read_back_as_int32_and_float32():
@@ -97,6 +121,19 @@ def test_exact_layout():
     assert data == expected
 
 
+def test_exact_layout_big_endian():
+    # the same layout; every number big-endian, map entries a 24-bit key index then the type byte
+    data = byml.write({"b": [I32(-1), "x"], "a": U64(5)}, "big")
+    keys = bytes([0xC2, 0, 0, 2]) + struct.pack(">3I", 16, 18, 20) + b"a\0b\0"
+    strings = bytes([0xC2, 0, 0, 1]) + struct.pack(">2I", 12, 14) + b"x\0" + b"\0\0"
+    longs = struct.pack(">Q", 5)
+    root = bytes([0xC1, 0, 0, 2, 0, 0, 0, 0xD5]) + struct.pack(">I", 0x34) + bytes([0, 0, 1, 0xC0])
+    root += struct.pack(">I", 0x50)
+    array = bytes([0xC0, 0, 0, 2, 0xD1, 0xA0, 0, 0]) + struct.pack(">II", 0xFFFFFFFF, 0)
+    expected = b"BY" + struct.pack(">HIII", 7, 0x10, 0x24, 0x3C) + keys + strings + longs + root + array
+    assert data == expected
+
+
 def test_map_entries_are_written_in_key_byte_order():
     data = byml.write({"b": I32(1), "a": I32(2), "B": I32(3), "é": I32(4)})
     root = header(data)[2]
@@ -120,6 +157,10 @@ def test_equal_values_of_different_types_are_not_merged():
     data = byml.write({"a": [I32(1)], "b": [U32(1)], "c": [F32(1.0)], "d": [True]})
     root = header(data)[2]
     assert len({entry_raw(data, root, i)[2] for i in range(4)}) == 4
+    # 8-byte values too: the game's GameDataList stores int64 0 and uint64 0 separately
+    data = byml.write({"a": I64(0), "b": U64(0)})
+    root = header(data)[2]
+    assert entry_raw(data, root, 0)[2] != entry_raw(data, root, 1)[2]
 
 
 def test_write_rejects_bad_values():
@@ -133,6 +174,8 @@ def test_write_rejects_bad_values():
         byml.write(Hash32Map({1 << 32: "x"}))
     with pytest.raises(byml.BymlError, match="root"):
         byml.write("x")
+    with pytest.raises(byml.BymlError, match="byte order"):
+        byml.write({}, "middle")
     with pytest.raises(byml.BymlError, match="no BYML node type"):
         byml.write({"a": b"bytes"})
 
@@ -143,7 +186,7 @@ def test_read_rejects_other_versions_and_formats():
     with pytest.raises(byml.BymlError, match="version 2"):
         byml.read(bytes(data))
     with pytest.raises(byml.BymlError, match="magic"):
-        byml.read(b"BY" + bytes(14))
+        byml.read(b"Yb" + bytes(14))
 
 
 def test_unsupported_node_type_is_named():

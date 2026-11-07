@@ -1,4 +1,6 @@
-"""BYML v7, little-endian: read to and write from Python trees.
+"""BYML v7, little-endian (magic ``YB``, placement files) or big-endian (magic ``BY``, ``GameDataList``): read to
+and write from Python trees. :func:`load`/:func:`dump` keep a file's byte order; :func:`read`/:func:`write` work on
+the tree alone (``write`` defaults to little-endian).
 
 Node types map to Python types so that a tree read from a file writes back with the same types:
 
@@ -24,8 +26,11 @@ Use :func:`same` to compare trees: ``==`` treats ``I32(1)`` and ``U32(1)`` as eq
 """
 
 import struct
+from dataclasses import dataclass
+from typing import Any
 
-MAGIC = b"YB"
+MAGIC_LITTLE = b"YB"
+MAGIC_BIG = b"BY"
 VERSION = 7
 
 STRING = 0xA0
@@ -201,20 +206,31 @@ def same(a, b) -> bool:
 # Reading
 
 
+def byte_order(data: bytes) -> str:
+    """``"little"`` (magic ``YB``) or ``"big"`` (magic ``BY``)."""
+    magic = bytes(data[:2])
+    if magic == MAGIC_LITTLE:
+        return "little"
+    if magic == MAGIC_BIG:
+        return "big"
+    raise BymlError(f"not BYML: magic {magic!r}")
+
+
 class _Reader:
     def __init__(self, data: bytes):
         self.d = memoryview(data)
-        if bytes(self.d[:2]) != MAGIC:
-            raise BymlError(f"not little-endian BYML: magic {bytes(self.d[:2])!r}")
-        self.version, keys_off, strings_off, self.root_off = struct.unpack_from("<HIII", data, 2)
+        self.big = byte_order(data) == "big"
+        self.e = ">" if self.big else "<"
+        self.version, keys_off, strings_off, self.root_off = struct.unpack_from(self.e + "HIII", data, 2)
         if self.version != VERSION:
             raise BymlError(f"BYML version {self.version}; only {VERSION} is supported")
         self.keys = self.string_table(keys_off)
         self.strings = self.string_table(strings_off)
 
     def header(self, off: int) -> tuple[int, int]:
-        v = struct.unpack_from("<I", self.d, off)[0]
-        return v & 0xFF, v >> 8
+        """(node type, count) of the node at ``off``: one type byte, then a 24-bit count."""
+        v = struct.unpack_from(self.e + "I", self.d, off)[0]
+        return (v >> 24, v & 0xFFFFFF) if self.big else (v & 0xFF, v >> 8)
 
     def string_table(self, off: int) -> list[str]:
         if not off:
@@ -222,7 +238,7 @@ class _Reader:
         t, n = self.header(off)
         if t != STRING_TABLE:
             raise BymlError(f"string table at 0x{off:x} has type 0x{t:02x}")
-        offs = struct.unpack_from(f"<{n + 1}I", self.d, off + 4)
+        offs = struct.unpack_from(f"{self.e}{n + 1}I", self.d, off + 4)
         d = bytes(self.d)
         return [d[off + o : d.index(b"\0", off + o)].decode("utf-8") for o in offs[:n]]
 
@@ -236,15 +252,15 @@ class _Reader:
         if t == INT:
             return I32(raw - (1 << 32) if raw & 0x80000000 else raw)
         if t == FLOAT:
-            return F32(struct.unpack("<f", struct.pack("<I", raw))[0])
+            return F32(struct.unpack("<f", struct.pack("<I", raw))[0])  # bits only; raw is already in host order
         if t == UINT:
             return U32(raw)
         if t == INT64:
-            return I64(struct.unpack_from("<q", self.d, raw)[0])
+            return I64(struct.unpack_from(self.e + "q", self.d, raw)[0])
         if t == UINT64:
-            return U64(struct.unpack_from("<Q", self.d, raw)[0])
+            return U64(struct.unpack_from(self.e + "Q", self.d, raw)[0])
         if t == DOUBLE:
-            return F64(struct.unpack_from("<d", self.d, raw)[0])
+            return F64(struct.unpack_from(self.e + "d", self.d, raw)[0])
         if t == NULL:
             return None
         raise BymlError(f"unsupported BYML value type 0x{t:02x}")
@@ -255,20 +271,22 @@ class _Reader:
         if t == ARRAY:
             types = bytes(d[off + 4 : off + 4 + n])
             vals = off + 4 + ((n + 3) & ~3)
-            raws = struct.unpack_from(f"<{n}I", d, vals)
+            raws = struct.unpack_from(f"{self.e}{n}I", d, vals)
             return [self.value(types[i], raws[i]) for i in range(n)]
         if t == MAP:
             out = {}
             for i in range(n):
-                kv, raw = struct.unpack_from("<II", d, off + 4 + 8 * i)
-                out[self.keys[kv & 0xFFFFFF]] = self.value(kv >> 24, raw)
+                # 24-bit key index, then the value's type byte
+                kv, raw = struct.unpack_from(self.e + "II", d, off + 4 + 8 * i)
+                key, vt = (kv >> 8, kv & 0xFF) if self.big else (kv & 0xFFFFFF, kv >> 24)
+                out[self.keys[key]] = self.value(vt, raw)
             return out
         if t in (HASH32_MAP, HASH64_MAP):
             hash_size = 4 if t == HASH32_MAP else 8
             entry = hash_size + 4
             types = bytes(d[off + 4 + entry * n : off + 4 + entry * n + n])
             out = Hash32Map() if t == HASH32_MAP else Hash64Map()
-            fmt = "<II" if t == HASH32_MAP else "<QI"
+            fmt = self.e + ("II" if t == HASH32_MAP else "QI")
             for i in range(n):
                 h, raw = struct.unpack_from(fmt, d, off + 4 + entry * i)
                 out[h] = self.value(types[i], raw)
@@ -277,7 +295,7 @@ class _Reader:
 
 
 def read(data: bytes):
-    """Parse a BYML v7 document; returns its root node (or None for an empty document)."""
+    """Parse a BYML v7 document of either byte order; returns its root node (None for an empty document)."""
     r = _Reader(data)
     if not r.root_off:
         return None
@@ -305,11 +323,12 @@ def _key_bytes(s: str) -> bytes:
 
 
 class _Writer:
-    def __init__(self, root):
+    def __init__(self, root, e: str):
+        self.e = e  # struct byte-order prefix
         self.keys: set[str] = set()
         self.strings: set[str] = set()
         self.long_order: list[bytes] = []  # 8-byte values in first-use order
-        self.long_index: dict[bytes, int] = {}
+        self.long_index: dict[tuple[int, bytes], int] = {}  # (type, bytes): equal bytes of two types stay apart
         self.container_order: list[tuple[int, object]] = []  # (identity, node) in layout order
         self.ident: dict[int, int] = {}  # id(node) -> identity; every node stays alive in the tree
         self.node_entries: dict[int, list] = {}  # id(node) -> entries in written order
@@ -365,11 +384,11 @@ class _Writer:
         if t == FLOAT:
             return struct.unpack("<I", struct.pack("<f", value))[0]
         if t == INT64:
-            return struct.pack("<q", value)
+            return struct.pack(self.e + "q", value)
         if t == UINT64:
-            return struct.pack("<Q", value)
+            return struct.pack(self.e + "Q", value)
         if t == DOUBLE:
-            return struct.pack("<d", value)
+            return struct.pack(self.e + "d", value)
         raise BymlError(f"unsupported node type 0x{t:02x}")
 
     def layout(self):
@@ -388,8 +407,8 @@ class _Writer:
                     walk(value)
                 elif vt in LONG_VALUES:
                     raw = self.scalar(vt, value)
-                    if raw not in self.long_index:
-                        self.long_index[raw] = len(self.long_order)
+                    if (vt, raw) not in self.long_index:
+                        self.long_index[vt, raw] = len(self.long_order)
                         self.long_order.append(raw)
 
         walk(self.root)
@@ -405,7 +424,7 @@ def _container_size(t: int, n: int) -> int:
     return 4 + 12 * n + _align4(n)
 
 
-def _string_table(strings: list[str]) -> bytes:
+def _string_table(strings: list[str], e: str) -> bytes:
     n = len(strings)
     offsets = []
     blob = bytearray()
@@ -414,15 +433,28 @@ def _string_table(strings: list[str]) -> bytes:
         offsets.append(base + len(blob))
         blob += s.encode("utf-8") + b"\0"
     offsets.append(base + len(blob))
-    out = struct.pack("<I", STRING_TABLE | n << 8) + struct.pack(f"<{n + 1}I", *offsets) + blob
+    out = _node_header(STRING_TABLE, n, e) + struct.pack(f"{e}{n + 1}I", *offsets) + blob
     return out + b"\0" * (_align4(len(out)) - len(out))
 
 
-def write(root) -> bytes:
-    """Serialize a tree (a map, array or hash map at the root) as BYML v7."""
+def _node_header(t: int, n: int, e: str) -> bytes:
+    """One type byte, then a 24-bit count in the file's byte order."""
+    return bytes([t]) + n.to_bytes(3, "big" if e == ">" else "little")
+
+
+def _map_entry(key: int, vt: int, e: str) -> bytes:
+    """A 24-bit key index in the file's byte order, then the value's type byte."""
+    return key.to_bytes(3, "big" if e == ">" else "little") + bytes([vt])
+
+
+def write(root, byte_order: str = "little") -> bytes:
+    """Serialize a tree (a map, array or hash map at the root) as BYML v7, ``"little"`` or ``"big"`` endian."""
+    if byte_order not in ("little", "big"):
+        raise BymlError(f"byte order must be 'little' or 'big', not {byte_order!r}")
     if node_type(root) not in CONTAINERS:
         raise BymlError(f"the root must be a container, not {type(root).__name__}")
-    w = _Writer(root)
+    e = ">" if byte_order == "big" else "<"
+    w = _Writer(root, e)
     w.layout()
     keys = sorted(w.keys, key=_key_bytes)
     strings = sorted(w.strings, key=_key_bytes)
@@ -434,10 +466,10 @@ def write(root) -> bytes:
     out = bytearray(16)
     keys_off = len(out) if keys else 0
     if keys:
-        out += _string_table(keys)
+        out += _string_table(keys, e)
     strings_off = len(out) if strings else 0
     if strings:
-        out += _string_table(strings)
+        out += _string_table(strings, e)
     long_base = len(out)
     for raw in w.long_order:
         out += raw
@@ -447,7 +479,8 @@ def write(root) -> bytes:
         container_offset[identity] = offset
         offset += _container_size(node_type(node), len(node))
     root_off = container_offset[w.ident[id(root)]]
-    struct.pack_into("<2sHIII", out, 0, MAGIC, VERSION, keys_off, strings_off, root_off)
+    magic = MAGIC_BIG if e == ">" else MAGIC_LITTLE
+    struct.pack_into(e + "2sHIII", out, 0, magic, VERSION, keys_off, strings_off, root_off)
 
     def raw_value(vt: int, value) -> int:
         if vt in CONTAINERS:
@@ -456,25 +489,43 @@ def write(root) -> bytes:
             return string_index[value]
         r = w.scalar(vt, value)
         if vt in LONG_VALUES:
-            return long_base + 8 * w.long_index[r]
+            return long_base + 8 * w.long_index[vt, r]
         return r
 
     for _identity, node in w.container_order:
         t = node_type(node)
         entries = w.node_entries[id(node)]
         n = len(entries)
-        out += struct.pack("<I", t | n << 8)
+        out += _node_header(t, n, e)
         if t == ARRAY:
             types = bytes(node_type(v) for _, v in entries)
             out += types + b"\0" * (_align4(n) - n)
-            out += struct.pack(f"<{n}I", *(raw_value(node_type(v), v) for _, v in entries))
+            out += struct.pack(f"{e}{n}I", *(raw_value(node_type(v), v) for _, v in entries))
         elif t == MAP:
             for k, v in entries:
                 vt = node_type(v)
-                out += struct.pack("<II", key_index[k] | vt << 24, raw_value(vt, v))
+                out += _map_entry(key_index[k], vt, e) + struct.pack(e + "I", raw_value(vt, v))
         else:
-            fmt = "<II" if t == HASH32_MAP else "<QI"
+            fmt = e + ("II" if t == HASH32_MAP else "QI")
             for k, v in entries:
                 out += struct.pack(fmt, k, raw_value(node_type(v), v))
             out += bytes(node_type(v) for _, v in entries) + b"\0" * (_align4(n) - n)
     return bytes(out)
+
+
+@dataclass
+class Document:
+    """A tree and the byte order of the file it came from, so that it is written back the same way."""
+
+    root: Any
+    byte_order: str = "little"
+
+
+def load(data: bytes) -> Document:
+    """Parse a BYML v7 document and remember its byte order."""
+    return Document(read(data), byte_order(data))
+
+
+def dump(document: Document) -> bytes:
+    """Serialize a document in its own byte order."""
+    return write(document.root, document.byte_order)
