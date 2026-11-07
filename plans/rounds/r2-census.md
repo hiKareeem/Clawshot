@@ -426,6 +426,63 @@ The Hyrule Field file needs 32 more than its entry, the same margin round 1's Ko
   right. That list is Claude's or Kareem's call; I did not write one.
 - 16:08: answer to the reviewer's question (above): KF Storms Grotto Chest exists and is linked; the two theater scrub
   spots exist with changed offers, unlinked until left/right is known; not N64-only.
+- 16:15: theater scrubs linked by position on the reviewer's call (Left = bug-buying scrub, Right = the potion
+  pair), inferred; LW now 5/9 (Near Shortcuts Grotto Chest and 3 GS open).
+- 16:15 (later): item 5 report (save reader, main slot, LLR heart piece not collected in the copy, Impa tests).
+
+## Item 5: save reader and the heart-piece tests on Kareem's save
+
+**`clawshot.save`** (`src/clawshot/save.py`, tests `tests/test_save.py`, synthetic only): `load(path)` / `read(bytes)`
+-> `Save`, read-only. The layout is Tears of the Kingdom's, confirmed on the copy:
+
+- header 0x20 bytes: u32 magic `0x01020304`, u32 version, u32 end of the entry table, zero padding;
+- entry table of (u32 key, u32 value) pairs; `(0, n)` opens section `n`; keys are murmur3 (x86 32, seed 0) of the
+  flag name, as in `GameDataList`. Section order checked against `GameDataList`: every key in sections 0-7, 10, 14,
+  16-22, 24, 25, 27 is a `GameDataList` entry of the type `save.TYPES` names; the other indices were empty and are
+  named by TotK's order (marked unconfirmed in the code). Bool/Int/UInt/Float/Enum values sit in the pair; other types
+  hold an offset (left as such);
+- section 32 (`Bool64bitKey`) has one pair keyed by the file's `MetaData.SaveTypeHash` (progress.sav: `0xa3db7114`);
+  its value points at the set 64-bit keys, u64 each, ending with 0.
+
+Accessors: `flag(name)`, `int_value`, `uint_value`, `float_value`, `enum_value`, `is_set(key64)`, `set_keys`.
+Tests: murmur3 vectors, every scalar type by name, the key list, an empty list, and six malformed files (bad magic,
+short file, misaligned table, entry before a section, unknown section type, unterminated key list).
+
+**On the copy** (`E:/OOTRemake/work/save-copy/`, read with `E:/OOTRemake/work/r2-census/save_report.py`; its output,
+with the per-slot numbers, is `save_report.txt` next to it, not here):
+
+- **Main game: `slot_01`**, by far the most `HavePlayedEvent.*` flags; child, past the Deku Tree (Kokiri Emerald,
+  Gohma's heart container, Zelda's letter, Saria's Song). The other slots are fresh starts.
+- **The mapping works for freestanding pickups and Gold Skulltulas**: the Deku Tree heart container's Hash is set (and
+  `IsGet.Obj_Heart_Container` is true); the other seven are not. Each Gold Skulltula killed sets its own Hash and a
+  second key at Hash +-2 (the token), as many of each as the token count. Recovery hearts, rupees, spider webs and
+  pots also appear by their Hash.
+- **The check asked for fails, and the save explains why: the LLR heart piece (9814903750835309225) reads NOT
+  collected.** It agrees with the rest of the save: `IsGet.Obj_Heart_Piece` is false and the life maximum is exactly 3
+  starting hearts plus Gohma's container, so this copy has no heart piece at all. Either the copy predates the pickup,
+  or the pickup was on another save. **Kareem: is the copy from before you took the Lon Lon Ranch heart piece?**
+- **All 14 freestanding heart pieces read not collected** in `slot_01` (and in every slot).
+- **Finding: chests are not in the `Bool64bitKey` list.** `slot_01` played the Deku Tree map, compass and slingshot
+  chest events and the Kokiri Sword's, yet no chest Hash is set (searched as u64 anywhere in the file, too). Where a
+  chest keeps "opened" is open; 03-game-data section 6's "a chest's opened flag is its Hash" holds for
+  `GameDataList` (the entry exists) but the save does not use it for chests. Candidate: the 3.4 KB `Binary` entry
+  `0x70d7c5cb` (u64 records grouped by a high word, not actor Hashes); not decoded.
+
+**New tests 1 and 2 on an open heart piece: Kakariko, Impa's house** (`Kak Impas House Freestanding PoH`, Hash
+17926402522258180222, in all three Kakariko files: child, adult, adult-alternative):
+
+- `ingame/impa-heart-piece-to-red-rupee/` (`Obj_Rupee_Red`) and `ingame/impa-heart-piece-to-fire-arrows/`
+  (`Obj_Arrow_Fire`), three files each.
+- Reachable with `slot_01` as **child, in daytime**: OoT Randomizer's `Kakariko Village -> Kak Impas Ledge` is
+  `is_child and at_day` (no items), and the ledge drops into the cow pen behind Impa's house (`Kak Impas House Back`),
+  where the census puts this heart piece next to the cow. The save has been to Kakariko (its Gold Skulltulas there are
+  taken). Adult would need `logic_visible_collisions` (a trick), so test as child.
+- See: a red rupee (or Fire Arrows) in the cow pen behind Impa's house; picking it up gives 20 rupees (or Fire
+  Arrows); leave and come back: it stays gone. Log: `fs: OpenFile(...KakarikoVillage_Child_Static...): from the
+  overlay`.
+- Sizes: `KakarikoVillage_Child_Static` 292,584 -> 292,600 (fits its size-table entry exactly);
+  `_Adult_Static` +16 (32 over the entry, the margin that loaded in round 1); `_Adult_Alternative_Static` +20 (fits).
+- The Lon Lon Ranch variants stay: by this copy, that heart piece is still open in `slot_01` too.
 
 ## Left for later
 
@@ -434,11 +491,11 @@ The Hyrule Field file needs 32 more than its entry, the same margin round 1's Ko
 - Gold Skulltulas: positions and rooms are in the census for the round-3 world port.
 - Event gifts (EVFL), and the alternative-state files (`Adult_Alternative`): which story state selects them.
 
-## Gates (before the handoff)
+## Gates (before the handoff, after item 5)
 
 ```
-uv run ruff format --check                                  31 files already formatted
+uv run ruff format --check                                  34 files already formatted
 uv run ruff check                                           All checks passed!
-uv run pytest                                              74 passed, 6 skipped
-OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump      6 passed, 74 deselected
+uv run pytest                                              86 passed, 6 skipped
+OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump      6 passed, 86 deselected
 ```
