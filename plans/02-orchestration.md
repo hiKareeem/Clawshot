@@ -43,6 +43,10 @@ OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump
   link. Decoded game data goes only to `E:/OOTRemake/work/`, never into a worktree.
 - **In-game checks need Kareem and one running game.** Agents never start the game in `E:/Games/Hookshot`. A
   Hookshot build track may boot its own test build headless and muted for at most 20 s.
+- **No Hookshot build or boot while Kareem plays.** A build compiles for about 20 minutes on every core and a boot
+  loads the GPU: both made his round 1 test session stutter. The prompt makes the agent check `tasklist` for
+  `hookshot.exe` before starting a build and before each boot, and wait (30 s steps) while it is there; Claude
+  tells Kareem before a build round starts.
 - **One Hookshot test build at a time.** Builds share `%LOCALAPPDATA%\HookshotBuilder` (object cache and lift
   work) with Kareem's own builder.
 - **Hookshot work is upstream work.** Small single-issue PRs to `NotRexed/Hookshot` in its conventions

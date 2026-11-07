@@ -30,6 +30,9 @@
   (Kareem, 2026-11-07).
 - **D13 No chest-size-matches-contents feature** (Kareem, 2026-11-07), provided a small chest can give a big
   chest's item and a big chest a small item. Round 1's in-game test checks both directions.
+- **D14 Hookshot mods are RomFS only; no exefs patches** (Claude, 2026-11-07, on round 1 track C's question).
+  Recompiled code can't take instruction patches, and nothing Clawshot plans needs data patches. Upstream PR
+  `NotRexed/Hookshot#321`.
 
 ## Open (only Kareem and his co-owner decide)
 
