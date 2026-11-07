@@ -8,14 +8,20 @@ OoT Randomizer (https://github.com/OoTRandomizer/OoT-Randomizer), MIT License, C
 the Zelda LttP Entrance Randomizer it started from). Commit 526b4c8d81b7c4023ef4573ffbaf39344e270d5b (branch Dev).
 None of its GPL-licensed folders (bin/, Notes/) is used.
 The MIT permission notice in LICENSE covers the files below under the copyright line above.
-- src/clawshot/data/world/root.toml, kokiri_forest.toml, lost_woods.toml, deku_tree.toml: regions, events,
-  locations and exits translated from data/World/Overworld.json, data/World/Deku Tree.json and
-  data/World/Bosses.json, with location types and vanilla items from LocationList.py.
+- src/clawshot/data/world/*.toml, every region file that port.toml names (root.toml, the 22 overworld files from
+  kokiri_forest.toml to zoras_fountain.toml, and the 12 dungeon files from deku_tree.toml to ganons_castle.toml):
+  regions, events, locations and exits translated from data/World/Overworld.json, data/World/Bosses.json and the
+  vanilla dungeon files data/World/{Deku Tree, Dodongos Cavern, Jabu Jabus Belly, Forest Temple, Fire Temple,
+  Water Temple, Shadow Temple, Spirit Temple, Bottom of the Well, Ice Cavern, Gerudo Training Ground,
+  Ganons Castle}.json, with location types and vanilla items from LocationList.py.
 - src/clawshot/data/world/helpers.toml: data/LogicHelpers.json.
 - src/clawshot/data/world/items.toml: ItemList.py (item_table).
 - src/clawshot/data/world/settings.toml: default values from SettingsList.py, SettingsListTricks.py and World.py.
 - src/clawshot/world/rules.py: the rule language and its semantics from RuleParser.py (helper substitution, here()
-  and at() as events, constant folding of settings) and State.py (has_bottle, has_hearts, can_live_dmg, ...).
+  and at() as events, constant folding of settings, table settings) and State.py (has_bottle, has_hearts,
+  can_live_dmg, has_all_notes_for_song, region_has_shortcuts, ...).
+- src/clawshot/world/load.py: the items held from the start, from ItemPool.py (get_pool_core: ocarina buttons, the
+  Fire Temple key).
 - src/clawshot/world/search.py: the reachability search from Search.py.
 - src/clawshot/generate/fill.py: the assumed fill from Fill.py (distribute_items_restrictive, fill_restrictive,
   fill_restrictive_fast, fast_fill).
