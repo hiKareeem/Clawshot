@@ -1,0 +1,194 @@
+# Chest open-event overrides: a chest's Dynamic.GetEventName, a row of RSDB/EventSetting that replaces the chest's
+# default open event (Dm_SY_Treasurebox for big chests, Dm_SY_TreasureboxSmall for small ones). Loaded by
+# clawshot.patch.events. plans/03-game-data.md section 3 describes them.
+#
+# `patch` says what the writer does to a chest whose item changes:
+#   remove  the override plays something tied to the vanilla item (its cutscene, a Navi line about it, a story
+#           step): the writer deletes GetEventName, so the chest plays its default event, which grants whatever
+#           the chest holds (round 2, in game: the Kokiri Sword chest without its override gave its Red Rupee
+#           through the default event, no sword, no cutscene).
+#   keep    the override is the default event plus state that does not depend on the item.
+# A chest whose item does not change keeps its override. A chest with an override not listed here stops the
+# writer.
+#
+# `flow` is the row's FlowchartFileName and EntryPointName; `does` is read from the decoded flows (zeldamods evfl,
+# outside the repository, plans/03-game-data.md). Navi balloon lines are named by index only: which item a line
+# names is inferred from the event's name, the text was not read. `story_state` (remove only) is the state the
+# override leaves that the default event does not, and how a seed gets it back.
+
+[event.Get_StoneOfForest_GetSword]
+flow = "Get_StoneOfForest:GetSword"
+patch = "remove"
+does = "the big-chest event, then the Kokiri Sword cutscene Dm_Kokiri_0063 (creates and equips Weapon_Sword_Kokiri), then a Navi line chosen by Mido's talk flags and IsGet.Weapon_Shield_Deku"
+story_state = "nothing to restore [inference]: neither flow sets a game-data flag; HavePlayedEvent.Get_StoneOfForest_GetSword and HavePlayedEvent.Dm_Kokiri_0063 are read by no event flow or Logic/Sequence AINB (byte search); Mido reads owning the sword, which the Kokiri Sword item gives wherever it is found (plans/rounds/r2-census.md)"
+
+[event.InsideTheDekuTree_GetMap]
+flow = "NaviChat:TreasureBoxDM_NaviChat_Deku_Map"
+patch = "remove"
+does = "the big-chest event (NaviChat:PlayDemo), then Navi balloon 354 (about the map, inferred)"
+story_state = "none: the flow sets no flag; HavePlayedEvent.InsideTheDekuTree_GetMap is named in no event flow or Logic/Sequence AINB (byte search)"
+
+[event.InsideTheDekuTree_GetCompass]
+flow = "NaviChat:TreasureBoxDM_NaviChat_Deku_Compass"
+patch = "remove"
+does = "the big-chest event (NaviChat:PlayDemo), then Navi balloon 345 (about the compass, inferred)"
+story_state = "none: the flow sets no flag; HavePlayedEvent.InsideTheDekuTree_GetCompass is named in no event flow or Logic/Sequence AINB (byte search)"
+
+[event.InsideTheDekuTree_GetSlingShot]
+flow = "NaviChat:TreasureBoxDM_NaviChat_Deku_GetSlingShot"
+patch = "remove"
+does = "the big-chest event (NaviChat:PlayDemo), then Navi balloon 474 (about the Slingshot, inferred)"
+story_state = "none: the flow sets no flag; HavePlayedEvent.InsideTheDekuTree_GetSlingShot is named in no event flow or Logic/Sequence AINB (byte search)"
+
+[event.KokiriForest_TreasureBox_NaviChatOff]
+flow = "Dm_SY_TreasureboxSmall:Success_MidoHouse"
+patch = "keep"
+does = "sets KokiriForest_TreasureBox_NaviChatOff, then the same Success_ as the default small-chest event (which clears that flag); round 1, in game: a Mido's house chest with this override gave the Boomerang with its own text"
+
+# Not in the round 3 slice: read from the flows, not yet exercised by a seed.
+
+[event.BottomOfTheWell_GetCompass]
+flow = "NaviChat:TreasureBoxDM_NaviChat_BottomOfTheWell_Compass"
+patch = "keep"
+does = "NaviChat:PlayDemo only: the big-chest event"
+
+[event.DodongoCavern_GetCompass]
+flow = "NaviChat:TreasureBoxDM_NaviChat_DoDoGon_Compass"
+patch = "keep"
+does = "NaviChat:PlayDemo only: the big-chest event"
+
+[event.DodongoCavern_GetMap]
+flow = "NaviChat:TreasureBoxDM_NaviChat_DoDoGon_Map"
+patch = "keep"
+does = "NaviChat:PlayDemo only: the big-chest event"
+
+[event.FireTemple_GetCompass]
+flow = "NaviChat:TreasureBoxDM_NaviChat_FireTemple_Compass"
+patch = "keep"
+does = "NaviChat:PlayDemo only: the big-chest event"
+
+[event.FireTemple_GetMap]
+flow = "NaviChat:TreasureBoxDM_NaviChat_FireTemple_Map"
+patch = "keep"
+does = "NaviChat:PlayDemo only: the big-chest event"
+
+[event.ForesetTemple_GetCompass]
+flow = "NaviChat:TreasureBoxDM_NaviChat_ForestTemple_Compass"
+patch = "keep"
+does = "NaviChat:PlayDemo only: the big-chest event"
+
+[event.ForesetTemple_GetMap]
+flow = "NaviChat:TreasureBoxDM_NaviChat_ForestTemple_Map"
+patch = "keep"
+does = "NaviChat:PlayDemo only: the big-chest event"
+
+[event.ShadowTemple_GetCompass]
+flow = "NaviChat:TreasureBoxDM_NaviChat_ShadowTemple_Compass"
+patch = "keep"
+does = "NaviChat:PlayDemo only: the big-chest event"
+
+[event.ShadowTemple_GetMap]
+flow = "NaviChat:TreasureBoxDM_NaviChat_ShadowTemple_Map"
+patch = "keep"
+does = "NaviChat:PlayDemo only: the big-chest event"
+
+[event.SpiritTemple_GetCompass]
+flow = "NaviChat:TreasureBoxDM_NaviChat_SpiritTemple_Compass"
+patch = "keep"
+does = "NaviChat:PlayDemo only: the big-chest event"
+
+[event.WaterTemple_GetCompass]
+flow = "NaviChat:TreasureBoxDM_NaviChat_WaterTemple_Compass"
+patch = "keep"
+does = "NaviChat:PlayDemo only: the big-chest event"
+
+[event.WaterTemple_GetMap]
+flow = "NaviChat:TreasureBoxDM_NaviChat_WaterTemple_Map"
+patch = "keep"
+does = "NaviChat:PlayDemo only: the big-chest event"
+
+[event.SageOfSpirit_GetShield]
+flow = "SageOfSpirit:SageOfSpirit_GetShield"
+patch = "keep"
+does = "the big-chest event only"
+
+[event.InsideJabuJabuBelly_TreasureBoxWithRuto12]
+flow = "InsideJabuJabuBelly_FocusGimmick:TreasureBox_WithRuto_Room12"
+patch = "keep"
+does = "unequips, plays InsideJabuJabuBelly_GetCompass (NaviChat:PlayDemo: the big-chest event) while Ruto is moved unless InsideJabuJabuBelly_Room12_TBoxNearRuto, then sets InsideJabuJabuBelly_Room12_TBoxDemo: Ruto's room state, not the item's"
+
+[event.InsideJabuJabuBelly_TreasureBoxWithRuto09]
+flow = "InsideJabuJabuBelly_FocusGimmick:TreasureBox_WithRuto_Room09"
+patch = "keep"
+does = "unequips, plays the big-chest event while Ruto is moved unless InsideJabuJabuBelly_Room09_TBoxNearRuto, sets InsideJabuJabuBelly_Room09_TBoxDemo (Ruto's room state), then Navi balloon 475 (may name the vanilla item: to check in game)"
+
+[event.MiniGame_DampeRace_OpenGoalTBox]
+flow = "MiniGame_DampeRace:MiniGame_DampeRace_OpenGoalTBox"
+patch = "keep"
+does = "plays the big or small chest event by Minigame_DampeRace_TreasureBoxState and records which goal chest was opened in it: the race's state, not the item's"
+
+[event.BottomOfTheWell_GetGlassTruth]
+flow = "BottomOfTheWell:BottomOfTheWell_GetGlassTruth"
+patch = "remove"
+does = "the big-chest event, then Navi talk (SubEvent_GetGlassTruth_NaviRepeat) chosen by IsGet.Item_Melody_ShadowNocturne (about the Lens, inferred)"
+story_state = "none found: the flow sets no flag"
+
+[event.FireTemple_GetHammer]
+flow = "NaviChat:TreasureBoxDM_NaviChat_FireTemple_GetHammer"
+patch = "remove"
+does = "the big-chest event (NaviChat:PlayDemo), then Navi balloon 479 (about the Hammer, inferred)"
+story_state = "none: the flow sets no flag"
+
+[event.ForesetTemple_GetBossKey]
+flow = "ForestTemple_Gimmick:TreasureBoxDM_NaviChat_ForestTemple_BossKey"
+patch = "remove"
+does = "the big-chest event, then Navi balloon 361 (about the boss key, inferred); the open event of five boss-key chests (Forest, Fire, Water, Shadow, Spirit)"
+story_state = "none: the flow sets no flag"
+
+[event.ForestTemple_GetBow]
+flow = "SageOfForest:TreasureBoxDM_NaviChat_Bow"
+patch = "remove"
+does = "the big-chest event, then Navi balloon 476 (about the Bow, inferred)"
+story_state = "none: the flow sets no flag"
+
+[event.Get_StoneOfFire_GetBombBag]
+flow = "Get_StoneOfFire:Get_StoneOfFire_GetBombBag"
+patch = "remove"
+does = "the big-chest event, then Navi balloon 495 (about the Bomb Bag, inferred)"
+story_state = "none: the flow sets no flag"
+
+[event.SageOfShdawo_GetHoverBoots]
+flow = "SageOfShadow:SageOfShdawo_GetHoverBoots"
+patch = "remove"
+does = "the big-chest event, then Navi balloon 228 (about the Hover Boots, inferred)"
+story_state = "none: the flow sets no flag"
+
+[event.WaterTemple_Room07_LongHook_FocusOnGimmick]
+flow = "SageOfWater_FocusGimmick:WaterTemple_Room07_LongHook"
+patch = "remove"
+does = "unequips, the big-chest event, a camera move, then Navi balloon 480 (about using the Longshot there, inferred)"
+story_state = "none: the flow sets no flag"
+
+[event.SubEvent_GetIceArrow_OpenTBox]
+flow = "SubEvent_GetIceArrow:SubEvent_GetIceArrow_OpenTBox"
+patch = "remove"
+does = "the big-chest event, then challenge SubEvent_GetIceArrow step Complete, then Navi balloon 478"
+story_state = "the side quest SubEvent_GetIceArrow is not marked complete; restoring it needs an event-flow edit (no data path yet)"
+
+[event.InsideGanonCastle_Get_Gauntlet_Gold]
+flow = "Defeat_Ganon:InsideGanonCastle_Dungeon_Get_Gauntlet_Gold"
+patch = "remove"
+does = "the big-chest event, then the cutscene Dm_InsideGanonCastle_0006"
+story_state = "whatever Dm_InsideGanonCastle_0006 sets (not read yet); needs a look before Ganon's Castle is shuffled"
+
+[event.SageOfSpirit_NaboorIsTakenAway]
+flow = "SageOfSpirit:SageOfSpirit_NaboorIsTakenAway"
+patch = "remove"
+does = "the big-chest event, then the cutscene Dm_DesertColossus_0030 (Nabooru taken away), clears HavePlayedEvent.NaviTips_Gauntlet_01 and _03, Navi talk, and challenge SageOfSpirit step Step07"
+story_state = "the Spirit sage quest's Step07 and the Nabooru cutscene: a story step the seed must give elsewhere, through an event-flow edit (no data path yet)"
+
+[event.SageOfWater_MelodyGet_Water]
+flow = "SageOfWater:IceCavern_WaterSerenade"
+patch = "remove"
+does = "the big-chest event, then Dm_MelodyGet_Water (Sheik teaches the Serenade of Water), sets SageOfWater_GetWaterSerenade, and challenge SageOfWater step Step04 or Step05"
+story_state = "the Serenade of Water (an event gift of its own, OoT Randomizer 'Sheik in Ice Cavern') and SageOfWater_GetWaterSerenade: they need an event-flow edit that plays Dm_MelodyGet_Water elsewhere (no data path yet)"

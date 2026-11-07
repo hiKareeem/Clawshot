@@ -36,18 +36,34 @@ class Seed:
     """The beatability search's spheres: location names collected in each."""
 
 
-def generate(spec: Mapping[str, Any], seed: int, settings: Settings, attempts: int = FILL_ATTEMPTS) -> Seed:
+def generate(
+    spec: Mapping[str, Any],
+    seed: int,
+    settings: Settings,
+    attempts: int = FILL_ATTEMPTS,
+    vanilla: Mapping[str, str] | None = None,
+) -> Seed:
     """Build the world for ``settings.logic``, fill it from ``random.Random(seed)`` and check it can be beaten.
+
+    ``vanilla`` gives the remake's own item for locations where it differs from the world's (OoT Randomizer's):
+    the pool is then what the remake hands out (``clawshot.patch.remake_vanilla``).
 
     A failed fill is retried with the same generator (so a retry is as deterministic as the first try), up to
     ``attempts`` times; then :class:`FillError` is raised.
     """
     world = build_world(spec, settings.logic)
+    vanilla = dict(vanilla or {})
+    unknown = sorted(name for name in vanilla if name not in world.locations)
+    if unknown:
+        raise FillError(f"vanilla items given for locations the world does not have: {unknown}")
+    bad = sorted(item for item in vanilla.values() if item not in world.items)
+    if bad:
+        raise FillError(f"vanilla items the world does not know: {bad}")
     rng = random.Random(seed)
     errors: list[str] = []
     for _ in range(attempts):
         try:
-            placements = fill(world, settings, rng)
+            placements = fill(world, settings, rng, vanilla)
             break
         except FillError as e:
             errors.append(str(e))

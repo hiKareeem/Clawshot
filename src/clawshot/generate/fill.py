@@ -7,6 +7,7 @@ the game stays beatable. Priority items only respect their restriction; the rest
 """
 
 import random
+from collections.abc import Mapping
 from dataclasses import dataclass, field
 from typing import Any
 
@@ -123,17 +124,27 @@ def _fast_fill(rng: random.Random, placements: dict[str, str], locations: list[s
         placements[locations.pop()] = items.pop()
 
 
-def fill(world: World, settings: Settings, rng: random.Random) -> dict[str, str]:
+def fill(
+    world: World, settings: Settings, rng: random.Random, vanilla: Mapping[str, str] | None = None
+) -> dict[str, str]:
     """Place the vanilla items of the shuffled locations. Returns every placement: the shuffled locations and the
-    locations that keep their vanilla item, in world order."""
+    locations that keep their vanilla item, in world order.
+
+    ``vanilla`` replaces the world's vanilla item (OoT Randomizer's) of the locations it names with the remake's
+    own, so the pool is what the remake hands out."""
+    vanilla = vanilla or {}
+
+    def vanilla_item(name: str) -> str | None:
+        return vanilla.get(name, world.locations[name].vanilla)
+
     shuffled = shuffled_locations(world, settings)
     shuffled_set = set(shuffled)
     placements = {
-        name: loc.vanilla
+        name: vanilla_item(name)
         for name, loc in world.locations.items()
-        if name not in shuffled_set and loc.vanilla is not None and loc.n64_only is None
+        if name not in shuffled_set and vanilla_item(name) is not None and loc.n64_only is None
     }
-    pool = [world.locations[name].vanilla for name in shuffled]
+    pool = [vanilla_item(name) for name in shuffled]
     rng.shuffle(pool)
     restricted = [item for item in pool if is_restricted(world, settings, item)]
     unrestricted = [item for item in pool if not is_restricted(world, settings, item)]

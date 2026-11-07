@@ -1,0 +1,85 @@
+# The remake actor a chest's Dynamic.Drop__DropActor takes for each logic item (an items.toml or world.toml name)
+# a chest can be given, and so, read backwards, the logic item a chest the remake fills with that actor holds.
+# Every actor here is one the game itself puts in a chest (census vanilla_item), so a seed only moves actors the
+# game already gives from chests. Loaded by clawshot.patch.items.
+#
+# Derived from the census chests linked to OoT Randomizer (src/clawshot/data/locations.toml oot_randomizer_name):
+# the census vanilla_item against LocationList.py's vanilla item for that name (commit
+# 526b4c8d81b7c4023ef4573ffbaf39344e270d5b). `source` names the linked location(s) a pair comes from; where no
+# linked chest holds the item, the census chests that hold the actor. Pairs where the remake gives something else
+# than N64 (OoT Randomizer "Recovery Heart" chests hold nuts, sticks or a blue rupee) are listed in
+# plans/rounds/r3-seed.md; they are content changes, not other actors for that item.
+#
+# Within a dungeon's own items (maps, compasses, keys) one actor serves every dungeon: the backwards lookup takes
+# the item of the chest's own dungeon. Any other actor appears once.
+
+[items]
+"Kokiri Sword" = { actor = "Item_Sword_Kokiri", source = "KF Kokiri Sword Chest" }
+"Slingshot" = { actor = "Item_Range_SlingShot", source = "Deku Tree Slingshot Chest" }
+"Boomerang" = { actor = "Item_Boomerang", source = "Jabu Jabus Belly Boomerang Chest" }
+"Bow" = { actor = "Item_Range_Bow", source = "Forest Temple Bow Chest" }
+"Megaton Hammer" = { actor = "Item_Hammer", source = "Fire Temple Megaton Hammer Chest" }
+"Hookshot" = { actor = "Item_Hookshot", source = "Graveyard Dampe Race Hookshot Chest (Progressive Hookshot, tier 1)" }
+"Longshot" = { actor = "Item_Longshot", source = "Water Temple Longshot Chest (Progressive Hookshot, tier 2)" }
+"Silver Gauntlets" = { actor = "Item_Gauntlet_Silver", source = "Spirit Temple Silver Gauntlets Chest (Progressive Strength Upgrade, tier 2)" }
+"Golden Gauntlets" = { actor = "Item_Gauntlet_Gold", source = "Ganons Castle Shadow Trial Golden Gauntlets Chest (Progressive Strength Upgrade, tier 3)" }
+"Iron Boots" = { actor = "Item_HeavyBoot", source = "Ice Cavern Iron Boots Chest" }
+"Hover Boots" = { actor = "Item_HoverBoot", source = "Shadow Temple Hover Boots Chest" }
+"Lens of Truth" = { actor = "Item_GlassTruth", source = "Bottom of the Well Lens of Truth Chest" }
+"Ice Arrows" = { actor = "Item_Arrow_Ice", source = "Gerudo Training Ground Maze Path Final Chest" }
+"Mirror Shield" = { actor = "Item_Shield_Mirror", source = "Spirit Temple Mirror Shield Chest" }
+"Deku Shield" = { actor = "TBox_Shield_Deku", source = "Bottom of the Well Fire Keese Chest" }
+"Hylian Shield" = { actor = "TBox_Shield_Hylian", source = "Graveyard Shield Grave Chest" }
+"Bomb Bag" = { actor = "Item_BombBag_Small", source = "Dodongos Cavern Bomb Bag Chest" }
+"Piece of Heart" = { actor = "Obj_Heart_Piece", source = "GF Chest, Graveyard Heart Piece Grave Chest, Graveyard Dampe Race Freestanding PoH, ZD Chest" }
+
+"Rupee (1)" = { actor = "TBox_Rupee_Green", source = "KF Midos Bottom Left Chest" }
+"Rupees (5)" = { actor = "TBox_Rupee_Blue", source = "KF Midos Top Left Chest, KF Midos Top Right Chest" }
+"Rupees (20)" = { actor = "TBox_Rupee_Red", source = "Dodongos Cavern Bomb Flower Platform Chest" }
+"Rupees (50)" = { actor = "TBox_Rupee_Purple", source = "Gerudo Training Ground Maze Path First Chest, SFM Wolfos Grotto Chest" }
+
+# Ammo: the remake's bundles hold other counts than these OoT Randomizer item names (PouchActorInfo
+# BundleActorNum); the logic only asks whether such an item is held.
+"Deku Nuts (5)" = { actor = "TBox_DekuNutBundle", source = "Deku Tree Slingshot Room Side Chest, Deku Tree Compass Room Side Chest (N64: Recovery Heart); holds 3 nuts" }
+"Deku Stick (1)" = { actor = "Item_DekuStickBundle_Small", source = "Deku Tree Basement Chest (N64: Recovery Heart); holds 3 sticks" }
+"Bombs (5)" = { actor = "Item_BombBundle_Small", source = "census: 3 chests; holds 5 bombs" }
+"Bombchus (5)" = { actor = "Item_BombchuBundle_Small", source = "Gerudo Training Ground Maze Right Central Chest; holds 5 bombchus" }
+"Arrows (5)" = { actor = "TBox_ArrowBundle_Medium", source = "census: 2 chests; holds 5 arrows" }
+"Arrows (10)" = { actor = "TBox_ArrowBundle_Large", source = "census: 1 chest; holds 10 arrows" }
+
+"Map (Deku Tree)" = { actor = "Item_Dungeon_Map", source = "Deku Tree Map Chest" }
+"Map (Dodongos Cavern)" = { actor = "Item_Dungeon_Map", source = "Dodongos Cavern Map Chest" }
+"Map (Jabu Jabus Belly)" = { actor = "Item_Dungeon_Map", source = "Jabu Jabus Belly Map Chest" }
+"Map (Forest Temple)" = { actor = "Item_Dungeon_Map", source = "Forest Temple Map Chest" }
+"Map (Fire Temple)" = { actor = "Item_Dungeon_Map", source = "Fire Temple Map Chest" }
+"Map (Water Temple)" = { actor = "Item_Dungeon_Map", source = "Water Temple Map Chest" }
+"Map (Spirit Temple)" = { actor = "Item_Dungeon_Map", source = "Spirit Temple Map Chest" }
+"Map (Shadow Temple)" = { actor = "Item_Dungeon_Map", source = "Shadow Temple Map Chest" }
+"Map (Bottom of the Well)" = { actor = "Item_Dungeon_Map", source = "Bottom of the Well Map Chest" }
+"Map (Ice Cavern)" = { actor = "Item_Dungeon_Map", source = "Ice Cavern Map Chest" }
+"Compass (Deku Tree)" = { actor = "Item_Dungeon_Compass", source = "Deku Tree Compass Chest" }
+"Compass (Dodongos Cavern)" = { actor = "Item_Dungeon_Compass", source = "Dodongos Cavern Compass Chest" }
+"Compass (Jabu Jabus Belly)" = { actor = "Item_Dungeon_Compass", source = "Jabu Jabus Belly Compass Chest" }
+"Compass (Forest Temple)" = { actor = "Item_Dungeon_Compass", source = "Forest Temple Blue Poe Chest" }
+"Compass (Fire Temple)" = { actor = "Item_Dungeon_Compass", source = "Fire Temple Compass Chest" }
+"Compass (Water Temple)" = { actor = "Item_Dungeon_Compass", source = "Water Temple Compass Chest" }
+"Compass (Spirit Temple)" = { actor = "Item_Dungeon_Compass", source = "Spirit Temple Compass Chest" }
+"Compass (Shadow Temple)" = { actor = "Item_Dungeon_Compass", source = "Shadow Temple Compass Chest" }
+"Compass (Bottom of the Well)" = { actor = "Item_Dungeon_Compass", source = "Bottom of the Well Compass Chest" }
+"Compass (Ice Cavern)" = { actor = "Item_Dungeon_Compass", source = "Ice Cavern Compass Chest" }
+"Boss Key (Forest Temple)" = { actor = "Item_Dungeon_BossKey", source = "Forest Temple Boss Key Chest" }
+"Boss Key (Fire Temple)" = { actor = "Item_Dungeon_BossKey", source = "Fire Temple Boss Key Chest" }
+"Boss Key (Water Temple)" = { actor = "Item_Dungeon_BossKey", source = "Water Temple Boss Key Chest" }
+"Boss Key (Spirit Temple)" = { actor = "Item_Dungeon_BossKey", source = "Spirit Temple Boss Key Chest" }
+"Boss Key (Shadow Temple)" = { actor = "Item_Dungeon_BossKey", source = "Shadow Temple Boss Key Chest" }
+# Not listed: "Boss Key (Ganons Castle)" (Ganons Tower Boss Key Chest, Item_Dungeon_BossKey). Its type,
+# GanonBossKey, carries no dungeon in the world model, so the backwards lookup cannot tell it from the other boss
+# keys; plans/rounds/r3-seed.md.
+"Small Key (Forest Temple)" = { actor = "Item_Dungeon_SmallKey", source = "census: 5 chests in ForestTemple" }
+"Small Key (Fire Temple)" = { actor = "Item_Dungeon_SmallKey", source = "census: 8 chests in FireTemple" }
+"Small Key (Water Temple)" = { actor = "Item_Dungeon_SmallKey", source = "census: 4 chests in WaterTemple" }
+"Small Key (Spirit Temple)" = { actor = "Item_Dungeon_SmallKey", source = "census: 5 chests in SpiritTemple" }
+"Small Key (Shadow Temple)" = { actor = "Item_Dungeon_SmallKey", source = "census: 4 chests in ShadowTemple" }
+"Small Key (Bottom of the Well)" = { actor = "Item_Dungeon_SmallKey", source = "census: 1 chest in BottomOfTheWell" }
+"Small Key (Gerudo Training Ground)" = { actor = "Item_Dungeon_SmallKey", source = "census: 9 chests in GerudoTrainingGround" }
+"Small Key (Ganons Castle)" = { actor = "Item_Dungeon_SmallKey", source = "census: 1 chest in InsideGanonCastle" }
