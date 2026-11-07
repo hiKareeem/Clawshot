@@ -395,3 +395,13 @@ rupee in the same spot the same route had no crash. Major items with an `Obj_` p
 Hylian shields, Goron and Zora tunics, Ocarina of Time, Bombchus, Ruto's letter, the lure, Amiibo masks, small keys;
 the rest exist only as `Item_*` actors without pick-up components. Placed red rupees have `GameDataList` entries of
 the permanent type (24) under their own Hashes, like the heart pieces.
+
+**In game (Kareem, 2026-11-07, Lon Lon Ranch tower heart piece, fresh copies of his save, `hookshot-main` build
+`main-ba594da`):** the red-rupee control worked, with the size table written by `formats.rstb` loaded from the
+overlay (log: `...rsizetable.zs): from the overlay`); `Obj_Shield_Hylian` lay on the floor in place of the heart piece
+(not picked up yet). With `Obj_Shield_Deku` the game hung while loading the save: the GPU device was lost
+(`vk: submit ... failed (-4)`, checkpoints in a compute dispatch at frame 675; Windows logged `nvlddmkm` 153). Every
+later start of that build lost the device the same way, the control included, so after that run the build or its
+caches (moved to `E:/OOTRemake/work/hookshot-main/cache-1848-device-lost/`) were broken, not the variants; whether
+the Deku Shield variant caused it is open. Tests 3 and 4 (chest at the heart piece) are to run again on the release
+build.
