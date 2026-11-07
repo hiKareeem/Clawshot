@@ -38,6 +38,9 @@
 - **D16 Fixed items now, progressive later** (Kareem, 2026-11-07): a check gives one fixed item (finding the
   Longshot first gives the Longshot). Progressive items come later through event-flow edits or Hookshot hooks. A
   downgrade (the Hookshot found after the Longshot) is to be tested in game.
+- **D17 Treasure Chest Game: only the reward chest is shuffled** (Kareem, 2026-11-07). The 11 game boxes stay
+  vanilla for now (Ship of Harkinian has shuffling them as an option; a later setting). The reward chest joins
+  the chests once its contents swap is tested in game.
 
 ## Open (only Kareem and his co-owner decide)
 

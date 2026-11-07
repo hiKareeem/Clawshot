@@ -302,10 +302,10 @@ M1 census job):
   from this data, not ported.
 - Changed placement (confirmed in game by Kareem, 2026-11-07): Din's Fire at the Death Mountain Trail fountain and
   the magic meter at Hyrule Castle (section 5).
-- Gold Skulltulas: the count per area matches, but Kareem reports they are not in the same places as on N64, so
-  token logic is built from the remake's positions, not ported per token. He also expects the Skulltula House
-  reward table to differ; the flow reads rewards at 10, 20, 30, 40 and 50 tokens (section 4, example 3), to
-  compare with what he has seen.
+- Gold Skulltulas: the count per area matches. Kareem first reported different places and a different Skulltula
+  House reward table, then corrected the rewards (2026-11-07): they are N64's (10, 20, 30, 40 and 50 tokens, section
+  4, example 3); the Stone of Agony only has a new name. Whether the positions differ is open (asked); until then
+  the tokens stay unlinked.
 
 ## 10. In-game results (round 1, Kareem, 2026-11-07, Hookshot `movie-sync`)
 
@@ -321,3 +321,8 @@ through `HOS_FS_OVERLAY` (log: `fs: OpenFile(...KokiriForest_Child_Dynamic...): 
   and handle the story state they set.
 - The changed file was 510,920 bytes against the original 510,884 (+36). By the size-table formula it needed an
   entry of 511,208 and the table has 511,176; it loaded anyway, so small growth is tolerated. How much is untested.
+
+Round 2 (Kareem, 2026-11-07, Hookshot `foliage-linux-updater`, new game): the Kokiri Sword chest with
+`TBox_Rupee_Red` and its `GetEventName` removed (both KokiriForest `*_Dynamic` files) gave the Red Rupee through the
+big chest's default event, with **no sword cutscene and no sword**. Removing a story override works; the story
+state it would have set is the patch plan's to restore (`plans/rounds/r2-census.md`).
