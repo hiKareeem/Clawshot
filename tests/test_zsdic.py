@@ -1,5 +1,3 @@
-import random
-
 import pytest
 import zstandard as zstd
 
@@ -7,22 +5,7 @@ from clawshot.formats import sarc, zsdic
 
 # The game's dictionary IDs, as recorded in each .zs frame header.
 DICTIONARY_IDS = {"zs.zsdic": 1, "bkprb.zsdic": 2, "bcett.byml.zsdic": 3, "pack.zsdic": 4}
-
-
-def _samples(seed: int) -> list[bytes]:
-    rng = random.Random(seed)
-    words = [b"Actors", b"Gyaml", b"Hash", b"Translate", b"Rotate", b"Dynamic", b"Phive", b"Placement"]
-    return [b"".join(rng.choice(words) + bytes([rng.randrange(256)]) for _ in range(40)) for _ in range(400)]
-
-
-@pytest.fixture(scope="module")
-def pack() -> bytes:
-    """A synthetic ZsDic.pack.zs: plain zstd around a SARC of four trained dictionaries."""
-    files = {
-        name: zstd.train_dictionary(4096, _samples(dict_id), dict_id=dict_id).as_bytes()
-        for name, dict_id in DICTIONARY_IDS.items()
-    }
-    return zstd.ZstdCompressor().compress(sarc.write(files))
+PAYLOAD = b"".join(b"Actors Gyaml Hash %d Translate Rotate Dynamic Phive Placement " % i for i in range(200))
 
 
 @pytest.mark.parametrize(
@@ -51,9 +34,9 @@ def test_dictionary_for_rejects_uncompressed_names():
         zsdic.dictionary_for("Banc/Foo.bcett.byml")
 
 
-def test_round_trip_with_each_dictionary(pack):
-    dicts = zsdic.Dictionaries.from_pack(pack)
-    payload = b"".join(_samples(99)[:20])
+def test_round_trip_with_each_dictionary(zsdic_pack):
+    dicts = zsdic.Dictionaries.from_pack(zsdic_pack)
+    payload = PAYLOAD
     for name, dict_id in [
         ("Banc/A/A_Child_Static.bcett.byml.zs", 3),
         ("Pack/Actor/B.pack.zs", 4),
@@ -68,22 +51,23 @@ def test_round_trip_with_each_dictionary(pack):
         assert dicts.decompress(name, packed) == payload
 
 
-def test_plain_pack_round_trip(pack):
-    dicts = zsdic.Dictionaries.from_pack(pack)
+def test_plain_pack_round_trip(zsdic_pack):
+    dicts = zsdic.Dictionaries.from_pack(zsdic_pack)
     packed = dicts.compress(zsdic.PACK_PATH, b"plain")
     assert zsdic.frame_dictionary_id(packed) == 0
     assert dicts.decompress(zsdic.PACK_PATH, packed) == b"plain"
 
 
-def test_decompress_refuses_a_mismatched_dictionary(pack):
-    dicts = zsdic.Dictionaries.from_pack(pack)
+def test_decompress_refuses_a_mismatched_dictionary(zsdic_pack):
+    dicts = zsdic.Dictionaries.from_pack(zsdic_pack)
     packed = dicts.compress("A.bcett.byml.zs", b"data" * 50)
     with pytest.raises(zsdic.ZsError, match="dictionary ID 3"):
         dicts.decompress("A.pack.zs", packed)
 
 
-def test_pack_must_hold_all_four_dictionaries():
-    files = {"zs.zsdic": zstd.train_dictionary(4096, _samples(1), dict_id=1).as_bytes()}
+def test_pack_must_hold_all_four_dictionaries(zsdic_pack):
+    files = sarc.read(zstd.ZstdDecompressor().decompress(zsdic_pack))
+    files = {"zs.zsdic": files["zs.zsdic"]}
     with pytest.raises(zsdic.ZsError, match="lacks"):
         zsdic.Dictionaries.from_pack(zstd.ZstdCompressor().compress(sarc.write(files)))
 
