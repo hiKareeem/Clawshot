@@ -10,7 +10,7 @@ reachability, `translate.py` ports OoT Randomizer). Data: `src/clawshot/data/wor
 
 | File | Holds | Written by |
 |---|---|---|
-| `world.toml` | `start` (region), `goal` (a rule), `files` (the region files to load) | hand |
+| `world.toml` | `start` (region), `goal` (a rule), `files` (the region files to load); Clawshot's own `[settings]` and `[items]`, and `[progressive]` (tiers) | hand |
 | `<area>.toml` | `[[region]]` entries, then a `[locations]` table | `translate` (from `port.toml`), then hand edits |
 | `helpers.toml` | `[helpers]`: named rules, some with parameters | `translate` (`LogicHelpers.json`) |
 | `items.toml` | `[items]`: every item the logic can name, with its type and class | `translate` (`ItemList.py`) |
@@ -24,6 +24,7 @@ reachability, `translate.py` ports OoT Randomizer). Data: `src/clawshot/data/wor
 name = "Kokiri Forest"
 scene = "Kokiri Forest"        # optional: OoT Randomizer's scene, hint area, dungeon
 hint = "KOKIRI_FOREST"
+area = "KokiriForest"          # the remake's Banc folder (the census `area`), from port.toml
 source = "Overworld.json:154"  # where the region came from
 # dungeon = "Deku Tree"        # a dungeon's own keys, maps and compasses stay in its regions
 # time_passes = true           # both day and night are reachable here
@@ -47,13 +48,36 @@ table that says so:
 "KF Kokiri Sword Chest" = { rule = "True", source = "verified: Kareem, build e0f3ccfa, 2026-11-20" }
 ```
 
-`[locations]` gives each location's OoT Randomizer type (`Chest`, `GS Token`, `NPC`, ...), its vanilla item (an
-`items.toml` name) and its `LocationList.py` line. Location names are OoT Randomizer's; the census
-(`src/clawshot/data/locations.toml`, track A) links them to the remake's IDs through `oot_randomizer_name`.
-
 An **event** is something that, once done, stays done; it is held as an item of its name. Several regions may
 define the same event; it is held once any of them passes. A rule names an event by a quoted name
 (`'Showed Mido Sword & Shield'`) or a capitalised identifier (`Time_Travel`).
+
+`[locations]` gives each location's OoT Randomizer type (`Chest`, `GS Token`, `NPC`, ...), its vanilla item (an
+`items.toml` name) and its `LocationList.py` line. Location names are OoT Randomizer's; the census
+(`src/clawshot/data/locations.toml`, track A) links them to the remake's IDs through `oot_randomizer_name`.
+Two fields are written by hand, and the translator keeps them when it rewrites a file:
+
+- `vanilla_fixed`: the item this check gives when items are fixed (below), where OoT Randomizer's vanilla item is
+  progressive or an upgrade (`LW Gift from Saria`: `Fairy Ocarina`; `LW Target in Woods`: `Bullet Bag (40)`).
+- `n64_only = "<reason>"`: the check does not exist in the remake; the reason gives the evidence. Such a location
+  stays in the logic but is neither shuffled nor placed. Set only with evidence (reviewer, round 2).
+
+`tests/test_world_census.py` holds the world to the census: every ported location of a type the census covers
+(`Chest`, `BossHeart`, `Scrub`, `GrottoScrub`, `Shop`, freestanding heart pieces and keys) is linked from a census
+definition of the matching kind and area, or is `n64_only`, or is on the test's explicit pending list (printed,
+each with why). Gold Skulltulas match by count per area until round 3 places them from the remake's positions.
+Other types are skipped by type: freestanding rupees and hearts, pots, beehives, wonder items, rupee towers (no
+remake placement to link), and NPC, cutscene, song and boss-reward gifts (event flows, round 3).
+
+### Fixed or progressive items
+
+`world.toml`'s `progressive_items` setting (default `false`, decision D16): with `false`
+each check gives one fixed item, as the remake does without a code hook; with `true`, OoT Randomizer's progressive
+items. `[progressive]` lists each progressive item's tiers (`"Progressive Hookshot" = ["Hookshot", "Longshot"]`);
+the loader makes each tier an item that counts as that many of the progressive item, so every OoT Randomizer rule
+(`Hookshot` = `Progressive_Hookshot`, `Longshot` = `(Progressive_Hookshot, 2)`) reads both kinds unchanged, and a
+Longshot found first is a Longshot. With fixed items, a location whose vanilla item is progressive must say its
+tier (`vanilla_fixed`), or the world does not build.
 
 ### Items, helpers, settings
 
@@ -156,17 +180,18 @@ uv run python -m clawshot.world.translate --ootr E:/OOTRemake/work/r2-world/OoT-
 Reads `port.toml`, checks the checkout is at its `ootr_commit`, and rewrites the region files, `helpers.toml`,
 `items.toml` and `settings.toml`. What it does with OoT Randomizer's data:
 
-- Region fields `scene`, `hint`, `dungeon`, `time_passes`, `provides_time` are kept; `savewarp`, `is_boss_room`
-  and `alt_hint` (entrance shuffle and hints) are dropped for now; any other field stops it.
+- Region fields `scene`, `hint`, `dungeon`, `time_passes`, `provides_time` are kept, and `area` is added from
+  `port.toml`; `savewarp`, `is_boss_room` and `alt_hint` (entrance shuffle and hints) are dropped for now; any other
+  field stops it.
 - Locations of type `Drop` and `Event` (Deku Baba sticks, gossip stone fairies, the Master Sword Pedestal's
   `Time Travel`) become events named after the item they give; two in one region merge as `(a) or (b)`.
 - `Hint` and `HintStone` locations hold nothing and are left out.
 - `settings.toml` gets every name the written rules (and all helpers) test that OoT Randomizer resolves to a world
   attribute, a setting or a trick, at OoT Randomizer's defaults, plus the few the engine always reads.
 
-A `test_world_translate.py` test reruns the translator into a temporary folder and compares bytes with the
-committed files when `OOTR_DIR` points at the checkout. Once a file carries hand edits for the remake, that test
-will need an override layer or the file leaves the translator; round 3 decides.
+A `test_world_translate.py` test copies the committed files to a temporary folder, reruns the translator over them
+(so the hand fields are read back) and compares bytes, when `OOTR_DIR` points at the checkout. Hand edits to rules
+would need an override layer; round 3 decides when the first one comes.
 
 ## Not carried over yet
 
@@ -174,5 +199,6 @@ will need an override layer or the file leaves the translator; round 3 decides.
 - `logic_no_night_tokens_without_suns_song` (an `at_night` special case for Gold Skulltulas).
 - Built-ins `has_all_notes_for_song`, `has_ocarina_buttons`, `region_has_shortcuts`, the goal-hint ones: errors if
   a live rule reaches them.
-- Progressive items: OoT Randomizer's pool and rules use `Progressive Hookshot` and the like. Without code hooks a
-  remake chest gives one fixed actor, so the item mapping (logic item to remake actor) must decide how these read.
+- Upgrades other than the five tiered items (quivers, bomb bags, bullet bags beyond the one above): OoT
+  Randomizer's rules only ask whether the base item is held, so they need no tiers; their checks need
+  `vanilla_fixed` once they are ported.
