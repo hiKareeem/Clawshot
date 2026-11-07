@@ -1,0 +1,3825 @@
+# Clawshot location definitions: one [[location]] per check in the remake (plans/decisions.md D4, D5).
+#   id                   the actor Hash (decimal; a string, as TOML integers are signed 64-bit)
+#   kind, area           census kind and Banc folder; vanilla_item: the actor name the check gives
+#   name                 readable and unique
+#   oot_randomizer_name  the OoT Randomizer location that is the same check, empty where none or unsure:
+#                        LocationList.py (MIT) of https://github.com/OoTRandomizer/OoT-Randomizer
+#                        at commit 526b4c8d81b7c4023ef4573ffbaf39344e270d5b
+# Written by `python -m clawshot.census.write_locations` from the player's dump. name and oot_randomizer_name may
+# be edited by hand: a rewrite keeps them for every id already in this file.
+
+[[location]]
+id = "631709185320708287"
+kind = "chest"
+area = "BottomOfTheWell"
+name = "Bottom Of The Well Room 1 Chest (TBox_Rupee_Blue) #1"
+vanilla_item = "TBox_Rupee_Blue"
+oot_randomizer_name = ""
+
+[[location]]
+id = "5429815628949128345"
+kind = "chest"
+area = "BottomOfTheWell"
+name = "Bottom Of The Well Room 1 Chest (TBox_Rupee_Blue) #2"
+vanilla_item = "TBox_Rupee_Blue"
+oot_randomizer_name = ""
+
+[[location]]
+id = "8397646530660039355"
+kind = "chest"
+area = "BottomOfTheWell"
+name = "Bottom Of The Well Room 1 Chest (Item_Dungeon_SmallKey)"
+vanilla_item = "Item_Dungeon_SmallKey"
+oot_randomizer_name = ""
+
+[[location]]
+id = "8975637636514249074"
+kind = "chest"
+area = "BottomOfTheWell"
+name = "Bottom Of The Well Room 1 Chest (TBox_Rupee_Red) #1"
+vanilla_item = "TBox_Rupee_Red"
+oot_randomizer_name = ""
+
+[[location]]
+id = "10905582354954996284"
+kind = "chest"
+area = "BottomOfTheWell"
+name = "Bottom Of The Well Room 1 Chest (TBox_Rupee_Red) #2"
+vanilla_item = "TBox_Rupee_Red"
+oot_randomizer_name = ""
+
+[[location]]
+id = "12988877782812797760"
+kind = "chest"
+area = "BottomOfTheWell"
+name = "Bottom Of The Well Room 1 Chest (TBox_Rupee_Blue) #3"
+vanilla_item = "TBox_Rupee_Blue"
+oot_randomizer_name = ""
+
+[[location]]
+id = "14911602953212243797"
+kind = "chest"
+area = "BottomOfTheWell"
+name = "Bottom of the Well Compass Chest"
+vanilla_item = "Item_Dungeon_Compass"
+oot_randomizer_name = "Bottom of the Well Compass Chest"
+
+[[location]]
+id = "11718708984125260282"
+kind = "chest"
+area = "BottomOfTheWell"
+name = "Bottom Of The Well Room 2 Chest (TBox_Rupee_Purple)"
+vanilla_item = "TBox_Rupee_Purple"
+oot_randomizer_name = ""
+
+[[location]]
+id = "874970148260328653"
+kind = "chest"
+area = "BottomOfTheWell"
+name = "Bottom of the Well Fire Keese Chest"
+vanilla_item = "TBox_Shield_Deku"
+oot_randomizer_name = "Bottom of the Well Fire Keese Chest"
+
+[[location]]
+id = "16654774376625985726"
+kind = "chest"
+area = "BottomOfTheWell"
+name = "Bottom of the Well Lens of Truth Chest"
+vanilla_item = "Item_GlassTruth"
+oot_randomizer_name = "Bottom of the Well Lens of Truth Chest"
+
+[[location]]
+id = "9466613428674883506"
+kind = "chest"
+area = "BottomOfTheWell"
+name = "Bottom of the Well Map Chest"
+vanilla_item = "Item_Dungeon_Map"
+oot_randomizer_name = "Bottom of the Well Map Chest"
+
+[[location]]
+id = "6064359710907908886"
+kind = "chest"
+area = "BottomOfTheWell"
+name = "Bottom Of The Well Room 11 Chest (Item_ScrubBusinessSeed)"
+vanilla_item = "Item_ScrubBusinessSeed"
+oot_randomizer_name = ""
+
+[[location]]
+id = "12165938013608963606"
+kind = "gold_skulltula"
+area = "BottomOfTheWell"
+name = "Bottom Of The Well Room 4 Gold Skulltula"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "7460556442932201772"
+kind = "gold_skulltula"
+area = "BottomOfTheWell"
+name = "Bottom Of The Well Room 5 Gold Skulltula"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "3889761319471426870"
+kind = "gold_skulltula"
+area = "BottomOfTheWell"
+name = "Bottom Of The Well Room 7 Gold Skulltula"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "17649154319341333603"
+kind = "freestanding"
+area = "BottomOfTheWell"
+name = "Bottom of the Well Freestanding Key"
+vanilla_item = "Obj_Dungeon_SmallKey"
+oot_randomizer_name = "Bottom of the Well Freestanding Key"
+
+[[location]]
+id = "15945446340598299551"
+kind = "scrub"
+area = "BottomOfTheWell"
+name = "Bottom Of The Well Room 1 Scrub (Item_Bottle_GreenPotion)"
+vanilla_item = "Item_Bottle_GreenPotion"
+oot_randomizer_name = ""
+
+[[location]]
+id = "1158729434763801603"
+kind = "chest"
+area = "DeathMountainCrater"
+name = "Death Mountain Crater Chest (Item_ScrubBusinessSeed)"
+vanilla_item = "Item_ScrubBusinessSeed"
+oot_randomizer_name = ""
+
+[[location]]
+id = "9128916506605227251"
+kind = "chest"
+area = "DeathMountainCrater"
+name = "Death Mountain Crater Chest (TBox_Rupee_Purple)"
+vanilla_item = "TBox_Rupee_Purple"
+oot_randomizer_name = ""
+
+[[location]]
+id = "6397182598322965076"
+kind = "gold_skulltula"
+area = "DeathMountainCrater"
+name = "Death Mountain Crater Gold Skulltula #1"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "18219295034534354574"
+kind = "gold_skulltula"
+area = "DeathMountainCrater"
+name = "Death Mountain Crater Gold Skulltula #2"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "744856631664786545"
+kind = "freestanding"
+area = "DeathMountainCrater"
+name = "Death Mountain Crater Freestanding (Obj_Heart_Piece) #1"
+vanilla_item = "Obj_Heart_Piece"
+oot_randomizer_name = ""
+
+[[location]]
+id = "10331043360028932045"
+kind = "freestanding"
+area = "DeathMountainCrater"
+name = "Death Mountain Crater Freestanding (Obj_Heart_Piece) #2"
+vanilla_item = "Obj_Heart_Piece"
+oot_randomizer_name = ""
+
+[[location]]
+id = "2518138296199711695"
+kind = "scrub"
+area = "DeathMountainCrater"
+name = "Death Mountain Crater Scrub (Obj_Heart_Piece)"
+vanilla_item = "Obj_Heart_Piece"
+oot_randomizer_name = ""
+
+[[location]]
+id = "9809508929088891725"
+kind = "chest"
+area = "DeathMountainTrail"
+name = "Death Mountain Trail Chest (Item_ScrubBusinessSeed)"
+vanilla_item = "Item_ScrubBusinessSeed"
+oot_randomizer_name = ""
+
+[[location]]
+id = "832677387023638406"
+kind = "gold_skulltula"
+area = "DeathMountainTrail"
+name = "Death Mountain Trail Gold Skulltula #1"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "17669199296215821346"
+kind = "gold_skulltula"
+area = "DeathMountainTrail"
+name = "Death Mountain Trail Gold Skulltula #2"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "351345377871782696"
+kind = "gold_skulltula"
+area = "DeathMountainTrail"
+name = "Death Mountain Trail Gold Skulltula #3"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "17425319789138387506"
+kind = "gold_skulltula"
+area = "DeathMountainTrail"
+name = "Death Mountain Trail Gold Skulltula #4"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "715147239509454487"
+kind = "freestanding"
+area = "DeathMountainTrail"
+name = "DMT Freestanding PoH"
+vanilla_item = "Obj_Heart_Piece"
+oot_randomizer_name = "DMT Freestanding PoH"
+
+[[location]]
+id = "1186167733408299582"
+kind = "chest"
+area = "DesertColossus"
+name = "Desert Colossus Chest (TBox_Rupee_Purple)"
+vanilla_item = "TBox_Rupee_Purple"
+oot_randomizer_name = ""
+
+[[location]]
+id = "2490063409521505179"
+kind = "chest"
+area = "DesertColossus"
+name = "Spirit Temple Silver Gauntlets Chest"
+vanilla_item = "Item_Gauntlet_Silver"
+oot_randomizer_name = "Spirit Temple Silver Gauntlets Chest"
+
+[[location]]
+id = "10012167258643363548"
+kind = "chest"
+area = "DesertColossus"
+name = "Spirit Temple Mirror Shield Chest"
+vanilla_item = "Item_Shield_Mirror"
+oot_randomizer_name = "Spirit Temple Mirror Shield Chest"
+
+[[location]]
+id = "11160993739666517210"
+kind = "gold_skulltula"
+area = "DesertColossus"
+name = "Desert Colossus Gold Skulltula #1"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "15057756765324812936"
+kind = "gold_skulltula"
+area = "DesertColossus"
+name = "Desert Colossus Gold Skulltula #2"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "234735562946824289"
+kind = "gold_skulltula"
+area = "DesertColossus"
+name = "Desert Colossus Gold Skulltula #3"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "10592092054086534681"
+kind = "freestanding"
+area = "DesertColossus"
+name = "Colossus Freestanding PoH"
+vanilla_item = "Obj_Heart_Piece"
+oot_randomizer_name = "Colossus Freestanding PoH"
+
+[[location]]
+id = "7524527082521156886"
+kind = "chest"
+area = "DodongoCavern"
+name = "Dodongo Cavern Room 1 Chest (TBox_Shield_Deku)"
+vanilla_item = "TBox_Shield_Deku"
+oot_randomizer_name = ""
+
+[[location]]
+id = "8291119063305855945"
+kind = "chest"
+area = "DodongoCavern"
+name = "Dodongos Cavern Map Chest"
+vanilla_item = "Item_Dungeon_Map"
+oot_randomizer_name = "Dodongos Cavern Map Chest"
+
+[[location]]
+id = "8607798771661947511"
+kind = "chest"
+area = "DodongoCavern"
+name = "Dodongo Cavern Room 1 Chest (TBox_Rupee_Blue)"
+vanilla_item = "TBox_Rupee_Blue"
+oot_randomizer_name = ""
+
+[[location]]
+id = "7764016096998075927"
+kind = "chest"
+area = "DodongoCavern"
+name = "Dodongos Cavern Bomb Flower Platform Chest"
+vanilla_item = "TBox_Rupee_Red"
+oot_randomizer_name = "Dodongos Cavern Bomb Flower Platform Chest"
+
+[[location]]
+id = "12253889300578348965"
+kind = "chest"
+area = "DodongoCavern"
+name = "Dodongo Cavern Room 10 Chest (Item_ScrubBusinessSeed)"
+vanilla_item = "Item_ScrubBusinessSeed"
+oot_randomizer_name = ""
+
+[[location]]
+id = "17531994809974271603"
+kind = "chest"
+area = "DodongoCavern"
+name = "Dodongos Cavern Compass Chest"
+vanilla_item = "Item_Dungeon_Compass"
+oot_randomizer_name = "Dodongos Cavern Compass Chest"
+
+[[location]]
+id = "11582649900854566065"
+kind = "chest"
+area = "DodongoCavern"
+name = "Dodongo Cavern Room 13 Chest (TBox_Shield_Deku)"
+vanilla_item = "TBox_Shield_Deku"
+oot_randomizer_name = ""
+
+[[location]]
+id = "12161709650443144121"
+kind = "chest"
+area = "DodongoCavern"
+name = "Dodongos Cavern Bomb Bag Chest"
+vanilla_item = "Item_BombBag_Small"
+oot_randomizer_name = "Dodongos Cavern Bomb Bag Chest"
+
+[[location]]
+id = "850464708089653824"
+kind = "chest"
+area = "DodongoCavern"
+name = "Dodongo Cavern Room 16 Chest (Item_ScrubBusinessSeed)"
+vanilla_item = "Item_ScrubBusinessSeed"
+oot_randomizer_name = ""
+
+[[location]]
+id = "960362013021648957"
+kind = "gold_skulltula"
+area = "DodongoCavern"
+name = "Dodongo Cavern Room 2 Gold Skulltula"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "1171854281537584829"
+kind = "gold_skulltula"
+area = "DodongoCavern"
+name = "Dodongo Cavern Room 3 Gold Skulltula"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "8470399761714006011"
+kind = "gold_skulltula"
+area = "DodongoCavern"
+name = "Dodongo Cavern Room 10 Gold Skulltula"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "4565265801822094851"
+kind = "gold_skulltula"
+area = "DodongoCavern"
+name = "Dodongo Cavern Room 18 Gold Skulltula"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "13690401647626643497"
+kind = "gold_skulltula"
+area = "DodongoCavern"
+name = "Dodongo Cavern Room 20 Gold Skulltula"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "5936534468710061389"
+kind = "heart_container"
+area = "DodongoCavern"
+name = "Dodongos Cavern King Dodongo Heart"
+vanilla_item = "Obj_Heart_Container"
+oot_randomizer_name = "Dodongos Cavern King Dodongo Heart"
+
+[[location]]
+id = "7388739057158296701"
+kind = "scrub"
+area = "DodongoCavern"
+name = "Dodongo Cavern Room 7 Scrub"
+vanilla_item = ""
+oot_randomizer_name = ""
+
+[[location]]
+id = "3949488292768750868"
+kind = "chest"
+area = "FireTemple"
+name = "Fire Temple Room 1 Chest (Item_Dungeon_SmallKey)"
+vanilla_item = "Item_Dungeon_SmallKey"
+oot_randomizer_name = ""
+
+[[location]]
+id = "5634724236470386190"
+kind = "chest"
+area = "FireTemple"
+name = "Fire Temple Room 2 Chest (Item_Dungeon_SmallKey)"
+vanilla_item = "Item_Dungeon_SmallKey"
+oot_randomizer_name = ""
+
+[[location]]
+id = "8757492004108970488"
+kind = "chest"
+area = "FireTemple"
+name = "Fire Temple Room 3 Chest (TBox_Rupee_Red)"
+vanilla_item = "TBox_Rupee_Red"
+oot_randomizer_name = ""
+
+[[location]]
+id = "16785682308850448108"
+kind = "chest"
+area = "FireTemple"
+name = "Fire Temple Room 4 Chest (Item_Dungeon_SmallKey)"
+vanilla_item = "Item_Dungeon_SmallKey"
+oot_randomizer_name = ""
+
+[[location]]
+id = "3688520809244472975"
+kind = "chest"
+area = "FireTemple"
+name = "Fire Temple Map Chest"
+vanilla_item = "Item_Dungeon_Map"
+oot_randomizer_name = "Fire Temple Map Chest"
+
+[[location]]
+id = "9634924691849556346"
+kind = "chest"
+area = "FireTemple"
+name = "Fire Temple Room 5 Chest (Item_Dungeon_SmallKey) #1"
+vanilla_item = "Item_Dungeon_SmallKey"
+oot_randomizer_name = ""
+
+[[location]]
+id = "12567412825200613393"
+kind = "chest"
+area = "FireTemple"
+name = "Fire Temple Room 5 Chest (Item_Dungeon_SmallKey) #2"
+vanilla_item = "Item_Dungeon_SmallKey"
+oot_randomizer_name = ""
+
+[[location]]
+id = "862385681502746018"
+kind = "chest"
+area = "FireTemple"
+name = "Fire Temple Room 8 Chest (TBox_Rupee_Purple)"
+vanilla_item = "TBox_Rupee_Purple"
+oot_randomizer_name = ""
+
+[[location]]
+id = "15073195886628236505"
+kind = "chest"
+area = "FireTemple"
+name = "Fire Temple Room 8 Chest (TBox_Rupee_Red) #1"
+vanilla_item = "TBox_Rupee_Red"
+oot_randomizer_name = ""
+
+[[location]]
+id = "17001858340376096722"
+kind = "chest"
+area = "FireTemple"
+name = "Fire Temple Room 8 Chest (TBox_Rupee_Red) #2"
+vanilla_item = "TBox_Rupee_Red"
+oot_randomizer_name = ""
+
+[[location]]
+id = "12945617941305968586"
+kind = "chest"
+area = "FireTemple"
+name = "Fire Temple Room 10 Chest (Item_Dungeon_SmallKey)"
+vanilla_item = "Item_Dungeon_SmallKey"
+oot_randomizer_name = ""
+
+[[location]]
+id = "10521366928524045067"
+kind = "chest"
+area = "FireTemple"
+name = "Fire Temple Room 11 Chest (Item_Dungeon_SmallKey)"
+vanilla_item = "Item_Dungeon_SmallKey"
+oot_randomizer_name = ""
+
+[[location]]
+id = "12083259659219538030"
+kind = "chest"
+area = "FireTemple"
+name = "Fire Temple Megaton Hammer Chest"
+vanilla_item = "Item_Hammer"
+oot_randomizer_name = "Fire Temple Megaton Hammer Chest"
+
+[[location]]
+id = "16713240760352215634"
+kind = "chest"
+area = "FireTemple"
+name = "Fire Temple Compass Chest"
+vanilla_item = "Item_Dungeon_Compass"
+oot_randomizer_name = "Fire Temple Compass Chest"
+
+[[location]]
+id = "14060099092170010696"
+kind = "chest"
+area = "FireTemple"
+name = "Fire Temple Boss Key Chest"
+vanilla_item = "Item_Dungeon_BossKey"
+oot_randomizer_name = "Fire Temple Boss Key Chest"
+
+[[location]]
+id = "1705064956286753527"
+kind = "chest"
+area = "FireTemple"
+name = "Fire Temple Room 22 Chest (Item_Dungeon_SmallKey)"
+vanilla_item = "Item_Dungeon_SmallKey"
+oot_randomizer_name = ""
+
+[[location]]
+id = "12751796212121957464"
+kind = "gold_skulltula"
+area = "FireTemple"
+name = "Fire Temple Room 5 Gold Skulltula"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "5556173334779815044"
+kind = "gold_skulltula"
+area = "FireTemple"
+name = "Fire Temple Room 7 Gold Skulltula"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "9172014785497046138"
+kind = "gold_skulltula"
+area = "FireTemple"
+name = "Fire Temple Room 8 Gold Skulltula"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "14706322686481615109"
+kind = "gold_skulltula"
+area = "FireTemple"
+name = "Fire Temple Room 18 Gold Skulltula"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "6789992996625105554"
+kind = "gold_skulltula"
+area = "FireTemple"
+name = "Fire Temple Room 19 Gold Skulltula"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "9478330070473364248"
+kind = "heart_container"
+area = "FireTemple"
+name = "Fire Temple Volvagia Heart"
+vanilla_item = "Obj_Heart_Container"
+oot_randomizer_name = "Fire Temple Volvagia Heart"
+
+[[location]]
+id = "5306318520835485827"
+kind = "chest"
+area = "ForestTemple"
+name = "Forest Temple Boss Key Chest"
+vanilla_item = "Item_Dungeon_BossKey"
+oot_randomizer_name = "Forest Temple Boss Key Chest"
+
+[[location]]
+id = "1171460703078800858"
+kind = "chest"
+area = "ForestTemple"
+name = "Forest Temple Room 0 Chest (Item_Dungeon_SmallKey)"
+vanilla_item = "Item_Dungeon_SmallKey"
+oot_randomizer_name = ""
+
+[[location]]
+id = "14776684749746592758"
+kind = "chest"
+area = "ForestTemple"
+name = "Forest Temple Room 4 Chest (Item_Dungeon_SmallKey)"
+vanilla_item = "Item_Dungeon_SmallKey"
+oot_randomizer_name = ""
+
+[[location]]
+id = "15920957434854338961"
+kind = "chest"
+area = "ForestTemple"
+name = "Forest Temple Room 8 Chest (TBox_Rupee_Purple)"
+vanilla_item = "TBox_Rupee_Purple"
+oot_randomizer_name = ""
+
+[[location]]
+id = "3174893090599461927"
+kind = "chest"
+area = "ForestTemple"
+name = "Forest Temple Map Chest"
+vanilla_item = "Item_Dungeon_Map"
+oot_randomizer_name = "Forest Temple Map Chest"
+
+[[location]]
+id = "6449977980406424425"
+kind = "chest"
+area = "ForestTemple"
+name = "Forest Temple Room 15 Chest (Item_Dungeon_SmallKey)"
+vanilla_item = "Item_Dungeon_SmallKey"
+oot_randomizer_name = ""
+
+[[location]]
+id = "3433400840978782007"
+kind = "chest"
+area = "ForestTemple"
+name = "Forest Temple Room 16 Chest (Item_Dungeon_SmallKey)"
+vanilla_item = "Item_Dungeon_SmallKey"
+oot_randomizer_name = ""
+
+[[location]]
+id = "11082303891540711688"
+kind = "chest"
+area = "ForestTemple"
+name = "Forest Temple Bow Chest"
+vanilla_item = "Item_Range_Bow"
+oot_randomizer_name = "Forest Temple Bow Chest"
+
+[[location]]
+id = "6948525240950728236"
+kind = "chest"
+area = "ForestTemple"
+name = "Forest Temple Blue Poe Chest"
+vanilla_item = "Item_Dungeon_Compass"
+oot_randomizer_name = "Forest Temple Blue Poe Chest"
+
+[[location]]
+id = "7535137041266964235"
+kind = "chest"
+area = "ForestTemple"
+name = "Forest Temple Room 22 Chest (Item_Dungeon_SmallKey)"
+vanilla_item = "Item_Dungeon_SmallKey"
+oot_randomizer_name = ""
+
+[[location]]
+id = "15117164073907033527"
+kind = "chest"
+area = "ForestTemple"
+name = "Forest Temple Room 24 Chest (Obj_Rupee_Green)"
+vanilla_item = "Obj_Rupee_Green"
+oot_randomizer_name = ""
+
+[[location]]
+id = "9038700938965170329"
+kind = "chest"
+area = "ForestTemple"
+name = "Forest Temple Room 27 Chest (TBox_ArrowBundle_Large)"
+vanilla_item = "TBox_ArrowBundle_Large"
+oot_randomizer_name = ""
+
+[[location]]
+id = "11081821111317815057"
+kind = "gold_skulltula"
+area = "ForestTemple"
+name = "Forest Temple Room 0 Gold Skulltula"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "17612196129225973969"
+kind = "gold_skulltula"
+area = "ForestTemple"
+name = "Forest Temple Room 2 Gold Skulltula"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "10970805784153267902"
+kind = "gold_skulltula"
+area = "ForestTemple"
+name = "Forest Temple Room 12 Gold Skulltula"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "2014780391754316762"
+kind = "gold_skulltula"
+area = "ForestTemple"
+name = "Forest Temple Room 14 Gold Skulltula"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "3072474196008424241"
+kind = "gold_skulltula"
+area = "ForestTemple"
+name = "Forest Temple Room 27 Gold Skulltula"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "18379569660496940670"
+kind = "heart_container"
+area = "ForestTemple"
+name = "Forest Temple Phantom Ganon Heart"
+vanilla_item = "Obj_Heart_Container"
+oot_randomizer_name = "Forest Temple Phantom Ganon Heart"
+
+[[location]]
+id = "5626064870824758772"
+kind = "gold_skulltula"
+area = "GanonCastle"
+name = "Ganon Castle Gold Skulltula"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "12343753510713797715"
+kind = "chest"
+area = "GerudoFortress"
+name = "GF Chest"
+vanilla_item = "Obj_Heart_Piece"
+oot_randomizer_name = "GF Chest"
+
+[[location]]
+id = "16619432200060282313"
+kind = "chest"
+area = "GerudoFortress"
+name = "Gerudo Fortress Chest (TBox_Rupee_Red)"
+vanilla_item = "TBox_Rupee_Red"
+oot_randomizer_name = ""
+
+[[location]]
+id = "9362225887419425752"
+kind = "gold_skulltula"
+area = "GerudoFortress"
+name = "Gerudo Fortress Gold Skulltula #1"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "13037049463363052038"
+kind = "gold_skulltula"
+area = "GerudoFortress"
+name = "Gerudo Fortress Gold Skulltula #2"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "1406667554698159711"
+kind = "freestanding"
+area = "GerudoFortress"
+name = "Gerudo Fortress Freestanding (Obj_Dungeon_SmallKey_GerudoFortress_03) #1"
+vanilla_item = "Obj_Dungeon_SmallKey_GerudoFortress_03"
+oot_randomizer_name = ""
+
+[[location]]
+id = "5126034700935231136"
+kind = "freestanding"
+area = "GerudoFortress"
+name = "Gerudo Fortress Freestanding (Obj_Dungeon_SmallKey_GerudoFortress_01) #1"
+vanilla_item = "Obj_Dungeon_SmallKey_GerudoFortress_01"
+oot_randomizer_name = ""
+
+[[location]]
+id = "5303541637929200213"
+kind = "freestanding"
+area = "GerudoFortress"
+name = "Gerudo Fortress Freestanding (Obj_Dungeon_SmallKey_GerudoFortress_02) #1"
+vanilla_item = "Obj_Dungeon_SmallKey_GerudoFortress_02"
+oot_randomizer_name = ""
+
+[[location]]
+id = "7337789119684854050"
+kind = "freestanding"
+area = "GerudoFortress"
+name = "Gerudo Fortress Freestanding (Obj_Dungeon_SmallKey_GerudoFortress_03) #2"
+vanilla_item = "Obj_Dungeon_SmallKey_GerudoFortress_03"
+oot_randomizer_name = ""
+
+[[location]]
+id = "10731814783987785199"
+kind = "freestanding"
+area = "GerudoFortress"
+name = "Gerudo Fortress Freestanding (Obj_Dungeon_SmallKey_GerudoFortress_04) #1"
+vanilla_item = "Obj_Dungeon_SmallKey_GerudoFortress_04"
+oot_randomizer_name = ""
+
+[[location]]
+id = "12946017077004046962"
+kind = "freestanding"
+area = "GerudoFortress"
+name = "Gerudo Fortress Freestanding (Obj_Dungeon_SmallKey_GerudoFortress_02) #2"
+vanilla_item = "Obj_Dungeon_SmallKey_GerudoFortress_02"
+oot_randomizer_name = ""
+
+[[location]]
+id = "14727159573379044362"
+kind = "freestanding"
+area = "GerudoFortress"
+name = "Gerudo Fortress Freestanding (Obj_Dungeon_SmallKey_GerudoFortress_01) #2"
+vanilla_item = "Obj_Dungeon_SmallKey_GerudoFortress_01"
+oot_randomizer_name = ""
+
+[[location]]
+id = "18396961731144479654"
+kind = "freestanding"
+area = "GerudoFortress"
+name = "Gerudo Fortress Freestanding (Obj_Dungeon_SmallKey_GerudoFortress_04) #2"
+vanilla_item = "Obj_Dungeon_SmallKey_GerudoFortress_04"
+oot_randomizer_name = ""
+
+[[location]]
+id = "10743352138513225188"
+kind = "chest"
+area = "GerudoTrainingGround"
+name = "Gerudo Training Ground Chest (TBox_Rupee_Red)"
+vanilla_item = "TBox_Rupee_Red"
+oot_randomizer_name = ""
+
+[[location]]
+id = "11182647876438515984"
+kind = "chest"
+area = "GerudoTrainingGround"
+name = "Gerudo Training Ground Room 0 Chest (Obj_Rupee_Green)"
+vanilla_item = "Obj_Rupee_Green"
+oot_randomizer_name = ""
+
+[[location]]
+id = "2436665354602612279"
+kind = "chest"
+area = "GerudoTrainingGround"
+name = "Gerudo Training Ground Room 0 Chest (TBox_Rupee_Blue)"
+vanilla_item = "TBox_Rupee_Blue"
+oot_randomizer_name = ""
+
+[[location]]
+id = "13501407288943710656"
+kind = "chest"
+area = "GerudoTrainingGround"
+name = "Gerudo Training Ground Room 1 Chest (Item_Dungeon_SmallKey)"
+vanilla_item = "Item_Dungeon_SmallKey"
+oot_randomizer_name = ""
+
+[[location]]
+id = "4519534997122863169"
+kind = "chest"
+area = "GerudoTrainingGround"
+name = "Gerudo Training Ground Room 3 Chest (TBox_Rupee_Blue)"
+vanilla_item = "TBox_Rupee_Blue"
+oot_randomizer_name = ""
+
+[[location]]
+id = "11563468890171962383"
+kind = "chest"
+area = "GerudoTrainingGround"
+name = "Gerudo Training Ground Room 4 Chest (Item_Dungeon_SmallKey)"
+vanilla_item = "Item_Dungeon_SmallKey"
+oot_randomizer_name = ""
+
+[[location]]
+id = "4372363658229299619"
+kind = "chest"
+area = "GerudoTrainingGround"
+name = "Gerudo Training Ground Room 5 Chest (Item_Dungeon_SmallKey)"
+vanilla_item = "Item_Dungeon_SmallKey"
+oot_randomizer_name = ""
+
+[[location]]
+id = "4961588221597286817"
+kind = "chest"
+area = "GerudoTrainingGround"
+name = "Gerudo Training Ground Room 5 Chest (Obj_Rupee_Green)"
+vanilla_item = "Obj_Rupee_Green"
+oot_randomizer_name = ""
+
+[[location]]
+id = "4709724720801091788"
+kind = "chest"
+area = "GerudoTrainingGround"
+name = "Gerudo Training Ground Room 7 Chest (Item_Dungeon_SmallKey)"
+vanilla_item = "Item_Dungeon_SmallKey"
+oot_randomizer_name = ""
+
+[[location]]
+id = "1883068192328530224"
+kind = "chest"
+area = "GerudoTrainingGround"
+name = "Gerudo Training Ground Room 8 Chest (Item_Dungeon_SmallKey) #1"
+vanilla_item = "Item_Dungeon_SmallKey"
+oot_randomizer_name = ""
+
+[[location]]
+id = "196331300747102419"
+kind = "chest"
+area = "GerudoTrainingGround"
+name = "Gerudo Training Ground Maze Right Central Chest"
+vanilla_item = "Item_BombchuBundle_Small"
+oot_randomizer_name = "Gerudo Training Ground Maze Right Central Chest"
+
+[[location]]
+id = "1941083939696166170"
+kind = "chest"
+area = "GerudoTrainingGround"
+name = "Gerudo Training Ground Maze Path Final Chest"
+vanilla_item = "Item_Arrow_Ice"
+oot_randomizer_name = "Gerudo Training Ground Maze Path Final Chest"
+
+[[location]]
+id = "4320448574091221496"
+kind = "chest"
+area = "GerudoTrainingGround"
+name = "Gerudo Training Ground Room 8 Chest (Item_Dungeon_SmallKey) #2"
+vanilla_item = "Item_Dungeon_SmallKey"
+oot_randomizer_name = ""
+
+[[location]]
+id = "8186301369655588602"
+kind = "chest"
+area = "GerudoTrainingGround"
+name = "Gerudo Training Ground Room 8 Chest (TBox_Rupee_Red) #1"
+vanilla_item = "TBox_Rupee_Red"
+oot_randomizer_name = ""
+
+[[location]]
+id = "9911316961118170383"
+kind = "chest"
+area = "GerudoTrainingGround"
+name = "Gerudo Training Ground Room 8 Chest (Item_Dungeon_SmallKey) #3"
+vanilla_item = "Item_Dungeon_SmallKey"
+oot_randomizer_name = ""
+
+[[location]]
+id = "10696620323243142689"
+kind = "chest"
+area = "GerudoTrainingGround"
+name = "Gerudo Training Ground Maze Path First Chest"
+vanilla_item = "TBox_Rupee_Purple"
+oot_randomizer_name = "Gerudo Training Ground Maze Path First Chest"
+
+[[location]]
+id = "11683433230229591151"
+kind = "chest"
+area = "GerudoTrainingGround"
+name = "Gerudo Training Ground Room 8 Chest (TBox_Rupee_Red) #2"
+vanilla_item = "TBox_Rupee_Red"
+oot_randomizer_name = ""
+
+[[location]]
+id = "3717705376223508790"
+kind = "chest"
+area = "GerudoTrainingGround"
+name = "Gerudo Training Ground Room 9 Chest (Item_Dungeon_SmallKey)"
+vanilla_item = "Item_Dungeon_SmallKey"
+oot_randomizer_name = ""
+
+[[location]]
+id = "3750231902048775592"
+kind = "chest"
+area = "GerudoTrainingGround"
+name = "Gerudo Training Ground Room 10 Chest (Item_BombBundle_Small)"
+vanilla_item = "Item_BombBundle_Small"
+oot_randomizer_name = ""
+
+[[location]]
+id = "5329807728555596183"
+kind = "chest"
+area = "GerudoTrainingGround"
+name = "Gerudo Training Ground Room 10 Chest (Item_Dungeon_SmallKey)"
+vanilla_item = "Item_Dungeon_SmallKey"
+oot_randomizer_name = ""
+
+[[location]]
+id = "6897789835137994741"
+kind = "chest"
+area = "GerudoTrainingGround"
+name = "Gerudo Training Ground Room 10 Chest (TBox_Rupee_Red)"
+vanilla_item = "TBox_Rupee_Red"
+oot_randomizer_name = ""
+
+[[location]]
+id = "11754783663699171680"
+kind = "chest"
+area = "GerudoTrainingGround"
+name = "Gerudo Training Ground Room 10 Chest (Item_ScrubBusinessSeed)"
+vanilla_item = "Item_ScrubBusinessSeed"
+oot_randomizer_name = ""
+
+[[location]]
+id = "13612880783193811229"
+kind = "chest"
+area = "GerudoValley"
+name = "Gerudo Valley Chest (TBox_Rupee_Red)"
+vanilla_item = "TBox_Rupee_Red"
+oot_randomizer_name = ""
+
+[[location]]
+id = "18413589940135955604"
+kind = "chest"
+area = "GerudoValley"
+name = "Gerudo Valley Chest (TBox_Rupee_Red) [Adult]"
+vanilla_item = "TBox_Rupee_Red"
+oot_randomizer_name = ""
+
+[[location]]
+id = "6463521162691873710"
+kind = "chest"
+area = "GerudoValley"
+name = "Gerudo Valley Chest (Item_ScrubBusinessSeed)"
+vanilla_item = "Item_ScrubBusinessSeed"
+oot_randomizer_name = ""
+
+[[location]]
+id = "17750686910716887133"
+kind = "chest"
+area = "GerudoValley"
+name = "Gerudo Valley Chest (TBox_Rupee_Green)"
+vanilla_item = "TBox_Rupee_Green"
+oot_randomizer_name = ""
+
+[[location]]
+id = "15856256242099990922"
+kind = "chest"
+area = "GerudoValley"
+name = "Gerudo Valley Chest (Obj_Heart_Piece)"
+vanilla_item = "Obj_Heart_Piece"
+oot_randomizer_name = ""
+
+[[location]]
+id = "6205043616869463865"
+kind = "chest"
+area = "GerudoValley"
+name = "Gerudo Valley Chest (TBox_Rupee_Red) [Child]"
+vanilla_item = "TBox_Rupee_Red"
+oot_randomizer_name = ""
+
+[[location]]
+id = "11535915511003753934"
+kind = "gold_skulltula"
+area = "GerudoValley"
+name = "Gerudo Valley Gold Skulltula #1"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "13584527502619061465"
+kind = "gold_skulltula"
+area = "GerudoValley"
+name = "Gerudo Valley Gold Skulltula #2"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "8326970197618554626"
+kind = "gold_skulltula"
+area = "GerudoValley"
+name = "Gerudo Valley Gold Skulltula #3"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "15265071047503310220"
+kind = "gold_skulltula"
+area = "GerudoValley"
+name = "Gerudo Valley Gold Skulltula #4"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "16129198288828948135"
+kind = "freestanding"
+area = "GerudoValley"
+name = "Gerudo Valley Freestanding (Obj_GerudoValley_Heart_Piece)"
+vanilla_item = "Obj_GerudoValley_Heart_Piece"
+oot_randomizer_name = ""
+
+[[location]]
+id = "1176975953041865014"
+kind = "chest"
+area = "GoronCity"
+name = "Goron City Chest (TBox_Rupee_Blue) #1"
+vanilla_item = "TBox_Rupee_Blue"
+oot_randomizer_name = ""
+
+[[location]]
+id = "3870071239709713434"
+kind = "chest"
+area = "GoronCity"
+name = "Goron City Chest (TBox_Rupee_Purple) #1"
+vanilla_item = "TBox_Rupee_Purple"
+oot_randomizer_name = ""
+
+[[location]]
+id = "4402942101476009858"
+kind = "chest"
+area = "GoronCity"
+name = "Goron City Chest (TBox_Rupee_Red)"
+vanilla_item = "TBox_Rupee_Red"
+oot_randomizer_name = ""
+
+[[location]]
+id = "14647422914070455120"
+kind = "chest"
+area = "GoronCity"
+name = "Goron City Chest (TBox_Rupee_Blue) #2"
+vanilla_item = "TBox_Rupee_Blue"
+oot_randomizer_name = ""
+
+[[location]]
+id = "9159710900681116662"
+kind = "chest"
+area = "GoronCity"
+name = "Goron City Chest (TBox_Rupee_Green)"
+vanilla_item = "TBox_Rupee_Green"
+oot_randomizer_name = ""
+
+[[location]]
+id = "10944569637726152230"
+kind = "chest"
+area = "GoronCity"
+name = "Goron City Chest (TBox_Rupee_Purple) #2"
+vanilla_item = "TBox_Rupee_Purple"
+oot_randomizer_name = ""
+
+[[location]]
+id = "18139423190738716302"
+kind = "gold_skulltula"
+area = "GoronCity"
+name = "Goron City Gold Skulltula #1"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "569390966671955163"
+kind = "gold_skulltula"
+area = "GoronCity"
+name = "Goron City Gold Skulltula #2"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "17336515988275376869"
+kind = "shop_slot"
+area = "GoronCity"
+name = "GC Shop Item 1 [Adult]"
+vanilla_item = "Shop_Heart"
+oot_randomizer_name = "GC Shop Item 1"
+
+[[location]]
+id = "3512162152062029293"
+kind = "shop_slot"
+area = "GoronCity"
+name = "GC Shop Item 1 [Child]"
+vanilla_item = "Shop_Heart"
+oot_randomizer_name = "GC Shop Item 1"
+
+[[location]]
+id = "1979255831149252819"
+kind = "shop_slot"
+area = "GoronCity"
+name = "GC Shop Item 2 [Adult]"
+vanilla_item = "Shop_Bottle_RedPotion"
+oot_randomizer_name = "GC Shop Item 2"
+
+[[location]]
+id = "16994919311159696078"
+kind = "shop_slot"
+area = "GoronCity"
+name = "GC Shop Item 2 [Child]"
+vanilla_item = "Shop_Bottle_RedPotion"
+oot_randomizer_name = "GC Shop Item 2"
+
+[[location]]
+id = "12353176944776347148"
+kind = "shop_slot"
+area = "GoronCity"
+name = "GC Shop Item 3 [Adult]"
+vanilla_item = "Shop_Bottle_Bug"
+oot_randomizer_name = "GC Shop Item 3"
+
+[[location]]
+id = "5465750003560413462"
+kind = "shop_slot"
+area = "GoronCity"
+name = "GC Shop Item 3 [Child]"
+vanilla_item = "Shop_Bottle_Bug"
+oot_randomizer_name = "GC Shop Item 3"
+
+[[location]]
+id = "15075156905719609791"
+kind = "shop_slot"
+area = "GoronCity"
+name = "GC Shop Item 4 [Adult]"
+vanilla_item = "Shop_Armor_Goron"
+oot_randomizer_name = "GC Shop Item 4"
+
+[[location]]
+id = "9081723785715040392"
+kind = "shop_slot"
+area = "GoronCity"
+name = "GC Shop Item 4 [Child]"
+vanilla_item = "Shop_Armor_Goron"
+oot_randomizer_name = "GC Shop Item 4"
+
+[[location]]
+id = "2024544143198404990"
+kind = "shop_slot"
+area = "GoronCity"
+name = "GC Shop Item 5 [Adult]"
+vanilla_item = "Shop_BombBundle_01"
+oot_randomizer_name = "GC Shop Item 5"
+
+[[location]]
+id = "9587346236695312499"
+kind = "shop_slot"
+area = "GoronCity"
+name = "GC Shop Item 5 [Child]"
+vanilla_item = "Shop_BombBundle_01"
+oot_randomizer_name = "GC Shop Item 5"
+
+[[location]]
+id = "4051972258083132277"
+kind = "shop_slot"
+area = "GoronCity"
+name = "GC Shop Item 6 [Adult]"
+vanilla_item = "Shop_BombBundle_02"
+oot_randomizer_name = "GC Shop Item 6"
+
+[[location]]
+id = "10981256749588857721"
+kind = "shop_slot"
+area = "GoronCity"
+name = "GC Shop Item 6 [Child]"
+vanilla_item = "Shop_BombBundle_02"
+oot_randomizer_name = "GC Shop Item 6"
+
+[[location]]
+id = "7766531338573556705"
+kind = "shop_slot"
+area = "GoronCity"
+name = "GC Shop Item 7 [Adult]"
+vanilla_item = "Shop_BombBundle_03"
+oot_randomizer_name = "GC Shop Item 7"
+
+[[location]]
+id = "14612795868360326117"
+kind = "shop_slot"
+area = "GoronCity"
+name = "GC Shop Item 7 [Child]"
+vanilla_item = "Shop_BombBundle_03"
+oot_randomizer_name = "GC Shop Item 7"
+
+[[location]]
+id = "4809021128171462363"
+kind = "shop_slot"
+area = "GoronCity"
+name = "GC Shop Item 8 [Adult]"
+vanilla_item = "Shop_BombBundle_04"
+oot_randomizer_name = "GC Shop Item 8"
+
+[[location]]
+id = "2540830164358535343"
+kind = "shop_slot"
+area = "GoronCity"
+name = "GC Shop Item 8 [Child]"
+vanilla_item = "Shop_BombBundle_04"
+oot_randomizer_name = "GC Shop Item 8"
+
+[[location]]
+id = "16912540161937823130"
+kind = "chest"
+area = "Graveyard"
+name = "Graveyard Shield Grave Chest"
+vanilla_item = "TBox_Shield_Hylian"
+oot_randomizer_name = "Graveyard Shield Grave Chest"
+
+[[location]]
+id = "234006393181394602"
+kind = "chest"
+area = "Graveyard"
+name = "Graveyard Chest (TBox_Rupee_Red)"
+vanilla_item = "TBox_Rupee_Red"
+oot_randomizer_name = ""
+
+[[location]]
+id = "4322670163630771947"
+kind = "chest"
+area = "Graveyard"
+name = "Graveyard Chest (TBox_Rupee_Blue)"
+vanilla_item = "TBox_Rupee_Blue"
+oot_randomizer_name = ""
+
+[[location]]
+id = "5534919361313859554"
+kind = "chest"
+area = "Graveyard"
+name = "Graveyard Dampe Race Freestanding PoH"
+vanilla_item = "Obj_Heart_Piece"
+oot_randomizer_name = "Graveyard Dampe Race Freestanding PoH"
+
+[[location]]
+id = "16041366920820397198"
+kind = "chest"
+area = "Graveyard"
+name = "Graveyard Dampe Race Hookshot Chest"
+vanilla_item = "Item_Hookshot"
+oot_randomizer_name = "Graveyard Dampe Race Hookshot Chest"
+
+[[location]]
+id = "9622128545943056087"
+kind = "chest"
+area = "Graveyard"
+name = "Graveyard Heart Piece Grave Chest"
+vanilla_item = "Obj_Heart_Piece"
+oot_randomizer_name = "Graveyard Heart Piece Grave Chest"
+
+[[location]]
+id = "229475726653285413"
+kind = "gold_skulltula"
+area = "Graveyard"
+name = "Graveyard Gold Skulltula #1"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "16798263777516949500"
+kind = "gold_skulltula"
+area = "Graveyard"
+name = "Graveyard Gold Skulltula #2"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "2157466067026784951"
+kind = "freestanding"
+area = "Graveyard"
+name = "Graveyard Freestanding PoH"
+vanilla_item = "Obj_Heart_Piece"
+oot_randomizer_name = "Graveyard Freestanding PoH"
+
+[[location]]
+id = "8825521833684392638"
+kind = "chest"
+area = "HountedWasteland"
+name = "Wasteland Chest"
+vanilla_item = "Item_ScrubBusinessSeed"
+oot_randomizer_name = "Wasteland Chest"
+
+[[location]]
+id = "14910672274965350769"
+kind = "gold_skulltula"
+area = "HountedWasteland"
+name = "Hounted Wasteland Gold Skulltula"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "2504273934093629549"
+kind = "gold_skulltula"
+area = "HyruleCastle"
+name = "Hyrule Castle Gold Skulltula #1"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "9162653017526462607"
+kind = "gold_skulltula"
+area = "HyruleCastle"
+name = "Hyrule Castle Gold Skulltula #2"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "1163740567397714729"
+kind = "chest"
+area = "HyruleField"
+name = "Hyrule Field Chest (TBox_Rupee_Red) #1"
+vanilla_item = "TBox_Rupee_Red"
+oot_randomizer_name = ""
+
+[[location]]
+id = "9891111455604007674"
+kind = "chest"
+area = "HyruleField"
+name = "Hyrule Field Chest (TBox_Rupee_Red) #2"
+vanilla_item = "TBox_Rupee_Red"
+oot_randomizer_name = ""
+
+[[location]]
+id = "17023457248274633121"
+kind = "chest"
+area = "HyruleField"
+name = "Hyrule Field Chest (TBox_Rupee_Red) #3"
+vanilla_item = "TBox_Rupee_Red"
+oot_randomizer_name = ""
+
+[[location]]
+id = "17445672702269453589"
+kind = "chest"
+area = "HyruleField"
+name = "Hyrule Field Chest (Item_ScrubBusinessSeed)"
+vanilla_item = "Item_ScrubBusinessSeed"
+oot_randomizer_name = ""
+
+[[location]]
+id = "2967378296224661060"
+kind = "chest"
+area = "HyruleField"
+name = "Hyrule Field Chest (Obj_Heart_Piece)"
+vanilla_item = "Obj_Heart_Piece"
+oot_randomizer_name = ""
+
+[[location]]
+id = "5755485285664292988"
+kind = "chest"
+area = "HyruleField"
+name = "Hyrule Field Chest (TBox_Rupee_Purple)"
+vanilla_item = "TBox_Rupee_Purple"
+oot_randomizer_name = ""
+
+[[location]]
+id = "6900843020594897860"
+kind = "chest"
+area = "HyruleField"
+name = "Hyrule Field Chest (TBox_Rupee_Red) #4"
+vanilla_item = "TBox_Rupee_Red"
+oot_randomizer_name = ""
+
+[[location]]
+id = "789492162651991711"
+kind = "gold_skulltula"
+area = "HyruleField"
+name = "Hyrule Field Gold Skulltula #1"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "7388645484070660331"
+kind = "gold_skulltula"
+area = "HyruleField"
+name = "Hyrule Field Gold Skulltula #2"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "9047381233010434881"
+kind = "gold_skulltula"
+area = "HyruleField"
+name = "Hyrule Field Gold Skulltula #3"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "341792603838029977"
+kind = "gold_skulltula"
+area = "HyruleField"
+name = "Hyrule Field Gold Skulltula #4"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "2177746409373494991"
+kind = "gold_skulltula"
+area = "HyruleField"
+name = "Hyrule Field Gold Skulltula #5"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "2730878115209290675"
+kind = "gold_skulltula"
+area = "HyruleField"
+name = "Hyrule Field Gold Skulltula #6"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "8655370827943125875"
+kind = "gold_skulltula"
+area = "HyruleField"
+name = "Hyrule Field Gold Skulltula #7"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "12007978132755687032"
+kind = "gold_skulltula"
+area = "HyruleField"
+name = "Hyrule Field Gold Skulltula #8"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "7014193622407727514"
+kind = "gold_skulltula"
+area = "HyruleField"
+name = "Hyrule Field Gold Skulltula #9"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "13944703896577680014"
+kind = "gold_skulltula"
+area = "HyruleField"
+name = "Hyrule Field Gold Skulltula #10"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "15889002414176907668"
+kind = "gold_skulltula"
+area = "HyruleField"
+name = "Hyrule Field Gold Skulltula #11"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "13469300937852836203"
+kind = "freestanding"
+area = "HyruleField"
+name = "LH Freestanding PoH"
+vanilla_item = "Obj_Heart_Piece"
+oot_randomizer_name = "LH Freestanding PoH"
+
+[[location]]
+id = "9814903750835309225"
+kind = "freestanding"
+area = "HyruleField"
+name = "LLR Freestanding PoH"
+vanilla_item = "Obj_Heart_Piece"
+oot_randomizer_name = "LLR Freestanding PoH"
+
+[[location]]
+id = "1888007325063123154"
+kind = "scrub"
+area = "HyruleField"
+name = "HF Deku Scrub Grotto [Adult]"
+vanilla_item = "Obj_Heart_Piece"
+oot_randomizer_name = "HF Deku Scrub Grotto"
+
+[[location]]
+id = "10364468093017215295"
+kind = "scrub"
+area = "HyruleField"
+name = "HF Deku Scrub Grotto [Child]"
+vanilla_item = "Obj_Heart_Piece"
+oot_randomizer_name = "HF Deku Scrub Grotto"
+
+[[location]]
+id = "12901354557574090016"
+kind = "scrub"
+area = "HyruleField"
+name = "Hyrule Field Scrub (Shop_DekuSeedBundle_02)"
+vanilla_item = "Shop_DekuSeedBundle_02"
+oot_randomizer_name = ""
+
+[[location]]
+id = "16672855544778411393"
+kind = "scrub"
+area = "HyruleField"
+name = "Hyrule Field Scrub (Shop_BombBundle_01)"
+vanilla_item = "Shop_BombBundle_01"
+oot_randomizer_name = ""
+
+[[location]]
+id = "17418042722045679657"
+kind = "scrub"
+area = "HyruleField"
+name = "Hyrule Field Scrub (Shop_DekuNutBundle_01)"
+vanilla_item = "Shop_DekuNutBundle_01"
+oot_randomizer_name = ""
+
+[[location]]
+id = "11498802739257120175"
+kind = "chest"
+area = "IceCavern"
+name = "Ice Cavern Map Chest"
+vanilla_item = "Item_Dungeon_Map"
+oot_randomizer_name = "Ice Cavern Map Chest"
+
+[[location]]
+id = "13542013937093159888"
+kind = "chest"
+area = "IceCavern"
+name = "Ice Cavern Compass Chest"
+vanilla_item = "Item_Dungeon_Compass"
+oot_randomizer_name = "Ice Cavern Compass Chest"
+
+[[location]]
+id = "4128092231168513176"
+kind = "chest"
+area = "IceCavern"
+name = "Ice Cavern Room 8 Chest (TBox_Rupee_Red)"
+vanilla_item = "TBox_Rupee_Red"
+oot_randomizer_name = ""
+
+[[location]]
+id = "6859289214373847284"
+kind = "chest"
+area = "IceCavern"
+name = "Ice Cavern Iron Boots Chest"
+vanilla_item = "Item_HeavyBoot"
+oot_randomizer_name = "Ice Cavern Iron Boots Chest"
+
+[[location]]
+id = "7165255787572043804"
+kind = "gold_skulltula"
+area = "IceCavern"
+name = "Ice Cavern Room 3 Gold Skulltula"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "1612219105489330028"
+kind = "gold_skulltula"
+area = "IceCavern"
+name = "Ice Cavern Room 6 Gold Skulltula"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "14822647495538506998"
+kind = "gold_skulltula"
+area = "IceCavern"
+name = "Ice Cavern Room 8 Gold Skulltula"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "16913531450403950487"
+kind = "chest"
+area = "InsideGanonCastle"
+name = "Inside Ganon Castle Room 2 Chest (TBox_ArrowBundle_Medium)"
+vanilla_item = "TBox_ArrowBundle_Medium"
+oot_randomizer_name = ""
+
+[[location]]
+id = "14404733996390762670"
+kind = "chest"
+area = "InsideGanonCastle"
+name = "Ganons Castle Spirit Trial Crystal Switch Chest"
+vanilla_item = "Item_BombchuBundle_Small"
+oot_randomizer_name = "Ganons Castle Spirit Trial Crystal Switch Chest"
+
+[[location]]
+id = "18277713685010400796"
+kind = "chest"
+area = "InsideGanonCastle"
+name = "Inside Ganon Castle Room 8 Chest (TBox_ArrowBundle_Medium)"
+vanilla_item = "TBox_ArrowBundle_Medium"
+oot_randomizer_name = ""
+
+[[location]]
+id = "17657623307936361670"
+kind = "chest"
+area = "InsideGanonCastle"
+name = "Ganons Castle Shadow Trial Golden Gauntlets Chest"
+vanilla_item = "Item_Gauntlet_Gold"
+oot_randomizer_name = "Ganons Castle Shadow Trial Golden Gauntlets Chest"
+
+[[location]]
+id = "1029712040059298120"
+kind = "chest"
+area = "InsideGanonCastle"
+name = "Inside Ganon Castle Room 12 Chest (TBox_Rupee_Blue) #1"
+vanilla_item = "TBox_Rupee_Blue"
+oot_randomizer_name = ""
+
+[[location]]
+id = "7461796063704896255"
+kind = "chest"
+area = "InsideGanonCastle"
+name = "Inside Ganon Castle Room 12 Chest (TBox_Rupee_Blue) #2"
+vanilla_item = "TBox_Rupee_Blue"
+oot_randomizer_name = ""
+
+[[location]]
+id = "14046623154429024571"
+kind = "chest"
+area = "InsideGanonCastle"
+name = "Inside Ganon Castle Room 12 Chest (TBox_Rupee_Blue) #3"
+vanilla_item = "TBox_Rupee_Blue"
+oot_randomizer_name = ""
+
+[[location]]
+id = "14962432460641118089"
+kind = "chest"
+area = "InsideGanonCastle"
+name = "Inside Ganon Castle Room 12 Chest (TBox_Rupee_Red)"
+vanilla_item = "TBox_Rupee_Red"
+oot_randomizer_name = ""
+
+[[location]]
+id = "15320975652699461295"
+kind = "chest"
+area = "InsideGanonCastle"
+name = "Inside Ganon Castle Room 13 Chest (Item_Dungeon_SmallKey)"
+vanilla_item = "Item_Dungeon_SmallKey"
+oot_randomizer_name = ""
+
+[[location]]
+id = "4733634471038136588"
+kind = "chest"
+area = "InsideGanonCastle"
+name = "Inside Ganon Castle Room 13 Chest (TBox_Rupee_Green)"
+vanilla_item = "TBox_Rupee_Green"
+oot_randomizer_name = ""
+
+[[location]]
+id = "7899179288432849355"
+kind = "chest"
+area = "InsideGanonCastle"
+name = "Inside Ganon Castle Room 17 Chest (Item_ScrubBusinessSeed)"
+vanilla_item = "Item_ScrubBusinessSeed"
+oot_randomizer_name = ""
+
+[[location]]
+id = "17092385671602176550"
+kind = "chest"
+area = "InsideGanonCastle"
+name = "Ganons Tower Boss Key Chest"
+vanilla_item = "Item_Dungeon_BossKey"
+oot_randomizer_name = "Ganons Tower Boss Key Chest"
+
+[[location]]
+id = "5527401621172639818"
+kind = "chest"
+area = "InsideJabuJabuBelly"
+name = "Jabu Jabus Belly Boomerang Chest"
+vanilla_item = "Item_Boomerang"
+oot_randomizer_name = "Jabu Jabus Belly Boomerang Chest"
+
+[[location]]
+id = "3510516276638146208"
+kind = "chest"
+area = "InsideJabuJabuBelly"
+name = "Jabu Jabus Belly Compass Chest"
+vanilla_item = "Item_Dungeon_Compass"
+oot_randomizer_name = "Jabu Jabus Belly Compass Chest"
+
+[[location]]
+id = "3609242017501283521"
+kind = "chest"
+area = "InsideJabuJabuBelly"
+name = "Inside Jabu Jabu Belly Room 13 Chest (TBox_Rupee_Red)"
+vanilla_item = "TBox_Rupee_Red"
+oot_randomizer_name = ""
+
+[[location]]
+id = "14933854942830098290"
+kind = "chest"
+area = "InsideJabuJabuBelly"
+name = "Jabu Jabus Belly Map Chest"
+vanilla_item = "Item_Dungeon_Map"
+oot_randomizer_name = "Jabu Jabus Belly Map Chest"
+
+[[location]]
+id = "11283202900158580106"
+kind = "gold_skulltula"
+area = "InsideJabuJabuBelly"
+name = "Inside Jabu Jabu Belly Room 3 Gold Skulltula #1"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "13852835165271311030"
+kind = "gold_skulltula"
+area = "InsideJabuJabuBelly"
+name = "Inside Jabu Jabu Belly Room 3 Gold Skulltula #2"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "15983944335296207002"
+kind = "gold_skulltula"
+area = "InsideJabuJabuBelly"
+name = "Inside Jabu Jabu Belly Room 5 Gold Skulltula"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "11513774157335944149"
+kind = "gold_skulltula"
+area = "InsideJabuJabuBelly"
+name = "Inside Jabu Jabu Belly Room 14 Gold Skulltula"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "17608884438514432711"
+kind = "heart_container"
+area = "InsideJabuJabuBelly"
+name = "Jabu Jabus Belly Barinade Heart"
+vanilla_item = "Obj_Heart_Container"
+oot_randomizer_name = "Jabu Jabus Belly Barinade Heart"
+
+[[location]]
+id = "9496373148524757782"
+kind = "scrub"
+area = "InsideJabuJabuBelly"
+name = "Jabu Jabus Belly Deku Scrub"
+vanilla_item = ""
+oot_randomizer_name = "Jabu Jabus Belly Deku Scrub"
+
+[[location]]
+id = "8579518566955184384"
+kind = "chest"
+area = "InsideTheDekuTree"
+name = "Deku Tree Map Chest"
+vanilla_item = "Item_Dungeon_Map"
+oot_randomizer_name = "Deku Tree Map Chest"
+
+[[location]]
+id = "821372075822700622"
+kind = "chest"
+area = "InsideTheDekuTree"
+name = "Deku Tree Slingshot Chest"
+vanilla_item = "Item_Range_SlingShot"
+oot_randomizer_name = "Deku Tree Slingshot Chest"
+
+[[location]]
+id = "13027331340815880287"
+kind = "chest"
+area = "InsideTheDekuTree"
+name = "Deku Tree Slingshot Room Side Chest"
+vanilla_item = "TBox_DekuNutBundle"
+oot_randomizer_name = "Deku Tree Slingshot Room Side Chest"
+
+[[location]]
+id = "11368028582977069031"
+kind = "chest"
+area = "InsideTheDekuTree"
+name = "Deku Tree Compass Room Side Chest"
+vanilla_item = "TBox_DekuNutBundle"
+oot_randomizer_name = "Deku Tree Compass Room Side Chest"
+
+[[location]]
+id = "9284193025315608699"
+kind = "chest"
+area = "InsideTheDekuTree"
+name = "Deku Tree Compass Chest"
+vanilla_item = "Item_Dungeon_Compass"
+oot_randomizer_name = "Deku Tree Compass Chest"
+
+[[location]]
+id = "12889104996486369065"
+kind = "chest"
+area = "InsideTheDekuTree"
+name = "Deku Tree Basement Chest"
+vanilla_item = "Item_DekuStickBundle_Small"
+oot_randomizer_name = "Deku Tree Basement Chest"
+
+[[location]]
+id = "13609975487234437568"
+kind = "gold_skulltula"
+area = "InsideTheDekuTree"
+name = "Inside The Deku Tree Room 3 Gold Skulltula"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "16101480770659370603"
+kind = "gold_skulltula"
+area = "InsideTheDekuTree"
+name = "Inside The Deku Tree Room 4 Gold Skulltula #1"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "18075358844331090388"
+kind = "gold_skulltula"
+area = "InsideTheDekuTree"
+name = "Inside The Deku Tree Room 4 Gold Skulltula #2"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "17501688996789643983"
+kind = "gold_skulltula"
+area = "InsideTheDekuTree"
+name = "Inside The Deku Tree Room 11 Gold Skulltula"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "17948245526767051747"
+kind = "heart_container"
+area = "InsideTheDekuTree"
+name = "Deku Tree Queen Gohma Heart"
+vanilla_item = "Obj_Heart_Container"
+oot_randomizer_name = "Deku Tree Queen Gohma Heart"
+
+[[location]]
+id = "13080955777249750889"
+kind = "chest"
+area = "KakarikoVillage"
+name = "Kakariko Village Chest (TBox_Rupee_Purple) [Adult Alternative]"
+vanilla_item = "TBox_Rupee_Purple"
+oot_randomizer_name = ""
+
+[[location]]
+id = "12902291359202819102"
+kind = "chest"
+area = "KakarikoVillage"
+name = "Kakariko Village Chest (TBox_Rupee_Blue)"
+vanilla_item = "TBox_Rupee_Blue"
+oot_randomizer_name = ""
+
+[[location]]
+id = "11929552275106311978"
+kind = "chest"
+area = "KakarikoVillage"
+name = "Kakariko Village Chest (TBox_Rupee_Purple) [Adult]"
+vanilla_item = "TBox_Rupee_Purple"
+oot_randomizer_name = ""
+
+[[location]]
+id = "3310819903461047792"
+kind = "gold_skulltula"
+area = "KakarikoVillage"
+name = "Kakariko Village Gold Skulltula #1"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "7677963516305772491"
+kind = "gold_skulltula"
+area = "KakarikoVillage"
+name = "Kakariko Village Gold Skulltula #2"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "11629189455828560791"
+kind = "gold_skulltula"
+area = "KakarikoVillage"
+name = "Kakariko Village Gold Skulltula #3"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "14107117960174262321"
+kind = "gold_skulltula"
+area = "KakarikoVillage"
+name = "Kakariko Village Gold Skulltula #4"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "15118290503807073158"
+kind = "gold_skulltula"
+area = "KakarikoVillage"
+name = "Kakariko Village Gold Skulltula #5"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "15314554401574296838"
+kind = "gold_skulltula"
+area = "KakarikoVillage"
+name = "Kakariko Village Gold Skulltula #6"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "13389209437182306002"
+kind = "freestanding"
+area = "KakarikoVillage"
+name = "Kak Windmill Freestanding PoH"
+vanilla_item = "Obj_Heart_Piece"
+oot_randomizer_name = "Kak Windmill Freestanding PoH"
+
+[[location]]
+id = "17926402522258180222"
+kind = "freestanding"
+area = "KakarikoVillage"
+name = "Kak Impas House Freestanding PoH"
+vanilla_item = "Obj_Heart_Piece"
+oot_randomizer_name = "Kak Impas House Freestanding PoH"
+
+[[location]]
+id = "1034471250009702566"
+kind = "shop_slot"
+area = "KakarikoVillage"
+name = "Kak Potion Shop Item 1 [Adult Alternative]"
+vanilla_item = "Shop_Bottle_RedPotion"
+oot_randomizer_name = "Kak Potion Shop Item 1"
+
+[[location]]
+id = "10770932550933339193"
+kind = "shop_slot"
+area = "KakarikoVillage"
+name = "Kak Bazaar Item 1 [Adult Alternative]"
+vanilla_item = "Shop_Heart"
+oot_randomizer_name = "Kak Bazaar Item 1"
+
+[[location]]
+id = "2420643791120092389"
+kind = "shop_slot"
+area = "KakarikoVillage"
+name = "Kak Potion Shop Item 1 [Adult]"
+vanilla_item = "Shop_Bottle_RedPotion"
+oot_randomizer_name = "Kak Potion Shop Item 1"
+
+[[location]]
+id = "7341217590785857658"
+kind = "shop_slot"
+area = "KakarikoVillage"
+name = "Kak Bazaar Item 1 [Adult]"
+vanilla_item = "Shop_Heart"
+oot_randomizer_name = "Kak Bazaar Item 1"
+
+[[location]]
+id = "7242922901245289051"
+kind = "shop_slot"
+area = "KakarikoVillage"
+name = "Kak Bazaar Item 2 [Adult Alternative]"
+vanilla_item = "Shop_MagicJar_Small"
+oot_randomizer_name = "Kak Bazaar Item 2"
+
+[[location]]
+id = "8914926333771357265"
+kind = "shop_slot"
+area = "KakarikoVillage"
+name = "Kak Potion Shop Item 2 [Adult Alternative]"
+vanilla_item = "Shop_Bottle_GreenPotion"
+oot_randomizer_name = "Kak Potion Shop Item 2"
+
+[[location]]
+id = "8409930160770260951"
+kind = "shop_slot"
+area = "KakarikoVillage"
+name = "Kak Potion Shop Item 2 [Adult]"
+vanilla_item = "Shop_Bottle_GreenPotion"
+oot_randomizer_name = "Kak Potion Shop Item 2"
+
+[[location]]
+id = "9196056434848129628"
+kind = "shop_slot"
+area = "KakarikoVillage"
+name = "Kak Bazaar Item 2 [Adult]"
+vanilla_item = "Shop_MagicJar_Small"
+oot_randomizer_name = "Kak Bazaar Item 2"
+
+[[location]]
+id = "6472964510849521373"
+kind = "shop_slot"
+area = "KakarikoVillage"
+name = "Kak Bazaar Item 3 [Adult Alternative]"
+vanilla_item = "Shop_DekuSeedBundle_02"
+oot_randomizer_name = "Kak Bazaar Item 3"
+
+[[location]]
+id = "14573579641810810967"
+kind = "shop_slot"
+area = "KakarikoVillage"
+name = "Kak Potion Shop Item 3 [Adult Alternative]"
+vanilla_item = "Shop_Bottle_HalfMilk"
+oot_randomizer_name = "Kak Potion Shop Item 3"
+
+[[location]]
+id = "2176150328003949778"
+kind = "shop_slot"
+area = "KakarikoVillage"
+name = "Kak Potion Shop Item 3 [Adult]"
+vanilla_item = "Shop_Bottle_HalfMilk"
+oot_randomizer_name = "Kak Potion Shop Item 3"
+
+[[location]]
+id = "12203225833235031646"
+kind = "shop_slot"
+area = "KakarikoVillage"
+name = "Kak Bazaar Item 3 [Adult]"
+vanilla_item = "Shop_DekuSeedBundle_02"
+oot_randomizer_name = "Kak Bazaar Item 3"
+
+[[location]]
+id = "9329787277345810673"
+kind = "shop_slot"
+area = "KakarikoVillage"
+name = "Kak Bazaar Item 4 [Adult Alternative]"
+vanilla_item = "Shop_ArrowBundle_01"
+oot_randomizer_name = "Kak Bazaar Item 4"
+
+[[location]]
+id = "13090519859098389042"
+kind = "shop_slot"
+area = "KakarikoVillage"
+name = "Kak Potion Shop Item 4 [Adult Alternative]"
+vanilla_item = "Shop_Bottle_Fairy"
+oot_randomizer_name = "Kak Potion Shop Item 4"
+
+[[location]]
+id = "2505209540695098876"
+kind = "shop_slot"
+area = "KakarikoVillage"
+name = "Kak Potion Shop Item 4 [Adult]"
+vanilla_item = "Shop_Bottle_Fairy"
+oot_randomizer_name = "Kak Potion Shop Item 4"
+
+[[location]]
+id = "12821849920581332402"
+kind = "shop_slot"
+area = "KakarikoVillage"
+name = "Kak Bazaar Item 4 [Adult]"
+vanilla_item = "Shop_ArrowBundle_01"
+oot_randomizer_name = "Kak Bazaar Item 4"
+
+[[location]]
+id = "9419965511399476345"
+kind = "shop_slot"
+area = "KakarikoVillage"
+name = "Kak Potion Shop Item 5 [Adult Alternative]"
+vanilla_item = "Shop_Bottle_BlueFire"
+oot_randomizer_name = "Kak Potion Shop Item 5"
+
+[[location]]
+id = "17252547494024141430"
+kind = "shop_slot"
+area = "KakarikoVillage"
+name = "Kak Bazaar Item 5 [Adult Alternative]"
+vanilla_item = "Shop_BombBundle_01"
+oot_randomizer_name = "Kak Bazaar Item 5"
+
+[[location]]
+id = "15457642551600550074"
+kind = "shop_slot"
+area = "KakarikoVillage"
+name = "Kak Potion Shop Item 5 [Adult]"
+vanilla_item = "Shop_Bottle_BlueFire"
+oot_randomizer_name = "Kak Potion Shop Item 5"
+
+[[location]]
+id = "17512265184304585271"
+kind = "shop_slot"
+area = "KakarikoVillage"
+name = "Kak Bazaar Item 5 [Adult]"
+vanilla_item = "Shop_BombBundle_01"
+oot_randomizer_name = "Kak Bazaar Item 5"
+
+[[location]]
+id = "11639399395084703081"
+kind = "shop_slot"
+area = "KakarikoVillage"
+name = "Kak Potion Shop Item 6 [Adult Alternative]"
+vanilla_item = "Shop_Bottle_Poe"
+oot_randomizer_name = "Kak Potion Shop Item 6"
+
+[[location]]
+id = "16693599174313571081"
+kind = "shop_slot"
+area = "KakarikoVillage"
+name = "Kak Bazaar Item 6 [Adult Alternative]"
+vanilla_item = "Shop_DekuNutBundle_01"
+oot_randomizer_name = "Kak Bazaar Item 6"
+
+[[location]]
+id = "10498999850469822755"
+kind = "shop_slot"
+area = "KakarikoVillage"
+name = "Kak Potion Shop Item 6 [Adult]"
+vanilla_item = "Shop_Bottle_Poe"
+oot_randomizer_name = "Kak Potion Shop Item 6"
+
+[[location]]
+id = "16973917980311026582"
+kind = "shop_slot"
+area = "KakarikoVillage"
+name = "Kak Bazaar Item 6 [Adult]"
+vanilla_item = "Shop_DekuNutBundle_01"
+oot_randomizer_name = "Kak Bazaar Item 6"
+
+[[location]]
+id = "3063235766944682979"
+kind = "shop_slot"
+area = "KakarikoVillage"
+name = "Kak Potion Shop Item 7 [Adult Alternative]"
+vanilla_item = "Shop_Bottle_Bug"
+oot_randomizer_name = "Kak Potion Shop Item 7"
+
+[[location]]
+id = "11066753475037239452"
+kind = "shop_slot"
+area = "KakarikoVillage"
+name = "Kak Bazaar Item 7 [Adult Alternative]"
+vanilla_item = "Shop_Weapon_Shield_Hylian"
+oot_randomizer_name = "Kak Bazaar Item 7"
+
+[[location]]
+id = "4010587438556269486"
+kind = "shop_slot"
+area = "KakarikoVillage"
+name = "Kak Potion Shop Item 7 [Adult]"
+vanilla_item = "Shop_Bottle_Bug"
+oot_randomizer_name = "Kak Potion Shop Item 7"
+
+[[location]]
+id = "6438218320520635418"
+kind = "shop_slot"
+area = "KakarikoVillage"
+name = "Kak Bazaar Item 7 [Adult]"
+vanilla_item = "Shop_Weapon_Shield_Hylian"
+oot_randomizer_name = "Kak Bazaar Item 7"
+
+[[location]]
+id = "12023735427638332018"
+kind = "shop_slot"
+area = "KakarikoVillage"
+name = "Kak Potion Shop Item 8 [Adult Alternative]"
+vanilla_item = "Shop_Bottle_Fish"
+oot_randomizer_name = "Kak Potion Shop Item 8"
+
+[[location]]
+id = "15323969315798721959"
+kind = "shop_slot"
+area = "KakarikoVillage"
+name = "Kak Bazaar Item 8 [Adult Alternative]"
+vanilla_item = "Shop_DekuStick"
+oot_randomizer_name = "Kak Bazaar Item 8"
+
+[[location]]
+id = "14581044945263333943"
+kind = "shop_slot"
+area = "KakarikoVillage"
+name = "Kak Potion Shop Item 8 [Adult]"
+vanilla_item = "Shop_Bottle_Fish"
+oot_randomizer_name = "Kak Potion Shop Item 8"
+
+[[location]]
+id = "17114479252530837728"
+kind = "shop_slot"
+area = "KakarikoVillage"
+name = "Kak Bazaar Item 8 [Adult]"
+vanilla_item = "Shop_DekuStick"
+oot_randomizer_name = "Kak Bazaar Item 8"
+
+[[location]]
+id = "4349272251343787229"
+kind = "chest"
+area = "KokiriForest"
+name = "Kokiri Forest Chest (TBox_Rupee_Purple)"
+vanilla_item = "TBox_Rupee_Purple"
+oot_randomizer_name = ""
+
+[[location]]
+id = "4555665598794293658"
+kind = "chest"
+area = "KokiriForest"
+name = "KF Midos Top Right Chest"
+vanilla_item = "TBox_Rupee_Blue"
+oot_randomizer_name = "KF Midos Top Right Chest"
+
+[[location]]
+id = "9725242744547055868"
+kind = "chest"
+area = "KokiriForest"
+name = "KF Midos Top Left Chest"
+vanilla_item = "TBox_Rupee_Blue"
+oot_randomizer_name = "KF Midos Top Left Chest"
+
+[[location]]
+id = "10831981390482426294"
+kind = "chest"
+area = "KokiriForest"
+name = "KF Midos Bottom Left Chest"
+vanilla_item = "TBox_Rupee_Green"
+oot_randomizer_name = "KF Midos Bottom Left Chest"
+
+[[location]]
+id = "12786193094758345086"
+kind = "chest"
+area = "KokiriForest"
+name = "KF Midos Bottom Right Chest"
+vanilla_item = "TBox_Rupee_Blue"
+oot_randomizer_name = "KF Midos Bottom Right Chest"
+
+[[location]]
+id = "16757992849254467386"
+kind = "chest"
+area = "KokiriForest"
+name = "KF Kokiri Sword Chest"
+vanilla_item = "Item_Sword_Kokiri"
+oot_randomizer_name = "KF Kokiri Sword Chest"
+
+[[location]]
+id = "14818888396401495482"
+kind = "chest"
+area = "KokiriForest"
+name = "Kokiri Forest Chest (TBox_Rupee_Green) #2"
+vanilla_item = "TBox_Rupee_Green"
+oot_randomizer_name = ""
+
+[[location]]
+id = "7116603238806634901"
+kind = "gold_skulltula"
+area = "KokiriForest"
+name = "Kokiri Forest Gold Skulltula #1"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "9623998892552467148"
+kind = "gold_skulltula"
+area = "KokiriForest"
+name = "Kokiri Forest Gold Skulltula #2"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "17067594426901953848"
+kind = "gold_skulltula"
+area = "KokiriForest"
+name = "Kokiri Forest Gold Skulltula #3"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "7488448334396031424"
+kind = "scrub"
+area = "KokiriForest"
+name = "Kokiri Forest Scrub (Item_StickBag_Medium) [Adult]"
+vanilla_item = "Item_StickBag_Medium"
+oot_randomizer_name = ""
+
+[[location]]
+id = "182031956235860994"
+kind = "scrub"
+area = "KokiriForest"
+name = "Kokiri Forest Scrub (Item_StickBag_Medium) [Child]"
+vanilla_item = "Item_StickBag_Medium"
+oot_randomizer_name = ""
+
+[[location]]
+id = "10357707628656499332"
+kind = "shop_slot"
+area = "KokiriForest"
+name = "KF Shop Item 1 [Adult]"
+vanilla_item = "Shop_Heart"
+oot_randomizer_name = "KF Shop Item 1"
+
+[[location]]
+id = "1333478118027005676"
+kind = "shop_slot"
+area = "KokiriForest"
+name = "KF Shop Item 1 [Child] #1"
+vanilla_item = "Shop_Heart"
+oot_randomizer_name = "KF Shop Item 1"
+
+[[location]]
+id = "11595064306709942551"
+kind = "shop_slot"
+area = "KokiriForest"
+name = "KF Shop Item 1 [Child] #2"
+vanilla_item = "Shop_Heart"
+oot_randomizer_name = "KF Shop Item 1"
+
+[[location]]
+id = "10608793909085719174"
+kind = "shop_slot"
+area = "KokiriForest"
+name = "KF Shop Item 2 [Adult]"
+vanilla_item = "Shop_DekuSeedBundle_02"
+oot_randomizer_name = "KF Shop Item 2"
+
+[[location]]
+id = "726499075643244587"
+kind = "shop_slot"
+area = "KokiriForest"
+name = "KF Shop Item 2 [Child] #1"
+vanilla_item = "Shop_DekuSeedBundle_02"
+oot_randomizer_name = "KF Shop Item 2"
+
+[[location]]
+id = "12274555791381804315"
+kind = "shop_slot"
+area = "KokiriForest"
+name = "KF Shop Item 2 [Child] #2"
+vanilla_item = "Shop_DekuSeedBundle_02"
+oot_randomizer_name = "KF Shop Item 2"
+
+[[location]]
+id = "8442446062876759020"
+kind = "shop_slot"
+area = "KokiriForest"
+name = "KF Shop Item 3 [Adult]"
+vanilla_item = "Shop_DekuNutBundle_01"
+oot_randomizer_name = "KF Shop Item 3"
+
+[[location]]
+id = "1212183037605930043"
+kind = "shop_slot"
+area = "KokiriForest"
+name = "KF Shop Item 3 [Child] #1"
+vanilla_item = "Shop_DekuNutBundle_01"
+oot_randomizer_name = "KF Shop Item 3"
+
+[[location]]
+id = "15469014478079481125"
+kind = "shop_slot"
+area = "KokiriForest"
+name = "KF Shop Item 3 [Child] #2"
+vanilla_item = "Shop_DekuNutBundle_01"
+oot_randomizer_name = "KF Shop Item 3"
+
+[[location]]
+id = "5205605618390578983"
+kind = "shop_slot"
+area = "KokiriForest"
+name = "KF Shop Item 4 [Adult]"
+vanilla_item = "Shop_DekuNutBundle_02"
+oot_randomizer_name = "KF Shop Item 4"
+
+[[location]]
+id = "12416733255464110660"
+kind = "shop_slot"
+area = "KokiriForest"
+name = "KF Shop Item 4 [Child] #1"
+vanilla_item = "Shop_DekuNutBundle_02"
+oot_randomizer_name = "KF Shop Item 4"
+
+[[location]]
+id = "12981796475041639447"
+kind = "shop_slot"
+area = "KokiriForest"
+name = "KF Shop Item 4 [Child] #2"
+vanilla_item = "Shop_DekuNutBundle_02"
+oot_randomizer_name = "KF Shop Item 4"
+
+[[location]]
+id = "13457020963026830815"
+kind = "shop_slot"
+area = "KokiriForest"
+name = "KF Shop Item 5 [Adult]"
+vanilla_item = "Shop_DekuSeedBundle_01"
+oot_randomizer_name = "KF Shop Item 5"
+
+[[location]]
+id = "4804777660082210636"
+kind = "shop_slot"
+area = "KokiriForest"
+name = "KF Shop Item 5 [Child] #1"
+vanilla_item = "Shop_DekuSeedBundle_01"
+oot_randomizer_name = "KF Shop Item 5"
+
+[[location]]
+id = "8357016262118670446"
+kind = "shop_slot"
+area = "KokiriForest"
+name = "KF Shop Item 5 [Child] #2"
+vanilla_item = "Shop_DekuSeedBundle_01"
+oot_randomizer_name = "KF Shop Item 5"
+
+[[location]]
+id = "4359156404841200094"
+kind = "shop_slot"
+area = "KokiriForest"
+name = "KF Shop Item 6 [Adult]"
+vanilla_item = "Shop_DekuStickBundle_Medium"
+oot_randomizer_name = "KF Shop Item 6"
+
+[[location]]
+id = "1748192465494650957"
+kind = "shop_slot"
+area = "KokiriForest"
+name = "KF Shop Item 6 [Child] #1"
+vanilla_item = "Shop_DekuStickBundle_Medium"
+oot_randomizer_name = "KF Shop Item 6"
+
+[[location]]
+id = "15329846556357339265"
+kind = "shop_slot"
+area = "KokiriForest"
+name = "KF Shop Item 6 [Child] #2"
+vanilla_item = "Shop_DekuStickBundle_Medium"
+oot_randomizer_name = "KF Shop Item 6"
+
+[[location]]
+id = "6642704364901961822"
+kind = "shop_slot"
+area = "KokiriForest"
+name = "KF Shop Item 7 [Adult]"
+vanilla_item = "Shop_Weapon_Shield_Deku"
+oot_randomizer_name = "KF Shop Item 7"
+
+[[location]]
+id = "6236883368863181555"
+kind = "shop_slot"
+area = "KokiriForest"
+name = "KF Shop Item 7 [Child] #1"
+vanilla_item = "Shop_Weapon_Shield_Deku"
+oot_randomizer_name = "KF Shop Item 7"
+
+[[location]]
+id = "8161552603046357963"
+kind = "shop_slot"
+area = "KokiriForest"
+name = "KF Shop Item 7 [Child] #2"
+vanilla_item = "Shop_Weapon_Shield_Deku"
+oot_randomizer_name = "KF Shop Item 7"
+
+[[location]]
+id = "15352451833778770402"
+kind = "shop_slot"
+area = "KokiriForest"
+name = "KF Shop Item 8 [Adult]"
+vanilla_item = "Shop_DekuStick"
+oot_randomizer_name = "KF Shop Item 8"
+
+[[location]]
+id = "13192127861177212694"
+kind = "shop_slot"
+area = "KokiriForest"
+name = "KF Shop Item 8 [Child] #1"
+vanilla_item = "Shop_DekuStick"
+oot_randomizer_name = "KF Shop Item 8"
+
+[[location]]
+id = "15086736134255051687"
+kind = "shop_slot"
+area = "KokiriForest"
+name = "KF Shop Item 8 [Child] #2"
+vanilla_item = "Shop_DekuStick"
+oot_randomizer_name = "KF Shop Item 8"
+
+[[location]]
+id = "17479747339356189279"
+kind = "chest"
+area = "LostWood"
+name = "LW Near Shortcuts Grotto Chest"
+vanilla_item = "TBox_Rupee_Purple"
+oot_randomizer_name = "LW Near Shortcuts Grotto Chest"
+
+[[location]]
+id = "4335656213162247230"
+kind = "gold_skulltula"
+area = "LostWood"
+name = "Lost Wood Gold Skulltula #1"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "9333354743976439033"
+kind = "gold_skulltula"
+area = "LostWood"
+name = "Lost Wood Gold Skulltula #2"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "17796658857969527112"
+kind = "gold_skulltula"
+area = "LostWood"
+name = "Lost Wood Gold Skulltula #3"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "5764461665617243979"
+kind = "scrub"
+area = "LostWood"
+name = "LW Deku Scrub Grotto Front [Adult]"
+vanilla_item = "Item_NutBag_Medium"
+oot_randomizer_name = "LW Deku Scrub Grotto Front"
+
+[[location]]
+id = "11192313919554167152"
+kind = "scrub"
+area = "LostWood"
+name = "LW Deku Scrub Near Bridge [Adult]"
+vanilla_item = "Item_StickBag_Medium"
+oot_randomizer_name = "LW Deku Scrub Near Bridge"
+
+[[location]]
+id = "14619830301496284497"
+kind = "scrub"
+area = "LostWood"
+name = "Lost Wood Scrub (Shop_ArrowBundle_01)"
+vanilla_item = "Shop_ArrowBundle_01"
+oot_randomizer_name = ""
+
+[[location]]
+id = "2214083465643671502"
+kind = "scrub"
+area = "LostWood"
+name = "LW Deku Scrub Grotto Rear"
+vanilla_item = "Shop_DekuSeedBundle_02"
+oot_randomizer_name = "LW Deku Scrub Grotto Rear"
+
+[[location]]
+id = "2569517939889411425"
+kind = "scrub"
+area = "LostWood"
+name = "Lost Wood Scrub"
+vanilla_item = ""
+oot_randomizer_name = ""
+
+[[location]]
+id = "4328741615941752705"
+kind = "scrub"
+area = "LostWood"
+name = "LW Deku Scrub Grotto Front [Child]"
+vanilla_item = "Item_NutBag_Medium"
+oot_randomizer_name = "LW Deku Scrub Grotto Front"
+
+[[location]]
+id = "5406759280757349546"
+kind = "scrub"
+area = "LostWood"
+name = "LW Deku Scrub Near Bridge [Child]"
+vanilla_item = "Item_StickBag_Medium"
+oot_randomizer_name = "LW Deku Scrub Near Bridge"
+
+[[location]]
+id = "11385057993574159532"
+kind = "scrub"
+area = "LostWood"
+name = "Lost Wood Scrub (Obj_Heart)"
+vanilla_item = "Obj_Heart"
+oot_randomizer_name = ""
+
+[[location]]
+id = "15048088372638595204"
+kind = "scrub"
+area = "LostWood"
+name = "Lost Wood Scrub (Item_Bottle_RedPotion)"
+vanilla_item = "Item_Bottle_RedPotion"
+oot_randomizer_name = ""
+
+[[location]]
+id = "1775586642693927992"
+kind = "treasure_game_box"
+area = "Market"
+name = "Market Treasure Chest Game Room 1 Top"
+vanilla_item = "Obj_MiniGame_SmallKey"
+oot_randomizer_name = "Market Treasure Chest Game Room 1 Top"
+
+[[location]]
+id = "5350594583391365806"
+kind = "treasure_game_box"
+area = "Market"
+name = "Market Treasure Chest Game Room 2 Top"
+vanilla_item = "Obj_MiniGame_SmallKey"
+oot_randomizer_name = "Market Treasure Chest Game Room 2 Top"
+
+[[location]]
+id = "6478285350658826847"
+kind = "treasure_game_box"
+area = "Market"
+name = "Market Treasure Chest Game Room 4 Top"
+vanilla_item = "Obj_MiniGame_SmallKey"
+oot_randomizer_name = "Market Treasure Chest Game Room 4 Top"
+
+[[location]]
+id = "6781536951709667179"
+kind = "treasure_game_box"
+area = "Market"
+name = "Market Treasure Game Box (TBox_Rupee_Red)"
+vanilla_item = "TBox_Rupee_Red"
+oot_randomizer_name = ""
+
+[[location]]
+id = "7390716194495618474"
+kind = "treasure_game_box"
+area = "Market"
+name = "Market Treasure Chest Game Room 1 Bottom"
+vanilla_item = "TBox_Rupee_Green"
+oot_randomizer_name = "Market Treasure Chest Game Room 1 Bottom"
+
+[[location]]
+id = "9591654059707200528"
+kind = "treasure_game_box"
+area = "Market"
+name = "Market Treasure Chest Game Room 3 Bottom"
+vanilla_item = "TBox_Rupee_Green"
+oot_randomizer_name = "Market Treasure Chest Game Room 3 Bottom"
+
+[[location]]
+id = "12114077686306649660"
+kind = "treasure_game_box"
+area = "Market"
+name = "Market Treasure Chest Game Room 2 Bottom"
+vanilla_item = "TBox_Rupee_Green"
+oot_randomizer_name = "Market Treasure Chest Game Room 2 Bottom"
+
+[[location]]
+id = "12763522142548402103"
+kind = "treasure_game_box"
+area = "Market"
+name = "Market Treasure Chest Game Room 3 Top"
+vanilla_item = "Obj_MiniGame_SmallKey"
+oot_randomizer_name = "Market Treasure Chest Game Room 3 Top"
+
+[[location]]
+id = "13633455645485504369"
+kind = "treasure_game_box"
+area = "Market"
+name = "Market Treasure Chest Game Room 4 Bottom"
+vanilla_item = "TBox_Rupee_Blue"
+oot_randomizer_name = "Market Treasure Chest Game Room 4 Bottom"
+
+[[location]]
+id = "15659683110284072977"
+kind = "treasure_game_box"
+area = "Market"
+name = "Market Treasure Chest Game Room 5 Bottom"
+vanilla_item = "TBox_Rupee_Blue"
+oot_randomizer_name = "Market Treasure Chest Game Room 5 Bottom"
+
+[[location]]
+id = "16881481538337649070"
+kind = "treasure_game_box"
+area = "Market"
+name = "Market Treasure Chest Game Reward"
+vanilla_item = "Obj_Heart_Piece"
+oot_randomizer_name = "Market Treasure Chest Game Reward"
+
+[[location]]
+id = "18239509117326156183"
+kind = "treasure_game_box"
+area = "Market"
+name = "Market Treasure Chest Game Room 5 Top"
+vanilla_item = "Obj_MiniGame_SmallKey"
+oot_randomizer_name = "Market Treasure Chest Game Room 5 Top"
+
+[[location]]
+id = "8942465719711548237"
+kind = "gold_skulltula"
+area = "Market"
+name = "Market Gold Skulltula"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "3435311694892283854"
+kind = "shop_slot"
+area = "Market"
+name = "Market Mask Shop Item 1"
+vanilla_item = "Shop_Mask_Spooky"
+oot_randomizer_name = "Market Mask Shop Item 1"
+
+[[location]]
+id = "5784220025515362731"
+kind = "shop_slot"
+area = "Market"
+name = "Market Bazaar Item 1"
+vanilla_item = "Shop_Heart"
+oot_randomizer_name = "Market Bazaar Item 1"
+
+[[location]]
+id = "13904446280042756301"
+kind = "shop_slot"
+area = "Market"
+name = "Market Bombchu Shop Item 1"
+vanilla_item = "Shop_BombchuBundle_03"
+oot_randomizer_name = "Market Bombchu Shop Item 1"
+
+[[location]]
+id = "16342679806948549224"
+kind = "shop_slot"
+area = "Market"
+name = "Market Potion Shop Item 1"
+vanilla_item = "Shop_Bottle_RedPotion"
+oot_randomizer_name = "Market Potion Shop Item 1"
+
+[[location]]
+id = "5101608369586255705"
+kind = "shop_slot"
+area = "Market"
+name = "Market Bazaar Item 2"
+vanilla_item = "Shop_MagicJar_Small"
+oot_randomizer_name = "Market Bazaar Item 2"
+
+[[location]]
+id = "5615457568081558860"
+kind = "shop_slot"
+area = "Market"
+name = "Market Potion Shop Item 2"
+vanilla_item = "Shop_Bottle_GreenPotion"
+oot_randomizer_name = "Market Potion Shop Item 2"
+
+[[location]]
+id = "10663283941529417575"
+kind = "shop_slot"
+area = "Market"
+name = "Market Mask Shop Item 2"
+vanilla_item = "Shop_Mask_Keaton"
+oot_randomizer_name = "Market Mask Shop Item 2"
+
+[[location]]
+id = "13242971960259401995"
+kind = "shop_slot"
+area = "Market"
+name = "Market Bombchu Shop Item 2"
+vanilla_item = "Shop_BombchuBundle_04"
+oot_randomizer_name = "Market Bombchu Shop Item 2"
+
+[[location]]
+id = "10828340057543190252"
+kind = "shop_slot"
+area = "Market"
+name = "Market Mask Shop Item 3"
+vanilla_item = "Shop_Mask_Bunny"
+oot_randomizer_name = "Market Mask Shop Item 3"
+
+[[location]]
+id = "12535663762055135836"
+kind = "shop_slot"
+area = "Market"
+name = "Market Bombchu Shop Item 3"
+vanilla_item = "Shop_BombchuBundle_05"
+oot_randomizer_name = "Market Bombchu Shop Item 3"
+
+[[location]]
+id = "13037119094293428679"
+kind = "shop_slot"
+area = "Market"
+name = "Market Bazaar Item 3"
+vanilla_item = "Shop_DekuSeedBundle_02"
+oot_randomizer_name = "Market Bazaar Item 3"
+
+[[location]]
+id = "16594423016797951568"
+kind = "shop_slot"
+area = "Market"
+name = "Market Potion Shop Item 3"
+vanilla_item = "Shop_Bottle_HalfMilk"
+oot_randomizer_name = "Market Potion Shop Item 3"
+
+[[location]]
+id = "2470662836017610480"
+kind = "shop_slot"
+area = "Market"
+name = "Market Bazaar Item 4"
+vanilla_item = "Shop_ArrowBundle_01"
+oot_randomizer_name = "Market Bazaar Item 4"
+
+[[location]]
+id = "3777780974748551665"
+kind = "shop_slot"
+area = "Market"
+name = "Market Mask Shop Item 4"
+vanilla_item = "Shop_Mask_Skull"
+oot_randomizer_name = "Market Mask Shop Item 4"
+
+[[location]]
+id = "11528490284966062201"
+kind = "shop_slot"
+area = "Market"
+name = "Market Potion Shop Item 4"
+vanilla_item = "Shop_Bottle_Fairy"
+oot_randomizer_name = "Market Potion Shop Item 4"
+
+[[location]]
+id = "17558451189872819062"
+kind = "shop_slot"
+area = "Market"
+name = "Market Bombchu Shop Item 4"
+vanilla_item = "Shop_BombchuBundle_06"
+oot_randomizer_name = "Market Bombchu Shop Item 4"
+
+[[location]]
+id = "6011696378209808077"
+kind = "shop_slot"
+area = "Market"
+name = "Market Potion Shop Item 5"
+vanilla_item = "Shop_Bottle_BlueFire"
+oot_randomizer_name = "Market Potion Shop Item 5"
+
+[[location]]
+id = "10043319116785133483"
+kind = "shop_slot"
+area = "Market"
+name = "Market Bombchu Shop Item 5"
+vanilla_item = "Shop_BombchuBundle_01"
+oot_randomizer_name = "Market Bombchu Shop Item 5"
+
+[[location]]
+id = "13988066728703442945"
+kind = "shop_slot"
+area = "Market"
+name = "Market Mask Shop Item 5"
+vanilla_item = "Shop_Mask_Zora"
+oot_randomizer_name = "Market Mask Shop Item 5"
+
+[[location]]
+id = "14164799327792384879"
+kind = "shop_slot"
+area = "Market"
+name = "Market Bazaar Item 5"
+vanilla_item = "Shop_BombBundle_01"
+oot_randomizer_name = "Market Bazaar Item 5"
+
+[[location]]
+id = "1403700953474659107"
+kind = "shop_slot"
+area = "Market"
+name = "Market Potion Shop Item 6"
+vanilla_item = "Shop_Bottle_Poe"
+oot_randomizer_name = "Market Potion Shop Item 6"
+
+[[location]]
+id = "3656390147213677788"
+kind = "shop_slot"
+area = "Market"
+name = "Market Mask Shop Item 6"
+vanilla_item = "Shop_Mask_Goron"
+oot_randomizer_name = "Market Mask Shop Item 6"
+
+[[location]]
+id = "7981518132387036590"
+kind = "shop_slot"
+area = "Market"
+name = "Market Bombchu Shop Item 6"
+vanilla_item = "Shop_BombchuBundle_07"
+oot_randomizer_name = "Market Bombchu Shop Item 6"
+
+[[location]]
+id = "18157355906313333023"
+kind = "shop_slot"
+area = "Market"
+name = "Market Bazaar Item 6"
+vanilla_item = "Shop_DekuNutBundle_01"
+oot_randomizer_name = "Market Bazaar Item 6"
+
+[[location]]
+id = "7804057436886816165"
+kind = "shop_slot"
+area = "Market"
+name = "Market Bazaar Item 7"
+vanilla_item = "Shop_Weapon_Shield_Hylian"
+oot_randomizer_name = "Market Bazaar Item 7"
+
+[[location]]
+id = "8862936792925648296"
+kind = "shop_slot"
+area = "Market"
+name = "Market Potion Shop Item 7"
+vanilla_item = "Shop_Bottle_Bug"
+oot_randomizer_name = "Market Potion Shop Item 7"
+
+[[location]]
+id = "13546492277428144846"
+kind = "shop_slot"
+area = "Market"
+name = "Market Mask Shop Item 7"
+vanilla_item = "Shop_Mask_Gerudo"
+oot_randomizer_name = "Market Mask Shop Item 7"
+
+[[location]]
+id = "15351736782374583877"
+kind = "shop_slot"
+area = "Market"
+name = "Market Bombchu Shop Item 7"
+vanilla_item = "Shop_BombchuBundle_02"
+oot_randomizer_name = "Market Bombchu Shop Item 7"
+
+[[location]]
+id = "6796029720660653103"
+kind = "shop_slot"
+area = "Market"
+name = "Market Potion Shop Item 8"
+vanilla_item = "Shop_Bottle_Fish"
+oot_randomizer_name = "Market Potion Shop Item 8"
+
+[[location]]
+id = "12366349165653624138"
+kind = "shop_slot"
+area = "Market"
+name = "Market Mask Shop Item 8"
+vanilla_item = "Shop_Mask_Truth"
+oot_randomizer_name = "Market Mask Shop Item 8"
+
+[[location]]
+id = "12426385834471778854"
+kind = "shop_slot"
+area = "Market"
+name = "Market Bombchu Shop Item 8"
+vanilla_item = "Shop_BombchuBundle_08"
+oot_randomizer_name = "Market Bombchu Shop Item 8"
+
+[[location]]
+id = "18084221514669050690"
+kind = "shop_slot"
+area = "Market"
+name = "Market Bazaar Item 8"
+vanilla_item = "Shop_DekuStick"
+oot_randomizer_name = "Market Bazaar Item 8"
+
+[[location]]
+id = "1764383515296652106"
+kind = "chest"
+area = "SacredForestMeadow"
+name = "Sacred Forest Meadow Chest (Item_ScrubBusinessSeed)"
+vanilla_item = "Item_ScrubBusinessSeed"
+oot_randomizer_name = ""
+
+[[location]]
+id = "7995233962349162969"
+kind = "chest"
+area = "SacredForestMeadow"
+name = "SFM Wolfos Grotto Chest"
+vanilla_item = "TBox_Rupee_Purple"
+oot_randomizer_name = "SFM Wolfos Grotto Chest"
+
+[[location]]
+id = "14473218207379268379"
+kind = "gold_skulltula"
+area = "SacredForestMeadow"
+name = "Sacred Forest Meadow Gold Skulltula"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "13528903653876646082"
+kind = "chest"
+area = "ShadowTemple"
+name = "Shadow Temple Map Chest"
+vanilla_item = "Item_Dungeon_Map"
+oot_randomizer_name = "Shadow Temple Map Chest"
+
+[[location]]
+id = "14535080241831873137"
+kind = "chest"
+area = "ShadowTemple"
+name = "Shadow Temple Hover Boots Chest"
+vanilla_item = "Item_HoverBoot"
+oot_randomizer_name = "Shadow Temple Hover Boots Chest"
+
+[[location]]
+id = "1111717451118505545"
+kind = "chest"
+area = "ShadowTemple"
+name = "Shadow Temple Room 6 Chest (Item_Dungeon_SmallKey)"
+vanilla_item = "Item_Dungeon_SmallKey"
+oot_randomizer_name = ""
+
+[[location]]
+id = "1733372171176975157"
+kind = "chest"
+area = "ShadowTemple"
+name = "Shadow Temple Compass Chest"
+vanilla_item = "Item_Dungeon_Compass"
+oot_randomizer_name = "Shadow Temple Compass Chest"
+
+[[location]]
+id = "8858270325665149688"
+kind = "chest"
+area = "ShadowTemple"
+name = "Shadow Temple Room 11 Chest (TBox_Rupee_Red)"
+vanilla_item = "TBox_Rupee_Red"
+oot_randomizer_name = ""
+
+[[location]]
+id = "5781953901224064730"
+kind = "chest"
+area = "ShadowTemple"
+name = "Shadow Temple Room 11 Chest (Item_Dungeon_SmallKey)"
+vanilla_item = "Item_Dungeon_SmallKey"
+oot_randomizer_name = ""
+
+[[location]]
+id = "12345747231768877602"
+kind = "chest"
+area = "ShadowTemple"
+name = "Shadow Temple Room 15 Chest (Item_ScrubBusinessSeed)"
+vanilla_item = "Item_ScrubBusinessSeed"
+oot_randomizer_name = ""
+
+[[location]]
+id = "169081039115821925"
+kind = "chest"
+area = "ShadowTemple"
+name = "Shadow Temple Room 16 Chest (Item_Dungeon_SmallKey)"
+vanilla_item = "Item_Dungeon_SmallKey"
+oot_randomizer_name = ""
+
+[[location]]
+id = "5681107746948738726"
+kind = "chest"
+area = "ShadowTemple"
+name = "Shadow Temple Room 16 Chest (TBox_Rupee_Green)"
+vanilla_item = "TBox_Rupee_Green"
+oot_randomizer_name = ""
+
+[[location]]
+id = "9852624243105848451"
+kind = "chest"
+area = "ShadowTemple"
+name = "Shadow Temple Room 19 Chest (Tbox_MagicJar_Large)"
+vanilla_item = "Tbox_MagicJar_Large"
+oot_randomizer_name = ""
+
+[[location]]
+id = "9221365632831348137"
+kind = "chest"
+area = "ShadowTemple"
+name = "Shadow Temple Boss Key Chest"
+vanilla_item = "Item_Dungeon_BossKey"
+oot_randomizer_name = "Shadow Temple Boss Key Chest"
+
+[[location]]
+id = "17902550525792072472"
+kind = "chest"
+area = "ShadowTemple"
+name = "Shadow Temple Room 21 Chest (Item_Dungeon_SmallKey)"
+vanilla_item = "Item_Dungeon_SmallKey"
+oot_randomizer_name = ""
+
+[[location]]
+id = "3718790579351798247"
+kind = "chest"
+area = "ShadowTemple"
+name = "Shadow Temple Room 31 Chest (TBox_Rupee_Red) #1"
+vanilla_item = "TBox_Rupee_Red"
+oot_randomizer_name = ""
+
+[[location]]
+id = "10344372963276519235"
+kind = "chest"
+area = "ShadowTemple"
+name = "Shadow Temple Room 31 Chest (TBox_Rupee_Red) #2"
+vanilla_item = "TBox_Rupee_Red"
+oot_randomizer_name = ""
+
+[[location]]
+id = "15148554628675590606"
+kind = "gold_skulltula"
+area = "ShadowTemple"
+name = "Shadow Temple Room 11 Gold Skulltula"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "15564367841356014861"
+kind = "gold_skulltula"
+area = "ShadowTemple"
+name = "Shadow Temple Room 14 Gold Skulltula"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "8823884712433934372"
+kind = "gold_skulltula"
+area = "ShadowTemple"
+name = "Shadow Temple Room 17 Gold Skulltula"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "10270336409167849808"
+kind = "gold_skulltula"
+area = "ShadowTemple"
+name = "Shadow Temple Room 20 Gold Skulltula"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "16933078188088206331"
+kind = "gold_skulltula"
+area = "ShadowTemple"
+name = "Shadow Temple Room 31 Gold Skulltula"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "12562389953863361839"
+kind = "freestanding"
+area = "ShadowTemple"
+name = "Shadow Temple Freestanding Key"
+vanilla_item = "Obj_Dungeon_SmallKey"
+oot_randomizer_name = "Shadow Temple Freestanding Key"
+
+[[location]]
+id = "17599164808183510748"
+kind = "heart_container"
+area = "ShadowTemple"
+name = "Shadow Temple Bongo Bongo Heart"
+vanilla_item = "Obj_Heart_Container"
+oot_randomizer_name = "Shadow Temple Bongo Bongo Heart"
+
+[[location]]
+id = "8721287453021850502"
+kind = "scrub"
+area = "ShadowTemple"
+name = "Shadow Temple Room 9 Scrub (Item_Bottle_GreenPotion)"
+vanilla_item = "Item_Bottle_GreenPotion"
+oot_randomizer_name = ""
+
+[[location]]
+id = "5309180490719879013"
+kind = "chest"
+area = "SpiritTemple"
+name = "Spirit Temple Room 2 Chest (TBox_Shield_Deku)"
+vanilla_item = "TBox_Shield_Deku"
+oot_randomizer_name = ""
+
+[[location]]
+id = "5703423643219134246"
+kind = "chest"
+area = "SpiritTemple"
+name = "Spirit Temple Room 4 Chest (Item_Dungeon_SmallKey)"
+vanilla_item = "Item_Dungeon_SmallKey"
+oot_randomizer_name = ""
+
+[[location]]
+id = "1501288453962537671"
+kind = "chest"
+area = "SpiritTemple"
+name = "Spirit Temple Child Climb North Chest"
+vanilla_item = "Item_BombchuBundle_Small"
+oot_randomizer_name = "Spirit Temple Child Climb North Chest"
+
+[[location]]
+id = "2203243501006528435"
+kind = "chest"
+area = "SpiritTemple"
+name = "Spirit Temple Room 7 Chest (Item_Dungeon_SmallKey)"
+vanilla_item = "Item_Dungeon_SmallKey"
+oot_randomizer_name = ""
+
+[[location]]
+id = "13852283723126411131"
+kind = "chest"
+area = "SpiritTemple"
+name = "Spirit Temple Map Chest"
+vanilla_item = "Item_Dungeon_Map"
+oot_randomizer_name = "Spirit Temple Map Chest"
+
+[[location]]
+id = "17407066694905911064"
+kind = "chest"
+area = "SpiritTemple"
+name = "Spirit Temple Room 9 Chest (Item_Dungeon_SmallKey)"
+vanilla_item = "Item_Dungeon_SmallKey"
+oot_randomizer_name = ""
+
+[[location]]
+id = "15633505270333176438"
+kind = "chest"
+area = "SpiritTemple"
+name = "Spirit Temple Compass Chest"
+vanilla_item = "Item_Dungeon_Compass"
+oot_randomizer_name = "Spirit Temple Compass Chest"
+
+[[location]]
+id = "4277978357934400600"
+kind = "chest"
+area = "SpiritTemple"
+name = "Spirit Temple Room 16 Chest (Item_Dungeon_SmallKey)"
+vanilla_item = "Item_Dungeon_SmallKey"
+oot_randomizer_name = ""
+
+[[location]]
+id = "12909857529499414969"
+kind = "chest"
+area = "SpiritTemple"
+name = "Spirit Temple Room 18 Chest (Item_BombBundle_Small)"
+vanilla_item = "Item_BombBundle_Small"
+oot_randomizer_name = ""
+
+[[location]]
+id = "9143177002861777924"
+kind = "chest"
+area = "SpiritTemple"
+name = "Spirit Temple Room 23 Chest (TBox_Rupee_Red) #1"
+vanilla_item = "TBox_Rupee_Red"
+oot_randomizer_name = ""
+
+[[location]]
+id = "14040210993541550542"
+kind = "chest"
+area = "SpiritTemple"
+name = "Spirit Temple Room 23 Chest (TBox_Rupee_Red) #2"
+vanilla_item = "TBox_Rupee_Red"
+oot_randomizer_name = ""
+
+[[location]]
+id = "12042193296697281461"
+kind = "chest"
+area = "SpiritTemple"
+name = "Spirit Temple Room 26 Chest (Item_Dungeon_SmallKey)"
+vanilla_item = "Item_Dungeon_SmallKey"
+oot_randomizer_name = ""
+
+[[location]]
+id = "16272168033146555902"
+kind = "chest"
+area = "SpiritTemple"
+name = "Spirit Temple Boss Key Chest"
+vanilla_item = "Item_Dungeon_BossKey"
+oot_randomizer_name = "Spirit Temple Boss Key Chest"
+
+[[location]]
+id = "13828480906010430010"
+kind = "chest"
+area = "SpiritTemple"
+name = "Spirit Temple Room 31 Chest (Item_BombBundle_Small)"
+vanilla_item = "Item_BombBundle_Small"
+oot_randomizer_name = ""
+
+[[location]]
+id = "10530233152473742636"
+kind = "gold_skulltula"
+area = "SpiritTemple"
+name = "Spirit Temple Room 4 Gold Skulltula"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "5086449036385341804"
+kind = "gold_skulltula"
+area = "SpiritTemple"
+name = "Spirit Temple Room 7 Gold Skulltula #1"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "12959656942046734931"
+kind = "gold_skulltula"
+area = "SpiritTemple"
+name = "Spirit Temple Room 7 Gold Skulltula #2"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "10127391959410674946"
+kind = "gold_skulltula"
+area = "SpiritTemple"
+name = "Spirit Temple Room 10 Gold Skulltula"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "8120267919866495114"
+kind = "gold_skulltula"
+area = "SpiritTemple"
+name = "Spirit Temple Room 15 Gold Skulltula"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "4720088048159616469"
+kind = "heart_container"
+area = "SpiritTemple"
+name = "Spirit Temple Twinrova Heart"
+vanilla_item = "Obj_Heart_Container"
+oot_randomizer_name = "Spirit Temple Twinrova Heart"
+
+[[location]]
+id = "11682974908842171598"
+kind = "chest"
+area = "WaterTemple"
+name = "Water Temple Room 2 Chest (TBox_Rupee_Red)"
+vanilla_item = "TBox_Rupee_Red"
+oot_randomizer_name = ""
+
+[[location]]
+id = "16424266294822218796"
+kind = "chest"
+area = "WaterTemple"
+name = "Water Temple Compass Chest"
+vanilla_item = "Item_Dungeon_Compass"
+oot_randomizer_name = "Water Temple Compass Chest"
+
+[[location]]
+id = "16490222392193949581"
+kind = "chest"
+area = "WaterTemple"
+name = "Water Temple Room 4 Chest (Item_Dungeon_SmallKey)"
+vanilla_item = "Item_Dungeon_SmallKey"
+oot_randomizer_name = ""
+
+[[location]]
+id = "18059711820131847165"
+kind = "chest"
+area = "WaterTemple"
+name = "Water Temple Longshot Chest"
+vanilla_item = "Item_Longshot"
+oot_randomizer_name = "Water Temple Longshot Chest"
+
+[[location]]
+id = "2503861086004941173"
+kind = "chest"
+area = "WaterTemple"
+name = "Water Temple Room 8 Chest (Item_Dungeon_SmallKey)"
+vanilla_item = "Item_Dungeon_SmallKey"
+oot_randomizer_name = ""
+
+[[location]]
+id = "10378828369334876242"
+kind = "chest"
+area = "WaterTemple"
+name = "Water Temple Boss Key Chest"
+vanilla_item = "Item_Dungeon_BossKey"
+oot_randomizer_name = "Water Temple Boss Key Chest"
+
+[[location]]
+id = "16384925224245172970"
+kind = "chest"
+area = "WaterTemple"
+name = "Water Temple Map Chest"
+vanilla_item = "Item_Dungeon_Map"
+oot_randomizer_name = "Water Temple Map Chest"
+
+[[location]]
+id = "18099019250896853049"
+kind = "chest"
+area = "WaterTemple"
+name = "Water Temple Room 18 Chest (Item_Dungeon_SmallKey)"
+vanilla_item = "Item_Dungeon_SmallKey"
+oot_randomizer_name = ""
+
+[[location]]
+id = "3693930347660122883"
+kind = "chest"
+area = "WaterTemple"
+name = "Water Temple Room 20 Chest (Item_Dungeon_SmallKey)"
+vanilla_item = "Item_Dungeon_SmallKey"
+oot_randomizer_name = ""
+
+[[location]]
+id = "11571778270592589517"
+kind = "gold_skulltula"
+area = "WaterTemple"
+name = "Water Temple Room 1 Gold Skulltula"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "16157272130665282352"
+kind = "gold_skulltula"
+area = "WaterTemple"
+name = "Water Temple Room 2 Gold Skulltula"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "15506432733081566465"
+kind = "gold_skulltula"
+area = "WaterTemple"
+name = "Water Temple Room 21 Gold Skulltula"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "186694424287048567"
+kind = "gold_skulltula"
+area = "WaterTemple"
+name = "Water Temple Room 24 Gold Skulltula"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "4399424945134189769"
+kind = "gold_skulltula"
+area = "WaterTemple"
+name = "Water Temple Room 25 Gold Skulltula"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "14426685265732353862"
+kind = "heart_container"
+area = "WaterTemple"
+name = "Water Temple Morpha Heart"
+vanilla_item = "Obj_Heart_Container"
+oot_randomizer_name = "Water Temple Morpha Heart"
+
+[[location]]
+id = "3130048366421939233"
+kind = "chest"
+area = "ZoraDomain"
+name = "ZD Chest"
+vanilla_item = "Obj_Heart_Piece"
+oot_randomizer_name = "ZD Chest"
+
+[[location]]
+id = "9600417828645642589"
+kind = "gold_skulltula"
+area = "ZoraDomain"
+name = "Zora Domain Gold Skulltula"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "68440390189505473"
+kind = "shop_slot"
+area = "ZoraDomain"
+name = "ZD Shop Item 1 [Adult Alternative]"
+vanilla_item = "Shop_Bottle_RedPotion"
+oot_randomizer_name = "ZD Shop Item 1"
+
+[[location]]
+id = "6482029965151015824"
+kind = "shop_slot"
+area = "ZoraDomain"
+name = "ZD Shop Item 1 [Adult]"
+vanilla_item = "Shop_Bottle_RedPotion"
+oot_randomizer_name = "ZD Shop Item 1"
+
+[[location]]
+id = "9176923586745152655"
+kind = "shop_slot"
+area = "ZoraDomain"
+name = "ZD Shop Item 1 [Child]"
+vanilla_item = "Shop_Bottle_RedPotion"
+oot_randomizer_name = "ZD Shop Item 1"
+
+[[location]]
+id = "1680449320526355316"
+kind = "shop_slot"
+area = "ZoraDomain"
+name = "ZD Shop Item 2 [Adult Alternative]"
+vanilla_item = "Shop_Bottle_GreenPotion"
+oot_randomizer_name = "ZD Shop Item 2"
+
+[[location]]
+id = "13414898983927272196"
+kind = "shop_slot"
+area = "ZoraDomain"
+name = "ZD Shop Item 2 [Adult]"
+vanilla_item = "Shop_Bottle_GreenPotion"
+oot_randomizer_name = "ZD Shop Item 2"
+
+[[location]]
+id = "11476986716356933396"
+kind = "shop_slot"
+area = "ZoraDomain"
+name = "ZD Shop Item 2 [Child]"
+vanilla_item = "Shop_Bottle_GreenPotion"
+oot_randomizer_name = "ZD Shop Item 2"
+
+[[location]]
+id = "9234916602077591207"
+kind = "shop_slot"
+area = "ZoraDomain"
+name = "ZD Shop Item 3 [Adult Alternative]"
+vanilla_item = "Shop_Bottle_Bug"
+oot_randomizer_name = "ZD Shop Item 3"
+
+[[location]]
+id = "3320419477327427990"
+kind = "shop_slot"
+area = "ZoraDomain"
+name = "ZD Shop Item 3 [Adult]"
+vanilla_item = "Shop_Bottle_Bug"
+oot_randomizer_name = "ZD Shop Item 3"
+
+[[location]]
+id = "1608689548758434535"
+kind = "shop_slot"
+area = "ZoraDomain"
+name = "ZD Shop Item 3 [Child]"
+vanilla_item = "Shop_Bottle_Bug"
+oot_randomizer_name = "ZD Shop Item 3"
+
+[[location]]
+id = "11864004513775532252"
+kind = "shop_slot"
+area = "ZoraDomain"
+name = "ZD Shop Item 4 [Adult Alternative]"
+vanilla_item = "Shop_Armor_Zora"
+oot_randomizer_name = "ZD Shop Item 4"
+
+[[location]]
+id = "13166851893817035932"
+kind = "shop_slot"
+area = "ZoraDomain"
+name = "ZD Shop Item 4 [Adult]"
+vanilla_item = "Shop_Armor_Zora"
+oot_randomizer_name = "ZD Shop Item 4"
+
+[[location]]
+id = "1896019874810434988"
+kind = "shop_slot"
+area = "ZoraDomain"
+name = "ZD Shop Item 4 [Child]"
+vanilla_item = "Shop_Armor_Zora"
+oot_randomizer_name = "ZD Shop Item 4"
+
+[[location]]
+id = "5711236115396681701"
+kind = "shop_slot"
+area = "ZoraDomain"
+name = "ZD Shop Item 5 [Adult Alternative]"
+vanilla_item = "Shop_ArrowBundle_01"
+oot_randomizer_name = "ZD Shop Item 5"
+
+[[location]]
+id = "3052820561336725395"
+kind = "shop_slot"
+area = "ZoraDomain"
+name = "ZD Shop Item 5 [Adult]"
+vanilla_item = "Shop_ArrowBundle_01"
+oot_randomizer_name = "ZD Shop Item 5"
+
+[[location]]
+id = "7406968007557772004"
+kind = "shop_slot"
+area = "ZoraDomain"
+name = "ZD Shop Item 5 [Child]"
+vanilla_item = "Shop_ArrowBundle_01"
+oot_randomizer_name = "ZD Shop Item 5"
+
+[[location]]
+id = "2083764746597287990"
+kind = "shop_slot"
+area = "ZoraDomain"
+name = "ZD Shop Item 6 [Adult Alternative]"
+vanilla_item = "Shop_ArrowBundle_02"
+oot_randomizer_name = "ZD Shop Item 6"
+
+[[location]]
+id = "13542715117931052230"
+kind = "shop_slot"
+area = "ZoraDomain"
+name = "ZD Shop Item 6 [Adult]"
+vanilla_item = "Shop_ArrowBundle_02"
+oot_randomizer_name = "ZD Shop Item 6"
+
+[[location]]
+id = "9694617930296799159"
+kind = "shop_slot"
+area = "ZoraDomain"
+name = "ZD Shop Item 6 [Child]"
+vanilla_item = "Shop_ArrowBundle_02"
+oot_randomizer_name = "ZD Shop Item 6"
+
+[[location]]
+id = "1464168721230727012"
+kind = "shop_slot"
+area = "ZoraDomain"
+name = "ZD Shop Item 7 [Adult Alternative]"
+vanilla_item = "Shop_Bottle_Fish"
+oot_randomizer_name = "ZD Shop Item 7"
+
+[[location]]
+id = "8813115213665249107"
+kind = "shop_slot"
+area = "ZoraDomain"
+name = "ZD Shop Item 7 [Adult]"
+vanilla_item = "Shop_Bottle_Fish"
+oot_randomizer_name = "ZD Shop Item 7"
+
+[[location]]
+id = "6783598093601493412"
+kind = "shop_slot"
+area = "ZoraDomain"
+name = "ZD Shop Item 7 [Child]"
+vanilla_item = "Shop_Bottle_Fish"
+oot_randomizer_name = "ZD Shop Item 7"
+
+[[location]]
+id = "407172431436964979"
+kind = "shop_slot"
+area = "ZoraDomain"
+name = "ZD Shop Item 8 [Adult Alternative]"
+vanilla_item = "Shop_ArrowBundle_03"
+oot_randomizer_name = "ZD Shop Item 8"
+
+[[location]]
+id = "17635977932423757890"
+kind = "shop_slot"
+area = "ZoraDomain"
+name = "ZD Shop Item 8 [Adult]"
+vanilla_item = "Shop_ArrowBundle_03"
+oot_randomizer_name = "ZD Shop Item 8"
+
+[[location]]
+id = "10093301156052781138"
+kind = "shop_slot"
+area = "ZoraDomain"
+name = "ZD Shop Item 8 [Child]"
+vanilla_item = "Shop_ArrowBundle_03"
+oot_randomizer_name = "ZD Shop Item 8"
+
+[[location]]
+id = "15055117029957340138"
+kind = "chest"
+area = "ZoraFountain"
+name = "Zora Fountain Chest (TBox_Rupee_Purple)"
+vanilla_item = "TBox_Rupee_Purple"
+oot_randomizer_name = ""
+
+[[location]]
+id = "9537398183107003742"
+kind = "gold_skulltula"
+area = "ZoraFountain"
+name = "Zora Fountain Gold Skulltula #1"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "7152962033963346563"
+kind = "gold_skulltula"
+area = "ZoraFountain"
+name = "Zora Fountain Gold Skulltula #2"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "17355397719442343054"
+kind = "gold_skulltula"
+area = "ZoraFountain"
+name = "Zora Fountain Gold Skulltula #3"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "8030885465575590602"
+kind = "freestanding"
+area = "ZoraFountain"
+name = "ZF Bottom Freestanding PoH"
+vanilla_item = "Obj_Heart_Piece"
+oot_randomizer_name = "ZF Bottom Freestanding PoH"
+
+[[location]]
+id = "12406896586250888098"
+kind = "freestanding"
+area = "ZoraFountain"
+name = "ZF Iceberg Freestanding PoH"
+vanilla_item = "Obj_Heart_Piece"
+oot_randomizer_name = "ZF Iceberg Freestanding PoH"
+
+[[location]]
+id = "8838426083116998768"
+kind = "chest"
+area = "ZoraRiver"
+name = "ZR Open Grotto Chest"
+vanilla_item = "Item_ScrubBusinessSeed"
+oot_randomizer_name = "ZR Open Grotto Chest"
+
+[[location]]
+id = "9450239379321634455"
+kind = "gold_skulltula"
+area = "ZoraRiver"
+name = "Zora River Gold Skulltula #1"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "10917372215719266172"
+kind = "gold_skulltula"
+area = "ZoraRiver"
+name = "Zora River Gold Skulltula #2"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "8695975724114049706"
+kind = "gold_skulltula"
+area = "ZoraRiver"
+name = "Zora River Gold Skulltula #3"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "12370559827741970774"
+kind = "gold_skulltula"
+area = "ZoraRiver"
+name = "Zora River Gold Skulltula #4"
+vanilla_item = "Obj_Token_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "4189391771527808272"
+kind = "freestanding"
+area = "ZoraRiver"
+name = "ZR Near Domain Freestanding PoH"
+vanilla_item = "Obj_Heart_Piece"
+oot_randomizer_name = "ZR Near Domain Freestanding PoH"
+
+[[location]]
+id = "11455676800795329345"
+kind = "freestanding"
+area = "ZoraRiver"
+name = "ZR Near Open Grotto Freestanding PoH"
+vanilla_item = "Obj_Heart_Piece"
+oot_randomizer_name = "ZR Near Open Grotto Freestanding PoH"
