@@ -332,3 +332,20 @@ Round 2 (Kareem, 2026-11-07, Hookshot `foliage-linux-updater`, new game): the Ko
 `TBox_Rupee_Red` and its `GetEventName` removed (both KokiriForest `*_Dynamic` files) gave the Red Rupee through the
 big chest's default event, with **no sword cutscene and no sword**. Removing a story override works; the story
 state it would have set is the patch plan's to restore (`plans/rounds/r2-census.md`).
+
+Round 2, freestanding items (Kareem, 2026-11-07, his save copy through `--user`, Hookshot `foliage-linux-updater`
+then `main-ba594da`):
+
+- Kakariko, Impa's cow-pen heart piece (Hash 17926402522258180222) with `Gyaml` `Obj_Rupee_Red` in the three
+  KakarikoVillage `*_Static` files: a red rupee stands in its place (seen through the gate; not reached yet).
+- Lon Lon Ranch tower heart piece (Hash 9814903750835309225) with `Gyaml` `Obj_Rupee_Red` in
+  `HyruleField_Child_Static`: a red rupee there; picked up, with its text, and added to the wallet. In the save
+  copies written afterwards neither Hash is set yet; whether a swapped rupee comes back after leaving (a pickup
+  type that saves no flag would) is still to see.
+- The same heart piece with `Gyaml` `Obj_Arrow_Fire`: three crashes out of three on the way (thread
+  `OptimizeChangeBanc`, read of guest `0x4`, lr `0x809051ec`, the signature of Hookshot issue #287), each soon after
+  `HyruleField_Child_Static` loaded from the overlay; with the rupee instead, the same route had none. The game's
+  only `Obj_Arrow_Fire` (adult Lake Hylia) is a member of an `AiGroups` logic module (with an `EventRequestActor`
+  and two `Area`s) and of the matching `SimultaneousGroups`/`FarDeleteGroups`; the moved one was in none. The
+  inference is that this pickup needs its logic group; it is not tested. Major items lying in the world need a
+  different actor or the group.
