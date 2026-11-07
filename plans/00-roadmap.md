@@ -44,6 +44,10 @@ Owns `pyproject.toml`, `uv.lock`, `src/clawshot/`, `tests/`, `plans/rounds/r1-fo
 6. Write into your round file: the decompressed and compressed sizes of each changed file against the original,
    and whether `RSDB/` holds a size entry for that file (Tears of the Kingdom's resource size table needed one
    when a file grew). Don't change RSDB yet; say what you found.
+7. (Added mid-round, from track B.) Big-endian BYML: `GameData/GameDataList.Product.110.byml.zs` is BYML v7 with
+   the `BY` magic, and the census needs it (chest-opened flags are `Bool64bitKey` entries keyed by the actor
+   `Hash`). Read and write both byte orders, writing a file back in the order it was read; synthetic tests for
+   both; a dump test that GameDataList round-trips (tree equal; byte-identical or not, stated in the round file).
 
 The in-game check is Kareem's: Claude sets `HOS_FS_OVERLAY` and asks him to open both chests.
 
