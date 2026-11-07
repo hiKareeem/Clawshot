@@ -333,6 +333,9 @@ to confirm in game, not a matching gap.
    for LH and LLR) and none in Ganon's Castle. Do you remember whether the remake removed them?**
 3. **Fire Temple: is the map in the chest you reach earlier (room 5) or later (room 16)?** This decides which N64
    location each is.
+4. **Deku Theater (Lost Woods, child): standing in front of the theater entrance, which business scrub is on your
+   left, the one that wants a bug or the one selling potions?** It decides which is OoT Randomizer's "Left" and
+   "Right" (section "Reviewer's question" below).
 
 ## In-game tests for Kareem
 
@@ -423,6 +426,8 @@ The Hyrule Field file needs 32 more than its entry, the same margin round 1's Ko
   the evidence points to N64-only for `LW Near Shortcuts Grotto Chest` (its grotto room holds no check); the two
   `LW Deku Scrub Near Deku Theater` scrubs exist near the theater but changed offers and can't be told left from
   right. That list is Claude's or Kareem's call; I did not write one.
+- 16:08: answer to the reviewer's question (above): KF Storms Grotto Chest exists and is linked; the two theater scrub
+  spots exist with changed offers, unlinked until left/right is known; not N64-only.
 
 ## Left for later
 
