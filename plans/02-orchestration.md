@@ -43,6 +43,12 @@ OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump
   link. Decoded game data goes only to `E:/OOTRemake/work/`, never into a worktree.
 - **In-game checks need Kareem and one running game.** Agents never start the game in `E:/Games/Hookshot`. A
   Hookshot build track may boot its own test build headless and muted for at most 20 s.
+- **Kareem's in-game tests run on a copy of his saves.** The game keeps one playthrough across the `slot_NN`
+  folders (TotK-style save slots, not N64 files): round 1 and 2's "new game" tests overwrote five of the six
+  slots holding his main game. Tests start from `E:/OOTRemake/work/r2-test/Clawshot test.bat` (or a copy for the
+  round): it resets a test user folder from a save backup, sets `HOS_FS_OVERLAY` for that process only, and runs
+  `hookshot.exe --user <test folder>` with the log redirected into the test folder. Nothing in his game folder
+  changes. A new-game test uses an empty test user folder.
 - **No Hookshot build or boot while Kareem plays.** A build compiles for about 20 minutes on every core and a boot
   loads the GPU: both made his round 1 test session stutter. The prompt makes the agent check `tasklist` for
   `hookshot.exe` before starting a build and before each boot, and wait (30 s steps) while it is there; Claude
