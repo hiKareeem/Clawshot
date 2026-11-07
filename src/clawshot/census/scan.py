@@ -23,12 +23,29 @@ EXCLUDED_AREAS = frozenset({"DreamWorld"})
 
 CHEST = "chest"
 TREASURE_GAME_BOX = "treasure_game_box"
+TREASURE_GAME_REWARD = "treasure_game_reward"
 GOLD_SKULLTULA = "gold_skulltula"
 FREESTANDING = "freestanding"
 HEART_CONTAINER = "heart_container"
 SCRUB = "scrub"
 SHOP_SLOT = "shop_slot"
-KINDS = (CHEST, TREASURE_GAME_BOX, GOLD_SKULLTULA, FREESTANDING, HEART_CONTAINER, SCRUB, SHOP_SLOT)
+KINDS = (
+    CHEST,
+    TREASURE_GAME_BOX,
+    TREASURE_GAME_REWARD,
+    GOLD_SKULLTULA,
+    FREESTANDING,
+    HEART_CONTAINER,
+    SCRUB,
+    SHOP_SLOT,
+)
+
+# The Treasure Chest Game (Market): ten boxes in five rooms (``_A_01``), then two reward boxes at one spot
+# (``_A_02``: the Heart Piece, and a red rupee, presumably the prize once the Heart Piece is taken). Only the reward
+# is shuffled (D17), so its boxes are a kind of their own. Every box also names the model shown inside it
+# (``Dynamic.DropViewActor``), which a changed item may need changed too.
+TREASURE_GAME_ACTOR_PREFIX = "Obj_HrlCity_Shop_TBox_"
+TREASURE_GAME_REWARD_ACTOR = "Obj_HrlCity_Shop_TBox_A_02"
 
 # A chest without ``Drop__DropActor`` gives its blackboard's ``DefaultDropActorName``, the same for every chest kind
 # (plans/03-game-data.md, section 2; inferred from the actor packs, not seen in game).
@@ -70,8 +87,8 @@ def kind_of(gyaml: str) -> str | None:
     """The kind of check an actor is, or None when it is none (including trap chests and pedestals)."""
     if gyaml.startswith("Obj_TBox_"):  # pedestals are Obj_TBoxPedestal_*, no underscore after TBox
         return None if gyaml.startswith("Obj_TBox_A_04") else CHEST
-    if gyaml.startswith("Obj_HrlCity_Shop_TBox_"):
-        return TREASURE_GAME_BOX
+    if gyaml.startswith(TREASURE_GAME_ACTOR_PREFIX):
+        return TREASURE_GAME_REWARD if gyaml == TREASURE_GAME_REWARD_ACTOR else TREASURE_GAME_BOX
     if gyaml == "Enemy_Skulltula_Gold":
         return GOLD_SKULLTULA
     if gyaml in FREESTANDING_ACTORS or gyaml.startswith(SMALL_KEY_PREFIX):
@@ -87,7 +104,7 @@ def kind_of(gyaml: str) -> str | None:
 
 def vanilla_item(kind: str, actor: Mapping) -> str:
     dynamic = actor.get("Dynamic") or {}
-    if kind in (CHEST, TREASURE_GAME_BOX):
+    if kind in (CHEST, TREASURE_GAME_BOX, TREASURE_GAME_REWARD):
         return str(dynamic.get("Drop__DropActor", DEFAULT_CHEST_DROP))
     if kind == GOLD_SKULLTULA:
         return GOLD_SKULLTULA_TOKEN

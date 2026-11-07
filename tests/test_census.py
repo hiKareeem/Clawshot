@@ -58,6 +58,7 @@ def test_kinds_items_and_exclusions():
                 actor("Shop_Bottle_Bug", 9, {"ShopItemIndex": I32(6)}),
                 actor("Shop_Board_SoldOut", 10),
                 actor("Obj_HrlCity_Shop_TBox_A_01", 11, {"Drop__DropActor": "Obj_MiniGame_SmallKey"}),
+                actor("Obj_HrlCity_Shop_TBox_A_02", 15, {"Drop__DropActor": "Obj_Heart_Piece"}),
                 actor("Animal_Cow", 12),
             ]
         },
@@ -74,6 +75,7 @@ def test_kinds_items_and_exclusions():
         8: ("shop_slot", "Shop_Heart"),
         9: ("shop_slot", "Shop_Bottle_Bug"),
         11: ("treasure_game_box", "Obj_MiniGame_SmallKey"),
+        15: ("treasure_game_reward", "Obj_Heart_Piece"),
         13: ("heart_container", "Obj_Heart_Container"),
     }
     assert (locs[8].shop_slot, locs[9].shop_slot, locs[1].shop_slot) == (0, 6, None)
@@ -230,8 +232,10 @@ def test_match_by_unique_item_residual_copies_and_shop_slots(location_list):
 
 def test_treasure_game_rooms_count_back_from_the_reward():
     boxes = [
-        loc(100, "treasure_game_box", "Market", "Obj_Heart_Piece", actor="Obj_HrlCity_Shop_TBox_A_02", pos=(0, 0, 0)),
-        loc(101, "treasure_game_box", "Market", "TBox_Rupee_Red", actor="Obj_HrlCity_Shop_TBox_A_02", pos=(0, 0, 0)),
+        loc(
+            100, "treasure_game_reward", "Market", "Obj_Heart_Piece", actor="Obj_HrlCity_Shop_TBox_A_02", pos=(0, 0, 0)
+        ),
+        loc(101, "treasure_game_reward", "Market", "TBox_Rupee_Red", actor="Obj_HrlCity_Shop_TBox_A_02", pos=(0, 0, 0)),
     ]
     for room in range(5):  # room 5 is nearest the reward
         x = -10.0 * (5 - room)
@@ -246,6 +250,14 @@ def test_treasure_game_rooms_count_back_from_the_reward():
     )
     assert names[204] == "Market Treasure Chest Game Room 5 Top"
     assert ootr.treasure_game(boxes[:-1]) == {}  # a room with one box: not the expected layout
+
+
+def test_only_the_treasure_game_reward_is_its_own_kind():
+    def kind(name):
+        return ootr.OotrLocation(name, "Chest", 0x10, None, ("Market",)).kind
+
+    assert kind("Market Treasure Chest Game Reward") == "treasure_game_reward"
+    assert kind("Market Treasure Chest Game Room 1 Top") == "treasure_game_box"
 
 
 def test_shops_are_named_by_area_and_contents():

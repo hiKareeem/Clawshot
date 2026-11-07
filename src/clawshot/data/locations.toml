@@ -2697,14 +2697,6 @@ vanilla_item = "Obj_MiniGame_SmallKey"
 oot_randomizer_name = "Market Treasure Chest Game Room 4 Top"
 
 [[location]]
-id = "6781536951709667179"
-kind = "treasure_game_box"
-area = "Market"
-name = "Market Treasure Game Box (TBox_Rupee_Red)"
-vanilla_item = "TBox_Rupee_Red"
-oot_randomizer_name = ""
-
-[[location]]
 id = "7390716194495618474"
 kind = "treasure_game_box"
 area = "Market"
@@ -2753,20 +2745,28 @@ vanilla_item = "TBox_Rupee_Blue"
 oot_randomizer_name = "Market Treasure Chest Game Room 5 Bottom"
 
 [[location]]
-id = "16881481538337649070"
-kind = "treasure_game_box"
-area = "Market"
-name = "Market Treasure Chest Game Reward"
-vanilla_item = "Obj_Heart_Piece"
-oot_randomizer_name = "Market Treasure Chest Game Reward"
-
-[[location]]
 id = "18239509117326156183"
 kind = "treasure_game_box"
 area = "Market"
 name = "Market Treasure Chest Game Room 5 Top"
 vanilla_item = "Obj_MiniGame_SmallKey"
 oot_randomizer_name = "Market Treasure Chest Game Room 5 Top"
+
+[[location]]
+id = "6781536951709667179"
+kind = "treasure_game_reward"
+area = "Market"
+name = "Market Treasure Chest Game Reward Repeat (TBox_Rupee_Red)"
+vanilla_item = "TBox_Rupee_Red"
+oot_randomizer_name = ""
+
+[[location]]
+id = "16881481538337649070"
+kind = "treasure_game_reward"
+area = "Market"
+name = "Market Treasure Chest Game Reward"
+vanilla_item = "Obj_Heart_Piece"
+oot_randomizer_name = "Market Treasure Chest Game Reward"
 
 [[location]]
 id = "8942465719711548237"

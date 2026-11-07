@@ -27,6 +27,7 @@ from clawshot.census.scan import (
     SCRUB,
     SHOP_SLOT,
     TREASURE_GAME_BOX,
+    TREASURE_GAME_REWARD,
     Location,
 )
 
@@ -198,6 +199,8 @@ class OotrLocation:
 
     @property
     def kind(self) -> str | None:
+        if self.type == "Chest" and self.name == TREASURE_GAME_REWARD_NAME:
+            return TREASURE_GAME_REWARD
         if self.type == "Chest" and self.name.startswith(TREASURE_GAME_PREFIX):
             return TREASURE_GAME_BOX
         return TYPE_KINDS.get(self.type)
@@ -249,9 +252,8 @@ TREASURE_GAME = "treasure game room"  # the Treasure Chest Game's rooms, counted
 
 # The Treasure Chest Game: two boxes per room at one x coordinate, the key in one (OoT Randomizer's "Top"), five
 # rooms, then two reward boxes at one spot (a Heart Piece, and a red rupee once the Heart Piece is taken).
-TREASURE_GAME_REWARD = "Market Treasure Chest Game Reward"
+TREASURE_GAME_REWARD_NAME = "Market Treasure Chest Game Reward"
 TREASURE_GAME_KEY = "Obj_MiniGame_SmallKey"
-TREASURE_GAME_REWARD_ACTOR = "Obj_HrlCity_Shop_TBox_A_02"
 TREASURE_GAME_ROOM_WIDTH = 1.0
 TREASURE_GAME_ROOMS = 5
 
@@ -337,12 +339,12 @@ def treasure_game(locations: Iterable[Location]) -> dict[int, str]:
     two reward boxes, the Heart Piece is OoT Randomizer's reward; the red-rupee box has no counterpart.
     """
     boxes = [loc for loc in locations if loc.kind == TREASURE_GAME_BOX]
-    rewards = [loc for loc in boxes if loc.actor == TREASURE_GAME_REWARD_ACTOR]
+    rewards = [loc for loc in locations if loc.kind == TREASURE_GAME_REWARD]
     heart = [loc for loc in rewards if remake_family(loc.vanilla_item) == "Piece of Heart"]
     if not rewards or len(heart) != 1:
         return {}
     rooms: list[list[Location]] = []
-    for loc in sorted((b for b in boxes if b not in rewards), key=lambda b: b.position[0]):
+    for loc in sorted(boxes, key=lambda b: b.position[0]):
         if rooms and abs(rooms[-1][0].position[0] - loc.position[0]) < TREASURE_GAME_ROOM_WIDTH:
             rooms[-1].append(loc)
         else:
@@ -351,7 +353,7 @@ def treasure_game(locations: Iterable[Location]) -> dict[int, str]:
     if len(rooms) != TREASURE_GAME_ROOMS or any(len(r) != 2 or len(k) != 1 for r, k in zip(rooms, keys, strict=True)):
         return {}
     rooms.sort(key=lambda room: -math.dist(room[0].position, heart[0].position))
-    out = {heart[0].id: TREASURE_GAME_REWARD}
+    out = {heart[0].id: TREASURE_GAME_REWARD_NAME}
     for n, room in enumerate(rooms, start=1):
         for box in room:
             side = "Top" if box.vanilla_item == TREASURE_GAME_KEY else "Bottom"
@@ -383,7 +385,10 @@ def match(locations: Sequence[Location], ootr: Sequence[OotrLocation]) -> dict[i
         remake[(spot[0].area, spot[0].kind)].append(spot)
     theirs: dict[tuple[str, str], list[OotrLocation]] = defaultdict(list)
     for o in ootr:
-        if o.kind not in (None, SHOP_SLOT, GOLD_SKULLTULA, TREASURE_GAME_BOX) and o.area is not None:
+        if (
+            o.kind not in (None, SHOP_SLOT, GOLD_SKULLTULA, TREASURE_GAME_BOX, TREASURE_GAME_REWARD)
+            and o.area is not None
+        ):
             theirs[(o.area, o.kind)].append(o)
 
     for key, ours in remake.items():
