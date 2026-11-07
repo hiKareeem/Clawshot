@@ -2,11 +2,12 @@
 adult-only item, 200 seeds, and byte-identical spoilers."""
 
 import json
+import random
 
 import pytest
 
 from clawshot.generate import FillError, Settings, generate, spoiler_json
-from clawshot.generate.fill import check_beatable
+from clawshot.generate.fill import check_beatable, fill, shuffled_locations
 from clawshot.world import build_world
 
 HELPERS = {
@@ -164,3 +165,24 @@ def test_same_seed_same_bytes():
     assert list(log["placements"]) == list(build_world(spec).locations)
     assert list(log["spheres"][0]) == ["Village Chest"]  # the only chest open at the start
     assert len({spoiler_json(generate(spec, n, Settings())) for n in range(8)}) > 1  # seeds do differ
+
+
+def test_keep_vanilla_locations_are_not_shuffled():
+    # A location held to its vanilla item (world Location.keep_vanilla, a reason) keeps it in every seed, and its
+    # item is not in the pool: here the Bow on the adult-only roof, which the goal needs.
+    world = build_world(dungeon_world())
+    object.__setattr__(world.locations["Village Roof"], "keep_vanilla", "test: held to its vanilla item")
+    assert "Village Roof" not in shuffled_locations(world, Settings())
+    for seed_number in range(50):
+        rng = random.Random(seed_number)
+        for _ in range(10):  # a fill may fail and is retried, as generate() does
+            try:
+                placements = fill(world, Settings(), rng)
+                break
+            except FillError:
+                continue
+        else:
+            pytest.fail(f"seed {seed_number}: no fill in 10 attempts")
+        assert placements["Village Roof"] == "Bow"
+        assert [loc for loc, item in placements.items() if item == "Bow"] == ["Village Roof"]
+        check_beatable(world, placements)

@@ -55,11 +55,16 @@ def allowed(world: World, settings: Settings, location: str, item: str) -> bool:
 
 
 def shuffled_locations(world: World, settings: Settings) -> list[str]:
-    """Locations of a shuffled type that hold an item in the remake (not N64-only)."""
+    """Locations of a shuffled type that hold an item in the remake (not N64-only) and are not held to their
+    vanilla item (``keep_vanilla``, a reason, e.g. the Treasure Chest Game's room boxes: D17). The others keep
+    their vanilla item."""
     return [
         name
         for name, loc in world.locations.items()
-        if loc.type in settings.shuffle and loc.vanilla is not None and loc.n64_only is None
+        if loc.type in settings.shuffle
+        and loc.vanilla is not None
+        and loc.n64_only is None
+        and getattr(loc, "keep_vanilla", None) is None
     ]
 
 
