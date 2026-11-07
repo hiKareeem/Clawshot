@@ -393,6 +393,26 @@ Sizes against the size table (entry = ceil32(size) + 264 by round 1's formula):
 
 The Hyrule Field file needs 32 more than its entry, the same margin round 1's Kokiri Forest file loaded with.
 
+## Reviewer's question: KF Storms Grotto Chest and the LW Deku Theater scrubs
+
+- **Grottos have no Banc folder of their own.** The 33 Banc folders are all areas, dungeons, `DreamWorld` and
+  `SageRoom`; a grotto is a `Land_HidingHole_Base_*` room inside the overworld file it opens from (see "Grotto
+  rooms"). The census scans every file of every folder.
+- **KF Storms Grotto Chest exists** and is linked (9573d21, after the rebase): chest 14818888396401495482
+  (`TBox_Rupee_Green`, both ages), 13 units below and 23 from KF's only grotto base, `Land_HidingHole_Base_I_01`
+  at (-51.9, 116.6, -62.8).
+- **The two LW Deku Theater scrub spots exist, with different offers, and are left unlinked only because left and
+  right cannot be told from the data.** All 51 `Enemy_Scrub_Business` actors were listed (the other `Enemy_Scrub_*`
+  actors are the theater audience, Mad Scrubs and the Deku Tree's brothers; none sells). Of the 11 business scrubs in
+  both LW files, two spots stand by the Deku Theater (base `L_01` at (3.8, 94.3, -47.5), with the
+  `Enemy_Scrub_ForestStage*` actors), both in the child file only (N64's two are child-only too):
+  2569517939889411425 at 11.9 units (`Enemy_Scrub_Business_Item_SellBug`, sells nothing: it buys a bug), and
+  11385057993574159532 / 15048088372638595204 at 16.8 units (two scrubs at one spot, `Enemy_Scrub_Business_Potion`:
+  heart, heart bundle, magic jar / red potion, green potion, heart bundle). The adult file has no scrub near the
+  theater. No scrub in the game sells a single Deku Stick: the scrub flow `Enemy_Scrub_Business_Common` has no stick
+  entry at all. **Kareem: standing in front of the Deku Theater entrance as child, which scrub is on your left, the one
+  that wants a bug or the one selling potions?** With that answer both spots get linked.
+
 ## Cross-track posts (thread `cs-r2`)
 
 - 15:54: `locations.toml` committed (dd08991): format, loader, many-to-one names for shops and copies, coverage of
