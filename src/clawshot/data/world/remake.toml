@@ -1,0 +1,247 @@
+# The remake's differences from OoT Randomizer's world, and Clawshot's own per-location facts, written by hand.
+# The translated region files stay exactly what `python -m clawshot.world.translate` writes; the loader applies
+# this file on top (`clawshot.world.load.apply_overrides`; format: plans/04-world-format.md, "Overrides").
+#
+# [locations."<OoT Randomizer name>"]: `source` (required: who or what says so) and any of
+#   rule + was     the remake's requirement; `was` repeats the translated rule, so a change upstream is noticed
+#   vanilla        the item the remake gives here, where it differs from OoT Randomizer's vanilla item
+#   vanilla_fixed  with fixed items (D16), the tier a check whose vanilla item is progressive gives
+#   n64_only       the check does not exist in the remake: neither shuffled nor placed
+#   area           the census area, where the remake places the check outside its region's Banc folder
+#   keep_vanilla   the check keeps its vanilla item even when its type is shuffled
+# [key_counts]: the remake's number of a dungeon's small keys; a rule asking for more asks for that many.
+
+# Fixed items (D16, Kareem, round 2): the tier each progressive vanilla item is in the remake.
+
+[locations."LW Gift from Saria"]
+vanilla_fixed = "Fairy Ocarina"
+source = "D16; Saria gives the Fairy Ocarina (round 2)"
+
+[locations."LW Target in Woods"]
+vanilla_fixed = "Bullet Bag (40)"
+source = "D16; the target game's prize is a bigger bullet bag (round 2)"
+
+[locations."HF Ocarina of Time Item"]
+vanilla_fixed = "Ocarina of Time"
+source = "D16; the Ocarina of Time from Zelda at the castle moat"
+
+[locations."LH Adult Fishing"]
+vanilla_fixed = "Golden Scale"
+source = "D16; the adult fishing prize is the Golden Scale"
+
+[locations."ZD Diving Minigame"]
+vanilla_fixed = "Silver Scale"
+source = "D16; the diving game prize is the Silver Scale"
+
+[locations."Kak 10 Gold Skulltula Reward"]
+vanilla_fixed = "Adult Wallet"
+source = "D16; GatheringTokenGold gives Item_Wallet_Medium at 10 tokens (03-game-data.md section 4, example 3)"
+
+[locations."Kak 30 Gold Skulltula Reward"]
+vanilla_fixed = "Giant Wallet"
+source = "D16; GatheringTokenGold gives Item_Wallet_Large at 30 tokens (03-game-data.md section 4, example 3)"
+
+[locations."GC Darunias Joy"]
+vanilla_fixed = "Goron Bracelet"
+source = "D16; Darunia gives the Goron's Bracelet"
+
+[locations."Graveyard Dampe Race Hookshot Chest"]
+vanilla_fixed = "Hookshot"
+source = "D16; census 'Graveyard Dampe Race Hookshot Chest' holds Item_Hookshot"
+
+[locations."Water Temple Longshot Chest"]
+vanilla_fixed = "Longshot"
+source = "D16; census 'Water Temple Longshot Chest' holds Item_Longshot"
+
+[locations."Ganons Castle Shadow Trial Golden Gauntlets Chest"]
+vanilla_fixed = "Golden Gauntlets"
+source = "D16; census 'Ganons Castle Shadow Trial Golden Gauntlets Chest' holds Item_Gauntlet_Gold"
+
+# Moved: the remake places these two Spirit Temple chests in the DesertColossus Banc folder (03-game-data.md
+# section 9, "Moved"; census, round 2). Logic unchanged: they are reached from inside the temple as on N64.
+
+[locations."Spirit Temple Silver Gauntlets Chest"]
+vanilla_fixed = "Silver Gauntlets"
+area = "DesertColossus"
+source = "census: Item_Gauntlet_Silver, in DesertColossus (03-game-data.md section 9, 'Moved'); D16 for the tier"
+
+[locations."Spirit Temple Mirror Shield Chest"]
+area = "DesertColossus"
+source = "census: Item_Shield_Mirror, in DesertColossus (03-game-data.md section 9, 'Moved')"
+
+# The Great Fairies of Death Mountain Trail and Hyrule Castle swapped gifts (confirmed in game by Kareem,
+# 2026-11-07, 03-game-data.md sections 5 and 9).
+
+[locations."DMT Great Fairy Reward"]
+vanilla = "Dins Fire"
+source = "Kareem, in game, 2026-11-07: the Death Mountain Trail fountain gives Din's Fire (03-game-data.md section 9)"
+
+[locations."HC Great Fairy Reward"]
+vanilla = "Magic Meter"
+source = "Kareem, in game, 2026-11-07: the Hyrule Castle fountain gives the magic meter (03-game-data.md section 9)"
+
+# Gold Skulltulas that need another item in the remake (03-game-data.md section 9, from Kareem and the Eurogamer
+# guide, 2026-11-07). The Death Mountain Trail one by the crater entrance (DMT GS Falling Rocks Path) needs the
+# Megaton Hammer there too; OoT Randomizer's rule already asks for it, so it needs no override.
+
+[locations."Fire Temple GS Boss Key Loop"]
+rule = "can_use(Megaton_Hammer)"
+was = "True"
+source = "03-game-data.md section 9 (Kareem and the Eurogamer guide, 2026-11-07): grey rocks hide it; the Megaton Hammer breaks them"
+
+[locations."OGC GS"]
+rule = "can_use(Hookshot)"
+was = "True"
+source = "03-game-data.md section 9 (Kareem and the Eurogamer guide, 2026-11-07): on the ruined gate, reached with the Hookshot"
+
+# N64-only checks.
+
+[locations."LW Near Shortcuts Grotto Chest"]
+n64_only = "the remake's Lost Woods grotto room that would hold it holds no check; the chest first matched to it stands in the open by the bridge scrub (track A census, plans/rounds/r2-census.md, round 2)"
+source = "plans/rounds/r2-census.md (round 2)"
+
+[locations."HF GS Cow Grotto"]
+n64_only = "the remake's Cow Grotto (grotto base near Gerudo Valley's rocks, with a cow, a Skulltula and two spider webs) holds no Gold Skulltula; HyruleField's three new Gold Skulltulas take the place of this one and the two LLR ones"
+source = "track B (cs3b), thread cs-r3, 2026-11-07 18:06"
+
+[locations."LLR GS Rain Shed"]
+n64_only = "Lon Lon Ranch has only the tree, house window and tower Gold Skulltulas in the remake (census and both guides)"
+source = "track B (cs3b), thread cs-r3, 2026-11-07 18:06"
+
+[locations."LLR GS Back Wall"]
+n64_only = "Lon Lon Ranch has only the tree, house window and tower Gold Skulltulas in the remake (census and both guides)"
+source = "track B (cs3b), thread cs-r3, 2026-11-07 18:06"
+
+[locations."HF GS Near Kak Grotto"]
+rule = "has_explosives and (can_use(Boomerang) or can_use(Hookshot))"
+was = "can_use(Boomerang) or can_use(Hookshot)"
+source = "track B (cs3b), thread cs-r3, 2026-11-07 18:06: in the remake this Gold Skulltula is in a grotto in Hyrule Field's southern woods, opened with explosives (both guides: Bombs and the Boomerang or Hookshot), not near Kakariko. The region (reached from Hyrule Field) stays; the explosives are asked here, since the N64 grotto also opens with the hammer"
+
+# Kind of check changed.
+
+[locations."Graveyard Dampe Race Freestanding PoH"]
+type = "Chest"
+source = "census: a chest in the remake (5534919361313859554, one of the four MiniGame_DampeRace_OpenGoalTBox chests, Obj_Heart_Piece), like the race's Hookshot chest; plans/rounds/r2-census.md"
+
+[locations."Gerudo Training Ground Freestanding Key"]
+n64_only = "no freestanding small key in GerudoTrainingGround; its nine keys are all in chests (census)"
+source = "03-game-data.md section 9; plans/rounds/r2-census.md"
+
+# The six N64 Ice Trap chests are trap chests (Obj_TBox_A_04) that hold no item (03-game-data.md section 2); trap
+# chests stay out (D10, Kareem).
+
+[locations."Spirit Temple First Mirror Left Chest"]
+n64_only = "a trap chest in the remake (Obj_TBox_A_04, room 18), no item; D10"
+source = "03-game-data.md section 2"
+
+[locations."Gerudo Training Ground Heavy Block Fourth Chest"]
+n64_only = "a trap chest in the remake (Obj_TBox_A_04, room 10), no item; D10"
+source = "03-game-data.md section 2"
+
+[locations."Ganons Castle Water Trial Left Chest"]
+n64_only = "a trap chest in the remake (Obj_TBox_A_04, room 5), no item; D10"
+source = "03-game-data.md section 2"
+
+[locations."Ganons Castle Light Trial First Right Chest"]
+n64_only = "a trap chest in the remake (Obj_TBox_A_04, room 12), no item; D10"
+source = "03-game-data.md section 2"
+
+[locations."Ganons Castle Light Trial Second Left Chest"]
+n64_only = "a trap chest in the remake (Obj_TBox_A_04, room 12), no item; D10"
+source = "03-game-data.md section 2"
+
+[locations."Ganons Castle Light Trial Third Right Chest"]
+n64_only = "a trap chest in the remake (Obj_TBox_A_04, room 12), no item; D10"
+source = "03-game-data.md section 2"
+
+# Cows are not one-time checks in the remake: no per-cow save flag (03-game-data.md section 5); they stay out (D11).
+
+[locations."KF Links House Cow"]
+n64_only = "no per-cow save flag, so not a one-time check; D11"
+source = "03-game-data.md section 5"
+
+[locations."HF Cow Grotto Cow"]
+n64_only = "no per-cow save flag, so not a one-time check; D11"
+source = "03-game-data.md section 5"
+
+[locations."LLR Stables Left Cow"]
+n64_only = "no per-cow save flag, so not a one-time check; D11"
+source = "03-game-data.md section 5"
+
+[locations."LLR Stables Right Cow"]
+n64_only = "no per-cow save flag, so not a one-time check; D11"
+source = "03-game-data.md section 5"
+
+[locations."LLR Tower Left Cow"]
+n64_only = "no per-cow save flag, so not a one-time check; D11"
+source = "03-game-data.md section 5"
+
+[locations."LLR Tower Right Cow"]
+n64_only = "no per-cow save flag, so not a one-time check; D11"
+source = "03-game-data.md section 5"
+
+[locations."Kak Impas House Cow"]
+n64_only = "no per-cow save flag, so not a one-time check; D11"
+source = "03-game-data.md section 5"
+
+[locations."GV Cow"]
+n64_only = "no per-cow save flag, so not a one-time check; D11"
+source = "03-game-data.md section 5"
+
+[locations."DMT Cow Grotto Cow"]
+n64_only = "no per-cow save flag, so not a one-time check; D11"
+source = "03-game-data.md section 5"
+
+# Treasure Chest Game: only the reward chest is shuffled; the ten room boxes keep their contents (D17, Kareem).
+
+[locations."Market Treasure Chest Game Room 1 Bottom"]
+keep_vanilla = "D17: the treasure game's room boxes stay vanilla"
+source = "D17"
+
+[locations."Market Treasure Chest Game Room 1 Top"]
+keep_vanilla = "D17: the treasure game's room boxes stay vanilla"
+source = "D17"
+
+[locations."Market Treasure Chest Game Room 2 Bottom"]
+keep_vanilla = "D17: the treasure game's room boxes stay vanilla"
+source = "D17"
+
+[locations."Market Treasure Chest Game Room 2 Top"]
+keep_vanilla = "D17: the treasure game's room boxes stay vanilla"
+source = "D17"
+
+[locations."Market Treasure Chest Game Room 3 Bottom"]
+keep_vanilla = "D17: the treasure game's room boxes stay vanilla"
+source = "D17"
+
+[locations."Market Treasure Chest Game Room 3 Top"]
+keep_vanilla = "D17: the treasure game's room boxes stay vanilla"
+source = "D17"
+
+[locations."Market Treasure Chest Game Room 4 Bottom"]
+keep_vanilla = "D17: the treasure game's room boxes stay vanilla"
+source = "D17"
+
+[locations."Market Treasure Chest Game Room 4 Top"]
+keep_vanilla = "D17: the treasure game's room boxes stay vanilla"
+source = "D17"
+
+[locations."Market Treasure Chest Game Room 5 Bottom"]
+keep_vanilla = "D17: the treasure game's room boxes stay vanilla"
+source = "D17"
+
+[locations."Market Treasure Chest Game Room 5 Top"]
+keep_vanilla = "D17: the treasure game's room boxes stay vanilla"
+source = "D17"
+
+# Small keys: the census counts each dungeon's small keys (chests and freestanding), and the locked doors agree
+# (Obj_DoorChainLock_A_01 actors, one on each side of a door: BottomOfTheWell 4, WaterTemple 8, InsideGanonCastle
+# 2; read from the Static placement files, plans/rounds/r3-world.md). Where the remake has fewer keys than N64 it
+# has as many fewer locked doors, so no door needs more keys than the dungeon holds: a rule asking for more is
+# capped at the remake's count. Which N64 doors are gone is not known; the cap never asks for fewer keys than the
+# remake's doors need, as long as the remake's locked doors are N64 doors. Dungeons with N64's count are not listed.
+
+[key_counts]
+"Small Key (Bottom of the Well)" = { count = 2, source = "census: one Item_Dungeon_SmallKey chest and the freestanding Obj_Dungeon_SmallKey (N64: 3); 4 chain locks = 2 doors" }
+"Small Key (Water Temple)" = { count = 4, source = "census: 4 Item_Dungeon_SmallKey chests (N64: 6; 03-game-data.md section 9); 8 chain locks = 4 doors" }
+"Small Key (Ganons Castle)" = { count = 1, source = "census: 1 Item_Dungeon_SmallKey chest (N64: 2); 2 chain locks = 1 door" }

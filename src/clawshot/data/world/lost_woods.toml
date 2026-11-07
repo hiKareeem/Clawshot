@@ -187,7 +187,7 @@ source = "Overworld.json:2917"
 "LW Trade Cojiro" = { type = "NPC", vanilla = "Odd Mushroom", source = "LocationList.py:169" }
 "LW Trade Odd Potion" = { type = "NPC", vanilla = "Poachers Saw", source = "LocationList.py:170" }
 "LW Ocarina Memory Game" = { type = "NPC", vanilla = "Piece of Heart", source = "LocationList.py:166" }
-"LW Target in Woods" = { type = "NPC", vanilla = "Slingshot", source = "LocationList.py:167", vanilla_fixed = "Bullet Bag (40)" }
+"LW Target in Woods" = { type = "NPC", vanilla = "Slingshot", source = "LocationList.py:167" }
 "LW Deku Scrub Near Bridge" = { type = "Scrub", vanilla = "Deku Stick Capacity", source = "LocationList.py:174" }
 "LW Underwater Green Rupee 1" = { type = "Freestanding", vanilla = "Rupee (1)", source = "LocationList.py:184" }
 "LW Underwater Green Rupee 2" = { type = "Freestanding", vanilla = "Rupee (1)", source = "LocationList.py:185" }
@@ -206,8 +206,8 @@ source = "Overworld.json:2917"
 "LW GS Above Theater" = { type = "GS Token", vanilla = "Gold Skulltula Token", source = "LocationList.py:181" }
 "LW GS Bean Patch Near Theater" = { type = "GS Token", vanilla = "Gold Skulltula Token", source = "LocationList.py:180" }
 "LW Underwater Shortcut Green Rupee" = { type = "Freestanding", vanilla = "Rupee (1)", source = "LocationList.py:191" }
-"LW Gift from Saria" = { type = "Cutscene", vanilla = "Ocarina", source = "LocationList.py:165", vanilla_fixed = "Fairy Ocarina" }
-"LW Near Shortcuts Grotto Chest" = { type = "Chest", vanilla = "Rupees (5)", source = "LocationList.py:168", n64_only = "the remake's Lost Woods grotto room that would hold it holds no check; the chest first matched to it stands in the open by the bridge scrub (track A census, plans/rounds/r2-census.md, round 2)" }
+"LW Gift from Saria" = { type = "Cutscene", vanilla = "Ocarina", source = "LocationList.py:165" }
+"LW Near Shortcuts Grotto Chest" = { type = "Chest", vanilla = "Rupees (5)", source = "LocationList.py:168" }
 "LW Near Shortcuts Grotto Beehive 1" = { type = "Beehive", vanilla = "Rupees (5)", source = "LocationList.py:193" }
 "LW Near Shortcuts Grotto Beehive 2" = { type = "Beehive", vanilla = "Rupees (20)", source = "LocationList.py:194" }
 "Deku Theater Skull Mask" = { type = "NPC", vanilla = "Deku Stick Capacity", source = "LocationList.py:171" }

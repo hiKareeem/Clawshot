@@ -1,7 +1,8 @@
-"""The committed world files are what the translator writes from OoT Randomizer at port.toml's commit.
+"""The committed world files are what the translator writes from OoT Randomizer at port.toml's commit, and the
+port covers every region of OoT Randomizer's world (Master Quest aside).
 
 Needs an OoT-Randomizer checkout in ``OOTR_DIR`` (e.g. ``E:/OOTRemake/work/r2-world/OoT-Randomizer``); skipped
-otherwise.
+otherwise. The remake's overrides (``remake.toml``) are kept apart, so the translation compares byte for byte.
 """
 
 import os
@@ -21,9 +22,8 @@ OOTR_DIR = os.environ.get("OOTR_DIR")
 def test_committed_files_match_the_translator(tmp_path: Path):
     with (DATA_DIR / "port.toml").open("rb") as f:
         region_files = list(tomllib.load(f)["files"])
-    # A rerun over the committed files: hand-written fields (vanilla_fixed, n64_only) are read back from them.
-    for name in ["port.toml", *region_files]:
-        shutil.copy(DATA_DIR / name, tmp_path / name)
-    translate(Path(OOTR_DIR).resolve(), tmp_path)
+    shutil.copy(DATA_DIR / "port.toml", tmp_path / "port.toml")
+    report = translate(Path(OOTR_DIR).resolve(), tmp_path)
+    assert report["regions_not_ported"] == []
     for name in [*region_files, "helpers.toml", "items.toml", "settings.toml"]:
         assert (tmp_path / name).read_bytes() == (DATA_DIR / name).read_bytes(), name

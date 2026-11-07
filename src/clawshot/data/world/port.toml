@@ -1,14 +1,32 @@
 # Which OoT Randomizer regions the translator (python -m clawshot.world.translate) writes into which world file.
 # OoT Randomizer: https://github.com/OoTRandomizer/OoT-Randomizer (MIT), data/World/*.json.
-# Round 2 ports Kokiri Forest, the Lost Woods and the Deku Tree, plus the start regions they hang from.
+# Round 3 ports the whole world: every region of Overworld.json, Bosses.json and the vanilla dungeons (Master Quest
+# is left out). The translator reports any region of those files that no entry below names.
 #
 # Per file: `area`, the remake's Banc folder its regions lie in (the census `area` of their checks; grottos are in
-# the overworld folder they open from, 03-game-data.md section 1), and `regions`, by OoT Randomizer source file.
+# the overworld folder they open from, Lake Hylia and Lon Lon Ranch in HyruleField, the Temple of Time in Market,
+# Ganon's Tower in InsideGanonCastle: 03-game-data.md section 1), and `regions`, by OoT Randomizer source file.
+# A boss room goes with its dungeon (the boss heart container is placed in the dungeon's own Banc folder).
 
 ootr_commit = "526b4c8d81b7c4023ef4573ffbaf39344e270d5b"
 
+# The start regions and the warp-song and Farore's Wind arrival points: no checks, no area.
 [files."root.toml".regions]
-"data/World/Overworld.json" = ["Root", "Root Exits", "Child Spawn", "Adult Spawn"]
+"data/World/Overworld.json" = [
+    "Root",
+    "Root Exits",
+    "Child Spawn",
+    "Adult Spawn",
+    "Prelude of Light Warp",
+    "Minuet of Forest Warp",
+    "Bolero of Fire Warp",
+    "Serenade of Water Warp",
+    "Nocturne of Shadow Warp",
+    "Requiem of Spirit Warp",
+    "Farores Wind Warp",
+]
+
+# Overworld
 
 [files."kokiri_forest.toml"]
 area = "KokiriForest"
@@ -43,6 +61,301 @@ area = "LostWood"
     "LW Scrubs Grotto",
 ]
 
+[files."sacred_forest_meadow.toml"]
+area = "SacredForestMeadow"
+
+[files."sacred_forest_meadow.toml".regions]
+"data/World/Overworld.json" = [
+    "SFM Entryway",
+    "Sacred Forest Meadow",
+    "SFM Forest Temple Entrance Ledge",
+    "SFM Fairy Grotto",
+    "SFM Storms Grotto",
+    "SFM Wolfos Grotto",
+]
+
+[files."hyrule_field.toml"]
+area = "HyruleField"
+
+[files."hyrule_field.toml".regions]
+"data/World/Overworld.json" = [
+    "Hyrule Field",
+    "HF Southeast Grotto",
+    "HF Open Grotto",
+    "HF Inside Fence Grotto",
+    "HF Cow Grotto",
+    "HF Near Market Grotto",
+    "HF Fairy Grotto",
+    "HF Near Kak Grotto",
+    "HF Tektite Grotto",
+]
+
+[files."lon_lon_ranch.toml"]
+area = "HyruleField"
+
+[files."lon_lon_ranch.toml".regions]
+"data/World/Overworld.json" = ["Lon Lon Ranch", "LLR Talons House", "LLR Stables", "LLR Tower", "LLR Grotto"]
+
+[files."lake_hylia.toml"]
+area = "HyruleField"
+
+[files."lake_hylia.toml".regions]
+"data/World/Overworld.json" = [
+    "Lake Hylia",
+    "LH Fishing Island",
+    "LH Owl Flight",
+    "LH Lab",
+    "LH Fishing Hole",
+    "LH Grotto",
+]
+
+[files."gerudo_valley.toml"]
+area = "GerudoValley"
+
+[files."gerudo_valley.toml".regions]
+"data/World/Overworld.json" = [
+    "Gerudo Valley",
+    "GV Upper Stream",
+    "GV Lower Stream",
+    "GV Grotto Ledge",
+    "GV Crate Ledge",
+    "GV Fortress Side",
+    "GV Carpenter Tent",
+    "GV Octorok Grotto",
+    "GV Storms Grotto",
+]
+
+[files."gerudo_fortress.toml"]
+area = "GerudoFortress"
+
+[files."gerudo_fortress.toml".regions]
+"data/World/Overworld.json" = [
+    "Gerudo Fortress",
+    "GF Entrances Behind Crates",
+    "GF Roof Entrance Cluster",
+    "GF Kitchen Roof Access",
+    "GF 3 Torches Jail Exterior",
+    "GF Chest Roof",
+    "GF Roof Gold Skulltula",
+    "GF Break Room Entrance",
+    "GF Balcony",
+    "GF Above Jail Child Locations",
+    "GF Outside Gate",
+    "Hideout 1 Torch Jail",
+    "Hideout 2 Torches Jail",
+    "Hideout 3 Torches Jail",
+    "Hideout 4 Torches Jail",
+    "Hideout Kitchen Hallway",
+    "Hideout Kitchen Front",
+    "Hideout Kitchen Rear",
+    "Hideout Kitchen Pots",
+    "Hideout Break Room",
+    "Hideout Hall to Balcony",
+    "GF Storms Grotto",
+]
+
+[files."haunted_wasteland.toml"]
+area = "HountedWasteland"
+
+[files."haunted_wasteland.toml".regions]
+"data/World/Overworld.json" = [
+    "Wasteland Near Fortress",
+    "Haunted Wasteland",
+    "Wasteland Near Crate",
+    "Wasteland Near Colossus",
+]
+
+[files."desert_colossus.toml"]
+area = "DesertColossus"
+
+[files."desert_colossus.toml".regions]
+"data/World/Overworld.json" = [
+    "Desert Colossus",
+    "Desert Colossus From Spirit Lobby",
+    "Desert Colossus Hands",
+    "Colossus Great Fairy Fountain",
+    "Colossus Grotto",
+]
+
+[files."market.toml"]
+area = "Market"
+
+[files."market.toml".regions]
+"data/World/Overworld.json" = [
+    "Market Entrance",
+    "Market",
+    "Market Back Alley",
+    "ToT Entrance",
+    "Market Guard House",
+    "Market Bazaar",
+    "Market Mask Shop",
+    "Market Mask Shop Storefront",
+    "Market Shooting Gallery",
+    "Market Bombchu Bowling",
+    "Market Potion Shop",
+    "Market Treasure Chest Game",
+    "Market Bombchu Shop",
+    "Market Dog Lady House",
+    "Market Man in Green House",
+]
+
+[files."temple_of_time.toml"]
+area = "Market"
+
+[files."temple_of_time.toml".regions]
+"data/World/Overworld.json" = ["Temple of Time", "Beyond Door of Time", "Beyond Door of Time Skippable Locations"]
+
+[files."hyrule_castle.toml"]
+area = "HyruleCastle"
+
+[files."hyrule_castle.toml".regions]
+"data/World/Overworld.json" = [
+    "Castle Grounds",
+    "Hyrule Castle Grounds",
+    "HC Garden",
+    "HC Garden Skippable Locations",
+    "HC Great Fairy Fountain",
+    "HC Storms Grotto",
+]
+
+[files."outside_ganons_castle.toml"]
+area = "GanonCastle"
+
+[files."outside_ganons_castle.toml".regions]
+"data/World/Overworld.json" = [
+    "Castle Grounds From Ganons Castle",
+    "Ganons Castle Grounds",
+    "Ganons Castle Ledge",
+    "OGC Great Fairy Fountain",
+]
+
+[files."kakariko.toml"]
+area = "KakarikoVillage"
+
+[files."kakariko.toml".regions]
+"data/World/Overworld.json" = [
+    "Kakariko Village",
+    "Kak Impas Ledge",
+    "Kak Impas Rooftop",
+    "Kak Odd Medicine Rooftop",
+    "Kak Backyard",
+    "Kak Carpenter Boss House",
+    "Kak House of Skulltula",
+    "Kak Impas House",
+    "Kak Impas House Back",
+    "Kak Impas House Near Cow",
+    "Kak Windmill",
+    "Kak Bazaar",
+    "Kak Shooting Gallery",
+    "Kak Potion Shop Front",
+    "Kak Potion Shop Back",
+    "Kak Odd Medicine Building",
+    "Kak Behind Gate",
+    "Kak Redead Grotto",
+    "Kak Open Grotto",
+]
+
+[files."graveyard.toml"]
+area = "Graveyard"
+
+[files."graveyard.toml".regions]
+"data/World/Overworld.json" = [
+    "Graveyard",
+    "Graveyard Shield Grave",
+    "Graveyard Heart Piece Grave",
+    "Graveyard Royal Familys Tomb",
+    "Graveyard Dampes Grave",
+    "Graveyard Dampes House",
+    "Graveyard Warp Pad Region",
+]
+
+[files."death_mountain_trail.toml"]
+area = "DeathMountainTrail"
+
+[files."death_mountain_trail.toml".regions]
+"data/World/Overworld.json" = [
+    "Death Mountain",
+    "Death Mountain Summit",
+    "DMT Owl Flight",
+    "DMT Great Fairy Fountain",
+    "DMT Cow Grotto",
+    "DMT Storms Grotto",
+]
+
+[files."goron_city.toml"]
+area = "GoronCity"
+
+[files."goron_city.toml".regions]
+"data/World/Overworld.json" = [
+    "Goron City",
+    "GC Woods Warp",
+    "GC Darunias Chamber",
+    "GC Grotto Platform",
+    "GC Spinning Pot",
+    "GC Shop",
+    "GC Grotto",
+]
+
+[files."death_mountain_crater.toml"]
+area = "DeathMountainCrater"
+
+[files."death_mountain_crater.toml".regions]
+"data/World/Overworld.json" = [
+    "DMC Upper Nearby",
+    "DMC Upper Local",
+    "DMC Pierre Platform",
+    "DMC Ladder Area Nearby",
+    "DMC Lower Nearby",
+    "DMC Lower Local",
+    "DMC Central Nearby",
+    "DMC Central Local",
+    "DMC Fire Temple Entrance",
+    "DMC Great Fairy Fountain",
+    "DMC Upper Grotto",
+    "DMC Hammer Grotto",
+]
+
+[files."zora_river.toml"]
+area = "ZoraRiver"
+
+[files."zora_river.toml".regions]
+"data/World/Overworld.json" = [
+    "ZR Front",
+    "Zora River",
+    "ZR Behind Waterfall",
+    "ZR Top of Waterfall",
+    "ZR Open Grotto",
+    "ZR Fairy Grotto",
+    "ZR Storms Grotto",
+]
+
+[files."zoras_domain.toml"]
+area = "ZoraDomain"
+
+[files."zoras_domain.toml".regions]
+"data/World/Overworld.json" = [
+    "Zoras Domain",
+    "Deliver Rutos Letter Region",
+    "ZD Behind King Zora",
+    "ZD Eyeball Frog Timeout",
+    "ZD Shop",
+    "ZD Storms Grotto",
+]
+
+[files."zoras_fountain.toml"]
+area = "ZoraFountain"
+
+[files."zoras_fountain.toml".regions]
+"data/World/Overworld.json" = [
+    "Zoras Fountain",
+    "ZF Underwater",
+    "ZF Hidden Cave",
+    "ZF Ice Ledge",
+    "ZF Great Fairy Fountain",
+]
+
+# Dungeons (vanilla layouts), each with its boss
+
 [files."deku_tree.toml"]
 area = "InsideTheDekuTree"
 
@@ -56,3 +369,212 @@ area = "InsideTheDekuTree"
     "Deku Tree Before Boss",
 ]
 "data/World/Bosses.json" = ["Queen Gohma Boss Room", "Queen Gohma Blue Warp"]
+
+[files."dodongos_cavern.toml"]
+area = "DodongoCavern"
+
+[files."dodongos_cavern.toml".regions]
+"data/World/Dodongos Cavern.json" = [
+    "Dodongos Cavern Beginning",
+    "Dodongos Cavern Lobby",
+    "Dodongos Cavern Lower Right Side",
+    "Dodongos Cavern Torch Room",
+    "Dodongos Cavern Staircase Room",
+    "Dodongos Cavern Climb",
+    "Dodongos Cavern Before Upper Lizalfos",
+    "Dodongos Cavern Upper Lizalfos",
+    "Dodongos Cavern Far Bridge",
+    "Dodongos Cavern Mouth",
+    "Dodongos Cavern Before Boss",
+]
+"data/World/Bosses.json" = ["King Dodongo Boss Room", "King Dodongo Blue Warp"]
+
+[files."jabu_jabus_belly.toml"]
+area = "InsideJabuJabuBelly"
+
+[files."jabu_jabus_belly.toml".regions]
+"data/World/Jabu Jabus Belly.json" = [
+    "Jabu Jabus Belly Beginning",
+    "Jabu Jabus Belly Main",
+    "Jabu Jabus Belly Depths",
+    "Jabu Jabus Belly Past Big Octo",
+    "Jabu Jabus Belly Before Boss",
+]
+"data/World/Bosses.json" = ["Barinade Boss Room", "Barinade Blue Warp"]
+
+[files."forest_temple.toml"]
+area = "ForestTemple"
+
+[files."forest_temple.toml".regions]
+"data/World/Forest Temple.json" = [
+    "Forest Temple Lobby",
+    "Forest Temple Central Area",
+    "Forest Temple NW Outdoors",
+    "Forest Temple Outdoors High Balconies",
+    "Forest Temple NE Outdoors",
+    "Forest Temple Block Push Room",
+    "Forest Temple Straightened Hall",
+    "Forest Temple Outside Upper Ledge",
+    "Forest Temple NW Outdoors Freestandings",
+    "Forest Temple Bow Region",
+    "Forest Temple Frozen Eye Switch Room",
+    "Forest Temple Falling Room",
+    "Forest Temple Basement",
+    "Forest Temple Before Boss",
+]
+"data/World/Bosses.json" = ["Phantom Ganon Boss Room", "Phantom Ganon Blue Warp"]
+
+[files."fire_temple.toml"]
+area = "FireTemple"
+
+[files."fire_temple.toml".regions]
+"data/World/Fire Temple.json" = [
+    "Fire Temple Lower",
+    "Fire Temple Near Boss",
+    "Fire Temple Before Boss",
+    "Fire Temple Lower Locked Door",
+    "Fire Temple Big Lava Room",
+    "Fire Temple Elevator Room",
+    "Fire Temple Boulder Maze Lower",
+    "Fire Temple Narrow Path Room",
+    "Fire Temple Boulder Maze Upper",
+    "Fire Temple Flame Maze",
+    "Fire Temple Upper",
+]
+"data/World/Bosses.json" = ["Volvagia Boss Room", "Volvagia Blue Warp"]
+
+[files."water_temple.toml"]
+area = "WaterTemple"
+
+[files."water_temple.toml".regions]
+"data/World/Water Temple.json" = [
+    "Water Temple Lobby",
+    "Water Temple Before Boss",
+    "Water Temple Dive",
+    "Water Temple Lowered Water Levels",
+    "Water Temple South Basement",
+    "Water Temple Middle Water Level",
+    "Water Temple Cracked Wall",
+    "Water Temple Central Bow Target",
+    "Water Temple North Basement",
+    "Water Temple Boss Key Chest Room",
+    "Water Temple Falling Platform Room",
+    "Water Temple Dark Link Region",
+    "Water Temple River",
+    "Water Temple Dragon Statue",
+]
+"data/World/Bosses.json" = ["Morpha Boss Room", "Morpha Blue Warp"]
+
+[files."shadow_temple.toml"]
+area = "ShadowTemple"
+
+[files."shadow_temple.toml".regions]
+"data/World/Shadow Temple.json" = [
+    "Shadow Temple Entryway",
+    "Shadow Temple Beginning",
+    "Shadow Temple First Beamos",
+    "Shadow Temple Huge Pit",
+    "Shadow Temple Falling Spikes",
+    "Shadow Temple Invisible Spikes",
+    "Shadow Temple Wind Tunnel",
+    "Shadow Temple After Wind",
+    "Shadow Temple Boat",
+    "Shadow Temple Beyond Boat",
+    "Shadow Temple 3 Spinning Pots Rupees",
+    "Shadow Temple Beyond Boat Scarecrow",
+    "Shadow Temple Beyond Boat SoT Block",
+    "Shadow Temple Before Boss",
+]
+"data/World/Bosses.json" = ["Bongo Bongo Boss Room", "Bongo Bongo Blue Warp"]
+
+[files."spirit_temple.toml"]
+area = "SpiritTemple"
+
+[files."spirit_temple.toml".regions]
+"data/World/Spirit Temple.json" = [
+    "Spirit Temple Lobby",
+    "Child Spirit Temple Beyond Metal Bridges",
+    "Child Spirit Before Locked Door",
+    "Early Adult Spirit Temple",
+    "Spirit Temple Boulder Room",
+    "Child Spirit Temple Climb",
+    "Spirit Temple Central Chamber",
+    "Adult Spirit Temple Climb",
+    "Spirit Temple Anubis Room",
+    "Spirit Temple Beyond Anubis Room",
+    "Spirit Temple Big Mirror Room",
+    "Spirit Temple Before Boss",
+]
+"data/World/Bosses.json" = ["Twinrova Boss Room", "Twinrova Blue Warp"]
+
+[files."bottom_of_the_well.toml"]
+area = "BottomOfTheWell"
+
+[files."bottom_of_the_well.toml".regions]
+"data/World/Bottom of the Well.json" = [
+    "Bottom of the Well",
+    "Bottom of the Well Main Area",
+    "Bottom of the Well Behind Fake Walls",
+    "Bottom of the Well Left Side",
+    "Bottom of the Well Behind Locked Doors",
+]
+
+[files."ice_cavern.toml"]
+area = "IceCavern"
+
+[files."ice_cavern.toml".regions]
+"data/World/Ice Cavern.json" = [
+    "Ice Cavern Beginning",
+    "Ice Cavern Spinning Scythe Room",
+    "Ice Cavern Map Room",
+    "Ice Cavern Behind Ice Walls",
+    "Ice Cavern End",
+]
+
+[files."gerudo_training_ground.toml"]
+area = "GerudoTrainingGround"
+
+[files."gerudo_training_ground.toml".regions]
+"data/World/Gerudo Training Ground.json" = [
+    "Gerudo Training Ground Lobby",
+    "Gerudo Training Ground Lava Room Front",
+    "Gerudo Training Ground Lava Room Back",
+    "Gerudo Training Ground Water Room",
+    "Gerudo Training Ground Underwater",
+    "Gerudo Training Ground Central Maze Right",
+    "Gerudo Training Ground Boulder Room",
+    "Gerudo Training Ground Heavy Block Room",
+    "Gerudo Training Ground Eye Statue Upper",
+    "Gerudo Training Ground Like Like Room",
+    "Gerudo Training Ground Eye Statue Lower",
+    "Gerudo Training Ground Hammer Room",
+]
+
+[files."ganons_castle.toml"]
+area = "InsideGanonCastle"
+
+[files."ganons_castle.toml".regions]
+"data/World/Ganons Castle.json" = [
+    "Ganons Castle Lobby",
+    "Ganons Castle Main",
+    "Ganons Castle Forest Trial",
+    "Ganons Castle Forest Trial Wind Room",
+    "Ganons Castle Forest Trial Ending",
+    "Ganons Castle Water Trial",
+    "Ganons Castle Water Trial Ending",
+    "Ganons Castle Shadow Trial",
+    "Ganons Castle Shadow Trial First Gap",
+    "Ganons Castle Shadow Trial Second Gap",
+    "Ganons Castle Shadow Trial Ending",
+    "Ganons Castle Fire Trial",
+    "Ganons Castle Fire Trial Ending",
+    "Ganons Castle Light Trial",
+    "Ganons Castle Light Trial Boulder Room",
+    "Ganons Castle Light Trial Ending",
+    "Ganons Castle Spirit Trial",
+    "Ganons Castle Spirit Trial Second Room Front",
+    "Ganons Castle Spirit Trial Second Room Back",
+    "Ganons Castle Spirit Trial Ending",
+    "Ganons Castle Deku Scrubs",
+]
+"data/World/Bosses.json" = ["Ganons Castle Tower", "Ganons Castle Tower Below Boss", "Ganondorf Boss Room"]

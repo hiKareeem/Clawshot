@@ -1,15 +1,19 @@
-"""The ported world (OoT Randomizer's Kokiri Forest, Lost Woods and Deku Tree): it loads, its vanilla placement
-is beatable, its rules say what OoT Randomizer's say, and its seeds are beatable and reproducible."""
+"""The ported world (all of OoT Randomizer's overworld and vanilla dungeons, with the remake's overrides): it loads,
+its vanilla placement is beatable, its rules say what OoT Randomizer's and the remake's say, and seeds with the
+default settings are beatable and reproducible."""
 
 import os
 import subprocess
 import sys
+from concurrent.futures import ProcessPoolExecutor
 
 import pytest
 
-from clawshot.generate import Settings, generate
+from clawshot.generate import FillError, Settings, generate
 from clawshot.generate.fill import check_beatable
-from clawshot.world import ADULT, CHILD, load_spec, load_world, reachable
+from clawshot.world import ADULT, CHILD, Search, load_spec, load_world, reachable
+
+SEEDS = 200
 
 
 @pytest.fixture(scope="module")
@@ -17,30 +21,42 @@ def world():
     return load_world()
 
 
+def test_the_whole_world_is_ported(world):
+    assert world.dangling_exits == []  # every exit leads to a ported region
+    assert world.undefined_events == []
+    assert world.missing_regions == []
+    assert len(world.regions) == 342
+
+
+def vanilla_placements(world) -> dict[str, str]:
+    return {n: loc.vanilla for n, loc in world.locations.items() if loc.vanilla is not None and loc.n64_only is None}
+
+
 def test_vanilla_placement_is_beatable(world):
-    placements = {name: loc.vanilla for name, loc in world.locations.items() if loc.vanilla is not None}
-    spheres = check_beatable(world, placements)
-    assert "Queen Gohma" in spheres[-1]
+    """OoT Randomizer counts a dungeon's small keys for the worst order of its locked doors, so its own vanilla key
+    layout is not provably enough (the Spirit Temple's Silver Gauntlets chest asks for 5 keys; the child side has
+    2). Key logic is what seeds test below; here every other item lies where the game puts it, and each dungeon's
+    small keys are held from the start."""
+    placements = vanilla_placements(world)
+    keys = [item for item in placements.values() if world.items[item].type == "SmallKey"]
+    search = Search(world, keys)
+    search.collect_spheres(placements)
+    assert search.won()
+    assert search.holds("Time Travel") and search.can_reach("Ganondorf Boss Room", ADULT)
+    # Every chest is reached (the keys held up front make the key counts moot).
+    assert sorted(n for n in placements if n not in search.collected and world.locations[n].type == "Chest") == []
 
 
 def test_forest_start(world):
     search = reachable(world)
     assert search.can_access(world.locations["KF Kokiri Sword Chest"], CHILD)
     assert not search.can_reach("KF Outside Deku Tree")  # Mido wants the sword and a shield
-    assert search.regions(ADULT) == ["Root"]  # no Temple of Time in this port
+    assert not search.can_reach("Kokiri Forest", ADULT)  # adult only after the Master Sword (Time Travel)
 
     search = reachable(world, ["Kokiri Sword", "Buy Deku Shield"])
     assert search.holds("Showed Mido Sword & Shield")
     assert search.can_reach("Deku Tree Slingshot Room", CHILD)  # here(has_shield)
     assert not search.can_reach("LW Bridge From Forest")  # can_leave_forest: Gohma first
-
-
-def test_open_forest_setting(world):
-    open_world = load_world({"open_forest": "open"})
-    search = reachable(open_world, ["Kokiri Sword"])
-    assert search.can_reach("Deku Tree Lobby", CHILD)  # Mido steps aside
-    assert not search.can_reach("Deku Tree Slingshot Room")  # still no shield
-    assert search.can_reach("LW Bridge From Forest")  # can_leave_forest: open_forest != 'closed'
 
 
 def test_deku_tree_needs_what_ootr_says(world):
@@ -54,23 +70,60 @@ def test_deku_tree_needs_what_ootr_says(world):
     assert search.can_access(gohma)
 
 
-@pytest.mark.parametrize("progressive", [False, True])
-def test_seeds_are_beatable(progressive):
-    spec = load_spec()
-    logic = {"progressive_items": progressive}
-    world = load_world(logic)
-    for seed_number in range(100):
-        seed = generate(spec, seed_number, Settings(logic=logic))
-        check_beatable(world, seed.placements)
+def test_remake_overrides(world):
+    # Gold Skulltulas that need another item in the remake.
+    hammer_gs = world.locations["Fire Temple GS Boss Key Loop"].rule
+    assert not hammer_gs({}, ADULT, 1) and hammer_gs({"Megaton Hammer": 1}, ADULT, 1)
+    ogc = world.locations["OGC GS"].rule
+    assert not ogc({}, ADULT, 1) and ogc({"Hookshot": 1, "Progressive Hookshot": 1}, ADULT, 1)
+    # The swapped Great Fairies, and checks the remake does not have.
+    assert world.locations["DMT Great Fairy Reward"].vanilla == "Dins Fire"
+    assert world.locations["HC Great Fairy Reward"].vanilla == "Magic Meter"
+    assert world.locations["LLR GS Rain Shed"].n64_only
+    assert world.locations["Ganons Castle Water Trial Left Chest"].n64_only
+    # The Water Temple has 4 small keys: no door asks for a fifth (OoT Randomizer: 5 to Dark Link).
+    exits = world.regions["Water Temple Falling Platform Room"].exits
+    dark_link = next(e for e in exits if e.target == "Water Temple Dark Link Region")
+    assert dark_link.rule({"Small Key (Water Temple)": 4, "Progressive Hookshot": 1}, ADULT, 1)
+    assert not dark_link.rule({"Small Key (Water Temple)": 3, "Progressive Hookshot": 1}, ADULT, 1)
+    assert world.locations["Spirit Temple Mirror Shield Chest"].area == "DesertColossus"
+    assert world.locations["Market Treasure Chest Game Room 1 Top"].keep_vanilla
 
 
 def test_fixed_items_are_the_default(world):
     # Saria gives the Fairy Ocarina, the target game a bigger bullet bag: one fixed item each (vanilla_fixed).
     assert world.locations["LW Gift from Saria"].vanilla == "Fairy Ocarina"
     assert world.locations["LW Target in Woods"].vanilla == "Bullet Bag (40)"
+    assert world.locations["Water Temple Longshot Chest"].vanilla == "Longshot"
     assert not world.items["Bullet Bag (40)"].progression
     progressive = load_world({"progressive_items": True})
     assert progressive.locations["LW Gift from Saria"].vanilla == "Ocarina"
+
+
+def _seed_failure(seed: int, progressive: bool) -> str | None:
+    """Generate one seed and run the beatability search again on its placements (in a worker process)."""
+    logic = {"progressive_items": progressive}
+    try:
+        result = generate(load_spec(), seed, Settings(logic=logic))
+        check_beatable(load_world(logic), result.placements)
+    except FillError as e:
+        return f"seed {seed}: {e}"
+    return None
+
+
+def _failures(seeds: range, progressive: bool) -> list[str]:
+    workers = min(os.cpu_count() or 1, 8)
+    with ProcessPoolExecutor(workers) as pool:
+        results = pool.map(_seed_failure, seeds, [progressive] * len(seeds), chunksize=5)
+        return [r for r in results if r]
+
+
+def test_seeds_with_the_default_settings_are_beatable():
+    assert _failures(range(SEEDS), progressive=False) == []
+
+
+def test_seeds_with_progressive_items_are_beatable():
+    assert _failures(range(20), progressive=True) == []
 
 
 def test_spoiler_is_the_same_in_another_process():

@@ -50,5 +50,75 @@ source = "Overworld.json:41"
 [region.exits]
 "Temple of Time" = "True"  # Overworld.json:43
 
+[[region]]
+name = "Prelude of Light Warp"
+source = "Overworld.json:47"
+
+[region.exits]
+"Temple of Time" = "True"  # Overworld.json:49
+
+[[region]]
+name = "Minuet of Forest Warp"
+source = "Overworld.json:53"
+
+[region.exits]
+"Sacred Forest Meadow" = "True"  # Overworld.json:55
+
+[[region]]
+name = "Bolero of Fire Warp"
+source = "Overworld.json:59"
+
+[region.exits]
+"DMC Central Local" = "True"  # Overworld.json:61
+
+[[region]]
+name = "Serenade of Water Warp"
+source = "Overworld.json:65"
+
+[region.exits]
+"Lake Hylia" = "True"  # Overworld.json:67
+
+[[region]]
+name = "Nocturne of Shadow Warp"
+source = "Overworld.json:71"
+
+[region.exits]
+"Graveyard Warp Pad Region" = "True"  # Overworld.json:73
+
+[[region]]
+name = "Requiem of Spirit Warp"
+source = "Overworld.json:77"
+
+[region.exits]
+"Desert Colossus" = "True"  # Overworld.json:79
+
+[[region]]
+name = "Farores Wind Warp"
+source = "Overworld.json:83"
+
+[region.exits]
+"Bottom of the Well" = "(is_child and at('Bottom of the Well', is_child)) or (is_adult and at('Bottom of the Well', is_adult))"  # Overworld.json:85
+"Deku Tree Lobby" = "(is_child and at('Deku Tree Lobby', is_child)) or (is_adult and at('Deku Tree Lobby', is_adult))"  # Overworld.json:88
+"Deku Tree Before Boss" = "(is_child and at('Deku Tree Before Boss', is_child)) or (is_adult and at('Deku Tree Before Boss', is_adult))"  # Overworld.json:91
+"Dodongos Cavern Beginning" = "(is_child and at('Dodongos Cavern Beginning', is_child)) or (is_adult and at('Dodongos Cavern Beginning', is_adult))"  # Overworld.json:94
+"Dodongos Cavern Mouth" = "(is_child and at('Dodongos Cavern Mouth', is_child)) or (is_adult and at('Dodongos Cavern Mouth', is_adult))"  # Overworld.json:97
+"Fire Temple Lower" = "(is_child and at('Fire Temple Lower', is_child)) or (is_adult and at('Fire Temple Lower', is_adult))"  # Overworld.json:100
+"Fire Temple Before Boss" = "(is_child and at('Fire Temple Before Boss', is_child)) or (is_adult and at('Fire Temple Before Boss', is_adult))"  # Overworld.json:103
+"Forest Temple Lobby" = "(is_child and at('Forest Temple Lobby', is_child)) or (is_adult and at('Forest Temple Lobby', is_adult))"  # Overworld.json:106
+"Forest Temple Before Boss" = "(is_child and at('Forest Temple Before Boss', is_child)) or (is_adult and at('Forest Temple Before Boss', is_adult))"  # Overworld.json:109
+"Ganons Castle Lobby" = "(is_child and at('Ganons Castle Lobby', is_child)) or (is_adult and at('Ganons Castle Lobby', is_adult))"  # Overworld.json:112
+"Ganons Castle Main" = "(is_child and at('Ganons Castle Main', is_child)) or (is_adult and at('Ganons Castle Main', is_adult))"  # Overworld.json:115
+"Ganons Castle Tower" = "(is_child and at('Ganons Castle Tower', is_child)) or (is_adult and at('Ganons Castle Tower', is_adult))"  # Overworld.json:118
+"Gerudo Training Ground Lobby" = "(is_child and at('Gerudo Training Ground Lobby', is_child)) or (is_adult and at('Gerudo Training Ground Lobby', is_adult))"  # Overworld.json:121
+"Ice Cavern Beginning" = "(is_child and at('Ice Cavern Beginning', is_child)) or (is_adult and at('Ice Cavern Beginning', is_adult))"  # Overworld.json:124
+"Jabu Jabus Belly Beginning" = "(is_child and at('Jabu Jabus Belly Beginning', is_child)) or (is_adult and at('Jabu Jabus Belly Beginning', is_adult))"  # Overworld.json:127
+"Jabu Jabus Belly Before Boss" = "(is_child and at('Jabu Jabus Belly Before Boss', is_child)) or (is_adult and at('Jabu Jabus Belly Before Boss', is_adult))"  # Overworld.json:130
+"Shadow Temple Entryway" = "(is_child and at('Shadow Temple Entryway', is_child)) or (is_adult and at('Shadow Temple Entryway', is_adult))"  # Overworld.json:133
+"Shadow Temple Before Boss" = "(is_child and at('Shadow Temple Before Boss', is_child)) or (is_adult and at('Shadow Temple Before Boss', is_adult))"  # Overworld.json:136
+"Spirit Temple Lobby" = "(is_child and at('Spirit Temple Lobby', is_child)) or (is_adult and at('Spirit Temple Lobby', is_adult))"  # Overworld.json:139
+"Spirit Temple Before Boss" = "(is_child and at('Spirit Temple Before Boss', is_child)) or (is_adult and at('Spirit Temple Before Boss', is_adult))"  # Overworld.json:142
+"Water Temple Lobby" = "(is_child and at('Water Temple Lobby', is_child)) or (is_adult and at('Water Temple Lobby', is_adult))"  # Overworld.json:145
+"Water Temple Before Boss" = "(is_child and at('Water Temple Before Boss', is_child)) or (is_adult and at('Water Temple Before Boss', is_adult))"  # Overworld.json:148
+
 [locations]
 "Gift from Sages" = { type = "Cutscene", source = "LocationList.py:77" }

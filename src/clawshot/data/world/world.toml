@@ -1,16 +1,55 @@
 # The world the generator loads: its start region, its goal, and the region files that make it, plus Clawshot's
 # own settings and items (the generated files hold OoT Randomizer's). Format: plans/04-world-format.md.
-# Region files are written by `python -m clawshot.world.translate` (port.toml).
+# Region files are written by `python -m clawshot.world.translate` (port.toml); the remake's differences from
+# them are in `overrides` (written by hand, each with its source).
 
 # OoT Randomizer's start region: both ages are reached here; its exit "Root Exits" admits the starting age, and
 # the other age once "Time Travel" is held.
 start = "Root"
 
-# Round 2 ports only Kokiri Forest, the Lost Woods and the Deku Tree, so a seed's goal is beating Queen Gohma.
-# The full game's goal (OoT Randomizer: the Triforce, after Ganon) replaces it once the rest is ported.
-goal = "'Defeat Queen Gohma'"
+# OoT Randomizer's goal: the Triforce, the event of beating Ganon (Bosses.json, "Ganondorf Boss Room").
+goal = "Triforce"
 
-files = ["root.toml", "kokiri_forest.toml", "lost_woods.toml", "deku_tree.toml"]
+files = [
+    "root.toml",
+    "kokiri_forest.toml",
+    "lost_woods.toml",
+    "sacred_forest_meadow.toml",
+    "hyrule_field.toml",
+    "lon_lon_ranch.toml",
+    "lake_hylia.toml",
+    "gerudo_valley.toml",
+    "gerudo_fortress.toml",
+    "haunted_wasteland.toml",
+    "desert_colossus.toml",
+    "market.toml",
+    "temple_of_time.toml",
+    "hyrule_castle.toml",
+    "outside_ganons_castle.toml",
+    "kakariko.toml",
+    "graveyard.toml",
+    "death_mountain_trail.toml",
+    "goron_city.toml",
+    "death_mountain_crater.toml",
+    "zora_river.toml",
+    "zoras_domain.toml",
+    "zoras_fountain.toml",
+    "deku_tree.toml",
+    "dodongos_cavern.toml",
+    "jabu_jabus_belly.toml",
+    "forest_temple.toml",
+    "fire_temple.toml",
+    "water_temple.toml",
+    "shadow_temple.toml",
+    "spirit_temple.toml",
+    "bottom_of_the_well.toml",
+    "ice_cavern.toml",
+    "gerudo_training_ground.toml",
+    "ganons_castle.toml",
+]
+
+# The remake's differences from the translated files, and Clawshot's own per-location facts.
+overrides = "remake.toml"
 
 [settings]
 # false: each check gives one fixed item, as the remake does without code hooks (a chest holding the Longshot
