@@ -119,7 +119,7 @@ def link(world: World, shuffled: Sequence[str], definitions: Sequence[Definition
         chests[name] = sorted((by_id[d.id] for d in found), key=lambda loc: loc.id)
     if problems:
         raise PatchError("cannot link the shuffled locations to the remake's chests:\n  " + "\n  ".join(problems))
-    areas = {world.regions[world.locations[name].region].area for name in world.locations}
+    areas = {loc.area for loc in world.locations.values()}
     linked = {loc.id for locs in chests.values() for loc in locs}
     world_names = set(world.locations)
     vanilla = [

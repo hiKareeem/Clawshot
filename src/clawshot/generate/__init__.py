@@ -10,7 +10,7 @@ only randomness is ``random.Random(seed)``, and every list the fill walks is in 
 import json
 import random
 from collections.abc import Mapping
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from importlib.metadata import version
 from typing import Any
 
@@ -18,7 +18,7 @@ from clawshot.generate.fill import FillError, Settings, check_beatable, fill, sh
 from clawshot.world.load import build_world
 from clawshot.world.model import World
 
-__all__ = ["FillError", "Seed", "Settings", "generate", "spoiler", "spoiler_json"]
+__all__ = ["FillError", "Seed", "Settings", "generate", "prepare", "spoiler", "spoiler_json", "world_spec"]
 
 FILL_ATTEMPTS = 10
 
@@ -36,6 +36,34 @@ class Seed:
     """The beatability search's spheres: location names collected in each."""
 
 
+def world_spec(spec: Mapping[str, Any], settings: Settings) -> Mapping[str, Any]:
+    """The spec cut down to ``settings.areas`` (the regions in those census areas and the area-less start regions,
+    whose exits elsewhere then dangle) with ``settings.goal``; the spec unchanged when no areas are given."""
+    if not settings.areas:
+        return spec
+    areas = set(settings.areas)
+    regions = [r for r in spec["regions"] if r.get("area") is None or r.get("area") in areas]
+    if not any(r.get("area") in areas for r in regions):
+        raise FillError(f"no region of the world lies in the areas {sorted(areas)}")
+    kept = {name for r in regions for name in r.get("locations", {})}
+    locations = {name: info for name, info in spec.get("locations", {}).items() if name in kept}
+    return {**spec, "regions": regions, "locations": locations, "goal": settings.goal or spec["goal"]}
+
+
+def prepare(spec: Mapping[str, Any], settings: Settings) -> tuple[Settings, World]:
+    """The settings as a seed uses them, and the world they build.
+
+    With ``dungeon_items = "anywhere"`` the logic setting ``keysanity`` is set too, where the world has it: OoT
+    Randomizer's rules give one Fire Temple key for free while keys stay in their dungeon."""
+    logic = dict(settings.logic)
+    if settings.dungeon_items == "anywhere" and "keysanity" in spec.get("settings", {}):
+        if logic.get("keysanity") is False:
+            raise FillError("dungeon_items = 'anywhere' needs the logic setting keysanity = true")
+        logic["keysanity"] = True
+    settings = replace(settings, logic=logic)
+    return settings, build_world(world_spec(spec, settings), settings.logic)
+
+
 def generate(
     spec: Mapping[str, Any],
     seed: int,
@@ -43,7 +71,8 @@ def generate(
     attempts: int = FILL_ATTEMPTS,
     vanilla: Mapping[str, str] | None = None,
 ) -> Seed:
-    """Build the world for ``settings.logic``, fill it from ``random.Random(seed)`` and check it can be beaten.
+    """Build the world for ``settings`` (:func:`prepare`), fill it from ``random.Random(seed)`` and check it can be
+    beaten.
 
     ``vanilla`` gives the remake's own item for locations where it differs from the world's (OoT Randomizer's):
     the pool is then what the remake hands out (``clawshot.patch.remake_vanilla``).
@@ -51,7 +80,7 @@ def generate(
     A failed fill is retried with the same generator (so a retry is as deterministic as the first try), up to
     ``attempts`` times; then :class:`FillError` is raised.
     """
-    world = build_world(spec, settings.logic)
+    settings, world = prepare(spec, settings)
     vanilla = dict(vanilla or {})
     unknown = sorted(name for name in vanilla if name not in world.locations)
     if unknown:

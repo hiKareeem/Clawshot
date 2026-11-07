@@ -18,6 +18,9 @@ from clawshot.patch.plan import DROP_KEY, EVENT_KEY, Plan
 
 pytestmark = pytest.mark.dump
 
+# Round 3's playtest slice, as tests/test_seed.py has it.
+SLICE = Settings(areas=("KokiriForest", "LostWood", "InsideTheDekuTree"), goal="'Defeat Queen Gohma'")
+
 REMOVED = "<removed>"
 
 
@@ -52,7 +55,7 @@ def expected_changes(plan: Plan, path: str) -> set:
 def test_written_files_differ_only_where_the_plan_says(romfs, tmp_path, seed_number):
     """Placement files: only the planned fields. The size table: each changed file's entry raised to what it needs
     when short, nothing else; and the table is written only then."""
-    output = make_seed(romfs, seed_number, Settings())
+    output = make_seed(romfs, seed_number, SLICE)
     out = tmp_path / "seed"
     written = {f.path: f for f in write_seed(output, romfs, out)}
     plan = output.plan
@@ -90,7 +93,9 @@ def test_same_seed_same_folder_in_two_processes(romfs, tmp_path):
         out = tmp_path / f"run{hash_seed}"
         env = {**os.environ, "PYTHONHASHSEED": hash_seed}
         argv = [sys.executable, "-m", "clawshot", "--romfs", str(romfs), "--seed", "4242", "--out", str(out)]
-        subprocess.run(argv, capture_output=True, env=env, check=True)
+        argv += ["--areas", *SLICE.areas, "--goal", SLICE.goal]
+        result = subprocess.run(argv, capture_output=True, text=True, env=env)
+        assert result.returncode == 0, result.stderr
         folders.append({p.relative_to(out).as_posix(): p.read_bytes() for p in sorted(out.rglob("*")) if p.is_file()})
     assert folders[0] == folders[1]
     assert "spoiler.json" in folders[0] and len(folders[0]) > 1

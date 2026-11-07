@@ -186,3 +186,30 @@ def test_keep_vanilla_locations_are_not_shuffled():
         assert placements["Village Roof"] == "Bow"
         assert [loc for loc, item in placements.items() if item == "Bow"] == ["Village Roof"]
         check_beatable(world, placements)
+
+
+def test_a_slice_keeps_only_its_areas_and_its_goal():
+    spec = dungeon_world()
+    for region in spec["regions"]:
+        if region["name"] != "Root":
+            region["area"] = "Village" if region["name"] == "Village" else "Elsewhere"
+    spec["regions"][1]["locations"]["Village Ledge"] = chest("Rupees (5)")  # open, so Sword and Bow both fit
+    settings = Settings(areas=("Village",), goal="Sword")
+    seed = generate(spec, 3, settings)
+    assert list(seed.world.regions) == ["Root", "Village"]  # the temple and the dungeon are cut away
+    assert seed.shuffled == ["Village Chest", "Village Ledge", "Village Roof"]
+    assert seed.placements["Village Roof"] == "Rupees (5)"  # the roof needs the adult, who never comes here
+    log = json.loads(spoiler_json(seed))
+    assert (log["settings"]["areas"], log["settings"]["goal"]) == (["Village"], "Sword")
+    with pytest.raises(FillError, match="no region of the world lies in the areas"):
+        generate(spec, 3, Settings(areas=("Nowhere",), goal="Sword"))
+
+
+def test_dungeon_items_anywhere_turn_keysanity_on():
+    # OoT Randomizer's rules give a free key while keys stay in their dungeon; with keys anywhere that must stop.
+    spec = dungeon_world()
+    spec["settings"] = {**spec["settings"], "keysanity": False}
+    assert generate(spec, 1, Settings(dungeon_items="anywhere")).settings.logic == {"keysanity": True}
+    assert generate(spec, 1, Settings()).settings.logic == {}
+    with pytest.raises(FillError, match="needs the logic setting keysanity = true"):
+        generate(spec, 1, Settings(dungeon_items="anywhere", logic={"keysanity": False}))

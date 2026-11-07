@@ -15,13 +15,13 @@ from typing import Any
 
 from clawshot.census import definitions as census_definitions
 from clawshot.census.scan import scan
-from clawshot.generate import Seed, Settings, generate, spoiler
+from clawshot.generate import Seed, Settings, generate, prepare, spoiler
 from clawshot.generate.fill import shuffled_locations
 from clawshot.patch import events as chest_events
 from clawshot.patch import items as item_actors
 from clawshot.patch.plan import Links, PatchError, Plan, link, make_plan, remake_vanilla
 from clawshot.patch.write import WrittenFile, write
-from clawshot.world.load import build_world, load_spec
+from clawshot.world.load import load_spec
 
 __all__ = ["PatchError", "SeedOutput", "make_seed", "write_seed"]
 
@@ -42,7 +42,7 @@ class SeedOutput:
 def make_seed(romfs: str | Path, seed: int, settings: Settings, spec: Mapping[str, Any] | None = None) -> SeedOutput:
     """Run the census on ``romfs`` (read only), fill a seed from the remake's chest contents and plan its patch."""
     spec = load_spec() if spec is None else spec
-    world = build_world(spec, settings.logic)
+    _, world = prepare(spec, settings)
     table = item_actors.load()
     table.check(world.items)
     links = link(world, shuffled_locations(world, settings), census_definitions.load(), scan(romfs))

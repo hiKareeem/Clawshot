@@ -26,22 +26,34 @@ class Settings:
     """What a seed shuffles. ``shuffle`` lists OoT Randomizer location types whose items are shuffled among
     themselves; every other location keeps its vanilla item. ``dungeon_items`` keeps a dungeon's keys, maps and
     compasses in that dungeon (``own_dungeon``) or lets them go ``anywhere``. ``logic`` overrides logic settings
-    from ``settings.toml``."""
+    from ``settings.toml``.
+
+    ``areas`` and ``goal`` cut the world down to a slice (a playtest of a few areas): only the regions in those
+    census areas (Banc folders) and the area-less start regions, with ``goal`` in place of the world's. Empty: the
+    whole world."""
 
     shuffle: tuple[str, ...] = ("Chest",)
     dungeon_items: str = "own_dungeon"
     logic: dict[str, Any] = field(default_factory=dict)
+    areas: tuple[str, ...] = ()
+    goal: str | None = None
 
     def __post_init__(self) -> None:
         if self.dungeon_items not in DUNGEON_ITEM_CHOICES:
             raise ValueError(f"dungeon_items must be one of {DUNGEON_ITEM_CHOICES}, not {self.dungeon_items!r}")
+        if self.goal is not None and not self.areas:
+            raise ValueError("a goal is given only with the areas of a slice")
 
     def as_dict(self) -> dict[str, Any]:
-        return {
+        out: dict[str, Any] = {
             "shuffle": list(self.shuffle),
             "dungeon_items": self.dungeon_items,
             "logic": {k: self.logic[k] for k in sorted(self.logic)},
         }
+        if self.areas:
+            out["areas"] = list(self.areas)
+            out["goal"] = self.goal
+        return out
 
 
 def is_restricted(world: World, settings: Settings, item: str) -> bool:
