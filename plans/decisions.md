@@ -23,6 +23,13 @@
 - **D8 Archipelago after a stable solo randomizer** (Kareem, 2026-11-07). Moved to Later in the roadmap.
 - **D9 Rounds run as in `02-orchestration.md`** (Kareem, 2026-11-07): Claude launches and watches omp agents in
   herdr, Bermuda for cross-track posts, parallel where possible, Kareem tests in game when asked.
+- **D10 Trap chests stay out of the first seeds** (Kareem, 2026-11-07, on round 1 track B's finding that the six
+  N64 Ice Trap chests are item-less trap actors here).
+- **D11 Cows stay out** (Kareem, 2026-11-07): no per-cow save flag, so not a one-time check without code hooks.
+- **D12 The remake's extra chests are shuffled; `Item_ScrubBusinessSeed` is filler; `DreamWorld` stays out**
+  (Kareem, 2026-11-07).
+- **D13 No chest-size-matches-contents feature** (Kareem, 2026-11-07), provided a small chest can give a big
+  chest's item and a big chest a small item. Round 1's in-game test checks both directions.
 
 ## Open (only Kareem and his co-owner decide)
 
