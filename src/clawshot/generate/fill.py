@@ -55,7 +55,12 @@ def allowed(world: World, settings: Settings, location: str, item: str) -> bool:
 
 
 def shuffled_locations(world: World, settings: Settings) -> list[str]:
-    return [name for name, loc in world.locations.items() if loc.type in settings.shuffle and loc.vanilla is not None]
+    """Locations of a shuffled type that hold an item in the remake (not N64-only)."""
+    return [
+        name
+        for name, loc in world.locations.items()
+        if loc.type in settings.shuffle and loc.vanilla is not None and loc.n64_only is None
+    ]
 
 
 def _fill_restrictive(
@@ -121,7 +126,7 @@ def fill(world: World, settings: Settings, rng: random.Random) -> dict[str, str]
     placements = {
         name: loc.vanilla
         for name, loc in world.locations.items()
-        if name not in shuffled_set and loc.vanilla is not None
+        if name not in shuffled_set and loc.vanilla is not None and loc.n64_only is None
     }
     pool = [world.locations[name].vanilla for name in shuffled]
     rng.shuffle(pool)

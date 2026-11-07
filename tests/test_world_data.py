@@ -54,11 +54,23 @@ def test_deku_tree_needs_what_ootr_says(world):
     assert search.can_access(gohma)
 
 
-def test_seeds_are_beatable(world):
+@pytest.mark.parametrize("progressive", [False, True])
+def test_seeds_are_beatable(progressive):
     spec = load_spec()
+    logic = {"progressive_items": progressive}
+    world = load_world(logic)
     for seed_number in range(100):
-        seed = generate(spec, seed_number, Settings())
+        seed = generate(spec, seed_number, Settings(logic=logic))
         check_beatable(world, seed.placements)
+
+
+def test_fixed_items_are_the_default(world):
+    # Saria gives the Fairy Ocarina, the target game a bigger bullet bag: one fixed item each (vanilla_fixed).
+    assert world.locations["LW Gift from Saria"].vanilla == "Fairy Ocarina"
+    assert world.locations["LW Target in Woods"].vanilla == "Bullet Bag (40)"
+    assert not world.items["Bullet Bag (40)"].progression
+    progressive = load_world({"progressive_items": True})
+    assert progressive.locations["LW Gift from Saria"].vanilla == "Ocarina"
 
 
 def test_spoiler_is_the_same_in_another_process():

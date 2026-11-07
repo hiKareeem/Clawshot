@@ -1,5 +1,6 @@
-# The world the generator loads: its start region, its goal, and the region files that make it.
-# Format: plans/04-world-format.md. Region files are written by `python -m clawshot.world.translate` (port.toml).
+# The world the generator loads: its start region, its goal, and the region files that make it, plus Clawshot's
+# own settings and items (the generated files hold OoT Randomizer's). Format: plans/04-world-format.md.
+# Region files are written by `python -m clawshot.world.translate` (port.toml).
 
 # OoT Randomizer's start region: both ages are reached here; its exit "Root Exits" admits the starting age, and
 # the other age once "Time Travel" is held.
@@ -10,3 +11,25 @@ start = "Root"
 goal = "'Defeat Queen Gohma'"
 
 files = ["root.toml", "kokiri_forest.toml", "lost_woods.toml", "deku_tree.toml"]
+
+[settings]
+# false: each check gives one fixed item, as the remake does without code hooks (a chest holding the Longshot
+# gives the Longshot, found first or not); vanilla items are the tier a check gives (`vanilla_fixed`).
+# true: OoT Randomizer's progressive items (needs event-flow edits or a Hookshot hook). Default false: decision D16
+# (Kareem, round 2).
+progressive_items = false
+
+# Each progressive item's tiers, lowest first. Tier n is an item of its own that counts as n of the progressive
+# item, so OoT Randomizer's rules ("Hookshot" = Progressive_Hookshot, "Longshot" = (Progressive_Hookshot, 2))
+# read fixed and progressive items alike. Finding a higher tier first gives that tier's ability [inference: the
+# remake granting a Longshot or Golden Gauntlets without the lower tier is not checked in game yet].
+[progressive]
+"Progressive Hookshot" = ["Hookshot", "Longshot"]
+"Progressive Strength Upgrade" = ["Goron Bracelet", "Silver Gauntlets", "Golden Gauntlets"]
+"Progressive Scale" = ["Silver Scale", "Golden Scale"]
+"Progressive Wallet" = ["Adult Wallet", "Giant Wallet", "Tycoon Wallet"]
+"Ocarina" = ["Fairy Ocarina", "Ocarina of Time"]
+
+[items]
+# The Lost Woods target game's prize is a bigger bullet bag: OoT Randomizer gives a progressive Slingshot there.
+"Bullet Bag (40)" = { class = "normal" }

@@ -4,6 +4,7 @@
 
 [[region]]
 name = "Deku Tree Lobby"
+area = "InsideTheDekuTree"
 dungeon = "Deku Tree"
 source = "Deku Tree.json:3"
 
@@ -29,6 +30,7 @@ source = "Deku Tree.json:3"
 
 [[region]]
 name = "Deku Tree Slingshot Room"
+area = "InsideTheDekuTree"
 dungeon = "Deku Tree"
 source = "Deku Tree.json:25"
 
@@ -38,6 +40,7 @@ source = "Deku Tree.json:25"
 
 [[region]]
 name = "Deku Tree Basement"
+area = "InsideTheDekuTree"
 dungeon = "Deku Tree"
 source = "Deku Tree.json:33"
 
@@ -52,6 +55,7 @@ source = "Deku Tree.json:33"
 
 [[region]]
 name = "Deku Tree Basement Back Room"
+area = "InsideTheDekuTree"
 dungeon = "Deku Tree"
 source = "Deku Tree.json:50"
 
@@ -63,6 +67,7 @@ source = "Deku Tree.json:50"
 
 [[region]]
 name = "Deku Tree Basement Ledge"
+area = "InsideTheDekuTree"
 dungeon = "Deku Tree"
 source = "Deku Tree.json:63"
 
@@ -73,6 +78,7 @@ source = "Deku Tree.json:63"
 
 [[region]]
 name = "Deku Tree Before Boss"
+area = "InsideTheDekuTree"
 dungeon = "Deku Tree"
 source = "Deku Tree.json:74"
 
@@ -87,6 +93,7 @@ source = "Deku Tree.json:74"
 
 [[region]]
 name = "Queen Gohma Boss Room"
+area = "InsideTheDekuTree"
 scene = "Deku Tree Boss"
 source = "Bosses.json:6"
 
@@ -103,6 +110,7 @@ source = "Bosses.json:6"
 
 [[region]]
 name = "Queen Gohma Blue Warp"
+area = "InsideTheDekuTree"
 scene = "Deku Tree Boss"
 provides_time = "day"
 source = "Bosses.json:22"

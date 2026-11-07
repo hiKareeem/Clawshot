@@ -1,13 +1,19 @@
 # Which OoT Randomizer regions the translator (python -m clawshot.world.translate) writes into which world file.
 # OoT Randomizer: https://github.com/OoTRandomizer/OoT-Randomizer (MIT), data/World/*.json.
 # Round 2 ports Kokiri Forest, the Lost Woods and the Deku Tree, plus the start regions they hang from.
+#
+# Per file: `area`, the remake's Banc folder its regions lie in (the census `area` of their checks; grottos are in
+# the overworld folder they open from, 03-game-data.md section 1), and `regions`, by OoT Randomizer source file.
 
 ootr_commit = "526b4c8d81b7c4023ef4573ffbaf39344e270d5b"
 
-[files."root.toml"]
+[files."root.toml".regions]
 "data/World/Overworld.json" = ["Root", "Root Exits", "Child Spawn", "Adult Spawn"]
 
 [files."kokiri_forest.toml"]
+area = "KokiriForest"
+
+[files."kokiri_forest.toml".regions]
 "data/World/Overworld.json" = [
     "Kokiri Forest",
     "KF Outside Deku Tree",
@@ -21,6 +27,9 @@ ootr_commit = "526b4c8d81b7c4023ef4573ffbaf39344e270d5b"
 ]
 
 [files."lost_woods.toml"]
+area = "LostWood"
+
+[files."lost_woods.toml".regions]
 "data/World/Overworld.json" = [
     "Lost Woods",
     "LW Beyond Mido",
@@ -35,6 +44,9 @@ ootr_commit = "526b4c8d81b7c4023ef4573ffbaf39344e270d5b"
 ]
 
 [files."deku_tree.toml"]
+area = "InsideTheDekuTree"
+
+[files."deku_tree.toml".regions]
 "data/World/Deku Tree.json" = [
     "Deku Tree Lobby",
     "Deku Tree Slingshot Room",

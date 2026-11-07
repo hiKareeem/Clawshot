@@ -19,9 +19,11 @@ OOTR_DIR = os.environ.get("OOTR_DIR")
 
 @pytest.mark.skipif(not OOTR_DIR, reason="OOTR_DIR is not set")
 def test_committed_files_match_the_translator(tmp_path: Path):
-    shutil.copy(DATA_DIR / "port.toml", tmp_path / "port.toml")
-    translate(Path(OOTR_DIR).resolve(), tmp_path)
     with (DATA_DIR / "port.toml").open("rb") as f:
-        files = [*tomllib.load(f)["files"], "helpers.toml", "items.toml", "settings.toml"]
-    for name in files:
+        region_files = list(tomllib.load(f)["files"])
+    # A rerun over the committed files: hand-written fields (vanilla_fixed, n64_only) are read back from them.
+    for name in ["port.toml", *region_files]:
+        shutil.copy(DATA_DIR / name, tmp_path / name)
+    translate(Path(OOTR_DIR).resolve(), tmp_path)
+    for name in [*region_files, "helpers.toml", "items.toml", "settings.toml"]:
         assert (tmp_path / name).read_bytes() == (DATA_DIR / name).read_bytes(), name

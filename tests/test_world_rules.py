@@ -146,3 +146,53 @@ def test_tricks_stay_off():
             },
             {"logic_trick": True},
         )
+
+
+def progressive_world(logic: dict, vanilla_fixed: str | None = "Longshot"):
+    """A chest whose OoT Randomizer vanilla item is the progressive hookshot; a post that needs the Hookshot and a
+    ledge that needs the Longshot (OoT Randomizer's helpers: Progressive_Hookshot, and two of it)."""
+    chest = {"type": "Chest", "vanilla": "Progressive Hookshot"}
+    if vanilla_fixed:
+        chest["vanilla_fixed"] = vanilla_fixed
+    return build_world(
+        {
+            "start": "Root",
+            "goal": "True",
+            "items": ITEMS,
+            "helpers": HELPERS,
+            "settings": {"progressive_items": False},
+            "progressive": {"Progressive Hookshot": ["Hookshot", "Longshot"]},
+            "locations": {"Chest": chest},
+            "regions": [
+                {
+                    "name": "Root",
+                    "locations": {
+                        "Chest": "True",
+                        "Post": {"rule": "Hookshot", "type": "Chest"},
+                        "Ledge": {"rule": "Longshot", "type": "Chest"},
+                    },
+                }
+            ],
+        },
+        logic,
+    )
+
+
+def test_fixed_and_progressive_items_read_the_same_rules():
+    fixed = progressive_world({})
+    assert fixed.locations["Chest"].vanilla == "Longshot"  # the tier this chest gives
+    assert progressive_world({"progressive_items": True}).locations["Chest"].vanilla == "Progressive Hookshot"
+    post, ledge = fixed.locations["Post"], fixed.locations["Ledge"]
+    longshot_first = reachable(fixed, ["Longshot"])  # a Longshot found first is a Longshot
+    assert longshot_first.can_access(post) and longshot_first.can_access(ledge)
+    hookshot = reachable(fixed, ["Hookshot"])
+    assert hookshot.can_access(post) and not hookshot.can_access(ledge)
+    assert reachable(fixed, ["Progressive Hookshot"] * 2).can_access(ledge)
+
+
+def test_fixed_items_need_the_tier_of_a_progressive_vanilla_item():
+    with pytest.raises(WorldError, match="say which tier"):
+        progressive_world({}, vanilla_fixed=None)
+    with pytest.raises(WorldError, match="not a tier"):
+        progressive_world({}, vanilla_fixed="Bow")
+    assert progressive_world({"progressive_items": True}, vanilla_fixed=None).locations["Chest"].vanilla

@@ -37,7 +37,8 @@ class Exit:
 @dataclass(frozen=True)
 class Location:
     """A check: one item, placed once. ``type`` is OoT Randomizer's location type (``Chest``, ``GS Token``, ...);
-    ``vanilla`` the item the unrandomized game puts there."""
+    ``vanilla`` the item the unrandomized game puts there (with fixed items, the tier this check gives).
+    ``n64_only`` is the reason, with its evidence, when the check does not exist in the remake."""
 
     name: str
     region: str
@@ -45,6 +46,7 @@ class Location:
     type: str
     vanilla: str | None
     source: str
+    n64_only: str | None = None
 
 
 @dataclass(frozen=True)
@@ -61,6 +63,8 @@ class Event:
 class Region:
     name: str
     source: str = ""
+    area: str | None = None
+    """The remake's Banc folder the region lies in (the census ``area``)."""
     dungeon: str | None = None
     scene: str | None = None
     hint: str | None = None

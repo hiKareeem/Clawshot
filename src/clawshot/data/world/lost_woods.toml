@@ -4,6 +4,7 @@
 
 [[region]]
 name = "Lost Woods"
+area = "LostWood"
 scene = "Lost Woods"
 hint = "LOST_WOODS"
 source = "Overworld.json:315"
@@ -48,6 +49,7 @@ Bugs = "is_child and can_cut_shrubs and has_bottle"  # Overworld.json:345
 
 [[region]]
 name = "LW Beyond Mido"
+area = "LostWood"
 scene = "Lost Woods"
 hint = "LOST_WOODS"
 source = "Overworld.json:361"
@@ -72,6 +74,7 @@ Fairy = "can_use(Sticks) and has_bottle"  # Overworld.json:377
 
 [[region]]
 name = "LW Forest Exit"
+area = "LostWood"
 scene = "Lost Woods"
 hint = "LOST_WOODS"
 source = "Overworld.json:388"
@@ -81,6 +84,7 @@ source = "Overworld.json:388"
 
 [[region]]
 name = "LW Underwater Entrance"
+area = "LostWood"
 scene = "Lost Woods"
 hint = "LOST_WOODS"
 source = "Overworld.json:396"
@@ -95,6 +99,7 @@ source = "Overworld.json:396"
 
 [[region]]
 name = "Lost Woods Mushroom Timeout"
+area = "LostWood"
 scene = "Lost Woods"
 hint = "LOST_WOODS"
 source = "Overworld.json:409"
@@ -104,6 +109,7 @@ source = "Overworld.json:409"
 
 [[region]]
 name = "LW Bridge From Forest"
+area = "LostWood"
 scene = "Lost Woods"
 hint = "LOST_WOODS"
 source = "Overworld.json:465"
@@ -116,6 +122,7 @@ source = "Overworld.json:465"
 
 [[region]]
 name = "LW Bridge"
+area = "LostWood"
 scene = "Lost Woods"
 hint = "LOST_WOODS"
 source = "Overworld.json:476"
@@ -127,6 +134,7 @@ source = "Overworld.json:476"
 
 [[region]]
 name = "LW Near Shortcuts Grotto"
+area = "LostWood"
 scene = "LW Near Shortcuts Grotto"
 source = "Overworld.json:2887"
 
@@ -149,6 +157,7 @@ Fish = "has_bottle"  # Overworld.json:2897
 
 [[region]]
 name = "Deku Theater"
+area = "LostWood"
 scene = "Deku Theater"
 source = "Overworld.json:2904"
 
@@ -161,6 +170,7 @@ source = "Overworld.json:2904"
 
 [[region]]
 name = "LW Scrubs Grotto"
+area = "LostWood"
 scene = "LW Scrubs Grotto"
 source = "Overworld.json:2917"
 
@@ -177,7 +187,7 @@ source = "Overworld.json:2917"
 "LW Trade Cojiro" = { type = "NPC", vanilla = "Odd Mushroom", source = "LocationList.py:169" }
 "LW Trade Odd Potion" = { type = "NPC", vanilla = "Poachers Saw", source = "LocationList.py:170" }
 "LW Ocarina Memory Game" = { type = "NPC", vanilla = "Piece of Heart", source = "LocationList.py:166" }
-"LW Target in Woods" = { type = "NPC", vanilla = "Slingshot", source = "LocationList.py:167" }
+"LW Target in Woods" = { type = "NPC", vanilla = "Slingshot", source = "LocationList.py:167", vanilla_fixed = "Bullet Bag (40)" }
 "LW Deku Scrub Near Bridge" = { type = "Scrub", vanilla = "Deku Stick Capacity", source = "LocationList.py:174" }
 "LW Underwater Green Rupee 1" = { type = "Freestanding", vanilla = "Rupee (1)", source = "LocationList.py:184" }
 "LW Underwater Green Rupee 2" = { type = "Freestanding", vanilla = "Rupee (1)", source = "LocationList.py:185" }
@@ -196,7 +206,7 @@ source = "Overworld.json:2917"
 "LW GS Above Theater" = { type = "GS Token", vanilla = "Gold Skulltula Token", source = "LocationList.py:181" }
 "LW GS Bean Patch Near Theater" = { type = "GS Token", vanilla = "Gold Skulltula Token", source = "LocationList.py:180" }
 "LW Underwater Shortcut Green Rupee" = { type = "Freestanding", vanilla = "Rupee (1)", source = "LocationList.py:191" }
-"LW Gift from Saria" = { type = "Cutscene", vanilla = "Ocarina", source = "LocationList.py:165" }
+"LW Gift from Saria" = { type = "Cutscene", vanilla = "Ocarina", source = "LocationList.py:165", vanilla_fixed = "Fairy Ocarina" }
 "LW Near Shortcuts Grotto Chest" = { type = "Chest", vanilla = "Rupees (5)", source = "LocationList.py:168" }
 "LW Near Shortcuts Grotto Beehive 1" = { type = "Beehive", vanilla = "Rupees (5)", source = "LocationList.py:193" }
 "LW Near Shortcuts Grotto Beehive 2" = { type = "Beehive", vanilla = "Rupees (20)", source = "LocationList.py:194" }

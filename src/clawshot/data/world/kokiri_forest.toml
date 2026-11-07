@@ -4,6 +4,7 @@
 
 [[region]]
 name = "Kokiri Forest"
+area = "KokiriForest"
 scene = "Kokiri Forest"
 hint = "KOKIRI_FOREST"
 source = "Overworld.json:154"
@@ -60,6 +61,7 @@ Fairy = "(can_summon_gossip_fairy_without_suns and has_bottle) or (is_child and 
 
 [[region]]
 name = "KF Outside Deku Tree"
+area = "KokiriForest"
 scene = "Kokiri Forest"
 hint = "KOKIRI_FOREST"
 source = "Overworld.json:214"
@@ -81,6 +83,7 @@ source = "Overworld.json:214"
 
 [[region]]
 name = "KF Links House"
+area = "KokiriForest"
 scene = "KF Links House"
 source = "Overworld.json:238"
 
@@ -93,6 +96,7 @@ source = "Overworld.json:238"
 
 [[region]]
 name = "KF Midos House"
+area = "KokiriForest"
 scene = "KF Midos House"
 source = "Overworld.json:249"
 
@@ -107,6 +111,7 @@ source = "Overworld.json:249"
 
 [[region]]
 name = "KF Sarias House"
+area = "KokiriForest"
 scene = "KF Sarias House"
 source = "Overworld.json:262"
 
@@ -121,6 +126,7 @@ source = "Overworld.json:262"
 
 [[region]]
 name = "KF House of Twins"
+area = "KokiriForest"
 scene = "KF House of Twins"
 source = "Overworld.json:275"
 
@@ -133,6 +139,7 @@ source = "Overworld.json:275"
 
 [[region]]
 name = "KF Know It All House"
+area = "KokiriForest"
 scene = "KF Know it All House"
 source = "Overworld.json:286"
 
@@ -145,6 +152,7 @@ source = "Overworld.json:286"
 
 [[region]]
 name = "KF Kokiri Shop"
+area = "KokiriForest"
 scene = "KF Kokiri Shop"
 source = "Overworld.json:297"
 
@@ -164,6 +172,7 @@ source = "Overworld.json:297"
 
 [[region]]
 name = "KF Storms Grotto"
+area = "KokiriForest"
 scene = "KF Storms Grotto"
 source = "Overworld.json:2870"
 

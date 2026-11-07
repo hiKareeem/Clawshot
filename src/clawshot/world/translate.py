@@ -45,6 +45,8 @@ IGNORED_REGION_KEYS = frozenset({"savewarp", "is_boss_room", "alt_hint"})
 # Names the engine reads even when no rule names them.
 ALWAYS_SETTINGS = ("starting_age", "starting_tod", "damage_multiplier")
 ALWAYS_FLAGS = ("ensure_tod_access",)
+# Fields of a [locations] entry that are written by hand (plans/04-world-format.md); a rerun keeps them.
+HAND_FIELDS = ("vanilla_fixed", "n64_only")
 
 
 class TranslateError(RuntimeError):
@@ -127,9 +129,10 @@ def port_regions(ootr: Path, files: Mapping[str, Mapping[str, list[str]]]) -> Po
     locations: dict[str, dict[str, Any]] = {}
     skipped: list[str] = []
     rules: list[str] = []
-    for out_name, sources in files.items():
+    for out_name, config in files.items():
         ported: list[PortedRegion] = []
-        for relative, wanted in sources.items():
+        area = config.get("area")
+        for relative, wanted in config["regions"].items():
             path = ootr / relative
             data = {r["region_name"]: r for r in read_logic_json(path)}
             lines = path.read_text(encoding="utf-8").splitlines()
@@ -174,6 +177,8 @@ def port_regions(ootr: Path, files: Mapping[str, Mapping[str, list[str]]]) -> Po
                 fields = {k: region[k] for k in keys if k in region}
                 if "provides_time" in fields:
                     fields["provides_time"] = str(fields["provides_time"]).lower()
+                if area is not None:
+                    fields = {"area": area, **fields}
                 ported.append(
                     PortedRegion(region_name, f"{file_label}:{start + 1}", fields, events, kept_locations, exits)
                 )
@@ -339,9 +344,14 @@ def write_region_file(path: Path, commit: str, regions: list[PortedRegion], loca
                 lines.extend(_entry_lines(entries))
         lines.append("")
     names = [entry.name for region in regions for entry in region.locations]
+    kept: dict[str, dict[str, Any]] = {}
+    if path.exists():
+        with path.open("rb") as f:
+            for name, info in tomllib.load(f).get("locations", {}).items():
+                kept[name] = {k: info[k] for k in HAND_FIELDS if k in info}
     if names:
         lines.append("[locations]")
-        lines.extend(f"{_toml_key(n)} = {_toml_value(locations[n])}" for n in names)
+        lines.extend(f"{_toml_key(n)} = {_toml_value(locations[n] | kept.get(n, {}))}" for n in names)
         lines.append("")
     path.write_text("\n".join(lines), encoding="utf-8", newline="\n")
 

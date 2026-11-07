@@ -41,7 +41,8 @@ def _read(path: Path) -> dict[str, Any]:
 
 
 def load_spec(directory: Path = DATA_DIR) -> dict[str, Any]:
-    """Merge the data files named by ``<directory>/world.toml`` into one spec."""
+    """Merge the data files named by ``<directory>/world.toml`` into one spec. ``world.toml``'s own ``[settings]``
+    and ``[items]`` (Clawshot's, not OoT Randomizer's) add to the generated tables; a name in both is an error."""
     meta = _read(directory / "world.toml")
     spec: dict[str, Any] = {"start": meta["start"], "goal": meta["goal"], "regions": [], "locations": {}}
     for name in ("items", "helpers"):
@@ -49,6 +50,12 @@ def load_spec(directory: Path = DATA_DIR) -> dict[str, Any]:
     settings = _read(directory / "settings.toml")
     for name in ("settings", "tricks", "flags"):
         spec[name] = settings.get(name, {})
+    for name in ("settings", "items"):
+        both = sorted(spec[name].keys() & meta.get(name, {}).keys())
+        if both:
+            raise WorldError(f"world.toml [{name}] repeats generated entries: {both}")
+        spec[name] = spec[name] | meta.get(name, {})
+    spec["progressive"] = meta.get("progressive", {})
     for file in meta["files"]:
         data = _read(directory / file)
         spec["regions"].extend(data.get("region", []))
@@ -111,10 +118,39 @@ def _rule_entry(value: Any, where: str) -> tuple[str, dict[str, Any]]:
     raise WorldError(f"{where}: expected a rule string or a table with 'rule'")
 
 
+def _progressive_tiers(table: Mapping[str, list[str]], items: dict[str, Item]) -> dict[str, list[str]]:
+    """Add an item for each tier of each progressive item: tier ``n`` (from 1) counts as ``n`` of the progressive
+    item, so every rule that asks for ``(Progressive_Hookshot, 2)`` reads a Longshot as well."""
+    for progressive, tiers in table.items():
+        if progressive not in items:
+            raise WorldError(f"[progressive]: {progressive!r} is not in the item table")
+        base = items[progressive]
+        for n, tier in enumerate(tiers, start=1):
+            if tier in items:
+                raise WorldError(f"[progressive]: tier {tier!r} of {progressive!r} is already an item")
+            items[tier] = Item(tier, base.type, base.progression, base.priority, alias=(progressive, n))
+    return dict(table)
+
+
+def _fixed_vanilla(vanilla: str | None, fixed: str | None, progressive: Mapping[str, list[str]], where: str) -> Any:
+    """The vanilla item when each check gives one fixed item: ``vanilla_fixed`` where given; a progressive item
+    without it is an error, since which tier the check gives is not known."""
+    if fixed is not None:
+        if vanilla in progressive and fixed not in progressive[vanilla]:
+            raise WorldError(f"{where}: vanilla_fixed {fixed!r} is not a tier of {vanilla!r}")
+        return fixed
+    if vanilla in progressive:
+        raise WorldError(f"{where}: vanilla item {vanilla!r} is progressive; say which tier (vanilla_fixed)")
+    return vanilla
+
+
 def build_world(spec: Mapping[str, Any], logic: Mapping[str, Any] | None = None) -> World:
     """Compile every rule of ``spec`` under the logic settings ``logic`` (defaults from the spec)."""
     settings = resolve_settings(spec, logic)
     items = {name: _item(name, info) for name, info in spec.get("items", {}).items()}
+    progressive = _progressive_tiers(spec.get("progressive", {}), items)
+    # Without the setting, a world reads OoT Randomizer's vanilla items as they are (progressive).
+    fixed_items = not settings.get("progressive_items", True)
     facts = ItemFacts(
         names=frozenset(items),
         bottles=tuple(n for n, i in items.items() if i.bottle),
@@ -139,6 +175,7 @@ def build_world(spec: Mapping[str, Any], logic: Mapping[str, Any] | None = None)
             region = Region(
                 name=name,
                 source=data.get("source", ""),
+                area=data.get("area"),
                 dungeon=data.get("dungeon"),
                 scene=data.get("scene"),
                 hint=data.get("hint"),
@@ -161,6 +198,8 @@ def build_world(spec: Mapping[str, Any], logic: Mapping[str, Any] | None = None)
                 if "type" not in info:
                     raise WorldError(f"{where}: no type (add it under [locations])")
                 vanilla = info.get("vanilla")
+                if fixed_items:
+                    vanilla = _fixed_vanilla(vanilla, info.get("vanilla_fixed"), progressive, where)
                 if vanilla is not None and vanilla not in items:
                     raise WorldError(f"{where}: vanilla item {vanilla!r} is not in the item table")
                 location = Location(
@@ -170,6 +209,7 @@ def build_world(spec: Mapping[str, Any], logic: Mapping[str, Any] | None = None)
                     type=info["type"],
                     vanilla=vanilla,
                     source=info.get("source", region.source),
+                    n64_only=info.get("n64_only"),
                 )
                 region.locations.append(location)
                 locations[location_name] = location
