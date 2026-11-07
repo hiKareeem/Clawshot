@@ -1,6 +1,6 @@
 # Round 3, track A: seed output (cs3a)
 
-Branch `r3/seed`, rebased on main `32551cf` (track B's `formats.rstb` and census). Owns `src/clawshot/patch/`,
+Branch `r3/seed`, rebased on main `1fbc78b` (track B's `formats.rstb` and census, track C's whole world). Owns `src/clawshot/patch/`,
 `src/clawshot/data/item_actors.toml`, `src/clawshot/__main__.py`, `src/clawshot/generate/`, `tests/test_patch*.py`,
 `tests/test_seed*.py` and this file.
 
@@ -120,19 +120,29 @@ Child Dynamic +60 (entries 516,328 -> 516,360 and 511,176 -> 511,208); seed 2: -
 
 ## Item 4: three seeds for Kareem
 
-Made after commit f04b910 (rebased on main, with the size table) with a clean worktree (`git status --short`
-empty), from `E:/OOTRemake/clawshot-r3/seed`; the first set (from 67cbe01, before the rebase and the size table) was deleted and
-made again, with the same placements:
+Made after commit 218f436 (rebased on main 1fbc78b, track C's whole-world port) with a clean worktree
+(`git status --short` empty), from `E:/OOTRemake/clawshot-r3/seed`. The world is now the whole game, so the seeds
+name their slice (`--areas`, `--goal`, below). This is the third making: the sets from 67cbe01 (before the size
+table) and f04b910 (before the whole world) were deleted and made again; all three give the same placements as
+the first.
 
 ```
-uv run python -m clawshot --romfs E:/Games/Hookshot/romfs --seed 3 --out E:/OOTRemake/work/r3-seed/seed-3
-uv run python -m clawshot --romfs E:/Games/Hookshot/romfs --seed 7 --out E:/OOTRemake/work/r3-seed/seed-7
-uv run python -m clawshot --romfs E:/Games/Hookshot/romfs --seed 22 --out E:/OOTRemake/work/r3-seed/seed-22
+uv run python -m clawshot --romfs E:/Games/Hookshot/romfs --seed 3 --out E:/OOTRemake/work/r3-seed/seed-3 --areas KokiriForest LostWood InsideTheDekuTree --goal "'Defeat Queen Gohma'"
+uv run python -m clawshot --romfs E:/Games/Hookshot/romfs --seed 7 --out E:/OOTRemake/work/r3-seed/seed-7 --areas KokiriForest LostWood InsideTheDekuTree --goal "'Defeat Queen Gohma'"
+uv run python -m clawshot --romfs E:/Games/Hookshot/romfs --seed 22 --out E:/OOTRemake/work/r3-seed/seed-22 --areas KokiriForest LostWood InsideTheDekuTree --goal "'Defeat Queen Gohma'"
 ```
 
 Each folder has `romfs/` (the overlay), `spoiler.json` and `play-note.md`. Picked from a survey of seeds 1-30
 (throwaway `survey.py`) so the three differ: the Kokiri Sword in three different Mido's house chests, the Slingshot
 in the Deku Tree basement (3), in the Deku Tree map chest (7) and in the Kokiri Sword chest (22).
+
+Checked on the folders themselves (throwaway `E:/OOTRemake/work/r3-seed/verify.py`): each spoiler's placements,
+on the slice world rebuilt from its `settings`, pass the beatability search (seeds 3 and 7: 4 spheres, seed 22: 3;
+one more each than before the rebase, with the same placements: the world data under them changed, the cause not
+traced); every
+written placement file differs from the dump only in the fields `patch.changes` names (the dump test's field diff);
+the size table, where written (seeds 7, 22), is the dump's with exactly the short entries raised, and absent in
+seed 3 where every entry fits.
 
 | Seed | Kokiri Sword | Slingshot | Kokiri Sword chest gives | Overrides removed |
 |---|---|---|---|---|
@@ -201,6 +211,13 @@ Through the round's copy of `E:/OOTRemake/work/r2-test/Clawshot test.bat`, with 
 7. **Remake-only chests** (D12) are not shuffled until the world has a location for them: in the slice the KF purple
    chest (4349272251343787229, by the stick-upgrade scrub) and the LW one (17479747339356189279, by the bridge
    scrub). The spoiler lists them under `vanilla_chests`. Posted for track C.
+8. **World slices** (218f436): `Settings.areas`/`goal` (`--areas`, `--goal`) keep only the regions in those census
+   areas plus the area-less start regions (`Root`, spawns, warp songs; their exits elsewhere dangle) and swap the
+   goal; the spoiler's `settings` records both, so a slice seed is reproducible from its log. A goal without areas
+   is refused.
+9. **`dungeon_items = "anywhere"` sets the logic setting `keysanity = true`** where the world has it (track C's
+   18:23 note: otherwise OoT Randomizer's rules count one free Fire Temple key); an explicit `keysanity = false`
+   with keys anywhere is an error. The spoiler's `settings.logic` shows it.
 
 ## Cross-track posts (thread `cs-r3`)
 
@@ -208,20 +225,25 @@ Through the round's copy of `E:/OOTRemake/work/r2-test/Clawshot test.bat`, with 
 - 18:20: seed writer on the branch; `python -m clawshot.generate` removed (04-world-format.md names it); for track C:
   Ganon's boss key has no dungeon in the model, remake-only chests need world locations, and the whole-game pool
   needs logic items for `Item_ScrubBusinessSeed`, `Tbox_MagicJar_Large` and the default `Obj_Rupee_Green`.
+- 18:36: size table in the writer (after the rebase on track B's rstb).
+- After the rebase on track C's whole world: slices, keysanity, seeds made again (this section's latest commit).
 
 ## Left for later
 
-- The size table is written now (f04b910); whether the game honours a raised entry, or needed it, shows in seeds 7
-  and 22 in game.
-- Round 4: the whole-world pool (the logic items above), event-flow edits for the four story overrides with state,
-  the Treasure Chest Game reward chest's `DropViewActor`, and the three drop-less chests (the writer adds
-  `Drop__DropActor` to them, untested in game).
+- The size table is written now; whether the game honours a raised entry, or needed it, shows in seeds 7 and 22 in
+  game.
+- **The whole world does not make a seed yet:** `python -m clawshot` without `--areas` stops at the link step with
+  99 shuffled chest locations that no census definition names (e.g. `HF Southeast Grotto Chest`, `GV Chest`);
+  round 4 needs those linked (or `n64_only`/`keep_vanilla`), plus the logic items above. Track C's
+  `Graveyard Dampe Race Freestanding PoH` (now type `Chest`) is a census chest and links as one.
+- Round 4: event-flow edits for the four story overrides with state, the Treasure Chest Game reward chest's
+  `DropViewActor`, and the three drop-less chests (the writer adds `Drop__DropActor` to them, untested in game).
 
-## Gates (before the handoff, on f04b910, rebased on main 32551cf)
+## Gates (before the handoff, on 218f436, rebased on main 1fbc78b)
 
 ```
-uv run ruff format --check                                  64 files already formatted
+uv run ruff format --check                                  65 files already formatted
 uv run ruff check                                           All checks passed!
-uv run pytest                                               164 passed, 18 skipped
-OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump      17 passed, 165 deselected
+uv run pytest                                               168 passed, 18 skipped
+OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump      17 passed, 169 deselected
 ```
