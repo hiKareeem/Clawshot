@@ -24,6 +24,10 @@ Both stand at the same spot, have a save flag, `IsEnableRepeatOpen` and the open
 prize for a win once the Heart Piece is taken. `ootr.treasure_game` now takes the reward from the new kind; matching
 is unchanged (`write_locations` reproduces the file).
 
+**The repeat box stays vanilla** (reviewer, 18:12): it is the repeat prize, not an OoT Randomizer check. The ten room
+boxes are `keep_vanilla` in track C's world data, so the generator side of D17 is covered there; the kind is for the
+patch plan.
+
 **For the patch (track A):** every treasure-game box also carries `Dynamic.DropViewActor`, the model shown in the box
 (reward: `Obj_Heart_Piece_MiniGame`; room boxes: `Obj_MiniGame_SmallKey`, `Obj_OrnamentalRupee_{Green,Blue,Red}_MiniGame`).
 Those five are the only `*_MiniGame` view actors in `Pack/Actor`, so a shuffled reward with another item either keeps
@@ -211,3 +215,38 @@ is the safe side (it can only make the logic stricter).
 basement ones (`room, height`). `Spirit Temple GS Sun on Floor Room` is the least sure: the remake has no Gold
 Skulltula in a sun-on-floor room on the child climb, and the statue room has two (`Lobby` beside the statue, the
 scarecrow one on the hand); which of the two is N64's `Lobby` is a guess from "beside the statue, no item needed".
+
+## Item 3: `clawshot.formats.rstb`, the resource size table
+
+`src/clawshot/formats/rstb.py`: `read(bytes) -> ResourceSizeTable`, `write(table) -> bytes` (decompressed bytes; the
+file is plain zstd, so `zsdic.Dictionaries.compress(rstb.TABLE_PATH, ...)` writes it), `table.get(path)` /
+`table.set(path, size)` (romfs path with or without `.zs`; a path among the name entries is looked up by name, any
+other by CRC32), and `required_size(path, size)`, the entry a file needs for its decompressed size. Format in the
+module docstring (Tears of the Kingdom's RESTBL v1: 22-byte header, sorted CRC32 entries, then 160-byte name entries
+for colliding paths; here 219,968 and 10, none of the 10 a placement file or event flow).
+
+**Formula: entry = decompressed size rounded up to 32 + an overhead per type.** `required_size` knows only the types
+checked against every such file in the game, and raises for any other:
+
+| Type | Overhead | Files that fit |
+|---|---:|---|
+| `.bcett.byml` (placements) | 264 | 160 of 160 |
+| `.bfevfl` (event flows) | 272 | 914 of 914 |
+| `.sarc` (`Mals/` message archives) | 312 | 16 of 16 |
+| `.pack` | 312 | 8384 of 8384 with an entry (`Pack/ZsDic.pack.zs` has none) |
+
+Not covered, from the same survey (scratch, `E:/OOTRemake/work/r3-census/`): `GameDataList` fits 264 (one file;
+`03-game-data.md` section 7 says "+ 288", which is entry minus the raw size, not minus the rounded size); `RSDB`
+tables fit 264 except `ActorInfo` (+3064); `.ainb` is 376 for all 1822 `Logic/` files but varies in `Sequence/`
+(`LoadBancImpl` +392) and `AI/` (+376 to +416), so it is not a fixed overhead.
+
+**For track A (posted):** for each changed file, `need = rstb.required_size(path, len(decompressed))`; if
+`need > table.get(path)`, `table.set(path, need)`; write the table to `<out>/romfs/System/Resource/...` only when an
+entry changed (it is 1.76 MB decompressed). Raising only, never lowering, keeps every other file's entry as the game
+has it. Round 1 and 2 loaded files up to 32 bytes over their entry, so the game tolerates some growth; how much is
+untested.
+
+Tests: `tests/test_rstb.py` (synthetic: write order and read-back, name-before-CRC lookup, `set`, the formula at the
+32-byte boundary, an unchecked type, six malformed tables, an over-long name); `tests/test_rstb_dump.py` (`-m dump`:
+the game's table writes back byte-identical; the formula fits every placement file, event flow, message archive and
+`Pack/Actor` pack: 160, 914, 16 and 8373 of the same).
