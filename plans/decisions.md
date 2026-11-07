@@ -33,6 +33,11 @@
 - **D14 Hookshot mods are RomFS only; no exefs patches** (Claude, 2026-11-07, on round 1 track C's question).
   Recompiled code can't take instruction patches, and nothing Clawshot plans needs data patches. Upstream PR
   `NotRexed/Hookshot#321`.
+- **D15 First playable seeds shuffle chests only** (Kareem, 2026-11-07). Each other kind (freestanding items, boss
+  hearts, scrubs, shops, gifts) joins once its in-game test passes.
+- **D16 Fixed items now, progressive later** (Kareem, 2026-11-07): a check gives one fixed item (finding the
+  Longshot first gives the Longshot). Progressive items come later through event-flow edits or Hookshot hooks. A
+  downgrade (the Hookshot found after the Longshot) is to be tested in game.
 
 ## Open (only Kareem and his co-owner decide)
 
