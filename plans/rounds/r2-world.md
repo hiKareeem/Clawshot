@@ -41,10 +41,10 @@ Zora River, SFM, the warp songs, the Temple of Time, ...), and three events no p
 |---|---|
 | `uv run ruff format --check` | 48 files already formatted |
 | `uv run ruff check` | All checks passed |
-| `uv run pytest` | 116 passed, 7 skipped (the dump tests, and the translator test without `OOTR_DIR`) |
-| `OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump` | see the last commit's handoff (formats and census; this track touches neither) |
+| `uv run pytest` | 117 passed, 6 skipped with `OOTR_DIR` set (the dump tests skip without `OOT_ROMFS`) |
+| `OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump` | 6 passed (formats and census; this track touches neither) |
 | `OOTR_DIR=E:/OOTRemake/work/r2-world/OoT-Randomizer uv run pytest tests/test_world_translate.py` | 1 passed: rerunning the translator over the committed files changes no byte |
-| `uv run pytest -rP tests/test_world_census.py` | 4 passed; prints the 3 pending locations |
+| `uv run pytest -rP tests/test_world_census.py` | 4 passed; prints the 4 locations waiting for the census on `main` |
 | `uv run python -m clawshot.generate --seed 12345 --out <work dir>`, twice, then `cmp` | identical `spoiler.json` |
 | `... --logic logic_deku_b1_skip=true` | exit 1, `trick logic_deku_b1_skip stays off until it is verified in the remake` |
 | 100 seeds shuffling every location type of the ported world (throwaway script) | 100 of 100 filled and beatable, 3.9 s |
@@ -122,11 +122,18 @@ evidence; Gold Skulltulas match by count per area; uncovered types are skipped b
 - **Covered types, checked one by one:** `Chest` (census `chest`, `treasure_game_box`), `BossHeart`
   (`heart_container`), `Scrub` and `GrottoScrub` (`scrub`), `Shop` (`shop_slot`), and `Freestanding` whose vanilla
   item is a Piece of Heart or a small key (`freestanding`). Each must be linked from a census definition of that
-  kind in the region's area, or be `n64_only`, or be on the pending list. Every census `oot_randomizer_name` in the
-  ported areas must name a ported location. Result: all linked except the three pending ones; no `n64_only` needed.
-- **Pending** (printed by the test, each must leave the list as a link or an `n64_only` with evidence; the test
-  fails if one becomes linked while still listed): `KF Storms Grotto Chest`, `LW Deku Scrub Near Deku Theater
-  Left`, `LW Deku Scrub Near Deku Theater Right`. The reviewer asked track A whether they exist in the remake.
+  kind in the region's area, or be `n64_only`, or be on one of the test's two waiting lists. Every census
+  `oot_randomizer_name` in the ported areas must name a ported location. Result against `main` (57af7ff): all
+  linked except the four below.
+- **N64-only:** `LW Near Shortcuts Grotto Chest`, with track A's evidence (`plans/rounds/r2-census.md` on
+  `r2/census`): the remake's Lost Woods grotto room that would hold it holds no check, and the chest first matched
+  to it stands in the open by the bridge scrub. It is neither shuffled nor placed. On `main` the census still
+  links chest 17479747339356189279 to it, so it sits in the test's `AWAITING_UNLINK` list.
+- **`PENDING`** (unlinked on `main`, shown to exist by track A): `KF Storms Grotto Chest` (chest
+  14818888396401495482 in KF's only grotto room, linked on `r2/census`), `LW Deku Scrub Near Deku Theater Left`
+  and `Right` (track A links them by position).
+- Both lists are printed, and the test fails on an entry the census on `main` has caught up with, so once track A's
+  update is merged the rerun says which entries to delete (the reviewer will say when).
 - **Gold Skulltulas by count:** OoT Randomizer GS Token locations per area against census `gold_skulltula`:
   KokiriForest 3 = 3, LostWood 3 = 3, InsideTheDekuTree 4 = 4.
 - **Skipped by type** (the census has no placement for them): `Freestanding` rupees and recovery hearts (29 in the
@@ -139,4 +146,5 @@ evidence; Gold Skulltulas match by count per area; uncovered types are skipped b
 - D15 (Kareem): first seeds shuffle chests only; `Settings.shuffle` defaults to `("Chest",)`.
 - D16 (Kareem): fixed items now; `progressive_items` defaults to `false`, progressive stays as a setting.
 
-No open questions.
+No open questions. Left: rerun `tests/test_world_census.py` when track A's census update is on `main`, and take
+the four entries out of `PENDING` and `AWAITING_UNLINK`.

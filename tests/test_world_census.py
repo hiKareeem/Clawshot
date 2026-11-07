@@ -28,12 +28,17 @@ GOLD_SKULLTULA = "GS Token"
 # remake has no placement for), and NPC, cutscene, song and boss-reward gifts (event flows, round 3).
 SKIPPED = {"Freestanding", "Pot", "Beehive", "Wonderitem", "RupeeTower", "NPC", "Cutscene", "Song", "Boss"}
 
-# Unlinked by track A and not yet shown absent from the remake; the reviewer asked track A whether they exist.
-# Each must move to a census link or to an n64_only reason with evidence.
+# Census changes reported by track A that are not on main yet (reviewer, round 2). Each entry must leave its list
+# when the census on main catches up; the test fails on a stale entry so the list cannot rot.
+# Unlinked on main; track A showed they exist and links them.
 PENDING = {
-    "KF Storms Grotto Chest": "asked track A (round 2): no census chest linked",
-    "LW Deku Scrub Near Deku Theater Left": "asked track A (round 2): no census scrub linked",
-    "LW Deku Scrub Near Deku Theater Right": "asked track A (round 2): no census scrub linked",
+    "KF Storms Grotto Chest": "exists: KF's only grotto room, chest 14818888396401495482; linked on r2/census",
+    "LW Deku Scrub Near Deku Theater Left": "track A links it by position",
+    "LW Deku Scrub Near Deku Theater Right": "track A links it by position",
+}
+# N64-only (n64_only, with track A's evidence) but still linked on main; track A removed the link on r2/census.
+AWAITING_UNLINK = {
+    "LW Near Shortcuts Grotto Chest": "main links chest 17479747339356189279 to it; removed on r2/census",
 }
 
 
@@ -70,8 +75,11 @@ def test_covered_locations_are_remake_checks_or_n64_only(world, definitions):
             continue
         region = world.regions[location.region]
         kinds = COVERED.get(location.type, {"freestanding"})
-        if name in linked:
-            assert location.n64_only is None, f"{name} is linked to the census and marked n64_only"
+        if name in linked and location.n64_only is not None:
+            assert name in AWAITING_UNLINK, f"{name} is linked to the census and marked n64_only"
+            pending.append(f"{name}: {AWAITING_UNLINK[name]}")
+        elif name in linked:
+            assert name not in AWAITING_UNLINK, f"{name} is no longer n64_only: take it out of AWAITING_UNLINK"
             for d in linked[name]:
                 if d.kind not in kinds or d.area != region.area:
                     wrong.append(f"{name}: census {d.id} is {d.kind} in {d.area}, expected {kinds} in {region.area}")
@@ -80,11 +88,12 @@ def test_covered_locations_are_remake_checks_or_n64_only(world, definitions):
             pending.append(f"{name}: {PENDING[name]}")
         elif location.n64_only is None:
             missing.append(f"{name} ({location.type}, {region.area})")
-    print("Pending, unlinked and not yet shown absent:", *pending, sep="\n  ")
+    print("Waiting for the census on main:", *pending, sep="\n  ")
     assert not wrong, "\n".join(wrong)
     assert not missing, "no census link and no n64_only reason:\n" + "\n".join(missing)
-    stale = sorted(set(PENDING) - {p.split(":")[0] for p in pending})
-    assert not stale, f"PENDING names that are linked or not ported: {stale}"
+    listed = {p.split(":")[0] for p in pending}
+    stale = sorted((set(PENDING) | set(AWAITING_UNLINK)) - listed)
+    assert not stale, f"the census on main caught up; take these out of PENDING / AWAITING_UNLINK: {stale}"
 
 
 def test_census_links_in_ported_areas_name_ported_locations(world, definitions):
