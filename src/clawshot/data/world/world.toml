@@ -1,0 +1,12 @@
+# The world the generator loads: its start region, its goal, and the region files that make it.
+# Format: plans/04-world-format.md. Region files are written by `python -m clawshot.world.translate` (port.toml).
+
+# OoT Randomizer's start region: both ages are reached here; its exit "Root Exits" admits the starting age, and
+# the other age once "Time Travel" is held.
+start = "Root"
+
+# Round 2 ports only Kokiri Forest, the Lost Woods and the Deku Tree, so a seed's goal is beating Queen Gohma.
+# The full game's goal (OoT Randomizer: the Triforce, after Ganon) replaces it once the rest is ported.
+goal = "'Defeat Queen Gohma'"
+
+files = ["root.toml", "kokiri_forest.toml", "lost_woods.toml", "deku_tree.toml"]

@@ -1,0 +1,46 @@
+# Which OoT Randomizer regions the translator (python -m clawshot.world.translate) writes into which world file.
+# OoT Randomizer: https://github.com/OoTRandomizer/OoT-Randomizer (MIT), data/World/*.json.
+# Round 2 ports Kokiri Forest, the Lost Woods and the Deku Tree, plus the start regions they hang from.
+
+ootr_commit = "526b4c8d81b7c4023ef4573ffbaf39344e270d5b"
+
+[files."root.toml"]
+"data/World/Overworld.json" = ["Root", "Root Exits", "Child Spawn", "Adult Spawn"]
+
+[files."kokiri_forest.toml"]
+"data/World/Overworld.json" = [
+    "Kokiri Forest",
+    "KF Outside Deku Tree",
+    "KF Links House",
+    "KF Midos House",
+    "KF Sarias House",
+    "KF House of Twins",
+    "KF Know It All House",
+    "KF Kokiri Shop",
+    "KF Storms Grotto",
+]
+
+[files."lost_woods.toml"]
+"data/World/Overworld.json" = [
+    "Lost Woods",
+    "LW Beyond Mido",
+    "LW Forest Exit",
+    "LW Underwater Entrance",
+    "Lost Woods Mushroom Timeout",
+    "LW Bridge From Forest",
+    "LW Bridge",
+    "LW Near Shortcuts Grotto",
+    "Deku Theater",
+    "LW Scrubs Grotto",
+]
+
+[files."deku_tree.toml"]
+"data/World/Deku Tree.json" = [
+    "Deku Tree Lobby",
+    "Deku Tree Slingshot Room",
+    "Deku Tree Basement",
+    "Deku Tree Basement Back Room",
+    "Deku Tree Basement Ledge",
+    "Deku Tree Before Boss",
+]
+"data/World/Bosses.json" = ["Queen Gohma Boss Room", "Queen Gohma Blue Warp"]

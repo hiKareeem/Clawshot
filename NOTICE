@@ -2,7 +2,23 @@ Clawshot
 Copyright (c) 2026 Kareem Albaba and the Clawshot contributors. MIT License (see LICENSE).
 
 Code or data ported from other projects is listed here with its source and license.
-(none yet)
+
+OoT Randomizer (https://github.com/OoTRandomizer/OoT-Randomizer), MIT License, Copyright (c) 2025 OoTRandomizer
+(credit to AmazingAmpharos, Testrunner, Zannick, Junglechief87 and others, and to LLCoolDave and KevinCathcart for
+the Zelda LttP Entrance Randomizer it started from). Commit 526b4c8d81b7c4023ef4573ffbaf39344e270d5b (branch Dev).
+None of its GPL-licensed folders (bin/, Notes/) is used.
+The MIT permission notice in LICENSE covers the files below under the copyright line above.
+- src/clawshot/data/world/root.toml, kokiri_forest.toml, lost_woods.toml, deku_tree.toml: regions, events,
+  locations and exits translated from data/World/Overworld.json, data/World/Deku Tree.json and
+  data/World/Bosses.json, with location types and vanilla items from LocationList.py.
+- src/clawshot/data/world/helpers.toml: data/LogicHelpers.json.
+- src/clawshot/data/world/items.toml: ItemList.py (item_table).
+- src/clawshot/data/world/settings.toml: default values from SettingsList.py, SettingsListTricks.py and World.py.
+- src/clawshot/world/rules.py: the rule language and its semantics from RuleParser.py (helper substitution, here()
+  and at() as events, constant folding of settings) and State.py (has_bottle, has_hearts, can_live_dmg, ...).
+- src/clawshot/world/search.py: the reachability search from Search.py.
+- src/clawshot/generate/fill.py: the assumed fill from Fill.py (distribute_items_restrictive, fill_restrictive,
+  fill_restrictive_fast, fast_fill).
 
 The Legend of Zelda and Ocarina of Time are trademarks of Nintendo. Clawshot is an unofficial fan project, not
 affiliated with or endorsed by Nintendo, and contains no part of the game.
