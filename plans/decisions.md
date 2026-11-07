@@ -1,25 +1,31 @@
 # Decisions
 
-## Decided (proposed by Claude, 2026-11-07; Kareem or his co-owner can overturn)
+## Decided
 
-- **D1 Python 3.12+ with uv.** OoT Randomizer and Archipelago are Python and MIT, so their logic, fill and
-  multiworld code can be ported; the generator is not speed-critical. Alternative: Rust or C++ (as Ship of
-  Harkinian) would be faster but loses that reuse.
-- **D2 Output is a folder of changed game files.** Works with Hookshot today and with emulators; code hooks come
-  later and stay optional.
-- **D3 Own BYML, SARC and zstd-dictionary code.** The existing Python libraries for these formats are GPL-2.0;
-  writing our own (the reader is ~120 lines) keeps every license option open.
-- **D4 Location IDs are (file, actor Hash).** Stable across tools and settings.
-- **D5 Location definitions are committed, game files never are.** Definitions are identifiers and names, as OoT
-  Randomizer's location list is.
+- **D1 Python 3.12+ with uv** (Claude, 2026-11-07). OoT Randomizer and Archipelago are Python and MIT, so their
+  logic, fill and multiworld code can be ported; the generator is not speed-critical. Alternative: Rust or C++ (as
+  Ship of Harkinian) would be faster but loses that reuse.
+- **D2 Output is a mod folder in the emulator layout** (Claude, 2026-11-07): `<out>/romfs/...`, only changed
+  files. It runs on Switch 2 emulators (and their PS5 builds), on Hookshot (`HOS_FS_OVERLAY` now, `mods\` after
+  round 1 track C) and on native ports that let romfs files be replaced. Code hooks come later and stay optional.
+- **D3 Own BYML, SARC and zstd-dictionary code** (Claude, 2026-11-07). The existing Python libraries for these
+  formats are GPL-2.0; the reader is ~120 lines.
+- **D4 Location IDs are (file, actor Hash)** (Claude, 2026-11-07). Stable across tools and settings.
+- **D5 Location definitions are committed, game files never are** (Claude, 2026-11-07). Definitions are
+  identifiers and names, as OoT Randomizer's location list is.
+- **D6 Name: Clawshot** (Kareem, 2026-11-07). "Longshot" is kept for a Hookshot-specific tool. Collision check
+  2026-11-07: one unrelated GitHub repo, PyPI `clawshot` free.
+- **D7 License: MIT** (Claude, at Kareem's request to decide, 2026-11-07). The same license as OoT Randomizer and
+  Archipelago, so code can move between them in both directions and an Archipelago world can later go into
+  Archipelago's own repository. GPL would require anyone who distributes a modified Clawshot to publish its
+  source; little is lost without that here, since the tool carries no game data and can't be sold. The Hookshot
+  code we contribute stays under Hookshot's GPL.
+- **D8 Archipelago after a stable solo randomizer** (Kareem, 2026-11-07). Moved to Later in the roadmap.
+- **D9 Rounds run as in `02-orchestration.md`** (Kareem, 2026-11-07): Claude launches and watches omp agents in
+  herdr, Bermuda for cross-track posts, parallel where possible, Kareem tests in game when asked.
 
 ## Open (only Kareem and his co-owner decide)
 
-- **O1 Name.** Candidates checked for collisions on 2026-11-07: Longshot (PyPI taken), Gaebora, Lost Woods,
-  Gossip Stone (all free).
-- **O2 License.** GPL-3.0 (as Hookshot) or MIT (as OoT Randomizer and Archipelago).
-- **O3 Who owns which track**, and how the co-owner gets access to the private repo.
-- **O4 Archipelago from the start**, or after M2.
-- **O5 Runtimes:** Hookshot only at first, or emulators too from M2.
+- **O3 Who owns which track**, and the co-owner's access to the private repo (a collaborator invite).
 - **O6 Remake content:** the remake may add or move checks compared with the N64 game (e.g. what `Banc/DreamWorld`
-  with 54 files is). The census will list differences; which ones to shuffle is a product call.
+  with 54 files is). Round 1 track B lists differences; which ones to shuffle is a product call.

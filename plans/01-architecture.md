@@ -3,10 +3,15 @@
 ## Principles
 
 - The generator is a pure function: (player's dump, seed, settings, generator version) -> output folder.
-- Output is a folder of replacement game files at their romfs-relative paths. Hookshot reads it through
-  `HOS_FS_OVERLAY`; an emulator reads it as a romfs mod. Only files that changed are written.
+- Output is a mod folder in the emulator layout: `<out>/romfs/<romfs-relative path>`, only the files that
+  changed. Emulators (Lichii, Eglantine and its PS5 build) load it from their mod directory; Hookshot reads
+  `<out>/romfs` through `HOS_FS_OVERLAY` today and the whole folder from its `mods\` once round 1 track C lands
+  upstream; other native ports (the nxnative-based Mac/iPhone build) need a way to swap romfs files, unverified.
+- Every runtime must run the same game version (build `e0f3ccfa`): the census and the patch plan assume its
+  files.
 - Code-level features wait for a hook API in Hookshot (M4) and stay optional, so data-only seeds keep working
-  on any runtime.
+  on any runtime. Exefs data patches (IPSwitch/IPS) are the one code-adjacent path emulators and Hookshot's mod
+  loader share; patches to instructions don't apply to recompiled ports.
 
 ## Data the game keeps (verified on the dump unless marked)
 
