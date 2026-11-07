@@ -1,8 +1,8 @@
 """The game's zstd dictionaries and ``.zs`` files.
 
-``Pack/ZsDic.pack.zs`` is a plain zstd frame around a SARC holding four dictionaries. Every other ``.zs`` file is
-compressed with the dictionary its name calls for (the frame header records the dictionary's ID; :func:`decompress`
-checks that it matches).
+``Pack/ZsDic.pack.zs`` is a plain zstd frame around a SARC holding four dictionaries. Every ``.zs`` file is
+compressed with the dictionary its name calls for, or with none (:func:`dictionary_for`); the frame header records
+the dictionary's ID and :meth:`Dictionaries.decompress` checks that it matches.
 """
 
 from pathlib import Path, PurePosixPath
@@ -13,11 +13,20 @@ from clawshot.formats import sarc
 
 PACK_PATH = "Pack/ZsDic.pack.zs"
 
-# File-name suffix -> dictionary, most specific first. A ``.zs`` file matching none of these uses ``zs.zsdic``.
-_SUFFIX_DICTIONARY = (
+# File-name suffix -> dictionary (None: plain zstd), first match wins. Any other ``.zs`` file uses ``zs.zsdic``.
+# Taken from the frame headers of every ``.zs`` file in the game (checked by a dump test).
+_SUFFIX_DICTIONARY: tuple[tuple[str, str | None], ...] = (
+    ("/ZsDic.pack.zs", None),
     (".bcett.byml.zs", "bcett.byml.zsdic"),
     (".pack.zs", "pack.zsdic"),
     (".bkprb.zs", "bkprb.zsdic"),
+    (".rstbl.byml.zs", None),
+    (".atbl.byml.zs", None),
+    (".HeapDef.byml.zs", None),
+    (".rsizetable.zs", None),
+    (".bntx.zs", None),
+    (".bcul.zs", None),
+    (".bars.zs", None),
 )
 _DEFAULT_DICTIONARY = "zs.zsdic"
 DICTIONARY_NAMES = ("zs.zsdic", "bcett.byml.zsdic", "pack.zsdic", "bkprb.zsdic")
@@ -32,12 +41,10 @@ class ZsError(ValueError):
 
 
 def dictionary_for(name: str) -> str | None:
-    """The dictionary a ``.zs`` file's name calls for, or None for the dictionary pack itself (plain zstd)."""
-    base = PurePosixPath(name.replace("\\", "/")).name
+    """The dictionary a ``.zs`` file's name (a romfs path or a bare file name) calls for; None for plain zstd."""
+    base = "/" + PurePosixPath(name.replace("\\", "/")).name
     if not base.endswith(".zs"):
         raise ZsError(f"not a .zs file: {name}")
-    if base == PurePosixPath(PACK_PATH).name:
-        return None
     for suffix, dictionary in _SUFFIX_DICTIONARY:
         if base.endswith(suffix):
             return dictionary

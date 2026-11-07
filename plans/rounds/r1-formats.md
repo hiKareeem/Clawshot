@@ -33,6 +33,17 @@ Dictionary IDs, read from each dictionary's header and checked by `test_dump_dic
 | `bcett.byml.zsdic` | 3 |
 | `pack.zsdic` | 4 |
 
+Which dictionary each `.zs` file uses, from the frame headers of all 102,185 `.zs` files in the dump (encoded in
+`zsdic.dictionary_for`; `test_dump_every_zs_frame_names_the_dictionary_its_name_calls_for` checks every file):
+
+| File names | Dictionary |
+|---|---|
+| `*.bcett.byml.zs` (placements) | `bcett.byml.zsdic` |
+| `*.pack.zs`, except `Pack/ZsDic.pack.zs` | `pack.zsdic` |
+| `*.bkprb.zs` | `bkprb.zsdic` |
+| `Pack/ZsDic.pack.zs`, `*.bntx.zs`, `*.bcul.zs`, `*.bars.zs`, `RSDB/*.rstbl.byml.zs`, `*.atbl.byml.zs`, `*.HeapDef.byml.zs`, `*.rsizetable.zs` | none (plain zstd) |
+| every other `.zs` (event flows, `GameData`, `Mals/*.sarc.zs`, models, ...) | `zs.zsdic` |
+
 ### BYML layout of the placement files
 
 Found by walking `KokiriForest_Child_Dynamic` node by node (script in `E:/OOTRemake/work/r1-formats/`), then
@@ -53,8 +64,8 @@ confirmed by the writer reproducing all 160 placement files byte for byte:
 
 ## Provisional choices
 
-- **Dictionary by name**: `.bcett.byml.zs` -> `bcett.byml.zsdic`, `.pack.zs` -> `pack.zsdic`, `.bkprb.zs` ->
-  `bkprb.zsdic`, any other `.zs` -> `zs.zsdic`, and `Pack/ZsDic.pack.zs` itself is plain zstd.
+- **Decompression checks the name against the frame**: `decompress(name, data)` raises if the frame's dictionary
+  ID is not the one the name calls for, rather than silently using the frame's.
 - **Compression**: level 19, content size in the frame, dictionary ID in the frame, no checksum (as the game's
   files are). The compressed bytes will not match the game's (its encoder and level are unknown); only the
   decompressed bytes are compared.

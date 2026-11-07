@@ -33,8 +33,13 @@ def pack() -> bytes:
         ("Phive/Foo.bkprb.zs", "bkprb.zsdic"),
         ("Event/EventFlow/Foo.bfevfl.zs", "zs.zsdic"),
         ("Model/Foo.bkprmb.zs", "zs.zsdic"),
-        ("RSDB\\Tag.Product.111.rstbl.byml.zs", "zs.zsdic"),
+        ("GameData/GameDataList.Product.110.byml.zs", "zs.zsdic"),
+        ("RSDB\\Tag.Product.111.rstbl.byml.zs", None),
+        ("System/Resource/ResourceSizeTable.Product.111.Nin_Ounce_NVN2.rsizetable.zs", None),
+        ("Tex/Foo.0.bntx.zs", None),
         ("Pack/ZsDic.pack.zs", None),
+        ("ZsDic.pack.zs", None),
+        ("Pack/NotZsDic.pack.zs", "pack.zsdic"),
     ],
 )
 def test_dictionary_for(name, dictionary):
@@ -97,3 +102,19 @@ def test_dump_every_placement_file_decompresses(romfs):
     for path in paths:
         data = dicts.decompress(path.name, path.read_bytes())
         assert data[:4] == b"YB\x07\x00", path
+
+
+@pytest.mark.dump
+def test_dump_every_zs_frame_names_the_dictionary_its_name_calls_for(romfs):
+    dicts = zsdic.Dictionaries.from_romfs(romfs)
+    ids = {None: 0} | {name: dicts.dictionary_id(name) for name in zsdic.DICTIONARY_NAMES}
+    wrong = []
+    count = 0
+    for path in romfs.rglob("*.zs"):
+        with path.open("rb") as f:
+            found = zsdic.frame_dictionary_id(f.read(18))
+        count += 1
+        if found != ids[zsdic.dictionary_for(path.name)]:
+            wrong.append((path.relative_to(romfs).as_posix(), found))
+    assert count > 100_000
+    assert wrong == []
