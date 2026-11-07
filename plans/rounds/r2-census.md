@@ -397,7 +397,7 @@ The Hyrule Field file needs 32 more than its entry, the same margin round 1's Ko
 
 - 15:54: `locations.toml` committed (dd08991): format, loader, many-to-one names for shops and copies, coverage of
   KF/LW/Deku Tree for track B, Gold Skulltulas unlinked by design.
-- After the second commit: `KF Storms Grotto Chest` and `DMT Chest` linked, `LW Near Shortcuts Grotto Chest`
+- 16:05, after the second commit (dedd1a6): `KF Storms Grotto Chest` and `DMT Chest` linked, `LW Near Shortcuts Grotto Chest`
   unlinked (the residual rule was wrong there); KF now 14/17 (only the 3 GS unlinked), LW 3/9.
 - Track B (16:01) asked for an N64-only list by OoT Randomizer name. From the census side, of the regions it ports,
   the evidence points to N64-only for `LW Near Shortcuts Grotto Chest` (its grotto room holds no check); the two
@@ -406,7 +406,7 @@ The Hyrule Field file needs 32 more than its entry, the same margin round 1's Ko
 
 ## Left for later
 
-- Dungeon chests with repeated items (mostly small keys and rupees): 9 to 19 per dungeon unlinked. Room numbers here
+- Dungeon chests with repeated items (mostly small keys and rupees): 5 to 19 per dungeon unlinked. Room numbers here
   are `DefaultDungeonRoomIndex`; linking them needs the N64 room of each OoT Randomizer chest or an in-game walk.
 - Gold Skulltulas: positions and rooms are in the census for the round-3 world port.
 - Event gifts (EVFL), and the alternative-state files (`Adult_Alternative`): which story state selects them.
