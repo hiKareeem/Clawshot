@@ -304,8 +304,14 @@ M1 census job):
   the magic meter at Hyrule Castle (section 5).
 - Gold Skulltulas: the count per area matches. Kareem first reported different places and a different Skulltula
   House reward table, then corrected the rewards (2026-11-07): they are N64's (10, 20, 30, 40 and 50 tokens, section
-  4, example 3); the Stone of Agony only has a new name. Whether the positions differ is open (asked); until then
-  the tokens stay unlinked.
+  4, example 3); the Stone of Agony only has a new name. Positions (Kareem and the Eurogamer and Polygon guides,
+  2026-11-07): three N64 Gold Skulltulas are gone (the Hyrule Field grotto near Gerudo Valley with the webs, likely
+  OoT Randomizer's `HF GS Cow Grotto`; Lon Lon Ranch's shed, likely `LLR GS Rain Shed`; and the ranch's cliff wall
+  left of the tower, likely `LLR GS Back Wall`) and three new ones stand elsewhere. The other 97 keep their N64
+  names, though several moved within their room or need other items: e.g. the Lake Hylia lab one is on the other
+  side of the lab; the Fire Temple boss-key one and the Death Mountain Trail one near the crater entrance need the
+  Megaton Hammer; the one on the ruined gate outside Ganon's Castle needs the Hookshot. The guides' text is in
+  `E:/OOTRemake/work/r3/` (local only, copyrighted); facts from it may be used, its text may not.
 
 ## 10. In-game results (round 1, Kareem, 2026-11-07, Hookshot `movie-sync`)
 
