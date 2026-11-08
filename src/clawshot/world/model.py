@@ -100,6 +100,21 @@ class World:
     missing_regions: list[str] = field(default_factory=list)
     """Regions an ``at()`` names that are not in this world."""
 
+    @property
+    def age_return(self) -> tuple[str, str] | None:
+        """The data-defined (completion event, adult return region), or unrestricted two-age travel.
+
+        Partial worlds may omit either named event/region from their graph: return then stays closed.
+        Neither a shuffled reward item nor an assumed starting age substitutes for the completion event.
+        """
+        event = self.settings.get("age_return_event")
+        region = self.settings.get("age_return_region")
+        if event is None and region is None:
+            return None
+        if not isinstance(event, str) or not event or not isinstance(region, str) or not region:
+            raise ValueError("age_return_event and age_return_region must both be nonempty strings")
+        return event, region
+
     def item(self, name: str) -> Item:
         try:
             return self.items[name]

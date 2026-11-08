@@ -1,10 +1,10 @@
 """Reachability: which regions, locations and events a player holding some items can get to, for each age.
 
-Ported from OoT Randomizer's ``Search.py`` (MIT): child and adult are searched separately from the start region,
-with one shared set of items and events. The start region's exits gate the other age (OoT Randomizer's ``Root
-Exits``: ``is_starting_age or Time_Travel``), so playing as the other age is an event like any other, done at the
-Temple of Time. Each region is reached at day, at night or both: a region where time passes has both, a region
-with ``provides_time`` has that time, any other has the times of the regions it was entered from.
+Child and adult share collected items only after the world's return gate opens. Before then the child view
+contains only starting items and checks/events reachable without adult finds: an exhaustive pre-pull prefix,
+not a second simultaneous player. Adult can use that prefix plus adult finds. Once the completion event holds
+and adult reaches the return pedestal, both views share inventory again. Worlds without a return gate retain
+OoT Randomizer's unrestricted two-age search. Time of day spreads through region exits as before.
 """
 
 from collections.abc import Iterable, Mapping
@@ -23,6 +23,11 @@ class Search:
         self.world = world
         self.counts: dict[str, int] = {}
         self.reached: dict[str, dict[str, int]] = {CHILD: {}, ADULT: {}}
+        self._return_gate = world.age_return
+        self._return_open = self._return_gate is None
+        self._child_counts: dict[str, int] = self.counts if self._return_open else {}
+        self._child_collected: set[str] = set()
+        self._starting_child = world.settings.get("starting_age", CHILD) == CHILD
         self.collected: set[str] = set()
         """Locations whose item has been collected (by :meth:`collect_spheres`)."""
         self._pending: dict[str, list[tuple[Exit, int]]] = {age: [] for age in AGES}
@@ -46,10 +51,17 @@ class Search:
             self.collect(item)
 
     def collect(self, name: str) -> None:
+        """Add an externally supplied/assumed item to both inventory views."""
+        self._collect_item(name, child=True, global_item=True)
+
+    def _collect_item(self, name: str, *, child: bool, global_item: bool) -> None:
         item = self.world.items.get(name)
-        self._add(name, 1)
-        if item is not None and item.alias is not None:
-            self._add(*item.alias)
+        values = ((name, 1),) if item is None or item.alias is None else ((name, 1), item.alias)
+        for key, count in values:
+            if global_item:
+                self._add(key, count)
+            if child and self._child_counts is not self.counts:
+                self._add_child(key, count)
         self._dirty = True
 
     # the search
@@ -57,6 +69,27 @@ class Search:
     def _add(self, name: str, count: int) -> None:
         self.counts[name] = self.counts.get(name, 0) + count
         self._wake(self._by_count.pop(name, ()))
+
+    def _add_child(self, name: str, count: int) -> None:
+        self._child_counts[name] = self._child_counts.get(name, 0) + count
+        self._wake(self._by_count.pop(name, ()))
+
+    def _child_active(self) -> bool:
+        return self._starting_child or self._return_open
+
+    def _open_return(self) -> bool:
+        if self._return_open:
+            return False
+        event, region = self._return_gate
+        if not self.counts.get(event, 0) or region not in self.reached[ADULT]:
+            return False
+        previous = self._child_counts
+        self._child_counts = self.counts
+        self._return_open = True
+        for name, count in self.counts.items():
+            if count > previous.get(name, 0):
+                self._wake(self._by_count.pop(name, ()))
+        return True
 
     def _park(self, key: tuple, entry: object, counts: Iterable[str], region: str | None = None) -> None:
         """Park ``entry`` under ``key`` (stable for the search: ids of the world's exits and events)."""
@@ -95,6 +128,8 @@ class Search:
         self._wake(self._by_region.pop(region.name, ()))
 
     def _expand(self, age: str) -> None:
+        if age == CHILD and not self._child_active():
+            return
         queue = self._pending[age]  # _reach and _add append to this same list while we walk it
         reached = self.reached[age]
         failed: list[tuple[Exit, int]] = []
@@ -106,7 +141,8 @@ class Search:
             tods = ALL_TIMES if target.time_passes else (target.provides_time or tod)
             if not tods & ~reached.get(target.name, 0):
                 continue
-            if exit.rule.fn(self.counts, age, tod):
+            counts = self._child_counts if age == CHILD else self.counts
+            if exit.rule.fn(counts, age, tod):
                 self._reach(age, target, tods)
             elif exit.rule.reads is None:
                 failed.append((exit, tod))  # what it reads is not known: try again at every update
@@ -115,26 +151,33 @@ class Search:
         queue.extend(failed)
 
     def _passes(self, region: str, rule: Rule) -> bool:
-        fn, counts = rule.fn, self.counts
-        for age in AGES:
-            known = self.reached[age].get(region, 0)
-            if known & DAY and fn(counts, age, DAY):
-                return True
-            if known & NIGHT and fn(counts, age, NIGHT):
-                return True
-        return False
+        return any(self._passes_age(region, rule, age) for age in AGES)
+
+    def _passes_age(self, region: str, rule: Rule, age: str) -> bool:
+        if age == CHILD and not self._child_active():
+            return False
+        counts = self._child_counts if age == CHILD else self.counts
+        known = self.reached[age].get(region, 0)
+        return bool(known & DAY and rule.fn(counts, age, DAY) or known & NIGHT and rule.fn(counts, age, NIGHT))
 
     def _collect_events(self) -> bool:
         todo, self._events_todo = self._events_todo, []
         new = False
         for event in todo:
-            if event.name in self._held:
+            if event.name in self._held and (self._return_open or self._child_counts.get(event.name, 0)):
                 continue
-            if self._passes(event.region, event.rule):
+            child = self._passes_age(event.region, event.rule, CHILD)
+            adult = self._passes_age(event.region, event.rule, ADULT)
+            if child or adult:
                 self._held.add(event.name)
                 if self.counts.get(event.name, 0) < 1:
-                    self._add(event.name, 1 - self.counts.get(event.name, 0))
-                new = True
+                    self._add(event.name, 1)
+                    new = True
+                if child and self._child_counts is not self.counts and not self._child_counts.get(event.name, 0):
+                    self._add_child(event.name, 1)
+                    new = True
+                if not self._return_open and not child:
+                    self._park((id(event),), event, event.rule.reads or (), event.region)
             elif event.rule.reads is None:
                 self._events_todo.append(event)  # not known what it reads: try again at every update
             elif any(event.region in self.reached[age] for age in AGES):
@@ -150,7 +193,8 @@ class Search:
         while True:
             for age in AGES:
                 self._expand(age)
-            if not self._collect_events():
+            new_events = self._collect_events()
+            if not self._open_return() and not new_events:
                 break
         self._dirty = False
 
@@ -173,8 +217,7 @@ class Search:
         self.update()
         if age is None:
             return self._passes(location.region, location.rule)
-        fn, known = location.rule.fn, self.reached[age].get(location.region, 0)
-        return bool(known & DAY and fn(self.counts, age, DAY) or known & NIGHT and fn(self.counts, age, NIGHT))
+        return self._passes_age(location.region, location.rule, age)
 
     def locations(self, age: str | None = None) -> list[str]:
         """Locations reachable (as ``age``, or as either), in world order."""
@@ -185,52 +228,57 @@ class Search:
         return self.world.goal(self.counts, None, self.world.start_tod)
 
     def collect_spheres(self, placements: Mapping[str, str]) -> list[list[str]]:
-        """Collect placed items sphere by sphere until nothing new is reachable. A sphere is every location
-        reachable with the items of the spheres before it (in world order); returns the location names of each
-        sphere. A location that fails is tried again only once its region or a count its rule reads changes."""
+        """Collect placed items sphere by sphere until nothing new is reachable, in world order.
+
+        A failed location waits for its region or rule inputs to change. A globally collected check may later
+        join the child prefix without granting its item twice or appearing twice in the returned spheres.
+        """
         self._call += 1
         order = {name: i for i, name in enumerate(self.world.locations)}
         self._spots_todo = [
             _Spot(self._call, name, location)
             for name, location in self.world.locations.items()
-            if name in placements and name not in self.collected
+            if name in placements
+            and (name not in self.collected or not self._return_open and name not in self._child_collected)
         ]
         spheres: list[list[str]] = []
-        child, adult, counts = self.reached[CHILD], self.reached[ADULT], self.counts
         while True:
             self.update()
             todo, self._spots_todo = self._spots_todo, []
-            sphere: list[str] = []
+            found: list[tuple[_Spot, bool, bool]] = []
             for spot in todo:
+                if spot.name in self.collected and (self._return_open or spot.name in self._child_collected):
+                    continue
                 location = spot.location
-                # _passes, inlined: this loop is the fill's hot path
-                region, fn = location.region, location.rule.fn
-                known_child, known_adult = child.get(region, 0), adult.get(region, 0)
-                if (
-                    known_child
-                    and (
-                        known_child & DAY and fn(counts, CHILD, DAY) or known_child & NIGHT and fn(counts, CHILD, NIGHT)
-                    )
-                ) or (
-                    known_adult
-                    and (
-                        known_adult & DAY and fn(counts, ADULT, DAY) or known_adult & NIGHT and fn(counts, ADULT, NIGHT)
-                    )
-                ):
-                    sphere.append(spot.name)
-                elif location.rule.reads is None:
-                    self._spots_todo.append(spot)
-                elif known_child or known_adult:
-                    self._park((id(location),), spot, location.rule.reads, region)
+                region = location.region
+                child = self._passes_age(region, location.rule, CHILD)
+                adult = self._passes_age(region, location.rule, ADULT)
+                global_item = spot.name not in self.collected and (child or adult)
+                child_item = child and spot.name not in self._child_collected
+                if global_item or child_item:
+                    found.append((spot, child_item, global_item))
                 else:
-                    self._park((id(location),), spot, (), region)
-            if not sphere:
+                    if location.rule.reads is None:
+                        self._spots_todo.append(spot)
+                    elif region in self.reached[CHILD] or region in self.reached[ADULT]:
+                        self._park((id(location),), spot, location.rule.reads, region)
+                    else:
+                        self._park((id(location),), spot, (), region)
+            if not found:
                 return spheres
-            sphere.sort(key=order.__getitem__)
-            for name in sphere:
-                self.collected.add(name)
-                self.collect(placements[name])
-            spheres.append(sphere)
+            found.sort(key=lambda entry: order[entry[0].name])
+            sphere = []
+            for spot, child, global_item in found:
+                if global_item:
+                    self.collected.add(spot.name)
+                    sphere.append(spot.name)
+                if child:
+                    self._child_collected.add(spot.name)
+                self._collect_item(placements[spot.name], child=child, global_item=global_item)
+                if not self._return_open and not child:
+                    self._park((id(spot.location),), spot, spot.location.rule.reads or (), spot.location.region)
+            if sphere:
+                spheres.append(sphere)
 
 
 class _Spot(NamedTuple):

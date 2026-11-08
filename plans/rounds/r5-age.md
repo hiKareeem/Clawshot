@@ -62,3 +62,37 @@ and the aimed rerun completed. No game or save bytes were written.
   other reader; it is not a safe free-travel flag. This is a conditional spec prerequisite, not permission to
   ship an ineffective flag or silently mark Forest completed. Requesting reviewer direction on an isolated
   data/logic patch instead; continue with the default gated search and softlock proof.
+
+## Item 2: separate pre-pull inventory
+
+Reviewer approved data wiring: `world.toml`'s `age_return_event = "Defeat Phantom Ganon"` and
+`age_return_region = "Beyond Door of Time"` (isolated commit `23d30c1`); no loader change was needed.
+`World.age_return` derives the pair from settings. Missing gates in partial worlds remain closed.
+
+`Search` now maintains a child-prefix inventory until the gate event holds and adult can reach the pedestal.
+Adult gets child-prefix and adult finds; child cannot consume adult-only items or events before return.
+Child-prefix reachability keeps growing independently, so the solver can finish all available child errands
+before choosing the first pull even if the pedestal is discovered early. An adult-collected check that later
+becomes reachable in that prefix is promoted without granting its item twice. Aliases follow the same provenance.
+Adult-start worlds have no child prefix before return. Public `collect()` and constructor items are assumed
+precollected items, available to both views; real placed pickups go through provenance-aware sphere collection.
+No gate in a synthetic world preserves the existing unrestricted behavior.
+
+Reproduction before fix: `pytest tests/test_age_travel.py -q` printed two failures: an adult Hookshot opened
+the child ledge and its own return key, and an adult start collected the pre-return child key. One positive passed.
+After fix: targeted age/search tests plus vanilla-world beatability **15 passed**.
+Live library smoke via `uv run python -c` on the same synthetic world:
+- Key requires adult-found Hookshot as child: only Adult Item collected; counts Time Travel/Hookshot;
+  child ledge unreachable; goal false.
+- Key already reachable in the child prefix: Adult Item + Child Key, then Child Prize; Forest Clear and goal true;
+  each physical item counted once.
+
+Regressions also cover adult event leakage, needing the actual adult pedestal, already-collected check promotion,
+alias counts and repeated collection, and public assumed inventory. Full seed/gate checks follow at handoff.
+
+## Reviewer direction on item 4
+
+Reviewer replaced the conditional initial-value approach: implement `patch/age.py`, default-off `free_time_travel`
+as an isolated pedestal-placement edit, dump field-diff test, and a test overlay for Kareem. Do not fake a Bool
+or complete the Forest quest. Also trace what else Forest completion controls. Fast-start TOML may need no edit
+if its existing schema cannot express placements; the seed owner must wire the new patch alongside the logic flag.

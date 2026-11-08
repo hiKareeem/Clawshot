@@ -812,6 +812,11 @@ All twelve saves in the supplied backup directories are child-era (`Sequence_IsC
 `Step_SageOfForest = Ready`), so they do not corroborate current adult progress.
 **Kareem: check the adult pedestal before and after the Forest blue warp, and supply adult save copies.**
 
+The search keeps an independent pre-pull child inventory until the Forest completion event and an adult route
+to `Beyond Door of Time` both hold. Adult-found items, aliases and events cannot unlock child checks before
+that return; child checks available without adult finds can all be collected before the first pull.
+The gate is data (`world.toml` settings), not a Forest Medallion inventory test.
+
 ## 17. Round 5: shops and the Deku Shield (cs5b)
 
 Full trace, provisional choices and player checks: `plans/rounds/r5-shops.md`. `data/shops.toml` identifies
