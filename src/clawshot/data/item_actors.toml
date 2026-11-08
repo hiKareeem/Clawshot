@@ -167,6 +167,9 @@
 "Deku Stick Capacity" = { actor = "Item_StickBag_Medium", source = "Enemy_Scrub_Business_Common Event322/Event555; fixed Medium tier for Scrub shuffle, r6-tokens.md" }
 "Deku Nut Capacity" = { actor = "Item_NutBag_Medium", source = "Enemy_Scrub_Business_Common Event326; fixed Medium tier for Scrub shuffle, r6-tokens.md" }
 
+# Round 7 BossHeart pool; native grant actor, chest presentation/pickup acceptance pending Kareem.
+"Heart Container" = { actor = "Obj_Heart_Container", source = "eight census boss hearts; HeartUtuwa PouchContent, r7-drops.md item 1" }
+
 [aliases]
 # Chests without an instance Drop__DropActor use this actor rather than the TBox spelling.
 "Obj_Rupee_Green" = "TBox_Rupee_Green"
