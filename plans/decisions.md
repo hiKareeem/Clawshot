@@ -71,6 +71,11 @@
   the return guarantee on); settings add difficulty for players who want it. So `forest` defaults to `closed`, with
   `closed_deku` and `open` as options for advanced players; not all at once. Quality-of-life settings that remove
   grind without changing the route (the intro skip, the cheap Deku Shield) may stay on.
+- **D25 Bomb and Bombchu pickups from chests only where the Bomb Bag is already guaranteed** (Kareem, 2026-11-08,
+  Claude's recommendation). Ammo packs grant their missing container (round 6, section 24; game-confirmed for a
+  shop bomb bundle in a chest, which gave the Bomb Bag with 20 bombs). Default: a `Bombs (N)`/`Bombchus (N)` item
+  goes only to a location the logic cannot reach without the Bomb Bag, so a pickup never hands out an early bag.
+  Counting such pickups as extra Bomb Bags is a later advanced option. Shop refills stay in shops.
 
 ## Open (only Kareem and his co-owner decide)
 
