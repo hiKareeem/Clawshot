@@ -31,13 +31,20 @@ class Settings:
 
     ``areas`` and ``goal`` cut the world down to a slice (a playtest of a few areas): only the regions in those
     census areas (Banc folders) and the area-less start regions, with ``goal`` in place of the world's. Empty: the
-    whole world."""
+    whole world.
+
+    ``item_location_types`` holds a logic item to the location types it may go to (songs to song locations, an
+    item whose actor is not known to work in a chest to the gift locations); a location type in
+    ``exclusive_location_types`` takes only items held to it there (OoT Randomizer's ``shuffle_song_items =
+    'song'``)."""
 
     shuffle: tuple[str, ...] = ("Chest",)
     dungeon_items: str = "own_dungeon"
     logic: dict[str, Any] = field(default_factory=dict)
     areas: tuple[str, ...] = ()
     goal: str | None = None
+    item_location_types: dict[str, tuple[str, ...]] = field(default_factory=dict)
+    exclusive_location_types: tuple[str, ...] = ()
 
     def __post_init__(self) -> None:
         if self.dungeon_items not in DUNGEON_ITEM_CHOICES:
@@ -54,6 +61,12 @@ class Settings:
         if self.areas:
             out["areas"] = list(self.areas)
             out["goal"] = self.goal
+        if self.item_location_types:
+            out["item_location_types"] = {
+                k: list(self.item_location_types[k]) for k in sorted(self.item_location_types)
+            }
+        if self.exclusive_location_types:
+            out["exclusive_location_types"] = list(self.exclusive_location_types)
         return out
 
 
@@ -69,6 +82,12 @@ def allowed(world: World, settings: Settings, location: str, item: str) -> bool:
         destinations = world.settings.get("shop_item_locations", {}).get(item)
         if destinations is not None and location not in destinations:
             return False
+    location_type = world.locations[location].type
+    types = settings.item_location_types.get(item)
+    if types is not None and location_type not in types:
+        return False
+    if location_type in settings.exclusive_location_types and (types is None or location_type not in types):
+        return False
     if not is_restricted(world, settings, item):
         return True
     return world.regions[world.locations[location].region].dungeon == world.items[item].dungeon
@@ -231,8 +250,11 @@ def fill(
     restricted = [item for item in pool if is_restricted(world, settings, item)]
     unrestricted = [item for item in pool if not is_restricted(world, settings, item)]
     progression = [item for item in unrestricted if world.items[item].progression]
-    priority = [item for item in unrestricted if world.items[item].priority]
-    rest = [item for item in unrestricted if not world.items[item].progression and not world.items[item].priority]
+    # A non-progression item held to some location types goes with the priority items, which are placed only where
+    # allowed() lets them; the rest go anywhere.
+    held = settings.item_location_types
+    priority = [i for i in unrestricted if not world.items[i].progression and (world.items[i].priority or i in held)]
+    rest = [item for item in unrestricted if not world.items[item].progression and item not in priority]
 
     if restricted:
         # Boss keys are taken first, then small keys, then the rest (Fill.fill_dungeons_restrictive).

@@ -7,7 +7,7 @@ import random
 import pytest
 
 from clawshot.generate import FillError, Settings, generate, spoiler_json
-from clawshot.generate.fill import check_beatable, fill, shuffled_locations
+from clawshot.generate.fill import allowed, check_beatable, fill, shuffled_locations
 from clawshot.world import build_world
 
 HELPERS = {
@@ -213,3 +213,33 @@ def test_dungeon_items_anywhere_turn_keysanity_on():
     assert generate(spec, 1, Settings()).settings.logic == {}
     with pytest.raises(FillError, match="needs the logic setting keysanity = true"):
         generate(spec, 1, Settings(dungeon_items="anywhere", logic={"keysanity": False}))
+
+
+def test_items_held_to_location_types_go_only_there():
+    # A song goes only to the song location, and the song location takes only the song (shuffle_song_items =
+    # 'song'); a letter held to the gift locations goes to one of them, never to a chest.
+    spec = dungeon_world()
+    spec["items"] = ITEMS | {"Lullaby": {"type": "Song"}, "Letter": {"class": "normal"}}
+    village = spec["regions"][1]["locations"]
+    village["Village Song"] = {"rule": "True", "type": "Song", "vanilla": "Lullaby"}
+    village["Village Gift"] = {"rule": "True", "type": "NPC", "vanilla": "Letter"}
+    village["Village Other Gift"] = {"rule": "True", "type": "NPC", "vanilla": "Rupees (5)"}
+    settings = Settings(
+        shuffle=("Chest", "Song", "NPC"),
+        item_location_types={"Lullaby": ("Song",), "Letter": ("NPC",)},
+        exclusive_location_types=("Song",),
+    )
+    world = build_world(spec)
+    assert not allowed(world, settings, "Village Chest", "Lullaby")
+    assert not allowed(world, settings, "Village Song", "Sword")
+    assert allowed(world, settings, "Village Gift", "Sword") and not allowed(world, settings, "Village Chest", "Letter")
+    letters = set()
+    for n in range(40):
+        placements = generate(spec, n, settings).placements
+        assert placements["Village Song"] == "Lullaby"
+        letters |= {loc for loc, item in placements.items() if item == "Letter"}
+    assert letters == {"Village Gift", "Village Other Gift"}
+    assert Settings(item_location_types={"B": ("x",), "A": ("y",)}).as_dict()["item_location_types"] == {
+        "A": ["y"],
+        "B": ["x"],
+    }
