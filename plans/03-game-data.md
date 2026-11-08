@@ -1956,3 +1956,80 @@ backup `2026-11-07_llr-tower-before-pickup`, manual slot01 (child, Sun's Song, f
 first-prize Hash unset). One resource: Market Child Static 259184 -> 259100 bytes, existing entry
 259464 retained. Exact inverse two-field delta, compression/readback, unchanged source/backup
 checksums and static launcher checks passed. Game acceptance is pending Kareem; D17 is not enabled.
+
+### Nine boss rewards: research only
+
+Reproducers: external `boss_rewards.py`, `warp_trace.py`, `warp_graphs.py`, `story_gate_trace.py`,
+`gate_readers.py`; active version map used, **640 flowcharts / 261 timelines**. The five adult
+medallion grant files use `.110.bfevfl.zs`, not their obsolete unversioned copies. Every row below
+calls `GetPouchContent:GetPouchContentByActorName` with the named `ActorName`. Three stone grants
+run at cut entries; adult medallion grants run after their awakening cutscene. The ninth reward,
+Rauru's Light Medallion, is **not a ninth boss/blue warp**: it belongs to the first sword-pull story.
+
+`Escape` below means `Dm_SY_BancChange_EscapeDungeon`; its event IDs name the transition into the
+grant scene and its separate quest-completion write. Saved quest Enums are reset8/save0; the
+`HavePlayedEvent.<grant flow>` history Bools also exist, reset8/save0. No new flag is needed merely
+to preserve the existing one-time blue-warp reward sequence.
+
+| Check | Blue-warp request / first-pull source | Grant flow, entry/event | Actor | Separate story completion |
+|---|---|---|---|---|
+| Queen Gohma | `InsideTheDekuTree_BossArea_Warp` -> Escape `BossArea_WarpIn`, then `Warp_Kokiri` | `Dm_Kokiri_0130`, `C08/Event22` (Escape Event2) | `Item_Stone_Forest` | Escape Event1: `Get_StoneOfForest=Complete` |
+| King Dodongo | `Get_StoneOfFire_EscapeDungeon`; arrival boot `Get_StoneOfFire_Complete` | `Dm_DeathMtTrail_0025`, `C01-07/Event26` (Escape Event60) | `Item_Stone_Fire` | Escape Event46: `Get_StoneOfFire=Complete` |
+| Barinade | `Getout_JabJab` -> Escape `Get_StoneOfWater_LeaveFromJabuJabuBelly` | `Dm_ZoraFountain_0030`, `C03/Event3` (Escape Event87) | `Item_Stone_Water` | Escape Event77: `Get_StoneOfWater=Complete` |
+| Phantom Ganon | `ForestTemple_SageOfForest_EscapeFromTemple`; first clear reserves SageRoom | `Dm_Awake_Forest_Get.110`, `EntryPoint0/Event13` (Escape Event213, after `Dm_Awake_Forest` Event211) | `Item_Medal_Forest` | Escape Event199: `SageOfForest=Complete` |
+| Volvagia | `Demo_SageOfFire_ClearEvent`; first clear reserves SageRoom | `Dm_Awake_Fire_Get.110`, `EntryPoint0/Event13` (Escape Event31, after `Dm_Awake_Fire` Event21) | `Item_Medal_Fire` | Escape Event40: `SageOfFire=Complete` |
+| Morpha | `Demo_SageOfWater_ClearEvent`; first clear reserves SageRoom | `Dm_Awake_Water_Get.110`, `EntryPoint0/Event13` (Escape Event98, after `Dm_Awake_Water` Event97) | `Item_Medal_Water` | Escape Event41: `SageOfWater=Complete` |
+| Bongo Bongo | `ShadowTemple_BossArea_Warp`; first clear reserves SageRoom | `Dm_Awake_Shadow_Get.110`, `EntryPoint0/Event3` (Escape Event126, after `Dm_Awake_Shadow` Event111) | `Item_Medal_Shadow` | Escape Event73: `SageOfShadow=Complete` |
+| Twinrova | `SageOfSpirit_Clear`; first clear reserves SageRoom | `Dm_Awake_Spirit_Get.110`, `EntryPoint0/Event14` (Escape Event143, after `Dm_Awake_Spirit` Event133) | `Item_Medal_Spirit` | Escape Event141: `SageOfSpirit=Complete` |
+| Rauru | `DoorOfTime:DoorOfTime_Draw`; SageRoom first-pull route, Event101 | `Dm_SageRoom_0005`, `Shine_Get_C18/Event48` | `Item_Medal_Light` | DoorOfTime Event93: `DoorOfTime=Complete`; Event103 sets adult era |
+
+All eight boss rooms place `Obj_WarpPoint_A_01` in their boss prefab's reference group, alongside the
+escape event request, separate from the heart container. Decoded native `Create_WarpPrefab` inputs:
+Gohma `Gohma_DefeatBoss`; Dodongo `DodongoCavern_BossGroundChange`; Barinade
+`Get_StoneOfWater_IsAfter_Step13_01_Exp`; Phantom Ganon `SageOfForest_IsAfter_Step08_Exp`;
+Volvagia `FireTemple_BossGroundChange`; Morpha the `SageOfWater` `Step07_2` order check;
+Bongo `SageOfShadow_IsAfter_DefeatBoss_Exp`; Twinrova `SageOfSpirit_IsAfter_Step09_01_Exp`.
+These control physical post-boss warps, not reward ownership. First-clear/revisit branches read quest
+completion, retaining exit/revisit behavior without granting a fresh reward on every warp.
+
+**Temple of Time mismatch, confirmed rather than inferred from reward names.**
+
+- `DoorOfTime:DoorOfTime_CheckStoneNum` Event38/39/56 reads Fire/Water stone **quest completion**,
+  not the held stones. Event68 reads `HavePlayedEvent.Dm_MelodyGet_Zelda`.
+  Door opening Event60 requires `DoorOfTime_IsAfter_Step04_Exp`, Event27 plays melody4,
+  Event69 checks the opened Bool and Event58 the door cutscene's history; Event53 sets
+  `Market_Child_TimeTempleDoor_Opened`, Event57 advances Step06. First-pull attention is gated by
+  that quest step (`Market_Child_Prefab_e700`, section16), not independent stone inventory.
+- Adult return and Prelude's separate trigger read `SageOfForest_IsCompleted_Exp`
+  (`Market_Adult_Prefab_89da` / `_edc2`, section16). Finding Forest Medallion elsewhere cannot
+  open the pedestal, and moving that medallion away must not forge Forest completion.
+- The later Light Arrows chain is `AllSage:Market_Adult_Field_GetArrowLight`, Event17 ->
+  `Dm_TimeTemple_0130`; Event25/26 read `HavePlayedEvent.Dm_Awake_Spirit` and
+  `...Dm_Awake_Shadow`, not Spirit/Shadow Medallion ownership. `SageOfLight`/`AllSage` progress
+  separately. `AllSage_AwakeSageCount` is an existing saved Int default5; Escape decrements it on
+  the five sage routes (Event249/251/252/253/267). No literal flow/decoded-logic reader of that Int
+  was found; do not invent a medallion-count gate from its name.
+- Fresh query survey found **zero literal stone/medallion item queries in 640 active flowcharts**.
+  The corresponding item symbols also do not occur in the 1822 previously decoded Logic graphs.
+  This does not claim the engine has no implicit readers; only the inspected data corpus.
+
+What a future reward shuffle needs, **not implemented here**:
+
+1. Keep all nine gifts class `more` until owner-approved gate semantics exist. Swap every literal
+   grant at its stable flow/event identity, using active `.110` versions; retain awakening scenes,
+   warp exits, quest completion, environmental changes and the independent Master Sword/era actions.
+2. Keep **check completion** separate from **reward ownership**. Existing quest/history gates
+   already supply one-time collection; replacing them wholesale with IsGet would replay boss scenes
+   when the vanilla medal is absent. Do not mark a dungeon complete when its reward is found elsewhere.
+3. For gates intended to follow collected rewards, replace the concrete Temple/scene readers and
+   their outer area/quest triggers with item checks, or explicitly change world logic to follow
+   physical boss/quest completion. Grant-only swaps leave the current item-based world oracle unsound
+   in both directions. D20's physical Forest-return guarantee remains a distinct constraint.
+4. Verify reward actors from their permitted destinations, matching get display/text and saved
+   inventory; check no duplicate after warp/reload, then rerun chronological beatability/return
+   proofs with the chosen gate policy. No chest allowlist is expanded by this research.
+
+**Kareem/co-owner: should the Door of Time and later reward gates follow the stones/medallions
+actually found, or remain tied to physical dungeon/awakening quest completion? Which gates, beyond
+the Door of Time, should change?** Proposed separation: reward ownership for chosen reward gates,
+physical completion for world restoration/return travel; no product choice is silently applied.

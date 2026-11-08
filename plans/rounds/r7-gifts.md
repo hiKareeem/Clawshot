@@ -100,4 +100,50 @@ from repeat behavior. D17 stays disabled pending that observation; no shuffle/lo
 
 ## Item 3: boss rewards
 
-Pending after item 2. Research only, no reward or story-gate patch.
+Completed research in section28, “Nine boss rewards”: all three stones, five adult temple medals and
+Rauru's Light Medallion. The last is a first-sword-pull check, not a ninth blue warp. The section gives
+each grant flow/entry/event, blue-warp request, cutscene and separate quest-completion write.
+Five `.110` grant files selected via the active version map; all nine use the shared GetPouchContent
+wrapper. All nine history Bools and all nine quest Enums exist as saved reset8/file0 entries.
+
+Actual read-only reproducers ran successfully under `E:/OOTRemake/work/r7-gifts/`:
+`boss_rewards.py` (640 active flowcharts, 261 timelines, nine asserted native grants, eight warp
+placements, zero literal reward-item query readers), `warp_trace.py` (each warp's exact escape
+request), `warp_graphs.py` (eight referenced native graphs and their real Create_WarpPrefab sources),
+`story_gate_trace.py` (request mapping, quest writes, saved types), `gate_readers.py` (later scene
+history reads and the saved sage counter). Full decoded inventories remain external:
+`boss-rewards-audit.json`, `warp-graphs-audit.json`.
+
+The initial warp-name filter returned no rows because the actor is `Obj_WarpPoint_A_01`, not a
+Boss-named actor; printed the unique actual actor names and corrected the filter. The first graph
+filter likewise returned empty roots: printed bindings showed `Create_WarpPrefab` is an input name
+on a boss module, not a node name/property. Following those actual input edges produced all eight
+creation predicates. No native data or decoder source was changed or copied.
+
+Confirmed Temple mismatch: DoorOfTime Event38/39/56 checks Fire/Water quest completion; opening
+still depends on DoorOfTime Step04/Step06, melody4, scene/opened history. Adult return/Prelude
+depends on Forest quest completion. The Light Arrows flow reads Spirit/Shadow **awakening-scene**
+history, not medals. Existing `AllSage_AwakeSageCount` defaults5 and decrements on sage routes;
+no literal query reader was found, so no new count gate is inferred. There are no reward-item
+symbols in the 1822 previously decoded Logic graphs; engine-implicit readers are not claimed absent.
+
+No boss reward, world rule, flag or gate patch. The nine class-more entries stay excluded.
+Future work must separate physical check completion from reward ownership, preserve warp/story/
+environmental changes and D20, update whichever reward gates owners choose, then test grant/display/
+save/revisit behavior and chronological beatability. Grant-only swaps would disagree with the oracle.
+
+**Kareem/co-owner: which Temple/reward gates should follow stones/medallions actually found,
+rather than completed dungeons/awakening scenes?** Proposed separation is recorded in section28,
+not applied as an unapproved product decision.
+
+## Completed gate evidence
+
+| Command | Observed result |
+|---|---|
+| `uv run ruff format --check` | 182 files already formatted |
+| `uv run ruff check` | All checks passed |
+| `uv run pytest --basetemp E:/OOTRemake/work/r7-gifts/gate-synthetic` | 517 passed, 70 skipped; 757.53 s |
+
+The full `OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump` gate is running, with its
+basetemp `E:/OOTRemake/work/r7-gifts/gate-dump`. No code edits after the full gates started.
+Final results and handoff follow after it completes; nothing is posted as ready yet.
