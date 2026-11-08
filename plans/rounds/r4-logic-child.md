@@ -1478,7 +1478,8 @@ Gates on the branch: `ruff format --check` 94 files formatted, `ruff check` clea
   (free Fire key: not mine to change; region count already handled); 20:05 grottos without the Stone of Agony
   (Gerudo Valley and Fortress left to track B); 20:06 time flows after meeting Zelda (adult night rules to track B);
   20:10 GTG key as a chest (fa9ed2b); 20:11 Great Fairies (first fairy, fees; DMC, Colossus, OGC to track B);
-  21:01 Shadow Trial Golden Gauntlets chest needs the Lens (138fb85).
+  21:01 Shadow Trial Golden Gauntlets chest needs the Lens (138fb85); 21:55 items 3 and 4; 02:01 item 6, the Great
+  Fairies from the data (ec03397, 26e0454).
 
 ## Gates (on the branch, rebased on main 00a9b63, before the handoff)
 
