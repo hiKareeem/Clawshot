@@ -1935,3 +1935,24 @@ delta restores the entire original flow. This is file/control-flow proof, not an
 Controlled new-game output `ingame/shopkeeper-boomerang` supplies a shield in Mido's far-right chest
 and a once-only Boomerang from the shopkeeper. Its flow grows 50552 -> 51200 bytes; allocation
 50832 -> 51472. No GameDataList is written. Checklist/isolated release-only launcher are in the round file.
+
+### Treasure Chest Game: contents experiment only
+
+The first prize is Hash `16881481538337649070`; the same-position repeat red-rupee actor is
+`6781536951709667179`. Only the first prize's drop and native preview change in the controlled output:
+`Obj_Heart_Piece` -> `TBox_Rupee_Red`, `Obj_Heart_Piece_MiniGame` ->
+`Obj_OrnamentalRupee_Red_MiniGame`. All ten game-room boxes and the repeat prize remain vanilla.
+`GetEventName`, repeated-opening setting, identity, AI groups, links and all other fields are unchanged.
+
+The EventSetting row `MiniGame_ChoiceTreasure_OpenClearTreasureBox` runs
+`MiniGame_SequentialChoiceTreasure:MiniGame_SequentialChoiceTreasure_OpenClearTreasureBox`.
+Event66 passes `ContentName` to OpenTreasureBoxClear; Event191 passes it to
+`Dm_SY_Treasurebox:SuccessForMiniGame`. ClearFlagOn Event146 sets
+`MiniGame_ChoiceTreasure_IsClear` (Hash3046747885; false/reset8/save0); both reward Hashes have
+permanent type24 Bool64bitKey entries. No flow or flag is changed.
+
+Output `ingame/treasure-red` and its release-only isolated save-copy launcher use the child ranch
+backup `2026-11-07_llr-tower-before-pickup`, manual slot01 (child, Sun's Song, first-clear false,
+first-prize Hash unset). One resource: Market Child Static 259184 -> 259100 bytes, existing entry
+259464 retained. Exact inverse two-field delta, compression/readback, unchanged source/backup
+checksums and static launcher checks passed. Game acceptance is pending Kareem; D17 is not enabled.

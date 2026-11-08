@@ -67,8 +67,36 @@ fill request are preserved here; handoff will attempt the prescribed post once m
 
 ## Item 2: Treasure Chest Game
 
-Pending after item 1. D17 remains: only a controlled reward-contents experiment; no shuffle enablement
-before Kareem's result. The eleven game boxes remain vanilla.
+Built `E:/OOTRemake/work/r7-gifts/ingame/treasure-red/` through the common writer. Copied the
+approved `Test - talon-boomerang.bat` into `ingame/Test - treasure-red.bat`, replacing only this
+experiment's paths/name. Own `user-treasure-red`, copies
+`E:/OOTRemake/work/save-backups/2026-11-07_llr-tower-before-pickup` only on first launch.
+Read-only slot01 evidence: child, Sun's Song, prize Hash unset, `MiniGame_ChoiceTreasure_IsClear=false`.
+The same child/ranch checkpoint was used by the round-6 Castle Town tests. No Lens availability is
+assumed; the unmodified five-room game may require retries or a later Lens acquisition.
+
+Only first-clear reward Hash `16881481538337649070` changes: `Obj_Heart_Piece` ->
+`TBox_Rupee_Red`; preview `Obj_Heart_Piece_MiniGame` -> `Obj_OrnamentalRupee_Red_MiniGame`,
+the native repeat prize's existing preview. All ten room boxes and repeat red-rupee prize Hash
+`6781536951709667179` remain vanilla (the eleven non-first-prize boxes of D17).
+Market Child Static: 259184 -> 259100 bytes, allocation 259464 retained; one resource, no size table.
+Exact inverse two-field diff recovers the entire original placement; dump and backup SHA256 maps
+are unchanged. Compression/readback and static launcher checks passed; no launcher executed.
+
+First probe wrongly assumed the EventSetting prefix was the physical flow filename: missing
+`MiniGame_ChoiceTreasure.bfevfl.zs` printed. Resolved the actual row's `FlowchartFileName` and entry,
+then corrected that one script: `MiniGame_SequentialChoiceTreasure`.
+OpenClear Event66 forwards `ContentName`; OpenTreasureBoxClear Event191 calls
+`Dm_SY_Treasurebox:SuccessForMiniGame` with it. ClearFlagOn Event146 sets
+`MiniGame_ChoiceTreasure_IsClear` (Hash3046747885, saved Bool false/reset8/file0).
+Both prize actors also have permanent type24 Bool64bitKey entries. Their logic/flow/flags are untouched.
+
+**Kareem: run `ingame/Test - treasure-red.bat`, Continue manual slot01, leave the ranch for Castle
+Town, make night with Sun's Song, pay10 and win the native five key rooms. First prize must preview
+and grant a Red Rupee (+20 below wallet cap), with rupee text and no heart-piece progress. Save,
+quit/Continue and verify first-clear completion persists. Require Market Child Static's overlay log.**
+Checklist: `ingame/treasure-check.md`. The repeat prize is already a red rupee, so distinguish first-win
+from repeat behavior. D17 stays disabled pending that observation; no shuffle/logic code changed.
 
 ## Item 3: boss rewards
 
