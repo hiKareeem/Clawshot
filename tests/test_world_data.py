@@ -51,8 +51,39 @@ def test_vanilla_placement_is_beatable(world):
     search.collect_spheres(placements)
     assert search.won()
     assert search.holds("Time Travel") and search.can_reach("Ganondorf Boss Room", ADULT)
-    # Every chest is reached (the keys held up front make the key counts moot).
-    assert sorted(n for n in placements if n not in search.collected and world.locations[n].type == "Chest") == []
+    # Only the twenty explicitly documented, unreachable keep-vanilla checks are exempt. D17's reachable
+    # Treasure Chest Game boxes/reward are not exempt; neither is any shuffled or merely unreachable chest.
+    excluded = {n for n, loc in world.locations.items() if loc.keep_vanilla and loc.rule.test is False}
+    assert excluded == {
+        "Bottom Of The Well Room 11 Chest (Item_ScrubBusinessSeed)",
+        "Gerudo Fortress Chest (TBox_Rupee_Red)",
+        "Gerudo Valley Chest (Item_ScrubBusinessSeed)",
+        "Gerudo Valley Chest (TBox_Rupee_Green)",
+        "Gerudo Valley Chest (TBox_Rupee_Red) [Adult]",
+        "Gerudo Valley Chest (TBox_Rupee_Red) [Child]",
+        "Goron City Chest (TBox_Rupee_Green)",
+        "Goron City Chest (TBox_Rupee_Purple) #2",
+        "Graveyard Chest (TBox_Rupee_Blue)",
+        "Graveyard Chest (TBox_Rupee_Red)",
+        "Hyrule Field Chest (Item_ScrubBusinessSeed)",
+        "Hyrule Field Chest (TBox_Rupee_Red) #1",
+        "Hyrule Field Chest (TBox_Rupee_Red) #2",
+        "Hyrule Field Chest (TBox_Rupee_Red) #3",
+        "Hyrule Field Chest (TBox_Rupee_Red) #4",
+        "Kakariko Village Chest (TBox_Rupee_Purple) [Adult Alternative]",
+        "Kakariko Village Chest (TBox_Rupee_Purple) [Adult]",
+        "Kokiri Forest Chest (TBox_Rupee_Purple)",
+        "Lost Wood Chest (TBox_Rupee_Purple)",
+        "Zora Fountain Chest (TBox_Rupee_Purple)",
+    }
+    assert (
+        sorted(
+            n
+            for n in placements
+            if n not in search.collected and n not in excluded and world.locations[n].type == "Chest"
+        )
+        == []
+    )
 
 
 def test_forest_start(world):
