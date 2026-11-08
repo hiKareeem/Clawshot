@@ -412,6 +412,23 @@ worked: a pick-up notice for the shield he already had, no duplicate. So two maj
 logic group work as freestanding items; the Fire Arrows crash belongs to that actor. Only the chest at the heart
 piece is left to test.
 
+## 12. Round 4: the remake's logic in the child areas (cs4a)
+
+What the remake changed against OoT Randomizer's (N64) rules in the areas child Link reaches, as the overrides in
+`src/clawshot/data/world/remake/child_<area>.toml` encode it. Per area, every rule checked, unchanged and open:
+`plans/rounds/r4-logic-child.md`. Sources are remake walkthroughs (cited per entry, facts only) and the placement
+files (actors listed by `E:/OOTRemake/work/r4-logic-child/actors.py`; room = `DefaultDungeonRoomIndex`, height =
+Banc `y`).
+
+**Inside the Deku Tree.** The lobby's 2F-to-3F vine wall carries three `Enemy_Skullwalltula` (y 113-116, above the
+map chest on 2F at y 108) that the Slingshot clears; the basement opens only by dropping from 3F into the 1F web
+(`Obj_InsideTheDekuTree_SpiderWeb_A_01`, y 100). So 3F, the compass room (room 3) and everything below 1F need the
+Slingshot; OoT Randomizer's single "Lobby" region (floors 1-3) let the basement open without it, which made round
+3's seed 3 unbeatable in game. The Slingshot room (room 2) has a breaking floating platform
+(`Obj_InsideTheDekuTree_FallingFloor_A_01/02/03`) at its entrance and an eye switch (`Obj_EyeSwitch_A_02`, y 114)
+with a falling ladder (`Obj_InsideTheDekuTree_FallingLadder_A_01`, y 116) above it: once in, Link leaves by shooting
+the eye. Nintendo Life's Deku Tree walkthrough (Switch 2) agrees on each point.
+
 ## 14. A new game and its opening cutscenes (round 4, cs4c)
 
 How it was found: AINB modules decoded with dt-12345's `ainb` 0.2.16 (GPL, unmodified, in a scratch venv under

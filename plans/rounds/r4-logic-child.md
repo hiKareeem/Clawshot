@@ -57,7 +57,9 @@ both Slingshot room chests are in reach without it.
 (the lobby is reached before the room), so it only records the trap. Nothing in the data shows a way out besides the
 eye switch: the only "return to entrance" flow is the Wallmaster's (`Enemy_Wallmaster_ReturnToEntrance`), and room
 2's only other actors are the vines, a Skullwalltula and the chests. Farore's Wind would work, but no child holds it
-this early.
+this early. Against an easy way out: the remake keeps one save with BotW-style autosave and resumes at the last
+save point (Eurogamer, https://www.eurogamer.net/all-new-changes-zelda-ocarina-of-time-switch-2), so a reload may
+put Link back in the room; and with one save file a trap would end the seed, not just cost a reset.
 
 - **Kareem: in the Slingshot room without the Slingshot (seed 3), how did you get out? Does saving and quitting (or
   a game over) and continuing put Link at the Deku Tree's entrance, as on N64?**
