@@ -413,6 +413,48 @@ counter/tree-quest/early-story/equipment instructions; KF6 appears only as its *
 Default cheap-shield mode's alternative is 10, verified by the real dump regression. Neither mode makes
 the free visit a shuffled check or another paid shelf.
 
-Scoped formatting left all four Python files unchanged; full format check: **178 files already formatted**;
-full lint: **all checks passed**. The full synthetic and dump gates are running on this completed code.
+Scoped formatting left all four Python files unchanged. Full-gate evidence follows.
 No game, launcher, window, active seed/user/save folder or dump file was changed.
+
+### Final F-integrated gates (code `83e7634`)
+
+| Command | Observed result |
+|---|---|
+| `uv run ruff format --check` | 178 files already formatted |
+| `uv run ruff check` | All checks passed |
+| `uv run pytest --basetemp=E:/OOTRemake/work/r6-names/pytest-free-synthetic` | 491 passed, 66 skipped; 241.39 s |
+| `OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump --basetemp=E:/OOTRemake/work/r6-names/pytest-free-dump` | 65 passed, 492 deselected; 324.97 s |
+
+All four full gates passed once; no retries, test exclusions beyond the prescribed `-m dump`, or source
+edits during the runs. The updated real free-visit regression is included in the full dump gate.
+
+An independent CLI replay used the actual spoiler's effective CS1 and `PYTHONHASHSEED=271828`:
+**all 79 files byte-identical**, including all 77 resources plus spoiler/note. The free visit, prerequisite
+references and optional paid row are deterministic. Both CLI output folders and both exact session-owned
+basetemps were removed only after their processes completed and the byte comparison passed; no game data,
+active seed/user/save folder or reusable research was deleted.
+
+### Current review chain after the F rebase
+
+Prior hash tables are historical. These are the current branch commits on authorized `a81faf9`:
+
+| Commit | Scope |
+|---|---|
+| `45c9a48` | Sourced catalog/reader/coverage and section 20 |
+| `d6836a2` | Pairing/item/rule audit |
+| `414dc10` | Shared Search child-only API only |
+| `3803640` | Readable spoiler and replayed opening route |
+| `2ab07e2` | Shared note writer only |
+| `3083f17` | Dump output-folder contract only |
+| `2da6256` | Baseline gate evidence |
+| `07bdb27` | Historical baseline blocked handoff |
+| `aaacb21` | Shared Scrub native-price metadata producer only |
+| `dc9592f` | Canonical purchase-price presentation/regressions |
+| `55cb9fa` | CS1 and legacy-price proof |
+| `9c506ea` | Prior integrated full gates |
+| `83e7634` | Explicit free-event visit, reachable paid alternatives, updated regression and docs |
+
+**Ready for review after F.** All requested name/where coverage, pairing audits, logic-derived purchases,
+free-shield instructions/alternative and regressions are complete. No code blocker or pending product
+decision for this track. Existing in-game research limits above remain explicit; no new gameplay claim,
+ammo-policy change, game launch, merge, push or stash.
