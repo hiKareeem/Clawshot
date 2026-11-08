@@ -58,6 +58,12 @@ overrides = "remake.toml"
 # (Kareem, round 2).
 progressive_items = false
 
+# Adult return pedestal: Market_Adult_Prefab_89da deletes its attention actor until the Forest quest is complete.
+# Dm_SY_BancChange_EscapeDungeon Event199 completes that quest after the Forest blue warp, not medal possession.
+# Exact source: plans/03-game-data.md section 16; the search keeps a separate pre-pull child inventory until then.
+age_return_event = "Defeat Phantom Ganon"
+age_return_region = "Beyond Door of Time"
+
 # Each progressive item's tiers, lowest first. Tier n is an item of its own that counts as n of the progressive
 # item, so OoT Randomizer's rules ("Hookshot" = Progressive_Hookshot, "Longshot" = (Progressive_Hookshot, 2))
 # read fixed and progressive items alike. Finding a higher tier first gives that tier's ability [inference: the
