@@ -18,7 +18,7 @@ from clawshot.census.scan import scan
 from clawshot.generate import Seed, Settings, generate, prepare, spoiler
 from clawshot.generate.fill import shuffled_locations
 from clawshot.patch import events as chest_events
-from clawshot.patch import gamedata, shops
+from clawshot.patch import gamedata, scrubs, shops
 from clawshot.patch import items as item_actors
 from clawshot.patch.plan import Links, PatchError, Plan, link, make_plan, remake_vanilla
 from clawshot.patch.write import FileChanges, WrittenFile, write
@@ -56,6 +56,9 @@ def make_seed(
 ) -> SeedOutput:
     """Fill a seed; kind-specific steps turn placements into decompressed file transforms."""
     spec = load_spec() if spec is None else spec
+    if scrubs.SHUFFLE in settings.shuffle:
+        spec, settings, step = scrubs.seed_setup(spec, settings)
+        extra_steps = (*extra_steps, step)
     fast_settings = gamedata.load()
     chosen = gamedata.select(fast_settings, list(settings.fast_start))
     settings = replace(settings, fast_start=tuple(s.name for s in chosen))
