@@ -6,7 +6,7 @@
 #   always    a listed location, every one that is shuffled, before the rest
 #   woth      an area holding an item the goal cannot be reached without ("Way of the Hero")
 #   barren    an area where no shuffled location holds an item that can unlock anything ("foolish")
-#   item      where a progression item is (its area)
+#   item      where a major item is (its area); one hint per item, not one per copy
 #   sometimes a listed location and its item
 #   random    any shuffled location and its item
 #   junk      a line that says nothing

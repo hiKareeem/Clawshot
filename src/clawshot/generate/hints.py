@@ -221,12 +221,18 @@ def choose(seed: "Seed", mode: str = "always", distribution: str = "balanced") -
     limits = {"woth": plan.get("dungeon_woth_limit", 2), "barren": plan.get("dungeon_barren_limit", 1)}
     is_dungeon = {area: any(r.dungeon == area for r in world.regions.values()) for area in set(area_of.values())}
 
+    hinted_items: set[str] = set()  # items an item hint named: one hint per item, not per copy
+
     def location_hint(kind: str, candidates: list[str]) -> bool:
         candidates = [name for name in candidates if name not in hinted_locations]
+        if kind == "item":
+            candidates = [name for name in candidates if seed.placements[name] not in hinted_items]
         while candidates:
             name = candidates.pop(rng.randrange(len(candidates)))
             hinted_locations.add(name)
             if place(kind, name, area=area_of[name]):
+                if kind == "item":
+                    hinted_items.add(seed.placements[name])
                 return True
         return False
 
@@ -324,7 +330,17 @@ def stone_place(stone: str) -> str:
     return load()["stones"].get(stone, stone)
 
 
-def text(hint: Hint, item_name: Callable[[str], str] = str, location_name: Callable[[str], str] = str) -> str:
+# With ``marked``, each filled-in name stands between these two characters, so a text patch can colour it.
+FIELD_START, FIELD_END = "\x01", "\x02"
+
+
+def text(
+    hint: Hint,
+    item_name: Callable[[str], str] = str,
+    location_name: Callable[[str], str] = str,
+    *,
+    marked: bool = False,
+) -> str:
     """The hint in Clawshot's wording; ``item_name`` and ``location_name`` turn the logic's names into the player's."""
     wording = load()["wording"]
     if hint.kind == "junk":
@@ -334,5 +350,7 @@ def text(hint: Hint, item_name: Callable[[str], str] = str, location_name: Calla
         "item": item_name(hint.item) if hint.item else "",
         "location": location_name(hint.location) if hint.location else "",
     }
+    if marked:
+        fields = {key: f"{FIELD_START}{value}{FIELD_END}" for key, value in fields.items()}
     template = wording["location"] if hint.kind in ("always", "sometimes", "random") else wording[hint.kind]
     return template.format(**fields)

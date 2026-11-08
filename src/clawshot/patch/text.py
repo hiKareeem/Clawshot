@@ -13,19 +13,32 @@ Where the game's text comes from (``03-game-data.md`` section 22):
   line; the line then reads right in each language it is built for.
 - A stone's line is the ``GossipStone`` message labelled with its placement name; the flow asks for the Mask of
   Truth first. :func:`gossip_without_mask` re-points those two questions so every answer leads on.
+- **Hints** (round 7): :func:`hint_changes` writes each stone's hint (from ``clawshot.generate.hints``) into the
+  ``GossipStone`` messages of every language archive given, wrapped to the stone's box (two rows a page) in the
+  stone's own style, the filled-in names coloured; with stones that speak without the mask, the flow edit too. The
+  text is English in every language (provisional); item names are the game's English ones (:func:`item_names`).
 """
 
-from collections.abc import Callable, Mapping, Sequence
+from collections.abc import Callable, Iterable, Mapping, Sequence
 from pathlib import Path
 
 from clawshot.census import hints
 from clawshot.formats import byml, evfl, msbt, sarc, zsdic
-from clawshot.formats.msbt import Part
+from clawshot.formats.msbt import Part, Tag
+from clawshot.generate.hints import FIELD_END, FIELD_START
+from clawshot.patch.items import ItemActors
 from clawshot.patch.plan import PatchError
+from clawshot.patch.write import FileChanges
 
 ARCHIVE = "Mals/{language}.Product.110.sarc.zs"
 POUCH_TEXT = "ActorMsg/PouchContent.msbt"
 ACTOR_PACK = "Pack/Actor/{actor}.pack.zs"
+NAME_LANGUAGE = "USen"  # the language whose item names the hint text uses
+HINT_WIDTH = 60  # characters a row; the game's own stone lines are at most 65
+HINT_ROWS = 2  # rows a page, as every stone line has
+COLOUR = (0, 3)  # the colour tag (group 0, type 3); its parameter is the colour
+HIGHLIGHT = b"\x00\x00"  # the colour other lines give a name they stress
+PAGE_BREAK = Tag(0, 4, b"")
 
 
 def archive_path(language: str) -> str:
@@ -142,3 +155,87 @@ def gossip_flow_transform(data: bytes) -> bytes:
     if evfl.read(written) != document:
         raise PatchError("the written GossipStone flow does not read back as the edited flow")
     return written
+
+
+def item_names(romfs: str | Path, items: Iterable[str], table: ItemActors) -> dict[str, str]:
+    """Each logic item's name as :data:`NAME_LANGUAGE` writes it (its ``<key>_Name``, without grammar tags); an item
+    without an actor in ``table`` keeps its logic name."""
+    romfs = Path(romfs)
+    dicts = zsdic.Dictionaries.from_romfs(romfs)
+    archive = archive_path(NAME_LANGUAGE)
+    pouch = msbt.read(sarc.read(dicts.decompress(archive, (romfs / archive).read_bytes()))[POUCH_TEXT])
+    names = {}
+    for item in sorted(set(items)):
+        actor = table.actors.get(item)
+        names[item] = item if actor is None else msbt.plain(item_name(pouch, read_text_key(romfs, actor, dicts)))
+    return names
+
+
+def _rows(text: str, width: int) -> list[str]:
+    """``text`` broken into rows of at most ``width`` visible characters (the field marks take no room)."""
+    rows: list[str] = []
+    row = ""
+    for word in text.split():
+        candidate = f"{row} {word}" if row else word
+        if row and len(candidate.replace(FIELD_START, "").replace(FIELD_END, "")) > width:
+            rows.append(row)
+            candidate = word
+        row = candidate
+    return [*rows, row] if row else rows
+
+
+def stone_line(original: Sequence[Part], text: str, width: int = HINT_WIDTH, rows: int = HINT_ROWS) -> list[Part]:
+    """A stone's line saying ``text`` in the look of ``original``: its opening tags first (voice, size, colour), rows
+    of at most ``width`` characters, ``rows`` to a page, each new page reopening the size and colour, and the names
+    between :data:`~clawshot.generate.hints.FIELD_START` and ``FIELD_END`` in the highlight colour."""
+    lead = keep_style(original, [])
+    style = [tag for tag in lead if isinstance(tag, Tag) and tag.group == 0]
+    colour = next((tag.params for tag in style if (tag.group, tag.type) == COLOUR), b"\xff\xff")
+    lines = _rows(text, width)
+    pages = ["\n".join(lines[i : i + rows]) for i in range(0, len(lines), rows)]
+    parts: list[Part] = list(lead)
+    for index, page in enumerate(pages):
+        if index:
+            parts += [PAGE_BREAK, *style]
+        for char in page:
+            if char == FIELD_START:
+                parts.append(Tag(*COLOUR, HIGHLIGHT))
+            elif char == FIELD_END:
+                parts.append(Tag(*COLOUR, colour))
+            elif parts and isinstance(parts[-1], str):
+                parts[-1] += char
+            else:
+                parts.append(char)
+    return parts
+
+
+def stone_lines_transform(lines: Mapping[str, str]) -> Callable[[bytes], bytes]:
+    """The transform of one language archive giving each stone label in ``lines`` its new line (:func:`stone_line`,
+    in that archive's style of the stone)."""
+
+    def transform(data: bytes) -> bytes:
+        files = sarc.read(data)
+        if hints.GOSSIP_MESSAGES not in files:
+            raise PatchError(f"no message file {hints.GOSSIP_MESSAGES} in the archive")
+        originals = msbt.read(files[hints.GOSSIP_MESSAGES]).messages
+        missing = sorted(set(lines) - set(originals))
+        if missing:
+            raise PatchError(f"{hints.GOSSIP_MESSAGES}: no message labelled {missing}")
+        parts = {label: stone_line(originals[label], text) for label, text in lines.items()}
+        return edit_messages({hints.GOSSIP_MESSAGES: parts})(data)
+
+    return transform
+
+
+def hint_changes(
+    romfs: str | Path, lines: Mapping[str, str], language_names: Sequence[str], *, without_mask: bool
+) -> FileChanges:
+    """The files a seed's hints change: each language archive's stone lines (``lines``: label -> marked text) and,
+    with ``without_mask``, the ``GossipStone`` flow so stones speak without the Mask of Truth."""
+    changes: dict[str, Callable[[bytes], bytes]] = {}
+    if lines:
+        transform = stone_lines_transform(lines)
+        changes.update({archive_path(language): transform for language in language_names})
+    if without_mask:
+        changes[hints.flow_path(romfs, hints.GOSSIP_FLOW)] = gossip_flow_transform
+    return changes
