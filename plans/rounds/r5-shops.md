@@ -134,6 +134,32 @@ true with 1000. New stock-gate test and post-rebase hook results are recorded be
 Reviewer corrected all three launchers to **only `E:/Games/Hookshot/hookshot.exe`**; that correction was read
 back, not overwritten. No test build/fallback is allowed. None was run.
 
+## Item 4: seed integration after the prerequisites
+
+Claude confirmed main `cd592e3`; clean rebase succeeded. Loader hook `5b6e92f` is a separate, four-line
+`load.py`-only commit and was posted. Native shop-to-chest mappings are isolated in `17207fb`; native `Shop_*`
+pouch actor grants are still pending family-level in-game checks, not presented as certified.
+
+`make_seed` now registers `shops.patch_step` for only its shuffled Shop locations, through the approved
+`extra_steps` API. Other vanilla shops are not patched. CLI accepts `--shuffle Shop` or `--shuffle Chest Shop`.
+The native palette includes eight equal-quantity chest-ammo aliases (Arrows 10/30, Bombs 5/10/20,
+Bombchus 5/10/20) in addition to 35 ordinary sale variants. `Buy Magic Jar` is distinct from Track C's
+actual chest `Magic Jar`, avoiding an actor/count collision. Refills keep bought-capability names, not fake bottles.
+
+Live CLI smoke (no game):
+
+| Command selection / output | Observed result |
+|---|---|
+| seed 22, `--shuffle Chest Shop --areas KokiriForest LostWood InsideTheDekuTree --goal "'Defeat Queen Gohma'"`, `.../r5-shops/seed-shop-22` | 20 checks, 3 spheres, 10 resources, seller-pack size entries raised |
+| seed 7, same slice, `--shuffle Shop`, `.../r5-shops/seed-shop-only-7` | 8 checks, 4 spheres, 6 resources, seller-pack size entries raised |
+
+Seed 22's shield is **KF Shop Item 3, 20 rupees**, in sphere 1 with Kokiri Sword and Slingshot. The intended
+single-shop placement reaches all three Kokiri age/short-stock shelf copies and their seller packs.
+The final dump regression checks this end-to-end plus preserved slot prices, release/stock and all output
+resource sizes. No launcher was added for these smoke seeds; the three controlled experiments remain the
+first in-game checks. Whole-game chest coverage and chronological age travel are still the other tracks'
+integration prerequisites, not claimed by the slice smoke.
+
 ## Coordination and provisional choices
 
 - Requested a narrow world loader hook for shop normalization/price predicates (not owned by B).

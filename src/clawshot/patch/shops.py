@@ -140,7 +140,10 @@ def patch_shelves(data: bytes, changes: tuple[tuple[Slot, Sale], ...]) -> bytes:
         for actor in document.root["Actors"]:
             if "Links" in actor:
                 actor["Links"] = [link for link in actor["Links"] if int(link["Dst"]) not in removed]
-    return byml.dump(document)
+    result = byml.dump(document)
+    if difference := byml.difference(document.root, byml.read(result)):
+        raise PatchError(f"shop shelves failed read-back: {difference}")
+    return result
 
 
 def patch_goods(data: bytes, changes: tuple[tuple[Slot, Sale], ...]) -> bytes:
@@ -168,7 +171,12 @@ def patch_goods(data: bytes, changes: tuple[tuple[Slot, Sale], ...]) -> bytes:
         goods["PriceOffset"] = byml.I32(slot.price - sale.base_price)
     for name, document in members.items():
         pack[name] = byml.dump(document)
-    return sarc.write(pack)
+        if difference := byml.difference(document.root, byml.read(pack[name])):
+            raise PatchError(f"{name}: shop goods failed read-back: {difference}")
+    result = sarc.write(pack)
+    if sarc.read(result) != pack:
+        raise PatchError("shop seller pack failed read-back")
+    return result
 
 
 def changes(
@@ -217,3 +225,29 @@ def changes(
         **{path: partial(patch_shelves, changes=tuple(rows)) for path, rows in shelves.items()},
         **{path: partial(patch_goods, changes=tuple(rows)) for path, rows in owners.items()},
     }
+
+
+def native_items(path: str | Path = SHOPS_TOML) -> dict[str, dict]:
+    with Path(path).open("rb") as stream:
+        data = tomllib.load(stream)
+    items = dict(data["items"])
+    for alias, target in data.get("display_aliases", {}).items():
+        items[alias] = items[target]
+    return items
+
+
+def patch_step(romfs: str | Path, locations: tuple[str, ...]) -> Callable[[Mapping[str, str]], dict]:
+    """Register only the shuffled Shop locations, never overwrite vanilla shops."""
+    palette = native_items()
+    slots = load()
+
+    def step(placements: Mapping[str, str]) -> dict[str, Callable[[bytes], bytes]]:
+        sales = {}
+        for name in locations:
+            item = placements[name]
+            if item not in palette:
+                raise PatchError(f"{name}: {item!r} has no native shop display")
+            sales[name] = palette[item]["display"]
+        return changes(romfs, sales, slots=slots) if sales else {}
+
+    return step

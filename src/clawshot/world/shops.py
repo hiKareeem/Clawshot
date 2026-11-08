@@ -12,7 +12,7 @@ def apply_shop_data(spec: dict[str, Any], data: Mapping[str, Any]) -> None:
     native = data["items"]
     by_actor = {entry["display"]: name for name, entry in native.items()}
     settings = spec.setdefault("settings", {})
-    settings["native_shop_items"] = list(native)
+    settings["native_shop_items"] = [*native, *data.get("display_aliases", {})]
     settings["shop_item_locations"] = data.get("item_locations", {})
     spec.setdefault("helpers", {}).update(data.get("helpers", {}))
     for name, entry in native.items():

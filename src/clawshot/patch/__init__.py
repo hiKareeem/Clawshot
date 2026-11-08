@@ -3,8 +3,8 @@
     out = make_seed(romfs, 12345, Settings())     # census, remake pool, fill, beatability search, plan
     write_seed(out, romfs, Path("seed-12345"))     # <dir>/romfs/... and <dir>/spoiler.json
 
-The pool is what the remake's chests hold (``remake_vanilla``), as logic items; the fill and the beatability
-search are ``clawshot.generate``'s.
+The chest pool uses ``remake_vanilla``; opt-in Shop locations use the native shop
+catalog. The fill and beatability search are ``clawshot.generate``'s.
 """
 
 import json
@@ -19,6 +19,7 @@ from clawshot.generate import Seed, Settings, generate, prepare, spoiler
 from clawshot.generate.fill import shuffled_locations
 from clawshot.patch import events as chest_events
 from clawshot.patch import items as item_actors
+from clawshot.patch import shops
 from clawshot.patch.plan import Links, PatchError, Plan, link, make_plan, remake_vanilla
 from clawshot.patch.write import FileChanges, WrittenFile, write
 from clawshot.world.load import load_spec
@@ -58,6 +59,9 @@ def make_seed(
     table = item_actors.load()
     table.check(world.items)
     chests = [name for name in shuffled_locations(world, settings) if world.locations[name].type == "Chest"]
+    shop_locations = tuple(name for name in shuffled_locations(world, settings) if world.locations[name].type == "Shop")
+    if shop_locations:
+        extra_steps = (*extra_steps, shops.patch_step(romfs, shop_locations))
     if len(chests) != len(shuffled_locations(world, settings)) and not extra_steps:
         raise PatchError("non-chest shuffle needs a kind-specific extra patch step")
     links = link(world, chests, census_definitions.load(), scan(romfs))

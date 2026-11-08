@@ -1,25 +1,19 @@
 import copy
 import random
-import tomllib
 from collections import Counter
 
 import pytest
 
 from clawshot.generate import Settings, generate
 from clawshot.generate.fill import allowed, fill, shuffled_locations
-from clawshot.patch.shops import SHOPS_TOML
 from clawshot.world import build_world
 from clawshot.world.load import load_spec
 from clawshot.world.search import Search
-from clawshot.world.shops import apply_shop_data
 
 
 @pytest.fixture
 def spec():
-    spec = load_spec()
-    with SHOPS_TOML.open("rb") as stream:
-        apply_shop_data(spec, tomllib.load(stream))
-    return spec
+    return load_spec()
 
 
 def test_actual_shields_unlock_their_child_and_adult_rules(spec):

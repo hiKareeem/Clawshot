@@ -1582,7 +1582,7 @@ price = 5
 class = "priority"
 source = "PouchActorInfo Shop_Heart; native Shop actor pack, build e0f3ccfa"
 
-[items."Magic Jar"]
+[items."Buy Magic Jar"]
 display = "Shop_MagicJar_Small"
 price = 10
 class = "normal"
@@ -1849,3 +1849,14 @@ source = "Npc_Hylia_020_Shop GoodsList[4].Release.SoldOutGameData=IsGet.Item_Bot
 [item_locations]
 "Goron Tunic" = ["GC Shop Item 1", "GC Shop Item 2", "GC Shop Item 3", "GC Shop Item 4", "GC Shop Item 5", "GC Shop Item 6", "GC Shop Item 7", "GC Shop Item 8", "KF Shop Item 1", "KF Shop Item 2", "KF Shop Item 3", "KF Shop Item 4", "KF Shop Item 5", "KF Shop Item 6", "KF Shop Item 7", "KF Shop Item 8", "Kak Bazaar Item 1", "Kak Bazaar Item 2", "Kak Bazaar Item 3", "Kak Bazaar Item 4", "Kak Bazaar Item 5", "Kak Bazaar Item 6", "Kak Bazaar Item 7", "Kak Bazaar Item 8", "Kak Potion Shop Item 1", "Kak Potion Shop Item 2", "Kak Potion Shop Item 3", "Kak Potion Shop Item 4", "Kak Potion Shop Item 5", "Kak Potion Shop Item 6", "Kak Potion Shop Item 7", "Kak Potion Shop Item 8", "ZD Shop Item 1", "ZD Shop Item 2", "ZD Shop Item 3", "ZD Shop Item 4", "ZD Shop Item 5", "ZD Shop Item 6", "ZD Shop Item 7", "ZD Shop Item 8"]
 "Zora Tunic" = ["GC Shop Item 1", "GC Shop Item 2", "GC Shop Item 3", "GC Shop Item 4", "GC Shop Item 5", "GC Shop Item 6", "GC Shop Item 7", "GC Shop Item 8", "KF Shop Item 1", "KF Shop Item 2", "KF Shop Item 3", "KF Shop Item 4", "KF Shop Item 5", "KF Shop Item 6", "KF Shop Item 7", "KF Shop Item 8", "Kak Bazaar Item 1", "Kak Bazaar Item 2", "Kak Bazaar Item 3", "Kak Bazaar Item 4", "Kak Bazaar Item 5", "Kak Bazaar Item 6", "Kak Bazaar Item 7", "Kak Bazaar Item 8", "Kak Potion Shop Item 1", "Kak Potion Shop Item 2", "Kak Potion Shop Item 3", "Kak Potion Shop Item 4", "Kak Potion Shop Item 5", "Kak Potion Shop Item 6", "Kak Potion Shop Item 7", "Kak Potion Shop Item 8", "ZD Shop Item 1", "ZD Shop Item 2", "ZD Shop Item 3", "ZD Shop Item 4", "ZD Shop Item 5", "ZD Shop Item 6", "ZD Shop Item 7", "ZD Shop Item 8"]
+
+# Same quantity and pouch target as their native sale variant (PouchActorInfo).
+[display_aliases]
+"Arrows (10)" = "Buy Arrows (10)"
+"Arrows (30)" = "Buy Arrows (30)"
+"Bombs (5)" = "Buy Bombs (5) for 35 Rupees"
+"Bombs (10)" = "Buy Bombs (10)"
+"Bombs (20)" = "Buy Bombs (20)"
+"Bombchus (5)" = "Buy Bombchu (5)"
+"Bombchus (10)" = "Buy Bombchu (10)"
+"Bombchus (20)" = "Buy Bombchu (20)"

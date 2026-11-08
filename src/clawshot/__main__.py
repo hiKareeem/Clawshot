@@ -3,9 +3,9 @@
     python -m clawshot --romfs <dump> --seed <n> --out <dir> [--shuffle Chest ...] [--dungeon-items own_dungeon]
         [--logic name=value ...] [--areas <Banc folder> ... --goal <rule>]
 
-Reads the player's dump (read only), places the remake's chest contents by logic, checks the seed can be beaten,
-and writes ``<out>/romfs/...`` (the changed placement files only, and the size table when an entry grows) and
-``<out>/spoiler.json`` (the placements, the spheres and the patch plan). ``<out>`` must be empty or absent.
+Reads the player's dump (read only), shuffles chests and optionally native shop contents,
+checks beatability, and writes changed resources (plus the size table when needed)
+under ``<out>/romfs`` and the placements/spheres/patch plan to ``<out>/spoiler.json``.
 ``--areas`` with ``--goal`` makes a slice: only those areas' regions, beaten when the goal holds (round 3's
 playtest: ``--areas KokiriForest LostWood InsideTheDekuTree --goal "'Defeat Queen Gohma'"``).
 """
@@ -35,7 +35,13 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--romfs", type=Path, required=True, help="the game's romfs folder (read only)")
     parser.add_argument("--seed", type=int, required=True)
     parser.add_argument("--out", type=Path, required=True, help="the mod folder to write (empty or absent)")
-    parser.add_argument("--shuffle", nargs="+", default=list(Settings().shuffle), help="location types to shuffle")
+    parser.add_argument(
+        "--shuffle",
+        nargs="+",
+        choices=("Chest", "Shop"),
+        default=list(Settings().shuffle),
+        help="location types to shuffle; Shop uses native displays only",
+    )
     parser.add_argument("--dungeon-items", choices=DUNGEON_ITEM_CHOICES, default=Settings().dungeon_items)
     parser.add_argument("--logic", nargs="*", default=[], metavar="NAME=VALUE", help="logic setting overrides")
     parser.add_argument("--areas", nargs="+", default=[], metavar="AREA", help="census areas of a slice")

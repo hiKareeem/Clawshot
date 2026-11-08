@@ -820,3 +820,25 @@ and release fields intact. Native and mismatched-sale field-diff dump checks pas
 display's actual menu/get/stock behavior is unverified; no custom displays or game runs. Player checklist and
 unrun, isolated-user launchers are beside the outputs. Stand-ins need text, price, category, stock persistence
 and sold-out identity review before a seed setting is safe.
+
+**Logic/integration (provisional, reviewer-approved).** `--shuffle Shop` shuffles the 64 ordinary logical shop
+slots; the eight mask loans remain `MaskShop`. The pool contains the actual Deku Shield, progression-class.
+Its helper now recognizes actual inventory as well as bought/drop forms, so sword + chest-found shield passes
+Mido. Keeping Mido prevents a shield self-lock in the Deku Tree; skipping Mido can permit it without opening
+the separate forest exit. Every bought-item helper was audited: Hylian Shield, nuts and sticks also gained
+actual-inventory forms; tunics already had them. Bottle refills' capabilities require `has_bottle`; all native
+Bombchu bundle counts are recognized. Thirty-five native sale variants plus eight equal-count chest-ammo
+aliases may occupy shops. No custom or stand-in displays in seeds.
+
+Wallet capacity is 200/500/1000 (`PouchActorInfo`, section 12), not N64's. Tunics cost 600 and need two upgrades.
+Tunics are restricted to adult-accessible shops; Market stays child-only. Kokiri's five post-Mido releases,
+Bombchu Shop's post-Dodongo gate, Bazaar's bomb-slot gate, and the potion shops' acquired-Blue-Fire gate remain
+in sourced catalog rules. The latter is conservative and needs a played confirmation; no stock/release field
+is discarded to make a seed pass. Test per rule: `tests/test_shop_logic.py`.
+
+`make_seed` registers shops through Track C's extra patch steps; the common writer composes chest/shelf edits,
+checks compression, updates the shared size table and builds before writing. `--shuffle Shop` alone and
+`--shuffle Chest Shop` are supported. Live slice CLI runs: seed 7 Shop-only (8 checks, 4 spheres, 6 resources);
+seed 22 combined (20 checks, 3 spheres, 10 resources). Seed 22 puts the Deku Shield in KF Shop Item 3 at 20,
+reachable in sphere 1. Both are search/data evidence, not a game certification; whole-game chest expansion
+and chronological age-model integration remain the other tracks' work.
