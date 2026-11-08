@@ -116,9 +116,12 @@ Built by `E:/OOTRemake/work/r6-hints/make_test.py` through `clawshot.patch.text`
 | `Mals/USen.Product.110.sarc.zs` | `GossipStone.msbt`: `GOSSIP_KOKIRI_FOREST_01` a custom line naming the Boomerang through `item_name` (USen `Item_Boomerang` key); every other stone label "Clawshot test stone" and its label; each line keeps the stone's opening style tags | 2,373,416 -> 2,371,192 | 2,373,752, unchanged |
 
 The size table is not written (no entry had to grow). The launcher `Test - gossip-kf-line.bat` was copied from
-round 5's `Test - chest-ocarina-storms.bat`: it starts `E:\Games\Hookshot\hookshot.exe` only, with `HOS_FS_OVERLAY` at
-`gossip-kf-line\romfs` and its own empty user folder `user-gossip-kf-line`, the log to
-`gossip-kf-line\hookshot_log.txt`. Not run by me (checked by reading it). Only the English (US) archive is changed:
+round 5's `Test - chest-ocarina-storms.bat`. For Hookshot 2.0.1 (where `E:\Games\Hookshot\hookshot.exe` is a launcher
+that ignores `--user` and opens the main save) it starts the game itself, `E:\Games\Hookshot\bin\hookshot.exe`, only,
+with `HOOKSHOT_NO_UPDATE_CHECK=1`, and stops if that exe is missing. It sets `HOS_FS_OVERLAY` to
+`gossip-kf-line\romfs`, uses its own empty user folder `user-gossip-kf-line` and logs to
+`gossip-kf-line\hookshot_log.txt`; `make_test.py` writes the same file. Not run by me (checked by reading it). Only the
+English (US) archive is changed:
 Kareem's game runs `en-US` (`oe: language en-US` in round 5's logs), which is `USen` [inference from the name].
 
 **What Kareem should do and see** (a new game; nothing else is changed, so the intro plays as usual):
