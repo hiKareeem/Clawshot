@@ -1,0 +1,4 @@
+[exits."Zoras Fountain"."ZF Hidden Cave"]
+rule = "can_use(Silver_Gauntlets) and can_use(Lens_of_Truth)"
+was = "can_use(Silver_Gauntlets) and can_blast_or_smash"
+source = "https://www.eurogamer.net/all-gold-skulltulas-locations-zelda-ocarina-of-time (Zora Fountain Silver Rock): Silver Gauntlets lift the grey rocks and Lenses reveal invisible Skulltulas in the tunnel; the extra bombable rocks are explicitly original-version-only. Nintendo Life token 56 agrees on Gauntlets/Lenses. Lensless traversal remains unverified."
