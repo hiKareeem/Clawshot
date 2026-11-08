@@ -88,6 +88,20 @@ def test_with_the_mask_a_stone_is_read_only_by_child_holding_it():
             assert hint.location != "Hut Chest"  # no stone is readable without the mask
 
 
+def test_with_the_mask_no_hint_names_an_item_needed_to_get_the_mask():
+    # the mask behind the Hookshot on the cliff; the Bow, also needed for the goal, in the hut
+    behind = seed(0).placements | {"Cliff Chest": "Mask of Truth", "Hut Chest": "Bow"}
+    assert hints.mask_prerequisites(seed(0, behind)) == ["Forest Chest", "Cliff Chest"]  # the mask's own chest too
+    named = {"always": set(), "mask": set()}
+    for mode in named:
+        for number in range(30):
+            chosen = hints.choose(seed(number, behind), mode, "strong")
+            named[mode] |= {hint.location for hint in chosen if hint.kind != "barren"}
+    assert "Forest Chest" in named["always"]  # hinted when stones need no mask
+    assert "Forest Chest" not in named["mask"]
+    assert "Hut Chest" in named["mask"]  # the Bow, found after the mask, is still hinted
+
+
 def test_a_shop_refill_is_not_a_major_item():
     refill = seed(0).placements | {"Lake Chest": "Buy Bombchu (8)"}
     kinds = set()

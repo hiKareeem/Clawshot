@@ -24,6 +24,11 @@ def test_dump_every_hint_names_a_placed_item_at_a_stone_readable_without_it(outp
     assert {hint.label for hint in seed.hints} == set(labels.values())
     named = [hint for hint in seed.hints if hint.location is not None]
     assert named, "no hint names a location"
+    if seed.settings.hints == "mask":
+        before_mask = set(stone_hints.mask_prerequisites(seed))
+        print("mask prerequisites:", sorted(before_mask))
+        assert before_mask, "the Mask of Truth needs nothing shuffled"
+        assert not before_mask & {hint.location for hint in named}
     for hint in named:
         assert hint.location in seed.shuffled, hint
         assert seed.placements[hint.location] == hint.item, hint

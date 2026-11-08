@@ -8,7 +8,9 @@ The kinds, their weights and Clawshot's wording are data (``data/hints.toml``); 
 
 - **Readable stones.** A stone is read where its world rule lets Link reach it (``World.hint_stones``); with
   ``mode = "mask"`` only as child holding the Mask of Truth (the remake asks for the mask worn, which only child Link
-  can), as the game does without the ``patch.text.gossip_without_mask`` edit.
+  can), as the game does without the ``patch.text.gossip_without_mask`` edit. Then no hint names a location whose
+  item the mask cannot be reached without (:func:`mask_prerequisites`; Kareem, D26): the player holds those before
+  any stone speaks, so Way of the Hero and the location hints start from the mask.
 - **Where it matters.** A hint naming a location goes only on a stone readable with every other placed item
   collected (OoT Randomizer's ``can_reach_hint``): the stone never needs the item it points at. Hints naming no
   location (barren areas, junk) go on any stone; junk takes the unreadable stones first.
@@ -181,6 +183,20 @@ def required_locations(seed: "Seed", searches: _Searches | None = None) -> list[
     ]
 
 
+def mask_prerequisites(seed: "Seed", searches: _Searches | None = None) -> list[str]:
+    """Shuffled locations, in world order, whose item the Mask of Truth cannot be reached without (the mask's own
+    location among them): with ``mask`` hints the player holds them before any stone speaks. Empty when the mask
+    cannot be reached at all."""
+    searches = searches or _Searches(seed)
+    if not searches().counts.get(MASK_OF_TRUTH, 0):
+        return []
+    return [
+        name
+        for name in seed.shuffled
+        if seed.world.items[seed.placements[name]].progression and not searches(name).counts.get(MASK_OF_TRUTH, 0)
+    ]
+
+
 def choose(seed: "Seed", mode: str = "always", distribution: str = "balanced") -> tuple[Hint, ...]:
     """One hint per live stone of ``seed``'s world (a stone the remake has, linked to a message label), in world
     order. A world without stones gets none."""
@@ -238,6 +254,13 @@ def choose(seed: "Seed", mode: str = "always", distribution: str = "balanced") -
         return False
 
     required = required_locations(seed, searches)
+    if mode == "mask":
+        # A stone is read only once the mask is held: a hint about an item needed to get the mask would come too
+        # late. Such locations are never named (the readability check alone would also refuse them).
+        before_mask = set(mask_prerequisites(seed, searches))
+        required = [name for name in required if name not in before_mask]
+    else:
+        before_mask = set()
     by_area: dict[str, list[str]] = {}
     for name in seed.shuffled:
         if area_of[name] is not None:
@@ -279,8 +302,10 @@ def choose(seed: "Seed", mode: str = "always", distribution: str = "balanced") -
         return True
 
     lists = data["lists"]
-    always = [name for name in seed.shuffled if name in set(lists["always"])]
-    hintable = [name for name in seed.shuffled if not _restricted(seed, seed.placements[name])]
+    always = [name for name in seed.shuffled if name in set(lists["always"]) and name not in before_mask]
+    hintable = [
+        name for name in seed.shuffled if not _restricted(seed, seed.placements[name]) and name not in before_mask
+    ]
     sometimes = [name for name in hintable if name in set(lists["sometimes"])]
     majors = [name for name in hintable if _major(seed, seed.placements[name])]
     junk_lines = len(data["wording"]["junk"])

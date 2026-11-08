@@ -16,7 +16,7 @@ Where the game's text comes from (``03-game-data.md`` section 22):
 - **Hints** (round 7): :func:`hint_changes` writes each stone's hint (from ``clawshot.generate.hints``) into the
   ``GossipStone`` messages of every language archive given, wrapped to the stone's box (two rows a page) in the
   stone's own style, the filled-in names coloured; with stones that speak without the mask, the flow edit too. The
-  text is English in every language (provisional); item names are the game's English ones (:func:`item_names`).
+  text is English in every language (D26, Kareem); item names are the game's English ones (:func:`item_names`).
 """
 
 from collections.abc import Callable, Iterable, Mapping, Sequence

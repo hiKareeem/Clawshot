@@ -117,7 +117,7 @@ def make_seed(
 
 
 def hint_step(romfs: str | Path, seed: Seed, table: item_actors.ItemActors) -> tuple[dict[str, str], FileChanges]:
-    """The seed's hints as text changes: every language archive's stone lines (English, provisional) and, with
+    """The seed's hints as text changes: every language archive's stone lines (English: D26) and, with
     ``hints = "always"``, the flow that lets stones speak without the Mask of Truth. Returns the item names used."""
     names = text.item_names(romfs, [hint.item for hint in seed.hints if hint.item], table)
     catalog = location_names.load()
