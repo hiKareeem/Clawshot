@@ -62,8 +62,8 @@ headers; skipped only those event graphs, not a failed boss module; no decoder s
 The eight Logic_Create contracts above come from successfully decoded room graphs, not that failed parse.
 
 First thread post command returned exit 1: `bermuda: no thread cs-r7`. No unchanged retry or prohibited thread
-creation. This report retains the intended post: Track C ordered work and isolated shared commits; section 27
-waits for sections 25/26. No other track's files edited. Python LSP unavailable (only marksman configured).
+creation. Read-only store diagnostics show threads through `cs-r6`, but no `cs-r7`; HOME/USERPROFILE are
+`C:\Users\hi`, no BERMUDA override. Intended posts are retained here. Python LSP unavailable (marksman only).
 
 ## Item 2: King Dodongo test output
 
@@ -138,9 +138,48 @@ Checks:
   other pack members, exact inverse component diff, non-growth allocation and backup SHA256/static launcher
   checks: **passed**. No game/launcher execution or token gameplay acceptance.
 
-## Remaining ordered item
+## Item 4: default-off BossHeart seed integration
 
-4. Default-off BossHeart seed integration for reviewed native pickups.
+Item 3 committed as `3347c7c`. `drops.seed_setup` links every selected BossHeart to exactly one saved
+census/definition Hash, uses the real remake pool, and intersects existing per-item holds with types other
+than BossHeart for every non-native pool item. This reuses `allowed()` and the existing constrained-filler
+priority stage: normal non-pickups cannot bypass policy through fast fill. No second fill algorithm,
+new setting field, alias, or generate/fill.py edit. Native destinations use the five-item palette in item 1.
+Unmoved Heart Containers are left untouched. Boss rules and existing exclusions stay unchanged.
 
-Section 27 will be appended after sections 25/26 on an authorized integrated base; this file holds its source
-material meanwhile. No out-of-order section or placeholder is added to the shared research file.
+Automatic `make_seed` registration, CLI choice and the new Heart Container chest-actor mapping are
+separate shared-file-only commits:
+
+| Commit | Shared file / contract |
+|---|---|
+| `f60c2c7` | `data/item_actors.toml`: Heart Container -> Obj_Heart_Container; chest acceptance unplayed |
+| `96ce2e3` | `patch/__init__.py`: one census read, actual-pool restrictions, BossHeart PatchStep; updated Token refusal |
+| `1e31f4d` | `__main__.py`: BossHeart choice/help, no default change |
+
+**Claude/reviewer: these are the intended shared-file posts; cs-r7 is absent in this process's store.**
+No changes to settings.toml, pyproject.toml, uv.lock, gifts, get-item models or other tracks' owned code.
+Section **27** is now appended after existing section 24 (in increasing numeric order); integrate 25/26
+ahead of 27 when those tracks arrive. No placeholders or unauthorized rebase needed.
+
+### Exercised integration and diagnosed failures
+
+- `uv run pytest tests/test_drops.py tests/test_drops_seed.py -q`: **16 passed**; twenty actual synthetic fills
+  prove non-native progression and normal filler cannot land on hearts, preserve pool counts and prior holds,
+  and replay effective CS1 settings. Unlinked/unsaved hearts refuse before a seed can use them.
+- The first real seed test printed `no actor for 'Heart Container' in item_actors.toml`. Diagnostic lookup
+  printed mapping `None`, native pickup `Obj_Heart_Container`. The isolated mapping commit addresses that
+  exact missing pool grant; no retry/logic/goal relaxation.
+- Aimed dump rerun: `OOT_ROMFS=... uv run pytest -m dump tests/test_drops_seed_dump.py -q -s
+  --basetemp E:/OOTRemake/work/r7-drops/pytest-boss-seed-mapped`: **1 passed**. Whole-world Chest+BossHeart
+  seed 7 written/read back: all eight assigned native actors; inverse Gyaml diff plus planned chest changes
+  reproduces each entire original Banc, including spawn/groups/save identities.
+- Initial scoped lint printed the CLI help's exact excess width and import ordering. Reordered the imports;
+  a 124-character shortened help was still over 120, so split it into adjacent literals. No behavioral workaround.
+- Actual full CLI: seed 7, `--shuffle Chest Shop Gift Scrub BossHeart --songs anywhere`, default gated
+  return guarantee: **289 checks, 24 spheres, 124 romfs resources**, plus spoiler and play note. Exit **0**.
+- The two-process smoke driver's 180-second deadline expired during its second process, after the successful
+  first output/log. Printed complete first output (126 files), first exit 0 and absent replay directory.
+  Resume only the second replay, preserving the first result, with a 3600-second deadline; result below.
+
+Four complete gates are running on the finished source; ready/handoff evidence follows after they finish.
+No game, launcher, window or live user was touched; all output remains outside the repository.

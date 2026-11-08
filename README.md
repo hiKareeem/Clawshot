@@ -37,6 +37,11 @@ all twelve songs in chests. Only Storms has been played from a chest; the other 
 and are inferred. Other gift-only items remain on gifts until individually observed in a chest; the sourced
 allowlist in `settings.toml` currently permits the Fairy Ocarina.
 
+`--shuffle Chest BossHeart` adds the eight boss-heart checks (off by default), restricted to native heart,
+heart-piece, shield and red-rupee pickups. Boss pickup persistence and Heart Containers from chests still need
+Kareem's in-game acceptance. `--shuffle Token` remains unavailable; the native-token grant experiment is global,
+not per-location tokensanity (`plans/rounds/r7-drops.md`).
+
 `--shop-prices vanilla` (default) keeps original slot prices; `affordable` makes every shuffled shop item
 exactly 10 rupees. `--cheap-deku-shield` (provisionally on) prices a Deku Shield in Kokiri shop at 10 even
 without Shop shuffle; `--no-cheap-deku-shield` disables it. Exact prices replace conditional discounts.

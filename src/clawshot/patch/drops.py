@@ -6,11 +6,16 @@ Logic_Create gates and the pending King Dodongo Save/Continue check.
 """
 
 from collections.abc import Mapping, Sequence
+from dataclasses import replace
 
+from clawshot.census.definitions import Definition
 from clawshot.census.scan import HEART_CONTAINER, Location
 from clawshot.formats import byml
+from clawshot.generate import Settings
+from clawshot.generate.fill import shuffled_locations
 from clawshot.patch.plan import PatchError
 from clawshot.patch.write import FileChanges
+from clawshot.world.model import World
 
 SHUFFLE = "BossHeart"
 HEART = "Obj_Heart_Container"
@@ -69,3 +74,49 @@ def _transform(path: str, targets: Mapping[int, str]):
         return out
 
     return transform
+
+
+def seed_setup(
+    world: World,
+    settings: Settings,
+    census: Sequence[Location],
+    definitions: Sequence[Definition],
+    vanilla: Mapping[str, str],
+):
+    """Use existing per-item type restrictions, including normal filler's priority.
+
+    Restrict non-native pool items away from BossHeart, intersecting prior holds.
+    This makes the existing fill place constrained filler before flexible native
+    hearts; no unrestricted fast-fill item can leak into a pickup destination.
+    """
+    shuffled = shuffled_locations(world, settings)
+    checks = [name for name in shuffled if world.locations[name].type == SHUFFLE]
+    locations = {loc.id: loc for loc in census}
+    linked = {}
+    for name in checks:
+        found = [d for d in definitions if d.kind == HEART_CONTAINER and (d.oot_randomizer_name or d.name) == name]
+        if len(found) != 1 or found[0].id not in locations:
+            raise PatchError(f"{name}: expected one census boss heart")
+        loc = locations[found[0].id]
+        if loc.kind != HEART_CONTAINER or loc.actor != HEART or not loc.has_save_flag:
+            raise PatchError(f"{name}: not a saved native boss heart")
+        linked[name] = loc.id
+    held = dict(settings.item_location_types)
+    other_types = tuple(sorted({loc.type for loc in world.locations.values()} - {SHUFFLE}))
+    pool = {vanilla.get(name, world.locations[name].vanilla) for name in shuffled}
+    for item in sorted(pool):
+        if item not in NATIVE_ITEMS:
+            held[item] = tuple(t for t in held.get(item, other_types) if t != SHUFFLE)
+    settings = replace(settings, item_location_types=held)
+
+    def step(placements: Mapping[str, str]) -> FileChanges:
+        targets = {}
+        for name, actor_id in linked.items():
+            item = placements[name]
+            if item not in NATIVE_ITEMS:
+                raise PatchError(f"{name}: {item!r} has no native boss-heart pickup")
+            if (pickup := NATIVE_ITEMS[item]) != HEART:
+                targets[actor_id] = pickup
+        return changes(targets, census)
+
+    return settings, step

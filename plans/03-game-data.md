@@ -1776,3 +1776,79 @@ songs remain family-inferred in opt-in anywhere mode; no new gift experiment act
 **Kareem: confirm the three native presentation paths and four new gift grants, including
 Time replacing Fairy without losing Storms; report the grotto's actual appearance prerequisite.**
 
+## 27. Round 7: boss-heart pickups and native token callback experiment (cs7c)
+
+Build `e0f3ccfa`, read-only dump/save backups. Reproducible probes, outputs and unrun isolated launchers:
+`E:/OOTRemake/work/r7-drops/`; full contracts/commands/questions: `plans/rounds/r7-drops.md`.
+Sections 25/26 belong ahead of this section when their tracks are integrated; no placeholders are added.
+
+### Boss Heart Containers
+
+The eight census `heart_container` checks already correspond to world type `BossHeart`. Each has one
+`ActorLogicSimpleActor` binding in its AiGroup and one membership in each of `SimultaneousGroups` and
+`FarDeleteGroups`. They are placed scripted pickups, not the boss's drop-table item. Creation gates:
+
+| Boss | Heart Hash | Logic_Create source |
+|---|---|---|
+| Gohma | 17948245526767051747 | `Gohma_DefeatBoss` |
+| King Dodongo | 5936534468710061389 | `DodongoCavern_BossGroundChange` |
+| Barinade | 17608884438514432711 | `Get_StoneOfWater_IsAfter_Step13_01_Exp` |
+| Phantom Ganon | 18379569660496940670 | `SageOfForest_IsAfter_Step08_Exp` |
+| Volvagia | 9478330070473364248 | `FireTemple_BossGroundChange` |
+| Morpha | 14426685265732353862 | `SageOfWater` after `Step07_2` |
+| Bongo Bongo | 17599164808183510748 | `SageOfShadow_IsAfter_DefeatBoss_Exp` |
+| Twinrova | 4720088048159616469 | `SageOfSpirit_IsAfter_Step09_01_Exp` |
+
+All eight have a permanent `Bool64bitKey` keyed by their Hash, reset 24/save file 0. Their pickup base
+inherits `ActorGameDataSetting=NoRespawn`. Gohma additionally reads
+`InsideTheDekuTree_Heart_Container_Obtained` to delete its pickup; the room graph writes this from its
+death-related signal. The replacement retains that complete wiring, not a fabricated completion flag.
+
+`patch/drops.py` changes only Gyaml, keeping Hash, Phive placement, room/transform, AiGroup Id/Path/
+Reference and both group memberships. It refuses stale actors or missing binding/memberships.
+Provisional native palette: Heart Container (`Obj_Heart_Container`), Piece of Heart (`Obj_Heart_Piece`),
+Deku/Hylian Shield (`Obj_Shield_Deku`/`Obj_Shield_Hylian`), Red Rupee (`Obj_Rupee_Red`, 20 rupees).
+The shields/rupee worked as freestanding pickups in section 11; persistence at a boss is still unplayed.
+Inventory-only `Item_*` majors are not pickup actors. Fire Arrows remain excluded: retaining an unrelated
+boss script group does not establish the object-specific dependencies absent in round 2's crash.
+
+Opt-in `--shuffle Chest BossHeart` admits the eight existing checks; default remains Chest only.
+Non-native pool items are held away from BossHeart through the existing `item_location_types`, intersecting
+prior restrictions. Constrained normal filler therefore uses the existing priority stage rather than
+unrestricted fast fill. Native destination actors are separate from chest actors (Red Rupee is Obj_ here).
+`Heart Container -> Obj_Heart_Container` is added to the chest actor table for the new shared pool;
+its chest presentation/grant also remains an in-game acceptance question. No boss rewards, quest gates,
+blue warps, key policy, new flags or settings defaults change.
+
+Test: `ingame/Test - dodongo-heart-hylian.bat`, copying nested user-save contents from
+`2026-11-08_1114-main-dodongo`. All six source saves are child, Fire quest DungeonStart, boss-ground-change
+false, target Hash unset, no Hylian Shield. Output changes one Banc (149088 -> 149084 bytes, allocation
+149352 unchanged). **Kareem:** follow `ingame/dodongo-checklist.md`: no early spawn; defeat King Dodongo,
+Hylian Shield instead of a maximum-heart increase; uncollected recovery and no duplicate after
+Save/Continue/re-entry. Observe the overlay-open log and `check_dodongo_save.py`'s read-only saved Hash.
+
+### Gold Skulltulas: keep the native pickup
+
+Section 23's ordinary replacement loses the native token AI. An alternative data experiment changes
+only the native `Obj_Token_Gold` pack's `PouchContentParam.PouchActor` from `Item_Token_Gold` to
+`Item_Boomerang`. The entire `Item_Token_Gold.root.ainb`, including `OneShotGoldTokenDeadAfter`, remains
+byte-identical, as do the enemy's GoldTokenGmdHash overwrite, model, physics, attachment and pickup rules.
+Member shrinks 740 -> 736 bytes (allocation 5984 retained); pack 54636 -> 54628 (allocation 54968 retained).
+No nested resource growth or generic component-size formula is assumed.
+
+This is **global to all Gold Tokens**, not a per-location shuffle. PouchActor is not an exposed instance
+blackboard field. Native GetType, SpecialDeal and fixed maximum 100 stay unchanged; **[INFERENCE]** they
+may still force token-specific grant/count behavior. A preserved callback alone does not prove its engine
+implementation saves the enemy Hash when the pouch identity changes.
+
+`tokens.grant_experiment()` writes `ingame/native-token-boomerang/`. Adjacent
+`Test - native-token-boomerang.bat` copies `2026-11-07_llr-tower-before-pickup` into its own user.
+The ranch tree Hash 341792603838029977 is unset, Boomerang absent; manual slot 01 has nine tokens.
+**Kareem:** follow `native-token-checklist.md`: native-looking token, uncollected recovery, actual Boomerang
+ownership/use versus token count/text/model, then saved Hash and no respawn after Save/Continue.
+No game or launcher has been run by the agent.
+
+`--shuffle Token` remains refused. Per-check selection still needs a reviewed instance grant channel,
+validated distinct actor definitions/registration, or an upstream hook; no global experiment is presented
+as tokensanity. Four-gate and actual CLI/replay results are recorded in the round report.
+
