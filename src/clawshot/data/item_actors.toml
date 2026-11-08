@@ -173,3 +173,5 @@
 [aliases]
 # Chests without an instance Drop__DropActor use this actor rather than the TBox spelling.
 "Obj_Rupee_Green" = "TBox_Rupee_Green"
+# Same Shield pouch/equipment row as TBox_Shield_Deku (both ages Weapon_Shield_Deku); section 28.
+"Obj_Shield_Deku" = "TBox_Shield_Deku"
