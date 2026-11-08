@@ -6,7 +6,9 @@ GoodsList[ShopItemIndex]; its Actor selects the price, pouch item and UI text.
 
 import copy
 import tomllib
+from collections.abc import Callable, Mapping
 from dataclasses import dataclass
+from functools import partial
 from pathlib import Path
 
 from clawshot.formats import byml, sarc, zsdic
@@ -98,3 +100,120 @@ def validate(romfs: str | Path, slots: tuple[Slot, ...] | None = None) -> None:
         price = int(pouch[slot.vanilla_item].get("BuyingPrice", 0)) + int(goods.get("PriceOffset", 0))
         if actor_name(goods["Actor"]) != slot.vanilla_item or price != slot.price:
             raise PatchError(f"{slot.owner}[{slot.index}]: stale sale definition: {goods}, price {price}")
+
+
+@dataclass(frozen=True)
+class Sale:
+    actor: str
+    display: str
+    base_price: int
+    bundle: int = 1
+
+
+def patch_shelves(data: bytes, changes: tuple[tuple[Slot, Sale], ...]) -> bytes:
+    """Replace shelf models, retaining Hash, index, position and seller links.
+
+    Quantity boards belong to the old bundle. Replace their count or remove them
+    for a single item; sold-out boards are controlled by the seller and stay.
+    """
+    document = byml.load(data)
+    actors = {int(actor["Hash"]): actor for actor in document.root["Actors"]}
+    removed = set()
+    for slot, sale in changes:
+        actor = actors.get(slot.id)
+        if actor is None or actor["Gyaml"] != slot.vanilla_item:
+            raise PatchError(f"{slot.file}: shelf {slot.id} no longer holds {slot.vanilla_item}")
+        actor["Gyaml"] = sale.display
+        links = []
+        for link in actor.get("Links", []):
+            board = actors.get(int(link["Dst"]))
+            if board is not None and board["Gyaml"].startswith("Shop_Board_Bundle_"):
+                if sale.bundle == 1:
+                    removed.add(int(board["Hash"]))
+                    continue
+                board["Gyaml"] = f"Shop_Board_Bundle_{sale.bundle:02d}"
+            links.append(link)
+        if "Links" in actor:
+            actor["Links"] = links
+    if removed:
+        document.root["Actors"] = [actor for actor in document.root["Actors"] if int(actor["Hash"]) not in removed]
+        for actor in document.root["Actors"]:
+            if "Links" in actor:
+                actor["Links"] = [link for link in actor["Links"] if int(link["Dst"]) not in removed]
+    return byml.dump(document)
+
+
+def patch_goods(data: bytes, changes: tuple[tuple[Slot, Sale], ...]) -> bytes:
+    """Change the sale as well as its display; preserve the destination's price."""
+    pack = sarc.read(data)
+    members = {}
+    seen = {}
+    for slot, sale in changes:
+        key = (slot.member, slot.index)
+        if key in seen:
+            if seen[key] != sale:
+                raise PatchError(f"{slot.pack}: conflicting sales for {key}")
+            continue
+        seen[key] = sale
+        if slot.member not in members:
+            members[slot.member] = byml.load(pack[slot.member])
+        document = members[slot.member]
+        # Resolve inheritance only to find the existing list; retain all unrelated fields.
+        if "GoodsList" not in document.root:
+            document.root["GoodsList"] = resolve_member(pack, slot.member)["GoodsList"]
+        goods = document.root["GoodsList"][slot.index]
+        if actor_name(goods["Actor"]) != slot.vanilla_item:
+            raise PatchError(f"{slot.pack}: sale {slot.index} no longer holds {slot.vanilla_item}: {goods}")
+        goods["Actor"] = actor_path(sale.actor)
+        goods["PriceOffset"] = byml.I32(slot.price - sale.base_price)
+    for name, document in members.items():
+        pack[name] = byml.dump(document)
+    return sarc.write(pack)
+
+
+def changes(
+    romfs: str | Path,
+    sales: Mapping[str, str],
+    *,
+    displays: Mapping[str, str] | None = None,
+    slots: tuple[Slot, ...] | None = None,
+) -> dict[str, Callable[[bytes], bytes]]:
+    """Decompressed resource transforms for logical slot -> sale actor.
+
+    By default display and sale agree and must be native Shop actors. ``displays``
+    explicitly requests a stand-in experiment, never used by normal seed output.
+    Compression, size-table changes and output validation belong to the writer.
+    """
+    romfs = Path(romfs)
+    slots = load() if slots is None else slots
+    dictionaries = zsdic.Dictionaries.from_romfs(romfs)
+    pouch = {
+        row["__RowId"]: row
+        for row in byml.read(dictionaries.decompress(POUCH_TABLE, (romfs / POUCH_TABLE).read_bytes()))
+    }
+    known = {slot.location for slot in slots}
+    if unknown := sales.keys() - known:
+        raise PatchError(f"unknown shop locations: {sorted(unknown)}")
+    shelves, owners = {}, {}
+    for slot in slots:
+        if slot.location not in sales:
+            continue
+        actor = sales[slot.location]
+        display = (displays or {}).get(slot.location, actor)
+        if not display.startswith("Shop_") or display.startswith("Shop_Board_"):
+            raise PatchError(f"{slot.location}: no native shop display for {display}")
+        if actor not in pouch or not (romfs / f"Pack/Actor/{display}.pack.zs").is_file():
+            raise PatchError(f"{slot.location}: unknown sale actor or display: {actor}, {display}")
+        if actor == slot.vanilla_item and display == slot.vanilla_item:
+            continue
+        row = pouch[actor]
+        sale = Sale(actor, display, int(row.get("BuyingPrice", 0)), int(row.get("BundleActorNum", 1)))
+        if sale.bundle > 1 and not (romfs / f"Pack/Actor/Shop_Board_Bundle_{sale.bundle:02d}.pack.zs").is_file():
+            raise PatchError(f"{slot.location}: no quantity board for bundle {sale.bundle}")
+        if display != slot.vanilla_item:
+            shelves.setdefault(slot.file, []).append((slot, sale))
+        owners.setdefault(slot.pack, []).append((slot, sale))
+    return {
+        **{path: partial(patch_shelves, changes=tuple(rows)) for path, rows in shelves.items()},
+        **{path: partial(patch_goods, changes=tuple(rows)) for path, rows in owners.items()},
+    }

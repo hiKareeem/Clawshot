@@ -17,7 +17,7 @@ The owner pack matters: changing Banc alone does not change the sale definition.
 - Display: shelf `Gyaml`; model/ActorName/PouchContent refs in that actor's pack. Forty-three distinct placed
   native `Shop_*` actors (eight are masks). No native shop display for most chest major items.
 - Sale, stock and releases: seller pack's `Component/ShopParam/*.bgyml`, `GoodsList[ShopItemIndex]`. Most stock is
-  unlimited (`StockNum = -1`); Bombchu Shop stock is finite. Kokiri short stock enables only nuts, shield and one
+  unlimited (`StockNum = -1`), including all eight Bombchu Shop offers. Kokiri short stock enables nuts, shield and one
   stick until `Meet_DekuTree_IsAfter_Step02_Exp`; full/short sellers and shelf copies have complementary Presence.
 - Price: item pack `GameParameter/PriceParam`, reflected in `RSDB/PouchActorInfo`. Per-slot `PriceOffset` and
   `ConditionalPriceOffsetList` modify it. Market Hylian Shield: 80, discounted by 20 on
@@ -45,6 +45,41 @@ After `Meet_DekuTree_IsAfter_Step02_Exp`, `present_DekuSheld` checks whether the
 `HaveTalked_Npc_Kokiri_001_Shop_Child_PresentDekuShield`; `Event116/117` give `Obj_Shield_Deku` through
 `Dm_SY_GetInEvent:GetInEvent_Mask`. This is not an additional pre-Mido free shield; it is a post-Mido replacement
 route. Track D was asked to leave these grants alone pending integration.
+
+## Item 2: native sale patch and three outputs
+
+`shops.changes(romfs, {logical_slot: sale_actor})` builds decompressed resource transforms. It changes each
+age/stock/Alternative shelf's `Gyaml` and each seller pack's active `GoodsList[index].Actor`. Fixed destination
+price is preserved with `PriceOffset = old_slot_price - new_item_base_price`; conditional discounts stay.
+The engine's original stock and release fields stay unchanged. Bundle-number boards follow the new bundle,
+or are removed for a single item (sold-out boards stay). No ActorInfo, PouchActorInfo, message or event change.
+
+All three outputs and **unrun** launchers are under `E:/OOTRemake/work/r5-shops/`; `README.md` there gives the
+full checklist. Each launcher uses its own new-game user folder, based on the round-2 safe launcher:
+
+| Output | Expected experiment | Size-table result |
+|---|---|---|
+| `shield-slot-hylian` | Usual Kokiri shield slot displays/sells Hylian Shield at **40**, not 80; no Deku Shield or its tutorial expected without acquired Deku Shield | 5 files; Adult/Child seller packs raised by 32 each; size table included |
+| `mido-chest-deku` | Mido bottom-left chest Hash 12786193094758345086 gives Deku Shield; get sword and approach Mido; visit shop without buying to check acquired-item tutorial | Child Dynamic grows 510884 → 510924; entry 511176 → 511208; size table included |
+| `shield-display-boomerang` | Shelf stays Deku Shield, sale is `Item_Boomerang` at **40**; inspect selection name/description, merchant, get model/text, inventory and tutorial | Three seller packs only; all fit existing entries |
+
+The third output is a **finding to test**, not proof stand-ins work. Shelf and sale definitions are independent
+in the data and engine flow actions use selected-item game data, but the native NPC selection code may bind
+by actor identity rather than index. **Kareem: does this mismatch sell a Boomerang at all? Which identity drives
+the menu name/description, get model/text and stock?** If it works, a future stand-in setting needs:
+
+- Explicit display actor separate from sale/pouch actor; accurate selection/get text (merchant flavour may remain).
+- Price/conditional offsets based on the sale actor; stand-in experiment preserves 40 with offset +40.
+- Compatible `EventQueryCanAddToPorchByGameData`/category route (bottle refill vs ordinary grant).
+- Per-slot stock/release policy and sold-number identity traced across seller age/short-stock/Alternative copies.
+  The original refill stock is not a demonstrated permanent one-time reward flag. Item-based
+  `SoldOutGameData` (e.g. potion-shop Blue Fire) must not accidentally follow the old item.
+- Kokiri tutorial remains item/history-gated. Do not suppress it to make an experiment look successful.
+
+No game has been run. Data build/readback is complete; `from the overlay` plus the in-game result is still required.
+Synthetic transform tests: **4 passed**. Targeted dump field-diff tests for native and stand-in variants:
+**2 passed**; all other members/fields, including stock/release, match the original. Live output builder printed
+each old/new resource size, checked compression/readback and wrote raised entries only where needed.
 
 ## Coordination and provisional choices
 

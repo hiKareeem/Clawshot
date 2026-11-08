@@ -812,3 +812,11 @@ route, guarded by quest state, equipped shield and its own talked flag; not a fr
 Verification: all 128 shelves match their Banc placement, linked NPC, resolved sale actor and base price
 (`tests/test_shops_dump.py`, 1 passed). Live catalog smoke printed the same 128 and the three Kokiri shield
 copies at 40. No game was run; changed-sale UI, stock persistence and tutorial behavior await Kareem.
+
+Item 2 outputs in `E:/OOTRemake/work/r5-shops/`: native shield-slot Hylian Shield (40 rupees), Mido bottom-left
+chest Deku Shield, and reviewer-requested unchanged shield display with Boomerang sale (40). Data-only
+transforms update both shelves and seller packs, preserve slot prices/conditional discounts, and leave stock
+and release fields intact. Native and mismatched-sale field-diff dump checks pass (2 tests). A mismatched
+display's actual menu/get/stock behavior is unverified; no custom displays or game runs. Player checklist and
+unrun, isolated-user launchers are beside the outputs. Stand-ins need text, price, category, stock persistence
+and sold-out identity review before a seed setting is safe.
