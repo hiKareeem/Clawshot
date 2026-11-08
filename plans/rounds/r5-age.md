@@ -117,3 +117,32 @@ The implemented model rejects temporal circular dependencies, but it does not cl
 softlock-proof. **Kareem: should seeds with free travel off guarantee return after the earliest possible pull,
 or is a spoiler/play-note instruction to finish required child checks acceptable?** Recommended: the guarantee,
 or free travel after its pedestal test, rather than relying only on a play note.
+
+### Item 3 reviewer decision: enforce it provisionally
+
+Reviewer subsequently required default-on `age_return_guarantee`, with off reserved for future play-note mode.
+Implemented in `Search.won()` for actual placement searches, so the existing seed acceptance oracle enforces
+it without altering assumed-fill reachability. It is irrelevant to a child-only goal that never opens travel.
+
+The proof derives mandatory logical item counts from the actual seed: collect the maximal child-only prefix;
+for each non-event inventory count, binary-search the smallest cap with which child-only collection still
+reaches the first-pull event. These minima include prerequisite items on the route (not only the door's direct
+requirements). Start inventory remains available. Then start an adult-only search with exactly those counts
+and the first-pull event; optional child checks/events remain unavailable until the normal gate/pedestal opens.
+Aliases are raw logical counts in that proof, not collected again. Alternative routes with no individually
+mandatory item may be rejected conservatively. `age_return_guarantee = false` skips only this extra guarantee,
+not the chronological two-age model.
+
+An initial direct-door-item prototype rejected vanilla: diagnostic output showed adult meadow false and Saria's
+Song absent. An interim all-other-items-up-front trial also missed it because assuming the stones bypassed
+their own child-dungeon prerequisites. Replaced it with actual-placement count caps, not a special-case song grant.
+Live vanilla smoke then printed Saria's Song, Lullaby, bracelet, Bomb Bag, Boomerang and other actual child
+prerequisites in the mandatory intersection; return safe and won both true (with the vanilla test's explicit
+up-front dungeon-key caveat). Targeted age/search/vanilla run: **20 passed**.
+One diagnostic command imported a test-only helper from the wrong module (printed ImportError); the corrected
+diagnostic constructed the vanilla mapping directly and printed the blocked frontier before the fix.
+
+Additional small request from cs5c: `GanonBossKey` added to `DUNGEON_ITEM_TYPES`, isolated commit `f2dadc2`.
+The first live allowed() smoke expected the Tower chest to be a Castle location; printed region metadata showed
+`dungeon = None`. Corrected the smoke to the real Castle trial (allowed true; Kokiri false), posted the separate
+Tower metadata defect to cs5c for its world integration and permanent fill coverage.

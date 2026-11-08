@@ -115,6 +115,14 @@ class World:
             raise ValueError("age_return_event and age_return_region must both be nonempty strings")
         return event, region
 
+    @property
+    def age_pull_event(self) -> str:
+        """The data-defined first-pull event for the early-return proof."""
+        event = self.settings.get("age_pull_event")
+        if not isinstance(event, str) or not event:
+            raise ValueError("age-return guarantee needs age_pull_event in world settings")
+        return event
+
     def item(self, name: str) -> Item:
         try:
             return self.items[name]

@@ -2,6 +2,9 @@
 
 from dataclasses import replace
 
+import pytest
+
+from clawshot.generate.fill import FillError, check_beatable
 from clawshot.world import ADULT, CHILD, Search, build_world
 from clawshot.world.model import Event, Item
 from clawshot.world.rules import Rule
@@ -78,7 +81,6 @@ def test_adult_start_has_no_child_prefix_before_return():
     assert search.can_reach("Field", ADULT)
     assert not search.can_access(world.locations["Child Key"], CHILD)
     assert not search.won()
-
 
 
 def test_adult_events_do_not_leak_into_child_here_subrules():
@@ -164,3 +166,59 @@ def test_beatable_seed_can_still_softlock_on_an_early_pull():
     prepared.collect_spheres(PLACEMENTS)
     assert prepared.holds("Forest Clear")
     assert prepared.won()
+
+
+def guarantee(world):
+    world.settings.update(age_return_guarantee=True, age_pull_event="Time Travel")
+    return world
+
+
+def test_default_guarantee_rejects_beatable_but_early_pull_unsafe_seed():
+    world = guarantee(age_world(child_key=True))
+    with pytest.raises(FillError, match="goal cannot be reached"):
+        check_beatable(world, PLACEMENTS)
+    world.settings["age_return_guarantee"] = False
+    assert "Child Prize" in sum(check_beatable(world, PLACEMENTS), [])
+
+
+def test_guarantee_accepts_adult_supply_and_mandatory_pull_inventory():
+    adult_supply = guarantee(age_world(child_key=True))
+    adult_supply.items["Hookshot"] = Item("Hookshot", alias=("Key", 1))
+    assert "Child Prize" in sum(check_beatable(adult_supply, PLACEMENTS), [])
+
+    mandatory = guarantee(age_world(child_key=True))
+    index = next(i for i, event in enumerate(mandatory.events) if event.name == "Time Travel")
+    mandatory.events[index] = replace(
+        mandatory.events[index], rule=Rule("Key", lambda c, a, t: c.get("Key", 0) > 0, frozenset({"Key"}))
+    )
+    assert "Child Prize" in sum(check_beatable(mandatory, PLACEMENTS), [])
+
+
+def test_child_only_goal_does_not_need_an_unreachable_return_pedestal():
+    world = guarantee(age_world(child_key=True))
+    world.events = [event for event in world.events if event.name != "Time Travel"]
+    world.goal = Rule("child Key", lambda c, a, t: c.get("Key", 0) > 0, frozenset({"Key"}))
+    assert "Child Key" in sum(check_beatable(world, PLACEMENTS), [])
+
+
+def test_mandatory_counts_include_child_prerequisites_not_just_the_pedestal():
+    world = guarantee(age_world(child_key=True))
+    # The pedestal itself needs only Prize, but obtaining Prize as child needs two Keys.
+    key = world.locations["Child Key"]
+    world.locations["Child Key"] = replace(
+        key, rule=Rule("two Keys", lambda c, a, t: a == CHILD and c.get("Key", 0) >= 2, frozenset({"Key"}))
+    )
+    world.locations["Child Supply"] = replace(key, name="Child Supply")
+    world.items["Bundle"] = Item("Bundle", alias=("Key", 2))
+    index = next(i for i, event in enumerate(world.events) if event.name == "Time Travel")
+    world.events[index] = replace(
+        world.events[index], rule=Rule("Prize", lambda c, a, t: c.get("Prize", 0) > 0, frozenset({"Prize"}))
+    )
+    placements = {"Child Supply": "Bundle", "Child Key": "Prize", "Adult Item": "Hookshot"}
+    search = Search(world)
+    search.collect_spheres(placements)
+    mandatory = search.mandatory_pull_inventory(placements)
+    assert mandatory["Key"] == 2
+    assert mandatory["Prize"] == 1
+    assert "Hookshot" not in mandatory
+    assert search.return_safe(placements)

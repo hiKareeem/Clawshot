@@ -22,12 +22,15 @@ class Search:
     def __init__(self, world: World, items: Iterable[str] = ()) -> None:
         self.world = world
         self.counts: dict[str, int] = {}
+        self._count_caps: dict[str, int] = {}
         self.reached: dict[str, dict[str, int]] = {CHILD: {}, ADULT: {}}
         self._return_gate = world.age_return
         self._return_open = self._return_gate is None
         self._child_counts: dict[str, int] = self.counts if self._return_open else {}
         self._child_collected: set[str] = set()
         self._starting_child = world.settings.get("starting_age", CHILD) == CHILD
+        self._adult_enabled = True
+        self._placements: Mapping[str, str] | None = None
         self.collected: set[str] = set()
         """Locations whose item has been collected (by :meth:`collect_spheres`)."""
         self._pending: dict[str, list[tuple[Exit, int]]] = {age: [] for age in AGES}
@@ -49,6 +52,7 @@ class Search:
             self._reach(age, start, ALL_TIMES if start.time_passes else world.start_tod)
         for item in (*world.start_items, *items):
             self.collect(item)
+        self._initial_counts = dict(self.counts)
 
     def collect(self, name: str) -> None:
         """Add an externally supplied/assumed item to both inventory views."""
@@ -67,11 +71,21 @@ class Search:
     # the search
 
     def _add(self, name: str, count: int) -> None:
-        self.counts[name] = self.counts.get(name, 0) + count
+        value = self.counts.get(name, 0) + count
+        if name in self._count_caps:
+            value = min(value, self._count_caps[name])
+        if value == self.counts.get(name, 0):
+            return
+        self.counts[name] = value
         self._wake(self._by_count.pop(name, ()))
 
     def _add_child(self, name: str, count: int) -> None:
-        self._child_counts[name] = self._child_counts.get(name, 0) + count
+        value = self._child_counts.get(name, 0) + count
+        if name in self._count_caps:
+            value = min(value, self._count_caps[name])
+        if value == self._child_counts.get(name, 0):
+            return
+        self._child_counts[name] = value
         self._wake(self._by_count.pop(name, ()))
 
     def _child_active(self) -> bool:
@@ -128,7 +142,7 @@ class Search:
         self._wake(self._by_region.pop(region.name, ()))
 
     def _expand(self, age: str) -> None:
-        if age == CHILD and not self._child_active():
+        if age == CHILD and not self._child_active() or age == ADULT and not self._adult_enabled:
             return
         queue = self._pending[age]  # _reach and _add append to this same list while we walk it
         reached = self.reached[age]
@@ -154,7 +168,7 @@ class Search:
         return any(self._passes_age(region, rule, age) for age in AGES)
 
     def _passes_age(self, region: str, rule: Rule, age: str) -> bool:
-        if age == CHILD and not self._child_active():
+        if age == CHILD and not self._child_active() or age == ADULT and not self._adult_enabled:
             return False
         counts = self._child_counts if age == CHILD else self.counts
         known = self.reached[age].get(region, 0)
@@ -225,7 +239,68 @@ class Search:
 
     def won(self) -> bool:
         self.update()
-        return self.world.goal(self.counts, None, self.world.start_tod)
+        if not self.world.goal(self.counts, None, self.world.start_tod):
+            return False
+        return self._placements is None or self.return_safe(self._placements)
+
+    def return_safe(self, placements: Mapping[str, str]) -> bool:
+        """Prove the earliest pull can return, without assuming optional child loot.
+
+        Start inventory is always available. Other counts are granted only when capping that count prevents
+        the actual seed's child-only search from reaching the pull. The minima account for prerequisites
+        of items on the route, not just the final door predicate.
+        """
+        if self._return_gate is None or not self.world.settings.get("age_return_guarantee", False):
+            return True
+        event = self.world.age_pull_event
+        self.update()
+        if not self.counts.get(event, 0):
+            return True  # a partial/child-only goal that never reaches a first pull
+        mandatory = self.mandatory_pull_inventory(placements)
+        mandatory[event] = 1
+        proof = self._inventory_search(mandatory, child=False)
+        proof.collect_spheres(placements)
+        return proof._return_open
+
+    def _inventory_search(self, counts: Mapping[str, int], *, child: bool) -> "Search":
+        # Raw logical counts already include aliases: do not collect them a second time.
+        search = Search(self.world)
+        search.counts = dict(counts)
+        search._child_counts = dict(counts)
+        search._starting_child = child
+        search._adult_enabled = not child
+        return search
+
+    def mandatory_pull_inventory(self, placements: Mapping[str, str]) -> dict[str, int]:
+        """A conservative mandatory-count intersection, accounting for the actual seed's child routes.
+
+        Cap each logical item count in a child-only search of the actual placements. The least cap that still
+        reaches the pull is necessary on every route; taking only these minima never assumes optional loot.
+        Alternative requirements may have no individually mandatory item; rejecting such a proof is conservative.
+        """
+        event = self.world.age_pull_event
+        prefix = self._inventory_search(self._initial_counts, child=True)
+        prefix.collect_spheres(placements)
+        inventory = {
+            name: prefix.counts[name]
+            for name, item in self.world.items.items()
+            if prefix.counts.get(name, 0) and item.type not in ("Event", "Drop")
+        }
+        mandatory = dict(self._initial_counts)
+        for name, count in inventory.items():
+            low, high = self._initial_counts.get(name, 0), count
+            while low < high:
+                middle = (low + high) // 2
+                trial = self._inventory_search(self._initial_counts, child=True)
+                trial._count_caps = {name: middle}
+                trial.collect_spheres(placements)
+                if trial.counts.get(event, 0):
+                    high = middle
+                else:
+                    low = middle + 1
+            if low:
+                mandatory[name] = low
+        return mandatory
 
     def collect_spheres(self, placements: Mapping[str, str]) -> list[list[str]]:
         """Collect placed items sphere by sphere until nothing new is reachable, in world order.
@@ -233,6 +308,7 @@ class Search:
         A failed location waits for its region or rule inputs to change. A globally collected check may later
         join the child prefix without granting its item twice or appearing twice in the returned spheres.
         """
+        self._placements = placements
         self._call += 1
         order = {name: i for i, name in enumerate(self.world.locations)}
         self._spots_todo = [
