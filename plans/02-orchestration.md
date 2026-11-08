@@ -23,8 +23,10 @@ skill). This file is the project's own version; where it differs from Overread, 
    (in an app space when the window is open, else a plain `hc` terminal), sends the prompt
    `E:/OOTRemake/work/rounds/r<N>/<agent>.txt` with `hc send` once omp is idle, and writes the terminal address to
    `<agent>.term`. One watcher per agent (`bash E:/OOTRemake/tools/hc_watch.sh <address> <agent>` as a background
-   job) and one on the thread (`thread_watch.sh`). Steer with `hc send <address> "<text>"`. Claude tracks use the
-   default Claude model; one track per round may run on Kareem's OpenAI quota (`openai-codex/gpt-6.1-sol`).
+   job) and one on the thread (`thread_watch.sh`). Steer with `hc send <address> "<text>"`. From round 5 most tracks
+   run on Kareem's OpenAI quota (`openai-codex/gpt-6.1-sol`, the launcher's third field) and one on the default
+   Claude model; Claude reviews (Kareem, 2026-11-08: the Sol track kept working through round 4's Claude usage
+   limit). `hc_watch.sh` stops on done, idle, blocked and error (a provider limit shows as error).
    Recipes and pitfalls: the `herdr` skill's `references/herdr-app-hc.md` and the overread-orchestration skill's
    `references/herdr-core-move.md`.
 4. **During.** Claude answers thread posts and gaps in a spec by steering the agent (a queued note, no restart).
