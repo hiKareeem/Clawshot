@@ -1752,20 +1752,29 @@ areas are a region's `hint` or `dungeon`, or that of the region it is entered fr
 on a stone readable with every other placed item collected, so a stone never needs what it points at. With
 `hints = mask` a stone counts as readable only for child Link holding the Mask of Truth (section 22: the flow asks for
 it held and worn; only child wears masks), and no hint names a location whose item the mask cannot be reached
-without (D26, Kareem: a hint must stay useful from when the mask is held). Lists, weights, area names and wording:
-`data/hints.toml`. Defaults (D26): `always`, English text in every language archive.
+without (D26, Kareem: a hint must stay useful from when the mask is held). Which items a location hint may name follows
+OoT Randomizer: random hints skip items of type `Drop`, `Event` and `Shop` (`get_random_location_hint`,
+`Hints.py:1088-1097`; the remake's own `Buy ...` refills, typed `Item` in the world, count as `Shop`) and nothing else,
+sometimes hints have no item filter (`get_specific_hint`, 1127-1172), item hints name only major items
+(`get_good_item_hint`, 882-891). So a random or sometimes hint may name a Red Rupee, as there. Lists, weights, area
+names and wording: `data/hints.toml`. Defaults (D26): `always`, English text in every language archive.
 
 **Writing.** Each hint replaces its stone's message (`EventFlowMsg/GossipStone.msbt`, label = the stone's `Name`)
 with Clawshot's English line: the stone's opening tags kept (size, colour, voice), rows of at most 60 characters
 (the game's own stone rows reach 65), two rows a page, a page break (group 0 type 4) reopening the size and colour, and
-the filled-in names in colour `0000` (group 0 type 3, the colour other lines use to stress a word), then the stone's
-own colour again. Item names are the game's English (`USen` `ActorMsg/PouchContent.msbt` `<key>_Name`, grammar tags
+the filled-in names in colour `0000` (group 0 type 3, the colour other lines use to stress a word), each closed with
+colour `ffff`. That is how the game ends a highlight: of `USen`'s colour tags following a `0000`, 3046 are `ffff`, 2 are
+`0000` again, none is a line's own colour. 7c's first build closed names with the stone's own `0100`, and in game the
+rest of the line stayed highlighted. Item names are the game's English (`USen` `ActorMsg/PouchContent.msbt` `<key>_Name`, grammar tags
 dropped). Every language archive gets the English lines (provisional). Seed 7 (chests): each Western and Japanese
 archive shrinks (`USen` 2,373,416 -> 2,373,192 bytes, `JPja` -2,416, `EUru` -2,496), while `CNzh` (+1,024), `KRko`
 (+512) and `TWzh` (+992) grow past their size-table entries, which the writer raises (the size table is then written).
 The `GossipStone` flow edit (section 22) is written with `hints = always`; with `mask` the flow stays vanilla.
 
-**In game:** not yet: `E:/OOTRemake/work/r7-hints/seed-shop-7c` (`plans/rounds/r7-hints.md`, item 4).
+**In game** (seed-shop-7c, Kareem, reviewer saw the screenshots): with `always` the four Temple of Time stones speak
+without the mask, wrapping is fine, and facing the temple, left to right, they are `GOSSIP_HYRULE_MARKET_01` to `_04`.
+Bug: after the first name the rest of the line stayed highlighted (closing colour `0100`). Fixed to `ffff` and built as
+`seed-shop-7c-next` (only text files differ from 7b); the fixed colour is not yet seen in game.
 
 ## 26. Round 7: chest get-models and gift actor evidence (cs7b)
 

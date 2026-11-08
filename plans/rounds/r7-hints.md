@@ -4,21 +4,26 @@ Branch `r7/hints`, from main `e498402`. Owns `src/clawshot/generate/hints.py`, t
 `src/clawshot/patch/text.py`, `tests/test_hints*.py`, this file and section 25 of `plans/03-game-data.md`. Scratch
 scripts and decoded data: `E:/OOTRemake/work/r7-hints/` (outside the repo).
 
-Rebased onto main `dfe923a` (the Jabu-Jabu rule and D26); commit ids below are after the rebase (before it:
-abbce51, 7fe1e63, a567b05, 2cb1e98, dded73e, 7fe2e97, 93dde8c, e4c9d43, a341990, in that order).
+Rebased onto main `9b4735c` (round 7 B and C merged, D27/D28); commit ids below are after that rebase. Before it
+(on `dfe923a`): 914d375, 0fb2d53, e7c03dc, 9f2dbd0, 512adb2, e96ff8e, af7cd2d, 86cb02d, a341990, f180296, 10272df,
+b5fcda0, 56a263c, in commit order; before the first rebase (on `e498402`): abbce51, 7fe1e63, a567b05, 2cb1e98,
+dded73e, 7fe2e97, 93dde8c, e4c9d43, a341990.
 
 | Item | Where | Commit |
 |---|---|---|
-| 1 Gossip Stones in the world (shared world files) | `world/translate.py`, translated region files, `world/model.py`, `world/load.py`, `04-world-format.md` | 914d375 |
-| 1 the 40 stones, one label each | `data/world/remake/hint_stones.toml`, `census/hints.py` (`REMAKE_STONES`, `stone_labels`), `tests/test_hints_world.py` | 0fb2d53 |
-| 2 hint selection | `data/hints.toml`, `generate/hints.py`, `tests/test_hints_select.py` | e7c03dc |
-| 3 hint settings (shared files) | `generate/fill.py` (`Settings`), `data/settings.toml`, `__main__.py`, `tests/test_hints_settings.py` | 9f2dbd0 |
-| 4 the stones' lines | `patch/text.py` (hint step), `tests/test_hints_lines.py`, item hints once per item | 512adb2 |
-| 4 seed step, spoiler, play note (shared files) | `generate/__init__.py` (`Seed.hints`, `spoiler`, `play_note`), `patch/__init__.py` (`hint_step`), `tests/test_hints_seed_dump.py` | e96ff8e |
-| 4 fix: shop refills are not major items | `generate/hints.py`, `tests/test_hints_select.py` | af7cd2d |
-| D26 mask rule (reviewer steer) | `generate/hints.py` (`mask_prerequisites`), tests, `settings.toml` comment | 86cb02d |
-| 4 section 25, this file | `plans/03-game-data.md`, `plans/rounds/r7-hints.md` | a341990, then the handoff commit |
-| gate fix: the seed oracle allows the hint text files (shared test, r5's) | `tests/test_seed_dump.py` | f180296 |
+| 1 Gossip Stones in the world (shared world files) | `world/translate.py`, translated region files, `world/model.py`, `world/load.py`, `04-world-format.md` | 43a18ec |
+| 1 the 40 stones, one label each | `data/world/remake/hint_stones.toml`, `census/hints.py` (`REMAKE_STONES`, `stone_labels`), `tests/test_hints_world.py` | 3f03bec |
+| 2 hint selection | `data/hints.toml`, `generate/hints.py`, `tests/test_hints_select.py` | d099e91 |
+| 3 hint settings (shared files) | `generate/fill.py` (`Settings`), `data/settings.toml`, `__main__.py`, `tests/test_hints_settings.py` | 78f0d15 |
+| 4 the stones' lines | `patch/text.py` (hint step), `tests/test_hints_lines.py`, item hints once per item | eab8b5d |
+| 4 seed step, spoiler, play note (shared files) | `generate/__init__.py` (`Seed.hints`, `spoiler`, `play_note`), `patch/__init__.py` (`hint_step`), `tests/test_hints_seed_dump.py` | d91b197 |
+| 4 fix: shop refills are not major items | `generate/hints.py`, `tests/test_hints_select.py` | 4784433 |
+| D26 mask rule (reviewer steer) | `generate/hints.py` (`mask_prerequisites`), tests, `settings.toml` comment | 7bef02d |
+| 4 section 25, this file | `plans/03-game-data.md`, `plans/rounds/r7-hints.md` | 33b36ab, 70787c6, then the final commit |
+| gate fix: the seed oracle allows the hint text files (shared test, r5's) | `tests/test_seed_dump.py` | 62b9e9f |
+| 7c fix: a name ends with colour `ffff` | `patch/text.py` (`RESET`), `tests/test_hints_lines.py` | 57a7fe9 |
+| 7c fix: random hints skip Drop, Event and Shop items | `generate/hints.py` (`RANDOM_SKIP_TYPES`), `tests/test_hints_select.py` | 4552332 |
+| 7c result: the Temple of Time stones settled | `census/hints.py` (`STONE_LINKS` evidence), `data/hints.toml` (`[stones]`) | 35320e0 |
 
 ## Item 1: Gossip Stones as hint locations
 
@@ -181,18 +186,92 @@ hints are `choose(seed, "always", "balanced")`; the text goes through `patch.tex
    broken box or crash), and is anything hard to read? Every stone's line is in `seed-shop-7c\play-note.md`, "Gossip
    Stones", if you meet others.
 
+### Kareem's 7c run, the two fixes and `seed-shop-7c-next`
+
+**What he saw** (reviewer, from his screenshots): facing the temple, left to right, the stones say
+`GOSSIP_HYRULE_MARKET_01` to `_04`, each without the mask; wrapping fine. That is how `STONE_LINKS` already had them
+(Left, Left-Center, Right-Center, Right); 35320e0 records it as in-game evidence and drops "unsettled" from the four
+`[stones]` descriptions. **Bug:** after the first name the rest of the line stayed highlighted.
+
+**Colour.** Printed tags of the written `GOSSIP_HYRULE_MARKET_01`: `0100`, size `P`, voice, "They say ", `0000`,
+name, `0100`, " holds\nthe ", `0000`, "Red Rupee", `0100`, ".". The game never ends a highlight that way. Every
+colour tag (group 0 type 3) in every `USen` message that follows a `0000`: `ffff` 3046 times, `0000` twice, the
+line's own colour never (`E:/OOTRemake/work/r7-hints/colour_probe3.py`). For example, `EventFlowMsg/GossipStone.msbt`'s
+`Talk_13` stresses two words with `0000` and ends them with `ffff`. Lines that open in `0100` and stress a word end it
+with `ffff` too. 57a7fe9 ends each name with `ffff` (`text.RESET`). `test_a_short_line_keeps_the_stone_style_and_colours_the_names`
+now pins `Tag(0, 3, b"\xff\xff")` after each name; the old test pinned `0100`, the bug. Read back from
+`seed-shop-7c-next`: "They say " `0000` "Gerudo Training Ground Like Like Hall Bomb Wall\nChest" `ffff` " holds the "
+`0000` "Red Rupee" `ffff` ".".
+
+**Junk items in hints** (reviewer: stone 01 named a Red Rupee, 02 a Poe). OoT Randomizer, `Hints.py` at `526b4c8d`
+(`E:/OOTRemake/work/r7-hints/ootr/`):
+- random, `get_random_location_hint` (1088-1097): any filled location except items of type `Drop`, `Event` or
+  `Shop`, restricted dungeon items, locked locations, hint exclusions. No junk filter: a Red Rupee can be named.
+- sometimes, `get_specific_hint` (1127-1172): a fixed list of locations; no filter on the item at all.
+- item, `get_good_item_hint` (882-891): `majoritem` only, so never junk.
+
+Clawshot matched item and sometimes already; its random kind lacked the type filter and named shop refills (`Buy
+...`, type `Shop`, or type `Item` for the remake's own refill sizes). 4552332 adds it (`RANDOM_SKIP_TYPES`, and the
+`Buy ` prefix), with `test_a_random_hint_names_junk_but_never_a_shop_refill` (fails without the filter for both a
+`Shop`-typed and an `Item`-typed refill). The Poe on stone 02 was a sometimes hint (`Wasteland Chest` holds `Buy
+Poe`), which OoT Randomizer does not filter either; there a `Buy` item never leaves the shops, here r5's shop shuffle
+puts them in chests. Junk stays nameable, as there (question 4 below).
+
+Hint kinds and named items for 7c (same placements, `balanced`), the first build and `seed-shop-7c-next`:
+
+| Kind | 7c first build | 7c-next |
+|---|---|---|
+| woth | 6 | 4 |
+| barren | 2 | 3 |
+| item | 8 | 13 |
+| sometimes | 9 | 8 |
+| random | 11 | 10 |
+| junk | 4 | 2 |
+
+Random hints, first build: 5 shop refills (Green Potion, 10 Deku Seeds, Blue Fire, 3 Bombchus, 10 Deku Nuts), 4
+rupees, Ice Arrows, a Deku Shield. 7c-next: no refill; 5 rupees, 2 Business Scrub Seeds, a Deku Stick, the Kokiri
+Sword, a Piece of Heart. Every kind moved because one random draw has fewer candidates, which shifts every later draw
+of the hint generator. Observation, not checked: a random hint names logic item `Deku Stick (1)` as "Three Deku
+Sticks" (r5's item-name table).
+
+**The folder.** My first rebuild ran `shutil.rmtree(seed-shop-7c)` while `hookshot.exe` (PID 49340) was running with
+that overlay. It deleted `romfs/`, then stopped on the open `hookshot_log.txt`; I posted it. Two more builds, with only
+`romfs/` removed, then wrote the fixed romfs into that folder while the game ran: one before the rebase onto
+`9b4735c`, one after. Then came the reviewer's stop, and the reviewer restores the romfs from 7b. After the stop
+nothing more was written there. `make_7c.py` now builds `seed-shop-7c-next` (asserting it is not the played folder),
+and no longer rewrites `Play shop seed 7c.bat` (cmd reads a running batch file as it goes). **Rule for this track:
+before deleting or overwriting a folder, check `tasklist /FI "IMAGENAME eq hookshot.exe"`. Never delete or overwrite a
+folder a running game may read (an overlay, its log, its launcher); build into a new folder for the reviewer to swap
+in.**
+
+**`seed-shop-7c-next`** (`E:/OOTRemake/work/r7-hints/`): romfs, `spoiler.json`, `play-note.md`, built on 35320e0. The
+placements are 7b's, beatable in 25 spheres. 7b's 77 files are byte-identical; it adds the stone flow (identical to
+the first 7c's) and the 13 language archives (all changed, nothing else did). The reviewer swaps it into
+`seed-shop-7c` after Kareem quits; the launcher is unchanged. What Kareem should see at the Temple of Time, left to
+right (names highlighted, the rest in the stone's colour, `/` a row break):
+1. "They say Gerudo Training Ground Like Like Hall Bomb Wall / Chest holds the Red Rupee."
+2. "They say Kokiri Forest hides the Goron Tunic."
+3. "They say searching Zora's Domain would only waste the hero's / time."
+4. "They say searching Dodongo's Cavern would only waste the / hero's time."
+
+**Report:** after each highlighted name, are " holds the ", " hides the " and " would only waste ..." back in the
+stone's ordinary colour?
+
 ## Questions for Kareem
 
-1. **`seed-shop-7c`** (item 4): do the Temple of Time stones speak the hints without the mask, which line is far
-   left, and do wrapping and the highlight colour look right?
+1. Answered (7c, above): the Temple of Time stones speak without the mask, `_01` to `_04` left to right; the colour
+   bug is fixed in `seed-shop-7c-next`, which is waiting for the in-game check above.
 2. Answered (D26): `always` by default; `mask` hints start from the mask (modelled, above). English in every archive.
 3. **Distribution:** `balanced` (OoT Randomizer's default) as the default, with `strong` and `useless` as options?
+4. **Junk in location hints:** OoT Randomizer's random and sometimes hints may name junk (a Red Rupee, a Business
+   Scrub Seed). Clawshot now does the same: random hints skip only `Drop`/`Event`/`Shop` items, as OoT Randomizer
+   does. Should random and sometimes hints also skip junk (non-progression items), at the cost of differing from OoT
+   Randomizer?
 
 ## Left for later
 
 - Other hint givers (Skulltula House rewards, Dampé's diary, Sheik) and dual, goal and entrance hints.
-- The Temple of Time pair/row labels and the Deku Tree, maze and Lake Hylia sets: which name is which stone (7c's
-  answer settles the Temple of Time row).
+- The Deku Tree, maze and Lake Hylia sets: which name is which stone (the Temple of Time row is settled, 7c).
 - The HF cow grotto stone's `has_fire_source` and the adult Zora's Domain stone copy are OoT Randomizer's rules,
   not checked in the remake.
 
@@ -204,26 +283,32 @@ hints are `choose(seed, "always", "balanced")`; the text goes through `patch.tex
   `play_note`, `make_seed` hint step; hint seeds now write the size table for `CNzh`/`KRko`/`TWzh`) with e4c9d43
   (D26 mask rule). Handoff post below.
 
-## Gates (on f180296, rebased on main `dfe923a`)
+## Gates (on 35320e0, rebased on main `9b4735c`; only round-file and section 25 commits follow)
 
 ```
-uv run ruff format --check                                  186 files already formatted
+uv run ruff format --check                                  196 files already formatted
 uv run ruff check                                           All checks passed!
-uv run pytest                                               535 passed, 73 skipped (650 s)
-OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump      72 passed, 536 deselected (833 s)
+uv run pytest                                               575 passed, 78 skipped (307 s)
+OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump      77 passed, 576 deselected (764 s)
 ```
 
-The first dump run after the rebase failed 3 tests, `tests/test_seed_dump.py::test_written_files_differ_only_where_the_plan_says[1-3]`:
+Earlier, on f180296 (on `dfe923a`): 186 formatted, check clean, 535 passed / 73 skipped, dump 72 passed. The first
+dump run after the `dfe923a` rebase failed 3 tests, `tests/test_seed_dump.py::test_written_files_differ_only_where_the_plan_says[1-3]`:
 the Kokiri Forest slice's folder listed the 16 language archives and the stone flow (the slice has stones, so it
-gets hints) where the oracle expected only chest files, the intro and the size table. f180296 adds the other steps'
-files to the expected list and checks their size-table entries are raised only to what they need; the three then
-passed (each "other steps: 17 files, size table written"), and the full dump gate above.
+gets hints) where the oracle expected only chest files, the intro and the size table. f180296 (now 62b9e9f) adds the
+other steps' files to the expected list and checks their size-table entries are raised only to what they need. The
+three then passed (each "other steps: 17 files, size table written").
+
+The `9b4735c` rebase had two conflicts. In `patch/__init__.py`, main's `drops` import and this branch's `text` import
+merged into one line. In `03-game-data.md`, section 25 now sits before main's 26 and 27.
 
 ## Handoff
 
-Commits on `r7/hints` (rebased on `dfe923a`): 914d375 world (stones as hint locations, shared), 0fb2d53 the 40
-stones and labels, e7c03dc hint selection, 9f2dbd0 settings (shared), 512adb2 the stones' lines, e96ff8e seed step,
-spoiler and play note (shared), af7cd2d shop refills not major, 86cb02d the D26 mask rule, a341990 round file and
-section 25, f180296 the seed oracle test (shared), then this commit. Checked: the four gates above, the CLI smoke,
-`seed-shop-7c` built, read back and compared with 7b by SHA-256. Left: Kareem's in-game check of `seed-shop-7c`
-(item 4), the distribution question, other hint givers and the unsettled stone names (above).
+Commits on `r7/hints` (rebased on `9b4735c`): 43a18ec world (stones as hint locations, shared), 3f03bec the 40 stones
+and labels, d099e91 hint selection, 78f0d15 settings (shared), eab8b5d the stones' lines, d91b197 seed step, spoiler
+and play note (shared), 4784433 shop refills not major, 7bef02d the D26 mask rule, 33b36ab round file and section 25,
+62b9e9f the seed oracle test (shared), 70787c6 gates and handoff, 57a7fe9 names end with colour `ffff`, 4552332
+random hints skip Drop/Event/Shop items, 35320e0 Temple of Time stones settled, then this commit. Checked: the four
+gates above, `seed-shop-7c-next` built, read back and compared with 7b and with the first 7c by SHA-256. Left:
+Kareem's look at `seed-shop-7c-next` (colour back after each name), questions 3 and 4, other hint givers and the
+unsettled stone names (above).
