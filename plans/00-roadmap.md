@@ -497,3 +497,75 @@ Owns `plans/playtest/` (new) and `plans/rounds/r5-playtest.md`; no code.
 For round 6 (to agree with Kareem): player-facing location descriptions for spoilers (Mido's chests are mirrored
 against the N64 names); a "songs anywhere" setting; gift items in chests as each is tested; the logic-session
 answers as they come; the rupee economy for early shop purchases.
+
+## Round 6 (M2 settings string and readable spoilers; M3 hints, scrubs and tokens begin)
+
+Kareem agreed, 2026-11-08 ("go ahead and continue"); he plays `seed-shop-7` meanwhile. Four tracks, Bermuda thread
+`cs-r6`, herdr-core. New sections of `plans/03-game-data.md`: 20 (A), 21 (B), 22 (C), 23 (D), each appended in number
+order. The round 5 rules on shared files carry over (a small change to another track's file is its own commit,
+posted). No Hookshot build. Track C runs on the default Claude model, the others on `openai-codex/gpt-6.1-sol`.
+
+### Track A: readable locations (`r6/names`)
+
+Owns `src/clawshot/data/location_names.toml` (new), the spoiler and play-note code (`spoiler()` in
+`src/clawshot/generate/__init__.py`), `tests/test_names*.py`, `plans/rounds/r6-names.md`, section 20.
+
+1. For every shuffled location (chests first, then shops, gifts, the Great Fairies): a short player-facing name and a
+   one-line "where" (area, room, what you see; dungeon room numbers mean nothing to a player), from the placement
+   data (positions, the room's doors and landmarks) and guides (facts only, cite the URL). Mido's house, settled in
+   game: walking in, the far-left chest is Hash `4555665598794293658` (OoT Randomizer's "KF Midos Top Right Chest")
+   and the far-right one `9725242744547055868` ("Top Left"); say how the middle two map.
+2. Every place where an OoT Randomizer name was matched to a remake chest by position or by guess (track C's
+   symmetric pairs: Goron City maze blue chests, Gerudo Training Ground lobby and heavy-block chests, Spirit
+   invisible pair, Fire's timed scarecrow-room chests; Mido's house): is the match only a label, or do the
+   vanilla item or the rule differ between the pair? List any that change logic.
+3. The spoiler and the play note show the player-facing name and "where" next to the OoT Randomizer name. A test
+   that every shuffled location has both.
+
+### Track B: settings (`r6/settings`)
+
+Owns `src/clawshot/generate/fill.py`'s `Settings` and `src/clawshot/__main__.py`, the price part of
+`src/clawshot/patch/shops.py`, `src/clawshot/data/settings.toml` (new), `tests/test_settings*.py`,
+`plans/rounds/r6-settings.md`, section 21.
+
+1. A settings string (M2): every setting (shuffled kinds, dungeon items, logic options, fast start, free travel, the
+   return guarantee, the new ones below) in one short string; `--settings <string>` and `--print-settings`; the
+   spoiler records it; the same string and seed give byte-identical files (a test). Defaults written in one place.
+2. `songs`: `song` (default, D23) or `anywhere`. Gift items allowed in chests: a list in `settings.toml` of actors
+   seen working in a chest (the Fairy Ocarina, the Song of Storms so far), each with its source; only those leave
+   gift locations.
+3. Prices: `shop_prices` = `vanilla` or `affordable` (every shuffled shop item 10 rupees, as Ship of Harkinian and
+   OoT Randomizer offer), and `cheap_deku_shield` (the Kokiri shop's Deku Shield at 10 rupees whether or not shops
+   are shuffled; default on, provisional: Kareem counted 36 guaranteed free-standing rupees in the forest outside
+   Mido's house and seed 22 needed nearly all of them). Through `GoodsList` `PriceOffset`, which the shop tests showed
+   working; the logic's wallet rules use the patched price. One test output in `E:/OOTRemake/work/r6-settings/`.
+
+### Track C: text and Gossip Stones (`r6/hints`, Claude)
+
+Owns `src/clawshot/formats/msbt.py` (new), `src/clawshot/census/hints.py` (new), `src/clawshot/patch/text.py`
+(new), `tests/test_msbt*.py`, `tests/test_hints*.py`, `plans/rounds/r6-hints.md`, section 22.
+
+1. `formats/msbt`: read and write the game's message files (round 4 read them for the Great Fairies' lines with a
+   scratch script) from the format, no GPL code. Every message file in the dump round-trips (byte-identical or
+   tree-equal, say which) in a `dump` test.
+2. A census of Gossip Stones: every stone (Banc actor), how it picks its text (actor parameter, flow, message id),
+   and whether it needs the Mask of Truth; the other hint givers (Sheik, the owl, the Kakariko Skulltula house).
+3. Item-get text: what decides the get window's text and model for an item from a chest, an NPC and a shop (the song
+   in a chest showed a green rupee), and how a patch would name an item in an NPC's line.
+4. One test output (`E:/OOTRemake/work/r6-hints/`): a Gossip Stone Kareem can reach early saying a custom line, with
+   what he should see. A short design note for hints in round 7 (OoT Randomizer's hint kinds, which fit the remake).
+
+### Track D: scrubs and Skulltula tokens (`r6/tokens`)
+
+Owns `src/clawshot/patch/scrubs.py` and `src/clawshot/patch/tokens.py` (new), `tests/test_scrub*.py`,
+`tests/test_token*.py`, `plans/rounds/r6-tokens.md`, section 23.
+
+1. Deku Scrubs (21 in the census): how each sells (actor parameters, flow, price), which are one-time checks, and a
+   patch that changes one scrub's item; a test output.
+2. Gold Skulltula tokens: how a token is given (the enemy's death, the token actor, its flag), whether a token's
+   actor can be swapped for another item (OoT Randomizer's tokensanity), and the House of Skulltula rewards as gift
+   checks (are they in the gift census?). A patch and a test output for one early token, if the data allows it.
+3. Both as locations the fill can use behind `--shuffle Scrub` and `--shuffle Token` (off), only for what passed
+   review; their in-game tests decide the defaults later.
+
+### After round 6
