@@ -410,3 +410,25 @@ Verification: `uv run pytest tests/test_world_remake_adult_desert_colossus.py -q
 with daytime restrictions explicitly ignored (isolating collection reach) printed adult Hookshot false,
 adult Longshot true, child Longshot false, child Boomerang true. In-game: visit the north-west cliff at night
 in each age and test those collection ranges.
+
+### Shadow/Spirit source-review follow-up
+
+Complete room-19 actor enumeration confirms no spike-wall pot; removed that N64 location rather than merely
+gating it behind the fifth key. Seven N64 freestanding-heart slots also have no direct heart placement in the
+dump, but dynamic drops/spawns have not been ruled out, so their existence remains unresolved.
+
+**Kareem: do the falling-spikes cube and ship cube require any strength upgrade? Can the falling-spikes token
+be reached by riding the ceiling without Hookshot and without taking damage? Do the seven old freestanding
+heart pickups still exist, particularly on the absent Time Block/scarecrow dead end?** Eurogamer documents
+the spike ride as normal, but is silent on strength. Read-only `Obj_MovableBox_A_05` pack inspection shows no
+explicit `MovableBoxType` override (unlike the silver block), which is not proof of the engine default.
+Kept the conservative inherited strength/Hookshot predicates instead of promoting guide silence to a new rule.
+Spirit's two hand targets support a possible direct grapple, but do not prove its unobstructed range; that
+alternative remains the existing in-game question. No extra Longshot gates were inferred from item-name
+wording alone on the Spirit upper route.
+
+The falling-spikes token now additionally allows the documented cube/ceiling route with the room's existing
+strength requirement; it no longer needs Hookshot merely because N64 labels the ceiling ride a trick.
+The strength-free version remains unverified. Targeted Shadow rerun **8 passed**; live smoke explicitly
+excludes `n64_only` checks, still collects all five keys from zero and wins. The spike-wall pot prints its
+exclusion reason (absent locations remain represented in `World`, but are excluded from placement).

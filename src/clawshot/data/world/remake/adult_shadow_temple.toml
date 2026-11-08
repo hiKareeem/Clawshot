@@ -75,9 +75,8 @@ was = "can_use(Dins_Fire)"
 source = "Banc room 19 (Hash 9221365632831348137, Item_Dungeon_BossKey) is behind the dungeon's fifth small-key door (room 19 Obj_DoorChainLock_A_01 Hash 15182601213658853510). Without this a fill may put the fifth key in the Boss Key chest, unreachable in the remake."
 
 [locations."Shadow Temple Spike Walls Pot"]
-rule = "(Small_Key_Shadow_Temple, 5) and (has_explosives or has_fire_source)"
-was = "True"
-source = "Room 19, behind the room-17 maze web and the fifth small-key door (see Spike Walls Left Chest). Banc room 19 places no Obj_Pot; whether this pot exists is not checked."
+n64_only = "the remake's spike-wall room (Banc room 19) contains its two chests, two ReDeads, spike boards, doors and shutters, but no pot"
+source = "Banc/ShadowTemple Static and Dynamic placements, read-only, build e0f3ccfa; complete room-19 actor inventory. Do not keep the N64 pot as a collectible behind the new lock."
 
 [exits."Shadow Temple Before Boss"."Bongo Bongo Boss Room"]
 rule = "Boss_Key_Shadow_Temple"
@@ -113,3 +112,8 @@ source = "Banc/ShadowTemple Static and Dynamic placement files, build e0f3ccfa (
 rule = "Bombs"
 was = "Bow or (logic_shadow_statue and has_bombchus) or shadow_temple_shortcuts"
 source = "https://www.eurogamer.net/shadow-temple-walkthrough-zelda-ocarina-of-time: place a Bomb beside the cracked brick pillar after the boat to create the bridge. The remake places no Bomb Flower to detonate with the N64 Bow route. N64 Bombchu/statue and shortcut bypasses are unverified."
+
+[locations."Shadow Temple GS Falling Spikes Room"]
+rule = "Progressive_Strength_Upgrade or Hookshot"
+was = "logic_shadow_umbrella_gs or Hookshot"
+source = "https://www.eurogamer.net/shadow-temple-walkthrough-zelda-ocarina-of-time: after moving the cube, cross on the falling spike ceilings, ride one upward and jump to the token ledge. This is a documented normal route, not an unverified N64 umbrella trick. Retain the room's conservative strength requirement for moving the cube pending an in-game check; the inherited Hookshot collection alternative remains."

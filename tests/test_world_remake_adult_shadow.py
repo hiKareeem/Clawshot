@@ -83,3 +83,12 @@ def test_boss_door_requires_the_boss_key():
     assert not search.can_reach("Bongo Bongo Boss Room", ADULT)
     search.collect("Boss Key (Shadow Temple)")
     assert search.can_reach("Bongo Bongo Boss Room", ADULT)
+
+
+def test_falling_spikes_token_has_a_normal_cube_and_ceiling_route():
+    world = shadow_world("Shadow Temple Falling Spikes")
+    search = Search(world)
+    token = world.locations["Shadow Temple GS Falling Spikes Room"]
+    assert not search.can_access(token, ADULT)
+    search.collect("Goron Bracelet")
+    assert search.can_access(token, ADULT)
