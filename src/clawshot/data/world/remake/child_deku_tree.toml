@@ -1,0 +1,60 @@
+# Inside the Deku Tree, as the remake builds it (round 4, track A, cs4a). Format: plans/04-world-format.md,
+# "Overrides". Evidence per entry; the round file (plans/rounds/r4-logic-child.md) lists what was checked.
+#
+# OoT Randomizer's "Deku Tree Lobby" holds floors 1 to 3. In the remake the climb from 2F to 3F passes a vine wall
+# with Skullwalltulas that only the Slingshot clears, and the basement opens only by dropping from 3F into the 1F
+# web, so 3F and everything below 1F need the Slingshot. Seed 3 of round 3 (Slingshot in the basement chest) was
+# beatable in OoT Randomizer's logic and not in the game (plans/00-roadmap.md, "Round 3 result").
+#
+# Guide: Nintendo Life, "Great Deku Tree walkthrough" (Switch 2), 2026-11-05,
+# https://www.nintendolife.com/guides/zelda-ocarina-of-time-great-deku-tree-walkthrough-switch-2
+# Placement data (InsideTheDekuTree_Static/_Dynamic, read by E:/OOTRemake/work/r4-logic-child/actors.py), Banc
+# coordinates in metres, y up; room = DefaultDungeonRoomIndex.
+
+[regions."Deku Tree Top Floor"]
+area = "InsideTheDekuTree"
+dungeon = "Deku Tree"
+source = "remake: 3F of the lobby (room 0 above y 120, Skulltulas at y 127) and the compass room (room 3: compass chest y 120, side chest y 126, Gold Skulltula y 121, the floor switch Obj_StepSwitch_A_02 and three Obj_InsideTheDekuTree_ElevatorLift platforms); Nintendo Life guide, 'Compass (3F)'"
+
+[exits."Deku Tree Lobby"."Deku Tree Top Floor"]
+rule = "can_use(Slingshot)"
+new = true
+source = "Kareem, round 3 seed 3: the Slingshot is needed to climb to the top floor; Nintendo Life guide: the Slingshot shoots down the Skulltulas that block the vine wall up to 3F; data: three Enemy_Skullwalltula on the lobby wall at y 113-116 between the map chest (2F, y 108) and 3F (y 120). Boomerang, Bow and Hookshot are not checked in the remake (question in the round file)"
+
+[exits."Deku Tree Top Floor"."Deku Tree Lobby"]
+rule = "True"
+new = true
+source = "Nintendo Life guide: back down through the switch room to 3F's central column; the vine wall leads down to 2F"
+
+[exits."Deku Tree Top Floor"."Deku Tree Basement"]
+rule = "here(is_adult or can_child_attack or Nuts)"
+new = true
+source = "Nintendo Life guide, 'Jumping into the spider web (3F to B1)': from 3F's central column, jump onto the 1F web (Obj_InsideTheDekuTree_SpiderWeb_A_01, room 0, y 100) to fall into B1. The condition is OoT Randomizer's for the lobby's way down (Deku Tree.json:20), kept"
+
+[exits."Deku Tree Lobby"."Deku Tree Basement"]
+rule = "deku_tree_shortcuts"
+was = "deku_tree_shortcuts or here(is_adult or can_child_attack or Nuts)"
+source = "the basement opens from 3F only (exit Deku Tree Top Floor -> Deku Tree Basement); the shortcut setting stays as OoT Randomizer has it (off by default)"
+
+[locations."Deku Tree Compass Chest"]
+region = "Deku Tree Top Floor"
+source = "data: Obj_TBox_A_02 9284193025315608699 (Item_Dungeon_Compass), room 3 at y 120; Nintendo Life guide: the floor switch by the door raises the platforms to the chest"
+
+[locations."Deku Tree Compass Room Side Chest"]
+region = "Deku Tree Top Floor"
+source = "data: Obj_TBox_A_01 11368028582977069031 (TBox_DekuNutBundle), room 3 at y 126; Nintendo Life guide: through the vent behind the compass chest"
+
+[locations."Deku Tree GS Compass Room"]
+region = "Deku Tree Top Floor"
+source = "data: Enemy_Skulltula_Gold 13609975487234437568, room 3 at y 121; Nintendo Life guide: in the alcove the raised platforms reach, past a Skulltula"
+
+# The Slingshot room: its floating platform breaks under Link, and the way out is a ladder (or door) that drops
+# when the eye switch above the entrance is shot. Data: room 2 holds Obj_InsideTheDekuTree_FallingFloor_A_01/02/03
+# (y 110, by the entrance), Obj_EyeSwitch_A_02 9080063866993537303 (y 114) and
+# Obj_InsideTheDekuTree_FallingLadder_A_01 (y 116) above the entrance door; both chests are reached by vines after
+# the drop (Slingshot chest y 112, side chest y 116). OoT Randomizer's room has no exit (it is a dead end there).
+
+[exits."Deku Tree Slingshot Room"."Deku Tree Lobby"]
+rule = "can_use(Slingshot) or can_use(Bow)"
+new = true
+source = "Kareem, round 3 seed 3: the Slingshot is needed to leave the Slingshot room; Nintendo Life guide: shoot the switch above the door you came through to drop it and escape. The Bow (adult) is OoT Randomizer's other way to hit an eye switch (Deku Tree.json:43), not checked in the remake"

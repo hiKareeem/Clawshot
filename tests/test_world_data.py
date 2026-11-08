@@ -5,13 +5,14 @@ default settings are beatable and reproducible."""
 import os
 import subprocess
 import sys
+import tomllib
 from concurrent.futures import ProcessPoolExecutor
 
 import pytest
 
 from clawshot.generate import FillError, Settings, generate
 from clawshot.generate.fill import check_beatable
-from clawshot.world import ADULT, CHILD, Search, load_spec, load_world, reachable
+from clawshot.world import ADULT, CHILD, DATA_DIR, Search, load_spec, load_world, reachable
 
 SEEDS = 200
 
@@ -25,7 +26,15 @@ def test_the_whole_world_is_ported(world):
     assert world.dangling_exits == []  # every exit leads to a ported region
     assert world.undefined_events == []
     assert world.missing_regions == []
-    assert len(world.regions) == 342
+    # The translated regions; the remake's overrides may add more (rooms OoT Randomizer folds together).
+    with (DATA_DIR / "world.toml").open("rb") as f:
+        files = tomllib.load(f)["files"]
+    translated = []
+    for file in files:
+        with (DATA_DIR / file).open("rb") as f:
+            translated.extend(region["name"] for region in tomllib.load(f)["region"])
+    assert len(translated) == 342
+    assert set(translated) <= world.regions.keys()
 
 
 def vanilla_placements(world) -> dict[str, str]:

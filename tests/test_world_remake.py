@@ -5,6 +5,8 @@ from pathlib import Path
 
 import pytest
 
+from clawshot.generate import Settings, prepare
+from clawshot.generate.fill import FillError, check_beatable
 from clawshot.world import CHILD, WorldError, build_world, load_spec, reachable
 from clawshot.world.load import apply_overrides
 
@@ -141,3 +143,37 @@ def test_an_exit_change_needs_the_translated_rule():
 def test_bad_overrides_are_refused(overrides: dict, message: str):
     with pytest.raises(WorldError, match=message):
         apply_overrides(spec(), [("f", overrides)])
+
+
+# Round 3's playtest slice: Kokiri Forest, the Lost Woods and the Deku Tree, beaten at Queen Gohma.
+SLICE = Settings(areas=("KokiriForest", "LostWood", "InsideTheDekuTree"), goal="'Defeat Queen Gohma'")
+
+
+@pytest.fixture(scope="module")
+def deku_slice():
+    return prepare(load_spec(), SLICE)[1]
+
+
+def test_deku_tree_slingshot_in_the_basement_is_not_beatable(deku_slice):
+    """Round 3 seed 3: the Slingshot in the basement chest. The remake needs the Slingshot to climb to 3F, and the
+    basement opens only from 3F."""
+    vanilla = {name: loc.vanilla for name, loc in deku_slice.locations.items() if loc.vanilla is not None}
+    check_beatable(deku_slice, vanilla)
+    swapped = vanilla | {
+        "Deku Tree Basement Chest": "Slingshot",
+        "Deku Tree Slingshot Chest": vanilla["Deku Tree Basement Chest"],
+    }
+    with pytest.raises(FillError, match="the goal cannot be reached"):
+        check_beatable(deku_slice, swapped)
+
+
+def test_deku_tree_top_floor_and_basement_need_the_slingshot(deku_slice):
+    others = [loc.vanilla for loc in deku_slice.locations.values() if loc.vanilla not in (None, "Slingshot")]
+    without = reachable(deku_slice, others)
+    with_slingshot = reachable(deku_slice, [*others, "Slingshot"])
+    for name in ("Deku Tree Compass Chest", "Deku Tree GS Compass Room", "Deku Tree Basement Chest"):
+        assert not without.can_access(deku_slice.locations[name]), name
+        assert with_slingshot.can_access(deku_slice.locations[name], CHILD), name
+    # The Slingshot room and the map stay open without it: the room traps, it doesn't lock (round file, item 2).
+    for name in ("Deku Tree Map Chest", "Deku Tree Slingshot Chest", "Deku Tree Slingshot Room Side Chest"):
+        assert without.can_access(deku_slice.locations[name], CHILD), name
