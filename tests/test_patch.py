@@ -441,3 +441,18 @@ def test_extra_step_failure_writes_nothing(world, links, fake_romfs, tmp_path):
     with pytest.raises(PatchError, match="gift no longer matches"):
         write(swap_plan(world, links), fake_romfs, out, extra_changes=({CHILD: fail},))
     assert not out.exists()
+
+
+def test_owned_item_substitute_cannot_replace_a_shuffled_reward(world, links, fake_romfs, tmp_path):
+    dicts = zsdic.Dictionaries.from_romfs(fake_romfs)
+    tree = village_tree(CHILD)
+    tree["Actors"][0]["Dynamic"].update(
+        {"Drop__CheckActor": "Item_Bow", "Drop__DropActor_Substitute": "TBox_ArrowBundle_Medium"}
+    )
+    (fake_romfs / CHILD).write_bytes(dicts.compress(CHILD, byml.write(tree)))
+    out = tmp_path / "substitute"
+    write(swap_plan(world, links), fake_romfs, out)
+    changed = byml.read(dicts.decompress(CHILD, (out / "romfs" / CHILD).read_bytes()))["Actors"][0]["Dynamic"]
+    assert changed["Drop__DropActor"] == "TBox_Rupee_Blue"
+    assert changed["Drop__DropActor_Substitute"] == "TBox_Rupee_Blue"
+    assert changed["Drop__CheckActor"] == "Item_Bow"

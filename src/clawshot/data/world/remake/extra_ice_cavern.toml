@@ -1,0 +1,11 @@
+# Round 5 chest identities and conservative route exclusions (cs5c). Ice Cavern: four census chests, three of them
+# OoT Randomizer's (Map, Compass, Iron Boots); the fourth replaces N64's three freestanding red rupees on the
+# push-block room's ledge (those are n64_only in child_ice_cavern.toml).
+
+[locations."Ice Cavern Room 8 Chest (TBox_Rupee_Red)"]
+new = true
+region = "Ice Cavern Behind Ice Walls"
+type = "Chest"
+vanilla = "Rupees (20)"
+rule = "can_play(Song_of_Time)"
+source = "Census 4128092231168513176, push-block room 8 ledge, with three Song of Time blocks below it. Play Time from the far Blue Fire ledge after the ice-block route. https://www.nintendolife.com/guides/zelda-ocarina-of-time-ice-cavern-walkthrough-switch-2."

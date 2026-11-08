@@ -1,0 +1,37 @@
+# Round 5 chest identities and conservative route exclusions (cs5c).
+
+[locations."Gerudo Valley Chest (TBox_Rupee_Red) [Adult]"]
+new = true
+region = "GV Storms Grotto"
+type = "Chest"
+vanilla = "Rupees (20)"
+rule = "False"
+source = "Adult invisible-chest copy shares child spot; remade grotto entrance unresolved, so neither copy is progression (r4-logic-adult.md Gerudo Valley)."
+keep_vanilla = "Adult invisible-chest copy shares child spot; remade grotto entrance unresolved, so neither copy is progression (r4-logic-adult.md Gerudo Valley)."
+
+[locations."Gerudo Valley Chest (Item_ScrubBusinessSeed)"]
+new = true
+region = "GV Octorok Grotto"
+type = "Chest"
+vanilla = "Scrub Business Seed"
+rule = "False"
+source = "Underwater grotto entrance changed from N64 silver-rock route; r4-logic-adult.md Gerudo Valley explicitly leaves its opener unresolved."
+keep_vanilla = "Underwater grotto entrance changed from N64 silver-rock route; r4-logic-adult.md Gerudo Valley explicitly leaves its opener unresolved."
+
+[locations."Gerudo Valley Chest (TBox_Rupee_Green)"]
+new = true
+region = "GV Storms Grotto"
+type = "Chest"
+vanilla = "Rupee (1)"
+rule = "False"
+source = "New grotto chest: pairing the remade grotto entrance to the inherited storms route is unresolved (r4-logic-adult.md Gerudo Valley)."
+keep_vanilla = "New grotto chest: pairing the remade grotto entrance to the inherited storms route is unresolved (r4-logic-adult.md Gerudo Valley)."
+
+[locations."Gerudo Valley Chest (TBox_Rupee_Red) [Child]"]
+new = true
+region = "GV Storms Grotto"
+type = "Chest"
+vanilla = "Rupees (20)"
+rule = "False"
+source = "Child invisible-chest copy shares adult spot; remade grotto entrance unresolved, so neither copy is progression (r4-logic-adult.md Gerudo Valley)."
+keep_vanilla = "Child invisible-chest copy shares adult spot; remade grotto entrance unresolved, so neither copy is progression (r4-logic-adult.md Gerudo Valley)."

@@ -1,0 +1,19 @@
+# Round 5 chest identities and conservative route exclusions (cs5c).
+
+[locations."Graveyard Chest (TBox_Rupee_Red)"]
+new = true
+region = "Graveyard Dampes Grave"
+type = "Chest"
+vanilla = "Rupees (20)"
+rule = "False"
+source = "Damp\u00e9 race repeat rupee reward shares the Hookshot/heart-piece reward spot and minigame state, not an independent progression check (03-game-data.md sections 3/9; r4-logic-child.md Graveyard)."
+keep_vanilla = "Damp\u00e9 race repeat rupee reward shares the Hookshot/heart-piece reward spot and minigame state, not an independent progression check (03-game-data.md sections 3/9; r4-logic-child.md Graveyard)."
+
+[locations."Graveyard Chest (TBox_Rupee_Blue)"]
+new = true
+region = "Graveyard Dampes Grave"
+type = "Chest"
+vanilla = "Rupees (5)"
+rule = "False"
+source = "Damp\u00e9 race repeat rupee reward shares the Hookshot/heart-piece reward spot and minigame state, not an independent progression check (03-game-data.md sections 3/9; r4-logic-child.md Graveyard)."
+keep_vanilla = "Damp\u00e9 race repeat rupee reward shares the Hookshot/heart-piece reward spot and minigame state, not an independent progression check (03-game-data.md sections 3/9; r4-logic-child.md Graveyard)."

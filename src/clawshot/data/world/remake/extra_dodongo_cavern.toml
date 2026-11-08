@@ -1,0 +1,39 @@
+# Round 5 chest identities and conservative route exclusions (cs5c). Dodongo's Cavern: nine census chests, five
+# N64 checks (Map, Compass, Bomb Bag, End of Bridge = 7524527082521156886, Bomb Flower Platform =
+# 11582649900854566065; the Boss Room Chest is n64_only) and the four remake-only chests below. Placement data:
+# DodongoCavern_Static/_Dynamic (E:/OOTRemake/work/r4-logic-child/dc_actors.txt); guide: IGN, "Dodongo Cavern
+# Dungeon Walkthrough" (Switch 2), https://www.ign.com/wikis/ocarina-of-time-remake/Dodongo_Cavern_Dungeon_Walkthrough
+#
+# Room 5 is the lower-Lizalfos reward, not the Bomb Flower platform: its old item-based census link is corrected.
+
+[locations."Dodongo Cavern Room 1 Chest (TBox_Rupee_Blue)"]
+new = true
+region = "Dodongos Cavern Lobby"
+type = "Chest"
+vanilla = "Rupees (5)"
+rule = "has_explosives or Progressive_Strength_Upgrade"
+source = "Census 8607798771661947511, west lobby alcove behind a cracked wall, with a nearby Bomb Flower. Explosives or the Bracelet's flower route; no unverified Hammer alternative. https://www.ign.com/wikis/ocarina-of-time-remake/Dodongo_Cavern_Dungeon_Walkthrough."
+
+[locations."Dodongo Cavern Room 5 Chest (TBox_Rupee_Red)"]
+new = true
+region = "Dodongos Cavern Lower Right Side"
+type = "Chest"
+vanilla = "Rupees (20)"
+rule = "is_adult or Sticks or Slingshot or Bombs or Kokiri_Sword"
+source = "Census 7764016096998075927, lower-Lizalfos arena room 5; appear-chest event DodongoCavern_Gimmick_DefeatLizalfos01. Inherited normal Lizalfos fight rule (Dodongos Cavern.json:55). https://www.ign.com/wikis/ocarina-of-time-remake/Dodongo_Cavern_Dungeon_Walkthrough."
+
+[locations."Dodongo Cavern Room 10 Chest (Item_ScrubBusinessSeed)"]
+new = true
+region = "Dodongos Cavern Climb"
+type = "Chest"
+vanilla = "Scrub Business Seed"
+rule = "has_explosives"
+source = "Census 12253889300578348965, staircase-top ladder in room 10, behind a cracked wall with no Bomb Flower on the upper ledge. https://www.ign.com/wikis/ocarina-of-time-remake/Dodongo_Cavern_Dungeon_Walkthrough."
+
+[locations."Dodongo Cavern Room 16 Chest (Item_ScrubBusinessSeed)"]
+new = true
+region = "Dodongos Cavern Upper Lizalfos"
+type = "Chest"
+vanilla = "Scrub Business Seed"
+rule = "is_adult or Sticks or Slingshot or Bombs or Kokiri_Sword"
+source = "Census 850464708089653824, upper-Lizalfos arena room 16; appear-chest event DodongoCavern_Gimmick_DefeatLizalfos02. Inherited normal Lizalfos fight rule (Dodongos Cavern.json:136). https://www.ign.com/wikis/ocarina-of-time-remake/Dodongo_Cavern_Dungeon_Walkthrough."

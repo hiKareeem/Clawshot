@@ -1,0 +1,10 @@
+# Round 5 chest identities and conservative route exclusions (cs5c).
+
+[locations."Kokiri Forest Chest (TBox_Rupee_Purple)"]
+new = true
+region = "Kokiri Forest"
+type = "Chest"
+vanilla = "Rupees (50)"
+rule = "False"
+source = "Route to the elevated chest above the stick-bag scrub is not established; r4-logic-child.md Kokiri Forest records only its placement."
+keep_vanilla = "Route to the elevated chest above the stick-bag scrub is not established; r4-logic-child.md Kokiri Forest records only its placement."

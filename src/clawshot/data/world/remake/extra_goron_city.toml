@@ -1,0 +1,27 @@
+# Round 5 chest identities and conservative route exclusions (cs5c).
+
+[locations."Goron City Chest (TBox_Rupee_Purple) #1"]
+new = true
+region = "Goron City"
+type = "Chest"
+vanilla = "Rupees (50)"
+rule = "can_use(Silver_Gauntlets)"
+source = "r4-logic-child.md Goron City: fourth maze chest between silver boulders; read-only Banc neighbors Obj_LiftRock_B_01."
+
+[locations."Goron City Chest (TBox_Rupee_Green)"]
+new = true
+region = "GC Grotto"
+type = "Chest"
+vanilla = "Rupee (1)"
+rule = "False"
+source = "Appearing chest uses GoronCity_SecretHole_AppearTreasureBox and a sign puzzle; exact trigger/second-reward dependency unmodeled. r4-logic-child.md Goron City and read-only Banc event-neighbor probe."
+keep_vanilla = "Appearing chest uses GoronCity_SecretHole_AppearTreasureBox and a sign puzzle; exact trigger/second-reward dependency unmodeled. r4-logic-child.md Goron City and read-only Banc event-neighbor probe."
+
+[locations."Goron City Chest (TBox_Rupee_Purple) #2"]
+new = true
+region = "GC Grotto"
+type = "Chest"
+vanilla = "Rupees (50)"
+rule = "False"
+source = "Appearing chest uses GoronCity_SecretHole_AppearTreasureBox2 and a sign puzzle; exact trigger/second-reward dependency unmodeled. r4-logic-child.md Goron City and read-only Banc event-neighbor probe."
+keep_vanilla = "Appearing chest uses GoronCity_SecretHole_AppearTreasureBox2 and a sign puzzle; exact trigger/second-reward dependency unmodeled. r4-logic-child.md Goron City and read-only Banc event-neighbor probe."

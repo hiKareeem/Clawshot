@@ -1,0 +1,10 @@
+# Round 5 chest identities and conservative route exclusions (cs5c).
+
+[locations."Zora Fountain Chest (TBox_Rupee_Purple)"]
+new = true
+region = "Zoras Fountain"
+type = "Chest"
+vanilla = "Rupees (50)"
+rule = "False"
+source = "Adult chest on ruined elevated masonry; collection route remains unverified (r4-logic-child.md Zoras Fountain)."
+keep_vanilla = "Adult chest on ruined elevated masonry; collection route remains unverified (r4-logic-child.md Zoras Fountain)."

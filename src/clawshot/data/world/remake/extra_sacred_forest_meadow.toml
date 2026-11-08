@@ -1,0 +1,9 @@
+# Round 5 chest identities and conservative route exclusions (cs5c).
+
+[locations."Sacred Forest Meadow Chest (Item_ScrubBusinessSeed)"]
+new = true
+region = "Sacred Forest Meadow"
+type = "Chest"
+vanilla = "Scrub Business Seed"
+rule = "is_adult and has_explosives and can_play(Song_of_Time)"
+source = "r4-logic-child.md Sacred Forest Meadow: Business Scrub Seed chest in the clearing behind Song of Time blocks; adult route documented at https://zeldacentral.com/games/ocarina-of-time-remake/walkthrough/sacred-grove-adult/. Unverified top-hole shortcut not allowed."

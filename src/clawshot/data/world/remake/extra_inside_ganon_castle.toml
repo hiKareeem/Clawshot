@@ -1,0 +1,12 @@
+# Ganon's Castle chests the remake adds (D12: shuffled). Banc/InsideGanonCastle build e0f3ccfa, read only.
+# Light trial: room 12 keeps N64's six-chest pattern (three trap chests) and adds this spawned red-rupee chest; room
+# 13 holds the dungeon's one key (Lens-only chest, the world's Light Trial Invisible Enemies Chest as round 4 kept
+# it) and the Lullaby chest. Round 4 (adult_ganons_castle.toml) already left this chest without an N64 name.
+
+[locations."Inside Ganon Castle Room 12 Chest (TBox_Rupee_Red)"]
+new = true
+region = "Ganons Castle Light Trial"
+type = "Chest"
+vanilla = "Rupees (20)"
+rule = "can_use(Lens_of_Truth)"
+source = "https://www.eurogamer.net/inside-ganondorfs-castle-walkthrough-zelda-ocarina-of-time (section 8): locked in the first Light-trial room, use the Lenses to see the Skulltula, defeat it, and open the chest that spawns for a Red Rupee. Banc InsideGanonCastle_Static room 12 Obj_TBox_A_01_NoBake Hash 14962432460641118089 (TBox_Rupee_Red) shown by EventRequestActor 3777237189487284015 InsideGanonCastle_Dungeon_AppaerTreasureBox_12; the room's two Obj_EnemyCounter_A_01 count Enemy_Skulltula_Truth 2728970570046451540 and three Enemy_Keese_Truth (Lens-visible enemies). Lens as the translated Invisible Enemies rule asks, without its trick term; a lensless kill is unverified."

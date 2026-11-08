@@ -1,0 +1,10 @@
+# Round 5 chest identities and conservative route exclusions (cs5c).
+
+[locations."Lost Wood Chest (TBox_Rupee_Purple)"]
+new = true
+region = "Lost Woods"
+type = "Chest"
+vanilla = "Rupees (50)"
+rule = "False"
+source = "Route onto the ledge above the bridge scrub remains an explicit in-game question in r4-logic-child.md Lost Woods."
+keep_vanilla = "Route onto the ledge above the bridge scrub remains an explicit in-game question in r4-logic-child.md Lost Woods."

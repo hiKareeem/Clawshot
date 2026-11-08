@@ -1,0 +1,9 @@
+# Round 5 chest identities and conservative route exclusions (cs5c).
+
+[locations."Death Mountain Crater Chest (TBox_Rupee_Purple)"]
+new = true
+region = "DMC Hammer Grotto"
+type = "Chest"
+vanilla = "Rupees (50)"
+rule = "is_adult"
+source = "r4-logic-child.md Death Mountain Crater: hammer grotto; read-only Banc probe shows two Dinolfos beside the appear-chest event. Adult sword combat; inherited Hammer entrance."

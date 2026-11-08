@@ -1,0 +1,20 @@
+# Fire Temple chests the remake adds (D12: shuffled). Banc/FireTemple build e0f3ccfa, read only.
+# Room 8 (the scarecrow top room, census GS Scarecrow Top) holds three timed chests where N64 has one: the purple
+# rupee 862385681502746018 is proposed as Fire Temple Scarecrow Chest (N64 Rupees (200), the only high-value one);
+# these two red rupees have no N64 name. All three share one route, so the pairing changes no rule.
+
+[locations."Fire Temple Room 8 Chest (TBox_Rupee_Red) #1"]
+new = true
+region = "Fire Temple Boulder Maze Upper"
+type = "Chest"
+vanilla = "Rupees (20)"
+rule = "can_use(Scarecrow)"
+source = "https://www.nintendolife.com/guides/zelda-ocarina-of-time-fire-temple-walkthrough-switch-2 (Boulder maze): Scarecrow's Song at the upper-maze door, Hookshot to Pierre, climb to 5F; the switch there raises two Hookshot posts to three small chests (two Red Rupees, one Purple Rupee). Banc FireTemple_Static room 8 Obj_TBox_A_01 Hash 15073195886628236505 (TBox_Rupee_Red), 1.7 units from the purple and the other red; room 8 Obj_StepSwitch_A_02 and Obj_HookShotTarget_A_01 x2. Same requirement as the translated Fire Temple Scarecrow Chest without its trick term."
+
+[locations."Fire Temple Room 8 Chest (TBox_Rupee_Red) #2"]
+new = true
+region = "Fire Temple Boulder Maze Upper"
+type = "Chest"
+vanilla = "Rupees (20)"
+rule = "can_use(Scarecrow)"
+source = "https://www.nintendolife.com/guides/zelda-ocarina-of-time-fire-temple-walkthrough-switch-2 (Boulder maze): the second Red Rupee of the three timed 5F chests behind the scarecrow climb. Banc FireTemple_Static room 8 Obj_TBox_A_01 Hash 17001858340376096722 (TBox_Rupee_Red); route as Fire Temple Room 8 Chest (TBox_Rupee_Red) #1."

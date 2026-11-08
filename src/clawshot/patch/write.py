@@ -8,7 +8,7 @@ from pathlib import Path, PurePosixPath
 
 from clawshot.census.scan import DEFAULT_CHEST_DROP
 from clawshot.formats import byml, rstb, zsdic
-from clawshot.patch.plan import DROP_KEY, EVENT_KEY, PatchError, Plan
+from clawshot.patch.plan import DROP_KEY, EVENT_KEY, SUBSTITUTE_KEY, PatchError, Plan
 
 FileChanges = Mapping[str, Callable[[bytes], bytes]]
 """Romfs-relative paths to transforms of decompressed file bytes. Transforms must validate their read-back."""
@@ -55,6 +55,9 @@ def patch_tree(tree: dict, path: str, plan: Plan) -> None:
                 f"{change.chest} holding {change.old_actor!r}"
             )
         dynamic[DROP_KEY] = change.new_actor
+        # A_06's already-owned branch must not replace a shuffled progression item with vanilla ammo/rupees.
+        if SUBSTITUTE_KEY in dynamic or "Drop__CheckActor" in dynamic:
+            dynamic[SUBSTITUTE_KEY] = change.new_actor
         if change.event is not None:
             if dynamic.get(EVENT_KEY) != change.event.name:
                 raise PatchError(

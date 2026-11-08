@@ -1,0 +1,54 @@
+# Round 5 chest identities and conservative route exclusions (cs5c).
+
+[locations."Hyrule Field Chest (TBox_Rupee_Red) #1"]
+new = true
+region = "Hyrule Field"
+type = "Chest"
+vanilla = "Rupees (20)"
+rule = "False"
+source = "Adult red-rupee chest near a Poe; exact Fairy Note/appearance trigger not established by r4-logic-child.md Hyrule Field or the read-only actor probe."
+keep_vanilla = "Adult red-rupee chest near a Poe; exact Fairy Note/appearance trigger not established by r4-logic-child.md Hyrule Field or the read-only actor probe."
+
+[locations."Hyrule Field Chest (TBox_Rupee_Red) #2"]
+new = true
+region = "Hyrule Field"
+type = "Chest"
+vanilla = "Rupees (20)"
+rule = "False"
+source = "Adult red-rupee chest near a Poe; exact Fairy Note/appearance trigger not established by r4-logic-child.md Hyrule Field or the read-only actor probe."
+keep_vanilla = "Adult red-rupee chest near a Poe; exact Fairy Note/appearance trigger not established by r4-logic-child.md Hyrule Field or the read-only actor probe."
+
+[locations."Hyrule Field Chest (TBox_Rupee_Red) #3"]
+new = true
+region = "Lake Hylia"
+type = "Chest"
+vanilla = "Rupees (20)"
+rule = "False"
+source = "Adult red-rupee chest near the lakeside Poe; appearance trigger and low-water approach unresolved in r4-logic-child.md Hyrule Field."
+keep_vanilla = "Adult red-rupee chest near the lakeside Poe; appearance trigger and low-water approach unresolved in r4-logic-child.md Hyrule Field."
+
+[locations."Hyrule Field Chest (Item_ScrubBusinessSeed)"]
+new = true
+region = "LLR Tower"
+type = "Chest"
+vanilla = "Scrub Business Seed"
+rule = "False"
+source = "Route to the tower upper chest remains an explicit in-game question in r4-logic-child.md Lon Lon Ranch; the lower crawl-hole heart route does not prove access."
+keep_vanilla = "Route to the tower upper chest remains an explicit in-game question in r4-logic-child.md Lon Lon Ranch; the lower crawl-hole heart route does not prove access."
+
+[locations."Hyrule Field Chest (Obj_Heart_Piece)"]
+new = true
+region = "Hyrule Field"
+type = "Chest"
+vanilla = "Piece of Heart"
+rule = "is_child and at('Hyrule Field', is_adult)"
+source = "r4-logic-child.md Hyrule Field: adult reads Fairy Note 11, child opens its heart-piece chest; https://www.nintendolife.com/guides/zelda-ocarina-of-time-heart-piece-locations-switch-2. Census Hash identifies the note chest."
+
+[locations."Hyrule Field Chest (TBox_Rupee_Red) #4"]
+new = true
+region = "LH Grotto"
+type = "Chest"
+vanilla = "Rupees (20)"
+rule = "False"
+source = "Chest is spawned by TreasureBoxAppear_Magic beside timed candles; a free grotto entry does not prove the fire puzzle solved. r4-logic-child.md Lake Hylia and read-only Banc probe."
+keep_vanilla = "Chest is spawned by TreasureBoxAppear_Magic beside timed candles; a free grotto entry does not prove the fire puzzle solved. r4-logic-child.md Lake Hylia and read-only Banc probe."

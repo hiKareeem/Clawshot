@@ -948,6 +948,40 @@ references. No game boot or crash was needed to diagnose this.
 - **A bought slot restocks** (no "sold out"), the Hylian Shield in the changed slot too. Every native shop item is
   re-buyable equipment or a consumable, so a shuffled slot is a permanent purchase. To check later: with the Deku
   Shield shuffled out of every shop, whether the shopkeeper's `present_DekuSheld` route replaces a burned shield.
+
+## 18. Round 5: whole-game chest seeds (cs5c)
+
+Build `e0f3ccfa`, read-only dump. Per-Hash evidence, commands and unresolved checks: `plans/rounds/r5-seeds.md`;
+scratch inventories and decoded probes are under `E:/OOTRemake/work/r5-seeds/`, never in the repository.
+
+**Chest coverage.** All 184 census chests now have world identities: 164 shuffled, 20 explicit conservative
+exclusions (`remake/extra_<area>.toml`, `keep_vanilla` reason and unreachable rule). The 119 previously unlinked
+entries are accounted for; new remake-only checks use census names rather than invented OoTR identities.
+Business Scrub Seeds and Magic Jars are normal filler. DreamWorld remains out. The Treasure Chest Game reward
+stays vanilla pending D17's contents-swap test.
+
+**Identity corrections.** DC lower-Lizalfos red-rupee reward is Hash `7764016096998075927`; the Bomb Flower
+platform is `11582649900854566065` (Deku Shield). Ganon Water Trial Right is `14404733996390762670` in room 5;
+Spirit Crystal Switch is `7899179288432849355` in room 17 (Business Scrub Seed). Earlier item-only matching had
+paired them incorrectly. Forest Raised Island Courtyard and Well Front Center Bombable/Like Like chests are
+absent from their remake rooms, not extra vanilla items.
+
+**Dungeon ownership.** Ganon's boss key has type `GanonBossKey` and belongs to `Ganons Castle`; the Tower
+region explicitly belongs there too. OoT Randomizer `526b4c8d` uses `Region.py:112-140`'s
+`shuffle_ganon_bosskey` and `HintArea.at` (`Hints.py:475-507`) to inherit the castle identity through the tower
+entrances (`Bosses.json:214-229`). Clawshot's own-dungeon setting likewise permits the key in its tower chest
+and refuses overworld chests. Actual chest-key totals are Forest 5, Fire 8, Water 4, Spirit 5, Shadow 4,
+Well 1, GTG 9, Castle 1; Shadow and Well each have an additional freestanding vanilla key.
+
+**Owned-item substitutes.** Some `Obj_TBox_A_06` chests branch on `Drop__CheckActor`, giving
+`Drop__DropActor_Substitute` when that item is already owned. A changed chest sets the substitute to the same
+placed actor as its primary drop, preventing vanilla ammo/rupees from replacing shuffled progression.
+
+**Still excluded pending play:** elevated KF/LW/ranch/windmill chests; repeat Dampé rupees; GC's sign-puzzle
+rewards; unresolved GF/GV grotto access; adult Field/Lake appearance triggers; LH timed-candle chest;
+ZF upper ruins; Well room 11 fake-floor chest. Exact identifiers, sources and questions are in the extra
+files and round report. None is used by the oracle to supply an item.
+
 ## 19. Round 5: what reads a gift's item, and how each gift check is changed (cs5d)
 
 How it was found (build `e0f3ccfa`; scratch in `E:/OOTRemake/work/r5-gifts/`, `readers.py` reproduces the reads and

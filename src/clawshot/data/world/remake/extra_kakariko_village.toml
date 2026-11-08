@@ -1,0 +1,19 @@
+# Round 5 chest identities and conservative route exclusions (cs5c).
+
+[locations."Kakariko Village Chest (TBox_Rupee_Purple) [Adult Alternative]"]
+new = true
+region = "Kak Windmill"
+type = "Chest"
+vanilla = "Rupees (50)"
+rule = "False"
+source = "Alternative copy of the unresolved upper-windmill chest; not an independent item check (r4-logic-child.md Kakariko)."
+keep_vanilla = "Alternative copy of the unresolved upper-windmill chest; not an independent item check (r4-logic-child.md Kakariko)."
+
+[locations."Kakariko Village Chest (TBox_Rupee_Purple) [Adult]"]
+new = true
+region = "Kak Windmill"
+type = "Chest"
+vanilla = "Rupees (50)"
+rule = "False"
+source = "Upper-windmill chest route is unresolved; its altitude is above the documented windmill heart route (r4-logic-child.md Kakariko). Normal/Alternative Hashes are mutually exclusive copies, not two checks."
+keep_vanilla = "Upper-windmill chest route is unresolved; its altitude is above the documented windmill heart route (r4-logic-child.md Kakariko). Normal/Alternative Hashes are mutually exclusive copies, not two checks."

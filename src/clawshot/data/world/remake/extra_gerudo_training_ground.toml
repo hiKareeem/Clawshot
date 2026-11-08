@@ -1,0 +1,13 @@
+# Gerudo Training Ground chests the remake adds (D12: shuffled). Banc/GerudoTrainingGround build e0f3ccfa, read only.
+# Room 10 (Like Likes) holds four item chests and the trap where N64 has three and the trap: the invisible key
+# 5329807728555596183 is Heavy Block Third; the room-clear red rupee 6897789835137994741 and the wall-bomb chest
+# 3750231902048775592 are proposed for Heavy Block First/Second (both already ask can_blast_or_smash, so either order
+# is safe); this eye-switch chest is the one left without an N64 name.
+
+[locations."Gerudo Training Ground Room 10 Chest (Item_ScrubBusinessSeed)"]
+new = true
+region = "Gerudo Training Ground Like Like Room"
+type = "Chest"
+vanilla = "Scrub Business Seed"
+rule = "can_use(Bow)"
+source = "https://www.eurogamer.net/gerudo-proving-grounds-walkthrough-zelda-ocarina-of-time (section 3): in the Like Like hallway, use the Bow on the eye switch on the upper right wall to reveal another chest. Banc GerudoTrainingGround_Static room 10 Obj_TBox_A_01_NoBake Hash 11754783663699171680 (SpawnType 1) dropped by EventRequestActor 109153443231021184 GerudoTrainingGround_10_FallTreasureBox, which references Obj_EyeSwitch_A_02 Hash 13939821958157812040 (not a Lens-only switch). The room is entered with Bow already (Heavy Block Room exit); a Hookshot hit is unverified."

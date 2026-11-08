@@ -10,7 +10,7 @@ dungeon's own items (maps, compasses, keys), where the chest's dungeon picks it.
 
 import tomllib
 from collections.abc import Mapping
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 
 from clawshot.world.model import Item
@@ -28,6 +28,8 @@ class ItemActors:
     """Logic item -> actor, in file order."""
     sources: dict[str, str]
     """Logic item -> where the pair comes from."""
+    aliases: dict[str, str] = field(default_factory=dict)
+    """Alternate vanilla chest actors -> canonical actor (backwards lookup only)."""
 
     def actor(self, item: str) -> str:
         try:
@@ -37,6 +39,7 @@ class ItemActors:
 
     def item(self, actor: str, dungeon: str | None, items: Mapping[str, Item]) -> str:
         """The logic item a chest holding ``actor`` gives, for a chest in ``dungeon`` (None outside dungeons)."""
+        actor = self.aliases.get(actor, actor)
         names = [name for name, a in self.actors.items() if a == actor]
         if len(names) > 1:
             names = [name for name in names if items[name].dungeon is not None and items[name].dungeon == dungeon]
@@ -51,6 +54,9 @@ class ItemActors:
         unknown = [name for name in self.actors if name not in items]
         if unknown:
             raise ItemActorError(f"item_actors.toml names items the world does not know: {unknown}")
+        for alias, canonical in self.aliases.items():
+            if alias in self.actors.values() or canonical not in self.actors.values():
+                raise ItemActorError(f"invalid actor alias {alias!r} -> {canonical!r}")
         by_actor: dict[str, list[str]] = {}
         for name, actor in self.actors.items():
             by_actor.setdefault(actor, []).append(name)
@@ -63,14 +69,15 @@ class ItemActors:
 
 
 def loads(text: str) -> ItemActors:
-    table = tomllib.loads(text).get("items", {})
+    data = tomllib.loads(text)
+    table = data.get("items", {})
     actors, sources = {}, {}
     for name, entry in table.items():
         if not isinstance(entry, dict) or not isinstance(entry.get("actor"), str):
             raise ItemActorError(f"item_actors.toml: {name!r} needs an actor")
         actors[name] = entry["actor"]
         sources[name] = str(entry.get("source", ""))
-    return ItemActors(actors, sources)
+    return ItemActors(actors, sources, dict(data.get("aliases", {})))
 
 
 def load(path: str | Path = ITEM_ACTORS_TOML) -> ItemActors:

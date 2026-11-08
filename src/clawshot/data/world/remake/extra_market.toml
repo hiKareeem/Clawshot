@@ -1,0 +1,3 @@
+[locations."Market Treasure Chest Game Reward"]
+keep_vanilla = "D17: reward joins shuffle only after its contents-swap in-game test; no passing test recorded yet"
+source = "decisions.md D17; r3-census.md Treasure Chest Game test remains pending"

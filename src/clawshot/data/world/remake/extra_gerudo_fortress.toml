@@ -1,0 +1,10 @@
+# Round 5 chest identities and conservative route exclusions (cs5c).
+
+[locations."Gerudo Fortress Chest (TBox_Rupee_Red)"]
+new = true
+region = "Gerudo Fortress"
+type = "Chest"
+vanilla = "Rupees (20)"
+rule = "False"
+source = "Underground red-rupee chest lies among flying pots and Skulltula; pairing to the old storms grotto/entrance is unresolved (r4-logic-adult.md Gerudo Fortress)."
+keep_vanilla = "Underground red-rupee chest lies among flying pots and Skulltula; pairing to the old storms grotto/entrance is unresolved (r4-logic-adult.md Gerudo Fortress)."

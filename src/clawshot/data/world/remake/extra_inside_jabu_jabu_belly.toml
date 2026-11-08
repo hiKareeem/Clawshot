@@ -1,0 +1,10 @@
+# Round 5 chest identities and conservative route exclusions (cs5c). Inside Jabu-Jabu's Belly: four census chests,
+# three of them OoT Randomizer's (Boomerang, Map, Compass); the fourth is remake-only.
+
+[locations."Inside Jabu Jabu Belly Room 13 Chest (TBox_Rupee_Red)"]
+new = true
+region = "Jabu Jabus Belly Main"
+type = "Chest"
+vanilla = "Rupees (20)"
+rule = "can_use(Boomerang)"
+source = "Census 3609242017501283521, basement south-west room 13 past the swaying floor. Documented route freezes the floor with Boomerang; Hover Boots alternative remains unverified. https://www.ign.com/wikis/ocarina-of-time-remake/Lord_Jabu-Jabu's_Belly_Dungeon_Walkthrough."

@@ -22,6 +22,7 @@ from clawshot.world.model import World
 
 DROP_KEY = "Drop__DropActor"
 EVENT_KEY = "GetEventName"
+SUBSTITUTE_KEY = "Drop__DropActor_Substitute"
 
 
 class PatchError(ValueError):
@@ -99,14 +100,14 @@ def link(world: World, shuffled: Sequence[str], definitions: Sequence[Definition
     by_id = {loc.id: loc for loc in census}
     named: dict[str, list[Definition]] = {}
     for d in definitions:
-        if d.oot_randomizer_name:
-            named.setdefault(d.oot_randomizer_name, []).append(d)
+        name = d.oot_randomizer_name or d.name
+        named.setdefault(name, []).append(d)
     problems = []
     chests: dict[str, list[Location]] = {}
     for name in shuffled:
         found = named.get(name, [])
         if not found:
-            problems.append(f"{name}: no census definition has this oot_randomizer_name")
+            problems.append(f"{name}: no census definition has this oot_randomizer_name or remake name")
             continue
         not_chests = [f"{d.id} ({d.kind})" for d in found if d.kind != CHEST]
         if not_chests:
@@ -125,7 +126,10 @@ def link(world: World, shuffled: Sequence[str], definitions: Sequence[Definition
     vanilla = [
         d
         for d in definitions
-        if d.kind == CHEST and d.area in areas and d.id not in linked and d.oot_randomizer_name not in world_names
+        if d.kind == CHEST
+        and d.area in areas
+        and d.id not in linked
+        and (d.oot_randomizer_name or d.name) not in world_names
     ]
     return Links(chests, {d.id: d.name for d in definitions}, vanilla)
 

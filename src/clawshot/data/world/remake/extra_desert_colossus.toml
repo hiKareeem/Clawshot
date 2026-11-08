@@ -1,0 +1,9 @@
+# Round 5 chest identities and conservative route exclusions (cs5c).
+
+[locations."Desert Colossus Chest (TBox_Rupee_Purple)"]
+new = true
+region = "Colossus Grotto"
+type = "Chest"
+vanilla = "Rupees (50)"
+rule = "True"
+source = "r4-logic-adult.md Desert Colossus: purple-rupee chest in the grotto under the Silver Gauntlets lift rock. Inherited grotto entrance gates access."

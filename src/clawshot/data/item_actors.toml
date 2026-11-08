@@ -35,7 +35,7 @@
 
 "Rupee (1)" = { actor = "TBox_Rupee_Green", source = "KF Midos Bottom Left Chest" }
 "Rupees (5)" = { actor = "TBox_Rupee_Blue", source = "KF Midos Top Left Chest, KF Midos Top Right Chest" }
-"Rupees (20)" = { actor = "TBox_Rupee_Red", source = "Dodongos Cavern Bomb Flower Platform Chest" }
+"Rupees (20)" = { actor = "TBox_Rupee_Red", source = "Dodongo Cavern Room 5 lower-Lizalfos chest; round 5 corrects the old item-based Bomb Flower Platform link" }
 "Rupees (50)" = { actor = "TBox_Rupee_Purple", source = "Gerudo Training Ground Maze Path First Chest, SFM Wolfos Grotto Chest" }
 
 # Ammo: the remake's bundles hold other counts than these OoT Randomizer item names (PouchActorInfo
@@ -72,9 +72,7 @@
 "Boss Key (Water Temple)" = { actor = "Item_Dungeon_BossKey", source = "Water Temple Boss Key Chest" }
 "Boss Key (Spirit Temple)" = { actor = "Item_Dungeon_BossKey", source = "Spirit Temple Boss Key Chest" }
 "Boss Key (Shadow Temple)" = { actor = "Item_Dungeon_BossKey", source = "Shadow Temple Boss Key Chest" }
-# Not listed: "Boss Key (Ganons Castle)" (Ganons Tower Boss Key Chest, Item_Dungeon_BossKey). Its type,
-# GanonBossKey, carries no dungeon in the world model, so the backwards lookup cannot tell it from the other boss
-# keys; plans/rounds/r3-seed.md.
+"Boss Key (Ganons Castle)" = { actor = "Item_Dungeon_BossKey", source = "Ganons Tower Boss Key Chest" }
 "Small Key (Forest Temple)" = { actor = "Item_Dungeon_SmallKey", source = "census: 5 chests in ForestTemple" }
 "Small Key (Fire Temple)" = { actor = "Item_Dungeon_SmallKey", source = "census: 8 chests in FireTemple" }
 "Small Key (Water Temple)" = { actor = "Item_Dungeon_SmallKey", source = "census: 4 chests in WaterTemple" }
@@ -161,3 +159,10 @@
 "Weird Egg" = { actor = "Item_WeirdEgg", source = "gift: HC Malon Egg" }
 "Zeldas Letter" = { actor = "Item_ZeldaLetter", source = "gift: HC Zeldas Letter" }
 "Zeldas Lullaby" = { actor = "Item_Melody_ZeldaLullaby", source = "gift: Song from Impa" }
+
+"Scrub Business Seed" = { actor = "Item_ScrubBusinessSeed", source = "D12; census: remake-only chest filler" }
+"Magic Jar" = { actor = "Tbox_MagicJar_Large", source = "census: Shadow Temple Spike Walls Left Chest" }
+
+[aliases]
+# Chests without an instance Drop__DropActor use this actor rather than the TBox spelling.
+"Obj_Rupee_Green" = "TBox_Rupee_Green"
