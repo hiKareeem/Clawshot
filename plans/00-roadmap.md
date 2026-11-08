@@ -634,3 +634,74 @@ For round 7 (to agree with Kareem): hints on Gossip Stones (track C's design not
 tested, and get-item models for gift items from chests (songs show a green rupee, the Fairy Ocarina
 none); a once-only gate for the shopkeeper's shield so it can be a check; boss Heart Containers as checks; token
 persistence; the advanced options (bomb pickups as bags, open Deku) as Kareem asks for them.
+
+## Round 7 (M3 hints, get-item models, boss hearts, gift follow-ups)
+
+Kareem agreed, 2026-11-08 ("Yes, please do"); he plays `seed-shop-7b` and his main save meanwhile. Four tracks,
+Bermuda thread `cs-r7`, herdr-core. New sections of `plans/03-game-data.md`: 25 (A), 26 (B), 27 (C), 28 (D), each
+appended in number order after 24. The round 5 and 6 rules on shared files carry over (a small change to another
+track's file is its own commit, posted; `patch/__init__.py`, `generate/fill.py`, `settings.toml`,
+`item_actors.toml` and the CLI are shared). No Hookshot build. Track A runs on the default Claude model, the others
+on `openai-codex/gpt-6.1-sol`. Every in-game test is one launcher with its own user folder and a short checklist;
+save-copy tests name the save they copy from `E:/OOTRemake/work/save-backups/`.
+
+### Track A: hints (`r7/hints`, Claude)
+
+Owns `src/clawshot/generate/hints.py` (new), the hint step in `src/clawshot/patch/text.py`, `tests/test_hints*.py`,
+`plans/rounds/r7-hints.md`, section 25. Round 6's design note (`plans/rounds/r6-hints.md`, "Design note: hints in
+round 7") is the spec:
+1. Gossip Stones as hint locations in the world (a non-item kind; OoT Randomizer's `HintStone` regions and rules
+   through `STONE_LINKS`, the four remake-only stones by hand), one label per stone.
+2. Hint selection: Way of the Hero, barren ("foolish") areas, item and `always`/`sometimes` location hints, junk;
+   a hint goes only on a stone reachable where it matters. Names from the round 6 catalogue; area names from the
+   world's hint areas. Clawshot's own wording (no copied text).
+3. Settings through the settings string: `hints` = `always` (stones speak without the Mask of Truth) or `mask`
+   (vanilla), and the distribution. Provisional default `always`, English text written to every language archive;
+   both are questions for Kareem.
+4. A `make_seed` step, the hints in the spoiler and the play note, a dump test that every hint names a placed item
+   at a reachable stone. Test output: `E:/OOTRemake/work/r7-hints/seed-shop-7c/`, which is `seed-shop-7b` plus hint
+   text only (same placements, hints chosen from its spoiler under current logic; every non-text file byte-identical
+   to 7b's), with a launcher that continues from his `user-seed-shop-7b` save copy.
+
+### Track B: get-item models and gift items in chests (`r7/getitem`)
+
+Owns `src/clawshot/patch/getitem.py` (new), the chest-allowed list in `src/clawshot/data/settings.toml`,
+`tests/test_getitem*.py`, `plans/rounds/r7-getitem.md`, section 26.
+1. What picks the model in the get window for an item from a chest (round 6: `Item_Melody_*` ModelInfo is
+   `Obj_Rupee`, so a song shows a green rupee; the Fairy Ocarina from a chest shows no model, text correct). Trace
+   both from the data and name the field each reads.
+2. A patch so each gift item that can land in a chest shows a fitting native model (an ocarina for the ocarinas; a
+   native note or song model for songs if the game has one, else say so and propose one); no new assets.
+3. Gift items in chests: list the gift items not yet seen working in a chest; one test output (new game, Kokiri
+   Forest and Mido's chests) holding as many of them as fit, each with what Kareem should see; the allowed list grows
+   only with his results.
+
+### Track C: boss Heart Containers and Gold Skulltula tokens (`r7/drops`)
+
+Owns `src/clawshot/patch/drops.py` (new), `src/clawshot/patch/tokens.py`, `tests/test_drops*.py`,
+`tests/test_token*.py`, `plans/rounds/r7-drops.md`, section 27.
+1. The 8 boss Heart Containers (`Obj_Heart_Container` in each boss room's Banc): how each spawns after the boss, its
+   saved flag, and which items can replace it without round 2's freestanding crash (#287 signature: majors need their
+   object or script group). Propose a location kind with a native-actor restriction, as D21 does for shops.
+2. A test output on a save copy before a boss (King Dodongo: check `2026-11-08_1114-main-dodongo`; say if no backup
+   fits): the Heart Container swapped for a safe item, with what Kareem should see, including after Save and Continue.
+3. Gold Skulltula tokens: round 6 found a replaced token lacks the `OneShotGoldTokenDeadAfter` callback (section 23).
+   Is there a way to keep the token actor and change what it grants, or to keep the callback? A test output only if
+   the data supports one; else say what is missing.
+4. `--shuffle BossHeart` (off) for what passed review; their in-game tests decide.
+
+### Track D: the shopkeeper's shield as a check, and the Treasure Chest Game (`r7/gifts`)
+
+Owns `src/clawshot/patch/gifts.py`, `tests/test_gift*.py`, `plans/rounds/r7-gifts.md`, section 28.
+1. The Kokiri shopkeeper's free Deku Shield repeats while none is equipped (round 6, track F, `r6-play.md`). Add a
+   once-only gate on both grant branches (an existing flag first, else a new saved Bool, D22) so it becomes a gift
+   check; keep the vanilla repeat when unshuffled. Logic: the free shield event stays as it is when unshuffled.
+   Test output (new game) with the check given a different item, and what Kareem sees on a second visit.
+2. The Treasure Chest Game reward chest (D17, kept vanilla): a contents-swap test output on a save copy of a child
+   near Castle Town (the round 6 Castle Town tests used one), with what he should see. It joins the shuffle only
+   after his result.
+3. The 9 boss rewards (stones and medallions): research only: how each is given (the blue warp and its cutscene,
+   flags, the Temple of Time's checks of quest steps rather than items, section 19), and what shuffling them would
+   need. No patch.
+
+### After round 7
