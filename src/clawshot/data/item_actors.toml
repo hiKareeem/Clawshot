@@ -1,7 +1,7 @@
 # The remake actor a chest's Dynamic.Drop__DropActor takes for each logic item (an items.toml or world.toml name)
 # a chest can be given, and so, read backwards, the logic item a chest the remake fills with that actor holds.
-# Every actor here is one the game itself puts in a chest (census vanilla_item), so a seed only moves actors the
-# game already gives from chests. Loaded by clawshot.patch.items.
+# Chest seeds move actors already used by chests. Opt-in Shop seeds also move native shop pouch actors listed
+# below; those grants still require their in-game family checks (D15). Loaded by clawshot.patch.items.
 #
 # Derived from the census chests linked to OoT Randomizer (src/clawshot/data/locations.toml oot_randomizer_name):
 # the census vanilla_item against LocationList.py's vanilla item for that name (commit
