@@ -19,6 +19,13 @@ copied gift spec; do not leave an implicit free shield in a shuffled world. Unsh
 the original repeat event and equipment condition. Normalize the gate even if the shuffled gift lands on
 its vanilla shield. Existing flavour dialogue remains; no claim of new dialogue or gameplay acceptance.
 
+The native quest cutoffs are deliberately unchanged: the reward is missable if the player ignores the
+documented shopkeeper visit until after Gohma/castle completion. The inherited monotone rule proves
+an early collection order, not safety after skipping it; the short Gohma-only opening need not include
+an item used only later. **Kareem/co-owner: should shuffled shopkeeper gifts remain available past
+the native cutoff until collected?** That would need a separate Talk-dispatch/logic policy change,
+not a fake completion flag. This track does not silently widen the native story window.
+
 Isolated shared-file commits: `b0cbb2f` (`gift_rules.toml`), `5e2f128` (player-name row and its coverage
 oracle), `079b8f9` (`item_actors.toml` backwards alias). First smoke printed the check absent: the native
 `Obj_Shield_Deku` did not match canonical `TBox_Shield_Deku`. Printed both PouchActorInfo rows: same
@@ -57,6 +64,18 @@ No retry-count, dungeon rule, ammo policy or fill code is changed by this track.
 refuses output; the controlled player overlay and focused merchant behavior are independently verified.
 **Claude: review the D25 prefill preserving early dungeon-key capacity before treating this full
 Chest+Shop+Gift seed 7 as generatable.** This is an explicit residual integration finding, not a passed seed.
+
+### Successful required early-game surface
+
+Independently ran the public CLI for the Kokiri/Lost Woods/Deku Tree slice (same seed7,
+`--shuffle Chest Gift --areas KokiriForest LostWood InsideTheDekuTree --goal "'Defeat Queen Gohma'"`):
+**17 shuffled checks, three spheres, 16 resources**, plus spoiler/note. The real written shopkeeper
+gives Fairy Ocarina on both grant branches and reads the existing saved once-Bool; no GameDataList.
+Read the actual spoiler and rendered note: both physical flow IDs and the early-story visit directions
+are present. Reconstructed child-only Search wins and has no implicit free-shield event.
+A second CLI process replays its expanded CS1 with another hash seed: **18/18 files byte-identical**.
+Evidence: external `slice-proof.json`. This verifies the requested early check end to end; it does not
+substitute for or relabel the explicitly refused whole-world Fire-key fill above.
 
 ### Coordination delivery failure
 
@@ -143,7 +162,55 @@ not applied as an unapproved product decision.
 | `uv run ruff format --check` | 182 files already formatted |
 | `uv run ruff check` | All checks passed |
 | `uv run pytest --basetemp E:/OOTRemake/work/r7-gifts/gate-synthetic` | 517 passed, 70 skipped; 757.53 s |
+| `OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump --basetemp E:/OOTRemake/work/r7-gifts/gate-dump` | 69 passed, 518 deselected; 1194.27 s |
 
-The full `OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump` gate is running, with its
-basetemp `E:/OOTRemake/work/r7-gifts/gate-dump`. No code edits after the full gates started.
-Final results and handoff follow after it completes; nothing is posted as ready yet.
+All four required full commands passed. The complete dump run includes the new real merchant-flow
+oracle, alias-based eligibility, the existing Gift slice writer, all formats/census and the actual
+CLI/chronological/seed integration oracles. No skipped/narrowed substitute, retry increase or weakened
+assertion was used. No source/test code edits after these gates started; subsequent edits are this report
+and section28's research/smoke evidence only. Runtime game acceptance remains Kareem's.
+
+Completed temporary artifacts removed only after their proof: the initial no-check smoke folder,
+both successful child-slice/replay folders, both completed full-gate basetemps and the failed whole-world
+smoke driver. Requested two controlled overlays, their copied release-only launchers/checklists,
+reproducible read-only research, `slice-proof.json` and `gift-cli-0.log` remain outside the repository.
+No active test, game/save/user/backup path, other worktree or pre-existing file was removed.
+
+Independent saved-artifact audit (not the builders' in-memory trees) also passed: all **five** emitted
+resources parsed; exact inverse allowed-field deltas restore the original Banc/flow trees; only the
+shield output's three planned size entries change. Both actual batch texts use only the bin executable,
+suppress update checks, stop if missing and name distinct isolated users. Neither user folder exists
+(no launcher was run). Retained external evidence: `ingame/artifact-proof.json`.
+
+## Branch handoff ledger
+
+| Commit | Scope |
+|---|---|
+| `b0cbb2f` | Isolated shared gift-rule data/schema contract |
+| `5e2f128` | Isolated shared player-name row and copy-identity coverage |
+| `079b8f9` | Isolated shared native gift/chest shield actor equivalence |
+| `e9c095d` | Item1: both-branch saved once-gate, copied-spec event-to-check cutover, tests, controlled new-game output evidence |
+| `0d6597a` | Item2: first-prize contents/preview experiment and save-copy checklist evidence |
+| `e1c5ff8` | Item3: all-nine reward/blue-warp/quest-gate research, no patch |
+
+The final documentation-only commit records the full gates, actual CLI/replay proof, saved-artifact
+audit and this ledger; its own hash is reported in the final handoff rather than self-referenced here.
+No merge, push, stash, dependency change, other-worktree edit or unauthorized rebase.
+
+### Left for review and play
+
+- **Kareem:** the two named launchers/checklists under external `ingame/`, with overlay logs and actual
+  reward/repeat/save observations. No game acceptance is fabricated; Treasure Chest Game D17 stays disabled.
+- **Kareem/co-owner:** future boss-reward gate semantics (question in item3/section28); no boss rewards enabled.
+- **Claude:** the isolated shared-file commits above, section28 inserted after future sections25–27 at
+  integration, and the diagnosed D25 early-Fire-key capacity interaction for whole-world Chest+Shop+Gift seed7.
+  It was refused, not replaced by a secretly rerolled seed. The successful required early-game CLI is a
+  separately labelled child-slice proof; its 18-file deterministic replay is not whole-world acceptance.
+- **Coordination:** `cs-r7` was absent from the available Bermuda store; final prescribed handoff post
+  outcome is recorded below. No forbidden thread creation or other terminal messaging was attempted.
+
+Final prescribed handoff post was attempted **after all four gates passed**, naming the six item/shared
+commits, gate counts, artifacts, D17/boss boundaries and the D25 integration finding. It again returned
+`bermuda: no thread cs-r7: create it with bermuda thread new cs-r7` (exit1). This is a coordination
+delivery blocker, not a successful post; creating threads is forbidden for this track. The full handoff
+is committed here for Claude to read/repost once that thread exists. No further unchanged retry.

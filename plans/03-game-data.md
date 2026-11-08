@@ -1936,6 +1936,13 @@ Controlled new-game output `ingame/shopkeeper-boomerang` supplies a shield in Mi
 and a once-only Boomerang from the shopkeeper. Its flow grows 50552 -> 51200 bytes; allocation
 50832 -> 51472. No GameDataList is written. Checklist/isolated release-only launcher are in the round file.
 
+Actual public child-slice CLI smoke (seed7, Chest+Gift): 17 checks, three spheres, 16 resources;
+both merchant branches grant the placed Fairy Ocarina, no implicit shield event or new GameDataList.
+The written spoiler/note includes its two physical IDs and visit directions. A second CLI/CS1/hash-seed
+process produces 18 byte-identical files; independent child-only Search wins. This is not the
+whole-world Chest+Shop+Gift seed7: that fill was refused by a D25 ammo/early-Fire-key capacity
+interaction, with printed diagnostic values in the round file; no fill policy was changed here.
+
 ### Treasure Chest Game: contents experiment only
 
 The first prize is Hash `16881481538337649070`; the same-position repeat red-rupee actor is
