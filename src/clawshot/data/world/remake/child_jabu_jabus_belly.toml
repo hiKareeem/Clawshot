@@ -17,3 +17,8 @@ source = "the map is before the Boomerang in the remake: Nintendo Life, in the b
 [locations."Jabu Jabus Belly GS Lobby Basement Upper"]
 region = "Jabu Jabus Belly Depths"
 source = "data: Enemy_Skulltula_Gold 11283202900158580106 (census: Upper, by height) in room 3 at (-15,90,-83), between the tentacle-blocked hole (Obj_InsideJabu_Jabu_Hole_A_03 (-9,91,-86), Obj_InsideJabu_Jabu_Tentacle_A_03 (-9,85,-86)) and Big Octo's door (-24,87,-88), its map icon at the ledge's height (MapIconOffsetAnchor 1360187271360393119, y 85). Nintendo Life: the basement's upper ledge, reached only by dropping down the north-west hole once the three tentacles are gone, has one Gold Skulltula inside the passage to the next room; IGN: on the ceiling of the corridor from that ledge to Big Octo's room, Boomerang; Polygon: after defeating the parasites drop into the new hole, on the ceiling; Eurogamer: in the tunnel to Big Octo's room (N64: next to the other one). The rule (Boomerang or Hookshot) stays; the region asks for the tentacles (Main -> Depths)"
+
+[exits."Jabu Jabus Belly Beginning"."Jabu Jabus Belly Main"]
+rule = "can_use(Slingshot) or can_use(Boomerang) or can_use(Bow) or can_use(Hookshot)"
+was = "can_use_projectile"
+source = "Kareem in game via Claude, 2026-11-08, main save (build e0f3ccfa, Hookshot 2.0.1): bombs do not hit the tonsil switch in the first room; the Slingshot or Boomerang is needed. Data: Obj_InsideJabu_Jabu_SwitchHit_A_01 2499231676847862528 on the ceiling (y 98) of room 0. Bombchus untested, left out until tried. Adult Bow and Hookshot kept from OoT Randomizer's can_use_projectile (adult reaches Jabu only if a later setting allows it)."

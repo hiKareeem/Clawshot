@@ -103,3 +103,12 @@ def test_adult_cannot_claim_the_child_shopkeepers_free_shield():
     world = starting_at("KF Kokiri Shop", ADULT)
     search = Search(world, ["Kokiri Sword", "Hylian Shield"])
     assert not search.holds("Deku Shield")
+
+
+@pytest.mark.parametrize("weapon", ["Slingshot", "Boomerang"])
+def test_jabu_tonsil_switch_needs_a_projectile_not_bombs(weapon):
+    world = starting_at("Jabu Jabus Belly Beginning")
+    search = Search(world, ["Bomb Bag"])
+    assert not search.can_reach("Jabu Jabus Belly Main", CHILD)
+    search.collect(weapon)
+    assert search.can_reach("Jabu Jabus Belly Main", CHILD)
