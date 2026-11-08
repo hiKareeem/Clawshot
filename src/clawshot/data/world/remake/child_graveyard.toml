@@ -1,0 +1,62 @@
+# The Graveyard as the remake builds it, child side (round 4, track A). Format: plans/04-world-format.md,
+# "Overrides". Evidence per entry; the findings (E:/OOTRemake/work/r4-logic-child/findings/graveyard.md) list every
+# rule checked, the unchanged ones and the questions for an in-game look.
+#
+# Guides (Switch 2 remake, 2026-11-05..07; facts only):
+#   IGN, Kakariko walkthrough (the Graveyard section) https://www.ign.com/wikis/ocarina-of-time-remake/Spiritual_Stone_of_Fire_-_Kakariko_Village_Walkthrough
+#   IGN, heart pieces https://www.ign.com/wikis/ocarina-of-time-remake/All_Heart_Piece_Locations
+#   Nintendo Life, heart pieces https://www.nintendolife.com/guides/zelda-ocarina-of-time-heart-piece-locations-switch-2
+#   Nintendo Life, Sun's Song https://www.nintendolife.com/guides/zelda-ocarina-of-time-suns-song-switch-2
+#   Eurogamer, 17 changes https://www.eurogamer.net/all-new-changes-zelda-ocarina-of-time-switch-2
+# Placement data: Graveyard_Child/Adult_Static/_Dynamic (read by E:/OOTRemake/work/r4-logic-child/actors.py),
+# coordinates in metres, y up. The graves: three holes (LookAttentionActor_HidingHoleEntrance) at (4,101,6) (flowers
+# and butterflies; below it the bombable WallCrack (4,84,27) to a fairy pool), (21,103,11) (the Hylian Shield chest and
+# a ReDead) and (21,103,23) (the heart-piece chest).
+#
+# Time: the remake's time of day starts flowing only after Link has met Zelda (Eurogamer, 17 changes); the event
+# 'Time Flows' (child_hyrule_castle.toml) stands for that. A child pulls graves at night only (IGN: by day the
+# village boy threatens to tell on Link; at night Dampé does not mind), as OoT Randomizer has it.
+
+[exits.Graveyard."Graveyard Shield Grave"]
+rule = "is_adult or (at_night and 'Time Flows')"
+was = "is_adult or at_night"
+source = "night needs time to flow (Eurogamer 17 changes); IGN Kakariko walkthrough: a child pulls graves at night (by day the boy threatens to tattle). Shared rule: the adult part unchanged"
+
+[exits.Graveyard."Graveyard Heart Piece Grave"]
+rule = "is_adult or (at_night and 'Time Flows')"
+was = "is_adult or at_night"
+source = "night needs time to flow (Eurogamer 17 changes); IGN Kakariko walkthrough: a child pulls graves at night. Shared rule: the adult part unchanged"
+
+[exits.Graveyard."Graveyard Dampes House"]
+rule = "is_adult or (at_dampe_time and 'Time Flows')"
+was = "is_adult or at_dampe_time"
+source = "Dampé's hours need time to flow (Eurogamer 17 changes); data: Obj_Graveyard_Door_A_01 11317197928420415449 with CheckEventName Npc_Hylia_Dampe_001_Child_CheckRestrictedDoor. Shared rule: the adult part unchanged"
+
+[locations."Graveyard Dampe Gravedigging Tour"]
+rule = "is_child and (at_dampe_time and 'Time Flows')"
+was = "is_child and at_dampe_time"
+source = "night needs time to flow (Eurogamer 17 changes: the tour is reworked, Link leads Dampé to the spot); IGN Kakariko walkthrough and Nintendo Life heart pieces (#9): Dampé offers the tour at night, the heart piece comes up after paying for digs. Data: HeartPieceAnchor 10075158462075677237 with GraveYard_DiggingHoleTour_Drop_HeartPiece, Npc_Hylia_Dampe_001 in Graveyard_Child_Static"
+
+[locations."Graveyard GS Wall"]
+rule = "can_use(Boomerang) and ((at_night and 'Time Flows') or gold_skulls_ignore_daytime)"
+was = "can_use(Boomerang) and (at_night or gold_skulls_ignore_daytime)"
+source = "night needs time to flow (Eurogamer 17 changes); data: Enemy_Skulltula_Gold 229475726653285413 (-20,104,26), Enemy_Skulltula_Gold_Nocturnal, behind Dampé's house; Nintendo Life GS #21: at night, the Boomerang fetches the token"
+
+# The graves' contents moved: the ReDead of N64's heart-piece grave now stands at the Hylian Shield chest, and the
+# heart-piece chest stands open in its own grave.
+
+[locations."Graveyard Shield Grave Chest"]
+rule = "is_adult or Sticks or Kokiri_Sword or can_use(Dins_Fire)"
+was = "True"
+source = "data: Enemy_ReDead 17994273783244561622 at (37,86,11), one metre from the chest Obj_TBox_A_06 16912540161937823130 (38,86,11), in Graveyard_Child_Dynamic; IGN Kakariko walkthrough: a ReDead guards the Hylian Shield chest, defeat it, then open the chest. The child's ways to kill a ReDead are OoT Randomizer's for its redead grotto chest (Overworld.json:3107); Sun's Song (stun) alone is not checked. Shared rule: adult unchanged (True)"
+
+[locations."Graveyard Heart Piece Grave Chest"]
+rule = "True"
+was = "can_play(Suns_Song)"
+source = "Nintendo Life heart pieces (#8): the original needed the Sun's Song, the remake does not; IGN heart pieces (#4): no enemies, a large chest holds the heart piece. Data: Obj_TBox_A_02 9622128545943056087 (21,86,39) placed in Graveyard_Child_Static and Adult_Static with only Drop__DropActor=Obj_Heart_Piece (no NoBake/pedestal/appear event, unlike the chests that appear)"
+
+# The Royal Family's Tomb: Keese room, ReDead room, Sun's Song tablet. No torches and no chest.
+
+[locations."Graveyard Royal Familys Tomb Chest"]
+n64_only = "no chest and no torch in the tomb: the Graveyard Banc files place Obj_TBox only at the graves (16912540161937823130, 9622128545943056087) and Dampé's race goal (4); the tomb rooms (Land_RoyalFamilyTomb_*, x 64 to 156) hold Keese, shutters, ReDeads and the song monument; the census has no remake id for it (plans/rounds/r2-census.md)"
+source = "data as said; IGN Kakariko walkthrough and Nintendo Life Sun's Song: Keese room (doors seal until the Keese die), ReDead room, Sun's Song tablet, no torches or chest"

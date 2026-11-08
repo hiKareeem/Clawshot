@@ -1,0 +1,106 @@
+# Hyrule Field, child side, as the remake builds it (round 4, track A). Format: plans/04-world-format.md,
+# "Overrides". What was checked and left as OoT Randomizer has it: E:/OOTRemake/work/r4-logic-child/findings/hyrule_field.md.
+#
+# Sources:
+# - Eurogamer, "All new changes in the Ocarina of Time remake", 2026-11-05,
+#   https://www.eurogamer.net/all-new-changes-zelda-ocarina-of-time-switch-2
+# - IGN, "Biggest Changes and Differences", 2026-11-05,
+#   https://www.ign.com/wikis/ocarina-of-time-remake/Biggest_Changes_and_Differences
+# - Nintendo Life, "All Heart Piece locations" (Switch 2), 2026-11-06,
+#   https://www.nintendolife.com/guides/zelda-ocarina-of-time-heart-piece-locations-switch-2
+# - Nintendo Life, "Business Scrub password guide" (Switch 2), 2026-11-06,
+#   https://www.nintendolife.com/guides/zelda-ocarina-of-time-business-scrub-password-switch-2
+# - RPG Site, "Minimalist 100% walkthrough" (Switch 2 remake), 2026-11-05,
+#   https://www.rpgsite.net/guide/21671-the-legend-zelda-ocarina-time-remake-minimalist-100-walkthrough-all-items-gold-skulltula-tokens-heart-pieces
+# - Gold Skulltula guides (Eurogamer, Polygon; local copies in E:/OOTRemake/work/r3/, facts only).
+# - Placement data (HyruleField_{Child,Adult}_{Static,Dynamic}, read by E:/OOTRemake/work/r4-logic-child/actors.py),
+#   Banc coordinates in metres, y up, +x east, +z south. The HyruleField Banc also holds Lon Lon Ranch and Lake Hylia.
+#
+# The remake's Hyrule Field has eight grottos, every entrance under a visible cover with a
+# FldObj_AirWall_HidingHoleCover: the scrub (40,148,27), the tektite pool (-98,147,17), the fairy fountain
+# (-13,150,169), the ReDead grotto by Kakariko (163,156,27; Kak Redead Grotto, set by child_kakariko.toml), the cow
+# (-258,141,138), the Gold Skulltula in the southern wood (-156,144,338), the wetlands (40,145,342) and the east one
+# (180,157,190). The last two hold a Gossip Stone and no chest, fish, shrub or beehive.
+
+# Grottos: every grotto entrance is visible in the remake and the Stone of Agony (now the Echo Gem) finds Gold
+# Skulltulas, not grottos (cross-area decision, Main, round 4). HyruleField's only two AgonyStoneReactArea actors
+# are at Gold Skulltulas inside grottos.
+
+[exits."Hyrule Field"."HF Inside Fence Grotto"]
+rule = "can_blast_or_smash"
+was = "can_open_bomb_grotto"
+source = "Eurogamer, 'all new changes': every grotto entrance is visible, bomb or Song of Storms is obvious, the Stone of Agony is the Echo Gem (finds Gold Skulltulas); Nintendo Life scrub password guide: bomb the cracked spot just right of the castle gate by the river; data: Land_HrlField_HidingHoleCover_A_01 2319887810288392884 and FldObj_AirWall_HidingHoleCover 3592000181700157958 at (40,148,27), the heart piece scrub inside at (25,130,22)"
+
+[exits."Hyrule Field"."HF Cow Grotto"]
+rule = "(is_child or Megaton_Hammer) and can_blast_or_smash"
+was = "(is_child or Megaton_Hammer) and can_open_bomb_grotto"
+source = "Eurogamer, 'all new changes': every grotto entrance is visible, the Stone of Agony is the Echo Gem; data: Obj_BrokenRock_A_01 15605814217953065995 on the entrance (-258,141,138) inside a ring of four Obj_LiftRock_A_01, FldObj_AirWall_HidingHoleCover 11945425470276716089, cow inside at (-258,120,129). The adult part is kept as OoT Randomizer has it (track B)"
+
+[exits."Hyrule Field"."HF Near Kak Grotto"]
+rule = "can_blast_or_smash"
+was = "can_open_bomb_grotto"
+source = "Eurogamer, 'all new changes': every grotto entrance is visible, the Stone of Agony is the Echo Gem; Eurogamer and Polygon Gold Skulltula guides: bombs open the hole (a circular rock) in the wood south of Lon Lon Ranch; data: Land_HrlField_HidingHoleCover_A_01 4105624336310342731 and FldObj_AirWall_HidingHoleCover 13343658070916094685 at (-156,144,338); its AgonyStoneReactArea 17897764476642920225 is inside, at the Gold Skulltula"
+
+[exits."Hyrule Field"."HF Tektite Grotto"]
+rule = "can_play(Song_of_Storms)"
+was = "can_open_bomb_grotto"
+source = "Eurogamer, 'all new changes': it is obvious whether a bomb or the Song of Storms opens a hole; IGN 'New Grotto Entrances': bombable stone circles, or plants that need a bit of wind; data: the tektite pool grotto (Obj_WaterPlane_A_01 at (-85,129,12), Enemy_Tektite_Blue) opens at (-98,147,17) under Land_Kokiri_HidingHoleCover_A_01 18359593268860138712 with EventProxyRequestActor 942345937270714415 linked to it, the cover of OoT Randomizer's storms grottos (KF (-52,122,-63), SFM (-2,100,51), DMT (-2,120,-26), ZR (-78,99,-17), HC); HF's bomb grottos have Land_HrlField_HidingHoleCover_A_01/_A_02 or a rock and no EventProxyRequestActor. Not seen in game (question in the findings)"
+
+[exits."Hyrule Field"."HF Open Grotto"]
+rule = "here(can_blast_or_smash)"
+was = "True"
+source = "IGN 'New Grotto Entrances' and Eurogamer 'all new changes': grotto entrances are covered (bombable stone circles or plants); data: all eight Hyrule Field grotto entrances have a cover and a FldObj_AirWall_HidingHoleCover, none is open; the two gossip-stone grottos left for N64's generic ones have Land_HrlField_HidingHoleCover_A_01 (wetlands 2786334400301738354 at (40,145,342), east 5432128860529907978 at (180,157,190)); Eurogamer Gold Skulltula guide: bombs open the wetlands hole"
+
+# N64 grotto contents the remake does not have.
+
+[locations."HF Southeast Grotto Chest"]
+n64_only = "no generic grotto chest in the remake's Hyrule Field: the only grotto chest in the HyruleField Banc outside Lake Hylia is the ReDead grotto's (5755485285664292988, Kak Redead Grotto); the gossip-stone grottos hold no chest"
+source = "data: the HyruleField Banc's chests are 5755485285664292988 (ReDead grotto), three Fairy Note chests in the open field (2967378296224661060, 9891111455604007674, 1163740567397714729), the Lon Lon Ranch tower chest 17445672702269453589 and two Lake Hylia chests; the wetlands (40,145,342) and east (180,157,190) grottos hold a Gossip Stone and no Obj_TBox"
+
+[locations."HF Open Grotto Chest"]
+n64_only = "no generic grotto chest in the remake's Hyrule Field (see HF Southeast Grotto Chest)"
+source = "data: no Obj_TBox in any Hyrule Field grotto but the ReDead one (5755485285664292988); the wetlands (40,145,342) and east (180,157,190) grottos hold a Gossip Stone and no chest"
+
+[locations."HF Near Market Grotto Chest"]
+n64_only = "no generic grotto chest in the remake's Hyrule Field (see HF Southeast Grotto Chest); the grotto beside the market drawbridge (40,148,27) is the heart piece scrub's"
+source = "data: no Obj_TBox in any Hyrule Field grotto but the ReDead one (5755485285664292988); Nintendo Life scrub password guide: the hole right of the castle gate holds the Business Scrub"
+
+[events."HF Southeast Grotto".Fish]
+rule = "False"
+was = "has_bottle"
+source = "data: no fish (Animal_Fish_*, FishAnchor) in the wetlands (40,145,342) or east (180,157,190) grottos, the remake's only gossip-stone grottos in Hyrule Field; fish are only in the tektite pool and Lake Hylia"
+
+[events."HF Open Grotto".Fish]
+rule = "False"
+was = "has_bottle"
+source = "data: no fish (Animal_Fish_*, FishAnchor) in the wetlands (40,145,342) or east (180,157,190) grottos, the remake's only gossip-stone grottos in Hyrule Field"
+
+[events."HF Near Market Grotto".Fish]
+rule = "False"
+was = "has_bottle"
+source = "data: no fish (Animal_Fish_*, FishAnchor) in any Hyrule Field grotto but the tektite pool; the grotto by the market drawbridge (40,148,27) is the scrub's, with shallow water and no fish"
+
+[locations."HF Tektite Grotto Freestanding PoH"]
+n64_only = "the remake's tektite grotto holds three underwater crates with rupees and no heart piece; Hyrule Field's two heart pieces are the Fairy Note chest by Gerudo Valley (remake-only) and the password scrub"
+source = "Nintendo Life heart piece guide (#35, #36) and RPG Site (#34, #35): Hyrule Field's heart pieces are a chest by the Gerudo Valley entrance and the scrub by the castle gate; data: the pool grotto (Obj_WaterPlane_A_01 (-85,129,12), Enemy_Tektite_Blue) holds Obj_BrokenBox_A_01 4293238463102171135, 7249046631724680605, 13505816572168486267 (green rupees, Drop_Rupee_Red2) and no Obj_Heart_Piece; the census' freestanding heart pieces in HyruleField are Lake Hylia's and Lon Lon Ranch's only"
+
+# The heart piece scrub sells to a child who knows the password, which an adult reads on a Fairy Note.
+
+[locations."HF Deku Scrub Grotto"]
+rule = "is_child and can_stun_deku and at('Hyrule Field', is_adult)"
+was = "can_stun_deku"
+source = "Nintendo Life scrub password guide: the scrub sells only with a password, read by Adult Link on the Fairy Note on the tree beside the hole; to Adult Link the scrub says it is out of stock; Child Link with the password buys the heart piece (100 rupees); RPG Site #35 the same; data: HrlField_Note_07 7446547123750630562 at (50,149,18) in Adult_Static only; scrub Enemy_Scrub_Business 10364468093017215295 (child) / 1888007325063123154 (adult) at (25,130,22). Shared rule: the adult can no longer buy (flagged for track B)"
+
+# The drawbridge chain rupees are gone.
+
+[locations."HF Child Above Drawbridge Wonderitem 1"]
+n64_only = "the drawbridge chains can no longer be climbed and the rupees above the drawbridge are gone"
+source = "IGN 'Castle Town Drawbridge Never Closes' and 'Bigger Wallets': the chains cannot be climbed, the drawbridge rupees are gone; Eurogamer 'all new changes': the rupees reached by running up the drawbridge chain are gone"
+
+[locations."HF Child Above Drawbridge Wonderitem 2"]
+n64_only = "the drawbridge chains can no longer be climbed and the rupees above the drawbridge are gone"
+source = "IGN 'Castle Town Drawbridge Never Closes' and 'Bigger Wallets'; Eurogamer 'all new changes' (drawbridge chain rupees gone)"
+
+[locations."HF Child Above Drawbridge Wonderitem 3"]
+n64_only = "the drawbridge chains can no longer be climbed and the rupees above the drawbridge are gone"
+source = "IGN 'Castle Town Drawbridge Never Closes' and 'Bigger Wallets'; Eurogamer 'all new changes' (drawbridge chain rupees gone)"

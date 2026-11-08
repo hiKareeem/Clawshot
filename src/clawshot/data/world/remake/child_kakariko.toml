@@ -1,0 +1,90 @@
+# Kakariko Village as the remake builds it, child side (round 4, track A). Format: plans/04-world-format.md,
+# "Overrides". Evidence per entry; the findings (E:/OOTRemake/work/r4-logic-child/findings/kakariko.md) list every
+# rule checked, the unchanged ones and the questions for an in-game look.
+#
+# Guides (Switch 2 remake, 2026-11-05..07; facts only):
+#   IGN, Kakariko walkthrough https://www.ign.com/wikis/ocarina-of-time-remake/Spiritual_Stone_of_Fire_-_Kakariko_Village_Walkthrough
+#   IGN, heart pieces https://www.ign.com/wikis/ocarina-of-time-remake/All_Heart_Piece_Locations
+#   IGN, changes https://www.ign.com/wikis/ocarina-of-time-remake/Biggest_Changes_and_Differences
+#   Eurogamer, Kakariko https://www.eurogamer.net/zelda-ocarina-of-time-kakariko-village
+#   Eurogamer, 17 changes https://www.eurogamer.net/all-new-changes-zelda-ocarina-of-time-switch-2
+#   Nintendo Life, heart pieces https://www.nintendolife.com/guides/zelda-ocarina-of-time-heart-piece-locations-switch-2
+#   Nintendo Life, Gold Skulltulas https://www.nintendolife.com/guides/zelda-ocarina-of-time-gold-skulltula-locations-rewards-switch-2
+#   Nintendo Life, Cuccos https://www.nintendolife.com/guides/zelda-ocarina-of-time-cucco-locations-kakariko-village-switch-2
+# Placement data: KakarikoVillage_* and HyruleField_* Banc files (read by E:/OOTRemake/work/r4-logic-child/actors.py),
+# coordinates in metres, y up.
+#
+# Time: the remake's time of day starts flowing only after Link has met Zelda (Eurogamer, 17 changes; IGN, changes,
+# "Time Always Moves"). The event 'Time Flows' (child_hyrule_castle.toml) stands for that; every child night rule
+# here asks for it.
+
+# Impa's cow-pen heart piece. N64: the cow pen is inside Impa's house, entered through a wall hole from the cucco-pen
+# roof, which a child reaches by gliding with a cucco from the construction site (OoT Randomizer: child, by day).
+# Remake: the pen is a separate shed behind Impa's house, its heart piece on the shed roof.
+
+[exits."Kakariko Village"."Kak Impas Ledge"]
+rule = "is_adult and logic_visible_collisions"
+was = "(is_child and at_day) or (is_adult and logic_visible_collisions)"
+source = "IGN heart pieces (#11): the cow pen is behind sealed gates and its heart piece, on the pen roof, can be reached only from Impa's roof (child: the owl from the Death Mountain summit drops Link there; adult: Hookshot); Eurogamer Kakariko (Heart Piece #1) gives the same two ways and names the cucco glide from the construction site as the original game's; Nintendo Life heart pieces (#4): owl, then hop down. Data: Obj_Heart_Piece 17926402522258180222 at (-44,108,112) behind Land_Kakariko_House_A_01 (-45,105,99). The child keeps the owl (DMT Owl Flight -> Kak Impas Rooftop -> Kak Impas Ledge). Shared rule: the adult part (a trick) is OoT Randomizer's, unchanged"
+
+# The man on the roof: a child reaches him with a cucco.
+
+[exits."Kakariko Village"."Kak Odd Medicine Rooftop"]
+rule = "can_use(Hookshot) or (is_child and at_day) or (logic_man_on_roof and (is_adult or (at_day and not gold_skulls_ignore_daytime) or Slingshot or has_bombchus or (logic_kakariko_tower_gs and (Sticks or Kokiri_Sword))))"
+was = "can_use(Hookshot) or (logic_man_on_roof and (is_adult or (at_day and not gold_skulls_ignore_daytime) or Slingshot or has_bombchus or (logic_kakariko_tower_gs and (Sticks or Kokiri_Sword))))"
+source = "IGN Kakariko walkthrough and IGN heart pieces (#2, child, nothing required): glide over the fence by the windmill with a cucco, climb the ladder to the hill behind the windmill, take the cucco there and glide onto Granny's Potion Shop roof; the man lies on the lower roof section and gives the heart piece. Nintendo Life Cuccos (#6, #7): the fenced area and the ladder to the ledge cucco by the windmill. By day only: the cuccos at night are not checked. Shared rule: the Hookshot and the trick parts are OoT Randomizer's, unchanged"
+
+# The redead grotto: in the remake it lies in Hyrule Field just outside Kakariko, opened with the Song of Storms.
+# Kakariko's own bomb grotto (Land_Kakariko_HidingHoleCover_A_01 at (-20,102,66)) leads to a room with a gossip stone
+# and beehives and no check; the village holds no Enemy_ReDead.
+
+[exits."Kakariko Village"."Kak Redead Grotto"]
+rule = "False"
+was = "can_open_bomb_grotto"
+source = "data: no Enemy_ReDead and no chest in KakarikoVillage's bomb grotto (Land_HidingHole_Base_A_01 at (-20,97,66): Obj_GossipStone_A_01, seven Obj_Kokiri_Beehive_A_01); the redead grotto is in Hyrule Field (exit Hyrule Field -> Kak Redead Grotto)"
+
+[exits."Kak Redead Grotto"."Kakariko Village"]
+rule = "False"
+was = "True"
+source = "the redead grotto's way out leads to Hyrule Field (exit Kak Redead Grotto -> Hyrule Field)"
+
+[exits."Hyrule Field"."Kak Redead Grotto"]
+rule = "can_play(Song_of_Storms)"
+new = true
+source = "data (HyruleField_Child/Adult_Static): grotto Land_HidingHole_Base_C_01 at (163,151,27) by the owl's tree near the Kakariko steps; two Enemy_ReDead_AlwaysRespawn at (155,136,16) and (149,136,18) and the chest 5755485285664292988 on Obj_TBoxPedestal_A_01, raised by EventRequestActor 'KakarikoVillage_TreasureBoxAppear', as N64's Kakariko redead grotto. Opening: its cover Land_Kokiri_HidingHoleCover_A_01 14656437530366949192 with an EventProxyRequestActor and a ring of Land_kokiri_Plant_A_02_DropFixed_03 plants is the cover of OoT Randomizer's storms grottos in KokiriForest, SacredForestMeadow, DeathMountainTrail and ZoraRiver (FieldRanch, round 4); bomb grottos have Land_*_HidingHoleCover without the proxy. IGN changes ('New Grotto Entrances'): grottos open by bombs at stone circles or by wind for strange plants; Eurogamer 17 changes: entrances are visible, no Stone of Agony"
+
+[exits."Kak Redead Grotto"."Hyrule Field"]
+rule = "True"
+new = true
+source = "leaving the grotto (Hyrule Field Banc, entrance at (163,151,27)) returns to Hyrule Field"
+
+[locations."Kak Redead Grotto Chest"]
+area = "HyruleField"
+source = "census: the chest is HyruleField's 5755485285664292988 ('Hyrule Field Chest (TBox_Rupee_Purple)'), in the grotto above; its rule (kill the two ReDeads: the pedestal chest appears) is OoT Randomizer's, unchanged"
+
+# Gold Skulltulas at night: all five are night-only in the guides; four carry Enemy_Skulltula_Gold_Nocturnal.
+
+[locations."Kak GS House Under Construction"]
+rule = "is_child and ((at_night and 'Time Flows') or gold_skulls_ignore_daytime)"
+was = "is_child and (at_night or gold_skulls_ignore_daytime)"
+source = "night needs time to flow (Eurogamer 17 changes: time starts after meeting Zelda); data: Enemy_Skulltula_Gold 14107117960174262321 (-61,102,60), Enemy_Skulltula_Gold_Nocturnal; IGN Kakariko: at night on the construction site's brick wall, by the scaffolding"
+
+[locations."Kak GS Skulltula House"]
+rule = "is_child and ((at_night and 'Time Flows') or gold_skulls_ignore_daytime)"
+was = "is_child and (at_night or gold_skulls_ignore_daytime)"
+source = "night needs time to flow (Eurogamer 17 changes); data: Enemy_Skulltula_Gold 15314554401574296838 (-29,103,61), Nocturnal; IGN Kakariko: left of the House of Skulltula's door, night only"
+
+[locations."Kak GS Near Gate Guard"]
+rule = "is_child and ((at_night and 'Time Flows') or gold_skulls_ignore_daytime)"
+was = "is_child and (at_night or gold_skulls_ignore_daytime)"
+source = "night needs time to flow (Eurogamer 17 changes); data: Enemy_Skulltula_Gold 11629189455828560791 (-75,105,2), Nocturnal; Nintendo Life GS #18 and Eurogamer Kakariko GS #2: at night behind the house by the Death Mountain gate"
+
+[locations."Kak GS Tree"]
+rule = "is_child and ((at_night and 'Time Flows') or gold_skulls_ignore_daytime) and can_bonk"
+was = "is_child and (at_night or gold_skulls_ignore_daytime) and can_bonk"
+source = "night needs time to flow (Eurogamer 17 changes). Night kept: Nintendo Life GS #16, Eurogamer Kakariko GS #1 and Polygon say night; but the actor (Enemy_Skulltula_Gold 7677963516305772491, (-74,104,43), linked to Obj_Tree_A_01) has no Nocturnal flag and IGN's walkthrough gets it by day: question in the findings"
+
+[locations."Kak GS Watchtower"]
+rule = "is_child and ((at_night and 'Time Flows') or gold_skulls_ignore_daytime) and (Slingshot or has_bombchus or (logic_kakariko_tower_gs and (Sticks or Kokiri_Sword)))"
+was = "is_child and (at_night or gold_skulls_ignore_daytime) and (Slingshot or has_bombchus or (logic_kakariko_tower_gs and (Sticks or Kokiri_Sword)))"
+source = "night needs time to flow (Eurogamer 17 changes); data: Enemy_Skulltula_Gold 15118290503807073158 (-48,111,18) on the watchtower ladder (Land_Kakariko_Ladder_A_05), Nocturnal; Nintendo Life GS #17 and IGN Kakariko: shoot it with the Slingshot, then climb for the token (items kept)"
