@@ -1,0 +1,67 @@
+# Remake build e0f3ccfa, Gerudo Training Ground ("Gerudo Proving Grounds" in the remake). Generated
+# gerudo_training_ground.toml stays untouched. Room numbers are DefaultDungeonRoomIndex in
+# Banc/GerudoTrainingGround/*_{Static,Dynamic} (read only, cs4b helper, 2026-11-07); they follow N64's rooms
+# (Stalfos 1, boulders 2, Wolfos 3, eye statue 4, hammer 5, lava 6, Beamos 7, maze 8, water 9, Like Likes 10).
+# Walkthroughs: https://www.eurogamer.net/gerudo-proving-grounds-walkthrough-zelda-ocarina-of-time (EG) and
+# https://zeldacentral.com/games/ocarina-of-time-remake/walkthrough/gerudo-proving-grounds/ (ZC).
+# The maze keeps N64's door structure: EG spends 1/2/4/5/7 keys to the hidden-ceiling, purple, red, arrow and Ice
+# Arrow chests (ZC: seven doors to the Ice Arrow), exactly OoT Randomizer's worst-order counts 3/4/6/7/9 minus the two
+# other maze doors, so the maze key rules stand. The ninth key (N64's freestanding key) is the maze chest
+# 1883068192328530224 by the lava-room door. Root override restoration is cs4a's fa9ed2b, census link cs4d's
+# f3fb5ef; integration pending. Do not duplicate the root location entry here.
+
+[locations."Gerudo Training Ground Lobby Left Chest"]
+rule = "(can_use(Bow) or can_use(Slingshot)) and can_use(Lens_of_Truth)"
+was = "can_use(Bow) or can_use(Slingshot)"
+source = "Banc room 0: the only lobby eye switch (Obj_EyeSwitch_A_02 11495024771723587729, above the entrance) drops the east chest 2436665354602612279 (GerudoTrainingGround_00_FallTreasureBox, TBox_Rupee_Blue; EG section 4: shoot the eye above the entrance, a chest with a Blue Rupee drops); the west chest 11182647876438515984 is Obj_TBox_GlassTruth_A_01 (Lens-only, always placed). Which OoT Randomizer name each takes is unconfirmed, so both lobby chests ask for the eye switch and the Lens until Kareem settles it."
+
+[locations."Gerudo Training Ground Lobby Right Chest"]
+rule = "(can_use(Bow) or can_use(Slingshot)) and can_use(Lens_of_Truth)"
+was = "can_use(Bow) or can_use(Slingshot)"
+source = "Banc room 0: one Bow eye-switch chest (east, 2436665354602612279) and one Lens-only Obj_TBox_GlassTruth_A_01 (west, 11182647876438515984); the name pairing is unconfirmed, so this chest asks for both, as Lobby Left Chest does."
+
+[exits."Gerudo Training Ground Lobby"."Gerudo Training Ground Lava Room Front"]
+rule = "here(has_explosives and (is_adult or Kokiri_Sword)) and can_use(Goron_Tunic)"
+was = "here(has_explosives and (is_adult or Kokiri_Sword))"
+source = "EG section 2: after the Beamos room the lava room needs the Goron Tunic for heat resistance; ZC: wear the Goron Tunic in the lava rooms or the heat drains hearts. The remake's heat damage: https://www.ign.com/wikis/ocarina-of-time-remake/Biggest_Changes_and_Differences (Link Reacts to Temperature)."
+
+[exits."Gerudo Training Ground Central Maze Right"."Gerudo Training Ground Lava Room Front"]
+rule = "can_use(Goron_Tunic)"
+was = "True"
+source = "EG section 2 and ZC: the lava room (room 6) burns without the Goron Tunic."
+
+[exits."Gerudo Training Ground Central Maze Right"."Gerudo Training Ground Lava Room Back"]
+rule = "can_use(Goron_Tunic)"
+was = "True"
+source = "EG section 2 and ZC: the lava room (room 6) burns without the Goron Tunic."
+
+[exits."Gerudo Training Ground Hammer Room"."Gerudo Training Ground Lava Room Back"]
+rule = "can_use(Goron_Tunic)"
+was = "True"
+source = "EG section 2 and ZC: the lava room (room 6) burns without the Goron Tunic."
+
+[exits."Gerudo Training Ground Eye Statue Upper"."Gerudo Training Ground Like Like Room"]
+rule = "False"
+was = "Silver_Gauntlets"
+source = "Banc room 10 (Like Likes, heavy-block chests) has a single door, the north shutter of room 3 (Obj_Gerudo_SwitchShutter_A_04 at -47.3/104/-111.2); room 4 has no door to it. EG section 3 reaches the Like Like hallway from the Wolfos room. The silver block moved into room 3: see the Heavy Block Room exit."
+
+[exits."Gerudo Training Ground Heavy Block Room"."Gerudo Training Ground Like Like Room"]
+rule = "can_use(Silver_Gauntlets) and can_use(Bow) and can_use(Lens_of_Truth)"
+new = true
+source = "EG section 3: in the Wolfos room push the door-like cube into the hole to make a path, then with the Lenses hit the eye switch above the door. Banc room 3: Obj_MovableBox_A_04 Hash 4134330786473270162 (MovableBoxParam MovableBoxType hashes to NeedGauntletSilver, the actor of the Spirit Temple's silver blocks) before an answer position; the door's room-3 shutter opens by GerudoTrainingGround_03_ShutterOpen from Obj_EyeSwitch_GlassTruth_A_02 Hash 10731754838093134223 (Lens-only). Bow as for every other eye switch here; whether the Hookshot also triggers it (pack default isHitHookShot = true) is unverified."
+
+[locations."Gerudo Training Ground Near Scarecrow Chest"]
+region = "Gerudo Training Ground Eye Statue Lower"
+rule = "can_use(Bow) and (can_use(Distant_Scarecrow) or (can_use(Goron_Tunic) and can_use(Hookshot) and can_use(Lens_of_Truth)))"
+was = "Bow"
+source = "EG section 3: from the Lens/Hookshot ledge (the Pierre ledge of room 4) go through the door behind Pierre to a Small Key chest = maze upper-floor chest 9911316961118170383 (Banc room 8, y 105). That door's shutter (12014808007378132009) opens with GerudoTrainingGround_Room04_StoneGimmick: the statue in the lava pool, shot with the Bow from the floor (EG section 2). Model the floor, Bow and return to the ledge: Pierre (EG: Scarecrow's Song there; ZC: Longshot to the scarecrow; about 18 units from AreaCanCallPierre) or a loop through the hot lava room with Goron Tunic, then the Wolfos room's Lens/Hookshot ledge."
+
+[locations."Gerudo Training Ground Heavy Block First Chest"]
+rule = "can_blast_or_smash"
+was = "True"
+source = "Banc room 10 holds four item chests (N64: three and the trap): GlassTruth key 5329807728555596183 (= Heavy Block Third), red rupee 6897789835137994741 (appears on room clear), Item_ScrubBusinessSeed 11754783663699171680 (eye switch 13939821958157812040; the remake-only seed marks the likely new chest) and five Bombs 3750231902048775592 behind Obj_GerudoTrainingGround_CrackWall_A_01 (EG section 3: bomb the breakable wall for the five-Bombs chest). Which of First/Second is behind the wall is unsettled, so both ask for explosives or the hammer (the wall's pack has ReactionForHammerAttack)."
+
+[locations."Gerudo Training Ground Heavy Block Second Chest"]
+rule = "can_blast_or_smash"
+was = "True"
+source = "Banc room 10 / EG section 3: one of N64's First/Second heavy-block chests is the bomb chest behind the breakable wall (see Heavy Block First Chest); unsettled which, so both ask for explosives or the hammer."

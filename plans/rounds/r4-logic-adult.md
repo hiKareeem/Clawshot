@@ -313,3 +313,54 @@ child keys: the inherited age-unknown Spirit key caveat remains. Separate live s
 key false without fire before the fix, then true for both ages with Bomb Bag after it. In-game: move the sun
 cube into window light without lighting torches; the small-key chest should spawn. Collect the hand key via
 Pierre, then test the direct alternatives above.
+
+## Gerudo Training Ground / Gerudo Proving Grounds
+
+Read every translated rule and both remake walkthroughs below; checked room doors, block type, eye switches,
+chest drops and targets against Banc and actor packs. Changes: lobby has one invisible chest and one eye-switch
+chest (name pairing unconfirmed, so both provisionally require Bow/Lens); lava-room approaches require Tunic;
+the silver block and invisible eye opening Like Likes are in the Wolfos room, not the eye-statue upper ledge.
+First/Second heavy-block chests both conservatively require the breakable wall until their identity pairing is
+settled; Third remains the invisible key. The near-scarecrow key is behind the floor statue's Bow puzzle and
+a return to the upper ledge (Longshot/Pierre, or the hot-room loop plus Lens/Hookshot).
+
+Checked/unchanged normal routes: membership admission; Stalfos combat; boulder silver rupees and grapple;
+Wolfos clear chest; Lens/grapple fake-wall ledge; Bow eye statue; Hammer room switch; lava silver rupees,
+Time Block and Hover crossings; underwater Boots/Tunic/Time Block; nine-key maze worst-order conditions and
+invisible ceiling key. Seven doors on the direct Ice Arrows route do not make the two side-door keys free.
+
+Sources:
+- https://www.eurogamer.net/gerudo-proving-grounds-walkthrough-zelda-ocarina-of-time
+- https://zeldacentral.com/games/ocarina-of-time-remake/walkthrough/gerudo-proving-grounds/
+- Banc/GerudoTrainingGround placements and block/eye/wall actor parameters, read-only, build `e0f3ccfa`.
+
+Cross-track: ninth key is now chest Hash `1883068192328530224`, in the east maze cell beside the lava door,
+not absent. Posted its exact identity; cs4a restored `type = Chest` in `fa9ed2b`, cs4d linked it in `f3fb5ef`.
+Those commits are not in this worktree's authorized `main` base yet. No duplicate root override was added.
+The eight-key local placement is therefore not claimed to bootstrap the nine-key maze.
+
+**Kareem: identify the two lobby chest names and the First/Second heavy-block chest pairing in game.
+Does Hookshot activate the invisible eye instead of Bow? Can brief heat exposure replace Tunic on the loop?
+Does ordinary Hookshot reach Pierre? Can the upper doorway/eye puzzle be solved without dropping to the floor?**
+These are provisional conservative routes, not verified exclusivity. Other pots/drops and N64 tricks remain unverified.
+
+Verification: focused GTG and Gerudo-grotto run **8 passed** (6 GTG, 2 grottos). Initial GTG run printed the
+near-scarecrow chest still in Eye Statue Upper: the predecessor override lacked its intended region move.
+Moved it to the floor-based puzzle and included the Lens/Hookshot return requirement; the aimed rerun passed.
+Removed the incidental region-name assertion; the search now checks collection from the floor directly.
+Live search reaches Like Likes with Silver Gauntlets/Bow/Lens and no Hookshot; wall chest is false before
+Hammer, true after. In-game: move the Wolfos-room block, use Lenses on the door's eye, and check the Like Like
+room opens; bomb/hammer its cracked wall for the Bombs chest.
+
+## Gerudo Valley and Fortress
+
+Read every translated rule and remake route descriptions; normal Epona/Longshot bridge, Hammer chest,
+Hookshot/night tokens, adult carpenter trade, four jail fights/keys, membership gate, horseback archery,
+roof grapple routes and Wasteland exit remain. Changed both storm-grotto entrances: Song of Storms and adult
+age, without the obsolete Stone of Agony. Source:
+https://www.eurogamer.net/all-new-changes-zelda-ocarina-of-time-switch-2 (visible grotto entrances; Echo Gem).
+
+Live search before: Ocarina/Song of Storms without Stone could enter neither grotto. After: both true.
+Two regressions also keep both closed without the song. **Kareem: check direct roof jumps/Hover alternatives,
+the exact archery admission/time conditions and the carpenter-key sharing abstraction.** In-game: play
+Song of Storms at either visible grotto mark with no Echo Gem; it should open.

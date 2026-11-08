@@ -654,3 +654,21 @@ Sources:
 - https://www.eurogamer.net/spirit-temple-walkthrough-zelda-ocarina-of-time
 - https://www.eurogamer.net/all-gold-skulltulas-locations-zelda-ocarina-of-time
 - Banc/SpiritTemple placements, read-only, build `e0f3ccfa`.
+
+### Gerudo Training Ground and Gerudo overworld
+
+The Like Like room opens from the Wolfos room's Silver Gauntlets block/invisible eye, not from the upper
+eye-statue ledge. Lobby and heavy-block chest-name pairings remain unresolved: both candidate locations
+conservatively require the union of their prerequisites. The near-scarecrow key needs the floor eye-statue
+Bow puzzle and a return route to its upper door. Lava approaches require Tunic on the documented safe route.
+
+The ninth key is chest Hash `1883068192328530224` in the maze by the lava door. World restoration (`fa9ed2b`,
+cs4a) and census link (`f3fb5ef`, cs4d) are separate pending integration dependencies; adult overrides do not
+duplicate the root location entry. Existing maze worst-order key counts remain. Valley/Fortress storm
+grottos need the song, not Stone of Agony: entrances are visible and the old item became the Echo Gem.
+
+Sources:
+- https://www.eurogamer.net/gerudo-proving-grounds-walkthrough-zelda-ocarina-of-time
+- https://zeldacentral.com/games/ocarina-of-time-remake/walkthrough/gerudo-proving-grounds/
+- https://www.eurogamer.net/all-new-changes-zelda-ocarina-of-time-switch-2
+- Banc/GerudoTrainingGround block/eye/wall and placement data, read-only, build `e0f3ccfa`.
