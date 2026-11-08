@@ -314,3 +314,69 @@ Still for review/Kareem:
 Requested player overlay retained: `E:/OOTRemake/work/r5-age/free-time-travel/` and its adjacent check note.
 No game/launcher was run; dump, backups and live game files were never written. No dependencies changed.
 All commits remain on `r5/age`; no merge or push. Final report commit ID is given in chat and the thread.
+
+## Reviewer-requested rebase onto shops/playtest main
+
+Rebased onto `main` at `ccd1963` as directed. Earlier base/commit IDs and gate counts above are historical.
+Resolved the three additive `plans/03-game-data.md` conflicts by keeping each whole age addition before the
+whole shop section: section 16 starts at line 788, section 17 at line 873.
+`generate/fill.py` merged without a textual conflict and retains both tracks' behavior:
+
+- Return-kit forward stage before the normal fill, with `allowed(world, settings, name, item)` in every
+  candidate decision.
+- Shop native-display and per-item destination restrictions in `allowed()`.
+- Shop-aware restrictive-fill ordering and native-display preference.
+- Shop-safe handling of the final priority/rest pool rather than unrestricted fast fill into shops.
+
+The GanonBossKey classification replayed as nonempty `691e883`; Git did not drop it as an identical patch.
+
+Added `test_chest_and_shop_seed_is_beatable_with_gated_return_guarantee` to the existing age-fill tests.
+It uses the complete world, seed 0, `shuffle=("Chest", "Shop")`, explicit guarantee on/free travel off.
+It collects the seed, requires the first pull and Phantom Ganon completion, checks `won()` (including the
+independent early-return proof), and checks every shuffled placement with `allowed()`.
+
+Native API smoke before adding the regression printed:
+`seed=0 shops=64 spheres=25 first_pull=True forest_clear=True return_safe=True won=True disallowed=[]`.
+No slice, relaxed goal, disabled guarantee or free-travel bypass was used.
+
+### Rebased commit ledger
+
+| Commit | Scope |
+|---|---|
+| `91022ab` | first-pull/return research, section 16 before whole section 17 |
+| `a4877d2` | world age-gate data |
+| `7fbf048` | chronological child-prefix search |
+| `3bfa024` | early-pull counterexample/proposal |
+| `691e883` | GanonBossKey classification |
+| `63806eb` | provisional default-on guarantee setting |
+| `37d71cc` | mandatory-count/adult-only proof |
+| `5999ee6` | default-off free-travel setting |
+| `6d9b14e` | isolated pedestal patch, tests and evidence |
+| `2f2d1a8` | automatic seed-output pairing |
+| `f7c155b` | chronological search documentation |
+| `5076f13` | explicit adult-after-pull phase |
+| `44c34d5` | return-kit data |
+| `b0b00fc` | forward return-kit fill, preserving shop behaviors |
+| `f95da61` | return-kit regression/evidence |
+| `cd06bd5` | constrained-fill documentation |
+| `7a2a43a` | previous handoff, now rebased |
+| `d51f8f0` | whole-world Chest+Shop/early-return integration regression |
+
+This final report is the next commit; its final ID is posted in chat and on `cs-r5`.
+Still no merge, push, dependency change, game launch or write under the dump/save backups.
+
+### Full gates after the rebase
+
+| Command | Result |
+|---|---|
+| `uv run ruff format --check` | **131 files already formatted** |
+| `uv run ruff check` | **All checks passed** |
+| `uv run pytest` | **350 passed, 32 skipped**, 364.62 s |
+| `OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump` | **31 passed, 351 deselected**, 612.17 s |
+
+This includes the new complete-world Chest+Shop regression, the existing shop restriction/rule/slice tests,
+and the unchanged default/progressive seed sweeps and determinism checks.
+
+The full dump gate includes all five shop dump checks as well as the isolated pedestal oracle and the existing
+format/census/seed oracles. All four gates passed on the rebased tree without a failed rerun or a weakened check.
+No additional source resolution was required for the automatically merged fill.
