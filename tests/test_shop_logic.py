@@ -100,6 +100,51 @@ def test_tunic_destinations_need_adult_shop_access_and_market_stays_child_only(s
     assert not market.rule({}, "adult", 1)
 
 
+@pytest.mark.parametrize("shop_prices", ["vanilla", "affordable"])
+def test_blue_fire_only_uses_gated_potion_slots_or_non_potion_shops(spec, shop_prices):
+    settings, world = prepare(spec, Settings(shuffle=("Chest", "Shop"), shop_prices=shop_prices))
+    for merchant in ("Market Potion Shop", "Kak Potion Shop"):
+        for slot in range(1, 9):
+            name = f"{merchant} Item {slot}"
+            assert allowed(world, settings, name, "Buy Blue Fire") is (slot == 5), name
+            assert allowed(world, settings, name, "Buy Fish"), name
+        rule = world.locations[f"{merchant} Item 5"].rule
+        counts = {"Bottle": 1, "Progressive Wallet": 2}
+        assert not rule(counts, "adult", 1)
+        assert rule({**counts, "Blue Fire": 1}, "adult", 1)
+    for merchant in ("KF Shop", "Market Bazaar", "Market Bombchu Shop", "Kak Bazaar", "GC Shop", "ZD Shop"):
+        for slot in range(1, 9):
+            assert allowed(world, settings, f"{merchant} Item {slot}", "Buy Blue Fire")
+    assert not allowed(world, settings, "Deku Tree Basement Chest", "Buy Blue Fire")
+
+
+def test_blue_fire_seed_cannot_bootstrap_from_an_ungated_potion_slot(spec):
+    _, full_world = prepare(spec, Settings(shuffle=("Chest", "Shop")))
+    synthetic = {
+        "start": "Start",
+        "goal": "Buy_Blue_Fire",
+        "settings": {
+            "native_shop_items": ["Buy Blue Fire", "Buy Fish"],
+            "shop_item_locations": full_world.settings["shop_item_locations"],
+        },
+        "items": {"Buy Blue Fire": {}, "Buy Fish": {"class": "normal"}, "Blue Fire": {}},
+        "regions": [
+            {
+                "name": "Start",
+                "locations": {
+                    "Market Potion Shop Item 1": {"rule": "True", "type": "Shop", "vanilla": "Buy Blue Fire"},
+                    "Market Potion Shop Item 5": {"rule": "Blue_Fire", "type": "Shop", "vanilla": "Buy Fish"},
+                    "KF Shop Item 7": {"rule": "True", "type": "Shop", "vanilla": "Buy Fish"},
+                },
+            }
+        ],
+    }
+    for number in range(20):
+        seed = generate(synthetic, number, Settings(shuffle=("Chest", "Shop")), attempts=1)
+        # Only this merchant can sell the first Blue Fire; Potion slot5 cannot unlock itself.
+        assert seed.placements["KF Shop Item 7"] == "Buy Blue Fire", (number, seed.placements)
+
+
 @pytest.mark.parametrize(
     "item,helper",
     [("Buy Bottle Bug", "Bugs"), ("Buy Fish", "Fish"), ("Buy Fairy's Spirit", "Fairy"), ("Buy Blue Fire", "Blue_Fire")],

@@ -163,6 +163,7 @@ Base **a81faf9**, branch `r6/shopfix`; previous `65bbcf7`/`fcb265f` checkpoint a
 | `70696f5` | pre-D25 full integration gates and handoff |
 | `fa358ae` | isolated D25 `generate/fill.py` restriction plus synthetic/real-seed regressions |
 | `f3f4f66` | D25 documentation, final-base ledger and actual CLI replay proof |
+| `c70a7d0` | complete D25 full gates and handoff, before the Blue Fire follow-up |
 
 ## Cleanup
 
@@ -235,9 +236,9 @@ to the maximal no-bag/no-pack search. **59 Buy refills, zero outside Shop**. Ind
 written placement passed beatability. Local transcripts: `d25-cli-0.txt`, `d25-cli-1.txt`; result:
 `E:/OOTRemake/work/r6-shopfix/d25-verification.json`. No game or launcher started; 7b was not regenerated.
 
-**Blue Fire gap, proposed fix only:** selected Blue Fire at either Potion merchant requires prior acquired Blue Fire,
-but the logic gates only its original slots; restrict `Buy Blue Fire` to already-gated Potion slots or non-Potion
-merchants. **Unchanged as requested.**
+**Blue Fire at the D25 checkpoint:** Potion merchants require prior acquired Blue Fire, but logic gates only
+their original slots. The proposed destination restriction was left unchanged at that checkpoint; the reviewer
+subsequently authorized it as the isolated correctness fix below.
 
 ### Rebased D25 full gates
 
@@ -260,3 +261,53 @@ After smoke proof, removed only the two session-created `d25-seed-*` overlays an
 materialized (those selected tests do not request temporary paths). Retained both CLI transcripts and
 `d25-verification.json`; original seed7/7b, every requested bisect/user and all read-only audits remain untouched.
 Both session-created full-gate temporary directories were removed after success; retained the recorded proof.
+
+## Blue Fire correctness follow-up
+
+Reviewer accepted D25, then authorized the conservative Blue Fire destination restriction before merge.
+This final follow-up is one isolated commit on top of **c70a7d0**; base remains **a81faf9**.
+
+### Fix and failing-before evidence
+
+- Added only `"Buy Blue Fire"` to `shops.toml [item_locations]`: **50 supported destinations**,
+  the two already-gated Potion slot5 checks plus 48 non-Potion checks.
+- Existing `apply_shop_data` loads that map into `world.settings.shop_item_locations`; existing `allowed()`
+  enforces it together with the Shop-only effective `item_location_types`. No shared Python API change,
+  inventory alias, price-policy edit, flow patch, release-rule rewrite or new bypass.
+- Both vanilla/affordable boundary regressions failed before: `allowed(..., "Market Potion Shop Item 1",
+  "Buy Blue Fire")` returned true. They now reject all14 unsafe Potion slots, allow both slot5s and all48
+  non-Potion slots, keep other bottle refills and the original acquisition rules intact, and reject chest placement.
+- Synthetic seed3 failed before: required `Buy Blue Fire` at **Market Potion Shop Item1**, with Fish at
+  **KF Shop Item7**. That world has no natural Blue Fire; Potion slot5 cannot bootstrap itself.
+  After fix, all20 seeds (`attempts=1`) put the first Blue Fire at the non-Potion merchant.
+- `uv run ruff format tests/test_shop_logic.py`: unchanged.
+- `uv run pytest tests/test_shop_logic.py -q`: **30 passed**, 8.89 s; all three new cases failed before the fix.
+
+### Actual CLI and continuation preservation
+
+`uv run python -u E:/OOTRemake/work/r6-shopfix/smoke_bluefire.py` ran two actual CLI processes (seed7 Chest+Shop,
+then its complete settings string, hash seeds73/74), both exit0. **78/78 files byte-identical**.
+Blue Fire goes to **Kak Bazaar Item5** and **GC Shop Item6**, neither a Potion merchant. Parsed every matching
+written seller/shelf copy: actual Blue Fire actors, original release fields preserved. Independent beatability
+and D25's **six** native ammo restrictions pass. SHA256 maps for **all78 files of 7b** match before and after;
+no launcher/game/user/save write or continuation regeneration.
+
+Local proof retained: `bluefire-cli-0.txt`, `bluefire-cli-1.txt`, `bluefire-verification.json` under
+`E:/OOTRemake/work/r6-shopfix/`. After smoke proof, removed only this follow-up's two `bluefire-seed-*`
+temporary overlays and `smoke_bluefire.py`; requested bisects/users/7b and prior audits remain.
+
+### Pre-names-rebase Blue Fire four gates
+
+The complete chain passed on a81faf9 + D25 + this Blue Fire fix:
+
+| Full command | Observed result |
+|---|---|
+| `uv run ruff format --check` | **173 files already formatted** |
+| `uv run ruff check` | **All checks passed** |
+| `uv run pytest --basetemp E:/OOTRemake/work/r6-shopfix/pytest-bluefire-full-synthetic` | **499 passed, 68 skipped**, 333.18 s |
+| `OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump --basetemp E:/OOTRemake/work/r6-shopfix/pytest-bluefire-full-dump` | **67 passed, 500 deselected**, 305.87 s |
+
+Reviewer then requested **0afcca5** (r6/names merged, section20). The pre-rebase job had already completed
+when cancellation was attempted; it was not stopped or failed. Its two session-created basetemps were removed.
+Commit this isolated Blue Fire change first, then rebase and run all four full gates on the new base before
+posting the ready head. Updated output-contract CLI proof and post-rebase results follow below.

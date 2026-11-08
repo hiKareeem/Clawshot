@@ -1708,9 +1708,16 @@ Default `free_bombchu_drops=true` conservatively needs an actual Bombchu item fo
 buy access supplies `can_refill_bombchus`. With free drops off, Bomb Bag plus buy access supplies usable Bombchus.
 No new Bomb-Bag requirement is invented for the observed successful purchase.
 
-**Remaining audit finding:** catalog rules retain the two original Potion Blue-Fire slots' acquired-Blue-Fire gate,
-even when they sell something else. The flow additionally tests the **selected Blue Fire item** at either Potion
-merchant; moving it to another Potion slot therefore needs the same gate, which current static slot rules do not
-follow. Other merchants bypass that Potion-only dialogue gate. A conservative fix is limiting Buy Blue Fire to
-already-gated destinations (or adding an item-dependent purchase requirement), not suppressing the flow check.
-This pre-existing gap is reported for review; no unrelated placement/logic policy is silently changed by the audit.
+**Blue Fire purchase gate fixed (reviewer authorization, 2026-11-08):** Potion merchants test the **selected**
+Blue Fire item for prior acquisition (`DisplayShop` Event108), while only their original slot5 release rules
+already model that condition. `shops.toml [item_locations]` now allows `Buy Blue Fire` only at those two Potion
+slot5 checks or the 48 supported non-Potion shop checks. The existing `allowed()` destination check enforces
+this together with the effective Shop-only `item_location_types`; no new flow bypass or release-rule rewrite.
+Other bottle refills are unchanged; both vanilla/affordable price modes retain the native acquired-Blue-Fire gate.
+
+Before the fix, both price modes allowed Market Potion slot1, and synthetic seed3 placed its required first
+Blue Fire there. All30 shop-logic tests now pass, including that 20-seed bootstrap regression. Actual seed7 CLI
+and settings/hash replay produce **78 identical files**; Blue Fire sells at **Kak Bazaar Item5** and **GC Shop Item6**.
+Written shelves/seller components were parsed and original release fields preserved; D25's six native ammo
+placements and beatability still pass. **All78 files of 7b are hash-identical before/after**; no continuation reroll.
+Full gate results and final commit: `plans/rounds/r6-shopfix.md`.
