@@ -271,3 +271,55 @@ Final handoff post for head `ddbc5e4` was attempted after all four gates passed 
 thread-creation command was issued. Gate evidence commit: `ddbc5e4`; this last documentation-only
 commit records the actual post failure. Delivery is blocked only on the coordinator restoring the thread;
 the complete branch/artifact handoff is supplied directly in chat.
+
+## Reviewer-authorized rebase onto dfe923a
+
+Claude restored `cs-r7`; all three original failed notes were reposted unchanged, in their original
+order, and verified in `thread log`. The earlier delivery blocker above is historical and resolved.
+
+Claude then authorized `git rebase main` for main **dfe923a** (Jabu tonsil-switch projectile rule and
+D26). At the clean point, `git status --short --branch` showed only `## r7/getitem`; all nine commits
+rebased successfully with no conflicts. No merge, push or stash. The earlier commit ledger is pre-rebase:
+
+| Original | Rebased |
+|---|---|
+| `c09c00a` | `1c4d0f6` |
+| `dc54dbb` | `790a126` |
+| `4535983` | `97af7be` |
+| `a3168ac` | `ae24e24` |
+| `0cd8feb` | `4c4340d` |
+| `5b0dd43` | `3a38c07` |
+| `ee8af43` | `caf30c4` |
+| `ddbc5e4` | `9cd352d` |
+| `40921a7` | `0d2f446` |
+
+Read the merged override and D26; no Track B product change is needed. An independent interpreter
+loaded the real world and exercised Beginning -> Main with canonical inventory: empty child, child
+Bomb Bag, adult Bomb Bag and child Bombchus all **false**; child Slingshot/Boomerang and adult
+Bow/Progressive Hookshot each **true**. No dump, output, player user or game interaction was needed.
+
+The first throwaway smoke used identifier-style `Progressive_Hookshot` instead of canonical inventory
+key `Progressive Hookshot`. Printed all eight payloads, actual rule reads and relevant canonical item
+definitions; corrected the smoke's inventory keys (including Bomb Bag) only. One cause-specific rerun
+passed all eight cases. No production code or rule was changed for this diagnostic.
+
+All four full gates were started afresh after the successful rebase, with distinct outside-repository
+`rebased-gate-synthetic` / `rebased-gate-dump` basetemps. Final results follow when they complete.
+The prior player overlay is retained unchanged; the upstream change is logic-only, not presentation data.
+
+### Rebased final gates
+
+The fresh unfiltered four-command chain on main dfe923a plus all nine Track B commits passed:
+
+| Command | Observed result |
+|---|---|
+| `uv run ruff format --check` | **183 files already formatted** |
+| `uv run ruff check` | **All checks passed** |
+| `uv run pytest` | **531 passed, 71 skipped**, 783.89 seconds |
+| `OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump` | **70 passed, 532 deselected**, 757.15 seconds |
+
+No gate was filtered, interrupted or repeated unchanged. Removed only the two completed session-created
+rebase-gate basetemps. This final documentation-only update records the rebase, resolved thread delivery,
+canonical-inventory smoke and passing gates; no presentation code, existing player artifact, game/user,
+save backup or dependency changed. The updated final commit and passing results are posted to `cs-r7`.
+Kareem's visual/grant/use/persistence checks remain pending; no new unobserved gift actor is enabled.
