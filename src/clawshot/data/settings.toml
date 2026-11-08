@@ -32,5 +32,8 @@ source = "Kareem, 2026-11-08, chest-ocarina-storms: Fairy Ocarina acquired from 
 [chest_verified.Item_Melody_StormSong]
 source = "Kareem, 2026-11-08, chest-ocarina-storms: Song of Storms learned from chest and played with chest Fairy Ocarina; plans/03-game-data.md section 19"
 
+[chest_verified.Item_Melody_ForestMinuet]
+source = "Kareem via Claude, 2026-11-08, chest-ocarina-minuet: learned from Mido chest, warped child Link to Sacred Forest Meadow; plans/03-game-data.md section 21"
+
 [songs_anywhere]
-source = "Claude, Round 6 review, 2026-11-08: all twelve Item_Melody_* share the pouch/IsGet grant path. Storms played from a chest; the other eleven are inferred, not individually verified. Opt-in only; Minuet warp chest test pending."
+source = "Claude, Round 6 review, 2026-11-08: all twelve Item_Melody_* share the pouch/IsGet grant path. Storms played and Minuet warped from a chest; the other ten are inferred, not individually verified. Opt-in only."
