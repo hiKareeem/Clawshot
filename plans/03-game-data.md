@@ -571,3 +571,19 @@ Sources:
 `Water Temple Cracked Wall Chest` for the east-geyser key is provisional world nomenclature, not a census
 link. The normal route bootstraps all four keys and Longshot without free Water keys. Hookshot/Longshot
 token ranges and N64 alternate traversal remain in-game questions in the round file.
+
+### Fire Temple
+
+Eight real keys/eight small-key locks. Acquired-key totals along the described remake route are 1 (lava bridge),
+3 (past both east/elevator locks), 4 (narrow walkway and upper-boulder shortcut), 5 (flame maze), 7 (Flare Dancer/
+Hammer), 8 (lower boss-key loop). Map is now in the lower boulder maze, Compass behind the narrow-walkway eye;
+their event names say the opposite item, so use their drop actors. The old lower-maze side-key world name is
+provisionally moved to the north flame-maze cell (room 11 Hash 10521366928524045067; not a new census link).
+The pillar-lowered event follows Hammer and Song of Time; Hover bypass remains unverified.
+
+Source: https://www.nintendolife.com/guides/zelda-ocarina-of-time-fire-temple-walkthrough-switch-2
+
+The N64 free Fire key in `world.load._start_items` is not an actual remake starting item. Track A has been asked
+to remove it; real-key overrides must not be evaluated with that phantom key. An isolated keysanity-true search
+starts with zero Fire keys, collects all eight through the real routes, obtains Hammer and boss key, lowers
+the pillar and reaches Volvagia. Default-settings proof waits on removing the phantom key.

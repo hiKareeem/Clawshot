@@ -109,6 +109,44 @@ Cross-track: posted that `tests/test_world_data.py::test_remake_overrides`'s old
 expectation is obsolete (three now suffice). This file is outside Track B ownership; requested authorization
 or a merge-time update rather than changing another track's test.
 
+## Fire Temple
+
+Read every rule in `fire_temple.toml`; full Nintendo Life remake walkthrough plus token guide and Banc chest/
+lock inspection. Eight real key chests (rooms 1, 2, 4, 5 twice, 10, 11, 22); seven paired small-key locks plus
+one single small-key lock; the cinematic boss lock is separate. Map actor is in the lower boulder maze (room 5
+Hash 3688520809244472975); Compass is behind the narrow-walkway eye (room 16 Hash 16713240760352215634).
+Their `GetEventName`s misleadingly name the other item: the actor's drop and walkthrough settle it.
+
+Actual acquired-key totals: big lava room 1; two additional east/elevator locks 3; narrow path 4; upper-boulder
+shortcut still 4; flame-maze entry 5; inner maze and Flare Dancer 7; lower boss-key loop 8. Changed these gates,
+removed non-keysanity's automatic boss-loop unlock, moved Map/Compass and the side-room key to the flame-maze
+north cell. Provisional world-name correspondence: the unlinked `Boulder Maze Side Room Chest` names this
+remodeled side-room key (room 11 Hash 10521366928524045067); no census mapping is asserted.
+The normal boss approach now records the Hammer/Time Block/pillar-lowered event; no unverified Hover skip.
+
+Checked/unchanged: Goron Tunic heat protection; near-boss first key; north lava cell; bomb-wall south lava cell;
+Song of Time tile-room token; strength block and ranged flame switch; bomb-wall maze token; upper keys including
+bomb floor; scarecrow side route and two tokens; explosives for Flare Dancer/Hammer chest; Hammer and Song of
+Time high cell; Hammer boss-loop token (already overridden); boss key; Hammer/Tunic Volvagia; heart/medallion/warp.
+
+Source: https://www.nintendolife.com/guides/zelda-ocarina-of-time-fire-temple-walkthrough-switch-2
+and https://www.nintendolife.com/guides/zelda-ocarina-of-time-gold-skulltula-locations-rewards-switch-2#fire-temple
+
+**Kareem: confirm the eight-lock order above, particularly no key on the moving-fire shortcut back to upper
+boulder maze. Can Hover Boots still skip the pillar, or bombs bypass the Time Block to the high cell? Does
+Hookshot expose the first Flare Dancer (the remake walkthrough says Bombs only)?** Fire token #71's short
+Nintendo Life description says Hammer room, but the full walkthrough and census place it in scarecrow room 8,
+not Hammer room 13; that short description is not used to relocate it. Pots/drops and unverified alternatives
+remain pending.
+
+Verification: `uv run pytest tests/test_world_remake_adult_fire.py -q`: **8 passed** (keysanity true; no fake key).
+`uv run python E:/OOTRemake/work/r4-logic-adult/smoke_fire.py`: start zero keys, nine collection spheres, eight
+real keys, pillar-lowered event, Volvagia reached and goal true.
+
+Cross-track dependency posted: `load._start_items` still injects an N64 free Fire key that the game/writer do
+not grant. These real-key data rules require cs4a to remove it. Do not treat default-settings seeds as verified
+until that removal; no compensating shim was added to the data.
+
 ## Remaining areas
 
-Fire, Shadow, Spirit, desert/endgame and shared adult-overworld audits follow.
+Shadow, Spirit, desert/endgame and shared adult-overworld audits follow.

@@ -1,0 +1,69 @@
+# Remake e0f3ccfa. These counts are REAL acquired keys, with no N64 free starting key.
+# Eight key chests and eight small-key locks; boss-door cinematic lock is separate.
+# load._start_items must not inject the old OoTR Fire key (posted to cs4a).
+
+[exits."Fire Temple Lower"."Fire Temple Big Lava Room"]
+rule = "(Small_Key_Fire_Temple, 1) and can_use(Goron_Tunic)"
+was = "(Small_Key_Fire_Temple, 2) and (logic_fewer_tunic_requirements or can_use(Goron_Tunic))"
+source = "https://www.nintendolife.com/guides/zelda-ocarina-of-time-fire-temple-walkthrough-switch-2 (Meeting Darunia): Near Boss key opens the east door into the bridge/lava room. Actual one-key lock; no N64 free starting key."
+
+[exits."Fire Temple Lower"."Fire Temple Lower Locked Door"]
+rule = "(Small_Key_Fire_Temple, 8) and can_use(Megaton_Hammer)"
+was = "((Small_Key_Fire_Temple, 8) or (not keysanity)) and can_use(Megaton_Hammer)"
+source = "https://www.nintendolife.com/guides/zelda-ocarina-of-time-fire-temple-walkthrough-switch-2 (Boss Key): hammer blocks guard a small-key door before the lower Flare Dancer/boss-key loop. Eight total acquired keys permit every order; being non-keysanity does not unlock it. Banc paired locks in room 15."
+
+[exits."Fire Temple Elevator Room"."Fire Temple Boulder Maze Lower"]
+rule = "(Small_Key_Fire_Temple, 3) and Progressive_Strength_Upgrade and (has_explosives or Bow or Hookshot)"
+was = "(Small_Key_Fire_Temple, 4) and (Progressive_Strength_Upgrade or logic_fire_strength) and (has_explosives or Bow or Hookshot)"
+source = "https://www.nintendolife.com/guides/zelda-ocarina-of-time-fire-temple-walkthrough-switch-2 (Meeting Darunia; Flame wall switch): entrance east lock plus two elevator-column locks spend three keys; block movement and ranged switch lead directly to the maze. Banc has two paired locks in room 21."
+
+[exits."Fire Temple Boulder Maze Lower"."Fire Temple Narrow Path Room"]
+rule = "(Small_Key_Fire_Temple, 4)"
+was = "(Small_Key_Fire_Temple, 5)"
+source = "https://www.nintendolife.com/guides/zelda-ocarina-of-time-fire-temple-walkthrough-switch-2 (Boulder maze): one further locked door leads from the lower boulder maze to the narrow walkway/eye switch."
+
+[locations."Fire Temple Map Chest"]
+region = "Fire Temple Boulder Maze Lower"
+rule = "True"
+was = "Bow or (Small_Key_Fire_Temple, 6)"
+source = "https://www.nintendolife.com/guides/zelda-ocarina-of-time-fire-temple-walkthrough-switch-2 (Boulder maze): map chest is in the lower maze alcove. Banc Dynamic room 5 Hash 3688520809244472975 holds Item_Dungeon_Map despite GetEventName FireTemple_GetCompass."
+
+[locations."Fire Temple Compass Chest"]
+region = "Fire Temple Narrow Path Room"
+rule = "can_use(Bow)"
+was = "True"
+source = "https://www.nintendolife.com/guides/zelda-ocarina-of-time-fire-temple-walkthrough-switch-2 (Boulder maze): shoot the eye beside the thin lava walkways for Compass. Banc Static room 16 Hash 16713240760352215634 holds Item_Dungeon_Compass despite GetEventName FireTemple_GetMap."
+
+[exits."Fire Temple Narrow Path Room"."Fire Temple Boulder Maze Upper"]
+rule = "True"
+was = "(Small_Key_Fire_Temple, 6)"
+source = "https://www.nintendolife.com/guides/zelda-ocarina-of-time-fire-temple-walkthrough-switch-2 (Boulder maze): bypass the locked flame-maze door, follow the moving-flame path and push the shortcut block to reach upper boulder maze; no further key spent."
+
+[locations."Fire Temple Boulder Maze Side Room Chest"]
+region = "Fire Temple Flame Maze"
+source = "https://www.nintendolife.com/guides/zelda-ocarina-of-time-fire-temple-walkthrough-switch-2 (Fire maze): the north outer room holds a Goron/key. Census room 11 Hash 10521366928524045067. Provisional world-name correspondence for the unlinked side-room key: lower maze now has the Map and one lower key, not two lower keys. No census link asserted."
+
+[exits."Fire Temple Boulder Maze Upper"."Fire Temple Flame Maze"]
+rule = "(Small_Key_Fire_Temple, 5)"
+was = "(Small_Key_Fire_Temple, 7)"
+source = "https://www.nintendolife.com/guides/zelda-ocarina-of-time-fire-temple-walkthrough-switch-2 (Fire maze): return from upper maze to the flame-wall room and spend the fifth key on its west door."
+
+[exits."Fire Temple Flame Maze"."Fire Temple Upper"]
+rule = "(Small_Key_Fire_Temple, 7) and has_explosives"
+was = "(Small_Key_Fire_Temple, 8) or (Hover_Boots and Megaton_Hammer) or logic_fire_flame_maze"
+source = "https://www.nintendolife.com/guides/zelda-ocarina-of-time-fire-temple-walkthrough-switch-2 (Fire maze; Flare Dancer): south inner lock then north flame-wall lock consume sixth/seventh keys; Bomb exposes Flare Dancer. N64 Hover/Hammer bypass unverified."
+
+[events."Fire Temple Upper"."Fire Temple Pillar Lowered"]
+rule = "can_use(Megaton_Hammer) and can_play(Song_of_Time)"
+new = true
+source = "https://www.nintendolife.com/guides/zelda-ocarina-of-time-fire-temple-walkthrough-switch-2 (Sending the pillar): Hammer route reaches a Time Block; Song of Time opens the way to the high Goron cell and Hammer floor panel drops the pillar to the boss approach."
+
+[exits."Fire Temple Upper"."Fire Temple Before Boss"]
+rule = "'Fire Temple Pillar Lowered'"
+was = "Megaton_Hammer and (can_play(Song_of_Time) or has_explosives)"
+source = "https://www.nintendolife.com/guides/zelda-ocarina-of-time-fire-temple-walkthrough-switch-2 (Sending the pillar): use the high cell's Hammer panel after the Time Block. N64 explosive alternative unverified."
+
+[exits."Fire Temple Near Boss"."Fire Temple Before Boss"]
+rule = "is_adult and 'Fire Temple Pillar Lowered'"
+was = "is_adult and (fire_temple_shortcuts or logic_fire_boss_door_jump or Hover_Boots)"
+source = "https://www.nintendolife.com/guides/zelda-ocarina-of-time-fire-temple-walkthrough-switch-2 (Meeting Darunia; Sending the pillar): lower the pillar from above for the boss approach. No remake proof for the ordinary N64 Hover Boots skip."
