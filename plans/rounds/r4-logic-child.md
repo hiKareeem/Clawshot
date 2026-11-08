@@ -1423,3 +1423,28 @@ the seeds Kareem plays stay in logic.
   (Gerudo Valley and Fortress left to track B); 20:06 time flows after meeting Zelda (adult night rules to track B);
   20:10 GTG key as a chest (fa9ed2b); 20:11 Great Fairies (first fairy, fees; DMC, Colossus, OGC to track B);
   21:01 Shadow Trial Golden Gauntlets chest needs the Lens (138fb85).
+
+## Gates (on the branch, rebased on main 00a9b63, before the handoff)
+
+```
+uv run ruff format --check                                   94 files already formatted
+uv run ruff check                                            All checks passed!
+uv run pytest                                                290 passed, 26 skipped
+OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump      25 passed, 291 deselected
+```
+
+Each area batch was also checked before its commit on a `git archive` of the branch plus that batch's files
+(`E:/OOTRemake/work/r4-logic-child/check_files.sh`: the world loads with no dangling exit or undefined event, and
+`test_world_remake`, `test_world_data` (vanilla beatable, 200 default and 20 progressive seeds), `test_world_census`,
+`test_seed` and `test_generate` pass). One full run stalled at about 70 % while a Hookshot build used every core
+(not this track's); timing every seed alone (`seed_times.py`) showed none slow, and the run above finished.
+
+## Left for later
+
+- The in-game questions above (Kareem), and the Slingshot room: rule or placement patch once his answer is in.
+- Remake-only checks found per area (census Hashes in the area sections) need world locations and census links.
+- Census links the area work suggests (census owner): Kak Open Grotto Chest 12902291359202819102, Kak Redead Grotto
+  Chest 5755485285664292988, DC End of Bridge Chest 7524527082521156886, the LLR grotto scrubs, BotW's nine chests
+  (`findings/bottom_of_the_well.md`).
+- Great Fairy fees and other rupee costs need rupee logic.
+- `'Time Flows'` as a compiler-level gate, and the adult night rules (track B).
