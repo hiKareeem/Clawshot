@@ -1916,13 +1916,13 @@ exactly those two original references to `HaveTalked_Npc_Kokiri_001_Shop_Child_P
 It is already a saved Bool (Hash 3217462169, false/reset 8/save file 0). D22 therefore needs no new flag
 or GameDataList layout change.
 
-With Gift shuffled, `KF Shopkeeper Gift` is one remake-only NPC check with both stable flow/event IDs,
+With Gift shuffled, `KF Shopkeeper Gift` is one remake-only missable check with both stable flow/event IDs,
 not an invented OoTR check. The copied gift spec moves the existing `KF Kokiri Shop` free-shield
 event's rule/source to the placed location and removes its implicit shield grant. Access still requires
 the early child tree visit past Mido; it cannot bootstrap its own initial shield. Event45 becomes a
 saved-Bool query with the same offer/no-offer branches; both grant steps set completion immediately
 after handing over the placed actor. The equipped-shield dependency is gone only for this shuffled
-check. Even an unmoved shuffled shield gets the once-gate. Unshuffled logic and flow keep vanilla repeats.
+check. Explicit same-actor patch probes also normalize it. Unshuffled logic/flow keep vanilla repeats.
 
 `Obj_Shield_Deku` and `TBox_Shield_Deku` have the same PouchActorInfo equipment/category fields
 (both ages `Weapon_Shield_Deku`); the former is a backwards actor alias for the existing Deku Shield
@@ -1931,17 +1931,39 @@ unmapped upgrade. No new item or unrelated gift family is enabled.
 
 The synthetic and real-flow control-flow interpreter checks one grant with either equipment state,
 no grant on repeat/restored completion, and completion after either original branch; an exact inverse
-delta restores the entire original flow. This is file/control-flow proof, not an engine/game run.
+delta restores the entire original flow. Those oracles are file/control-flow proof.
 Controlled new-game output `ingame/shopkeeper-boomerang` supplies a shield in Mido's far-right chest
 and a once-only Boomerang from the shopkeeper. Its flow grows 50552 -> 51200 bytes; allocation
 50832 -> 51472. No GameDataList is written. Checklist/isolated release-only launcher are in the round file.
 
-Actual public child-slice CLI smoke (seed7, Chest+Gift): 17 checks, three spheres, 16 resources;
+Kareem confirmed via Claude (2026-11-08): Boomerang with the shield equipped, nothing on later
+talks. No game was rerun by the agent. His option1 keeps the native story window and forbids
+progression at the shuffled check: its `Missable` location type is rejected for progression by
+`allowed()`. Gift expansion/effective-CS1 replay include the new type. The controlled Boomerang
+probe is engine evidence, not a placement permitted in ordinary generated seeds under this policy.
+Extending the native window is later work. A 20-seed synthetic generation regression failed before
+the guard (seed1 put Deku Shield there) and passes after.
+
+Initial pre-policy public child-slice CLI smoke (seed7, Chest+Gift): 17 checks, three spheres, 16 resources;
 both merchant branches grant the placed Fairy Ocarina, no implicit shield event or new GameDataList.
 The written spoiler/note includes its two physical IDs and visit directions. A second CLI/CS1/hash-seed
-process produces 18 byte-identical files; independent child-only Search wins. This is not the
-whole-world Chest+Shop+Gift seed7: that fill was refused by a D25 ammo/early-Fire-key capacity
-interaction, with printed diagnostic values in the round file; no fill policy was changed here.
+process produced 18 byte-identical files; independent child-only Search won. That initial smoke did
+not substitute for the whole-world Chest+Shop+Gift seed7, which exposed D25 ammo consuming early
+Fire-key capacity. Claude subsequently authorized the generator follow-up below.
+
+### Generator follow-up: restriction order before ammo
+
+The reviewer-authorized ordinary fill order is own-dungeon items, type-held items (songs and Shop
+refills, regardless of class), D25 bag-gated ammo, remaining progression, then filler. The type-held
+pool takes sparse allowed capacities before general refills, preserving Blue Fire's gated sale slots.
+Constrained/progression stages assume all not-yet-placed items; the D20 return-kit prerequisite is
+unchanged. Unrestricted junk retains fast fill, so otherwise-beatable slices may contain unreachable
+junk. No retry bound, native rule, item eligibility or gift story window is relaxed.
+
+Two synthetic one-attempt regressions cover ammo consuming the only entrance-key slot and the
+type-held song/bag dependency cycle. Both failed before their aimed fixes and pass after. Actual
+whole-world seed7 mode/attempt/sphere evidence and final gates are in `plans/rounds/r7-gifts.md`;
+these do not claim a Hookshot play run.
 
 ### Treasure Chest Game: contents experiment only
 

@@ -2,7 +2,7 @@
 
 Branch `r7/gifts`. Required AGENTS/README/plans 00–04/decisions and all round-5/6 reports read,
 including the Round 7 opening/shared-file rules. Dump and save backups are read-only; no game,
-launcher, GUI, Hookshot build or terminal-control command is run. Scratch/generated data stays under
+launcher, GUI, Hookshot build or terminal-control command is run by this agent. Scratch/generated data stays under
 `E:/OOTRemake/work/r7-gifts/`. No dependency, merge, push or stash change.
 
 ## Item 1: shopkeeper gift
@@ -16,15 +16,13 @@ Implementation decision: on Gift shuffle only, reuse that Bool as the eligibilit
 equipment test, set it after both grants, and represent the two stable flow/event IDs as one remake-only
 check, `KF Shopkeeper Gift`. Move the existing data-sourced free-shield event rule to that location in a
 copied gift spec; do not leave an implicit free shield in a shuffled world. Unshuffled specs/flows keep
-the original repeat event and equipment condition. Normalize the gate even if the shuffled gift lands on
-its vanilla shield. Existing flavour dialogue remains; no claim of new dialogue or gameplay acceptance.
+the original repeat event and equipment condition. Low-level same-actor probes still normalize the
+once-gate; ordinary generated seeds now follow Kareem's non-progression policy below. Dialogue is unchanged.
 
-The native quest cutoffs are deliberately unchanged: the reward is missable if the player ignores the
-documented shopkeeper visit until after Gohma/castle completion. The inherited monotone rule proves
-an early collection order, not safety after skipping it; the short Gohma-only opening need not include
-an item used only later. **Kareem/co-owner: should shuffled shopkeeper gifts remain available past
-the native cutoff until collected?** That would need a separate Talk-dispatch/logic policy change,
-not a fake completion flag. This track does not silently widen the native story window.
+**Kareem's decision via Claude, 2026-11-08: option1.** Keep the native quest cutoffs unchanged.
+When shuffled, `KF Shopkeeper Gift` may contain only non-progression items, enforced by a missable
+location type through `allowed()`. No seed may rely on a progression reward surviving this missable
+window. Extending its Talk-dispatch/story window is a later change, not part of this round.
 
 Isolated shared-file commits: `b0cbb2f` (`gift_rules.toml`), `5e2f128` (player-name row and its coverage
 oracle), `079b8f9` (`item_actors.toml` backwards alias). First smoke printed the check absent: the native
@@ -46,24 +44,24 @@ Child Banc 510884 -> 510924, allocation 511176 -> 511208; Adult 516036 -> 516076
 allocation 516328 -> 516360. No GameDataList. Copied/statically checked approved new-game launcher;
 no batch, dry run, window or game executed.
 
-**Kareem: new game, get that chest shield and the normal Kokiri Sword; pass Mido and talk to the tree;
-before Gohma/castle completion return to the shop with the shield equipped. Expect Boomerang model/text,
-then no second reward after unequipping/re-entry and Save/Continue. Require overlay log lines for the
-merchant flow, child Kokiri Dynamic and size table.** Flavour dialogue still refers to the shield.
+**In game, Kareem confirmed via Claude (2026-11-08): Boomerang is granted with the shield equipped,
+and later talks give nothing.** This is the supplied game result, not a rerun by the agent. The original
+isolated new-game launcher and `ingame/shopkeeper-check.md` remain available. The message did not
+separately report Save/Continue or quote overlay-log lines; no additional observations are invented.
 
-### Full-seed diagnostic, not a passed smoke
+### Original full-seed diagnostic (before reviewer-authorized item4)
 
-Whole-world Chest+Shop+Gift seed 7 refused within the existing ten-attempt bound after adding the check:
+Before item4, whole-world Chest+Shop+Gift seed 7 refused within the existing ten-attempt bound:
 last failure `Small Key (Fire Temple)`, 6 allowed of 225 left. No unchanged retry or seed/settings reroll.
 A one-attempt diagnostic printed all candidate/key/placement values: only two Fire keys were collectable;
 native ammo prefill occupied Big Lava Room Blocked Door with Bombs and Highest Goron with Bombchus.
 The remaining Fire slots all needed later keys. This exposes the existing D25 prefill/key-capacity
 interaction under the changed pool/RNG, not the shield gate (seven assumed shields; Mido/time travel
 and Forest gear held). Diagnostic artifact: external `diagnose_fill.py`; error log `gift-cli-0.log`.
-No retry-count, dungeon rule, ammo policy or fill code is changed by this track. The generator correctly
-refuses output; the controlled player overlay and focused merchant behavior are independently verified.
-**Claude: review the D25 prefill preserving early dungeon-key capacity before treating this full
-Chest+Shop+Gift seed 7 as generatable.** This is an explicit residual integration finding, not a passed seed.
+At that point no retry-count, dungeon rule, ammo policy or fill code was changed. The generator correctly
+refused output; controlled player overlays were independently verified. Claude subsequently authorized
+item4 below to correct the generator ordering. This original failure is retained as the failing-before
+evidence, not described as the outcome of the updated generator.
 
 ### Successful required early-game surface
 
@@ -77,12 +75,12 @@ A second CLI process replays its expanded CS1 with another hash seed: **18/18 fi
 Evidence: external `slice-proof.json`. This verifies the requested early check end to end; it does not
 substitute for or relabel the explicitly refused whole-world Fire-key fill above.
 
-### Coordination delivery failure
+### Initial coordination delivery failure, resolved
 
-Two prescribed `bermuda.exe thread post --thread cs-r7 --as cs7d ...` notices returned
-`no thread cs-r7`; `thread log` returned empty. Read-only store inspection shows cs-r1 through cs-r6,
-no cs-r7. No thread was created (forbidden by this track's command allowlist). Shared notices and the
-fill request are preserved here; handoff will attempt the prescribed post once more after the work.
+The two initial notices and first final handoff returned `no thread cs-r7`. No thread was created by
+this track (forbidden by the command allowlist). After Claude supplied the missing thread, all three
+original messages were reposted unchanged, in order, with `thread post --thread cs-r7 --as cs7d`;
+all three succeeded. Subsequent item4 shared-file notices also posted successfully.
 
 ## Item 2: Treasure Chest Game
 
@@ -155,7 +153,7 @@ save/revisit behavior and chronological beatability. Grant-only swaps would disa
 rather than completed dungeons/awakening scenes?** Proposed separation is recorded in section28,
 not applied as an unapproved product decision.
 
-## Completed gate evidence
+## Initial items1–3 gates (before rebase/item4)
 
 | Command | Observed result |
 |---|---|
@@ -164,11 +162,9 @@ not applied as an unapproved product decision.
 | `uv run pytest --basetemp E:/OOTRemake/work/r7-gifts/gate-synthetic` | 517 passed, 70 skipped; 757.53 s |
 | `OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump --basetemp E:/OOTRemake/work/r7-gifts/gate-dump` | 69 passed, 518 deselected; 1194.27 s |
 
-All four required full commands passed. The complete dump run includes the new real merchant-flow
-oracle, alias-based eligibility, the existing Gift slice writer, all formats/census and the actual
-CLI/chronological/seed integration oracles. No skipped/narrowed substitute, retry increase or weakened
-assertion was used. No source/test code edits after these gates started; subsequent edits are this report
-and section28's research/smoke evidence only. Runtime game acceptance remains Kareem's.
+These four full commands passed before the reviewer follow-up. They covered formats/census,
+the merchant oracle, Gift integration and chronological/seed oracles; they are historical evidence,
+not substitutes for the fresh post-fix gates below. Runtime game acceptance remains Kareem's.
 
 Completed temporary artifacts removed only after their proof: the initial no-check smoke folder,
 both successful child-slice/replay folders, both completed full-gate basetemps and the failed whole-world
@@ -179,38 +175,146 @@ No active test, game/save/user/backup path, other worktree or pre-existing file 
 Independent saved-artifact audit (not the builders' in-memory trees) also passed: all **five** emitted
 resources parsed; exact inverse allowed-field deltas restore the original Banc/flow trees; only the
 shield output's three planned size entries change. Both actual batch texts use only the bin executable,
-suppress update checks, stop if missing and name distinct isolated users. Neither user folder exists
-(no launcher was run). Retained external evidence: `ingame/artifact-proof.json`.
+suppress update checks, stop if missing and name distinct isolated users. At this initial pre-play audit,
+neither user folder existed. Retained external evidence: `ingame/artifact-proof.json`.
 
-## Branch handoff ledger
+## Branch handoff ledger (rebased onto approved main `dfe923a`)
 
 | Commit | Scope |
 |---|---|
-| `b0cbb2f` | Isolated shared gift-rule data/schema contract |
-| `5e2f128` | Isolated shared player-name row and copy-identity coverage |
-| `079b8f9` | Isolated shared native gift/chest shield actor equivalence |
-| `e9c095d` | Item1: both-branch saved once-gate, copied-spec event-to-check cutover, tests, controlled new-game output evidence |
-| `0d6597a` | Item2: first-prize contents/preview experiment and save-copy checklist evidence |
-| `e1c5ff8` | Item3: all-nine reward/blue-warp/quest-gate research, no patch |
+| `5802aba` | Isolated shared gift-rule data/schema contract |
+| `ebbbfed` | Isolated shared player-name row and copy-identity coverage |
+| `d187892` | Isolated shared native gift/chest shield actor equivalence |
+| `54bf25f` | Item1: both-branch saved once-gate, copied-spec event-to-check cutover and tests |
+| `1bfe7d6` | Item2: first-prize contents/preview experiment and save-copy checklist |
+| `e1d3615` | Item3: all-nine reward/blue-warp/quest-gate research, no patch |
+| `f7a39e7` | Initial gates, CLI/replay and artifact audit; earlier posted hashes are historical |
+| `313a01e` | Item4: own-dungeon items before D25 ammo, early-key regression |
+| `266f219` | Item4: captured type-held dependency cycle and second regression |
+| `708cedb` | Item4: explicit type-held stage before ammo; replaces the intermediate sort workaround |
+| `9a1ac61` | Item4: sparse type-held capacities before general refills |
+| `c543679` | Shared synthetic purchase fixture: first Blue Fire sets its owned-content state |
 
-The final documentation-only commit records the full gates, actual CLI/replay proof, saved-artifact
-audit and this ledger; its own hash is reported in the final handoff rather than self-referenced here.
+Final documentation evidence and its own head are reported after the post-fix gates, rather than
+self-referenced here. The approved rebase was conflict-free; the clean final rebase was up to date.
 No merge, push, stash, dependency change, other-worktree edit or unauthorized rebase.
 
 ### Left for review and play
 
-- **Kareem:** the two named launchers/checklists under external `ingame/`, with overlay logs and actual
-  reward/repeat/save observations. No game acceptance is fabricated; Treasure Chest Game D17 stays disabled.
+- **Kareem:** Treasure Chest Game's isolated-save checklist remains pending; D17 stays disabled.
+  The shopkeeper's equipped-shield grant and repeat-talk result are confirmed above.
 - **Kareem/co-owner:** future boss-reward gate semantics (question in item3/section28); no boss rewards enabled.
-- **Claude:** the isolated shared-file commits above, section28 inserted after future sections25–27 at
-  integration, and the diagnosed D25 early-Fire-key capacity interaction for whole-world Chest+Shop+Gift seed7.
-  It was refused, not replaced by a secretly rerolled seed. The successful required early-game CLI is a
-  separately labelled child-slice proof; its 18-file deterministic replay is not whole-world acceptance.
-- **Coordination:** `cs-r7` was absent from the available Bermuda store; final prescribed handoff post
-  outcome is recorded below. No forbidden thread creation or other terminal messaging was attempted.
+- **Claude:** integrate the isolated shared-file commits and section28 after sections25–27. Item4's
+  latest generator/matrix/gate evidence below supersedes the original D25 refusal.
+- **Kareem:** option1 is the approved policy: missable shuffled gifts reject progression. The native
+  window remains unchanged; extending it is later work, not an unanswered decision in this branch.
+- **Coordination:** the missing-thread blocker is resolved. Final post-fix head is posted only after
+  the four required commands, not inferred from the earlier handoff.
 
-Final prescribed handoff post was attempted **after all four gates passed**, naming the six item/shared
-commits, gate counts, artifacts, D17/boss boundaries and the D25 integration finding. It again returned
-`bermuda: no thread cs-r7: create it with bermuda thread new cs-r7` (exit1). This is a coordination
-delivery blocker, not a successful post; creating threads is forbidden for this track. The full handoff
-is committed here for Claude to read/repost once that thread exists. No further unchanged retry.
+## Item4: reviewer-authorized generator ordering
+
+Claude authorized the generator fix and its restriction order in this conversation (2026-11-08).
+The implementation preserves D20 return-kit staging and uses these explicit ordinary fill stages:
+own-dungeon items (keys/maps/compasses), all type-held items (including songs and normal/progression
+shop refills), D25 bag-gated ammo, remaining progression, then filler. Each constrained/progression
+stage assumes every not-yet-placed item. No retries, rules, location eligibility, seed or settings are
+relaxed. No product decision was made about the native gift window.
+
+Two synthetic failing-before/passing-after cases in `tests/test_gifts_fill.py`:
+
+- A bag-gated dungeon has one entrance-key slot and two key-locked ammo slots. Printed RNG/state
+  values showed ammo in the entrance slot; seed0, one attempt, failed with no reachable Small Key.
+  Both ammo families now wait behind the real entrance key and an independently obtained bag.
+- A type-held song/bag dependency: flexible progression consumes the song's viable frontier.
+  The three-check seed2, one-attempt case failed with no reachable `Storms`; taking the type-held
+  song first leaves the bag before the song and its unlocked chest, without widening allowed types.
+
+Dungeon-before-ammo alone exposed another ordering issue: the unchanged ten-attempt whole-world
+Gift run had five Fire-key failures and five type-held-song failures. Captured exception-frame values
+showed Storms stranded at adult Windmill/Sheik Temple while the independent bag was in the Well.
+The intermediate type-priority safeguard generated 278 checks in 22 spheres. Per Claude's subsequent
+direction, the final code replaces that workaround with the explicit type-held stage before ammo.
+All 23 focused generator, age-return and regression tests pass after that cutover.
+
+**Claude: final unrestricted junk retains OoTR-style fast fill. A valid child slice intentionally has
+unreachable adult-roof junk (`test_a_slice_keeps_only_its_areas_and_its_goal`); applying reachability
+to all filler would be a separate all-checks-reachable policy change.** This distinction was posted;
+all constrained/progression stages do use the requested assumed search.
+
+### Type-held capacity follow-up
+
+The first full synthetic gate on `708cedb` exposed a genuine constrained-Shop regression:
+**one failed, 520 passed, 70 skipped**. Normal Fish refills could consume Blue Fire's eligible frontier.
+Printed native whitelist values: Blue Fire has two of the fixture's three slots; Fish has all three.
+`9a1ac61` stably orders the type-held pool by allowed destination count, most constrained first.
+
+The original synthetic purchase fixture also never supplied its separate owned `Blue Fire` state,
+leaving Potion slot5 permanently unreachable even after the first purchase. `c543679` models that
+ownership transition so all type-held normal refills may use the intended assumed search. The exact
+first-Blue-Fire-at-`KF Shop Item 7` assertion is retained across all 20 seeds; no native shop whitelist,
+sale gate or bottle rule is changed. All **53** focused shop/generator/return-kit/regression tests pass.
+
+### Pre-missable-policy whole-world CLI matrix after `9a1ac61`/`c543679`
+
+All four modes used seed7, no slice/alternate goal and the unchanged ten-attempt bound. The real
+public CLI entrypoint built and wrote each output; a pass-through wrapper counted actual `fill`
+calls without altering arguments, RNG, results or error handling. Independent Search replayed the
+returned full placements, matched the written spoiler's progression spheres and reached the goal.
+
+| Mode | Actual attempts / existing bound | Shuffled checks | Collection spheres | Output files |
+|---|---|---|---|---|
+| Chest | 1 / 10 | 164 | 24 | 64 |
+| Chest+Shop | 3 / 10 | 228 | 24 | 82 |
+| Chest+Shop+Gift | 1 / 10 | 278 | 19 | 123 |
+| `--settings CS1` default | 1 / 10 | 164 | 24 | 64 |
+
+The Shop run's first two failures were ordinary Fire-key capacity refusals, captured in the proof;
+the generator did not reroll settings or extend its bound. Each mode retained **63** correctly
+own-dungeon items and **six** ammo pickups inaccessible under maximal independent-bag-free inventory.
+Both shuffled-Shop modes retained **59** Buy refills in Shop. The explicit Chest/default-CS1 outputs
+were **64/64 files byte-identical**. Every collection sphere's shuffled checks/items was printed.
+
+Retained external final evidence under `E:/OOTRemake/work/r7-gifts/`: `item4-final-matrix-proof.json`,
+`item4-final-matrix-spheres.log`, `item4-final-matrix-hashes.json`, and four `item4-final-*-cli.log` files.
+Captured failing-before values remain in `item4-failure-states.json`. The raw four smoke outputs,
+obsolete interim output and throwaway counter/diagnostic/unused verifier scripts were removed only
+after the successful proof; the two requested controlled player overlays/launchers/checklists remain.
+No game or launcher was started; no main save, backup or dump file was modified.
+
+### Completed pre-missable-policy gates
+
+The earlier synthetic failure above is not counted as a passed gate. Its in-flight old-source dump
+run was cancelled, not reported as success. The refreshed full commands use `9a1ac61`/`c543679`
+on approved main `dfe923a`; no source/test edits followed their start.
+
+| Command | Observed result |
+|---|---|
+| `uv run ruff format --check` | 183 files already formatted |
+| `uv run ruff check` | All checks passed |
+| `uv run pytest --basetemp E:/OOTRemake/work/r7-gifts/gate-dfe923a-synthetic-vvmt3e1o` | 521 passed, 70 skipped; 329.50 s |
+| `OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump --basetemp E:/OOTRemake/work/r7-gifts/gate-dfe923a-dump-ojz3x37k` | 69 passed, 522 deselected; 881.35 s |
+
+All four completed on `9a1ac61`/`c543679` before Kareem supplied the game result and missable policy.
+The attempted stop found the dump job already completed successfully; that run was not cancelled.
+Fresh policy-source gates below supersede these pre-policy counts. The completed synthetic basetemp
+was removed only after its passing run; no active test directory was removed.
+
+## Approved missable-check policy follow-up
+
+Kareem's equipped-shield Boomerang/repeat-talk confirmation and option1 are recorded above.
+Shared commit `8001e9a` rejects any `world.items[item].progression` at a `Missable` location in
+`allowed()`. Owned `bcad046` assigns that type only to the shuffled merchant check, expands/replays
+it through Gift settings, and leaves the unshuffled native free-shield event and story window intact.
+No flow grant/gate bytes change in this policy follow-up.
+
+The new synthetic generated-world regression failed before at seed1:
+`Independent Chest = Rupee`, `KF Shopkeeper Gift = Deku Shield` (progression). After the guard,
+all 20 one-attempt seeds place only non-progression at the merchant while still obtaining the required
+shield elsewhere. The former literal held-type tuple test was replaced with real `allowed()` behavior
+on Chest/Gift/Song/Missable destinations; no obsolete tuple snapshot is re-pinned. All **78** focused
+gift/shop/generator/return-kit tests pass before the newly authorized main rebase.
+
+Claude then advanced main to `9b4735c` (merged B/C, D27/D28). This clean checkpoint precedes that
+rebase; section28 is retained after27, with section25's integration remaining before26. Fresh policy
+CLI matrix (including expanded Gift CS1 replay and goal-without-missable proof), four gates and
+rewritten head follow on the approved new base; pre-policy results above are not reused.
