@@ -17,7 +17,7 @@ GE01→XC04 are aliases with no separate errand. There are 186 routed checks and
 | FA01 | — | Before obtaining Din Fire, play Lullaby at the Hyrule Castle fountain | asked 2026-11-08, answer pending | — |
 | TT01 | — | With only Fairy Ocarina, three stones and Song of Time, play at the altar | asked 2026-11-08, answer pending | — |
 | TT02 | — | Immediately after the first sword pull, try putting it back | asked 2026-11-08, answer pending | — |
-| DMT03 | — | At the summit, speak to the owl before Din Fire | asked 2026-11-08, answer pending | — |
+| DMT03 | — | At the summit, speak to the owl before Din Fire | confirmed | Child, test `r5-gifts/ingame/din-fairy-hookshot` (Kareem, 2026-11-08, Hookshot release build): the owl refused before the fairy, and still refused after she gave the Hookshot instead of Din's Fire. The owl needs Din's Fire itself (`IsGet.Item_DinFire`, flow `Npc_Kaepora_DeathMountainTrail`); `child_death_mountain_trail.toml`'s `is_child and Dins_Fire` stands. |
 | ZD02 | — | After the first Silver Scale, win the second diving round | asked 2026-11-08, answer pending | — |
 | JJ02 | — | Without a Scale, dive through the elevator-room underwater passage to the scrub | asked 2026-11-08, answer pending | — |
 | JJ03 | — | In the entrance mouth, try Bombs then Bombchus on the ceiling tonsil; do not use Slingshot | asked 2026-11-08, answer pending | — |
