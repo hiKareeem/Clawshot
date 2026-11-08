@@ -18,7 +18,9 @@ def test_a_short_line_keeps_the_stone_style_and_colours_the_names():
     line = text.stone_line(
         ORIGINAL, f"They say {FIELD_START}Lake Hylia{FIELD_END} hides the {FIELD_START}Bow{FIELD_END}."
     )
-    highlight, back = Tag(0, 3, text.HIGHLIGHT), Tag(0, 3, b"\x01\x00")
+    # A name ends as the game's own highlights end, with colour ff ff, not by naming the stone's 01 00 again: that
+    # left the rest of the line highlighted in game (seed-shop-7c).
+    highlight, back = Tag(0, 3, b"\x00\x00"), Tag(0, 3, b"\xff\xff")
     assert line == [
         COLOUR,
         SIZE,

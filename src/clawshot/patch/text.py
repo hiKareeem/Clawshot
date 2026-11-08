@@ -38,6 +38,10 @@ HINT_WIDTH = 60  # characters a row; the game's own stone lines are at most 65
 HINT_ROWS = 2  # rows a page, as every stone line has
 COLOUR = (0, 3)  # the colour tag (group 0, type 3); its parameter is the colour
 HIGHLIGHT = b"\x00\x00"  # the colour other lines give a name they stress
+# What ends a highlight: every one of USen's 3046 highlights that ends in its line ends with this colour, never by
+# naming the line's own colour again. The stones' own ``01 00`` does not end one (seed-shop-7c, Kareem: the text
+# stayed highlighted to the end of the line).
+RESET = b"\xff\xff"
 PAGE_BREAK = Tag(0, 4, b"")
 
 
@@ -187,10 +191,10 @@ def _rows(text: str, width: int) -> list[str]:
 def stone_line(original: Sequence[Part], text: str, width: int = HINT_WIDTH, rows: int = HINT_ROWS) -> list[Part]:
     """A stone's line saying ``text`` in the look of ``original``: its opening tags first (voice, size, colour), rows
     of at most ``width`` characters, ``rows`` to a page, each new page reopening the size and colour, and the names
-    between :data:`~clawshot.generate.hints.FIELD_START` and ``FIELD_END`` in the highlight colour."""
+    between :data:`~clawshot.generate.hints.FIELD_START` and ``FIELD_END`` in the highlight colour, each closed with
+    :data:`RESET` as the game's own lines close theirs."""
     lead = keep_style(original, [])
     style = [tag for tag in lead if isinstance(tag, Tag) and tag.group == 0]
-    colour = next((tag.params for tag in style if (tag.group, tag.type) == COLOUR), b"\xff\xff")
     lines = _rows(text, width)
     pages = ["\n".join(lines[i : i + rows]) for i in range(0, len(lines), rows)]
     parts: list[Part] = list(lead)
@@ -201,7 +205,7 @@ def stone_line(original: Sequence[Part], text: str, width: int = HINT_WIDTH, row
             if char == FIELD_START:
                 parts.append(Tag(*COLOUR, HIGHLIGHT))
             elif char == FIELD_END:
-                parts.append(Tag(*COLOUR, colour))
+                parts.append(Tag(*COLOUR, RESET))
             elif parts and isinstance(parts[-1], str):
                 parts[-1] += char
             else:
