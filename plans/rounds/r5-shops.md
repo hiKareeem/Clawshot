@@ -81,6 +81,59 @@ Synthetic transform tests: **4 passed**. Targeted dump field-diff tests for nati
 **2 passed**; all other members/fields, including stock/release, match the original. Live output builder printed
 each old/new resource size, checked compression/readback and wrote raised entries only where needed.
 
+## Item 3: shield pool, native destinations and wallets
+
+`world/shops.py` normalizes the translated shop locations from the catalog, then compiles its wallet and release
+rules. The separate loader hook follows after the authorized rebase onto `cd592e3`. There are **64** ordinary
+shop locations, not 128 independent rewards; shelf copies keep one shared logical placement. The eight mask
+loans stay `MaskShop`, outside `--shuffle Shop` (their rental/trade flow is not an ordinary sale).
+
+The shield slot's pool entry is now the actual **Deku Shield**, classified progression. Before: a live search
+holding Kokiri Sword + Deku Shield could not pass Mido (helper read only `Buy Deku Shield`/drop). After: it can.
+Vanilla shops still supply the shield by purchase; shuffling `Shop` removes the fixed purchase and puts its shield
+in the shared pool. Keeping Mido blocks a shield self-lock in the Deku Tree; skipping Mido permits that placement,
+without opening the separate forest exit.
+
+Audited **every helper with a `Buy_*` reference**:
+
+| Helper | Result |
+|---|---|
+| `Deku_Shield`, `Hylian_Shield` | Added actual shield inventory; retained bought/drop forms |
+| `Goron_Tunic`, `Zora_Tunic` | Already read quoted actual inventory and bought forms; unchanged |
+| `Nuts`, `Sticks` | Added actual chest inventory; Sticks also recognizes native five-stick bundles |
+| `Bugs`, `Fish`, `Fairy`, `Blue_Fire` | Bought refill capability usable only with `has_bottle`; Blue Fire Arrow alternative retained |
+| `can_refill_bombchus` | Includes all native 1/3/5/8/10/15/20/30 bundle variants |
+
+Other direct `Buy_*` checks keep their existing logical item identity, so no helper silently loses a native
+offer. Refills are not new bottles; their `Buy ...` names describe refill access, not bottle ownership.
+
+Reviewer-approved **provisional** constraints (sources and rules in `shops.toml`):
+
+- Only the 35 ordinary native-display item variants can occupy Shop destinations. No custom/stand-in displays.
+- Tunics only at adult-accessible shops; child-only Market excluded. Original tunic slots are conservatively adult.
+- Capacity tiers **200/500/1000**; 240-rupee Bombchus need one wallet upgrade, 600-rupee tunics need two.
+  Slot prices remain fixed under item swaps; conditional discounts remain (using the undiscounted upper bound
+  is conservative).
+- Kokiri's five locked early slots keep the post-Mido release; the cheap nuts/stick and shield remain early.
+- Bombchu Shop keeps Dodongo's clear gate; Market Bazaar's bomb slot keeps its own clear gate.
+- Potion shops' Blue Fire slot keeps the acquired-Blue-Fire gate from `SoldOutGameData`/`DisplayShop:Event108`.
+  **Kareem: confirm the old Blue Fire slot unlocks on first Blue Fire acquisition, including when it sells
+  something else.** Conservative until played; component fields are not silently deleted.
+
+Fill commits are intentionally isolated: `bc71356` touches only `allowed()`; `ee886a3` fixes its caller gap.
+Normal filler previously bypassed `allowed()` entirely. Shop seeds now place chest-only items first and route
+all remaining filler through allowed-aware placement; native items prefer native shop destinations to avoid
+exhausting the chests needed by non-display items. Chest-only seed ordering is unchanged.
+
+Checks: initial shop-logic run **21 passed, 1 failed**; printed failure was test `Counter(dict)` treating the
+dictionary's item metadata as counts. Changed the assertion to count its keys; aimed rerun **1 passed**,
+including 30 complete synthetic fills with non-display normal filler. The first run's mini-seed 22 was beatable.
+Live smoke printed actual shield + sword passes Mido; catalog gives 35 native items; tunic false with 500 wallet,
+true with 1000. New stock-gate test and post-rebase hook results are recorded below.
+
+Reviewer corrected all three launchers to **only `E:/Games/Hookshot/hookshot.exe`**; that correction was read
+back, not overwritten. No test build/fallback is allowed. None was run.
+
 ## Coordination and provisional choices
 
 - Requested a narrow world loader hook for shop normalization/price predicates (not owned by B).

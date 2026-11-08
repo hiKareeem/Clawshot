@@ -1537,3 +1537,315 @@ member = "Component/ShopParam/Npc_Zora_011_Shop.game__component__ShopParam.bgyml
 index = 7
 vanilla_item = "Shop_ArrowBundle_03"
 price = 70
+
+# Native display policy: reviewer, 2026-11-08. Prices from PouchActorInfo.
+[helpers]
+# Sources: PouchActorInfo equipment/bundle targets + DisplayShop purchase/refill paths,
+# build e0f3ccfa; r5-shops.md. Existing tunic helpers already read their actual inventory.
+"Deku_Shield" = "'Deku Shield' or Buy_Deku_Shield or Deku_Shield_Drop"
+"Hylian_Shield" = "'Hylian Shield' or Buy_Hylian_Shield"
+"Sticks" = "'Deku Stick (1)' or Buy_Deku_Stick_1 or Buy_Deku_Stick_5 or Deku_Stick_Drop"
+"Nuts" = "'Deku Nuts (5)' or 'Deku Nuts (10)' or Buy_Deku_Nut_5 or Buy_Deku_Nut_10 or Deku_Nut_Drop"
+"Bugs" = "has_bottle and ('Bugs' or Buy_Bottle_Bug)"
+"Fish" = "has_bottle and ('Fish' or Buy_Fish)"
+"Fairy" = "has_bottle and ('Fairy' or Buy_Fairys_Spirit)"
+"Blue_Fire" = "has_bottle and ('Blue Fire' or Buy_Blue_Fire) or (blue_fire_arrows and can_use(Blue_Fire_Arrows))"
+"can_refill_bombchus" = "Buy_Bombchu_1 or Buy_Bombchu_3 or Buy_Bombchu_5 or Buy_Bombchu_8 or Buy_Bombchu_10 or Buy_Bombchu_15 or Buy_Bombchu_20 or Buy_Bombchu_30 or Bombchu_Drop"
+
+[items."Deku Shield"]
+display = "Shop_Weapon_Shield_Deku"
+price = 40
+class = "progression"
+source = "PouchActorInfo Shop_Weapon_Shield_Deku; native Shop actor pack, build e0f3ccfa"
+
+[items."Hylian Shield"]
+display = "Shop_Weapon_Shield_Hylian"
+price = 80
+class = "progression"
+source = "PouchActorInfo Shop_Weapon_Shield_Hylian; native Shop actor pack, build e0f3ccfa"
+
+[items."Goron Tunic"]
+display = "Shop_Armor_Goron"
+price = 600
+class = "progression"
+source = "PouchActorInfo Shop_Armor_Goron; native Shop actor pack, build e0f3ccfa"
+
+[items."Zora Tunic"]
+display = "Shop_Armor_Zora"
+price = 600
+class = "progression"
+source = "PouchActorInfo Shop_Armor_Zora; native Shop actor pack, build e0f3ccfa"
+
+[items."Buy Heart"]
+display = "Shop_Heart"
+price = 5
+class = "priority"
+source = "PouchActorInfo Shop_Heart; native Shop actor pack, build e0f3ccfa"
+
+[items."Magic Jar"]
+display = "Shop_MagicJar_Small"
+price = 10
+class = "normal"
+source = "PouchActorInfo Shop_MagicJar_Small; native Shop actor pack, build e0f3ccfa"
+
+[items."Buy Deku Nut (5)"]
+display = "Shop_DekuNutBundle_01"
+price = 20
+class = "progression"
+source = "PouchActorInfo Shop_DekuNutBundle_01; native Shop actor pack, build e0f3ccfa"
+
+[items."Buy Deku Nut (10)"]
+display = "Shop_DekuNutBundle_02"
+price = 30
+class = "progression"
+source = "PouchActorInfo Shop_DekuNutBundle_02; native Shop actor pack, build e0f3ccfa"
+
+[items."Buy Deku Stick (1)"]
+display = "Shop_DekuStick"
+price = 10
+class = "progression"
+source = "PouchActorInfo Shop_DekuStick; native Shop actor pack, build e0f3ccfa"
+
+[items."Buy Deku Stick (5)"]
+display = "Shop_DekuStickBundle_Medium"
+price = 40
+class = "progression"
+source = "PouchActorInfo Shop_DekuStickBundle_Medium; native Shop actor pack, build e0f3ccfa"
+
+[items."Buy Deku Seeds (10)"]
+display = "Shop_DekuSeedBundle_02"
+price = 15
+class = "priority"
+source = "PouchActorInfo Shop_DekuSeedBundle_02; native Shop actor pack, build e0f3ccfa"
+
+[items."Buy Deku Seeds (30)"]
+display = "Shop_DekuSeedBundle_01"
+price = 30
+class = "priority"
+source = "PouchActorInfo Shop_DekuSeedBundle_01; native Shop actor pack, build e0f3ccfa"
+
+[items."Buy Fish"]
+display = "Shop_Bottle_Fish"
+price = 50
+class = "progression"
+source = "PouchActorInfo Shop_Bottle_Fish; native Shop actor pack, build e0f3ccfa"
+
+[items."Buy Bottle Bug"]
+display = "Shop_Bottle_Bug"
+price = 30
+class = "progression"
+source = "PouchActorInfo Shop_Bottle_Bug; native Shop actor pack, build e0f3ccfa"
+
+[items."Buy Blue Fire"]
+display = "Shop_Bottle_BlueFire"
+price = 200
+class = "progression"
+source = "PouchActorInfo Shop_Bottle_BlueFire; native Shop actor pack, build e0f3ccfa"
+
+[items."Buy Fairy's Spirit"]
+display = "Shop_Bottle_Fairy"
+price = 50
+class = "progression"
+source = "PouchActorInfo Shop_Bottle_Fairy; native Shop actor pack, build e0f3ccfa"
+
+[items."Buy Red Potion for 30 Rupees"]
+display = "Shop_Bottle_RedPotion"
+price = 30
+class = "priority"
+source = "PouchActorInfo Shop_Bottle_RedPotion; native Shop actor pack, build e0f3ccfa"
+
+[items."Buy Green Potion"]
+display = "Shop_Bottle_GreenPotion"
+price = 30
+class = "priority"
+source = "PouchActorInfo Shop_Bottle_GreenPotion; native Shop actor pack, build e0f3ccfa"
+
+[items."Buy Half Milk"]
+display = "Shop_Bottle_HalfMilk"
+price = 20
+class = "priority"
+source = "PouchActorInfo Shop_Bottle_HalfMilk; native Shop actor pack, build e0f3ccfa"
+
+[items."Buy Poe"]
+display = "Shop_Bottle_Poe"
+price = 200
+class = "priority"
+source = "PouchActorInfo Shop_Bottle_Poe; native Shop actor pack, build e0f3ccfa"
+
+[items."Buy Arrows (10)"]
+display = "Shop_ArrowBundle_01"
+price = 20
+class = "priority"
+source = "PouchActorInfo Shop_ArrowBundle_01; native Shop actor pack, build e0f3ccfa"
+
+[items."Buy Arrows (30)"]
+display = "Shop_ArrowBundle_02"
+price = 50
+class = "priority"
+source = "PouchActorInfo Shop_ArrowBundle_02; native Shop actor pack, build e0f3ccfa"
+
+[items."Buy Arrows (50)"]
+display = "Shop_ArrowBundle_03"
+price = 70
+class = "priority"
+source = "PouchActorInfo Shop_ArrowBundle_03; native Shop actor pack, build e0f3ccfa"
+
+[items."Buy Bombs (5) for 35 Rupees"]
+display = "Shop_BombBundle_01"
+price = 35
+class = "priority"
+source = "PouchActorInfo Shop_BombBundle_01; native Shop actor pack, build e0f3ccfa"
+
+[items."Buy Bombs (10)"]
+display = "Shop_BombBundle_02"
+price = 45
+class = "priority"
+source = "PouchActorInfo Shop_BombBundle_02; native Shop actor pack, build e0f3ccfa"
+
+[items."Buy Bombs (20)"]
+display = "Shop_BombBundle_03"
+price = 80
+class = "priority"
+source = "PouchActorInfo Shop_BombBundle_03; native Shop actor pack, build e0f3ccfa"
+
+[items."Buy Bombs (30)"]
+display = "Shop_BombBundle_04"
+price = 110
+class = "priority"
+source = "PouchActorInfo Shop_BombBundle_04; native Shop actor pack, build e0f3ccfa"
+
+[items."Buy Bombchu (10)"]
+display = "Shop_BombchuBundle_01"
+price = 140
+class = "progression"
+source = "PouchActorInfo Shop_BombchuBundle_01; native Shop actor pack, build e0f3ccfa"
+
+[items."Buy Bombchu (20)"]
+display = "Shop_BombchuBundle_02"
+price = 240
+class = "progression"
+source = "PouchActorInfo Shop_BombchuBundle_02; native Shop actor pack, build e0f3ccfa"
+
+[items."Buy Bombchu (1)"]
+display = "Shop_BombchuBundle_03"
+price = 15
+class = "progression"
+source = "PouchActorInfo Shop_BombchuBundle_03; native Shop actor pack, build e0f3ccfa"
+
+[items."Buy Bombchu (3)"]
+display = "Shop_BombchuBundle_04"
+price = 45
+class = "progression"
+source = "PouchActorInfo Shop_BombchuBundle_04; native Shop actor pack, build e0f3ccfa"
+
+[items."Buy Bombchu (5)"]
+display = "Shop_BombchuBundle_05"
+price = 75
+class = "progression"
+source = "PouchActorInfo Shop_BombchuBundle_05; native Shop actor pack, build e0f3ccfa"
+
+[items."Buy Bombchu (8)"]
+display = "Shop_BombchuBundle_06"
+price = 120
+class = "progression"
+source = "PouchActorInfo Shop_BombchuBundle_06; native Shop actor pack, build e0f3ccfa"
+
+[items."Buy Bombchu (15)"]
+display = "Shop_BombchuBundle_07"
+price = 210
+class = "progression"
+source = "PouchActorInfo Shop_BombchuBundle_07; native Shop actor pack, build e0f3ccfa"
+
+[items."Buy Bombchu (30)"]
+display = "Shop_BombchuBundle_08"
+price = 300
+class = "progression"
+source = "PouchActorInfo Shop_BombchuBundle_08; native Shop actor pack, build e0f3ccfa"
+
+[[wallet]]
+capacity = 200
+rule = "True"
+
+[[wallet]]
+capacity = 500
+rule = "Progressive_Wallet"
+
+[[wallet]]
+capacity = 1000
+rule = "(Progressive_Wallet, 2)"
+
+[availability."GC Shop Item 4"]
+rule = "is_adult"
+source = "ShopParam release + DisplayShop availability, build e0f3ccfa; r5-shops.md"
+
+[availability."KF Shop Item 1"]
+rule = "is_adult or 'Showed Mido Sword & Shield'"
+source = "ShopParam release + DisplayShop availability, build e0f3ccfa; r5-shops.md"
+
+[availability."KF Shop Item 2"]
+rule = "is_adult or 'Showed Mido Sword & Shield'"
+source = "ShopParam release + DisplayShop availability, build e0f3ccfa; r5-shops.md"
+
+[availability."KF Shop Item 4"]
+rule = "is_adult or 'Showed Mido Sword & Shield'"
+source = "ShopParam release + DisplayShop availability, build e0f3ccfa; r5-shops.md"
+
+[availability."KF Shop Item 5"]
+rule = "is_adult or 'Showed Mido Sword & Shield'"
+source = "ShopParam release + DisplayShop availability, build e0f3ccfa; r5-shops.md"
+
+[availability."KF Shop Item 6"]
+rule = "is_adult or 'Showed Mido Sword & Shield'"
+source = "ShopParam release + DisplayShop availability, build e0f3ccfa; r5-shops.md"
+
+[availability."Market Bombchu Shop Item 1"]
+rule = "'Defeat King Dodongo'"
+source = "ShopParam release + DisplayShop availability, build e0f3ccfa; r5-shops.md"
+
+[availability."Market Bombchu Shop Item 2"]
+rule = "'Defeat King Dodongo'"
+source = "ShopParam release + DisplayShop availability, build e0f3ccfa; r5-shops.md"
+
+[availability."Market Bombchu Shop Item 3"]
+rule = "'Defeat King Dodongo'"
+source = "ShopParam release + DisplayShop availability, build e0f3ccfa; r5-shops.md"
+
+[availability."Market Bombchu Shop Item 4"]
+rule = "'Defeat King Dodongo'"
+source = "ShopParam release + DisplayShop availability, build e0f3ccfa; r5-shops.md"
+
+[availability."Market Bombchu Shop Item 5"]
+rule = "'Defeat King Dodongo'"
+source = "ShopParam release + DisplayShop availability, build e0f3ccfa; r5-shops.md"
+
+[availability."Market Bombchu Shop Item 6"]
+rule = "'Defeat King Dodongo'"
+source = "ShopParam release + DisplayShop availability, build e0f3ccfa; r5-shops.md"
+
+[availability."Market Bombchu Shop Item 7"]
+rule = "'Defeat King Dodongo'"
+source = "ShopParam release + DisplayShop availability, build e0f3ccfa; r5-shops.md"
+
+[availability."Market Bombchu Shop Item 8"]
+rule = "'Defeat King Dodongo'"
+source = "ShopParam release + DisplayShop availability, build e0f3ccfa; r5-shops.md"
+
+[availability."ZD Shop Item 4"]
+rule = "is_adult"
+source = "ShopParam release + DisplayShop availability, build e0f3ccfa; r5-shops.md"
+
+[availability."Market Bazaar Item 5"]
+rule = "'Defeat King Dodongo'"
+source = "Npc_Hylia_018_Shop GoodsList[4].Release.SoldOutGameData=Get_StoneOfFire_IsCompleted_Exp; DisplayShop Event67/Event372"
+
+[availability."Market Potion Shop Item 5"]
+rule = "Blue_Fire"
+source = "Npc_Hylia_020_Shop GoodsList[4].Release.SoldOutGameData=IsGet.Item_Bottle_BlueFire; DisplayShop Event108; conservative acquired-Blue-Fire gate"
+
+[availability."Kak Potion Shop Item 5"]
+rule = "Blue_Fire"
+source = "Npc_Hylia_020_Shop GoodsList[4].Release.SoldOutGameData=IsGet.Item_Bottle_BlueFire; DisplayShop Event108; conservative acquired-Blue-Fire gate"
+
+[item_locations]
+"Goron Tunic" = ["GC Shop Item 1", "GC Shop Item 2", "GC Shop Item 3", "GC Shop Item 4", "GC Shop Item 5", "GC Shop Item 6", "GC Shop Item 7", "GC Shop Item 8", "KF Shop Item 1", "KF Shop Item 2", "KF Shop Item 3", "KF Shop Item 4", "KF Shop Item 5", "KF Shop Item 6", "KF Shop Item 7", "KF Shop Item 8", "Kak Bazaar Item 1", "Kak Bazaar Item 2", "Kak Bazaar Item 3", "Kak Bazaar Item 4", "Kak Bazaar Item 5", "Kak Bazaar Item 6", "Kak Bazaar Item 7", "Kak Bazaar Item 8", "Kak Potion Shop Item 1", "Kak Potion Shop Item 2", "Kak Potion Shop Item 3", "Kak Potion Shop Item 4", "Kak Potion Shop Item 5", "Kak Potion Shop Item 6", "Kak Potion Shop Item 7", "Kak Potion Shop Item 8", "ZD Shop Item 1", "ZD Shop Item 2", "ZD Shop Item 3", "ZD Shop Item 4", "ZD Shop Item 5", "ZD Shop Item 6", "ZD Shop Item 7", "ZD Shop Item 8"]
+"Zora Tunic" = ["GC Shop Item 1", "GC Shop Item 2", "GC Shop Item 3", "GC Shop Item 4", "GC Shop Item 5", "GC Shop Item 6", "GC Shop Item 7", "GC Shop Item 8", "KF Shop Item 1", "KF Shop Item 2", "KF Shop Item 3", "KF Shop Item 4", "KF Shop Item 5", "KF Shop Item 6", "KF Shop Item 7", "KF Shop Item 8", "Kak Bazaar Item 1", "Kak Bazaar Item 2", "Kak Bazaar Item 3", "Kak Bazaar Item 4", "Kak Bazaar Item 5", "Kak Bazaar Item 6", "Kak Bazaar Item 7", "Kak Bazaar Item 8", "Kak Potion Shop Item 1", "Kak Potion Shop Item 2", "Kak Potion Shop Item 3", "Kak Potion Shop Item 4", "Kak Potion Shop Item 5", "Kak Potion Shop Item 6", "Kak Potion Shop Item 7", "Kak Potion Shop Item 8", "ZD Shop Item 1", "ZD Shop Item 2", "ZD Shop Item 3", "ZD Shop Item 4", "ZD Shop Item 5", "ZD Shop Item 6", "ZD Shop Item 7", "ZD Shop Item 8"]

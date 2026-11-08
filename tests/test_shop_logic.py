@@ -1,0 +1,179 @@
+import copy
+import random
+import tomllib
+from collections import Counter
+
+import pytest
+
+from clawshot.generate import Settings, generate
+from clawshot.generate.fill import allowed, fill, shuffled_locations
+from clawshot.patch.shops import SHOPS_TOML
+from clawshot.world import build_world
+from clawshot.world.load import load_spec
+from clawshot.world.search import Search
+from clawshot.world.shops import apply_shop_data
+
+
+@pytest.fixture
+def spec():
+    spec = load_spec()
+    with SHOPS_TOML.open("rb") as stream:
+        apply_shop_data(spec, tomllib.load(stream))
+    return spec
+
+
+def test_actual_shields_unlock_their_child_and_adult_rules(spec):
+    world = build_world(spec)
+    assert Search(world, ["Kokiri Sword", "Deku Shield"]).can_reach("KF Outside Deku Tree", "child")
+    location = world.locations["Deku Tree Slingshot Chest"]
+    assert not Search(world, ["Kokiri Sword"]).can_access(location)
+    assert world.items["Deku Shield"].progression
+    # An adult shield helper must also read actual inventory, not only shop access.
+    rule_spec = {**spec, "start": "Root", "goal": "Hylian_Shield"}
+    assert Search(build_world(rule_spec), ["Hylian Shield"]).won()
+
+
+def test_vanilla_shield_is_bought_and_shop_shuffle_puts_actual_shield_in_pool(spec):
+    world = build_world(spec)
+    assert "KF Shop Item 7" not in shuffled_locations(world, Settings())
+    assert world.locations["KF Shop Item 7"].vanilla == "Deku Shield"
+    assert "KF Shop Item 7" in shuffled_locations(world, Settings(shuffle=("Shop",)))
+    search = Search(world, ["Kokiri Sword"])
+    assert not search.can_reach("KF Outside Deku Tree", "child")
+    search.collect_spheres({"KF Shop Item 7": "Deku Shield"})
+    assert search.can_reach("KF Outside Deku Tree", "child")
+
+
+def test_shuffled_shield_cannot_self_lock_behind_mido_but_skip_allows_it(spec):
+    placements = {"Deku Tree Map Chest": "Deku Shield"}
+    world = build_world(spec)
+    blocked = Search(world, ["Kokiri Sword"])
+    blocked.collect_spheres(placements)
+    assert "Deku Tree Map Chest" not in blocked.collected
+    skipped = copy.deepcopy(spec)
+    forest = next(region for region in skipped["regions"] if region["name"] == "Kokiri Forest")
+    forest["exits"]["KF Outside Deku Tree"] = "True"  # Mido skip only, not the separate forest exit.
+    search = Search(build_world(skipped), ["Kokiri Sword"])
+    search.collect_spheres(placements)
+    assert "Deku Tree Map Chest" in search.collected
+    assert not search.can_reach("LW Bridge From Forest", "child")
+
+
+@pytest.mark.parametrize(
+    ("name", "wallets", "expected"),
+    [
+        ("ZD Shop Item 8", 0, True),  # 70 fits 200.
+        ("Market Bombchu Shop Item 7", 0, False),  # 240 needs the 500 wallet.
+        ("Market Bombchu Shop Item 7", 1, True),
+        ("GC Shop Item 4", 1, False),  # 600 needs the 1000 wallet.
+        ("GC Shop Item 4", 2, True),
+    ],
+)
+def test_prices_require_remake_wallet_capacity(spec, name, wallets, expected):
+    world = build_world(spec)
+    counts = {"Progressive Wallet": wallets, "Defeat King Dodongo": 1}
+    assert world.locations[name].rule(counts, "adult", 1) is expected
+
+
+def test_kokiri_short_stock_and_bombchu_release_gates(spec):
+    world = build_world(spec)
+    assert world.locations["KF Shop Item 7"].rule({}, "child", 1)
+    assert not world.locations["KF Shop Item 1"].rule({}, "child", 1)
+    assert world.locations["KF Shop Item 1"].rule({"Showed Mido Sword & Shield": 1}, "child", 1)
+    rule = world.locations["Market Bombchu Shop Item 1"].rule
+    assert not rule({}, "child", 1)
+    assert rule({"Defeat King Dodongo": 1}, "child", 1)
+
+
+def test_bazaar_bombs_and_blue_fire_keep_their_original_release_flags(spec):
+    world = build_world(spec)
+    bombs = world.locations["Market Bazaar Item 5"].rule
+    assert not bombs({}, "child", 1)
+    assert bombs({"Defeat King Dodongo": 1}, "child", 1)
+    for name in ("Market Potion Shop Item 5", "Kak Potion Shop Item 5"):
+        rule = world.locations[name].rule
+        assert not rule({}, "adult", 1)
+        assert rule({"Blue Fire": 1, "Bottle": 1}, "adult", 1)
+
+
+def test_tunic_destinations_need_adult_shop_access_and_market_stays_child_only(spec):
+    world = build_world(spec)
+    settings = Settings(shuffle=("Chest", "Shop"))
+    assert not allowed(world, settings, "Market Bazaar Item 1", "Goron Tunic")
+    assert allowed(world, settings, "Kak Bazaar Item 1", "Goron Tunic")
+    assert not world.locations["GC Shop Item 4"].rule({"Progressive Wallet": 2}, "child", 1)
+    market = next(exit for exit in world.regions["Market"].exits if exit.target == "Market Bazaar")
+    assert not market.rule({}, "adult", 1)
+
+
+@pytest.mark.parametrize(
+    "item,helper",
+    [("Buy Bottle Bug", "Bugs"), ("Buy Fish", "Fish"), ("Buy Fairy's Spirit", "Fairy"), ("Buy Blue Fire", "Blue_Fire")],
+)
+def test_bought_refills_do_not_supply_a_bottle(spec, item, helper):
+    spec = {**spec, "goal": helper}
+    world = build_world(spec)
+    assert not Search(world, [item]).won()
+    assert Search(world, [item, "Bottle"]).won()
+
+
+@pytest.mark.parametrize(
+    "item,helper",
+    [
+        ("Goron Tunic", "Goron_Tunic"),
+        ("Zora Tunic", "Zora_Tunic"),
+        ("Deku Nuts (5)", "Nuts"),
+        ("Deku Stick (1)", "Sticks"),
+        ("Buy Deku Stick (5)", "Sticks"),
+        ("Buy Bombchu (8)", "can_refill_bombchus"),
+    ],
+)
+def test_other_bought_item_helpers_read_normal_inventory_or_native_bundle(spec, item, helper):
+    world = build_world({**spec, "goal": helper})
+    assert not Search(world).won()
+    assert Search(world, [item]).won()
+
+
+def test_all_fill_stages_respect_native_display_restrictions():
+    spec = {
+        "start": "Start",
+        "goal": "Sword",
+        "settings": {"native_shop_items": ["Shield", "Shop Filler"]},
+        "items": {
+            "Sword": {},
+            "Shield": {},
+            "Shop Filler": {"class": "normal"},
+            "Non-display Filler": {"class": "normal"},
+        },
+        "regions": [
+            {
+                "name": "Start",
+                "locations": {
+                    "Shop A": {"rule": "True", "type": "Shop", "vanilla": "Shield"},
+                    "Shop B": {"rule": "True", "type": "Shop", "vanilla": "Shop Filler"},
+                    "Chest A": {"rule": "True", "type": "Chest", "vanilla": "Sword"},
+                    "Chest B": {"rule": "True", "type": "Chest", "vanilla": "Non-display Filler"},
+                },
+            }
+        ],
+    }
+    world = build_world(spec)
+    settings = Settings(shuffle=("Chest", "Shop"))
+    for seed in range(30):
+        placements = fill(world, settings, random.Random(seed))
+        assert placements["Shop A"] in ("Shield", "Shop Filler")
+        assert placements["Shop B"] in ("Shield", "Shop Filler")
+        assert Counter(placements.values()) == Counter(list(spec["items"]))
+
+
+def test_shop_mini_seed_is_beatable_with_shield_in_the_shared_pool(spec):
+    settings = Settings(
+        shuffle=("Chest", "Shop"), areas=("KokiriForest", "LostWood", "InsideTheDekuTree"), goal="'Defeat Queen Gohma'"
+    )
+    seed = generate(spec, 22, settings)
+    search = Search(seed.world)
+    search.collect_spheres(seed.placements)
+    assert search.won()
+    for name in seed.shuffled:
+        if seed.world.locations[name].type == "Shop":
+            assert allowed(seed.world, settings, name, seed.placements[name])
