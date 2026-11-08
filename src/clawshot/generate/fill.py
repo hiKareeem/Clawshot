@@ -62,8 +62,12 @@ def is_restricted(world: World, settings: Settings, item: str) -> bool:
 
 def allowed(world: World, settings: Settings, location: str, item: str) -> bool:
     """Whether ``item`` may go to ``location`` at all, reachable or not."""
-    if world.locations[location].type == "Shop" and item not in world.settings.get("native_shop_items", ()):
-        return False
+    if world.locations[location].type == "Shop":
+        if item not in world.settings.get("native_shop_items", ()):
+            return False
+        destinations = world.settings.get("shop_item_locations", {}).get(item)
+        if destinations is not None and location not in destinations:
+            return False
     if not is_restricted(world, settings, item):
         return True
     return world.regions[world.locations[location].region].dungeon == world.items[item].dungeon
@@ -94,13 +98,17 @@ def _fill_restrictive(
 ) -> None:
     """OoT Randomizer ``fill_restrictive``: take items from the end of ``items``; put each in a location that is
     reachable holding ``assumed``, the items still to place and whatever the placements so far give."""
-    items.sort(key=lambda name: not world.items[name].priority)  # stable: priority items last to be taken
+    native = world.settings.get("native_shop_items", ()) if "Shop" in settings.shuffle else ()
+    # Leave flexible native-display items until items that can only occupy chests.
+    items.sort(key=lambda name: (not world.items[name].priority, name not in native))
     while items:
         item = items.pop()
         search = Search(world, [*assumed, *items])
         search.collect_spheres(placements)
         candidates = [name for name in locations if allowed(world, settings, name, item)]
         rng.shuffle(candidates)
+        if item in native:
+            candidates.sort(key=lambda name: world.locations[name].type != "Shop")
         spot = next((name for name in candidates if search.can_access(world.locations[name])), None)
         if spot is None:
             raise FillError(
@@ -123,6 +131,8 @@ def _fill_restrictive_fast(
     while items and locations:
         item = items[-1]
         rng.shuffle(locations)
+        if item in world.settings.get("native_shop_items", ()):
+            locations.sort(key=lambda name: world.locations[name].type != "Shop")
         spot = next((name for name in locations if allowed(world, settings, name, item)), None)
         if spot is None:
             return
@@ -173,8 +183,15 @@ def fill(
         restricted.sort(key=lambda name: order.get(world.items[name].type, 1))
         _fill_restrictive(world, settings, rng, placements, locations, restricted, unrestricted)
     _fill_restrictive(world, settings, rng, placements, locations, progression, [])
-    _fill_restrictive_fast(world, settings, rng, placements, locations, priority)
-    _fast_fill(rng, placements, locations, rest)
+    if any(world.locations[name].type == "Shop" for name in shuffled):
+        native = world.settings.get("native_shop_items", ())
+        priority = [*priority, *rest]
+        rest = []
+        priority.sort(key=lambda item: item not in native)
+        _fill_restrictive_fast(world, settings, rng, placements, locations, priority)
+    else:
+        _fill_restrictive_fast(world, settings, rng, placements, locations, priority)
+        _fast_fill(rng, placements, locations, rest)
 
     if priority or rest:
         raise FillError(f"items left unplaced: {sorted(priority + rest)}")
