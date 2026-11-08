@@ -1,0 +1,21 @@
+# Haunted Wasteland / Mirage Desert, remake e0f3ccfa.
+# One physical crate on the Colossus side, not the five N64 crates: child/adult Banc hashes
+# 12727181966767362695 / 17072091790119450948 at (-56.0,98.9,-55.2).
+# Retain the geographically matching Wasteland Crate Near Colossus; confirm the name pairing in game.
+# https://www.eurogamer.net/zelda-ocarina-of-time-mirage-desert
+
+[locations."Wasteland Crate Before Quicksand"]
+n64_only = "no crate is placed before the quicksand; the remake's sole crate is on the Colossus side"
+source = "Complete Banc HountedWasteland child/adult inventory, read-only, build e0f3ccfa."
+
+[locations."Wasteland Crate After Quicksand 1"]
+n64_only = "no crate cluster remains after the quicksand; the remake's sole crate is on the Colossus side"
+source = "Banc HountedWasteland inventory, as for Wasteland Crate Before Quicksand."
+
+[locations."Wasteland Crate After Quicksand 2"]
+n64_only = "no crate cluster remains after the quicksand; the remake's sole crate is on the Colossus side"
+source = "Banc HountedWasteland inventory, as for Wasteland Crate Before Quicksand."
+
+[locations."Wasteland Crate After Quicksand 3"]
+n64_only = "no crate cluster remains after the quicksand; the remake's sole crate is on the Colossus side"
+source = "Banc HountedWasteland inventory, as for Wasteland Crate Before Quicksand."
