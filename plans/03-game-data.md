@@ -1261,9 +1261,12 @@ languages, groups 1, 3, 4, 5 timing, voice and animation cues. All 8640 files re
 each archive writes back byte-identical through `clawshot.formats.sarc` (its default alignment, 8); the size-table
 overhead for `Mals/*.sarc` is +312 (section 11).
 
-**Gossip Stones** (`clawshot.census.hints`). 41 talking stones, each an `Obj_GossipStone_A_01` placed in the child and
-the adult file as two actors with **different `Hash` values** (unlike chests) and the same `Name`
-(`GOSSIP_<AREA>_<NN>`, 40 names). No `Dynamic` parameters; `Presence.FlagName` `GossipStoneDisappear.<Name>`
+**Gossip Stones** (`clawshot.census.hints`). 40 talking stones with 40 names, each an `Obj_GossipStone_A_01` placed in
+the child and the adult file as two actors with **different `Hash` values** (unlike chests) and the same `Name`
+(`GOSSIP_<AREA>_<NN>`); the census lists 41 because the Kokiri Forest files also place the Lost Woods bridge stone
+(`GOSSIP_LOST_WOOD_02`) in their copy of the bridge ledge: stone, stick-bag scrub and purple-rupee chest all stand at
+one offset (82, -20, 88) from the Lost Woods copies (cs6a found the same for the chest and scrub, thread `cs-r6`). No
+`Dynamic` parameters; `Presence.FlagName` `GossipStoneDisappear.<Name>`
 (negated; Zora's Domain adult: `IsAppear_GossipStone_ZoraDomain_Adult`); three `Reference` links each (an
 `Obj_FairySpirit` with `IsGossipStoneAppearance`, anchors `FairySpirit_AppearPoint` and `PlayerPos`: the fairy that
 playing a song summons). An unnamed `Obj_GossipStone_A_02` in Zora's Domain's adult `Dynamic` files (`Presence`
@@ -1275,24 +1278,22 @@ playing a song summons). An unnamed `Obj_GossipStone_A_02` in Zora's Domain's ad
   the first time (`HaveTalked_MaskTruth_GossipStone` unset) or `Talk_12` after; after it, one of two closing lines at
   random (`GOSSIP_RumorCommon_01`/`_02`), and the first time a Navi balloon (232) and the flag set. Every stone label
   exists in all 16 languages. The names do not follow the areas (`GOSSIP_HYRULE_CASTLE_03` stands in a Death
-  Mountain Trail grotto), and `GOSSIP_LOST_WOOD_02` names two stones (the Lost Woods bridge and a remake-only stone in
-  Kokiri Forest by the stick-bag scrub): those two always say the same line unless a patch renames one (its placement
-  `Name`; `Presence.FlagName` is a separate field) [inference: untested].
+  Mountain Trail grotto); each name is one stone.
 - **The Mask of Truth is needed**, as on N64: every path from `Talk` to Event18 passes `PouchSystemActor`
   `EventQueryIsExistInPouch {Actor: Armor_Child_Mask_Truth}` case 0 (Event112) and `Player_Event`
   `EventQueryPlayerIsEquipArmor {ArmorName: Armor_Child_Mask_Truth}` case 0 (Event25). Without the mask Navi talks
   instead (`Talk_00`, `_05`, `_09`, `_13`, `_15`, `_19`, `_22`, `_30`), and hitting a stone tells the time
   (`ReceiveSwordDamageByPlayer`, `Reaction_*`). Making stones talk without the mask is a flow edit (Event112's and
-  Event25's case 1 pointed at case 0's next), which round 6's test output makes (item 4 below).
+  Event25's case 1 pointed at case 0's next), which round 6's test output makes ("In game" below).
 - **Against OoT Randomizer** (`LocationList.py` at `526b4c8d`, 40 `HintStone`s): 36 stones match one each
   (`STONE_LINKS`, evidence per stone: nearby actors, grotto rooms and covers, round 4's grotto findings, Zelda Central's
   remake guide https://zeldacentral.com/games/ocarina-of-time-remake/gossip-stones/); within the Deku Tree pair, the
   SFM maze pair, the three Lake Hylia stones and the four Temple of Time stones, which name goes to which stone is not
   settled (each group is one OoT Randomizer region, so no logic depends on it), nor whether the east Hyrule Field
   grotto is N64's Southeast or Near Market grotto. Four OoT Randomizer stones have none here: the KF Storms, LW Near
-  Shortcuts and DMT Storms grottos hold no stone (round 4), and Hyrule Field has one generic grotto fewer. Five stones
-  are remake-only: Kokiri Forest by the stick-bag scrub, the Sacred Forest Meadow clearing behind the Song of Time
-  block, a Kakariko grotto with a beehive, the Zora's River storms grotto, and the Death Mountain Trail cow grotto.
+  Shortcuts and DMT Storms grottos hold no stone (round 4), and Hyrule Field has one generic grotto fewer. Four stones
+  are remake-only: the Sacred Forest Meadow clearing behind the Song of Time block, a Kakariko grotto with a beehive,
+  the Zora's River storms grotto, and the Death Mountain Trail cow grotto.
 
 **Other hint givers** (`HINT_GIVERS`; each label checked to be shown by its flow and present in every language):
 
@@ -1343,6 +1344,10 @@ Many NPCs also have `Mask_NN` lines for when Link wears a mask (the Mask of Trut
 - **A Gossip Stone without the mask:** `patch.text.gossip_without_mask` points both answers of Event112 and Event25
   at the stone's path; the flow keeps its size (93,400 bytes). The stone's first-time opener (`Talk_03`, `Talk_10`)
   mentions the mask; `Talk_12` is the repeat opener.
+
+**In game:** not yet. The test `E:/OOTRemake/work/r6-hints/ingame/gossip-kf-line` (a new game: every stone speaks
+without the mask, the Kokiri Forest stone by the Lost Woods entrance says a custom line naming the Boomerang through
+`item_name`) and what Kareem should see are in `plans/rounds/r6-hints.md`, item 4.
 
 ## 23. Round 6: one-time scrubs and Gold Skulltula drop experiments (cs6d)
 

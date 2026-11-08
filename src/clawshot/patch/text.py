@@ -52,7 +52,7 @@ def edit_messages(edits: Mapping[str, Mapping[str, Sequence[Part]]]) -> Callable
             for label, parts in edits[name].items():
                 if label not in document.messages:
                     raise PatchError(f"{name}: no message labelled {label}")
-                document.messages[label] = list(parts)
+                document.messages[label] = msbt.normalized(list(parts))
             written = msbt.write(document)
             if msbt.read(written) != document:
                 raise PatchError(f"{name}: the written file does not read back as the edited messages")
@@ -97,6 +97,17 @@ def item_name(pouch_text: msbt.Msbt, key: str) -> list[Part]:
     if label not in pouch_text.messages:
         raise PatchError(f"{POUCH_TEXT}: no message labelled {label}")
     return list(pouch_text.messages[label])
+
+
+def keep_style(original: Sequence[Part], parts: Sequence[Part]) -> list[Part]:
+    """``parts`` after the tags ``original`` opens with (a Gossip Stone's colour, size and voice), so a new line
+    keeps the look of the one it replaces."""
+    lead: list[Part] = []
+    for part in original:
+        if isinstance(part, str):
+            break
+        lead.append(part)
+    return lead + list(parts)
 
 
 def _is_mask_gate(gate: hints.TalkGate) -> bool:

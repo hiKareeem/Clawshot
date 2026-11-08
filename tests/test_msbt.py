@@ -86,6 +86,12 @@ def test_file_size_and_alignment():
     assert struct.unpack_from("<I", data, 0x12)[0] == len(data)
 
 
+def test_split_text_reads_back_joined_as_normalized_says():
+    parts = ["they say the ", "", "Boomerang", Tag(0, 4), "", " is near"]
+    back = msbt.read(msbt.write(Msbt({"A": parts}, buckets=1))).messages["A"]
+    assert back == msbt.normalized(parts) == ["they say the Boomerang", Tag(0, 4), " is near"]
+
+
 def test_empty_message_and_empty_file():
     m = Msbt({"A": []}, buckets=1)
     assert msbt.read(msbt.write(m)) == m

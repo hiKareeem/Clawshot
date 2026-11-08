@@ -8,7 +8,8 @@ Branch `r6/hints`, from main `57c2a57`. Owns `src/clawshot/formats/msbt.py`, `sr
 |---|---|---|
 | 1 `formats/msbt` | `src/clawshot/formats/msbt.py`, `tests/test_msbt.py`, `tests/test_msbt_dump.py` | 2272d6a |
 | 2 Gossip Stone census, other hint givers | `src/clawshot/census/hints.py`, `tests/test_hints.py`, `tests/test_hints_dump.py`, section 22 | a14aed7 |
-| 3 item-get text and model; naming an item in a line; stones without the mask | `src/clawshot/patch/text.py`, `src/clawshot/census/hints.py` (`flow_path`), `tests/test_hints_text.py`, `tests/test_hints_text_dump.py`, section 22 | (this commit) |
+| 3 item-get text and model; naming an item in a line; stones without the mask | `src/clawshot/patch/text.py`, `src/clawshot/census/hints.py` (`flow_path`), `tests/test_hints_text.py`, `tests/test_hints_text_dump.py`, section 22 | ddbb286 |
+| 4 test output `gossip-kf-line`, hint design note; `msbt.normalized` and `text.keep_style` (needed by the test) | `E:/OOTRemake/work/r6-hints/ingame/`, `src/clawshot/formats/msbt.py`, `src/clawshot/patch/text.py`, tests, this file, section 22 | (this commit) |
 
 ## Item 1: `clawshot.formats.msbt`
 
@@ -62,7 +63,7 @@ Checks:
 | Command | Result |
 |---|---|
 | `uv run pytest tests/test_hints.py` | 7 passed: age copies merged, a label shared by two areas kept as two stones, unnamed silent stones and `DreamWorld` left out; one label at two places in an area and a talking stone without a name refused; gates are only the switches every path passes (a random branch both ways is not one), with and without the equip gate; a flow that never reaches the line refused; no OoT Randomizer stone linked twice |
-| `OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump tests/test_hints_dump.py -s` | 4 passed: 41 stones, 40 labels, every stone in `STONE_LINKS` and back, 36 linked + 4 missing = OoT Randomizer's 40; every label in `GossipStone.msbt` of all 16 languages; the gates are exactly Mask of Truth held (Event112, case 0) and worn (Event25, case 0); every hint giver's flow shows its labels and every language has them |
+| `OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump tests/test_hints_dump.py -s` | 4 passed: 41 census entries (40 stones: the Lost Woods bridge stone is also in the Kokiri Forest files), 40 labels, every entry in `STONE_LINKS` and back, 36 linked + 4 missing = OoT Randomizer's 40; every label in `GossipStone.msbt` of all 16 languages; the gates are exactly Mask of Truth held (Event112, case 0) and worn (Event25, case 0); every hint giver's flow shows its labels and every language has them |
 
 Provisional (for review): the order inside the Deku Tree pair, the SFM maze pair, the three Lake Hylia stones and the
 four Temple of Time stones (labels only: each group is one OoT Randomizer region), and the east Hyrule Field grotto
@@ -72,8 +73,7 @@ stone.
 
 Finding for the logic (round 4's `child_*` files, no owner this round; not changed): the Zora's River storms grotto
 holds a talking stone (`GOSSIP_LOST_WOOD_01`), so its `Fairy` event could use `can_summon_gossip_fairy`; and the
-Kokiri Forest stone by the stick-bag scrub and the Kakariko beehive grotto stone are gossip fairies OoT Randomizer
-does not model. Stricter as it is; nothing breaks.
+Kakariko beehive grotto stone is a gossip fairy OoT Randomizer does not model. Stricter as it is; nothing breaks.
 
 ## Item 3: item-get text and model (`clawshot.patch.text`)
 
@@ -100,5 +100,71 @@ Checks:
 **Product questions for Kareem (and his co-owner), in bold: which languages should a seed's custom text cover?**
 Hint lines are new text, so they exist only in the languages Clawshot writes; English-only (written into every
 language archive, or only `USen`/`EUen`) is the simplest. And: **should Gossip Stones speak without the Mask of
-Truth?** OoT Randomizer's default is that stones always speak (its `hints` setting; the Mask of Truth is an option);
-the patch above does that.
+Truth?** OoT Randomizer's default is that stones always speak (`hints = Combobox(default='always', ...)`,
+`SettingsList.py:3696` at `526b4c8d`; `mask` and `agony` are its other choices); the patch above does that.
+
+## Item 4: in-game test and the hint design note
+
+### The test output (`E:/OOTRemake/work/r6-hints/ingame/`)
+
+Built by `E:/OOTRemake/work/r6-hints/make_test.py` through `clawshot.patch.text` and the seed writer
+(`clawshot.patch.write` with an empty chest plan), so the files are what a seed step would write:
+
+| File | Change | Size (decompressed) | Size entry |
+|---|---|---|---|
+| `Event/EventFlow/GossipStone.bfevfl.zs` | Event112 and Event25 send every answer on (no Mask of Truth needed) | 93,400 -> 93,400 | 93,680, unchanged |
+| `Mals/USen.Product.110.sarc.zs` | `GossipStone.msbt`: `GOSSIP_KOKIRI_FOREST_01` a custom line naming the Boomerang through `item_name` (USen `Item_Boomerang` key); every other stone label "Clawshot test stone" and its label; each line keeps the stone's opening style tags | 2,373,416 -> 2,371,192 | 2,373,752, unchanged |
+
+The size table is not written (no entry had to grow). The launcher `Test - gossip-kf-line.bat` was copied from
+round 5's `Test - chest-ocarina-storms.bat`: it starts `E:\Games\Hookshot\hookshot.exe` only, with `HOS_FS_OVERLAY` at
+`gossip-kf-line\romfs` and its own empty user folder `user-gossip-kf-line`, the log to
+`gossip-kf-line\hookshot_log.txt`. Not run by me (checked by reading it). Only the English (US) archive is changed:
+Kareem's game runs `en-US` (`oe: language en-US` in round 5's logs), which is `USen` [inference from the name].
+
+**What Kareem should do and see** (a new game; nothing else is changed, so the intro plays as usual):
+
+1. Run `E:\OOTRemake\work\r6-hints\ingame\Test - gossip-kf-line.bat` and start a **new game**.
+2. Once Link can move, go up to the **Lost Woods entrance** (the tunnel on the high ground of Kokiri Forest, near
+   Mido's house). The Gossip Stone stands about 18 m from the tunnel's mouth, next to where the Song of Storms grotto
+   opens (placement `GOSSIP_KOKIRI_FOREST_01`, Hash 15788731894432615343 child).
+3. Talk to it **without the Mask of Truth**. Expected: the stone speaks (not Navi): first its own opener, which
+   mentions a mask (the game's first-time lines `Talk_03` and `Talk_10`; expected), then **"Clawshot test: they say
+   the Boomerang is hidden / somewhere in Kokiri Forest."** in the stone's usual colour and size, then one of its
+   closing lines; Navi may show a small balloon the first time. Talk again: a shorter opener and the same line.
+4. The log `gossip-kf-line\hookshot_log.txt` should show `fs: OpenFile(content:/Event/EventFlow/GossipStone.bfevfl.zs):
+   from the overlay` and the same for `Mals/USen.Product.110.sarc.zs`.
+5. **Report:** does the stone speak without the mask, is the line shown as written (two lines, the word Boomerang
+   right), and does anything look wrong (text box, colour, a crash)? If the stone's text is unchanged but it speaks,
+   the game reads another language archive: send the log's `oe: language` line.
+6. Optional, if you get past Mido in this test: the two stones in front of the Deku Tree say "Clawshot test stone"
+   and their label: **which label is on the left as you face the Deku Tree?** (it settles OoT Randomizer's "Left" and
+   "Right" names; `STONE_LINKS` guesses `GOSSIP_KOKIRI_FOREST_03` is the left one).
+
+### Design note: hints in round 7
+
+OoT Randomizer's hints (`Hints.py`, `HintList.py`, default distribution `balanced`, at `526b4c8d`) and how each fits:
+
+| OoT Randomizer hint | Fits the remake? | Needs |
+|---|---|---|
+| Way of the Hero (an area holds a required item), barren ("foolish") areas | yes | the world's region `hint` areas are already ported (`04-world-format.md`); the search's required-item set |
+| item (where an item is), `always` and `sometimes` location hints | yes | location names a player understands (track A's names this round) |
+| dual, goal (path to a boss) | later | the same, plus goal sets |
+| entrance hints | no | no entrance shuffle |
+| junk | yes | lines Clawshot writes (no copied text) |
+| Skulltula House rewards (10 to 50) | yes | rewrite `Npc_SkullDad` `Talk_28`/`_23`-`_26` to name the reward (`item_name`) |
+| Dampé's diary (Hookshot) | yes | rewrite `Diary_Hylia_Dampe_Adult` `Talk_03`; Sheik's `Talk_01`/`Talk_03` are a second Hookshot slot |
+| Temple of Time altar (stones, medallions), Ganondorf (Light Arrows) | not yet | the altar text is a cutscene (`Dm_TimeTemple_0020`), Ganondorf's not traced |
+| frogs, Big Poes, Deku Theater, warp songs | later | each NPC's lines traced like the Skulltula House |
+
+What round 7 needs: (1) **stones as hint locations in the world**: OoT Randomizer's `HintStone` locations (its
+regions and rules, e.g. `DMC Gossip Stone` asks `has_explosives`, `HC Storms Grotto Gossip Stone` `can_blast_or_smash`)
+are dropped by the translator today; keep them as a non-item kind, linked through `STONE_LINKS`, and give the four
+remake-only stones regions and rules by hand, so a hint is placed only on a stone reachable where it matters
+(OoT Randomizer's rule). (2) **One label per stone**: 40 stones, 40 labels, so one hint per label; the Lost Woods
+bridge stone's second census entry (the Kokiri Forest files' copy) is the same stone. (3) **Text**: one hint per stone
+label via `edit_messages`, item names through `item_name` per language and area names from the hint areas (English,
+unless Kareem decides otherwise; the remake's `LocationMsg/Location.msbt` holds the game's own area names per language,
+an option); `keep_style` keeps the stone's look. (4) **Settings**: `hints` (`always` with `gossip_without_mask`, or
+`mask` as vanilla) and the distribution, through track B's settings string. (5) A `make_seed` extra step returning the
+archive and flow transforms, the hints in the spoiler, and a dump test that every hint names a placed item at a
+reachable stone.

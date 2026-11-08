@@ -24,7 +24,7 @@ def message_files(romfs):
 @pytest.mark.dump
 def test_dump_every_stone_is_linked_and_every_link_is_a_stone(stones):
     found = {(s.area, s.label) for s in stones}
-    print(f"{len(stones)} talking stones, {len({s.label for s in stones})} labels")
+    print(f"{len(stones)} stone entries, {len({s.label for s in stones})} labels")
     for s in stones:
         print(f"  {s.area:20} {s.label:34} {s.ages:6} {hints.STONE_LINKS.get((s.area, s.label), ('?',))[0]}")
     assert found == set(hints.STONE_LINKS)

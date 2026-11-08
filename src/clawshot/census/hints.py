@@ -6,7 +6,8 @@ the stone speaks, the step is ``Npc_EventStarter.EventTalkWithInstanceNameLabel`
 message whose label is the speaking actor's instance name, in ``EventFlowMsg/GossipStone.msbt`` of the language's
 archive (``Mals/<language>.Product.110.sarc.zs``). So changing a stone's line is changing that one message; the flow
 and the placement stay as they are. Child and adult files place each stone as two actors (two ``Hash`` values) with the
-same name, and two stones in different places may share a name (they then say the same thing).
+same name. One stone is placed in two areas' files: the Kokiri Forest files hold a copy of the Lost Woods bridge ledge
+(``GOSSIP_LOST_WOOD_02``), the same stone in other coordinates.
 
 **What the stone needs** is read from the flow, not assumed: :func:`talk_gates` lists the switch steps every path from
 ``Talk`` to the instance-name step passes, with the case it takes. In this game those are "the Mask of Truth is in the
@@ -264,7 +265,8 @@ STONE_LINKS: dict[tuple[str, str], tuple[str | None, str]] = {
     ("KokiriForest", "GOSSIP_KOKIRI_FOREST_04"): ("KF Deku Tree Gossip Stone (Right)", "pair before the Deku Tree"),
     ("KokiriForest", "GOSSIP_LOST_WOOD_02"): (
         None,
-        "remake-only, by the stick-bag scrub and chest 4349272251343787229; shares its label with the Lost Woods stone",
+        "the Lost Woods bridge stone as the Kokiri Forest files place it: the stone, the stick-bag scrub and chest "
+        "4349272251343787229 stand at one offset (82, -20, 88) from the Lost Woods copies; see LostWood",
     ),
     ("LostWood", "GOSSIP_LOST_WOOD_02"): ("LW Gossip Stone", "open air by the bridge scrub (r2, r4)"),
     ("Market", "GOSSIP_HYRULE_MARKET_01"): (

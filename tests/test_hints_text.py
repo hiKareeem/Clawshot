@@ -35,6 +35,12 @@ def test_edit_messages_refuses_what_is_not_there(edits, match):
         text.edit_messages(edits)(sarc.write(_archive()))
 
 
+def test_keep_style_takes_only_the_opening_tags_of_the_old_line():
+    old = [Tag(0, 3, b"\x01\x00"), Tag(0, 2, b"P\x00"), "rumor", Tag(0, 4), "more"]
+    assert text.keep_style(old, ["new"]) == [Tag(0, 3, b"\x01\x00"), Tag(0, 2, b"P\x00"), "new"]
+    assert text.keep_style(["plain"], ["new"]) == ["new"]
+
+
 def test_item_name_keeps_grammar_tags_and_refuses_unknown_items():
     pouch = msbt.read(_archive()[text.POUCH_TEXT])
     assert text.item_name(pouch, "Item_X") == [Tag(201, 13), "Hookshot"]

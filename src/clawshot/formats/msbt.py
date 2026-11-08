@@ -83,6 +83,21 @@ def plain(parts: list[Part]) -> str:
     return "".join(p for p in parts if isinstance(p, str))
 
 
+def normalized(parts: list[Part]) -> list[Part]:
+    """``parts`` as :func:`read` returns them: neighbouring text joined, empty text dropped. Writing ``parts`` and
+    reading the file back gives this."""
+    out: list[Part] = []
+    for part in parts:
+        if isinstance(part, str):
+            if not part:
+                continue
+            if out and isinstance(out[-1], str):
+                out[-1] += part
+                continue
+        out.append(part)
+    return out
+
+
 # --- reading ------------------------------------------------------------------------------------------------------
 
 
