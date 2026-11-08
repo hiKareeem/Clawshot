@@ -1,20 +1,24 @@
 # Round 5, track D: gifts through the flows (cs5d)
 
-Branch `r5/gifts`, from main `91b3ed5`, rebased on `cd592e3`. Owns `src/clawshot/patch/gifts.py` (new),
-`src/clawshot/census/gifts.py`, `src/clawshot/formats/evfl.py`, `tests/test_gift*.py`, `tests/test_evfl*.py`, this file
-and section 19 of `plans/03-game-data.md`. Scratch scripts and decoded data: `E:/OOTRemake/work/r5-gifts/` (outside the
-repo).
+Branch `r5/gifts`, from main `91b3ed5`, rebased on `cd592e3` and then on `ccd1963` (r5/shops merged; conflicts resolved
+in section placement, `item_actors.toml` and `allowed()`; hashes below are after that rebase). Owns
+`src/clawshot/patch/gifts.py` (new), `src/clawshot/census/gifts.py`, `src/clawshot/formats/evfl.py`,
+`tests/test_gift*.py`, `tests/test_evfl*.py`, this file and section 19 of `plans/03-game-data.md`. Scratch scripts and
+decoded data: `E:/OOTRemake/work/r5-gifts/` (outside the repo).
 
 | Item | Where | Commit |
 |---|---|---|
-| 1 readers of each gift's item, flags to use, classes | `plans/03-game-data.md` section 19, this file | e47caf5 |
-| 2 `patch/gifts.py`: item swap, flag rewrites, skips | `src/clawshot/patch/gifts.py`, `src/clawshot/patch/gift_rules.toml`, `tests/test_gifts.py`, `tests/test_gifts_dump.py`; section 19 revised (reviewer, 08:40) | acde59a |
-| (needed by 2) a size formula for `GameDataList` | `src/clawshot/formats/rstb.py`, `tests/test_rstb_dump.py` (no owner this round; posted) | 0cf3725 |
-| 3 in-game test folders | `E:/OOTRemake/work/r5-gifts/ingame/`, this file | dc576d3 |
-| (needed by 4) item actors for the gift items | `src/clawshot/data/item_actors.toml` (track C's; posted) | 6d754f6 |
-| 4 `--shuffle Gift` through `make_seed`'s extra steps | `src/clawshot/patch/gifts.py`, `src/clawshot/__main__.py`, tests | a537bd5 |
-| (reviewer) songs to song locations, chestless gift items to gifts | `src/clawshot/generate/fill.py`, `tests/test_generate.py` (track C's; alone, posted) | 6e0a7f8 |
-| (reviewer) the gift shuffle uses it; a song-in-a-chest test output | `src/clawshot/patch/gifts.py`, tests; `E:/OOTRemake/work/r5-gifts/ingame/chest-song-storms` | b44bb4e |
+| 1 readers of each gift's item, flags to use, classes | `plans/03-game-data.md` section 19, this file | 5a6414c |
+| 2 `patch/gifts.py`: item swap, flag rewrites, skips | `src/clawshot/patch/gifts.py`, `src/clawshot/patch/gift_rules.toml`, `tests/test_gifts.py`, `tests/test_gifts_dump.py`; section 19 revised (reviewer, 08:40) | 5828fc6 |
+| (needed by 2) a size formula for `GameDataList` | `src/clawshot/formats/rstb.py`, `tests/test_rstb_dump.py` (no owner this round; posted) | b2bf7d4 |
+| 3 in-game test folders | `E:/OOTRemake/work/r5-gifts/ingame/`, this file | cb18c63 |
+| (needed by 4) item actors for the gift items | `src/clawshot/data/item_actors.toml` (track C's; posted; at the rebase the two tunics were dropped, track B maps them to shop actors) | 2f05d15 |
+| 4 `--shuffle Gift` through `make_seed`'s extra steps | `src/clawshot/patch/gifts.py`, `src/clawshot/__main__.py`, tests | eab6195 |
+| (reviewer) songs to song locations, chestless gift items to gifts | `src/clawshot/generate/fill.py`, `tests/test_generate.py` (track C's; alone, posted) | 52d0342 |
+| (reviewer) the gift shuffle uses it; a song-in-a-chest test output | `src/clawshot/patch/gifts.py`, tests; `E:/OOTRemake/work/r5-gifts/ingame/chest-song-storms` | d385896 |
+| round file for item 4 | this file | 2a64445 |
+| (reviewer) GC Darunias Joy held vanilla unless `free_time_travel` | `src/clawshot/patch/gifts.py`, `tests/test_gifts.py` | bf63f8a |
+| `Gift` among the `--shuffle` choices (track B made it a choice list) | `src/clawshot/__main__.py` | 409c40b |
 
 ## Item 1: what reads each gift's item, and the classes
 
@@ -137,20 +141,25 @@ prints its flags from the test user's newest save.
 
 `python -m clawshot ... --shuffle Chest Gift` (or `Gift` alone). `__main__` calls `gifts.seed_setup(romfs, load_spec(),
 settings)` when `Gift` is asked for and passes its step to `make_seed(..., extra_steps=[step])`; nothing else in
-`make_seed` changed. `seed_setup`:
+`make_seed` changed (rebased on `ccd1963`, where it also adds the shop step itself). `seed_setup`:
 
 - replaces `Gift` in `Settings.shuffle` with OoT Randomizer's gift location types (`NPC`, `Song`, `Cutscene`, `Boss`);
-- picks the gift checks that may move (`seed_checks`, 48 of the world's 79 linked checks): class `swap` or `rewrite`;
+- picks the gift checks that may move (`seed_checks`, 45 of the world's 79 linked checks): class `swap` or `rewrite`;
   not needing a new `GameDataList` flag (the reviewer: the six fairies wait for `din-fairy-hookshot`; `new_flags=True`
-  takes four of them, the other two are upgrades); and whose world vanilla item has, in `item_actors.toml`, the actor
-  every step of the check gives, so the pool item a check adds is what it gave. That leaves out 10 upgrade checks (both
+  takes four of them, the other two are upgrades); not an anchor (`ANCHORS`: **GC Darunias Joy stays vanilla** while
+  `free_time_travel` is off, because the adult-return guarantee D20 relies on the child getting the Goron Bracelet
+  there; the reviewer, 08:55); and whose world vanilla item has, in `item_actors.toml`, the actor every step of the
+  check gives, so the pool item a check adds is what it gave. That last test leaves out 10 upgrade checks (both
   shooting galleries, Horseback Archery 1500, the Deku scrub target, both Deku Theater masks, the child Rolling Goron,
   Bombchu Bowling's first prize and bombchus, the 40-token reward: bags, quivers, capacities, bombchu packs), which need
-  fixed-tier logic items first (`04-world-format.md`, "Not carried over yet");
+  fixed-tier logic items first (`04-world-format.md`, "Not carried over yet"), and, since `ccd1963` maps the tunics to
+  the shop actors `Shop_Armor_Goron`/`Shop_Armor_Zora`, the two tunic gifts (GC Rolling Goron as Adult, ZD King Zora
+  Thawed, which give `Obj_Armor_*`);
 - holds every other gift-type location vanilla (`restrict_spec`: `keep_vanilla` on a copy of the spec);
 - holds songs to song locations and song locations to songs, and every other pool gift item whose actor no census
   chest holds to the `NPC`/`Cutscene`/`Boss` locations (`held_items`, through `Settings.item_location_types` and
-  `exclusive_location_types`, the reviewer's request, in `generate/fill.py` as its own commit 6e0a7f8);
+  `exclusive_location_types`, the reviewer's request, in `generate/fill.py` as its own commit 52d0342, merged with
+  track B's shop check in `allowed()`);
 - returns the patch step: placements in, `file_changes` for every moved gift out (its item through `item_actors`).
 
 Checks:
@@ -160,12 +169,25 @@ Checks:
 | `uv run pytest tests/test_gifts.py tests/test_generate.py` | 17 + 11 passed: `seed_checks` takes `swap`/`rewrite` checks whose pool item's actor is what they give, leaves out `more`, new-flag checks (unless asked), held and non-gift locations; `restrict_spec` holds the others vanilla on a copy; `seed_step` changes only moved gifts; `held_items`; in the fill, a song goes only to the song location, the song location takes only the song, and a held letter goes to one of two gift locations and never to a chest, over 40 seeds |
 | `OOT_ROMFS=... uv run pytest -m dump tests/test_gifts_dump.py -k slice -s` | passed: the Kokiri Forest / Lost Woods / Deku Tree slice with `Chest Gift`, seed 7: no `more` or new-flag check shuffled, every held item where it is held, each moved gift's steps written with the placed item's actor (moved: LW Skull Kid -> Deku Nuts (5), LW Trade Odd Potion -> Rupee (1), LW Ocarina Memory Game -> Poachers Saw) |
 | `python -m clawshot --romfs E:/Games/Hookshot/romfs --seed 7 --out E:/OOTRemake/work/r5-gifts/slice-7 --shuffle Chest Gift --areas KokiriForest LostWood InsideTheDekuTree --goal "'Defeat Queen Gohma'"` | 16 locations shuffled, 3 spheres; wrote the six placement files, `Npc_Kokiri_Fado_Adult`, `Npc_SkullKid_Child`, `Npc_SkullKid_Child_02` and the size table |
+| the same with `--shuffle Chest Shop Gift` (after the rebase on `ccd1963`), `--out .../slice-7-shop` | 24 locations shuffled, 3 spheres; 13 files: the same three gift flows plus the shop changes; the shop and gift steps compose in one seed |
 
 Whole-game seeds could not be smoked on this base (main `cd592e3`): `--shuffle Chest Gift` stops at chests with no
 census definition (track C's item 2), and `--shuffle Gift` alone fails every fill (seeds 1-5, 11) because two gift
 locations are unreachable with every item held: `ToT Light Arrows Cutscene` and `Kak 100 Gold Skulltula Reward` lie
 behind dungeons whose vanilla key layouts OoT Randomizer's worst-order key counts cannot prove (`04-world-format.md`,
 "Key logic and the vanilla placement"); with chests shuffled, keys are placed by the fill.
+
+## Left for later
+
+- Kareem's five in-game tests (item 3); the Great Fairies join the gift shuffle (`new_flags`) once `din-fairy-hookshot`
+  shows an old save loads and the flag persists; songs and chestless gift items may go to chests once
+  `chest-song-storms` (and a key-item twin) works.
+- Class 3: the boss rewards (their story gates read dungeon quest steps; rewrite those reads or ask for the bosses in
+  the logic), the three timed trades (retry steps), the three `SimpleShop` sales (a once flag inside the purchase).
+- The 10 upgrade gifts need fixed-tier logic items (`Bullet Bag (40)`-style tiers per check); the two tunic gifts
+  need the gift step to give the tunic under the shop actor or the table to keep both actors.
+- The spoiler's `patch` section lists chest changes only; gift changes show in `placements`.
+- Whole-game `--shuffle Chest Gift` seeds wait for every chest to be a location (track C's item 2).
 
 ## Provisional choices (for review)
 
@@ -198,4 +220,14 @@ behind dungeons whose vanilla key layouts OoT Randomizer's worst-order key count
 - 08:36: item 2 (acde59a), the `GameDataList` size formula commit (0cf3725) outside my files.
 - 08:38: item 3 ready.
 - 08:41: item actors for the gift items (6d754f6) in track C's `item_actors.toml`.
-- 08:50: item 4 (a537bd5), the `allowed()` commit in track C's `fill.py` (6e0a7f8), its use (b44bb4e).
+- 08:50: item 4, the `allowed()` commit in track C's `fill.py`, its use (pre-rebase hashes a537bd5, 6e0a7f8, b44bb4e; now eab6195, 52d0342, d385896).
+- handoff: below.
+
+## Gates (on 409c40b, rebased on main `ccd1963`, before the handoff)
+
+```
+uv run ruff format --check                                  129 files already formatted
+uv run ruff check                                           All checks passed!
+uv run pytest                                               349 passed, 36 skipped
+OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump      35 passed, 350 deselected
+```
