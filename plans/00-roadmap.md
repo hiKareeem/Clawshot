@@ -357,6 +357,15 @@ chest seeds over the checked logic, gifts through the flows, and in-game checks 
 Engine questions from track B for round 5 (`plans/rounds/r4-logic-adult.md`): (1) the Forest Temple walkthrough
 says the remake lets adult Link return to child only after the Forest Temple; the search shares one inventory
 across ages and can't tell an adult-found item used as child before that, so it needs an age-travel model, not a
-data gate; (2) Great Fairies: the first must be the Death Mountain Trail or Hyrule Castle one, and their fees rise
-with each visit and may exceed the default wallet. The adult rules keep conservative routes where the remake is
+data gate; (2) Great Fairies: settled from the data by track A's item 6 (`03-game-data.md` section 12): Din's
+Fire opens the other five, fees are fixed per fairy, wallets hold 200/500/1000, every magic item carries the
+magic meter. The adult rules keep conservative routes where the remake is
 unproven (stricter than the game, never looser); their in-game questions are in bold in the round file.
+
+**Round 4 result (2026-11-08):** all four tracks merged (`main` 7a46b04; 297 tests, 25 dump tests). Every child
+and adult area checked against the remake (track A 125 changed rules over 21 child areas plus the Deku Tree; track
+B the adult areas and temples, the phantom Fire Temple key removed); fast start passed in game (D18); EVFL
+reader/writer and the gift census (148 gift steps). About 85 logic questions only play can answer, kept with
+stricter rules until then. Proposed for round 5 (not yet agreed with Kareem): the age-travel model, Deku Shield
+and shops (D19), whole-game chest seeds, gifts through the flows, an organised in-game logic session; most tracks
+on `openai-codex/gpt-6.1-sol`, Opus for review.
