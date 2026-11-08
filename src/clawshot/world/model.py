@@ -6,7 +6,7 @@ from typing import Any
 from clawshot.world.rules import Rule
 
 # OoT Randomizer item types whose items belong to one dungeon ("Small Key (Forest Temple)").
-DUNGEON_ITEM_TYPES = frozenset({"SmallKey", "SmallKeyRing", "BossKey", "Map", "Compass", "SilverRupee"})
+DUNGEON_ITEM_TYPES = frozenset({"SmallKey", "SmallKeyRing", "BossKey", "GanonBossKey", "Map", "Compass", "SilverRupee"})
 
 
 @dataclass(frozen=True)
