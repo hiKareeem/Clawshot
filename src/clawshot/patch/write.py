@@ -10,6 +10,7 @@ from typing import TYPE_CHECKING
 from clawshot.census.scan import DEFAULT_CHEST_DROP
 from clawshot.formats import byml, rstb, zsdic
 from clawshot.patch.plan import DROP_KEY, EVENT_KEY, SUBSTITUTE_KEY, PatchError, Plan
+from clawshot.patch.shops import member_growth
 
 if TYPE_CHECKING:
     from clawshot.patch.gamedata import BuiltFile
@@ -98,6 +99,8 @@ def write(
     table_data = dicts.decompress(rstb.TABLE_PATH, table_compressed)
     table = rstb.read(table_data)
     built: list[tuple[WrittenFile, bytes]] = []
+    member_entries: dict[str, int] = {}
+    members_grew = False
     paths = sorted(set(plan.files()).union(*(changes.keys() for changes in extra_changes)))
     for path in paths:
         relative = _patch_path(path)
@@ -113,6 +116,17 @@ def write(
         for changes in extra_changes:
             if transform := changes.get(path):
                 new_data = transform(new_data)
+        if path.startswith("Pack/Actor/") and path.endswith(".pack.zs"):
+            for member, growth in member_growth(data, new_data).items():
+                if member not in member_entries:
+                    entry = table.get(member)
+                    if entry is None:
+                        raise PatchError(f"{member}: the resource size table has no entry for it")
+                    member_entries[member] = entry
+                required = member_entries[member] + growth
+                if required > table.get(member):
+                    table.set(member, required)
+                    members_grew = True
         new_compressed = dicts.compress(path, new_data) if path.endswith(".zs") else new_data
         if path.endswith(".zs") and dicts.decompress(path, new_compressed) != new_data:
             raise PatchError(f"{path}: the compressed file does not decompress to the written bytes")
@@ -142,7 +156,7 @@ def write(
             file.path, file.size, file.new_size, len(compressed), len(file.content), file.entry, file.entry
         )
         built.append((info, file.content))
-    if any(info.entry != info.new_entry for info, _ in built):
+    if members_grew or any(info.entry != info.new_entry for info, _ in built):
         new_table = rstb.write(table)
         new_table_compressed = dicts.compress(rstb.TABLE_PATH, new_table)
         if dicts.decompress(rstb.TABLE_PATH, new_table_compressed) != new_table:
