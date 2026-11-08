@@ -17,6 +17,7 @@ moves the event gifts that can be changed (``clawshot.patch.gifts``); the others
 import argparse
 import json
 import sys
+from dataclasses import replace
 from pathlib import Path
 
 from clawshot.generate import FillError, Settings
@@ -36,52 +37,66 @@ def _logic_value(text: str) -> object:
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="python -m clawshot", description=__doc__.splitlines()[0])
-    parser.add_argument("--romfs", type=Path, required=True, help="the game's romfs folder (read only)")
-    parser.add_argument("--seed", type=int, required=True)
-    parser.add_argument("--out", type=Path, required=True, help="the mod folder to write (empty or absent)")
+    parser.add_argument("--romfs", type=Path, help="the game's romfs folder (read only)")
+    parser.add_argument("--seed", type=int)
+    parser.add_argument("--out", type=Path, help="the mod folder to write (empty or absent)")
+    parser.add_argument("--settings", help="a CS1 settings string; explicit options override it")
+    parser.add_argument(
+        "--print-settings", action="store_true", help="print the resolved string and exit; no dump needed"
+    )
     parser.add_argument(
         "--shuffle",
         nargs="+",
         choices=("Chest", "Shop", gifts.SHUFFLE, "Scrub", "Token"),
-        default=list(Settings().shuffle),
+        default=None,
         help="location types; Shop: native displays; Gift: supported gifts; Scrub: once sales; Token: not enabled",
     )
-    parser.add_argument("--dungeon-items", choices=DUNGEON_ITEM_CHOICES, default=Settings().dungeon_items)
+    parser.add_argument("--dungeon-items", choices=DUNGEON_ITEM_CHOICES)
     parser.add_argument("--logic", nargs="*", default=[], metavar="NAME=VALUE", help="logic setting overrides")
-    parser.add_argument("--areas", nargs="+", default=[], metavar="AREA", help="census areas of a slice")
+    parser.add_argument("--areas", nargs="+", metavar="AREA", help="census areas of a slice")
     parser.add_argument("--goal", help="the slice's goal (a rule); needs --areas")
     parser.add_argument(
         "--skip",
         nargs="*",
         choices=list(gamedata.load()),
-        default=list(Settings().fast_start),
+        default=None,
         help="fast-start skips (default: intro); --skip alone disables all",
     )
     args = parser.parse_args(argv)
 
-    logic = {}
-    for pair in args.logic:
-        name, sep, value = pair.partition("=")
-        if not sep:
-            parser.error(f"--logic expects NAME=VALUE, got {pair!r}")
-        logic[name] = _logic_value(value)
-    if args.areas and not args.goal:
-        parser.error("--areas needs --goal (the world's goal lies outside most slices)")
     try:
-        settings = Settings(
-            shuffle=tuple(args.shuffle),
-            dungeon_items=args.dungeon_items,
-            logic=logic,
-            areas=tuple(args.areas),
-            goal=args.goal,
-            fast_start=tuple(args.skip),
-        )
+        settings = Settings.from_string(args.settings) if args.settings is not None else Settings()
+        overrides = {}
+        for option, field in (
+            ("shuffle", "shuffle"),
+            ("dungeon_items", "dungeon_items"),
+            ("areas", "areas"),
+            ("goal", "goal"),
+            ("skip", "fast_start"),
+        ):
+            value = getattr(args, option)
+            if value is not None:
+                overrides[field] = tuple(value) if isinstance(value, list) else value
+        logic = dict(settings.logic)
+        for pair in args.logic:
+            name, sep, value = pair.partition("=")
+            if not name or not sep:
+                parser.error(f"--logic expects NAME=VALUE, got {pair!r}")
+            logic[name] = _logic_value(value)
+        settings = replace(settings, **overrides, logic=logic)
+        if settings.areas and not settings.goal:
+            parser.error("--areas needs --goal (the world's goal lies outside most slices)")
     except ValueError as e:
         parser.error(str(e))
+    if args.print_settings:
+        print(settings.to_string())
+        return 0
+    if args.romfs is None or args.seed is None or args.out is None:
+        parser.error("generation needs --romfs, --seed and --out")
     try:
         check_output_folder(args.romfs, args.out)
         spec, steps = None, []
-        if gifts.SHUFFLE in settings.shuffle:
+        if gifts.SHUFFLE in settings.shuffle or set(settings.shuffle).intersection(gifts.GIFT_TYPES):
             spec, settings, step = gifts.seed_setup(args.romfs, load_spec(), settings)
             steps.append(step)
         output = make_seed(args.romfs, args.seed, settings, spec, extra_steps=steps)

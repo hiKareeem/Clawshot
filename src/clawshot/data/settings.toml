@@ -1,0 +1,6 @@
+# Generator defaults. Logic defaults remain in data/world/{settings,world}.toml;
+# a settings string stores overrides against this version's defaults.
+[defaults]
+shuffle = ["Chest"]
+dungeon_items = "own_dungeon"
+fast_start = ["intro"]

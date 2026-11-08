@@ -6,11 +6,16 @@ reachable assuming the player holds every item not yet placed; that keeps every 
 the game stays beatable. Priority items only respect their restriction; the rest go anywhere.
 """
 
+import base64
+import binascii
+import json
 import random
+import zlib
 from collections.abc import Mapping
 from dataclasses import dataclass, field
 from typing import Any
 
+from clawshot.settings import DEFAULTS
 from clawshot.world.model import World
 from clawshot.world.rules import ADULT, CHILD
 from clawshot.world.search import Search
@@ -38,16 +43,39 @@ class Settings:
     ``exclusive_location_types`` takes only items held to it there (OoT Randomizer's ``shuffle_song_items =
     'song'``)."""
 
-    shuffle: tuple[str, ...] = ("Chest",)
-    dungeon_items: str = "own_dungeon"
+    shuffle: tuple[str, ...] = tuple(DEFAULTS["shuffle"])
+    dungeon_items: str = DEFAULTS["dungeon_items"]
     logic: dict[str, Any] = field(default_factory=dict)
     areas: tuple[str, ...] = ()
     goal: str | None = None
     item_location_types: dict[str, tuple[str, ...]] = field(default_factory=dict)
     exclusive_location_types: tuple[str, ...] = ()
-    fast_start: tuple[str, ...] = ("intro",)
+    fast_start: tuple[str, ...] = tuple(DEFAULTS["fast_start"])
 
     def __post_init__(self) -> None:
+        for name in ("shuffle", "areas", "fast_start", "exclusive_location_types"):
+            values = getattr(self, name)
+            if not isinstance(values, (tuple, list)) or not all(isinstance(value, str) for value in values):
+                raise ValueError(f"{name} must be a list of names")
+            object.__setattr__(self, name, tuple(sorted(set(values))))
+        if not isinstance(self.logic, dict) or not all(isinstance(key, str) for key in self.logic):
+            raise ValueError("logic must be a table of setting names to JSON values")
+        if self.goal is not None and not isinstance(self.goal, str):
+            raise ValueError("goal must be a rule string")
+        if not isinstance(self.item_location_types, dict):
+            raise ValueError("item_location_types must be a table")
+        held = {}
+        for item, types in self.item_location_types.items():
+            if not isinstance(item, str) or not isinstance(types, (tuple, list)):
+                raise ValueError("item_location_types must map item names to lists of location types")
+            if not all(isinstance(value, str) for value in types):
+                raise ValueError("item_location_types must contain location type names")
+            held[item] = tuple(sorted(set(types)))
+        object.__setattr__(self, "item_location_types", held)
+        try:
+            json.dumps(self.logic, allow_nan=False)
+        except (ValueError, TypeError) as error:
+            raise ValueError("logic must contain finite JSON values") from error
         if self.dungeon_items not in DUNGEON_ITEM_CHOICES:
             raise ValueError(f"dungeon_items must be one of {DUNGEON_ITEM_CHOICES}, not {self.dungeon_items!r}")
         if self.goal is not None and not self.areas:
@@ -70,6 +98,36 @@ class Settings:
         if self.exclusive_location_types:
             out["exclusive_location_types"] = list(self.exclusive_location_types)
         return out
+
+    def to_string(self) -> str:
+        """Canonical CS1 string: sorted JSON overrides, zlib, URL-safe base64 (no padding).
+
+        CS1 alone selects this generator version's defaults. World data and generator version
+        must also match to reproduce a seed, as with the JSON settings.
+        """
+        baseline = Settings().as_dict()
+        delta = {name: value for name, value in self.as_dict().items() if value != baseline.get(name)}
+        if not delta:
+            return "CS1"
+        payload = json.dumps(delta, sort_keys=True, separators=(",", ":"), ensure_ascii=False, allow_nan=False)
+        return "CS1." + base64.urlsafe_b64encode(zlib.compress(payload.encode("utf-8"), 9)).decode("ascii").rstrip("=")
+
+    @classmethod
+    def from_string(cls, text: str) -> "Settings":
+        """Decode a CS1 string; reject unknown versions, corrupt payloads and invalid fields."""
+        if text == "CS1":
+            return cls()
+        if not text.startswith("CS1."):
+            raise ValueError("unsupported settings string version (expected CS1)")
+        try:
+            payload = text[4:]
+            compressed = base64.b64decode(payload + "=" * (-len(payload) % 4), altchars=b"-_", validate=True)
+            data = json.loads(zlib.decompress(compressed))
+            if not isinstance(data, dict):
+                raise ValueError("settings payload must be a table")
+            return cls(**data)
+        except (binascii.Error, zlib.error, UnicodeError, ValueError, TypeError) as error:
+            raise ValueError(f"invalid settings string: {error}") from error
 
 
 def is_restricted(world: World, settings: Settings, item: str) -> bool:

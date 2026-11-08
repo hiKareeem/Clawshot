@@ -19,6 +19,19 @@ Day-1 spike done (see `plans/00-roadmap.md`, M0): the game's placement files dec
 same engine as Tears of the Kingdom), and chest contents are a single actor-name parameter. Writing files back and
 a swapped chest in game are next.
 
+## Settings strings
+
+```sh
+uv run python -m clawshot --shuffle Chest Shop Gift --print-settings
+uv run python -m clawshot --romfs E:/Games/Hookshot/romfs --seed 7 --settings CS1 --out E:/OOTRemake/work/my-seed
+```
+
+`--print-settings` prints a shareable `CS1` string and exits without opening the dump. Pass it to `--settings`;
+explicit command-line options override its fields, and `--logic name=value` overrides individual logic values.
+`--skip` alone disables fast start. The spoiler records both settings and their replay string.
+Reproduction requires the same seed, generator version and world data. Generator defaults are in
+`src/clawshot/data/settings.toml`; logic defaults are in `src/clawshot/data/world/`.
+
 ## Stack
 
 Python 3.12+ with uv. Reasons and alternatives: `plans/decisions.md`.
