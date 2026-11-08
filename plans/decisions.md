@@ -76,6 +76,10 @@
   shop bomb bundle in a chest, which gave the Bomb Bag with 20 bombs). Default: a `Bombs (N)`/`Bombchus (N)` item
   goes only to a location the logic cannot reach without the Bomb Bag, so a pickup never hands out an early bag.
   Counting such pickups as extra Bomb Bags is a later advanced option. Shop refills stay in shops.
+- **D26 Hints: stones speak without the Mask of Truth by default; English hint text in every language archive**
+  (Kareem, 2026-11-08, Claude's provisional picks). `hints = mask` (vanilla) is an option; Kareem's note for it: a
+  stone's hint can be read only once the mask is held, so in that mode hints must stay useful from the point the
+  mask is obtained (no hints about items the player must already have collected to get the mask).
 
 ## Open (only Kareem and his co-owner decide)
 
