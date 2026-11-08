@@ -39,9 +39,9 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--shuffle",
         nargs="+",
-        choices=("Chest", "Shop"),
+        choices=("Chest", "Shop", gifts.SHUFFLE),
         default=list(Settings().shuffle),
-        help="location types to shuffle; Shop uses native displays only",
+        help="location types to shuffle; Shop uses native displays only; Gift the event gifts that can be changed",
     )
     parser.add_argument("--dungeon-items", choices=DUNGEON_ITEM_CHOICES, default=Settings().dungeon_items)
     parser.add_argument("--logic", nargs="*", default=[], metavar="NAME=VALUE", help="logic setting overrides")
