@@ -54,6 +54,14 @@ class Search:
             self.collect(item)
         self._initial_counts = dict(self.counts)
 
+    @classmethod
+    def adult_after_pull(cls, world: World, items: Iterable[str] = ()) -> "Search":
+        """An actual adult phase: no further child collection until return, with the pull already performed."""
+        search = cls(world, items)
+        search._starting_child = False
+        search.collect(world.age_pull_event)
+        return search
+
     def collect(self, name: str) -> None:
         """Add an externally supplied/assumed item to both inventory views."""
         self._collect_item(name, child=True, global_item=True)
