@@ -96,3 +96,14 @@ tokens; one aimed rerun passed. No batch execution was used as a substitute for 
 Item 2 commit: `6fdcda4`. Shop/gift variants remain producer-owned (MOD07/08); no duplicate patch implementation.
 **Claude: review new isolated variants before scheduling, and stage first-adult/pre-Dampe and child-return/pre-treasure
 checkpoint copies for MOD03/04.** Other consumed first-time states require matching preserved copies, never main resets.
+
+## Item 4 — answer ledger
+
+`plans/playtest/answers.md` has one row for every question ID: nine already-asked pending rows first, then 168
+not-yet-played rows in route order. No actual answer filled without Kareem's observation. Each row has room for
+age/inventory/progress/result/evidence; `inconclusive` and missing-control states are explicitly supported.
+
+Observed saved-document smoke: 177 unique answer rows cover all 168 active register headings plus nine already-asked
+IDs; 168 unique route IDs cover exactly the active questions and none of the already-asked questions. All 208
+relative Markdown file links resolve, every primary rule-file path exists, and all nine actual launcher texts use
+release-only EXE assignments. Item 3 commit: `72934b4`.
