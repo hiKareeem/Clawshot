@@ -90,3 +90,29 @@ def test_seed_shop_copies_share_the_placement_and_keep_slot_prices(romfs, tmp_pa
     for info in written:
         if info.path != rstb.TABLE_PATH:
             assert table.get(info.path) >= rstb.required_size(info.path, info.new_size)
+
+
+def test_removing_quantity_boards_leaves_no_banc_group_references(romfs):
+    def integers(value):
+        if isinstance(value, dict):
+            for child in value.values():
+                yield from integers(child)
+        elif isinstance(value, list):
+            for child in value:
+                yield from integers(child)
+        elif isinstance(value, int):
+            yield int(value)
+
+    dictionaries = zsdic.Dictionaries.from_romfs(romfs)
+    sales = {slot.location: "Shop_Heart" for slot in shops.load() if slot.shop != "Market Mask Shop"}
+    for path, transform in shops.changes(romfs, sales).items():
+        if not path.startswith("Banc/"):
+            continue
+        original = dictionaries.decompress(path, (romfs / path).read_bytes())
+        before, after = byml.read(original), byml.read(transform(original))
+        removed = {int(actor["Hash"]) for actor in before["Actors"]} - {int(actor["Hash"]) for actor in after["Actors"]}
+        groups = {key: value for key, value in after.items() if key != "Actors"}
+        assert not removed.intersection(integers(groups)), path
+        assert not [
+            link for actor in after["Actors"] for link in actor.get("Links", []) if int(link["Dst"]) in removed
+        ], path

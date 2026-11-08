@@ -842,3 +842,8 @@ checks compression, updates the shared size table and builds before writing. `--
 seed 22 combined (20 checks, 3 spheres, 10 resources). Seed 22 puts the Deku Shield in KF Shop Item 3 at 20,
 reachable in sphere 1. Both are search/data evidence, not a game certification; whole-game chest expansion
 and chronological age-model integration remain the other tracks' work.
+
+Output safety: quantity-board removal also removes the board's `SimultaneousGroups` / `FarDeleteGroups`
+memberships, not just its actor and seller links. A live generated-overlay smoke exposed the stale memberships;
+the aimed fix and synthetic/all-shop dump regressions pass. Rebuilt smoke outputs contain no dangling board
+references. No game boot or crash was needed to diagnose this.

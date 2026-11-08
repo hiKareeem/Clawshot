@@ -140,6 +140,12 @@ def patch_shelves(data: bytes, changes: tuple[tuple[Slot, Sale], ...]) -> bytes:
         for actor in document.root["Actors"]:
             if "Links" in actor:
                 actor["Links"] = [link for link in actor["Links"] if int(link["Dst"]) not in removed]
+        for key in ("FarDeleteGroups", "SimultaneousGroups"):
+            if key in document.root:
+                document.root[key] = [
+                    [actor_hash for actor_hash in group if int(actor_hash) not in removed]
+                    for group in document.root[key]
+                ]
     result = byml.dump(document)
     if difference := byml.difference(document.root, byml.read(result)):
         raise PatchError(f"shop shelves failed read-back: {difference}")

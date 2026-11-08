@@ -182,3 +182,19 @@ replaces only ShopRef. Neither failure was rerun unchanged.
 
 Item 1: `OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump tests/test_shops_dump.py -s`: **1 passed**.
 Live `load(); validate(...)` smoke: **128 shelves, nine shops**, all three KF shield copies priced 40.
+
+## Final safety follow-up: removed quantity-board references
+
+Live output inspection found a real omission after the first complete synthetic gate: quantity boards removed
+from `Actors` and seller links still appeared in `FarDeleteGroups` and `SimultaneousGroups`. Printed exact
+paths/Hash lists: Adult group 2 held removed 11847747441471484392 / 16953505662516287090; Child groups 3/4 held
+4602234734267749628 / 4733469548168048595 / 10712672058188138415. No AI-group reference was found.
+
+Fixed `patch_shelves` to remove those memberships too, preserving other group members and types. Extended the
+synthetic regression with both group kinds: **1 passed** after the fix. Added a whole-catalog dump regression
+replacing every ordinary shelf with a single-item native display: **1 passed**, no dangling group/link refs in
+any shop's Banc. Rebuilt both smoke seeds after the aimed change (same placements/spheres/resource counts).
+Fresh output smoke printed **zero** remaining references for all five removed boards. The throwaway inspection
+script was removed; permanent behavior regressions remain. The three controlled player experiments were
+unaffected (their old shield shelf has no quantity board).
+

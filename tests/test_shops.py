@@ -68,13 +68,17 @@ def test_shelf_swap_keeps_identity_and_removes_only_obsolete_quantity_boards(slo
             {"Hash": byml.U64(102), "Gyaml": "Shop_Board_Bundle_05"},
             {"Hash": byml.U64(103), "Gyaml": "Shop_Board_SoldOut"},
             {"Hash": byml.U64(999), "Gyaml": "Unrelated"},
-        ]
+        ],
+        "FarDeleteGroups": [[byml.U64(101), byml.U64(102), byml.U64(103)]],
+        "SimultaneousGroups": [[byml.U64(102), byml.U64(999)]],
     }
     output = byml.read(shops.patch_shelves(byml.write(tree), ((slot, shops.Sale("Shop_New", "Shop_New", 80)),)))
     expected = copy.deepcopy(tree)
     expected["Actors"][0]["Gyaml"] = "Shop_New"
     expected["Actors"][0]["Links"] = [{"Dst": byml.U64(103)}]
     del expected["Actors"][1]
+    expected["FarDeleteGroups"] = [[byml.U64(101), byml.U64(103)]]
+    expected["SimultaneousGroups"] = [[byml.U64(999)]]
     assert byml.same(output, expected)
 
 
