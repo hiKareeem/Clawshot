@@ -823,6 +823,15 @@ collection to find its mandatory first-pull minimum, then prove adult can open r
 minima, starting inventory and adult checks. Optional child loot cannot satisfy that proof.
 Turning the guarantee off retains temporal correctness but permits early-pull softlocks.
 
+The fill enforces a return kit first, rather than hoping the oracle accepts a random placement.
+Shuffled strength-family sources stay in adult-only checks: otherwise child could find Silver/Golden
+Gauntlets, bypass Saria's unshuffled bracelet gift, pull early and leave adult unable to pass Mido.
+This preserves Saria's Song as a compulsory child dependency of the first pull. Bow, grapple sources,
+strength tiers and Forest keys are forward-placed at adult-reachable checks before ordinary assumed fill;
+small keys bootstrap from zero before a boss key can occupy the entrance-key chest.
+The fill's data-defined lower bound is Saria's Song, strength 1, Ocarina 2 and Song of Time, not optional child
+loot. The independent actual-placement oracle still verifies those assumptions on every finished seed.
+
 ### Isolated free-travel setting (off)
 
 No fake GameData default: `patch/age.py` changes only AiGroup Hash 2075259738076588912 in

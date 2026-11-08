@@ -210,3 +210,65 @@ Read the six newly supplied nested saves in `2026-11-08_0802-before-adult/save/<
 `Sequence_IsChildhood = true`, `Step_SageOfForest = Ready`, first-pull/first-return false, DoorOfTime
 NotReady or Step02. Eighteen inspected saves in total, still no adult-ready backup; no live game save was read.
 Posted all integration contracts and the Ganon Tower dungeon-metadata request on the thread.
+
+## Commit ledger after authorized rebase
+
+Base `cd592e3`, branch `r5/age`. Earlier inline/thread IDs before the rebase are historical.
+
+| Commit | Scope |
+|---|---|
+| `036b008` | item 1 research and section 16 |
+| `1bb8187` | isolated world gate data |
+| `9a4f542` | item 2 chronological child-prefix search |
+| `1833047` | item 3 counterexample/proposal |
+| `fe72c12` | cs5c's isolated GanonBossKey model fix |
+| `27e4667` | isolated default-on guarantee settings |
+| `f3586cf` | reviewer-required mandatory-count/adult-only guarantee |
+| `94ad473` | isolated default-off free-travel setting |
+| `e2ff6b0` | item 4 pedestal transform, model, tests, evidence |
+| `8356c6c` | isolated automatic seed-output pairing |
+| `fba0c82` | isolated world-format documentation |
+
+No merge, push, stash, dependency change, game/save write or game process.
+
+## Full-gate failure and reviewer-directed fill constraint
+
+First four-gate attempt: format **101 files**, lint passed; synthetic suite **318 passed, 27 skipped,
+3 failed in 409.74 s**. The default 200-seed sweep rejected 147, progressive sweep rejected 10 of 20,
+and determinism seed 4242 could not be generated; the `&&` chain therefore did not run the full dump gate.
+No failing command was rerun unchanged.
+
+Seed 0 diagnostics printed the real cause: normal goal true, return false, adult meadow false,
+mandatory Saria's Song zero. Other child-route necessities were present. Its optional shuffled gauntlet
+tiers let child get strength without Saria's unshuffled bracelet gift; after pulling early, adult cannot
+pass Mido, and the song is not obtainable as adult. This is a genuine earliest-pull softlock, not a demand for
+the optional 100-token reward. Ten diagnostic fill candidates showed two safe ones, several missing Saria
+and others missing Forest gear. `generate` checks the oracle after its existing retry loop; no retry count
+or acceptance assertion was changed.
+
+Reviewer required a fill constraint, not reliance on rejection. Added a forward return-kit stage before the
+normal assumed fill:
+
+- Data names the logical source families (Bow, grapple, strength, Forest small/boss keys), the stricter
+  bypass family (strength), and its safe lower-bound adult-start inventory.
+- Every shuffled strength source must go to a strictly adult-only check, tested against maximum child access.
+  This preserves the actual compulsory child Saria → bracelet → Dodongo boulder route instead of inventing
+  an extra logical first-pull gate or moving an unshuffled gift.
+- The safe lower bound is Ocarina 2, Song of Time (the actual door), Saria's Song and strength 1 (the preserved
+  child dependency). No optional child chest, Bomb Bag, wallet or boots are assumed.
+- Forward-place the staged sources at adult-reachable checks with that inventory and already placed/vanilla
+  adult pickups. Small keys bootstrap first; if further keys need another item, place that reachable item
+  next. Boss keys cannot consume the only reachable entrance-key chest first.
+- Then the existing assumed fill handles the remainder; the independent mandatory-count/return oracle still
+  checks every generated seed. Free travel or guarantee-off skips this extra placement stage.
+
+`Search.adult_after_pull` is the explicit phase constructor used by that stage.
+Synthetic regression `test_age_fill.py` shows a child-only song/bracelet route, shuffled bypass tier forced
+into the adult dungeon, two keys bootstrapped from zero, and return without optional child loot.
+Targeted fill/age tests **15 passed**. Live generation of previously failing seeds **0, 93 and 4242** succeeded;
+their mandatory Saria count is now 1 (seed 0 actual return proof also printed true, 21 spheres).
+The unchanged full 200/progressive/determinism tests and full dump gate are running after this aimed fix.
+
+Removed the disposable `seed-free-smoke` output created by this session after its observed CLI proof; the
+requested `free-time-travel` player overlay and read-only research material remain outside the repository.
+Removed incidental error-wording assertions from the new tests; they assert the rejection type and state instead.

@@ -175,7 +175,7 @@ def guarantee(world):
 
 def test_default_guarantee_rejects_beatable_but_early_pull_unsafe_seed():
     world = guarantee(age_world(child_key=True))
-    with pytest.raises(FillError, match="goal cannot be reached"):
+    with pytest.raises(FillError):
         check_beatable(world, PLACEMENTS)
     world.settings["age_return_guarantee"] = False
     assert "Child Prize" in sum(check_beatable(world, PLACEMENTS), [])
