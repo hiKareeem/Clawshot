@@ -1,6 +1,5 @@
 # Remake e0f3ccfa. These counts are REAL acquired keys, with no N64 free starting key.
 # Eight key chests and eight small-key locks; boss-door cinematic lock is separate.
-# load._start_items must not inject the old OoTR Fire key (posted to cs4a).
 
 [exits."Fire Temple Lower"."Fire Temple Big Lava Room"]
 rule = "(Small_Key_Fire_Temple, 1) and can_use(Goron_Tunic)"

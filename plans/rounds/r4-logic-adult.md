@@ -143,9 +143,15 @@ Verification: `uv run pytest tests/test_world_remake_adult_fire.py -q`: **8 pass
 `uv run python E:/OOTRemake/work/r4-logic-adult/smoke_fire.py`: start zero keys, nine collection spheres, eight
 real keys, pillar-lowered event, Volvagia reached and goal true.
 
-Cross-track dependency posted: `load._start_items` still injects an N64 free Fire key that the game/writer do
-not grant. These real-key data rules require cs4a to remove it. Do not treat default-settings seeds as verified
-until that removal; no compensating shim was added to the data.
+Reviewer authorized cs4b to remove the phantom Fire key from `load._start_items` after the prerequisite was
+merged. Removed the two-line grant, updated its docstring and `04-world-format.md`, and added the default-path
+regression. Before the fix, live smoke printed zero actual keys but one solver key and an open big-lava door.
+After removal, the default regression, whole-world vanilla beatability and **200 default seeds** all passed:
+`uv run pytest tests/test_world_remake_adult_fire.py::test_default_settings_do_not_invent_the_first_fire_key
+tests/test_world_data.py::test_vanilla_placement_is_beatable
+tests/test_world_data.py::test_seeds_with_the_default_settings_are_beatable -q`: **3 passed in 58.83 s**.
+The vanilla test still holds dungeon keys up front (its documented Spirit-key caveat); the 200 fill tests do
+not receive a phantom Fire key. No failure required a compensating data change.
 
 ## Shared overworld: adult-side audit
 

@@ -193,10 +193,9 @@ An exit, event or location whose rule failed is tried again only once a count it
 records the item and event names each rule reads, `Rule.reads`), or, for an event or location, once its region is
 reached at a new age or time of day.
 
-**Start items.** `World.start_items` are held before any check, as OoT Randomizer's `ItemPool.get_pool_core`
-collects them for vanilla dungeons: the five ocarina buttons (notes not shuffled), Scarecrow's Song when
-`scarecrow_behavior = "free"`, and one Fire Temple small key while `keysanity` is false (its rules count on it:
-`(Small_Key_Fire_Temple, 8) or (not keysanity)`).
+**Start items.** `World.start_items` are held before any check: the five ocarina buttons when notes are not
+shuffled, and Scarecrow's Song when `scarecrow_behavior = "free"`. The remake gives no starting dungeon keys.
+The N64 free Fire Temple key is not carried over; its eight real keys must be collected from checks.
 
 **Ages.** OoT Randomizer's start region `Root` is reached by both ages, and its exit to `Root Exits` needs
 `is_starting_age or Time_Travel`. The other age therefore starts only once the event `Time Travel` is held, which

@@ -7,11 +7,11 @@ from clawshot.world import ADULT, Search, build_world, load_spec
 GEAR = ["Goron Tunic", "Goron Bracelet", "Hookshot", "Bow", "Bomb Bag", "Fairy Ocarina", "Song of Time"]
 
 
-def fire_world(start="Fire Temple Lower", *, keysanity=True):
+def fire_world(start="Fire Temple Lower"):
     spec = load_spec()
     spec["start"] = start
     spec["goal"] = "'Defeat Volvagia'"
-    return build_world(spec, {"keysanity": keysanity})
+    return build_world(spec)
 
 
 @pytest.mark.parametrize("keys,expected", [(0, False), (1, True)])
@@ -82,3 +82,11 @@ def test_eight_real_key_routes_bootstrap_hammer_and_boss():
     assert search.won()
     assert search.counts["Small Key (Fire Temple)"] == 8
     assert search.collected == set(names)
+
+
+def test_default_settings_do_not_invent_the_first_fire_key():
+    world = fire_world()
+    search = Search(world, ["Goron Tunic"])
+    assert not search.can_reach("Fire Temple Big Lava Room", ADULT)
+    search.collect("Small Key (Fire Temple)")
+    assert search.can_reach("Fire Temple Big Lava Room", ADULT)

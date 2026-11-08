@@ -406,17 +406,16 @@ OCARINA_BUTTONS = (
 
 
 def _start_items(settings: Mapping[str, Any], items: Mapping[str, Item]) -> tuple[str, ...]:
-    """What the player holds before any check, as OoT Randomizer's ``ItemPool.get_pool_core`` collects it for
-    vanilla dungeons: the ocarina buttons when notes are not shuffled, Scarecrow's Song when it is free, and one
-    Fire Temple small key when keys stay in their dungeon (its rules count on it: ``(Small_Key_Fire_Temple, 8) or
-    (not keysanity)``). Only items the world's item table has are given."""
+    """The ocarina buttons when notes are not shuffled and Scarecrow's Song when it is free.
+
+    The remake gives no starting dungeon keys; Fire Temple keys must be collected from real checks.
+    Only items the world's item table has are given.
+    """
     held: list[str] = []
     if not settings.get("shuffle_individual_ocarina_notes", False):
         held.extend(OCARINA_BUTTONS)
     if settings.get("scarecrow_behavior") == "free":
         held.append("Scarecrow Song")
-    if settings.get("keysanity") is False:
-        held.append("Small Key (Fire Temple)")
     return tuple(name for name in held if name in items)
 
 

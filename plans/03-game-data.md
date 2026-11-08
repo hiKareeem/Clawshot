@@ -583,10 +583,10 @@ The pillar-lowered event follows Hammer and Song of Time; Hover bypass remains u
 
 Source: https://www.nintendolife.com/guides/zelda-ocarina-of-time-fire-temple-walkthrough-switch-2
 
-The N64 free Fire key in `world.load._start_items` is not an actual remake starting item. Track A has been asked
-to remove it; real-key overrides must not be evaluated with that phantom key. An isolated keysanity-true search
-starts with zero Fire keys, collects all eight through the real routes, obtains Hammer and boss key, lowers
-the pillar and reaches Volvagia. Default-settings proof waits on removing the phantom key.
+The N64 free Fire key in `world.load._start_items` is not an actual remake starting item. Reviewer authorized
+cs4b to remove that grant. The isolated route starts with zero Fire keys and collects all eight, Hammer and
+boss key before reaching Volvagia. After removal, the default-path regression, whole-world vanilla beatability
+test (with its documented up-front-key caveat) and 200 default generated seeds all passed.
 
 ### Adult shared overworld
 
