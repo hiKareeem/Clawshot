@@ -637,3 +637,20 @@ Sources:
 - https://www.ign.com/wikis/ocarina-of-time-remake/Shadow_Temple_Dungeon_Walkthrough
 - https://www.eurogamer.net/all-gold-skulltulas-locations-zelda-ocarina-of-time
 - Banc/ShadowTemple placement and skull-pot/web actor parameters, read-only, build `e0f3ccfa`.
+
+### Spirit Temple
+
+Five real keys/five ordinary locks retain the existing age-unknown/worst-order key model. The statue-floor
+token needs no ranged weapon; the former child-climb token is by Pierre beside the statue's hand (adult
+Longshot/Scarecrow). Lullaby spawns the hand key, then the documented collection route also uses Pierre.
+The sun-block key now uses window light, not torches or the silver-rupee door trigger. Child Climb East
+and Statue Northeast are absent N64 chests.
+
+The live adult-boundary search starts with three earlier keys and collects hand key, Mirror Shield, fifth
+key and Boss Key before winning. This does not resolve the inherited cross-age key abstraction or prove
+chronological child-to-adult play. Short-Hookshot ranges and lensless combat remain questions in the round file.
+
+Sources:
+- https://www.eurogamer.net/spirit-temple-walkthrough-zelda-ocarina-of-time
+- https://www.eurogamer.net/all-gold-skulltulas-locations-zelda-ocarina-of-time
+- Banc/SpiritTemple placements, read-only, build `e0f3ccfa`.

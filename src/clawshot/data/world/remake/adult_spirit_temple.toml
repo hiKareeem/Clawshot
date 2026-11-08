@@ -1,0 +1,42 @@
+# Spirit Temple, remake e0f3ccfa. Banc evidence from Banc/SpiritTemple/SpiritTemple_{Static,Dynamic}.bcett.byml.zs
+# (rooms are Dynamic.DefaultDungeonRoomIndex), read-only. Five small-key doors (Obj_SpiritTemple_DoorChainLock_A_01
+# in rooms 5, 10, 17, 20, 21) for the five key chests (rooms 4, 7, 9, 16, 26), as on N64; OoT Randomizer's key logic
+# is kept. The statue room is Banc room 7: OoT Randomizer's "Spirit Temple Central Chamber" (its 2F floor, y 114)
+# and the statue's hands and upper ledges (y 124 to 130).
+#
+# OoT Randomizer's Central Chamber rules are age-unknown (Spirit Temple.json:88): an age-specific check there asks
+# for 5 keys as child or 3 keys (or shortcuts) as adult; a check needing no item uses the room pots' rule.
+
+[locations."Spirit Temple GS Lobby"]
+rule = "(Small_Key_Spirit_Temple, 3) or spirit_temple_shortcuts or has_explosives or ((Small_Key_Spirit_Temple, 2) and free_bombchu_drops)"
+was = "(is_child and logic_spirit_lobby_gs and Boomerang and (Small_Key_Spirit_Temple, 5)) or (is_adult and (Hookshot or Hover_Boots or logic_spirit_lobby_jump) and ((Small_Key_Spirit_Temple, 3) or spirit_temple_shortcuts)) or (logic_spirit_lobby_gs and Boomerang and (Hookshot or Hover_Boots or logic_spirit_lobby_jump) and (has_explosives or ((Small_Key_Spirit_Temple, 2) and free_bombchu_drops)))"
+source = "In the statue room's floor corner right of the statue, both ages, no item: https://www.eurogamer.net/all-gold-skulltulas-locations-zelda-ocarina-of-time (Next To The Giant Statue); Polygon Gold Skulltula guide (Johnny Yu, 2026-11-07, Spirit 2F: 'None'); https://www.videogameschronicle.com/guide/all-spirit-temple-gold-skulltula-locations-in-zelda-ocarina-of-time-switch-2/ (Behind the statue). Banc room 7 Hash 12959656942046734931 at y 115.2, the 2F floor (Map chest y 114.2). Rule: OoT Randomizer's own rule for item-free checks in this region (Central Chamber Pot 1 to 6)."
+
+[locations."Spirit Temple GS Sun on Floor Room"]
+region = "Spirit Temple Central Chamber"
+rule = "can_use(Distant_Scarecrow) and ((Small_Key_Spirit_Temple, 3) or spirit_temple_shortcuts)"
+was = "(is_child and has_projectile(child) and (Small_Key_Spirit_Temple, 5)) or (is_adult and (has_projectile(adult) or can_take_damage) and ((Small_Key_Spirit_Temple, 3) or spirit_temple_shortcuts or ((Small_Key_Spirit_Temple, 2) and free_bombchu_drops))) or has_projectile(both) or can_use(Dins_Fire) or (can_take_damage and (Sticks or Kokiri_Sword or has_projectile(child)))"
+source = "Not on the child climb: in the statue room by the statue's right hand, adult, Scarecrow's Song and Longshot to Pierre. Eurogamer (Giant Statue Room: Longshot and Scarecrow's Song), Polygon (Spirit 3F: Adult Link, Longshot, Scarecrow Song), VGC (Scarecrow), URLs as for the GS Lobby. Banc room 7 Hash 5086449036385341804 at (-23.1, 129.7, -66.7), 5 units from Obj_ScarecrowMarker_B_00 / Npc_Pierre_CallOcarina at (-17.8, 129.1, -67.4). Adult-only check in the age-unknown Central Chamber: OoT Randomizer's adult key condition (3 keys or shortcuts), as for the Map Chest."
+
+# Chests the remake does not have. Banc chests: room 2 Deku Shield, 4 key, 6 Bombchus (Child Climb North, census
+# link), 7 Map and key (on the statue's right hand), 9 key, 14 Compass, 16 key, 18 trap and bombs, 23 two invisible
+# red rupees, 26 key, 29 Boss Key, 31 bombs: 15 placements, plus the Silver Gauntlets and Mirror Shield chests in
+# DesertColossus (remake.toml), against OoT Randomizer's 19.
+
+[locations."Spirit Temple Child Climb East Chest"]
+n64_only = "the remake's child climb room (Banc room 6) holds one chest, the Bombchus chest the census links to Spirit Temple Child Climb North Chest (Hash 1501288453962537671); N64's second, east chest is not placed in any room"
+source = "Banc/SpiritTemple Static and Dynamic placement files, build e0f3ccfa (read-only inspection, round 4)"
+
+[locations."Spirit Temple Statue Room Northeast Chest"]
+n64_only = "the remake's statue room (Banc room 7) holds two chests: the Map (census link) and the small key on the statue's right hand (N64's Statue Room Hand Chest, Hash 2203243501006528435, beside the hand's hookshot target); the dungeon's three Zelda's Lullaby points (Obj_TriForcePoint_A_07/08/09) serve the Compass, hand and Boss Key chests, none an upper north-east ledge"
+source = "Banc/SpiritTemple Static and Dynamic placement files, build e0f3ccfa (read-only inspection, round 4)"
+
+[locations."Spirit Temple Sun Block Room Chest"]
+rule = "(Small_Key_Spirit_Temple, 3) or spirit_temple_shortcuts or has_explosives or ((Small_Key_Spirit_Temple, 2) and free_bombchu_drops)"
+was = "(is_child and Sticks and (logic_spirit_sun_chest_no_rupees or (Silver_Rupee_Spirit_Temple_Sun_Block, 5)) and (Small_Key_Spirit_Temple, 5)) or (is_adult and (has_fire_source or (logic_spirit_sun_chest_bow and (Silver_Rupee_Spirit_Temple_Sun_Block, 5) and Bow)) and ((Small_Key_Spirit_Temple, 3) or spirit_temple_shortcuts)) or ((can_use(Dins_Fire) or (((Magic_Meter and Fire_Arrows) or (logic_spirit_sun_chest_bow and (Silver_Rupee_Spirit_Temple_Sun_Block, 5))) and Bow and Sticks and (logic_spirit_sun_chest_no_rupees or (Silver_Rupee_Spirit_Temple_Sun_Block, 5)))) and (has_explosives or ((Small_Key_Spirit_Temple, 2) and free_bombchu_drops)))"
+source = "https://www.eurogamer.net/spirit-temple-walkthrough-zelda-ocarina-of-time: moving the sun cube into the window light spawns this small-key chest; the five silver rupees instead open the onward door. No torch puzzle remains. Preserve OoT Randomizer's age-unknown room-access condition from the Central Chamber pots and silver rupees (Spirit Temple.json:159-201), without its old fire-source condition."
+
+[locations."Spirit Temple Statue Room Hand Chest"]
+rule = "can_play(Zeldas_Lullaby) and can_use(Distant_Scarecrow)"
+was = "can_play(Zeldas_Lullaby)"
+source = "https://www.eurogamer.net/spirit-temple-walkthrough-zelda-ocarina-of-time: Zelda's Lullaby on one hand spawns the small-key chest on the opposite hand; summon Pierre on the corner ledge, grapple over and jump to the chest. The same Pierre route as GS Sun on Floor Room (Longshot and Scarecrow's Song). Direct hand-to-hand/target alternatives remain an in-game question."

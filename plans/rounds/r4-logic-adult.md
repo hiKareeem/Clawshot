@@ -277,3 +277,39 @@ only after the fifth key, and wins against Bongo Bongo. No blocked progression c
 live search printed Bow-only true/Bomb-Bag-only false; afterwards false/true. In-game: after landing from the
 boat, bomb the cracked pillar; the bridge should fall. With four keys the spike-wall room must remain locked;
 the invisible Floormaster supplies the fifth.
+
+## Spirit Temple
+
+Read every translated rule, Eurogamer's full remake walkthrough, token guides and Banc placements/locks.
+Five key chests/five locks agree with N64's count; the inherited worst-order/age-unknown key conditions remain.
+Changed: statue-floor token needs no weapon; old child-climb token moves beside Pierre at the statue hand
+(adult Longshot/Scarecrow); hand small-key chest needs Lullaby and that same Pierre return route. The sun-block
+key chest now appears from window light, not torches; remove fire and silver-rupee requirements while retaining
+the room's age-unknown access condition. Exclude the absent Child Climb East and Statue Northeast chests.
+
+Checked/unchanged normal routes: child bridge combat/projectile; torch key; first lock; bombable child-climb
+wall; Map torch; five-rupee door onward; Iron Knuckle/Silver Gauntlets; adult silver block; Compass Lullaby
+and grapple; boulder rupees/Time Block/key; adult locked climb; Anubis/Beamos; invisible red-rupee chests;
+Iron Knuckle/Mirror Shield; reflected-light key; moving-wall/top lock; Lullaby/Bow/grapple Boss Key;
+Mirror Shield/explosives mirror puzzle; boss key; Mirror Shield Twinrova, reward and warp.
+
+Sources:
+- https://www.eurogamer.net/spirit-temple-walkthrough-zelda-ocarina-of-time
+- https://www.eurogamer.net/all-gold-skulltulas-locations-zelda-ocarina-of-time
+- https://www.videogameschronicle.com/guide/all-spirit-temple-gold-skulltula-locations-in-zelda-ocarina-of-time-switch-2/
+- Banc/SpiritTemple placements, build `e0f3ccfa`, read-only.
+
+**Kareem: can the hand key be reached directly with a grapple target or jump without summoning Pierre?
+Are Lenses necessary to defeat the first invisible Floormaster, rather than just see it? Does ordinary
+Hookshot reach the moving wall, Boss Key platform and final statue face, or are those Longshot-only?
+Can Hammer replace explosives for any Beamos/Anubis sequence?** The guide names Longshot for the upper
+route but also describes climbing the walls; it does not establish every short-Hookshot impossibility.
+Those old alternatives remain questions, not certified remake tricks. Pots/drops are not independently verified.
+
+Verification: `uv run pytest tests/test_world_remake_adult_spirit.py -q`: **5 passed**. Live adult-boundary
+smoke starts at Adult Climb with the three previously earned keys, then collects hand key → Mirror Shield →
+reflected-light fifth key → Boss Key, reaches Twinrova and wins. It does not grant or claim to bootstrap the
+child keys: the inherited age-unknown Spirit key caveat remains. Separate live search printed the sun-block
+key false without fire before the fix, then true for both ages with Bomb Bag after it. In-game: move the sun
+cube into window light without lighting torches; the small-key chest should spawn. Collect the hand key via
+Pierre, then test the direct alternatives above.
