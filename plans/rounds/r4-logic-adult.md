@@ -516,40 +516,43 @@ the shared questions above.
 
 ## Handoff commit ledger
 
-Branch `r4/logic-adult`, based on the reviewer-authorized `main` loader prerequisite. No merge or push.
-The first three IDs changed during the authorized rebase; use this ledger, not earlier thread IDs.
+Branch `r4/logic-adult`, rebased onto reviewer-authorized `main` `ab941d2`. No merge or push.
+All IDs below reflect that rebase; earlier area/thread IDs are historical.
 
 | Commit | Scope |
 |---|---|
-| `5a3c6ca` | Forest locks/traversal |
-| `3d49bd8` | Water four-key graph |
-| `bb93f16` | Fire real locks/pillar |
-| `96de461` | Initial crater heart gate (corrected below) |
-| `b7bd622` | Goron City ceiling token |
-| `272e61b` | Lake entry/restored-water routes |
-| `4c2e30c` | Domain thaw/shop/token |
-| `a0fa4cd` | Fountain Gauntlets/Lens tunnel |
-| `3140d39` | Five-Poe bottle threshold |
-| `a8002bf` | Documented Light Arrows route |
-| `22aee05` | Corroborated child crater climb |
-| `b036547` | Authorized phantom starting Fire-key removal |
-| `64d22a4` | Shadow locks/bombs/moved checks |
-| `f160bd2` | Spirit light/statue checks |
-| `0c1f39a` | Gerudo trials and storm grottos |
-| `457371a` | Domain source corroboration/shared-gate questions |
-| `24dd60e` | Colossus cliff token/absent scrubs |
-| `e1e988d` | Shadow ceiling ride/absent pot |
-| `6cc13c2` | Castle trials and one-key Light route |
-| `80f5b59` | Gerudo chest kind/absent pickups |
-| `da67b7f` | Absent Wasteland crates |
-| `5af3435` | Colossus Hammer wall access |
-| `0e8e1ea` | GTG regression formatting |
+| `4d62e58` | Forest locks/traversal |
+| `493f613` | Water four-key graph |
+| `d7674cc` | Fire real locks/pillar |
+| `700d68b` | Initial crater heart gate (corrected below) |
+| `b398de4` | Goron City ceiling token |
+| `cbc98de` | Lake entry/restored-water routes |
+| `29dd120` | Domain thaw/shop/token |
+| `a4ecb87` | Fountain Gauntlets/Lens tunnel |
+| `df3067e` | Five-Poe bottle threshold |
+| `8a11f13` | Documented Light Arrows route |
+| `400bcc4` | Corroborated child crater climb |
+| `1fe9b86` | Authorized phantom starting Fire-key removal |
+| `ec981d4` | Shadow locks/bombs/moved checks |
+| `d669f83` | Spirit light/statue checks |
+| `40f7c05` | Gerudo trials and storm grottos |
+| `f4fed62` | Domain source corroboration/shared-gate questions |
+| `f73d986` | Colossus cliff token/absent scrubs |
+| `d8859fd` | Shadow ceiling ride/absent pot |
+| `a709712` | Castle trials and one-key Light route |
+| `18fbd56` | Gerudo chest kind/absent pickups |
+| `a0c0132` | Absent Wasteland crates |
+| `7b01d67` | Colossus Hammer wall access |
+| `6cc3103` | GTG regression formatting |
+| `5e329c6` | Authorized shared assertions: complete translation coverage and Water 2/3 boundary |
+| `f6a39e6` | Pre-integration evidence checkpoint |
+| `27c31f6` | Integrated evidence ordering, GTG status and stale starting-item documentation |
 
 Six session-created throwaway smoke scripts were removed after their observed outputs were recorded here.
 Permanent behavior regressions remain. Read-only research material stays outside the repository; no game
 data, dependency, game/save file, game process or window was changed/started.
 
-## Final gate results and review blockers
+## Pre-integration gate results and review blockers
 
 | Command | Observed result |
 |---|---|
@@ -581,3 +584,55 @@ key pessimism and monotone time travel remain engine limitations, not concealed 
 Reachable track work is committed area by area, with source evidence, targeted regressions and live search
 proof. No compensating key data was added; both phantom Fire start key and extra castle pool key are gone.
 No game was launched. This is a source/search audit handoff, not an in-game certification.
+
+## Authorized integration update
+
+Reviewer authorized the shared-test change, then instructed rebase onto
+`ab941d2318522a04bfdc47751236601ab7e8a126`. Rebase complete. Resolved only two conflicts:
+kept all tracks' evidence sections in `03-game-data.md` and preserved Track A's complete translated-region
+subset check in `test_world_data.py`, removing only its incidental numeric count. Section 13 is back between
+12 and 14; other tracks' evidence text is preserved.
+
+Shared assertions have their own sourced commit `5e329c6`. The obsolete isolated Dark Link count assertion
+is replaced by the full-search two-key-negative/three-key-positive test, moved from the adult Water module
+instead of duplicated. Whole-world graph integrity, complete translated-region inclusion and vanilla
+all-chest coverage remain. Targeted shared/Fire-default run after rebase: **5 passed**.
+
+Live integration smoke prints ninth GTG key `Chest`, not excluded, accessible in Central Maze Right;
+the vanilla GTG pool now contains **9** real keys. The earlier pending-GTG statements above are resolved.
+Removed the final obsolete Fire-key example from `World.start_items`'s docstring.
+
+Reviewer routes the root Shadow Golden Gauntlets chest Lens rule through Track A and settles `Time Flows`,
+`Great Fairy Met`, fees and night semantics at merge; this track leaves them as questions, as instructed.
+Business Scrub Seed's existing representation is accepted as-is by the reviewer. No new gate or item alias
+was invented to resolve those shared decisions. Earlier "not merge-ready" statements describe the superseded
+pre-authorization state; the remaining owner actions are explicitly assigned.
+
+Post-rebase live GTG smoke starts with **zero** small keys, collects all **nine** actual keys (including
+the restored maze chest), and reaches the Ice Arrows goal. No blocked key checks. This replaces the earlier
+local eight-key limitation; no free key was supplied.
+
+**Kareem: Eurogamer's Spirit guide calls the adult ranged tool "Slingshot" twice. Is that guide wording,
+or can adult Link actually use it in the remake?** Existing age restrictions are unchanged, not loosened
+from ambiguous wording.
+
+## Final integrated verification
+
+Base: reviewer-authorized `ab941d2`. These results supersede the pre-integration failures above.
+
+| Command | Observed result |
+|---|---|
+| `uv run ruff format --check` | Passed: **94 files** formatted |
+| `uv run ruff check` | Passed |
+| `uv run pytest` | **289 passed, 26 skipped**, 119.37 s |
+| `OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump` | **25 passed**, 290 deselected, 135.74 s |
+
+The full run includes vanilla placement beatability, the 200-default-seed search, the default no-free-Fire-key
+regression, the shared Water two/three-key boundary, all adult-area regressions and the integrated tracks'
+synthetic checks. The dump oracle includes the newly integrated EVFL/fast-start checks. No failing check remains.
+
+Track B handoff is ready for review. Remaining work is explicitly assigned: Track A/reviewer adds the root
+Shadow Gauntlets chest Lens rule; reviewer settles shared night/fairy semantics and accepts the unchanged
+Business Scrub Seed representation; Kareem performs the area-by-area in-game checks above. No game was
+started and no in-game success is claimed. Commit ledger above lists the rebased implementation/evidence
+commits; the final handoff-document commit is reported in chat and on `cs-r4`.
