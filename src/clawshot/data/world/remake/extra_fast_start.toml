@@ -1,0 +1,14 @@
+[events."Kokiri Forest"."Showed Mido Sword & Shield"]
+rule = "is_child and (skip_mido or (Kokiri_Sword and (Deku_Shield or Hylian_Shield)))"
+was = "is_child and Kokiri_Sword and Deku_Shield"
+source = "D18; mido changes only KokiriForest_Npc_Kokiri_Mido_Child_Blocker, not the exit guard (KokiriForest_Child_Level_All_02_d26e, separate Kokiri_007 flags/Get_StoneOfForest Complete). Kept Mido accepts either shield: Kareem in game 2026-11-08, r5-shops/shield-slot-hylian, Kokiri Sword plus Hylian Shield and no Deku Shield cleared his blocker."
+
+[events."KF Outside Deku Tree"."Showed Mido Sword & Shield"]
+rule = "is_child and (skip_mido or (Kokiri_Sword and (Deku_Shield or Hylian_Shield)))"
+was = "is_child and Kokiri_Sword and Deku_Shield"
+source = "Same Mido event as Kokiri Forest; Kareem in game 2026-11-08, E:/OOTRemake/work/r5-shops/shield-slot-hylian: Kokiri Sword and Hylian Shield, no Deku Shield, Mido blocker false."
+
+[events."Root"."Showed Mido Sword & Shield"]
+rule = "open_forest == 'fast' and Kokiri_Sword and (Deku_Shield or Hylian_Shield)"
+was = "open_forest == 'fast' and Kokiri_Sword and Deku_Shield"
+source = "Legacy fast-forest variant of the same Mido equipment test; Kareem in game 2026-11-08, r5-shops/shield-slot-hylian confirms either shield. This does not change open_forest itself."

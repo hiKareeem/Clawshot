@@ -22,6 +22,7 @@ pytestmark = pytest.mark.dump
 SLICE = Settings(areas=("KokiriForest", "LostWood", "InsideTheDekuTree"), goal="'Defeat Queen Gohma'")
 
 REMOVED = "<removed>"
+INTRO = "Event/EventSetting/EventSettingComponentList/Dm_Kokiri_0000.engine__event__EventSettingComponentList.bgyml"
 
 
 def field_changes(a, b, path=(), actor=None):
@@ -80,7 +81,7 @@ def test_written_files_differ_only_where_the_plan_says(romfs, tmp_path, seed_num
     raised = expected_table != table
     files = sorted(p.relative_to(out).as_posix() for p in out.rglob("*") if p.is_file())
     table_file = [f"romfs/{rstb.TABLE_PATH}"] if raised else []
-    assert files == sorted(["spoiler.json", *(f"romfs/{path}" for path in plan.files()), *table_file])
+    assert files == sorted(["spoiler.json", f"romfs/{INTRO}", *(f"romfs/{path}" for path in plan.files()), *table_file])
     if raised:
         new_table = rstb.read(dicts.decompress(rstb.TABLE_PATH, (out / "romfs" / rstb.TABLE_PATH).read_bytes()))
         assert new_table == expected_table

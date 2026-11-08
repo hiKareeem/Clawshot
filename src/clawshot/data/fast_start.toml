@@ -34,10 +34,10 @@ source = "Logic KokiriForest_Child_Level_Npc_Kokiri_Saria_Child_a766 (request wh
 
 [setting.mido]
 default = false
-skips = "Mido blocking the path to the Great Deku Tree until Link has the Kokiri Sword and a Deku Shield; he stands aside from the start."
+skips = "Mido blocking the path to the Great Deku Tree until Link has the Kokiri Sword and a shield; he stands aside from the start. Either Deku or Hylian Shield works (Kareem, 2026-11-08)."
 state = "KokiriForest_Npc_Kokiri_Mido_Child_Blocker false (his BlockerParam blocks while it is true; Npc_Kokiri_Mido_Child sets it false when shown the sword and shield). His challenge steps Meet_DekuTree Step02/Step03 are skipped; the Deku Tree's talk still triggers (its area stays until Meet_DekuTree is past Step03) and sets Complete."
 source = "GameParameter/BlockerParam/Npc_Blocker_Mido in Pack/Actor/Npc_Kokiri_Mido_Child names the flag; flow Npc_Kokiri_Mido_Child Event26/Event29 clear it; GameDataList default true; r3-seed/user-seed-3 slot_05 has it false after the shield was shown."
-logic = "The Deku Tree no longer needs the Kokiri Sword and Deku Shield: OoT Randomizer's event 'Showed Mido Sword & Shield' holds from the start (KF Outside Deku Tree as with open_forest = 'open' for child). Not wired into seeds yet."
+logic = "Seed fast_start mido sets skip_mido in the world: the child Showed Mido Sword & Shield event no longer needs equipment. open_forest and the separate forest-exit gate stay unchanged."
 
 [setting.mido.game_data]
 "KokiriForest_Npc_Kokiri_Mido_Child_Blocker" = false

@@ -5,10 +5,14 @@ romfs is written."""
 from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
+from typing import TYPE_CHECKING
 
 from clawshot.census.scan import DEFAULT_CHEST_DROP
 from clawshot.formats import byml, rstb, zsdic
 from clawshot.patch.plan import DROP_KEY, EVENT_KEY, SUBSTITUTE_KEY, PatchError, Plan
+
+if TYPE_CHECKING:
+    from clawshot.patch.gamedata import BuiltFile
 
 FileChanges = Mapping[str, Callable[[bytes], bytes]]
 """Romfs-relative paths to transforms of decompressed file bytes. Transforms must validate their read-back."""
@@ -67,12 +71,20 @@ def patch_tree(tree: dict, path: str, plan: Plan) -> None:
             del dynamic[EVENT_KEY]
 
 
+def _patch_path(path: str) -> PurePosixPath:
+    relative = PurePosixPath(path)
+    if relative.is_absolute() or ".." in relative.parts or "\\" in path or ":" in path or path == rstb.TABLE_PATH:
+        raise PatchError(f"invalid patch path {path!r}")
+    return relative
+
+
 def write(
     plan: Plan,
     romfs: str | Path,
     out: str | Path,
     *,
     extra_changes: Sequence[FileChanges] = (),
+    fast_start_files: Sequence["BuiltFile"] = (),
 ) -> list[WrittenFile]:
     """Write every file the plan changes to ``<out>/romfs/``, compressed with the dictionary its name calls for.
 
@@ -88,9 +100,7 @@ def write(
     built: list[tuple[WrittenFile, bytes]] = []
     paths = sorted(set(plan.files()).union(*(changes.keys() for changes in extra_changes)))
     for path in paths:
-        relative = PurePosixPath(path)
-        if relative.is_absolute() or ".." in relative.parts or "\\" in path or ":" in path or path == rstb.TABLE_PATH:
-            raise PatchError(f"invalid patch path {path!r}")
+        relative = _patch_path(path)
         compressed = (romfs / relative).read_bytes()
         data = dicts.decompress(path, compressed) if path.endswith(".zs") else compressed
         new_data = data
@@ -113,6 +123,25 @@ def write(
         table.set(path, new_entry)
         info = WrittenFile(path, len(data), len(new_data), len(compressed), len(new_compressed), entry, new_entry)
         built.append((info, new_compressed))
+    occupied = set(paths)
+    for file in sorted(fast_start_files, key=lambda f: f.path):
+        relative = _patch_path(file.path)
+        if file.path in occupied:
+            raise PatchError(f"{file.path}: fast start collides with another patch step")
+        occupied.add(file.path)
+        compressed = (romfs / relative).read_bytes()
+        data = dicts.decompress(file.path, compressed) if file.path.endswith(".zs") else compressed
+        new_data = dicts.decompress(file.path, file.content) if file.path.endswith(".zs") else file.content
+        if (len(data), len(new_data), table.get(file.path)) != (file.size, file.new_size, file.entry):
+            raise PatchError(f"{file.path}: fast-start build no longer matches its input or size entry")
+        # gamedata.build validates the exact tree edits. Initial-value edits keep the layout; removing the
+        # intro's SkipSetting only shrinks its tree. Neither needs an unverified generic .bgyml size formula.
+        if file.new_size > file.size or file.new_size > file.entry:
+            raise PatchError(f"{file.path}: fast-start file must fit without growing its original allocation")
+        info = WrittenFile(
+            file.path, file.size, file.new_size, len(compressed), len(file.content), file.entry, file.entry
+        )
+        built.append((info, file.content))
     if any(info.entry != info.new_entry for info, _ in built):
         new_table = rstb.write(table)
         new_table_compressed = dicts.compress(rstb.TABLE_PATH, new_table)

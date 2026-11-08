@@ -53,9 +53,15 @@ def world_spec(spec: Mapping[str, Any], settings: Settings) -> Mapping[str, Any]
 def prepare(spec: Mapping[str, Any], settings: Settings) -> tuple[Settings, World]:
     """The settings as a seed uses them, and the world they build.
 
-    With ``dungeon_items = "anywhere"`` the logic setting ``keysanity`` is set too, where the world has it: OoT
-    Randomizer's rules give one Fire Temple key for free while keys stay in their dungeon."""
+    With ``dungeon_items = "anywhere"`` the logic setting ``keysanity`` is set too, where the world has it.
+    ``skip_mido`` is derived from the same fast-start list the overlay writer uses; it cannot diverge.
+    """
     logic = dict(settings.logic)
+    if "skip_mido" in spec.get("settings", {}):
+        skipped = "mido" in settings.fast_start
+        if "skip_mido" in logic and logic["skip_mido"] != skipped:
+            raise FillError("skip_mido logic must agree with the seed's fast_start settings")
+        logic["skip_mido"] = skipped
     if settings.dungeon_items == "anywhere" and "keysanity" in spec.get("settings", {}):
         if logic.get("keysanity") is False:
             raise FillError("dungeon_items = 'anywhere' needs the logic setting keysanity = true")

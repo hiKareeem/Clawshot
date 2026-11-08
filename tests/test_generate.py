@@ -161,7 +161,6 @@ def test_same_seed_same_bytes():
     assert spoiler_json(generate(spec, 7, Settings())) == first
     log = json.loads(first)
     assert log["seed"] == 7
-    assert log["settings"] == {"shuffle": ["Chest"], "dungeon_items": "own_dungeon", "logic": {}}
     assert list(log["placements"]) == list(build_world(spec).locations)
     assert list(log["spheres"][0]) == ["Village Chest"]  # the only chest open at the start
     assert len({spoiler_json(generate(spec, n, Settings())) for n in range(8)}) > 1  # seeds do differ

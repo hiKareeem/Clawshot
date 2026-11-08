@@ -1006,6 +1006,30 @@ cosmetic scenes may still refer to the vanilla item; those are not additional it
 `Dm_SY_Ocarina:LearningOcarinaPlayAutoForSeek` (its Water case is `Event68`). The gift track owns both sides
 when that song is shuffled; the chest patch changes neither. The world check remains `Sheik in Ice Cavern`.
 
+### Fast start in seed outputs
+
+Seeds use the same `fast_start.toml` settings as the standalone patcher: the intro is skippable by default;
+`--skip intro saria mido deku_tree kaepora` selects skips explicitly, and `--skip` alone disables them all.
+Selected initial-value edits go into the seed's `GameDataList`; the intro edits its event-setting component list.
+All files are built/validated before any output is written. Fast-start GameDataList keeps its original layout
+and size; removing the intro SkipSetting shrinks its tree. Their original allocations are retained without
+inventing a generic `.bgyml` sizing formula.
+
+**Mido is not the forest exit.** The skip changes only
+`KokiriForest_Npc_Kokiri_Mido_Child_Blocker`. Decoded graph
+`KokiriForest_Child_Level_All_02_d26e` separately reads/writes
+`KokiriForest_Npc_Kokiri_007_Child_Blocker`/`_00` and checks `Get_StoneOfForest` step `Complete`.
+Seed logic derives `skip_mido` from the same selected fast-start list, bypassing only the sword/shield event.
+It leaves `open_forest`, `can_leave_forest` and the forest-exit guard alone. The search therefore reaches the
+Deku Tree with Mido skipped and no equipment, but cannot leave the forest until Gohma is defeated.
+
+**Mido accepts either shield (Kareem, in game 2026-11-08).** In
+`E:/OOTRemake/work/r5-shops/shield-slot-hylian`, he had the Kokiri Sword and a bought Hylian Shield, no Deku
+Shield; Mido let him through and `KokiriForest_Npc_Kokiri_Mido_Child_Blocker` was false in the save.
+All three definitions of `Showed Mido Sword & Shield` now accept `Deku_Shield or Hylian_Shield`; the normal
+definitions still require the Kokiri Sword unless Mido is skipped. Found-shield helper semantics are the shop
+track's shared normalization and must be checked after it lands on main.
+
 ## 19. Round 5: what reads a gift's item, and how each gift check is changed (cs5d)
 
 How it was found (build `e0f3ccfa`; scratch in `E:/OOTRemake/work/r5-gifts/`, `readers.py` reproduces the reads and

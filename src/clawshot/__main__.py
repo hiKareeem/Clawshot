@@ -1,11 +1,12 @@
 """Generate a seed as a mod folder.
 
     python -m clawshot --romfs <dump> --seed <n> --out <dir> [--shuffle Chest ...] [--dungeon-items own_dungeon]
-        [--logic name=value ...] [--areas <Banc folder> ... --goal <rule>]
+        [--skip intro saria mido deku_tree kaepora] [--logic name=value ...] [--areas <Banc folder> ... --goal <rule>]
 
 Reads the player's dump (read only), shuffles chests and optionally native shop contents,
-checks beatability, and writes changed resources (plus the size table when needed)
+checks beatability, and writes changed resources (including selected fast-start files and the size table when needed)
 under ``<out>/romfs`` and the placements/spheres/patch plan to ``<out>/spoiler.json``.
+The intro is skippable by default; ``--skip`` alone disables all fast start.
 ``--areas`` with ``--goal`` makes a slice: only those areas' regions, beaten when the goal holds (round 3's
 playtest: ``--areas KokiriForest LostWood InsideTheDekuTree --goal "'Defeat Queen Gohma'"``). ``--shuffle Gift`` also
 moves the event gifts that can be changed (``clawshot.patch.gifts``); the others keep their items.
@@ -18,7 +19,7 @@ from pathlib import Path
 
 from clawshot.generate import FillError, Settings
 from clawshot.generate.fill import DUNGEON_ITEM_CHOICES
-from clawshot.patch import PatchError, gifts, make_seed, write_seed
+from clawshot.patch import PatchError, gamedata, gifts, make_seed, write_seed
 from clawshot.patch.items import ItemActorError
 from clawshot.patch.write import check_output_folder
 from clawshot.world.load import WorldError, load_spec
@@ -47,6 +48,13 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--logic", nargs="*", default=[], metavar="NAME=VALUE", help="logic setting overrides")
     parser.add_argument("--areas", nargs="+", default=[], metavar="AREA", help="census areas of a slice")
     parser.add_argument("--goal", help="the slice's goal (a rule); needs --areas")
+    parser.add_argument(
+        "--skip",
+        nargs="*",
+        choices=list(gamedata.load()),
+        default=list(Settings().fast_start),
+        help="fast-start skips (default: intro); --skip alone disables all",
+    )
     args = parser.parse_args(argv)
 
     logic = {}
@@ -64,6 +72,7 @@ def main(argv: list[str] | None = None) -> int:
             logic=logic,
             areas=tuple(args.areas),
             goal=args.goal,
+            fast_start=tuple(args.skip),
         )
     except ValueError as e:
         parser.error(str(e))

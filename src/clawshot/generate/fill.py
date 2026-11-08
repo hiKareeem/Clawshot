@@ -45,6 +45,7 @@ class Settings:
     goal: str | None = None
     item_location_types: dict[str, tuple[str, ...]] = field(default_factory=dict)
     exclusive_location_types: tuple[str, ...] = ()
+    fast_start: tuple[str, ...] = ("intro",)
 
     def __post_init__(self) -> None:
         if self.dungeon_items not in DUNGEON_ITEM_CHOICES:
@@ -57,6 +58,7 @@ class Settings:
             "shuffle": list(self.shuffle),
             "dungeon_items": self.dungeon_items,
             "logic": {k: self.logic[k] for k in sorted(self.logic)},
+            "fast_start": list(self.fast_start),
         }
         if self.areas:
             out["areas"] = list(self.areas)

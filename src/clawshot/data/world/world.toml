@@ -57,6 +57,8 @@ overrides = "remake.toml"
 # true: OoT Randomizer's progressive items (needs event-flow edits or a Hookshot hook). Default false: decision D16
 # (Kareem, round 2).
 progressive_items = false
+# Mido's child blocker only; the separate forest-exit gate is unchanged.
+skip_mido = false
 
 # Adult return pedestal: Market_Adult_Prefab_89da deletes its attention actor until the Forest quest is complete.
 # Dm_SY_BancChange_EscapeDungeon Event199 completes that quest after the Forest blue warp, not medal possession.

@@ -77,3 +77,55 @@ Probe failures were diagnosed from printed values, not retried blindly: EventSet
 `Work/...evfc` paths, normalized to basename; some rows omit EntryPointName and use EntryPoint0/cuts;
 Nabooru's row uses TimelineFileName rather than FlowchartFileName. The corrected probe explicitly handled
 flowchart entries and timeline clips. No game was started.
+
+## Item 4: fast start in seeds; independent Mido gate
+
+`Settings.fast_start` is serialized in the spoiler. `python -m clawshot` defaults to `("intro",)`:
+the movie is skippable by button, not removed. `--skip intro saria mido deku_tree kaepora` chooses the complete
+list explicitly; `--skip` alone turns fast start off. Unknown names are refused before the census/fill.
+The existing `gamedata.build` builds and validates the selected files; the common writer includes them only
+after all chest/kind patches have also built. A path collision is refused rather than overwriting another
+step. GameDataList's layout/size is unchanged; the intro's component tree shrinks; neither borrows an unverified
+generic BYML sizing formula.
+
+Mido's skip derives `skip_mido` from that same list (a contradictory `--logic skip_mido=...` is refused).
+It changes only the child sword/shield event, never `open_forest` or `can_leave_forest`.
+Read-only decoded module `KokiriForest_Child_Level_All_02_d26e` shows the independent exit guard's
+`KokiriForest_Npc_Kokiri_007_Child_Blocker`/`_00` and `Get_StoneOfForest` `Complete` check; neither is changed
+by the Mido flag patch. Search regression: no equipment + Mido skipped reaches outside the Deku Tree but not
+the forest bridge; defeating Gohma opens the bridge. Kept Mido still needs the sword and a shield.
+
+Reviewer supplied Kareem's in-game result (2026-11-08, `r5-shops/shield-slot-hylian`): sword + bought Hylian
+Shield, no Deku Shield, Mido blocker cleared. All three definitions of the Mido event now accept either shield,
+with that source. Five focused logic tests pass (including Hylian Shield). Physical found-shield aliases and
+progression classification remain cs5b's shared normalization; verify them after its authorized rebase.
+
+Actual CLI smoke (three subprocesses, never a launcher): default **7 overlay files**, Mido **8 files** with its
+GameDataList blocker false, `--skip` disabled **6 files** and neither fast-start file. All exit codes **0**;
+temporary overlays removed. Full dump gate includes exact selected-flag-only and default-intro seed checks.
+The source edit briefly lost a docstring terminator; the edit tool printed that syntax cause and it was restored
+before execution. Ruff printed one 122-column writer call; wrapped that exact call, then format/lint passed.
+
+## Reviewer-requested oracle correction
+
+`ed80a46` changes only `tests/test_world_data.py`. The vanilla all-chests assertion now exempts exactly the
+twenty documented `keep_vanilla` + constant-False checks and asserts their complete name set; it does **not**
+exempt reachable D17 checks or arbitrary unreachable/shuffled chests. The reviewer-reported failure was not
+rerun unchanged. Printed all twenty names, patched the predicate, and the corrected vanilla oracle passed.
+Ruff printed the needed multi-line assertion layout; formatted that file before its isolated commit.
+
+## Full gates before the item-4 checkpoint
+
+All four required gates passed on this tree, including the isolated `ed80a46` oracle correction:
+
+| Command | Observed result |
+|---|---|
+| `uv run ruff format --check` | 101 files formatted |
+| `uv run ruff check` | All checks passed |
+| `uv run pytest` | 313 passed, 35 skipped |
+| `OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump` | 34 passed |
+
+Pytest basetemps were explicitly under `E:/OOTRemake/work/r5-seeds/` so dump-derived temporary files stayed
+outside the repo. Five completed parent smoke/probe scripts were removed after their evidence was recorded;
+the per-Hash research inventories remain outside the repo. No dependency, game/save file, window or game process
+was changed/started. No test or launcher was run through Hookshot.
