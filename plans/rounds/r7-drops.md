@@ -65,9 +65,39 @@ First thread post command returned exit 1: `bermuda: no thread cs-r7`. No unchan
 creation. This report retains the intended post: Track C ordered work and isolated shared commits; section 27
 waits for sections 25/26. No other track's files edited. Python LSP unavailable (only marksman configured).
 
-## Pending ordered items
+## Item 2: King Dodongo test output
 
-2. King Dodongo safe-pickup output and isolated launcher, including Save/Continue checklist.
+Item 1 committed as `7fa2c15`. `patch/drops.py` now replaces native heart Gyaml by stable saved Hash;
+refuses non-pickups/Fire Arrows, stale or duplicate actors, missing native logic binding and missing/duplicate
+group memberships. All copies change together. No AI, save table, boss, quest, warp or position edit.
+
+Output: `E:/OOTRemake/work/r7-drops/ingame/dodongo-heart-hylian/`.
+Launcher: adjacent **`Test - dodongo-heart-hylian.bat`**, copied from the approved `talon-boomerang`
+template, never run. Its own `user-dodongo-heart-hylian`, bin executable only, updater disabled, missing-exe
+hard stop. Its source is the **nested user save contents** of the King Dodongo backup, not the whole backup
+root (which would accidentally add another `save/<user>` nesting). All source-file SHA256 values unchanged.
+
+Only `DodongoCavern_Static.bcett.byml.zs`: decompressed **149088 -> 149084**, compressed
+**44503 -> 43428**, original/effective allocation **149352**. Exact inverse-tree diff restores equality
+after changing only the heart Gyaml back. No resource table needs writing. `verification.json` records it.
+
+**Kareem:** follow `ingame/dodongo-checklist.md`: defeat King Dodongo normally; no early reward; Hylian
+Shield at the heart's native spawn, shield notice/inventory and no added maximum heart; uncollected reward
+survives Continue if practical; collect/save/Continue/re-enter, no duplicate. The overlay-open log plus
+actual pickup and saved Hash must agree. Native blue-warp/Ruby progression stays untouched.
+`ingame/check_dodongo_save.py` reads only the isolated test user's resulting saves.
+
+Checks actually exercised:
+- `uv run pytest tests/test_drops.py -q`: **14 passed**.
+- `OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump tests/test_drops_dump.py -q -s
+  --basetemp E:/OOTRemake/work/r7-drops/pytest-heart`: **1 passed**, all eight native heart identities.
+- Scoped ruff format/lint passed (three Python files).
+- `uv run python E:/OOTRemake/work/r7-drops/build_dodongo.py`: real writer/compression/readback,
+  allocation, inverse-field diff, unchanged-backup SHA256 and static launcher checks **passed**.
+  This is data proof, not gameplay certification. Full four gates run before a ready/handoff post.
+
+## Remaining ordered items
+
 3. Keep native token callback while changing grants, if supported by data.
 4. Default-off BossHeart seed integration for reviewed native pickups.
 
