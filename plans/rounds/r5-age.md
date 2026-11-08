@@ -228,6 +228,11 @@ Base `cd592e3`, branch `r5/age`. Earlier inline/thread IDs before the rebase are
 | `e2ff6b0` | item 4 pedestal transform, model, tests, evidence |
 | `8356c6c` | isolated automatic seed-output pairing |
 | `fba0c82` | isolated world-format documentation |
+| `c2fa669` | explicit adult-after-pull search phase |
+| `33a339b` | isolated return-kit data and preserved child dependency |
+| `571a143` | isolated `generate/fill.py` forward return-kit stage |
+| `8d39b8d` | source-family/key-bootstrap regression and failure evidence |
+| `efbc291` | isolated return-kit fill documentation |
 
 No merge, push, stash, dependency change, game/save write or game process.
 
@@ -267,8 +272,45 @@ Synthetic regression `test_age_fill.py` shows a child-only song/bracelet route, 
 into the adult dungeon, two keys bootstrapped from zero, and return without optional child loot.
 Targeted fill/age tests **15 passed**. Live generation of previously failing seeds **0, 93 and 4242** succeeded;
 their mandatory Saria count is now 1 (seed 0 actual return proof also printed true, 21 spheres).
-The unchanged full 200/progressive/determinism tests and full dump gate are running after this aimed fix.
+The unchanged full 200/progressive/determinism tests and full dump gate passed after this aimed fix (below).
 
 Removed the disposable `seed-free-smoke` output created by this session after its observed CLI proof; the
 requested `free-time-travel` player overlay and read-only research material remain outside the repository.
 Removed incidental error-wording assertions from the new tests; they assert the rejection type and state instead.
+
+## Final gates and handoff
+
+Base `cd592e3`, through `efbc291` plus this final report. Earlier failure results above are superseded by:
+
+| Command | Result |
+|---|---|
+| `uv run ruff format --check` | **102 files already formatted** |
+| `uv run ruff check` | **All checks passed** |
+| `uv run pytest` | **322 passed, 27 skipped**, 208.49 s |
+| `OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump` | **26 passed, 323 deselected**, 227.95 s |
+
+The synthetic run includes the unchanged 200-default-seed, 20-progressive-seed, cross-interpreter determinism
+and vanilla-placement checks. The dump run includes the isolated pedestal field-diff oracle, all placement/
+GameData/EVFL round trips and seed-output checks. The earlier 147-seed rejection is fixed by construction,
+not skipped, weakened or hidden behind more retries.
+
+Delivered: data/source age gates; chronological inventory; default-on early-return proof and forward fill
+constraint; default-off isolated free-travel placement patch automatically paired with seed logic; tests,
+section 16, world-format documentation and player overlay/instructions.
+
+Still for review/Kareem:
+
+- **Confirm the provisional `age_return_guarantee = true` default and whether free travel should later default
+  on after its in-game check.** Off-by-default free travel is not claimed to work in game yet.
+- **Run `free-time-travel-check.md` on a disposable adult-before-Forest save copy**, with overlay log evidence,
+  child return/second pull, no premature Prelude/reward, then normal Forest sage/reward and Prelude afterwards.
+- Current known save copies are all child-era; an adult-ready read-only backup is still needed.
+- Gift integration that shuffles `GC Darunias Joy` must preserve/rebuild the compulsory child strength anchor:
+  the default return-kit data deliberately relies on the unshuffled Saria → bracelet route. Posted to cs5d/cs5c;
+  the independent finished-seed oracle rejects violations. Chest/Shop-only pools retain that gift.
+- cs5c owns the separate Ganon Tower region's missing dungeon metadata and permanent fill coverage; this branch
+  contains only the requested GanonBossKey classification. No Tower metadata fix is claimed.
+
+Requested player overlay retained: `E:/OOTRemake/work/r5-age/free-time-travel/` and its adjacent check note.
+No game/launcher was run; dump, backups and live game files were never written. No dependencies changed.
+All commits remain on `r5/age`; no merge or push. Final report commit ID is given in chat and the thread.
