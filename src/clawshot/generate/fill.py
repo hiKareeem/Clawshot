@@ -1,9 +1,9 @@
 """The fill: OoT Randomizer's assumed fill (``Fill.py``, ``distribute_items_restrictive``, MIT), for one world.
 
-Order, as there: items restricted to some locations first (a dungeon's own keys, maps and compasses), then
-bag-gated bomb ammo, progression items, priority items and the rest. Restricted and progression items go to
-locations reachable assuming the player holds every item not yet placed; that keeps every progression item
-reachable, so the game stays beatable. Priority items only respect their restriction; the rest go anywhere.
+Order, as there: own-dungeon items, type-held items (songs and shop refills), bag-gated bomb ammo, then
+remaining progression and filler. Each constrained/progression stage assumes every item not yet placed.
+This preserves restricted capacity and keeps progression reachable. Priority filler respects its restriction;
+the rest can go anywhere, including unreachable junk locations in otherwise-beatable slices.
 """
 
 import base64
@@ -217,10 +217,7 @@ def _fill_restrictive(
     native = world.settings.get("native_shop_items", ()) if "Shop" in settings.shuffle else ()
     # Reserve only the slots needed by remaining refills, not every shop slot.
     # Leave flexible native-display items until items that can only occupy chests.
-    # Type-held progression (notably songs) must precede flexible items that could depend on it.
-    items.sort(
-        key=lambda name: (not world.items[name].priority, name not in native, name in settings.item_location_types)
-    )
+    items.sort(key=lambda name: (not world.items[name].priority, name not in native))
     while items:
         item = items.pop()
         search = Search(world, [*assumed, *items])
@@ -412,19 +409,22 @@ def fill(
         shop_refills = _fill_restrictive(
             world, settings, rng, placements, locations, restricted, unrestricted, shop_refills
         )
+    type_held = [item for item in unrestricted if item in held]
+    unrestricted = [item for item in unrestricted if item not in held]
+    shop_refills = _fill_restrictive(world, settings, rng, placements, locations, type_held, unrestricted, shop_refills)
     _fill_bomb_ammo(world, settings, rng, placements, locations, unrestricted)
     progression = [item for item in unrestricted if world.items[item].progression]
-    # A non-progression item held to some location types goes with the priority items, which are placed only where
-    # allowed() lets them; the rest go anywhere.
-    priority = [i for i in unrestricted if not world.items[i].progression and (world.items[i].priority or i in held)]
+    priority = [item for item in unrestricted if not world.items[item].progression and world.items[item].priority]
     rest = [item for item in unrestricted if not world.items[item].progression and item not in priority]
-    shop_refills = _fill_restrictive(world, settings, rng, placements, locations, progression, [], shop_refills)
+    shop_refills = _fill_restrictive(
+        world, settings, rng, placements, locations, progression, [*priority, *rest], shop_refills
+    )
     if any(world.locations[name].type == "Shop" for name in shuffled):
         native = world.settings.get("native_shop_items", ())
         priority = [*priority, *rest]
         rest = []
-        # Pop held items before flexible filler can consume their only destinations.
-        priority.sort(key=lambda item: (item not in native, item in held))
+        # Leave flexible native displays until filler that can only occupy chests.
+        priority.sort(key=lambda item: item not in native)
         _fill_restrictive_fast(world, settings, rng, placements, locations, priority, shop_refills)
     else:
         _fill_restrictive_fast(world, settings, rng, placements, locations, priority)
