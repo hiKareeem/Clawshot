@@ -195,3 +195,35 @@ closed `(free shield, scrub room, bridge) = (False, False, False)`;
 closed_deku `(False, False, True)`; open `(True, True, True)`.
 This replaces only the obsolete Mido-skip-with-closed-bridge test state, not the observed gameplay source.
 All four full gates are rerun below after this integration.
+
+Rebased actual CLI smoke (`--seed 7 --shuffle Chest Shop`): **228 shuffled checks, 25 spheres,
+77 resources**, default forest closed, vanilla prices, cheap Deku Shield on. Written spoiler includes
+CS1 settings. A separate replay decoded that string, rebuilt the world, combined vanilla/unshuffled
+placements with the spoiler and ran the chronological oracle: Gohma true, free Deku Shield true,
+Forest sage true, won true. This is generator/search evidence only; the shop-crash track owns runtime
+pack acceptance. The session-only smoke output is removed after this proof.
+
+### Full gates after the authorized rebase
+
+Finished tree through `c457aeb`, base `65bbcf7`; these results supersede the pre-rebase counts above.
+Both full pytest commands again used only external session-specific basetemps via `PYTEST_ADDOPTS`.
+
+| Command | Observed result |
+|---|---|
+| `uv run ruff format --check` | 171 files already formatted |
+| `uv run ruff check` | All checks passed |
+| `uv run pytest` | 479 passed, 65 skipped; 302.60 s |
+| `OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump` | 64 passed, 480 deselected; 1116.15 s |
+
+All 19 play-finding cases passed with merged settings/forest/price/gift behavior; complete default/
+progressive/determinism and gated-return suites passed. No retries or acceptance changes were needed.
+The actual combined CLI plus independent CS1 replay passed as above. Its output and both rebased
+pytest basetemps were removed after proof; only reproducible read-only research probes remain outside
+the repo. No game/launcher/window opened and no save/dump/player output was modified.
+
+Final branch ledger after `65bbcf7`, in order:
+`dab8c82`, `58ea0dc`, `c96360e`, `b97bf4b`, `ba1c321`, `c457aeb`, then the documentation-only
+commit containing this final table (its ID is posted in chat and on `cs-r6`).
+The only integration action still belonging to another track is cs6a's opening-note/witness refresh
+for the free merchant visit. No code or source question blocks Track F. Review/merge belongs to Claude;
+unarmed recovery, adult vine weapons and optional repeat-shield/cutoff corroboration remain in the ledger.
