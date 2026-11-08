@@ -71,3 +71,28 @@ the nine already-asked IDs appear in no session. Membership verified by the rout
 Item 1 committed as `5a7634c`. Source register pointers updated with the final area-session numbering.
 Reviewer launcher steering incorporated: **only `E:\Games\Hookshot\hookshot.exe`**, no work-build path or fallback.
 Item 3 will re-read the corrected template before copying; no launcher has been run.
+
+## Item 3 — cheaper isolated checks
+
+`plans/playtest/prepared-mods.md` lists six external overlays under `E:/OOTRemake/work/r5-playtest/`:
+tower red-rupee persistence, tower chest/Boomerang fallback, fresh-game no-Slingshot room recovery, Mido Boomerang
+for child vine-wall comparison, adult Longshot→Hookshot order, and supported red-rupee treasure reward preview.
+Nine launchers copied/adapted from the corrected round-2 template: those six plus existing corrected mini-seed 7,
+intro-removed and all-skip-chain overlays. Every EXE assignment is release-only; no launcher/dry-run/game executed.
+The upgrade/reward launchers require pre-staged matching milestone users and refuse an absent checkpoint.
+No source backup or dump write; all generated files/code/manifests stay outside the repository.
+
+Observed smoke: `uv run python E:/OOTRemake/work/r5-playtest/build_overlays.py` passed four overlays/seven files,
+independent field-diff allowlists, compression/readback, stable identity, three required resource-entry raises,
+all other resource entries unchanged and source checksums unchanged. `build_order_reward.py` passed two overlays/
+four more files, independent reverse-field diff and size limits with no table raises. Total six overlays/eleven files.
+External builders/manifests remain useful reproducibility artifacts, not committed scaffolds.
+
+Static checks passed all nine launcher texts: release path, isolated user/log/overlay, backup direction, no destructive
+or window-start commands. Initial substring checker failed on `start` inside inherited dry-run ECHO prose;
+printed predicates showed every real safety check true and only prose matched. Changed checker to actual command
+tokens; one aimed rerun passed. No batch execution was used as a substitute for static inspection.
+
+Item 2 commit: `6fdcda4`. Shop/gift variants remain producer-owned (MOD07/08); no duplicate patch implementation.
+**Claude: review new isolated variants before scheduling, and stage first-adult/pre-Dampe and child-return/pre-treasure
+checkpoint copies for MOD03/04.** Other consumed first-time states require matching preserved copies, never main resets.

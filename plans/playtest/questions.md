@@ -1411,8 +1411,8 @@ No in-game result is claimed by this track.
   cause-specific fix and reviewer instruction are prerequisites, not another variant in a player sitting.
 - `r2-census:464` backup-before-pickup question is resolved for the archived tower copy: all six slots inspected here
   have Hash 9814903750835309225 unset. Chest Hash absence is NOT an unopened-chest oracle (`r2-census:466-470`).
-- D16 downgrade = MOD03; D17 reward-preview swap = MOD04. No existing approved variant was found for either;
-  these entries say exactly which controlled artifact must exist before the comparison, not that an overlay was tested.
+- D16 downgrade = MOD03; D17 reward-preview swap = MOD04. Track E prepared isolated upgrade-order and red-rupee
+  reward-preview variants (`prepared-mods.md`); both await reviewer approval, matching milestone saves and gameplay.
 - Fast-start policy questions (`r4-fast-start:142-151`): D18 settles intro-skippable default and separate Saria/Mido/
   Tree/owl toggles. **Courtyard skip, Navi-wake policy, tying Mido skip to forest exit, and removing the movie entirely
   remain owner choices**, not logic-session questions. MOD06 tests the existing removal experiment only.
