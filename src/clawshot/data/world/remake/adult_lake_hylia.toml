@@ -1,0 +1,14 @@
+[exits."Lake Hylia"."Water Temple Lobby"]
+rule = "can_use(Hookshot) and can_use(Iron_Boots)"
+was = "is_adult and Hookshot and (Iron_Boots or ((Longshot or logic_water_hookshot_entry) and (Progressive_Scale, 2)))"
+source = "https://www.ign.com/wikis/ocarina-of-time-remake/Water_Temple_Dungeon_Walkthrough (entrance): Iron Boots to sink and Hookshot the underwater target. N64 Golden Scale/Longshot entry is not verified in the remake."
+
+[locations."LH Sun"]
+rule = "'Water Temple Clear' and can_use(Bow)"
+was = "(can_use(Distant_Scarecrow) or 'Water Temple Clear') and can_use(Bow)"
+source = "https://www.nintendolife.com/guides/zelda-ocarina-of-time-bow-arrow-fire-ice-light-arrows-switch-2 (Fire Arrows): lake must be full after Water Temple; shoot the dawn sun and swim to the item. N64 distant-scarecrow low-water collection is unverified."
+
+[exits."Lake Hylia"."Zoras Domain"]
+rule = "(is_child and can_dive) or (is_adult and 'Water Temple Clear' and (can_dive or can_use(Iron_Boots)))"
+was = "is_child and can_dive"
+source = "https://www.nintendolife.com/guides/zelda-ocarina-of-time-biggeron-sword-trading-sequence-switch-2 (Eyeball Frog): after Water Temple the Domain thaws and its underwater shortcut to the lake can be used as adult. Child scale route unchanged."
