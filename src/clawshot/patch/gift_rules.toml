@@ -11,6 +11,13 @@
 #           after each step (last resort: it changes the save layout)
 #   skip    events ("<flow>/<event>") whose predecessors are pointed at their `next`
 #   gate    what stops the check giving twice in the game (evidence; not used by the patch)
+#   once    equipped-Deku-Shield queries replaced with the check's saved Bool; set after every grant branch
+
+[check."KF Shopkeeper Gift"]
+class = "rewrite"
+gate = "Section 28 / r6-play: first-talk flag is saved but vanilla repeats; use it to gate both grant branches"
+flag = "HaveTalked_Npc_Kokiri_001_Shop_Child_PresentDekuShield"
+once = ["Npc_Kokiri_001_Shop_Child/Event45"]
 
 [check."Barinade"]
 class = "more"
