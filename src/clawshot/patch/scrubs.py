@@ -7,14 +7,19 @@ success-only saved completion flags stay native. See r6-tokens.md for all 21 act
 """
 
 from collections.abc import Mapping
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
+from typing import Any
 
 from clawshot.formats import evfl
+from clawshot.generate import Settings, prepare
+from clawshot.patch import items as item_actors
 from clawshot.patch.plan import PatchError
 from clawshot.patch.write import FileChanges
 
 FLOW = "Enemy_Scrub_Business_Common"
 PATH = f"Event/EventFlow/{FLOW}.bfevfl.zs"
+SHUFFLE = "Scrub"
+CAPACITIES = ("Deku Stick Capacity", "Deku Nut Capacity")
 
 
 @dataclass(frozen=True)
@@ -120,3 +125,38 @@ def changes(placements: Mapping[str, str]) -> FileChanges:
         return out
 
     return {PATH: transform}
+
+
+def seed_setup(spec: Mapping[str, Any], settings: Settings):
+    """Four reviewed once-sale families; one pool reward per shared saved flag.
+
+    Public Scrub covers the two translated scrub types without exposing an internal
+    alias in the settings string. Capacities use fixed Medium actors (D16), held to
+    these destinations until their grants have been tested in chests.
+    """
+    locations = {}
+    for name, info in spec["locations"].items():
+        if name in SALES:
+            info = {**info, "type": SHUFFLE}
+        elif info.get("type") in ("Scrub", "GrottoScrub") and not info.get("keep_vanilla"):
+            info = {**info, "keep_vanilla": "scrub shuffle: repeat/rotating vendor, not a saved one-time family"}
+        locations[name] = info
+    spec = {**spec, "locations": locations}
+    held = dict(settings.item_location_types)
+    for item in CAPACITIES:
+        held[item] = (SHUFFLE,) if item not in held else tuple(t for t in held[item] if t == SHUFFLE)
+    settings = replace(settings, item_location_types=held)
+    _, world = prepare(spec, settings)
+    checks = tuple(
+        name
+        for name, loc in world.locations.items()
+        if name in SALES and loc.vanilla is not None and not loc.n64_only and not loc.keep_vanilla
+    )
+    actors = item_actors.load()
+
+    def step(placements: Mapping[str, str]) -> FileChanges:
+        # Even an unchanged capacity placement must normalize both native tier
+        # branches to the single fixed item represented in the pool.
+        return changes({name: actors.actor(placements[name]) for name in checks})
+
+    return spec, settings, step

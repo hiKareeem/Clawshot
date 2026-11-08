@@ -68,3 +68,12 @@ def test_wrong_or_already_changed_enemy_is_refused():
             transform(byml.write(t))
     with pytest.raises(PatchError):
         tokens.changes({99: "Obj_Rupee_Red"}, [location()])
+
+
+def test_unverified_token_mode_refuses_before_reading_dump_or_writing_seed(tmp_path):
+    from clawshot.generate import Settings
+    from clawshot.patch import make_seed
+
+    with pytest.raises(PatchError):
+        make_seed(tmp_path / "no-dump", 7, Settings(shuffle=("Token",)))
+    assert not list(tmp_path.iterdir())

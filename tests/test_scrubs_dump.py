@@ -44,3 +44,32 @@ def test_once_sales_change_all_copies_and_tiers_but_no_price_or_saved_gate(romfs
                 # Every physical copy still reaches the shared, changed family flow.
                 assert any(ep.name == row["EntryPointName"] for ep in after.flowchart.entry_points)
     print(f"four once-sale families / nine actor copies: {len(data)} -> {len(evfl.write(after))} bytes")
+
+
+@pytest.mark.dump
+def test_whole_seed_assigns_one_item_to_every_tier_and_copy_without_changing_prices(romfs, tmp_path):
+    from clawshot.generate import Settings
+    from clawshot.patch import make_seed, write_seed
+    from clawshot.patch.items import load
+
+    output = make_seed(romfs, 7, Settings(shuffle=("Chest", "Scrub")))
+    write_seed(output, romfs, tmp_path / "seed")
+    dicts, actors = zsdic.Dictionaries.from_romfs(romfs), load()
+    data = dicts.decompress(scrubs.PATH, (romfs / scrubs.PATH).read_bytes())
+    written = dicts.decompress(scrubs.PATH, (tmp_path / "seed" / "romfs" / scrubs.PATH).read_bytes())
+    before, after = evfl.read(data), evfl.read(written)
+    index = {e.name: e for e in after.flowchart.events}
+    assert set(output.seed.shuffled) & scrubs.SALES.keys() == scrubs.SALES.keys()
+    for check, sale in scrubs.SALES.items():
+        item = actors.actor(output.seed.placements[check])
+        for name, old in sale.grants:
+            assert index[name].params["ActorName"] == item
+            assert index[name].params["Price"] == sale.price
+            index[name].params["ActorName"] = old
+        if sale.selection:
+            assert index[sale.selection].params["Value"] == item
+            index[sale.selection].params["Value"] = "Obj_Heart_Piece"
+    assert after == before
+    for name in output.seed.shuffled:
+        if output.seed.placements[name] in scrubs.CAPACITIES:
+            assert name in scrubs.SALES

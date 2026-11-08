@@ -186,3 +186,61 @@ need to own House gifts. Token count queries remain `PouchData.Item_Token_Gold.S
 - Scoped ruff format/lint passed (three files).
 
 Posted token callback/persistence prerequisite and capacity integration choice on `cs-r6` at 10:29.
+
+## Item 3: opt-in seed integration
+
+`make_seed` automatically runs `scrubs.seed_setup` for public `Scrub`, then registers its transform through
+`extra_steps`. CLI accepts `--shuffle Chest Scrub`, or Scrub with other supported kinds. Default remains
+Chest only. The setup copies the spec; normalizes **only the four approved logical checks** to type Scrub;
+and explicitly holds all other Scrub/GrottoScrub vendors vanilla. This keeps the public settings value
+`Scrub`, rather than leaking the translated `GrottoScrub` type into a settings string. Native existing rules,
+including HF's adult-note then child purchase requirement, are unchanged.
+
+Fixed capacity choice (provisional D16 implementation): `Deku Stick Capacity` -> `Item_StickBag_Medium`
+(20 sticks), `Deku Nut Capacity` -> `Item_NutBag_Medium` (30 nuts). Verified against PouchActorInfo
+`AfterExpansionMaxNum`. The existing logic items are normal-class, not progressive. Every selected family
+is patched even if its pool item did not move, so a native Large branch cannot give an unmodelled tier.
+The capacity items are restricted to Scrub destinations until chest-grant evidence exists; an existing
+stricter per-item restriction is intersected, not relaxed. Gift census/mask upgrade steps remain unchanged.
+**Kareem/reviewer: fixed first-tier capacity actors follow D16; confirm this policy rather than assuming a
+shuffled capacity is progressive.** Nothing assumes those capacity actors work in chests.
+
+Token is **not a fill destination yet**: the public CLI accepts the name only to give an explicit prerequisite
+error; `make_seed` refuses before reading the dump or generating/writing anything. No no-op Token shuffle,
+fake persistence flag or seed accepted on an unproved callback. The experimental `tokens.changes` is a
+separate explicit file-transform API, used only by the three controlled outputs. Reviewer direction requested
+on this safety boundary; the roadmap permits only what passed review. Persistence remains Kareem's test.
+
+### Exercised seed and command behavior
+
+- `uv run pytest tests/test_scrub_seed.py tests/test_scrubs.py -q`: **8 passed**, including unchanged input spec,
+  exactly four eligible families, repeat exclusion, fixed item counts and no capacity-in-chest leakage across
+  20 synthetic seeds.
+- Real whole-world API smoke, seed 7, `Settings(shuffle=("Chest", "Scrub"))`: **168 checks, 28 spheres,
+  59 resources; finished search won with default chronological return guarantee**. Read written common flow:
+  HF -> Nut Capacity (100); DMC -> Stick Capacity (100); bridge -> Slingshot (40); grotto front -> Rupee (1) (40).
+  Every native tier/copy supplies the assigned actor; no shuffled capacity is in a chest.
+- Actual `python -m clawshot --romfs E:/Games/Hookshot/romfs --seed 7 --out <external replay> --shuffle Chest Scrub`
+  in a second interpreter with `PYTHONHASHSEED=31337`: **exit 0, all 60 canonical files byte-identical** to the
+  API output, no path or byte differences.
+- Actual same CLI with `--shuffle Token`: **exit 1**, names the callback/persistence prerequisite,
+  output directory absent. New synthetic regression verifies API refusal without even a readable dump.
+- Added full-world dump regression: seed output assigns every once-sale grant/selection to its placed actor;
+  exact inverse flow equality proves native prices, control flow, saved gates and other vendors unchanged.
+  Full gate result below will cover it.
+
+### Shared-file-only commits
+
+| Commit | Scope |
+|---|---|
+| daee593 | item 1 scrub transforms, census trace/report and tests |
+| 7f4ee0b | item 2 token experiments, persistence trace/report and tests |
+| 9b60b4e | only `data/item_actors.toml`: two fixed Medium capacity mappings |
+| de1fe3c | only `patch/__init__.py`: automatic Scrub setup/extra-step hook |
+| 5a823fc | only `patch/__init__.py`: explicit Token prerequisite refusal |
+| b0f3f33 | only `__main__.py`: CLI choices/help |
+
+Shared contracts/commits posted on `cs-r6`; cs6a received all four names, stable Hash groups and landmarks;
+cs6b was asked to include Scrub/Token in the settings codec's public values. No shared dependency file edited.
+Section 23 cannot be appended in numeric order until the other tracks' sections 20–22 are on the authorized
+base; the research and reproducible findings are complete here meanwhile.
