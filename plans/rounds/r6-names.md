@@ -189,7 +189,8 @@ purchase-before-entry ordering and rejection of an adult-only pickup faking chil
 Catalog + presentation + route synthetic checks: **4 passed**. `tests/test_names_dump.py`:
 **1 passed**, recreating seed 7 Chest+Shop and checking its serialized spoiler and rendered note put the
 KF6 Deku Shield purchase before Tree entry, with Sword/Hylian prerequisites and the post-Mido release.
-Scoped format/lint passed. The complete four-gate chain is running; no full-ready claim yet.
+Scoped format/lint passed. All four full baseline gates then passed (below); final settings integration
+still awaits the producer/authorized rebase, so the raw-price baseline is not presented as affordable-mode support.
 
 Canonical settings integration prerequisite: cs6b's `clawshot.settings.shop_price` is the shared price API;
 this pre-settings baseline still has fixed vanilla slot prices. Requested authorized rebase once its
@@ -201,3 +202,54 @@ The actor used for cheap-shield pricing must be the placed native display, not t
 No launcher was created/run by this track. For any future launcher, the ONLY executable is now
 `E:\Games\Hookshot\bin\hookshot.exe`, with `HOOKSHOT_NO_UPDATE_CHECK=1`, and missing exe is a hard stop.
 Never fall back to the folder-root launcher: it ignores `--user` and can target Kareem's main save.
+
+## Commit checkpoints before settings integration
+
+| Commit | Scope |
+|---|---|
+| `3676b5b` | Item 1: sourced catalog, reader, copy/coverage oracle, section 20 |
+| `5c57bbb` | Item 2: positional/item/rule audit and executed equivalence evidence |
+| `3181c84` | Isolated `world/search.py`: child-only proof constructor |
+| `c890fc6` | Item 3: readable metadata, logic-derived route, unit/real-spoiler regressions |
+| `2e0fb58` | Isolated `patch/__init__.py`: write the note from the same validated spoiler snapshot |
+| `77d1dd9` | Isolated `tests/test_seed_dump.py`: include the note in the exact output-folder contract |
+
+The CLI smoke overlay and parent-only one-off probe scripts were removed after proof; reusable catalog
+research and pair-audit evidence remain outside the repo. A fresh renderer check after the milestone-location
+correction prints **Defeat Queen Gohma at Queen Gohma Boss Room**, with the same six ordered steps.
+No stale lobby-as-boss location is delivered by the current renderer.
+
+Canonical price handoff was independently exercised read-only against cs6b's actual `shop_price`,
+using native display actors from the regenerated placements (rupees):
+
+| Slot / placed item | Legacy vanilla | Cheap Shield | Affordable |
+|---|---:|---:|---:|
+| KF6 / Deku Shield | 40 | 10 | 10 |
+| KF7 / Fairy | 40 | 40 | 10 |
+| KF8 / Hylian Shield | 10 | 10 | 10 |
+
+The final production cutover awaits the authorized producer rebase. No duplicate pricing formula was added.
+Catalog quality smoke also passed with a positive control: all 339 player names/directions are free of
+numeric internal room labels, Hash fields and `Item_`/`TBox_`/`Obj_` actor strings; technical keys stay separate.
+
+## Full baseline gates (through `77d1dd9`)
+
+| Command | Observed result |
+|---|---|
+| `uv run ruff format --check` | 147 files already formatted |
+| `uv run ruff check` | All checks passed |
+| `uv run pytest --basetemp=E:/OOTRemake/work/r6-names/pytest-full-synthetic` | 385 passed, 48 skipped; 415.87 s |
+| `OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump --basetemp=E:/OOTRemake/work/r6-names/pytest-full-dump` | 47 passed, 386 deselected; 745.70 s |
+
+All four ran in full once, no retry or excluded test. The new real-spoiler/note regression passes in the
+full dump gate; cross-interpreter folder determinism now includes `play-note.md`. Temporary gate outputs
+were removed afterwards using modern Python's non-junction-following `shutil.rmtree`, only under the two
+exact session-created basetemp paths. Reusable research remains. No source dump/seed/user/save mutation.
+
+### Additional purchase boundary found during integration review
+
+The supported Scrub sale table is now on main (the finished track's worktree was removed): HF/DMC cost 100,
+the two LW capacity families cost 40. For a required Scrub source, the route must also show Buy/price rather
+than a free Collect. Planned isolated producer-file metadata handoff into world settings reads the existing
+`SALES` values directly; generate will not import the patch layer or duplicate the native-price table.
+This cutover, together with canonical Shop pricing, is waiting on the authorized main rebase.
