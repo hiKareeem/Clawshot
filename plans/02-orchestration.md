@@ -58,6 +58,9 @@ OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump
   folder's `hookshot.exe` is a launcher that ignores `--user` and starts the main save with the caller's overlay:
   every test launcher starts `E:\Games\Hookshot\bin\hookshot.exe` with `HOOKSHOT_NO_UPDATE_CHECK=1` and stops if it
   is missing.
+- **Never delete or rewrite an output folder a game may be reading.** The overlay is read file by file as Kareem
+  moves; a file missing for a moment loads the vanilla one (round 7: a rebuild wiped `seed-shop-7c` for four minutes
+  while he played it). A changed output goes to a new folder (`<name>-next`); Claude swaps it in after he quits.
 - **Kareem's in-game tests run on a copy of his saves.** The game keeps one playthrough across the `slot_NN`
   folders (TotK-style save slots, not N64 files): round 1 and 2's "new game" tests overwrote five of the six
   slots holding his main game. Tests start from `E:/OOTRemake/work/r2-test/Clawshot test.bat` (or a copy for the
