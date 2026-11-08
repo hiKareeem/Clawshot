@@ -1,0 +1,14 @@
+[locations."ZD GS Frozen Waterfall"]
+rule = "can_use(Hookshot) and (at_night or gold_skulls_ignore_daytime)"
+was = "is_adult and (at_night or gold_skulls_ignore_daytime) and (Hookshot or Bow or Magic_Meter or logic_domain_gs)"
+source = "https://www.nintendolife.com/guides/zelda-ocarina-of-time-gold-skulltula-locations-rewards-switch-2#gold-skulltula-53: token is high near the frozen throne room, retrieved with Hookshot. Bow or merely owning Magic Meter does not establish token collection. Existing night restriction retained pending in-game check."
+
+[exits."Zoras Domain"."Lake Hylia"]
+rule = "(is_child and can_dive) or (is_adult and 'Water Temple Clear' and (can_dive or can_use(Iron_Boots)))"
+was = "is_child and can_dive"
+source = "https://www.nintendolife.com/guides/zelda-ocarina-of-time-biggeron-sword-trading-sequence-switch-2 (Eyeball Frog): adult shortcut opens after Water Temple thaws the Domain. Child diving route unchanged."
+
+[exits."Zoras Domain"."ZD Shop"]
+rule = "is_child or (is_adult and 'Water Temple Clear')"
+was = "is_child or Blue_Fire"
+source = "https://www.ign.com/wikis/ocarina-of-time-remake/Water_Temple_Dungeon_Walkthrough (Finding the Compass): adult shop stays sealed even after King Zora is freed, so no replacement tunic while doing Water Temple. Nintendo Life Biggoron trading guide describes thawing after Water Temple. Adult shop actors exist in both normal/Alternative Banc files; reopening after the thaw is provisional and flagged for Kareem."
