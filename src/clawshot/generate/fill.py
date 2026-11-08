@@ -178,6 +178,8 @@ def allowed(world: World, settings: Settings, location: str, item: str) -> bool:
         if destinations is not None and location not in destinations:
             return False
     location_type = world.locations[location].type
+    if location_type == "Missable" and world.items[item].progression:
+        return False
     types = settings.item_location_types.get(item)
     if types is not None and location_type not in types:
         return False
