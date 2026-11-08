@@ -4,3 +4,7 @@
 rule = "is_adult and can_play(Song_of_Storms)"
 was = "is_adult and can_open_storm_grotto"
 source = "https://www.eurogamer.net/all-new-changes-zelda-ocarina-of-time-switch-2: grotto entrances are visible and visibly distinguish Bombs from Song of Storms; the Stone of Agony is replaced by the Skulltula-finding Echo Gem. Preserve the adult-only route, without requiring the obsolete Stone of Agony."
+
+[locations."GF Freestanding PoH"]
+n64_only = "the remake's two fortress hearts are the roof chest and horseback archery reward, not the child-only pickup below the jail"
+source = "https://www.eurogamer.net/zelda-ocarina-of-time-gerudo-fortress; Banc GerudoFortress contains no freestanding heart placement, build e0f3ccfa."

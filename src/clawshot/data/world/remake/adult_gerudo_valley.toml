@@ -4,3 +4,55 @@
 rule = "is_adult and can_play(Song_of_Storms)"
 was = "is_adult and can_open_storm_grotto"
 source = "https://www.eurogamer.net/all-new-changes-zelda-ocarina-of-time-switch-2: grotto entrances are visible and visibly distinguish Bombs from Song of Storms; the Stone of Agony is replaced by the Skulltula-finding Echo Gem. Preserve the adult-only route, without requiring the obsolete Stone of Agony."
+
+[locations."GV Crate Freestanding PoH"]
+type = "Chest"
+source = "Remake Gerudo Valley ledge: Obj_TBox_A_02 contains Item_Heart_Piece at (-9.5,90.4,35.0), rather than N64's breakable crate. https://www.eurogamer.net/zelda-ocarina-of-time-gerudo-valley; read-only Banc GerudoValley placement inspection, e0f3ccfa. Existing can_break_crate remains sufficient (rolling is available); correct the shuffle kind."
+
+[locations."GV Freestanding PoH Crate"]
+n64_only = "the heart is in a chest; there is no separate crate pickup around it"
+source = "Banc GerudoValley ledge chest and Eurogamer Gerudo Valley route, as for GV Crate Freestanding PoH."
+
+[locations."GV Deku Scrub Grotto Rear"]
+n64_only = "the remake's storm grotto contains chests and pots, no business-scrub actors"
+source = "Complete Banc GerudoValley grotto inventory, read-only, build e0f3ccfa."
+
+[locations."GV Deku Scrub Grotto Front"]
+n64_only = "the remake's storm grotto contains chests and pots, no business-scrub actors"
+source = "Complete Banc GerudoValley grotto inventory, read-only, build e0f3ccfa."
+
+[locations."GV Storms Grotto Beehive"]
+n64_only = "the remake's storm grotto contains no beehive actor"
+source = "Complete Banc GerudoValley grotto inventory, read-only, build e0f3ccfa."
+
+[locations."GV Octorok Grotto Red Rupee"]
+n64_only = "the underwater grotto now holds a Business Scrub Seed chest, not N64's eight loose rupees"
+source = "Complete Banc GerudoValley underwater-grotto inventory, read-only, build e0f3ccfa; new chest identity/entry requirements remain in-game questions."
+
+[locations."GV Octorok Grotto Blue Rupee 1"]
+n64_only = "absent loose rupee in the remodeled underwater grotto"
+source = "Banc GerudoValley inventory, as for GV Octorok Grotto Red Rupee."
+
+[locations."GV Octorok Grotto Blue Rupee 2"]
+n64_only = "absent loose rupee in the remodeled underwater grotto"
+source = "Banc GerudoValley inventory, as for GV Octorok Grotto Red Rupee."
+
+[locations."GV Octorok Grotto Blue Rupee 3"]
+n64_only = "absent loose rupee in the remodeled underwater grotto"
+source = "Banc GerudoValley inventory, as for GV Octorok Grotto Red Rupee."
+
+[locations."GV Octorok Grotto Green Rupee 1"]
+n64_only = "absent loose rupee in the remodeled underwater grotto"
+source = "Banc GerudoValley inventory, as for GV Octorok Grotto Red Rupee."
+
+[locations."GV Octorok Grotto Green Rupee 2"]
+n64_only = "absent loose rupee in the remodeled underwater grotto"
+source = "Banc GerudoValley inventory, as for GV Octorok Grotto Red Rupee."
+
+[locations."GV Octorok Grotto Green Rupee 3"]
+n64_only = "absent loose rupee in the remodeled underwater grotto"
+source = "Banc GerudoValley inventory, as for GV Octorok Grotto Red Rupee."
+
+[locations."GV Octorok Grotto Green Rupee 4"]
+n64_only = "absent loose rupee in the remodeled underwater grotto"
+source = "Banc GerudoValley inventory, as for GV Octorok Grotto Red Rupee."
