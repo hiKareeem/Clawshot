@@ -785,6 +785,33 @@ name, so the get model and text should follow [inference]; the NPC's own lines (
 flags the flow sets do not change. A song needs its play-along changed too. Test folders for Talon's cucco game (milk
 bottle -> Heart Piece, -> Boomerang) are in `E:/OOTRemake/work/r4-evfl/ingame/`; not yet run in game.
 
+## 16. Round 5: age travel (cs5a)
+
+Evidence and exact flow nodes: `plans/rounds/r5-age.md`, item 1; build `e0f3ccfa`. No game launched.
+
+The normal first pull follows all three stone quests, the moat Ocarina of Time and Song of Time, and opening
+the Door of Time. `DoorOfTime:DoorOfTime_OpenDoor` checks quest progress beyond Step04, the recommended melody
+(4), and the door/scene not already done; it sets `Market_Child_TimeTempleDoor_Opened` and Step06.
+The first-pull attention request (`Market_Child_Prefab_e700`) requires DoorOfTime exactly Step06.
+Stone items and Ocarina of Time inventory are not independently queried there: chest-only logic keeps the
+conservative vanilla route; independently shuffled gifts need to preserve quest progression.
+
+Adult return is gated by `SageOfForest_IsCompleted_Exp`, not Forest Medallion or Prelude inventory.
+`Market_Adult_Prefab_89da` deletes the pedestal attention actor while that expression is false.
+GameDataList defines it from Enum `Step_SageOfForest` and `Complete`; the Forest blue-warp completion chain
+sets Complete in `Dm_SY_BancChange_EscapeDungeon` Event199.
+`Market_Adult_Field_AdultToChild` then plays the return scene and changes era.
+`Market_Adult_Firsttime_GobacktoChild` is checked only after the era change: setting it cannot unlock return.
+There is no independent initial-value Bool for free travel; forcing the Forest quest complete has broader
+story effects and is not a safe substitute.
+
+Published corroboration (facts only):
+https://www.nintendolife.com/guides/zelda-ocarina-of-time-forest-temple-walkthrough-switch-2
+describes return travel and Prelude after Forest Temple.
+All twelve saves in the supplied backup directories are child-era (`Sequence_IsChildhood = true`,
+`Step_SageOfForest = Ready`), so they do not corroborate current adult progress.
+**Kareem: check the adult pedestal before and after the Forest blue warp, and supply adult save copies.**
+
 ## 17. Round 5: shops and the Deku Shield (cs5b)
 
 Full trace, provisional choices and player checks: `plans/rounds/r5-shops.md`. `data/shops.toml` identifies
