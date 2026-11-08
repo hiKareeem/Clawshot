@@ -75,6 +75,9 @@ def prepare(spec: Mapping[str, Any], settings: Settings) -> tuple[Settings, Worl
         logic["keysanity"] = True
     settings = replace(settings, logic=logic)
     spec = with_shop_prices(spec, settings.shuffle, settings.shop_prices, settings.cheap_deku_shield)
+    if "Shop" in settings.shuffle:
+        held = {name: ("Shop",) for name in spec.get("items", {}) if name.startswith("Buy ")}
+        settings = replace(settings, item_location_types={**settings.item_location_types, **held})
     return settings, build_world(world_spec(spec, settings), settings.logic)
 
 
