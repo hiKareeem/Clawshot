@@ -66,6 +66,11 @@
   from a chest) it plays as a learned song (Kareem, 2026-11-08). So songs and the Fairy Ocarina work in chests; the
   default stays songs-on-song-locations (OoT Randomizer's default) and "songs anywhere" becomes a setting (round 6).
   Other gift items stay on gift locations until each actor is seen in a chest.
+- **D24 Defaults stay close to vanilla; difficulty is opt-in** (Kareem, 2026-11-08). The base seed keeps new
+  players on the vanilla path (the forest closed until Gohma, Mido kept, songs on song spots, own-dungeon items,
+  the return guarantee on); settings add difficulty for players who want it. So `forest` defaults to `closed`, with
+  `closed_deku` and `open` as options for advanced players; not all at once. Quality-of-life settings that remove
+  grind without changing the route (the intro skip, the cheap Deku Shield) may stay on.
 
 ## Open (only Kareem and his co-owner decide)
 
