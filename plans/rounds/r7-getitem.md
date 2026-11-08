@@ -60,3 +60,55 @@ supply their missing native get-demo event performer. Visual placement still nee
 
 Item 1 check: live read-only traces above completed, model assets/RSDB/component references and native
 bind dispatch inspected. Investigation only: no tests/docs beyond this required research report.
+
+## Item 2: explicit native presentation patch
+
+`patch/getitem.py` exposes `changes(romfs, actors)` for the common overlay writer. All fourteen
+identities are explicit: both ocarinas plus the twelve ordinary songs (not Scarecrow).
+
+- Songs: change only the existing ModelInfo's `FmdbName`/`ModelProjectName`; Fairy Ocarina for
+  non-warp songs, Ocarina of Time for warp songs. No replacement of the pouch actor.
+- Ocarinas: keep their existing native model, OcarinaParam, Accessory, text and pouch data. Replace
+  only their ActorParam `EventPerformerRef` with the native PouchContent component, copied byte-for-byte
+  from the Boomerang pack. The selected graph includes every Common command plus the missing chest
+  presentation commands. No graph is edited and no animation/mesh is created.
+- ActorInfo: song model names/bounds match the native donor. Existing render reservations never shrink.
+  Instance heap reserves the original budget **plus the whole native donor budget** (ocarina donor for
+  song geometry, Boomerang for ocarina's pouch event dispatch). This is deliberately conservative,
+  **not a measured minimal heap formula**. Native donors are captured before updating any row.
+- Every other pack member/table row, ActorName, item category, SpecialDeal, grant flags and event
+  flows stay unchanged. Typed BYML/endian and SARC read-back are checked.
+- The common writer's isolated hook includes positive rounded growth of changed ModelInfo/ActorParam
+  members, retaining their original parsed overhead and taking maximum across copies. Only the two
+  known same-shape string substitutions are accepted; structural growth is refused.
+- ActorInfo's own existing allocation is verified as raw **1,934,492**, rounded **1,934,496**,
+  entry **1,937,560**, overhead **3,064**. Isolated format support: `dc54dbb`, plus the whole-file oracle.
+
+**Deliberate acceptance boundary:** this is an explicit experiment API, not an automatic seed default.
+The spec asks for a patch and a player output, not an unverified forced model change in every seed.
+Kareem must confirm the native ocarina binding, usable ocarina after the change, song presentation and
+normal Saria/ocarina behavior before a reviewer enables it by default. In particular, the native pouch
+graph's no-hit action queries the rigid body; ocarina packs differ from normal chest-item packs. That
+runtime behavior is not established by a byte diff. No placeholder, fake grant or allowlist bypass.
+
+Checks:
+
+| Command | Observed result |
+|---|---|
+| `uv run ruff format src/clawshot/patch/getitem.py tests/test_getitem*.py` | Formatted; scoped lint passed |
+| `uv run pytest tests/test_getitem.py -q` | **18 passed** |
+| `OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump tests/test_getitem_dump.py -q -s --basetemp E:/OOTRemake/work/r7-getitem/pytest-item2-after-allocation` | **1 passed**; all 14 pack inverse diffs, all 8,363 ActorInfo rows, native assets, nested/outer allocations |
+| `uv run python E:/OOTRemake/work/r7-getitem/smoke_models.py` | Public transforms/common writer actually wrote **16 resources**; independent output read printed all 14 native model identities and PouchContent performer refs |
+
+Original/output ActorInfo size is identical; ocarina packs grow **8,376 -> 8,632** and
+**8,216 -> 8,472**, with outer entries raised **8,696 -> 8,952** and **8,536 -> 8,792**.
+Songs grow eight serialized pack bytes each; the writer raises only entries that need it.
+
+Failures were diagnosed, not retried unchanged:
+- Synthetic nested-size test initially had **zero** rounded growth (104 -> 112 both round to 128).
+  Printed the size-boundary values; gave only that synthetic fixture a padding field to put the original
+  on the 128-byte boundary. The corrected behavioral allocation test passes.
+- First dump test printed `RstbError` for ActorInfo's unsupported formula. Printed its actual original
+  raw/rounded/allocation/row count, added the measured own-file formula, then the aimed rerun passed.
+- Coordination database metadata confirms **no cs-r7 thread exists**; no message data edited/read through
+  SQL, no thread created. Shared writer/formats changes are isolated commits for review; post remains blocked.
