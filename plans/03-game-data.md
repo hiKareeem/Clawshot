@@ -948,3 +948,168 @@ references. No game boot or crash was needed to diagnose this.
 - **A bought slot restocks** (no "sold out"), the Hylian Shield in the changed slot too. Every native shop item is
   re-buyable equipment or a consumable, so a shuffled slot is a permanent purchase. To check later: with the Deku
   Shield shuffled out of every shop, whether the shopkeeper's `present_DekuSheld` route replaces a burned shield.
+## 19. Round 5: what reads a gift's item, and how each gift check is changed (cs5d)
+
+How it was found (build `e0f3ccfa`; scratch in `E:/OOTRemake/work/r5-gifts/`, `readers.py` reproduces the reads and
+gates): every flowchart the game loads, joined into one graph through `SubFlow` calls and `EventTransition`s (an
+`EventSetting` row without `EntryPointName` runs `EntryPoint0`: 274 of the 284 such rows name a flow that has one); every
+query that reads an item (`GameDataActor.EventQueryIsGameDataBool` on `IsGet.<item>`, `EventQueryCheckIsGet`,
+`PouchSystemActor.EventQueryIsExistInPouch`, `EventQueryIsGameDataInt` on `PouchData.<item>.*`,
+`EventQueryCanAddToPorch`); round 4's decoded logic modules (`Logic/*.ainb`, 1822, `IsGet.` strings); every placement's
+parameters (`Presence.FlagName`); `GameDataList` `BoolExp` entries (operands hashed back to `IsGet.<item>`); and the
+save reader on Kareem's save backups. For a gift check, a read is *near* when it sits on a path into the gift step
+(callers included) and *far* otherwise; a far read is a *gate* when its branches lead to different effects (flags set,
+events started, items given) and *lines* when they differ only in what is said. The *once gate* is the saved flag (or
+quest step) that the path reads before the step and sets after it, checked by reading the flow.
+
+**Facts the rewrite rests on.**
+
+- `IsGet.<name>` is set by the game whenever the item enters the pouch, however it is got: no flow sets it except two
+  (`Dm_MelodyGet_Fire` sets `IsGet.Item_Melody_FireBolero`, the fishing flows the sinking lure), and Kareem's saves have
+  `IsGet.Weapon_Sword_Kokiri` set from the Kokiri Sword chest. The name is the pouch name: equipment pick-ups read under
+  their equipment actor (`Item_Sword_Kokiri` -> `IsGet.Weapon_Sword_Kokiri`, `Obj_Shield_Deku` ->
+  `IsGet.Weapon_Shield_Deku`, `Obj_Armor_Zora` -> `Armor_Adult_Zora`; `RSDB/PouchActorInfo` `AdultEquipment`/
+  `ChildEquipment`). 193 of the 395 pouch actors have an `IsGet` Bool.
+- A Bool query's case 0 is true, case 1 false (`IsExistInPouch` the same: case 0 = held).
+- `HavePlayedEvent.<row>` is set when the event ends, also when the player declines and the flow quits:
+  `Dm_FairyFountain_Power` asks its own `HavePlayedEvent` inside that event to tell a first visit from a later one, and
+  offers again after a refusal. So it marks "visited", not "given".
+- The save's Bool section holds exactly the `GameDataList` Bools with `SaveFileIndex` 0 (10212 in every slot read);
+  `MetaData.SaveDataOffsetPos[0]` (95704) is where `progress.sav`'s entry table ends, 0x20 + 8 × (11925 entries of
+  file 0 outside `Bool64bitKey`, + 1 `Bool64bitKey` pair, + 33 section headers). `GameDataList`'s Bool list is not sorted
+  by hash.
+- Story gates mostly read quest steps and events, not items: `DoorOfTime` asks `Get_StoneOfFire_IsCompleted_Exp`,
+  `Get_StoneOfWater_IsCompleted_Exp` and `HavePlayedEvent.Dm_MelodyGet_Zelda`; no flow, logic module or placement reads
+  `Item_Stone_*` or `Item_Medal_*`.
+
+**Item gates elsewhere stay item reads**, because the logic models them as items: `TriForcePoint` Event8
+(`IsGet.Item_DinFire` before any other Great Fairy), `Npc_Kaepora_DeathMountainTrail` (Din's Fire), the castle-grounds
+soldier `Npc_Hylia_Soldier_009_Child` (`IsGet.Item_WeirdEgg` opens the gate, `Npc_Hylia_Soldier_009_Child_OpenTheGate`;
+OoT Randomizer's `HC Garden` asks `Weird_Egg or Chicken`), the Gerudo guards (`GerudoFortress_Common_35d7`,
+`IsGet.Item_Token_Gerudo`), the windmill's Song of Storms spot (`KakarikoVillage_Adult_Common_7d34`), Mido's blocker
+(`KokiriForest_Npc_Kokiri_Blocker_Surprised_BoolExp`: Kokiri Sword and Deku Shield). Lines that change with an item
+(Kokiri children on Saria's Song, Zoras on the scales, Navi's heat hint) are left as they are.
+
+**Classes.** 79 gift checks are linked to OoT Randomizer names (93 steps). Each check's steps all get the new item
+(where the game splits one check over two steps, a tier pick such as `IsExistInPouch(Item_BulletBag_Medium)` or two
+code paths, both steps).
+
+1. **Item swap only** (45): the once gate is a saved flag of the check, a quest step, the hand-in of the previous trade
+   item, or the cutscene playing once (its trigger tests the cutscene's `HavePlayedEvent`, section 14 [inference per
+   cutscene]); nothing reads the vanilla item as "already given".
+2. **Swap plus rewrite** (19): the flow reads the vanilla item as "already given", or the step does more than give.
+   - *Given flag* (six Great Fairies, Song from Windmill): no existing flag is set only on the gift path (`Meet_GreatFairy_01`
+     defaults to true, Din's fairy has none, `HavePlayedEvent` marks a visit), so the patch adds a saved Bool per check to
+     `GameDataList` (`Clawshot.Gift.<flow>.<event>` of the check's first step; `ResetTypeValue` 8, `SaveFileIndex` 0, as
+     9338 story flags; `MetaData` file-0 offset and size raised by 8 bytes per flag), sets it right after each gift step,
+     and turns the listed "already given" reads into reads of it. Whether the game keeps a Bool it did not ship with is
+     the in-game test (the Din fairy output, `plans/rounds/r5-gifts.md`).
+   - *Skip* (the twelve songs, DMT Biggoron): each song flow first runs the shared play-along
+     (`Dm_SY_Ocarina:LearningOcarinaPlayAuto` / `...ForSeek`), which adds the song of the current melody through one step
+     per song (`Dm_SY_Ocarina` Event59 to Event71, chosen by `EventQueryMelodyTypeForNormal` Event45 or Event66) and is
+     called only by the twelve song flows and Scarecrow's; the patch points that step's predecessors at its `next`, so the
+     play-along teaches the notes and adds nothing, and the song flow's own `GetPouchContent` step gives the new item.
+     Biggoron's step also takes the Giant's Knife (or the broken one) to make his sword; those two take steps are skipped.
+3. **Needs more** (15): the nine boss rewards (story gates read the dungeon, not the reward), the three timed trades with a
+   retry step, and the three sales inside `SimpleShop`.
+
+| Check | Flow, step(s) | Vanilla | Once gate | Other readers of the item | Class | Change |
+|---|---|---|---|---|---|---|
+| DMT Trade Broken Sword | `Npc_Goron_Biggoron_Adult` Event232 | `Item_Prescription` | hand-in takes `Item_BrokenSword` | lines: 3 flows | 1 |  |
+| DMT Trade Eyedrops | `Dm_DeathMtTrail_0050` Event21 | `Item_ClaimCheck` | hand-in takes `Item_EyeDrop` | none | 1 |  |
+| Deku Theater Mask of Truth | `LostWood_ScrubForestStageElder_TrueMaskFirst` Event2, Event31 | `Item_NutBag_Large`, `Item_NutBag_Medium` | `LostWood_ScrubForestStage_TrueMaskEventLaunched` | tier pick `IsExistInPouch` in `LostWood_ScrubForestStageElder_TrueMaskFirst`; item gates kept: `Enemy_Scrub_Business_Common` | 1 | two steps (tier pick or two code paths): both get the item |
+| Deku Theater Skull Mask | `LostWood_ScrubForestStageElder_SkullMaskFirst` Event29, Event32 | `Item_StickBag_Large`, `Item_StickBag_Medium` | `LostWood_ScrubForestStage_SkullMaskEventLaunched` | tier pick `IsExistInPouch` in `LostWood_ScrubForestStageElder_SkullMaskFirst`; item gates kept: `Enemy_Scrub_Business_Common` | 1 | two steps (tier pick or two code paths): both get the item |
+| GC Darunias Joy | `Dm_Goron_0030` Event127 | `Item_Gauntlet_Goron` | the cutscene plays once | none | 1 |  |
+| GC Rolling Goron as Adult | `SageOfFire` Event18 | `Obj_Armor_Goron` | `SageOfFire_Step02_DaruniaJr_FirstTalked` | lines: Navi's heat hint in `SageOfFire` (`IsExistInPouch(Armor_Adult_Goron)`), 2 other flows | 1 |  |
+| GC Rolling Goron as Child | `Npc_Goron_006_Child` Event58, Event92 | `Item_BombBag_Large`, `Item_BombBag_Medium` | `GoronCity_GetBombBag_fromGoron006` | tier pick `IsExistInPouch` in `Npc_Goron_006_Child`; lines: 2 flows | 1 | two steps (tier pick or two code paths): both get the item |
+| GF HBA 1000 Points | `Minigame_HorsebackArchery` Event322 | `Obj_Heart_Piece` | `MiniGame_HorsebackArchery_GotaHeart` | none | 1 |  |
+| GF HBA 1500 Points | `Minigame_HorsebackArchery` Event319, Event320 | `Item_Quiver_Large`, `Item_Quiver_Medium` | `MiniGame_HorseBackArchery_Get_Quiver` | tier pick `IsExistInPouch` in `Minigame_HorsebackArchery`; lines: 1 flow | 1 | two steps (tier pick or two code paths): both get the item |
+| GV Trade Poachers Saw | `Npc_Hylia_012_Adult` Event58 | `Item_BrokenSword` | hand-in takes `Item_PoacherSaw` | lines: 2 flows | 1 |  |
+| HC Malon Egg | `Goto_HyruleCastle` Event35 | `Item_WeirdEgg` | quest `Goto_HyruleCastle` step | item gates kept: `Npc_Hylia_Soldier_009_Child` | 1 |  |
+| HC Zeldas Letter | `Dm_HrlCastle_0050` Event59 | `Item_ZeldaLetter` | the cutscene plays once | none | 1 |  |
+| HF Ocarina of Time Item | `Dm_MelodyGet_Time` Event70 | `Item_Ocarina_Time` | the cutscene plays once | none | 1 |  |
+| Hideout Gerudo Membership Card | `Dm_Gerudo_0025` Event294 | `Item_Token_Gerudo` | the cutscene plays once | item gate kept: logic module `GerudoFortress_Common_35d7` (`IsGet.Item_Token_Gerudo`: guards send Link to the cell without it) | 1 |  |
+| Kak 10 Gold Skulltula Reward | `GatheringTokenGold` Event398 | `Item_Wallet_Medium` | `KakarikoVillage_GatheringTokenGold_GetReward10` | lines: 1 flow | 1 |  |
+| Kak 100 Gold Skulltula Reward | `GatheringTokenGold` Event215 | `Obj_Rupee_Gold` | `GatheringTokenGold` quest `Complete` | none | 1 |  |
+| Kak 20 Gold Skulltula Reward | `GatheringTokenGold` Event75 | `Item_AgonyStone` | `..._GetReward20` | none | 1 |  |
+| Kak 30 Gold Skulltula Reward | `GatheringTokenGold` Event194 | `Item_Wallet_Large` | `..._GetReward30` | lines: 1 flow | 1 |  |
+| Kak 40 Gold Skulltula Reward | `GatheringTokenGold` Event200 | `Item_BombchuBundle_Large` | `..._GetReward40` | none | 1 |  |
+| Kak 50 Gold Skulltula Reward | `GatheringTokenGold` Event219 | `Obj_Heart_Piece` | `..._GetReward50` | none | 1 |  |
+| Kak Anju Trade Pocket Cucco | `Npc_Hylia_049_Adult` Event234 | `Item_CojiroCucco` | hand-in takes `Item_PocketCucco` | none | 1 |  |
+| Kak Anju as Adult | `Npc_Hylia_049_Adult` Event264 | `Item_PocketEgg` | `GetSwordBigGoron_IsAfterFirstTalk_Npc_Hylia_049_Adult`, quest step | none | 1 |  |
+| Kak Anju as Child | `Minigame_CatchCucco` Event181 | `Item_Bottle` | `MiniGame_CatchCucco_IsCompleted` | item gates kept: `Enemy_Scrub_Business_Common`, `Enemy_Scrub_Business_Seed` | 1 |  |
+| Kak Granny Trade Odd Mushroom | `Npc_Hylia_053_Adult` Event167 | `Item_OddPowder` | hand-in takes `Item_OddMushroom` | lines: 1 flow | 1 |  |
+| Kak Man on Roof | `Npc_Hylia_001_Adult` Event4 | `Obj_Heart_Piece` | `Npc_Hylia_001_IsGetHeartPiece` | none | 1 |  |
+| Kak Shooting Gallery Reward | `MiniGame_HitTarget` Event242, Event381 | `Item_Quiver_Large`, `Item_Quiver_Medium` | `MiniGame_HitTarget_Kakariko_Get_Quiver` | tier pick `IsExistInPouch` in `MiniGame_HitTarget`; item gates kept: `Minigame_HorsebackArchery` | 1 | two steps (tier pick or two code paths): both get the item |
+| LH Adult Fishing | `MiniGame_Fishing` Event579, Event822 | `Item_Scale_Gold` | `MiniGame_Fishing_GetGoldScale` | item gates kept: `Npc_Zora_002_Adult`; lines: 1 flow | 1 | two steps (tier pick or two code paths): both get the item |
+| LH Child Fishing | `MiniGame_Fishing` Event573, Event821 | `Obj_Heart_Piece` | `MiniGame_Fishing_GetHeartPiece` | none | 1 | two steps (tier pick or two code paths): both get the item |
+| LH Lab Dive | `Npc_Hylia_045_Child` Event113 | `Obj_Heart_Piece` | `Npc_Hylia_045_HasDived` | none | 1 |  |
+| LLR Talons Chickens | `Minigame_FindOutCucco` Event23 | `Item_Bottle_Milk` | `IsClear_Minigame_FindOutCucco` | none | 1 |  |
+| LW Gift from Saria | `Dm_Kokiri_0155` Event68 | `Item_Ocarina_Fairy` | the cutscene plays once | item gates kept: `Npc_Kokiri_007_Child`; lines: 1 flow | 1 |  |
+| LW Ocarina Memory Game | `Npc_SkullKid_Child_02` Event24 | `Obj_Heart_Piece` | `Minigame_SkullKidSession_IsGetHeartPiece` | none | 1 |  |
+| LW Skull Kid | `Npc_SkullKid_Child` Event71 | `Obj_Heart_Piece` | `Npc_SkullKid_Child_IsGetHeartPiece` | none | 1 |  |
+| LW Target in Woods | `Dm_LostWood_0040` Event17, Event30 | `Item_BulletBag_Large`, `Item_BulletBag_Medium` | `LostWood_HitTargetOfDekuScrub_FirstClear` | tier pick `IsExistInPouch` in `Dm_LostWood_0040`, `IsGameDataBool` in `Dm_LostWood_0040`; lines: 1 flow | 1 | two steps (tier pick or two code paths): both get the item |
+| LW Trade Odd Potion | `Npc_Kokiri_Fado_Adult` Event123 | `Item_PoacherSaw` | hand-in takes `Item_OddPowder` | lines: 1 flow | 1 |  |
+| Market 10 Big Poes | `Npc_Hylia_048_BottleShop` Event329 | `Item_Bottle` | quest `SubEvent_GhostShop` `Complete` | item gates kept: `Enemy_Scrub_Business_Common`, `Enemy_Scrub_Business_Seed` | 1 |  |
+| Market Bombchu Bowling Bombchus | `MiniGame_BombchuBowling` Event309 | `Item_BombchuBundle_Medium` | `MiniGame_BombchuBowling_Clear{First,Second,Third}Time` | none | 1 |  |
+| Market Bombchu Bowling First Prize | `MiniGame_BombchuBowling` Event304, Event306 | `Item_BombBag_Large`, `Item_BombBag_Medium` | `MiniGame_BombchuBowling_Clear{First,Second,Third}Time` | tier pick `IsExistInPouch` in `MiniGame_BombchuBowling`; lines: 2 flows | 1 | two steps (tier pick or two code paths): both get the item |
+| Market Bombchu Bowling Second Prize | `MiniGame_BombchuBowling` Event143 | `Obj_Heart_Piece` | `MiniGame_BombchuBowling_Clear{First,Second,Third}Time` | none | 1 |  |
+| Market Lost Dog | `SubEvent_FindRichard` Event16 | `Obj_Heart_Piece` | quest `SubEvent_FindRichard` `Complete` | none | 1 |  |
+| Market Shooting Gallery Reward | `MiniGame_HitTarget` Event241, Event378 | `Item_BulletBag_Large`, `Item_BulletBag_Medium` | `MiniGame_HitTarget_HrlCity_Get_BulletBag` | tier pick `IsExistInPouch` in `MiniGame_HitTarget`; item gates kept: `Dm_LostWood_0040` | 1 | two steps (tier pick or two code paths): both get the item |
+| ToT Light Arrows Cutscene | `Dm_TimeTemple_0130` Event85 | `Item_Arrow_Light` | the cutscene plays once | lines: 1 flow | 1 |  |
+| ZD Diving Minigame | `MiniGame_Diving` Event21 | `Item_Scale_Silver` | `MiniGame_Diving_Cleared` | item gates kept: `Npc_Zora_002`, `Npc_Zora_009`; lines: 1 flow | 1 |  |
+| ZD King Zora Thawed | `SageOfWater` Event242 | `Obj_Armor_Zora` | `SageOfWater_KingZora_adult_Talk_Event198` | lines and music in `SageOfWater` (`IsExistInPouch(Armor_Adult_Zora)`); item gates kept: `Npc_Zora_KingZora_adult` | 1 |  |
+| ZR Frogs Ocarina Game | `MiniGame_FrogTenors` Event384 | `Obj_Heart_Piece` | `MiniGame_FrogTenors_SongClear` | none | 1 |  |
+| Colossus Great Fairy Reward | `Dm_FairyFountain_Nayru` Event163 | `Item_NayruLove` | none: `IsGet.<gift>` in `Dm_FairyFountain_Nayru` | lines: 2 flows | 2 | flag: own-flow read, `TriForcePoint` `Check_Complete` read, the two count reads in `Dm_FairyFountain_Din`; keep `TriForcePoint` Event8 (`IsGet.Item_DinFire`, the gate for the other five) |
+| DMC Great Fairy Reward | `Dm_FairyFountain_Wisdom` Event144 | `Item_FairyBless_MPDouble` | none: `IsGet.<gift>` in `Dm_FairyFountain_Wisdom` | lines: 2 flows | 2 | flag: own-flow read, `TriForcePoint` `Check_Complete` read, the two count reads in `Dm_FairyFountain_Din`; keep `TriForcePoint` Event8 (`IsGet.Item_DinFire`, the gate for the other five) |
+| DMT Biggoron | `Npc_Goron_Biggoron_Adult` Event123 | `Item_Sword_Biggoron` | quest `SubEvent_GetSwordBigGoron` `Complete` | item gates kept: `Npc_Goron_Medigoron_Adult` | 2 | skip the two steps that take the Giant's Knife (Event96, Event106) |
+| DMT Great Fairy Reward | `Dm_FairyFountain_Din` Event212 | `Item_DinFire` | none: `IsGet.<gift>` in `Dm_FairyFountain_Din` | item gates kept: `Enemy_Scrub_Business_Common`, `Npc_Goron_008_Child`, `Npc_Kaepora_DeathMountainTrail`; lines: 4 flows | 2 | flag: own-flow read, `TriForcePoint` `Check_Complete` read; keep `TriForcePoint` Event8 (`IsGet.Item_DinFire`, the gate for the other five) |
+| HC Great Fairy Reward | `Dm_FairyFountain_Power` Event141 | `Item_FairyBless_MP` | none: `IsGet.<gift>` in `Dm_FairyFountain_Power` | item gates kept: `Enemy_Scrub_Business_Common`, `Npc_Hylia_041_Child`; lines: 2 flows; placement: the fountain's `WallCrack` in `HyruleCastle_Static` is absent once `IsGet.Item_FairyBless_MP` (kept: cosmetic) | 2 | flag: own-flow read, `TriForcePoint` `Check_Complete` read, the two count reads in `Dm_FairyFountain_Din`; keep `TriForcePoint` Event8 (`IsGet.Item_DinFire`, the gate for the other five) |
+| OGC Great Fairy Reward | `Dm_FairyFountain_Courage` Event144 | `Item_FairyBless_DefenseDouble` | none: `IsGet.<gift>` in `Dm_FairyFountain_Courage` | lines: 1 flow | 2 | flag: own-flow read, `TriForcePoint` `Check_Complete` read, the two count reads in `Dm_FairyFountain_Din`; keep `TriForcePoint` Event8 (`IsGet.Item_DinFire`, the gate for the other five) |
+| Sheik at Colossus | `Dm_MelodyGet_Spilit` Event17 | `Item_Melody_SpiritRequiem` | the cutscene plays once | lines: 2 flows | 2 | skip the play-along add `Dm_SY_Ocarina/Event69` |
+| Sheik at Temple | `Dm_MelodyGet_Shine` Event53 | `Item_Melody_LightPrelude` | the cutscene plays once | none | 2 | skip the play-along add `Dm_SY_Ocarina/Event71` |
+| Sheik in Crater | `Dm_MelodyGet_Fire` Event192 | `Item_Melody_FireBolero` | the cutscene plays once | lines: 2 flows | 2 | skip the play-along add `Dm_SY_Ocarina/Event67` |
+| Sheik in Forest | `Dm_MelodyGet_Forest` Event22 | `Item_Melody_ForestMinuet` | the cutscene plays once | lines: 2 flows | 2 | skip the play-along add `Dm_SY_Ocarina/Event65` |
+| Sheik in Ice Cavern | `Dm_MelodyGet_Water` Event29 | `Item_Melody_WaterSerenade` | the Ice Cavern chest opens once | lines: 1 flow | 2 | skip the play-along add `Dm_SY_Ocarina/Event68`; started only by the Iron Boots chest's open event (below) |
+| Sheik in Kakariko | `Dm_MelodyGet_Shadow` Event21 | `Item_Melody_ShadowNocturne` | the cutscene plays once | lines: 1 flow | 2 | skip the play-along add `Dm_SY_Ocarina/Event70` |
+| Song from Impa | `Dm_MelodyGet_Zelda` Event111 | `Item_Melody_ZeldaLullaby` | the cutscene plays once | lines: 1 flow | 2 | skip the play-along add `Dm_SY_Ocarina/Event59` |
+| Song from Malon | `Dm_MelodyGet_Epona` Event11 | `Item_Melody_EponaSong` | the cutscene plays once | none | 2 | skip the play-along add `Dm_SY_Ocarina/Event60` |
+| Song from Ocarina of Time | `Dm_MelodyGet_Time` Event4 | `Item_Melody_TimeSong` | the cutscene plays once | none | 2 | skip the play-along add `Dm_SY_Ocarina/Event63` |
+| Song from Royal Familys Tomb | `Dm_MelodyGet_Sun_03` Event34 | `Item_Melody_SunSong` | `RoyalFamilyTomb_MelodyGet_Clear` | none | 2 | skip the play-along add `Dm_SY_Ocarina/Event62` |
+| Song from Saria | `Dm_MelodyGet_Saria` Event109 | `Item_Melody_SariaSong` | the cutscene plays once | item gates kept: `Npc_Kokiri_009_Child`, `Npc_Kokiri_Mido_Child`; lines: 4 flows | 2 | skip the play-along add `Dm_SY_Ocarina/Event61` |
+| Song from Windmill | `Dm_MelodyGet_Storm` Event29 | `Item_Melody_StormSong` | none: `IsGet.Item_Melody_StormSong` in `Npc_Hylia_009_Adult` | lines: 3 flows; item gate kept: logic module `KakarikoVillage_Adult_Common_7d34` enables the windmill's Song of Storms spot on `IsGet.Item_Melody_StormSong` | 2 | skip the play-along add `Dm_SY_Ocarina/Event64`; flag: `Npc_Hylia_009_Adult` Event9, 17, 31, 69 (learn or play branch, lines) |
+| ZF Great Fairy Reward | `Dm_FairyFountain_Frore` Event174 | `Item_FaroreWind` | none: `IsGet.<gift>` in `Dm_FairyFountain_Frore` | lines: 2 flows | 2 | flag: own-flow read, `TriForcePoint` `Check_Complete` read, the two count reads in `Dm_FairyFountain_Din`; keep `TriForcePoint` Event8 (`IsGet.Item_DinFire`, the gate for the other five) |
+| Barinade | `Dm_ZoraFountain_0030` Event3 | `Item_Stone_Water` | the cutscene plays once | none | 3 | no flow reads the reward; the game's story gates read the dungeon's quest step instead (`DoorOfTime` asks `Get_StoneOfFire_IsCompleted_Exp`, ...), so a moved reward breaks them both ways |
+| Bongo Bongo | `Dm_Awake_Shadow_Get` Event3 | `Item_Medal_Shadow` | the cutscene plays once | none | 3 | no flow reads the reward; the game's story gates read the dungeon's quest step instead (`DoorOfTime` asks `Get_StoneOfFire_IsCompleted_Exp`, ...), so a moved reward breaks them both ways |
+| GC Medigoron | `Npc_Goron_Medigoron_Adult` Event11 | `Shop_Sword_Giant` | none: `IsExistInPouch(Weapon_Sword_Giant)` | item gates kept: `Npc_Goron_Biggoron_Adult` | 3 | a sale inside `SimpleShop` (the call returns without giving on cancel or too few rupees): a once flag must be set inside the shared purchase path; OoT Randomizer shuffles it only with `shuffle_expensive_merchants`/`shuffle_beans` |
+| King Dodongo | `Dm_DeathMtTrail_0025` Event26 | `Item_Stone_Fire` | the cutscene plays once | none | 3 | no flow reads the reward; the game's story gates read the dungeon's quest step instead (`DoorOfTime` asks `Get_StoneOfFire_IsCompleted_Exp`, ...), so a moved reward breaks them both ways |
+| LH Trade Eyeball Frog | `Npc_Hylia_045_Adult` Event26, Event27, Event45 | `Item_EyeDrop` | quest `SubEvent_GetSwordBigGoron`; retry steps re-give | lines: 4 flows | 3 | a retry step gives the vanilla item again whenever the player no longer holds it (timed trade item spoiled) |
+| LW Trade Cojiro | `Npc_Hylia_017_Adult` Event100, Event116 | `Item_OddMushroom` | quest `SubEvent_GetSwordBigGoron`; retry step re-gives | item gates kept: `Npc_Hylia_053_Adult` | 3 | a retry step gives the vanilla item again whenever the player no longer holds it (timed trade item spoiled) |
+| Morpha | `Dm_Awake_Water_Get` Event13 | `Item_Medal_Water` | the cutscene plays once | none | 3 | no flow reads the reward; the game's story gates read the dungeon's quest step instead (`DoorOfTime` asks `Get_StoneOfFire_IsCompleted_Exp`, ...), so a moved reward breaks them both ways |
+| Phantom Ganon | `Dm_Awake_Forest_Get` Event13 | `Item_Medal_Forest` | the cutscene plays once | none | 3 | no flow reads the reward; the game's story gates read the dungeon's quest step instead (`DoorOfTime` asks `Get_StoneOfFire_IsCompleted_Exp`, ...), so a moved reward breaks them both ways |
+| Queen Gohma | `Dm_Kokiri_0130` Event22 | `Item_Stone_Forest` | the cutscene plays once | none | 3 | no flow reads the reward; the game's story gates read the dungeon's quest step instead (`DoorOfTime` asks `Get_StoneOfFire_IsCompleted_Exp`, ...), so a moved reward breaks them both ways |
+| ToT Reward from Rauru | `Dm_SageRoom_0005` Event48 | `Item_Medal_Light` | the cutscene plays once | none | 3 | no flow reads the reward; the game's story gates read the dungeon's quest step instead (`DoorOfTime` asks `Get_StoneOfFire_IsCompleted_Exp`, ...), so a moved reward breaks them both ways |
+| Twinrova | `Dm_Awake_Spirit_Get` Event14 | `Item_Medal_Spirit` | the cutscene plays once | none | 3 | no flow reads the reward; the game's story gates read the dungeon's quest step instead (`DoorOfTime` asks `Get_StoneOfFire_IsCompleted_Exp`, ...), so a moved reward breaks them both ways |
+| Volvagia | `Dm_Awake_Fire_Get` Event13 | `Item_Medal_Fire` | the cutscene plays once | none | 3 | no flow reads the reward; the game's story gates read the dungeon's quest step instead (`DoorOfTime` asks `Get_StoneOfFire_IsCompleted_Exp`, ...), so a moved reward breaks them both ways |
+| Wasteland Bombchu Salesman | `Npc_Hylia_044_Adult` Event3 | `Shop_BombchuBundle_01` | `Npc_Hylia_044_Buy` (not saved) | none | 3 | a sale inside `SimpleShop` (the call returns without giving on cancel or too few rupees): a once flag must be set inside the shared purchase path; OoT Randomizer shuffles it only with `shuffle_expensive_merchants`/`shuffle_beans` |
+| ZD Trade Prescription | `Npc_Zora_KingZora_adult` Event87, Event131 | `Item_EyeballFrog` | quest `SubEvent_GetSwordBigGoron`; retry step re-gives | item gates kept: `Npc_Hylia_045_Adult`; lines: 2 flows | 3 | a retry step gives the vanilla item again whenever the player no longer holds it (timed trade item spoiled) |
+| ZR Magic Bean Salesman | `SimpleShop` Event182 | `Item_MagicBean` | none: a repeatable sale | none | 3 | a sale inside `SimpleShop` (the call returns without giving on cancel or too few rupees): a once flag must be set inside the shared purchase path; OoT Randomizer shuffles it only with `shuffle_expensive_merchants`/`shuffle_beans` |
+
+Cutscene checks whose trigger reads quest progress (Sheik's songs after a medallion, the Light Arrows after the Shadow
+and Spirit medallions) stay right only while the boss rewards are vanilla, which class 3 keeps them.
+
+**Gifts inside a chest's open event.** Of the four story overrides on chests (`GetEventName`, section 3) that the seed
+keeps, one plays a gift: the Ice Cavern Iron Boots chest (`IceCavern_Static`, Hash 6859289214373847284,
+`SageOfWater_MelodyGet_Water`) runs `SageOfWater:IceCavern_WaterSerenade`, whose two `EventTransition`s (Event281,
+Event283) are the only starts of `Dm_MelodyGet_Water`: the Serenade check (`Sheik in Ice Cavern`, step Event29) is that
+chest's second item, given once because the chest opens once. With the override removed the Serenade is never given.
+The other three (`SubEvent_GetIceArrow_OpenTBox`, `InsideGanonCastle_Get_Gauntlet_Gold`,
+`SageOfSpirit_NaboorIsTakenAway`) reach no gift step (followed through their cutscenes `Dm_InsideGanonCastle_0006` and
+`Dm_DesertColossus_0030`). The chest's own item stays track C's.
+
+**Gift steps that are not checks** (55, no OoT Randomizer link): repeat and lesser prizes (rupees), the 13 play-along
+steps, the hatching cuccos, the Master Sword grants, the Amiibo pouch, Scarecrow's Song, the Zora shop's tunic sale and
+the mask shop's Mask of Truth (shops, track B), the Kokiri shopkeeper's free Deku Shield (`present_DekuSheld`, given
+once, `HaveTalked_Npc_Kokiri_001_Shop_Child_PresentDekuShield`, when Link holds no shield: `CheckIsGet
+(Weapon_Shield_Deku)`; track B's), the Market bottle (`Npc_Hylia_020_Shop_Child`), Dampé's digging heart piece and the
+frogs' bug game. None is changed.
