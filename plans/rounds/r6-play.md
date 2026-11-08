@@ -120,4 +120,56 @@ are in section 12, before section 13. No guide text, decoded data, generated ove
 - `cb5fee3`: item 1, sourced Deku Tree Boomerang routes and regressions.
 - `dc1ed26`: item 2, no-scale moat confirmation and boundary regressions (existing rules correct).
 - `f81146f`: item 3, free-shield event, exact merchant branch trace and non-bootstrap regressions.
-- Item 4 is the next commit; full required gates are running before readiness/handoff is posted.
+- `8346a48`: item 4, answer ledger, section-12 findings and stale test-comment correction.
+
+### Cross-track integration note
+
+The thread's cs6a opening-route checkpoint still requires buying KF6 Deku Shield after Hylian/Mido.
+After this track merges, that purchase is no longer mandatory: the early merchant event supplies the shield
+for free. **Claude/cs6a: regenerate the opening witness/note on the merged logic; update any regression
+that insists on a KF6 purchase, and explain the free shopkeeper visit before entering the tree.**
+This worktree does not contain the names track's unmerged presentation code/tests; no other worktree is edited.
+The existing scrub still needs a Deku Shield; do not replace its requirement with the Hylian Shield.
+
+Additional runtime smoke: the historical `python -m clawshot.generate` command in the world-format plan
+failed because that package has no `__main__`. The printed exception identified the missing entry point.
+Used the supported `python -m clawshot --romfs ... --seed 7 --out ...` instead; it passed as recorded below.
+No module stub/extra CLI or unrelated documentation rewrite was added.
+
+Supported full CLI smoke completed: **seed 7, 164 shuffled checks, 28 spheres, 60 overlay resources**
+plus spoiler, default gated return retained. `python -m clawshot` exercised actual fill, finished-seed
+oracle and writer, with every changed resource/size decision printed. Output was only under
+`E:/OOTRemake/work/r6-play-cs6f/seed-smoke/`, not a player launcher or active seed. Posted the opening-note
+integration request to cs6a/Claude, including the free visit before the Deku Tree rather than a KF6 purchase.
+
+## Final full gates and handoff
+
+All four required commands completed in full on the finished behavior/test tree through `8346a48`.
+Pytest's `PYTEST_ADDOPTS` set only `--basetemp` to session-created directories under
+`E:/OOTRemake/work/r6-play-cs6f/`, keeping all dump-derived temporary output outside the repository.
+
+| Command | Observed result |
+|---|---|
+| `uv run ruff format --check` | 160 files already formatted |
+| `uv run ruff check` | All checks passed |
+| `uv run pytest` | 443 passed, 58 skipped; 695.51 s |
+| `OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump` | 57 passed, 444 deselected; 633.83 s |
+
+The synthetic gate includes the whole-world vanilla/200-default-seed/progressive/determinism checks,
+gated-return checks and all 17 new play regressions. The unchanged full dump gate covers census/formats/
+writer integration on this branch's C/D-inclusive base. No failed test was suppressed or accepted.
+The separate actual CLI smoke succeeded (164 checks, 28 spheres, 60 resources); its generated overlay
+and both completed pytest basetemps have now been removed. Three read-only research probes remain
+outside the repo for reproducibility. No dependency change, game/window/launcher run or save/dump write.
+
+Track F items 1–4 are complete. No merge/rebase/push performed. Four item commits are listed above;
+the next documentation-only commit records this final evidence and the cross-track presentation request.
+
+Left for Claude/Kareem, not a reduced implementation scope:
+
+- Merge/review on the round's integrated tree; cs6a's opening note/witness must use the free merchant
+  visit rather than insisting on a KF6 purchase. Request posted to `cs-r6`; names code is not on this branch.
+- Optional play corroboration of repeat-shield/late-story cutoff; do not shuffle this repeat grant as-is.
+- Still unanswered original questions: unarmed Slingshot-room recovery, adult Bow/Hookshot vine routes.
+- The old module-only generation command in `04-world-format.md` is stale; supported CLI was used.
+  That unrelated historical documentation was intentionally left outside this track's edits.
