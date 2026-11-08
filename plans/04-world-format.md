@@ -147,7 +147,7 @@ tier (`vanilla_fixed`), or the world does not build.
 `settings.toml` has three tables, merged into one namespace for rules:
 
 - `[settings]`: OoT Randomizer settings the rules name, at its defaults (`open_forest = "closed"`, ...). A seed's
-  settings may override them (`Settings.logic`).
+  settings may override them (`Settings.logic`), except `open_forest` / `skip_mido`, derived from `Settings.forest`.
 - `[tricks]`: N64 tricks and glitches, all `false`. Turning one on is an error until it is verified in the remake
   (rule 6); the check is in `load.resolve_settings`.
 - `[flags]`: OoT Randomizer `World` attributes derived from its settings (`entrance_shuffle`,
@@ -249,7 +249,8 @@ dungeon's small keys from the start; key logic is exercised by the seed tests, w
 
 ## Generating a seed
 
-`clawshot.generate` (`python -m clawshot.generate --seed <n> --out <dir>` writes `<dir>/spoiler.json`):
+`python -m clawshot --romfs <dump> --seed <n> --out <dir>` uses `clawshot.generate` and writes changed
+resources under `<dir>/romfs/` plus `<dir>/spoiler.json`:
 
 1. The world is built for the seed's logic settings; the locations whose OoT Randomizer type is in
    `Settings.shuffle` (default `Chest`, M2's chest shuffle), that have a vanilla item and are neither `n64_only` nor
@@ -266,11 +267,35 @@ dungeon's small keys from the start; key logic is exercised by the seed tests, w
    only); then the rest, anywhere. A failed fill is retried with the same generator, up to 10 times.
 3. The beatability search on the result: collect sphere by sphere from the start; the goal must hold. A seed that
    fails is never returned.
-4. The spoiler log, JSON: `generator` (with version), `seed`, `settings`, `placements` (shuffled locations, world
-   order), `spheres` (the progression items collected in each sphere; spheres with none are left out).
+4. The spoiler log, JSON: `generator` (with version), `seed`, `settings`, `settings_string`,
+   `placements` (shuffled locations, world order), `spheres` (the progression items collected in each sphere;
+   spheres with none are left out).
 
 Same seed, settings, data and generator version give the same bytes: the generator is the only randomness, and the
 fill walks lists in world-file order, never a set (a test compares two interpreters with different hash seeds).
+
+### Replayable generator settings
+
+Generator defaults live in `data/settings.toml`, separate from the translated `data/world/settings.toml`.
+`Settings.to_string()` / `from_string()` and CLI `--settings` / `--print-settings` use versioned canonical `CS1`
+strings; explicit CLI options override a supplied string. Effective gift restrictions are rebuilt on replay.
+The same generator/world data and seed are required; strings do not promise cross-version compatibility.
+
+`forest=closed` is the vanilla-like default (D24, Kareem). Advanced opt-ins `closed_deku` and `open` open the
+bridge only or bridge plus Mido. Legacy `--skip mido` aliases `forest=open`. The GameData bridge-control flag
+and Mido flag are separate; the logic derives the corresponding `open_forest` and `skip_mido` constants.
+Initial-value transforms compose before gift-added saved Bools, preserving both sets of GameDataList changes.
+
+`songs=song` keeps songs on song checks; opt-in `anywhere` releases all twelve. Non-song gift-only items
+require the sourced chest actor allowlist before leaving gifts. Native Shop displays remain mandatory.
+Shop wallet predicates use the same effective-price decision as the overlay: `shop_prices=affordable`
+prices shuffled offers at 10; provisional default-on `cheap_deku_shield` prices the actual Kokiri shop shield
+at 10 even without Shop shuffle. Stock/release, refill and adult-only rules stay intact.
+Flag sources, inference limits and pending player checks: `03-game-data.md` section 21.
+
+The overlay writer's `make_seed` supplies the remake's actual chest pool through census actor identities and
+`item_actors.toml`, not the untranslated N64 chest contents. Native shops use their catalog; gift checks join
+only when their fixed logic item matches the actor every grant step gives. Unresolved upgrade tiers stay vanilla.
 
 ## Porting OoT Randomizer
 
@@ -299,7 +324,7 @@ at the checkout. Nothing in a translated file is edited by hand: the remake's di
 
 ## Not carried over yet
 
-- Shop prices and wallets (OoT Randomizer `Rules.set_shop_rules`), savewarps, entrance shuffle.
+- Savewarps, entrance shuffle.
 - `logic_no_night_tokens_without_suns_song` (an `at_night` special case for Gold Skulltulas).
 - Built-ins `has_item_goal`, `has_full_item_goal`, `has_all_item_goals`, `guarantee_hint`, `item_name`, `won`
   (hints and goals), and `has_all_notes_for_song`/`has_ocarina_buttons`/`region_has_shortcuts` with the settings
@@ -307,6 +332,3 @@ at the checkout. Nothing in a translated file is edited by hand: the remake's di
 - Upgrades other than the five tiered items (quivers, bomb bags, bullet bags beyond the one above, the second
   magic meter): OoT Randomizer's rules only ask whether the base item is held, so they need no tiers, and none is
   in a chest; the gifts that give them need `vanilla_fixed` once gifts are shuffled.
-- Vanilla items come from OoT Randomizer, not the census: where the remake's chests hold other items (rupees for
-  ammo, the Water Temple's 4 keys against 6), the pool still has OoT Randomizer's items until the census links
-  every chest and an item mapping (actor to logic item) exists.
