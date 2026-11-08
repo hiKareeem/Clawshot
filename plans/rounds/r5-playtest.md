@@ -59,3 +59,15 @@ Directory inspection showed `C:/Users/hi/go/bin/bermuda.exe`; using that explici
 Live read-only save reader exercised against 18 actual progress saves; quest states printed and inventory flags
 resolved against known actors. Register construction checked 177 unique IDs. No gameplay verification claimed.
 Four gate commands are reserved for the pre-handoff run, as requested; no repeated dump runs.
+
+## Item 2 — player routes
+
+`plans/playtest/README.md` is the entry point; `session-1.md` through `session-17.md` are short area/milestone
+cards. Session 1 starts after the first pull, goes through Kakariko/Hookshot to Forest Temple; child cards wait
+for return travel. Long routes have area stop headings. Late tools/consumed states are explicitly deferred to
+proper disposable controls rather than faked with unequipping. All 168 unanswered IDs appear exactly once;
+the nine already-asked IDs appear in no session. Membership verified by the route-construction smoke.
+
+Item 1 committed as `5a7634c`. Source register pointers updated with the final area-session numbering.
+Reviewer launcher steering incorporated: **only `E:\Games\Hookshot\hookshot.exe`**, no work-build path or fallback.
+Item 3 will re-read the corrected template before copying; no launcher has been run.

@@ -32,7 +32,7 @@ No in-game result is claimed by this track.
 
 ### DT01 — Deku Tree
 
-- Age/progress: child; Shield; use isolated test copy before entering room. Session 14.
+- Age/progress: child; Shield; use isolated test copy before entering room. Session 17.
 - Do/watch: Enter the Slingshot room without a Slingshot; after the platform falls, try returning. Save/quit/continue, then separately game-over/continue on a disposable copy. Where does each resume?
 - Target: `remake/child_deku_tree.toml` — exits Deku Tree Lobby -> Deku Tree Slingshot Room; reverse exit.
 - Answer changes: Entrance recovery permits existing entry; trapped recovery needs owner-approved safe-room patch or stronger entry, not a claim that the seed is safe.
@@ -40,7 +40,7 @@ No in-game result is claimed by this track.
 
 ### DT02 — Deku Tree
 
-- Age/progress: child; Shield; use isolated test copy before entering room. Session 14.
+- Age/progress: child; Shield; use isolated test copy before entering room. Session 17.
 - Do/watch: At the lobby vines above the map chest, try Boomerang as child; on a later adult visit try Bow and Hookshot separately. Can each clear all spiders and let you climb to 3F?
 - Target: `remake/child_deku_tree.toml` — exits Deku Tree Lobby -> Deku Tree Top Floor.
 - Answer changes: Add only successful age/tool alternatives; otherwise retain Slingshot. Adult branches belong in a later return, not the child attempt.
@@ -72,7 +72,7 @@ No in-game result is claimed by this track.
 
 ### LW01 — Lost Woods
 
-- Age/progress: child; Before Zelda for LW01; sword/Slingshot/nuts for alternatives. Session 14.
+- Age/progress: child; Before Zelda for LW01; sword/Slingshot/nuts for alternatives. Session 17.
 - Do/watch: After Gohma but before Zelda, follow the correct maze path to the meadow. Does the last turn admit you or send you to Kokiri Forest?
 - Target: `remake/child_lost_woods.toml` — exits LW Beyond Mido -> SFM Entryway.
 - Answer changes: Admit: remove met-Zelda condition; redirect: keep it.
@@ -168,7 +168,7 @@ No in-game result is claimed by this track.
 
 ### HF06 — Hyrule Field
 
-- Age/progress: adult then child; Free return to child; password note unread on control copy. Session 9.
+- Age/progress: adult then child; Free return to child; password note unread on control copy. Session 10.
 - Do/watch: Read the Fairy Note by the Gerudo-side heart-piece scrub as adult. Try buying as adult, then return as child who has not spoken to it. Can that child buy for 100? Also try opening the note chest as adult, then child.
 - Target: `remake/child_hyrule_field.toml` — locations HF Deku Scrub Grotto; fact: note chest 2967378296224661060.
 - Answer changes: Confirms age-memory prerequisite and chest access; do not convert this into simple shared inventory.
@@ -624,7 +624,7 @@ No in-game result is claimed by this track.
 
 ### AO07 — First adult overworld
 
-- Age/progress: adult; Just after pull; no later-temple progress required; compare before buying/collecting. Session 1.
+- Age/progress: adult; Just after pull; no later-temple progress required; compare before buying/collecting. Session 7.
 - Do/watch: In Goron City try stopping the rolling Goron using Bow alone before bombs/flowers; try collecting the ceiling token without grappling.
 - Target: `kakariko.toml` — goron_city.toml locations GC Rolling Goron as Adult; remake/adult_goron_city.toml GC GS Center Platform.
 - Answer changes: Add Bow or hand-collection alternatives only on success.
@@ -640,7 +640,7 @@ No in-game result is claimed by this track.
 
 ### AO09 — Adult overworld returns
 
-- Age/progress: adult; Have Hover/Longshot; hold off on timed trade hand-ins until ready. Session 9.
+- Age/progress: adult; Have Hover/Longshot; hold off on timed trade hand-ins until ready. Session 10.
 - Do/watch: Test Lost Woods bridge Hover and Longshot routes separately, then one timed mushroom/frog/eyedrops delivery. Record clock at start/arrival, warp/age-change reset behavior, and shortcut used.
 - Target: `lost_woods.toml` — lost_woods.toml trade access/timeouts; death_mountain_trail.toml trade gates; lake_hylia.toml Eyedrops Access.
 - Answer changes: Refines timed-trade/geometry assumptions; never infer all delivery routes from one success.
@@ -648,7 +648,7 @@ No in-game result is claimed by this track.
 
 ### AO10 — Adult overworld returns
 
-- Age/progress: adult; Have Hover/Longshot; hold off on timed trade hand-ins until ready. Session 9.
+- Age/progress: adult; Have Hover/Longshot; hold off on timed trade hand-ins until ready. Session 10.
 - Do/watch: At the old Field cow/bomb holes, test Hammer as adult without Bombs. Record which covers break; do not disturb the Storms comparison copies.
 - Target: `lost_woods.toml` — hyrule_field.toml grotto exits; remake/child_hyrule_field.toml cow grotto edge.
 - Answer changes: Remove obsolete adult Hammer restriction or add opener per actual hole, not globally.
@@ -656,7 +656,7 @@ No in-game result is claimed by this track.
 
 ### AO11 — Adult overworld returns
 
-- Age/progress: adult; Have Hover/Longshot; hold off on timed trade hand-ins until ready. Session 9.
+- Age/progress: adult; Have Hover/Longshot; hold off on timed trade hand-ins until ready. Session 10.
 - Do/watch: After earning Poe Collector bottle at five Poes, leave and revisit with another Poe. Does he repeat the bottle or give only money?
 - Target: `lost_woods.toml` — remake/adult_market.toml Market 10 Big Poes; fact reward persistence.
 - Answer changes: Confirms first-prize flag and five-Poe model; record later 1000-point reward separately.
@@ -776,7 +776,7 @@ No in-game result is claimed by this track.
 
 ### WA01 — Water Temple
 
-- Age/progress: adult; Before spending keys; Boots/Hookshot/Lullaby; Hover for optional comparison. Session 8.
+- Age/progress: adult; Before spending keys; Boots/Hookshot/Lullaby; Hover for optional comparison. Session 9.
 - Do/watch: Log each spent lock in order: pillar, middle-west water raise, high-west falling platforms, north basement. Record how many keys were acquired before each and confirm no extra lock before Dark Link.
 - Target: `remake/adult_water_temple.toml` — Water Temple lock exits; Raise Water Level event.
 - Answer changes: Correct graph at first mismatch; four total keys alone does not prove order.
@@ -784,7 +784,7 @@ No in-game result is claimed by this track.
 
 ### WA02 — Water Temple
 
-- Age/progress: adult; Before spending keys; Boots/Hookshot/Lullaby; Hover for optional comparison. Session 8.
+- Age/progress: adult; Before spending keys; Boots/Hookshot/Lullaby; Hover for optional comparison. Session 9.
 - Do/watch: In Ruto cracked-wall room, after blasting wall, try taking its token by hand without Hookshot/Longshot.
 - Target: `remake/adult_water_temple.toml` — locations Water Temple GS Falling Platform Room.
 - Answer changes: Success removes ranged collection only; bomb-wall gate remains.
@@ -792,7 +792,7 @@ No in-game result is claimed by this track.
 
 ### WA03 — Water Temple
 
-- Age/progress: adult; Before spending keys; Boots/Hookshot/Lullaby; Hover for optional comparison. Session 8.
+- Age/progress: adult; Before spending keys; Boots/Hookshot/Lullaby; Hover for optional comparison. Session 9.
 - Do/watch: At river and waterfall tokens, try ordinary Hookshot from reachable ground before Longshot. Record each working standing point.
 - Target: `remake/adult_water_temple.toml` — water_temple.toml locations Water Temple GS River; Water Temple GS Near Boss Key Chest.
 - Answer changes: Resolve range disagreement separately per token.
@@ -800,7 +800,7 @@ No in-game result is claimed by this track.
 
 ### WA04 — Water Temple
 
-- Age/progress: adult; Before spending keys; Boots/Hookshot/Lullaby; Hover for optional comparison. Session 8.
+- Age/progress: adult; Before spending keys; Boots/Hookshot/Lullaby; Hover for optional comparison. Session 9.
 - Do/watch: At middle-water north target and north Boss Key block route, try Hover Boots without Longshot, one route at a time.
 - Target: `remake/adult_water_temple.toml` — exits Water Temple Middle Water Level -> Water Temple Central Bow Target; Water Temple Dive -> Water Temple North Basement.
 - Answer changes: Add only actual bypassed requirements, not general Hover substitution.
@@ -808,7 +808,7 @@ No in-game result is claimed by this track.
 
 ### GE01 — Gerudo Valley / Fortress
 
-- Age/progress: adult; Epona or Longshot bridge; membership later; no capture on main save for testing. Session 9.
+- Age/progress: adult; Epona or Longshot bridge; membership later; no capture on main save for testing. Session 10.
 - Do/watch: At Valley underwater hole where the old silver rock stood, inspect the cover. Try normal dive/Boots/Scale before songs or explosives; record the actual entrance and chest reached.
 - Target: `remake/adult_gerudo_valley.toml` — gerudo_valley.toml underwater grotto exit; fact new chest identities.
 - Answer changes: Replaces obsolete rock prerequisite only after mapping actual entrance.
@@ -816,7 +816,7 @@ No in-game result is claimed by this track.
 
 ### GE02 — Gerudo Valley / Fortress
 
-- Age/progress: adult; Epona or Longshot bridge; membership later; no capture on main save for testing. Session 9.
+- Age/progress: adult; Epona or Longshot bridge; membership later; no capture on main save for testing. Session 10.
 - Do/watch: Map Valley/fortress grottos: describe each chest position, vanilla content and opener; at old storms marks test Storms without Echo Gem.
 - Target: `remake/adult_gerudo_valley.toml` — gerudo_valley.toml GV Storms Grotto; gerudo_fortress.toml GF Storms Grotto; fact new chest mapping.
 - Answer changes: Confirms song gates or identifies always-open drop-hole; records absent scrubs/fairies separately.
@@ -824,7 +824,7 @@ No in-game result is claimed by this track.
 
 ### GE03 — Gerudo Valley / Fortress
 
-- Age/progress: adult; Epona or Longshot bridge; membership later; no capture on main save for testing. Session 9.
+- Age/progress: adult; Epona or Longshot bridge; membership later; no capture on main save for testing. Session 10.
 - Do/watch: At fortress old storms hole, try simply dropping before playing Storms. Are fairies still inside?
 - Target: `remake/adult_gerudo_valley.toml` — remake/adult_gerudo_fortress.toml exits GF Entrances Behind Crates -> GF Storms Grotto; Fairy event.
 - Answer changes: An always-open hole removes only this song gate; absence removes fairy source.
@@ -832,7 +832,7 @@ No in-game result is claimed by this track.
 
 ### GE04 — Gerudo Valley / Fortress
 
-- Age/progress: adult; Epona or Longshot bridge; membership later; no capture on main save for testing. Session 9.
+- Age/progress: adult; Epona or Longshot bridge; membership later; no capture on main save for testing. Session 10.
 - Do/watch: On disposable copy, let a guard capture you once. Free each carpenter by reachable route, recording named key, door opened and whether one cell key works elsewhere.
 - Target: `remake/adult_gerudo_valley.toml` — gerudo_fortress.toml jail rescue/key location rules.
 - Answer changes: Validates shared-key/capture reachability abstraction; report blocked rescue sequence precisely.
@@ -840,7 +840,7 @@ No in-game result is claimed by this track.
 
 ### GE05 — Gerudo Valley / Fortress
 
-- Age/progress: adult; Epona or Longshot bridge; membership later; no capture on main save for testing. Session 9.
+- Age/progress: adult; Epona or Longshot bridge; membership later; no capture on main save for testing. Session 10.
 - Do/watch: Try direct roof jumps and Hover routes separately, without grapple. Record route to each roof chest/token.
 - Target: `remake/adult_gerudo_valley.toml` — gerudo_fortress.toml roof exits; GF Chest; GF GS Top Floor.
 - Answer changes: Adds only reproducible normal geometry alternatives.
@@ -848,7 +848,7 @@ No in-game result is claimed by this track.
 
 ### GE06 — Gerudo Valley / Fortress
 
-- Age/progress: adult; Epona or Longshot bridge; membership later; no capture on main save for testing. Session 9.
+- Age/progress: adult; Epona or Longshot bridge; membership later; no capture on main save for testing. Session 10.
 - Do/watch: At horseback archery try admission by day/night, before/after membership and on/off Epona as available. Record fee and first rewards at 750/1400, then repeats.
 - Target: `remake/adult_gerudo_valley.toml` — gerudo_fortress.toml GF HBA 1000 Points; GF HBA 1500 Points.
 - Answer changes: Confirms admission predicates and renamed-score facts; no N64 threshold assumption.
@@ -856,7 +856,7 @@ No in-game result is claimed by this track.
 
 ### GE07 — Gerudo Valley / Fortress
 
-- Age/progress: adult; Epona or Longshot bridge; membership later; no capture on main save for testing. Session 9.
+- Age/progress: adult; Epona or Longshot bridge; membership later; no capture on main save for testing. Session 10.
 - Do/watch: Inspect Valley cow crate/waterfall wonderitems and fortress signs/crates; break each and record content and respawn after exit.
 - Target: `remake/adult_gerudo_valley.toml` — fact / rule review: gerudo_valley.toml cow crate/waterfall wonderitems; gerudo_fortress.toml signs/crates.
 - Answer changes: Corrects resource-source existence; no invented check from scenery.
@@ -864,7 +864,7 @@ No in-game result is claimed by this track.
 
 ### GE08 — Gerudo Valley / Fortress
 
-- Age/progress: adult; Epona or Longshot bridge; membership later; no capture on main save for testing. Session 9.
+- Age/progress: adult; Epona or Longshot bridge; membership later; no capture on main save for testing. Session 10.
 - Do/watch: Open Valley Lens chest before age change, then compare opposite-age chest; compare Kakariko purple windmill chest before/after area thaw/state change. Can each pair pay twice?
 - Target: `remake/adult_gerudo_valley.toml` — fact: Valley Lens chest and Kakariko purple alternate Hash pairs.
 - Answer changes: Informs one-vs-two-check product decision; same-position is not same save flag.
@@ -872,7 +872,7 @@ No in-game result is claimed by this track.
 
 ### GT01 — Training Ground
 
-- Age/progress: adult; Membership, Bow/Lens/Silver Gauntlets; short Hookshot for comparisons. Session 9.
+- Age/progress: adult; Membership, Bow/Lens/Silver Gauntlets; short Hookshot for comparisons. Session 11.
 - Do/watch: Facing in from lobby entrance, inspect both chest sides before eye switch. Open Lens-only west chest, then shoot the eye for east blue chest. Record left/right from that facing.
 - Target: `remake/adult_gerudo_training_ground.toml` — locations Gerudo Training Ground Lobby Left Chest; Lobby Right Chest.
 - Answer changes: Pair IDs 11182647876438515984 / 2436665354602612279 before splitting combined Lens/Bow requirements.
@@ -880,7 +880,7 @@ No in-game result is claimed by this track.
 
 ### GT02 — Training Ground
 
-- Age/progress: adult; Membership, Bow/Lens/Silver Gauntlets; short Hookshot for comparisons. Session 9.
+- Age/progress: adult; Membership, Bow/Lens/Silver Gauntlets; short Hookshot for comparisons. Session 11.
 - Do/watch: In Like Like/heavy-block room record room-clear red chest, cracked-wall Bombs chest and eye-switch Seed chest by position. Which are First/Second old names?
 - Target: `remake/adult_gerudo_training_ground.toml` — locations Gerudo Training Ground Heavy Block First Chest; Heavy Block Second Chest.
 - Answer changes: Replace shared wall condition only after physical-to-ID pairing, not guesses from old names.
@@ -888,7 +888,7 @@ No in-game result is claimed by this track.
 
 ### GT03 — Training Ground
 
-- Age/progress: adult; Membership, Bow/Lens/Silver Gauntlets; short Hookshot for comparisons. Session 9.
+- Age/progress: adult; Membership, Bow/Lens/Silver Gauntlets; short Hookshot for comparisons. Session 11.
 - Do/watch: At Wolfos silver-block invisible eye, try Hookshot instead of Bow with Lens on. Does door open?
 - Target: `remake/adult_gerudo_training_ground.toml` — exits Gerudo Training Ground Heavy Block Room -> Gerudo Training Ground Like Like Room.
 - Answer changes: Success adds Hookshot eye-switch alternative.
@@ -896,7 +896,7 @@ No in-game result is claimed by this track.
 
 ### GT04 — Training Ground
 
-- Age/progress: adult; Membership, Bow/Lens/Silver Gauntlets; short Hookshot for comparisons. Session 9.
+- Age/progress: adult; Membership, Bow/Lens/Silver Gauntlets; short Hookshot for comparisons. Session 11.
 - Do/watch: Try hot-room loop without Tunic; record hearts, burn ticks, time and whether exit/upper door is reached alive.
 - Target: `remake/adult_gerudo_training_ground.toml` — GTG lava entrance exits; Near Scarecrow Chest.
 - Answer changes: Only supports explicit safe heat route; not universal no-Tunic access.
@@ -904,7 +904,7 @@ No in-game result is claimed by this track.
 
 ### GT05 — Training Ground
 
-- Age/progress: adult; Membership, Bow/Lens/Silver Gauntlets; short Hookshot for comparisons. Session 9.
+- Age/progress: adult; Membership, Bow/Lens/Silver Gauntlets; short Hookshot for comparisons. Session 11.
 - Do/watch: Summon Pierre then try ordinary Hookshot from reachable floor/ledge, without Longshot.
 - Target: `remake/adult_gerudo_training_ground.toml` — locations Gerudo Training Ground Near Scarecrow Chest.
 - Answer changes: Short-grapple success relaxes distant-scarecrow route.
@@ -912,7 +912,7 @@ No in-game result is claimed by this track.
 
 ### GT06 — Training Ground
 
-- Age/progress: adult; Membership, Bow/Lens/Silver Gauntlets; short Hookshot for comparisons. Session 9.
+- Age/progress: adult; Membership, Bow/Lens/Silver Gauntlets; short Hookshot for comparisons. Session 11.
 - Do/watch: From upper eye-statue doorway, try solving all eye targets without dropping to floor; can you open and return to the near-scarecrow chest?
 - Target: `remake/adult_gerudo_training_ground.toml` — locations Gerudo Training Ground Near Scarecrow Chest region/rule.
 - Answer changes: Successful upper-only solution changes floor-puzzle/return requirement.
@@ -920,7 +920,7 @@ No in-game result is claimed by this track.
 
 ### HW01 — Haunted Wasteland
 
-- Age/progress: adult; Membership, Lens; Hover/Longshot separately for sand; wallet money for seller. Session 9.
+- Age/progress: adult; Membership, Lens; Hover/Longshot separately for sand; wallet money for seller. Session 12.
 - Do/watch: On separate approaches, cross quicksand with Hover Boots only, then Longshot only. Can each reach safe ground and continue?
 - Target: `remake/adult_haunted_wasteland.toml` — haunted_wasteland.toml quicksand exit.
 - Answer changes: Keep or remove each alternative; guide using both does not prove both required.
@@ -928,7 +928,7 @@ No in-game result is claimed by this track.
 
 ### HW02 — Haunted Wasteland
 
-- Age/progress: adult; Membership, Lens; Hover/Longshot separately for sand; wallet money for seller. Session 9.
+- Age/progress: adult; Membership, Lens; Hover/Longshot separately for sand; wallet money for seller. Session 12.
 - Do/watch: At ruin token, try ordinary Hookshot before Longshot; identify the surviving Colossus-side crate, break it and inspect four ruin pots.
 - Target: `remake/adult_haunted_wasteland.toml` — haunted_wasteland.toml Wasteland GS; Wasteland Crate Near Colossus; pots.
 - Answer changes: Records range, real crate identity and renewable resources.
@@ -936,7 +936,7 @@ No in-game result is claimed by this track.
 
 ### HW03 — Haunted Wasteland
 
-- Age/progress: adult; Membership, Lens; Hover/Longshot separately for sand; wallet money for seller. Session 9.
+- Age/progress: adult; Membership, Lens; Hover/Longshot separately for sand; wallet money for seller. Session 12.
 - Do/watch: At desert salesman, record offered Bombchu count, price, wallet capacity needed and whether he sells again after leaving.
 - Target: `remake/adult_haunted_wasteland.toml` — haunted_wasteland.toml Wasteland Bombchu Salesman.
 - Answer changes: Sets price/wallet and one-time/repeat facts.
@@ -944,7 +944,7 @@ No in-game result is claimed by this track.
 
 ### HW04 — Haunted Wasteland
 
-- Age/progress: adult; Membership, Lens; Hover/Longshot separately for sand; wallet money for seller. Session 9.
+- Age/progress: adult; Membership, Lens; Hover/Longshot separately for sand; wallet money for seller. Session 12.
 - Do/watch: At ruin, light all three torches, open the chest and record actual item.
 - Target: `remake/adult_haunted_wasteland.toml` — haunted_wasteland.toml Wasteland Chest.
 - Answer changes: Confirms Business Scrub Seed reward; world-item representation is reviewer-owned, not a playtest decision.
@@ -952,7 +952,7 @@ No in-game result is claimed by this track.
 
 ### CO01 — Desert Colossus
 
-- Age/progress: adult; child comparison after return; Night; Hookshot/Longshot; bean absent for bypass test. Session 9.
+- Age/progress: adult; child comparison after return; Night; Hookshot/Longshot; bean absent for bypass test. Session 12.
 - Do/watch: At north-west cliff token, try ordinary Hookshot from every safe reachable standing point, then Longshot. Later as child compare Boomerang.
 - Target: `remake/adult_desert_colossus.toml` — locations Colossus GS Tree.
 - Answer changes: Adds short-Hookshot branch only for actual collection; keep night until day control observed.
@@ -960,7 +960,7 @@ No in-game result is claimed by this track.
 
 ### CO02 — Desert Colossus
 
-- Age/progress: adult; child comparison after return; Night; Hookshot/Longshot; bean absent for bypass test. Session 9.
+- Age/progress: adult; child comparison after return; Night; Hookshot/Longshot; bean absent for bypass test. Session 12.
 - Do/watch: Without planted bean, try Hover and Longshot separately to the bean-platform heart and token.
 - Target: `remake/adult_desert_colossus.toml` — desert_colossus.toml Colossus Freestanding PoH; Colossus GS Hill.
 - Answer changes: Add only proven no-bean route.
@@ -968,7 +968,7 @@ No in-game result is claimed by this track.
 
 ### CO03 — Desert Colossus
 
-- Age/progress: adult; child comparison after return; Night; Hookshot/Longshot; bean absent for bypass test. Session 9.
+- Age/progress: adult; child comparison after return; Night; Hookshot/Longshot; bean absent for bypass test. Session 12.
 - Do/watch: Lift grotto rock, inspect the purple chest and whole room; any scrubs? Record position and route.
 - Target: `remake/adult_desert_colossus.toml` — locations Colossus Deku Scrub Grotto Front; Rear n64_only; fact chest 1186167733408299582.
 - Answer changes: Confirms exclusions and new chest identity, not a renamed scrub.
@@ -976,7 +976,7 @@ No in-game result is claimed by this track.
 
 ### SP01 — Spirit Temple
 
-- Age/progress: child then adult; Child keys first; adult Silver Gauntlets, Mirror Shield; short Hookshot comparison. Session 10.
+- Age/progress: child then adult; Child keys first; adult Silver Gauntlets, Mirror Shield; short Hookshot comparison. Session 13.
 - Do/watch: After Lullaby spawns the hand key, try direct hand target/jump without summoning Pierre. Can you collect and leave?
 - Target: `remake/adult_spirit_temple.toml` — locations Spirit Temple Statue Room Hand Chest.
 - Answer changes: Success removes distant-scarecrow requirement in favour of real direct route.
@@ -984,7 +984,7 @@ No in-game result is claimed by this track.
 
 ### SP02 — Spirit Temple
 
-- Age/progress: child then adult; Child keys first; adult Silver Gauntlets, Mirror Shield; short Hookshot comparison. Session 10.
+- Age/progress: child then adult; Child keys first; adult Silver Gauntlets, Mirror Shield; short Hookshot comparison. Session 13.
 - Do/watch: Fight first invisible Floormaster with Lens off; can you finish and receive chest normally?
 - Target: `remake/adult_spirit_temple.toml` — fact / rule review: spirit_temple.toml invisible Floormaster/chest access.
 - Answer changes: Adds/removes visibility-combat gate only for observed route; seeing enemy is not mandatory combat by itself.
@@ -992,7 +992,7 @@ No in-game result is claimed by this track.
 
 ### SP03 — Spirit Temple
 
-- Age/progress: child then adult; Child keys first; adult Silver Gauntlets, Mirror Shield; short Hookshot comparison. Session 10.
+- Age/progress: child then adult; Child keys first; adult Silver Gauntlets, Mirror Shield; short Hookshot comparison. Session 13.
 - Do/watch: Try ordinary Hookshot at moving wall, Boss Key platform and final statue face separately, then use Longshot as positive control.
 - Target: `remake/adult_spirit_temple.toml` — spirit_temple.toml Adult Climb/upper exits; Spirit Temple Boss Key Chest.
 - Answer changes: Require Longshot only at proven out-of-range mandatory crossing.
@@ -1000,7 +1000,7 @@ No in-game result is claimed by this track.
 
 ### SP04 — Spirit Temple
 
-- Age/progress: child then adult; Child keys first; adult Silver Gauntlets, Mirror Shield; short Hookshot comparison. Session 10.
+- Age/progress: child then adult; Child keys first; adult Silver Gauntlets, Mirror Shield; short Hookshot comparison. Session 13.
 - Do/watch: At Beamos/Anubis sequence, try Hammer without explosives; note each enemy/barrier it can clear and how Anubis is finished.
 - Target: `remake/adult_spirit_temple.toml` — spirit_temple.toml adult combat/explosives exits.
 - Answer changes: Add Hammer only to the actual successful encounter.
@@ -1008,7 +1008,7 @@ No in-game result is claimed by this track.
 
 ### SP05 — Spirit Temple
 
-- Age/progress: child then adult; Child keys first; adult Silver Gauntlets, Mirror Shield; short Hookshot comparison. Session 10.
+- Age/progress: child then adult; Child keys first; adult Silver Gauntlets, Mirror Shield; short Hookshot comparison. Session 13.
 - Do/watch: As adult, try equipping/using Slingshot in the item menu and hitting an ordinary eye. Is it usable or only ambiguous guide wording?
 - Target: `remake/adult_spirit_temple.toml` — helpers.toml can_use(Slingshot); age/tool fact.
 - Answer changes: Reviewer owns any broad age-usage change; do not loosen from guide wording.
@@ -1016,7 +1016,7 @@ No in-game result is claimed by this track.
 
 ### SP06 — Spirit Temple
 
-- Age/progress: child then adult; Child keys first; adult Silver Gauntlets, Mirror Shield; short Hookshot comparison. Session 10.
+- Age/progress: child then adult; Child keys first; adult Silver Gauntlets, Mirror Shield; short Hookshot comparison. Session 13.
 - Do/watch: In sun-block room, move cube into window light without lighting torches; does key chest appear before collecting silver rupees? Record child/adult side and keys spent to enter.
 - Target: `remake/adult_spirit_temple.toml` — locations Spirit Temple Sun Block Room Chest; cross-age key abstraction.
 - Answer changes: Confirms revised spawn condition and supplies chronology missing from worst-order key count.
@@ -1024,7 +1024,7 @@ No in-game result is claimed by this track.
 
 ### SH01 — Shadow Temple
 
-- Age/progress: adult; No strength upgrades for SH06; Lens off comparisons only on disposable copy. Session 11.
+- Age/progress: adult; No strength upgrades for SH06; Lens off comparisons only on disposable copy. Session 14.
 - Do/watch: At high scythe-room silver rupee, try ordinary Hookshot target, then Longshot. Can short Hookshot collect it?
 - Target: `remake/adult_shadow_temple.toml` — locations Shadow Temple Scythe Shortcut Silver Rupee Ledge.
 - Answer changes: Short range success keeps existing gate; longer-only adds Longshot.
@@ -1032,7 +1032,7 @@ No in-game result is claimed by this track.
 
 ### SH02 — Shadow Temple
 
-- Age/progress: adult; No strength upgrades for SH06; Lens off comparisons only on disposable copy. Session 11.
+- Age/progress: adult; No strength upgrades for SH06; Lens off comparisons only on disposable copy. Session 14.
 - Do/watch: At fan corridor try timed walking and Hookshot without Iron Boots; then Boots as control. Can you safely cross both directions?
 - Target: `remake/adult_shadow_temple.toml` — shadow_temple.toml Wind Tunnel exits.
 - Answer changes: Add Boots only if mandatory; record timing and damage.
@@ -1040,7 +1040,7 @@ No in-game result is claimed by this track.
 
 ### SH03 — Shadow Temple
 
-- Age/progress: adult; No strength upgrades for SH06; Lens off comparisons only on disposable copy. Session 11.
+- Age/progress: adult; No strength upgrades for SH06; Lens off comparisons only on disposable copy. Session 14.
 - Do/watch: At invisible Floormaster, keep Lens off and finish fight. Does key chest appear and remain reachable?
 - Target: `remake/adult_shadow_temple.toml` — locations Shadow Temple Invisible Floormaster Chest.
 - Answer changes: Distinguishes visibility help from mandatory combat gate; web gate remains separate.
@@ -1048,7 +1048,7 @@ No in-game result is claimed by this track.
 
 ### SH04 — Shadow Temple
 
-- Age/progress: adult; No strength upgrades for SH06; Lens off comparisons only on disposable copy. Session 11.
+- Age/progress: adult; No strength upgrades for SH06; Lens off comparisons only on disposable copy. Session 14.
 - Do/watch: Beyond boat, try Pierre/Hover/Longshot routes without Bomb Bag to bypass cracked-pillar bridge.
 - Target: `remake/adult_shadow_temple.toml` — exits Shadow Temple Beyond Boat -> Before Boss; Beyond Boat SoT Block -> Before Boss.
 - Answer changes: Add only full successful bridge bypass; no Time Block is assumed to exist.
@@ -1056,7 +1056,7 @@ No in-game result is claimed by this track.
 
 ### SH05 — Shadow Temple
 
-- Age/progress: adult; No strength upgrades for SH06; Lens off comparisons only on disposable copy. Session 11.
+- Age/progress: adult; No strength upgrades for SH06; Lens off comparisons only on disposable copy. Session 14.
 - Do/watch: In fifth-lock spike-wall room, use Fire Arrows without Din Fire. Do both walls burn so Boss Key and left chest can be opened?
 - Target: `remake/adult_shadow_temple.toml` — locations Shadow Temple Boss Key Chest; Spike Walls Left Chest.
 - Answer changes: Adds fire-arrow branch while retaining fifth-key gate.
@@ -1064,7 +1064,7 @@ No in-game result is claimed by this track.
 
 ### SH06 — Shadow Temple
 
-- Age/progress: adult; No strength upgrades for SH06; Lens off comparisons only on disposable copy. Session 11.
+- Age/progress: adult; No strength upgrades for SH06; Lens off comparisons only on disposable copy. Session 14.
 - Do/watch: With no bracelet/gauntlets, push falling-spikes cube and boat cube separately. Can each move far enough? Ride ceiling to token with no Hookshot and note damage.
 - Target: `remake/adult_shadow_temple.toml` — shadow_temple.toml strength exits; remake/adult_shadow_temple.toml Shadow Temple GS Falling Spikes Room.
 - Answer changes: Remove strength only for tested cube; no-damage ride distinguishes normal route from damage/trick.
@@ -1072,7 +1072,7 @@ No in-game result is claimed by this track.
 
 ### SH07 — Shadow Temple
 
-- Age/progress: adult; No strength upgrades for SH06; Lens off comparisons only on disposable copy. Session 11.
+- Age/progress: adult; No strength upgrades for SH06; Lens off comparisons only on disposable copy. Session 14.
 - Do/watch: Beyond boat, Bomb each rotating skull; does the token emerge only after an explosion? Is any alternate nonbomb hit effective?
 - Target: `remake/adult_shadow_temple.toml` — locations Shadow Temple GS Triple Giant Pot.
 - Answer changes: Confirms r3 skull question and bombs-only drop; do not loosen from skull destruction without token.
@@ -1080,7 +1080,7 @@ No in-game result is claimed by this track.
 
 ### SH08 — Shadow Temple
 
-- Age/progress: adult; No strength upgrades for SH06; Lens off comparisons only on disposable copy. Session 11.
+- Age/progress: adult; No strength upgrades for SH06; Lens off comparisons only on disposable copy. Session 14.
 - Do/watch: Check old loose-heart sites, especially the absent Time Block/scarecrow dead end; record each present/missing location and whether spawned from a pot.
 - Target: `remake/adult_shadow_temple.toml` — fact / rule review: shadow_temple.toml freestanding-heart locations.
 - Answer changes: Seven inherited heart sources need individual existence records before exclusion.
@@ -1088,7 +1088,7 @@ No in-game result is claimed by this track.
 
 ### SH09 — Shadow Temple
 
-- Age/progress: adult; No strength upgrades for SH06; Lens off comparisons only on disposable copy. Session 11.
+- Age/progress: adult; No strength upgrades for SH06; Lens off comparisons only on disposable copy. Session 14.
 - Do/watch: Log five keys and their spent doors; confirm fifth opens spike-wall room, while boss approach has no small-key lock. At post-boat pillar use carried Bombs as normal route control.
 - Target: `remake/adult_shadow_temple.toml` — Shadow Temple lock graph; Beyond Boat -> Before Boss.
 - Answer changes: Confirms graph and Bomb-Bag bridge requirement independently of alternate bypasses.
@@ -1096,7 +1096,7 @@ No in-game result is claimed by this track.
 
 ### EN01 — Endgame triggers
 
-- Age/progress: adult; Preserve pre-trigger copy before each sage reward. Session 12.
+- Age/progress: adult; Preserve pre-trigger copy before each sage reward. Session 15.
 - Do/watch: Before Fire/Water/Forest are all complete, visit Kakariko after each sage if possible. When does Nocturne scene trigger? Record exact medallions and completed temples.
 - Target: `remake/adult_temple_of_time.toml` — kakariko.toml Sheik in Kakariko.
 - Answer changes: Determines exact trigger; later all-sage success cannot prove earlier sufficiency.
@@ -1104,7 +1104,7 @@ No in-game result is claimed by this track.
 
 ### EN02 — Endgame triggers
 
-- Age/progress: adult; Preserve pre-trigger copy before each sage reward. Session 12.
+- Age/progress: adult; Preserve pre-trigger copy before each sage reward. Session 15.
 - Do/watch: If a reviewed seed naturally gives Shadow/Spirit before other sages, visit Temple before completing the others. Does Light Arrows scene trigger? Record all boss-clear flags/items.
 - Target: `remake/adult_temple_of_time.toml` — locations ToT Light Arrows Cutscene.
 - Answer changes: Relaxes five-medallion gate only with reduced-sage positive evidence; otherwise remains untested, not failed.
@@ -1112,7 +1112,7 @@ No in-game result is claimed by this track.
 
 ### GA01 — Ganon Castle / Tower
 
-- Age/progress: adult; All six trials accessible; Light Arrows; Gauntlets; before relevant puzzle solved. Session 12.
+- Age/progress: adult; All six trials accessible; Light Arrows; Gauntlets; before relevant puzzle solved. Session 15.
 - Do/watch: In Forest wind trial, label five diamonds by physical position and collection order. Try normal jumps/short Hookshot before Hover/Time; record which tool each actually needs.
 - Target: `remake/adult_ganons_castle.toml` — fact / rule review: locations Ganons Castle Forest Trial silver rupees; exit Forest Trial Wind Room -> Ending.
 - Answer changes: Split combined end gate into correctly identified per-diamond requirements after mapping.
@@ -1120,7 +1120,7 @@ No in-game result is claimed by this track.
 
 ### GA02 — Ganon Castle / Tower
 
-- Age/progress: adult; All six trials accessible; Light Arrows; Gauntlets; before relevant puzzle solved. Session 12.
+- Age/progress: adult; All six trials accessible; Light Arrows; Gauntlets; before relevant puzzle solved. Session 15.
 - Do/watch: At Spirit ceiling web, shoot ordinary arrow through lit candle. On a separate unsolved copy try Din Fire from below. Does web fully burn and sun switch become usable?
 - Target: `remake/adult_ganons_castle.toml` — exits Ganons Castle Spirit Trial Second Room Back -> Ending.
 - Answer changes: Adds precise fire-transfer options, not every fire source by assumption.
@@ -1128,7 +1128,7 @@ No in-game result is claimed by this track.
 
 ### GA03 — Ganon Castle / Tower
 
-- Age/progress: adult; All six trials accessible; Light Arrows; Gauntlets; before relevant puzzle solved. Session 12.
+- Age/progress: adult; All six trials accessible; Light Arrows; Gauntlets; before relevant puzzle solved. Session 15.
 - Do/watch: At Shadow final stone and invisible chest-switch route, try Hover/Longshot without lifting stone; compare Lens off/on for chest path.
 - Target: `remake/adult_ganons_castle.toml` — exits Ganons Castle Shadow Trial Second Gap -> Ending; remake.toml Golden Gauntlets Chest.
 - Answer changes: Successful full bypass can relax strength/Lens only for that path.
@@ -1136,7 +1136,7 @@ No in-game result is claimed by this track.
 
 ### GA04 — Ganon Castle / Tower
 
-- Age/progress: adult; All six trials accessible; Light Arrows; Gauntlets; before relevant puzzle solved. Session 12.
+- Age/progress: adult; All six trials accessible; Light Arrows; Gauntlets; before relevant puzzle solved. Session 15.
 - Do/watch: On ordinary full equipment run, record required attacks/equipment through Ganondorf, collapse, Ganon phase before sword retrieval and final blow.
 - Target: `remake/adult_ganons_castle.toml` — ganons_castle.toml goal Triforce / final combat rules.
 - Answer changes: Check solver Light-Arrow-only abstraction against real mandatory combat; do not attempt a deliberately unwinnable main-save loadout.
@@ -1144,7 +1144,7 @@ No in-game result is claimed by this track.
 
 ### GA05 — Ganon Castle / Tower
 
-- Age/progress: adult; All six trials accessible; Light Arrows; Gauntlets; before relevant puzzle solved. Session 12.
+- Age/progress: adult; All six trials accessible; Light Arrows; Gauntlets; before relevant puzzle solved. Session 15.
 - Do/watch: Outside castle, before sage bridge appears if reachable, try reaching fairy path with Golden Gauntlets. What barrier still blocks it?
 - Target: `remake/adult_ganons_castle.toml` — outside_ganons_castle.toml OGC Great Fairy Fountain exit.
 - Answer changes: Add bridge/story barrier if gauntlets alone are insufficient; late successful visit does not settle pre-bridge access.
@@ -1152,7 +1152,7 @@ No in-game result is claimed by this track.
 
 ### GA06 — Ganon Castle / Tower
 
-- Age/progress: adult; All six trials accessible; Light Arrows; Gauntlets; before relevant puzzle solved. Session 12.
+- Age/progress: adult; All six trials accessible; Light Arrows; Gauntlets; before relevant puzzle solved. Session 15.
 - Do/watch: Inspect hidden fairy room: any Business Scrub? In Light trial, open Lullaby chest before spending the single key and record reward; inspect Spirit room for any second invisible chest.
 - Target: `remake/adult_ganons_castle.toml` — Ganons Castle scrub exclusions; Light Trial Lullaby Chest; Spirit Trial Invisible Chest.
 - Answer changes: Confirms old r2/r3 questions and one-key/absent-chest facts.
@@ -1160,7 +1160,7 @@ No in-game result is claimed by this track.
 
 ### MOD01 — Isolated mod checks
 
-- Age/progress: child; adult only for upgrade order; Fresh throwaway user copy per variant; never main save. Session 13.
+- Age/progress: child; adult only for upgrade order; Fresh throwaway user copy per variant; never main save. Session 16.
 - Do/watch: In existing tower red-rupee variant, collect 20, trigger a save, leave and re-enter, then reload that same test user. Is rupee still gone?
 - Target: `fact` — fact: heart-piece Hash 9814903750835309225 persistence.
 - Answer changes: Confirms whether swapped pickup sets original permanent flag; missing Bool64 alone is not proof a chest reset.
@@ -1168,7 +1168,7 @@ No in-game result is claimed by this track.
 
 ### MOD02 — Isolated mod checks
 
-- Age/progress: child; adult only for upgrade order; Fresh throwaway user copy per variant; never main save. Session 13.
+- Age/progress: child; adult only for upgrade order; Fresh throwaway user copy per variant; never main save. Session 16.
 - Do/watch: In existing tower chest-Boomerang variant, open chest replacing heart piece, use Boomerang, save/reload and revisit. Does chest stay open and item stay owned?
 - Target: `fact` — fact: chest fallback at Hash 9814903750835309225.
 - Answer changes: Determines freestanding-major fallback; do not rerun Fire Arrows crash variant.
@@ -1176,7 +1176,7 @@ No in-game result is claimed by this track.
 
 ### MOD03 — Isolated mod checks
 
-- Age/progress: child; adult only for upgrade order; Fresh throwaway user copy per variant; never main save. Session 13.
+- Age/progress: child; adult only for upgrade order; Fresh throwaway user copy per variant; never main save. Session 16.
 - Do/watch: On separate adult test users, collect Longshot before Hookshot and inspect usable range after each. Also collect a higher bag/gauntlet tier before lower only if a reviewed variant exists.
 - Target: `fact` — fact: D16 fixed-item downgrade/order.
 - Answer changes: A downgrade requires generator/runtime policy review, not invented progressive behavior.
@@ -1184,7 +1184,7 @@ No in-game result is claimed by this track.
 
 ### MOD04 — Isolated mod checks
 
-- Age/progress: child; adult only for upgrade order; Fresh throwaway user copy per variant; never main save. Session 13.
+- Age/progress: child; adult only for upgrade order; Fresh throwaway user copy per variant; never main save. Session 16.
 - Do/watch: With a reviewed Treasure Chest Game reward swap, win the final room. Record visible preview, granted item/model/text and later repeat reward.
 - Target: `fact` — fact: D17 reward DropViewActor compatibility.
 - Answer changes: Reward may join shuffle only after preview/grant/persistence pass; eleven ordinary boxes stay vanilla.
@@ -1192,7 +1192,7 @@ No in-game result is claimed by this track.
 
 ### MOD05 — Isolated mod checks
 
-- Age/progress: child; adult only for upgrade order; Fresh throwaway user copy per variant; never main save. Session 13.
+- Age/progress: child; adult only for upgrade order; Fresh throwaway user copy per variant; never main save. Session 16.
 - Do/watch: On a corrected mini-seed with sword moved to Mido chest, get sword and shield, equip them and approach Mido. Does he admit Link without vanilla sword cutscene?
 - Target: `fact` — fact: Get_StoneOfForest_GetSword removal and Mido inventory gate.
 - Answer changes: Confirms ownership is sufficient; moved sword without gate success is not end-to-end proof.
@@ -1200,7 +1200,7 @@ No in-game result is claimed by this track.
 
 ### MOD06 — Isolated mod checks
 
-- Age/progress: child; adult only for upgrade order; Fresh throwaway user copy per variant; never main save. Session 13.
+- Age/progress: child; adult only for upgrade order; Fresh throwaway user copy per variant; never main save. Session 16.
 - Do/watch: On existing intro-removed test, start empty test user. Does forest load without movie and Navi wake correctly? On all-skip copy, finish Deku Tree and walk Field-to-Market-to-Zelda chain: any owl or blocked quest step?
 - Target: `fact` — fact: fast-start intro removal; Step_Goto_HyruleCastle monotonicity.
 - Answer changes: Checks only still-unplayed paths; intro-skippable and initial all-skip already passed.
@@ -1208,7 +1208,7 @@ No in-game result is claimed by this track.
 
 ### MOD07 — Isolated mod checks
 
-- Age/progress: child; adult only for upgrade order; Fresh throwaway user copy per variant; never main save. Session 13.
+- Age/progress: child; adult only for upgrade order; Fresh throwaway user copy per variant; never main save. Session 16.
 - Do/watch: Use Track B reviewed Kokiri shop-slot variant; buy substitute, inspect display/name/price/granted item, tutorial and stock after reload. Use separate chest-shield variant for inventory/Mido check.
 - Target: `fact` — fact: Track B D19 shop tutorial / shield chest.
 - Answer changes: Shop shuffle remains opt-in until in-game display/grant/stock pass; do not build a competing shop patch.
@@ -1216,7 +1216,7 @@ No in-game result is claimed by this track.
 
 ### MOD08 — Isolated mod checks
 
-- Age/progress: child; adult only for upgrade order; Fresh throwaway user copy per variant; never main save. Session 13.
+- Age/progress: child; adult only for upgrade order; Fresh throwaway user copy per variant; never main save. Session 16.
 - Do/watch: Use Track D reviewed Talon/NPC/fairy/song variants separately. Check overlay log, actual grant/model/text and repeat refusal after reload; for song also inspect whether vanilla melody is still learned.
 - Target: `fact` — fact: Track D gift flags and duplicate song grant.
 - Answer changes: Gift families join only after reviewed wrapper-specific check; use producer save/launcher, not a main-save overlay.
@@ -1248,7 +1248,7 @@ No in-game result is claimed by this track.
 
 ### PAIR01 — Paired upgrades
 
-- Age/progress: child then adult; Both ages available; unbought upgrade pair on isolated copy. Session 9.
+- Age/progress: child then adult; Both ages available; unbought upgrade pair on isolated copy. Session 10.
 - Do/watch: Buy Kokiri/Lost Woods stick/nut upgrade as child, then visit same scrub as adult; reverse on a separate copy if possible. Does second age offer another one-time tier?
 - Target: `fact` — fact: separate scrub age Hashes.
 - Answer changes: Evidence for one-vs-two-check owner choice; record tier before/after and repeat price.
@@ -1328,7 +1328,7 @@ No in-game result is claimed by this track.
 
 ### RES08 — Ice/Water/Zora/Lake
 
-- Age/progress: age of this session; Observe on planned route only. Session 8.
+- Age/progress: age of this session; Observe on planned route only. Session 9.
 - Do/watch: On this route, note any old pot/crate/heart/wonderitem source that is absent or has a different drop. Record room/landmark, age, tool, item and whether it respawns; skip already-collected sources.
 - Target: `fact` — fact: Ice/Water/Zora/Lake resource-source audit.
 - Answer changes: Resolve the named inherited resource check only after stable identity; guide silence and a single empty random drop do not prove absence.
@@ -1336,7 +1336,7 @@ No in-game result is claimed by this track.
 
 ### RES09 — Gerudo/Training Ground/desert
 
-- Age/progress: age of this session; Observe on planned route only. Session 9.
+- Age/progress: age of this session; Observe on planned route only. Session 10.
 - Do/watch: On this route, note any old pot/crate/heart/wonderitem source that is absent or has a different drop. Record room/landmark, age, tool, item and whether it respawns; skip already-collected sources.
 - Target: `fact` — fact: Gerudo/Training Ground/desert resource-source audit.
 - Answer changes: Resolve the named inherited resource check only after stable identity; guide silence and a single empty random drop do not prove absence.
@@ -1344,7 +1344,7 @@ No in-game result is claimed by this track.
 
 ### RES10 — Spirit Temple
 
-- Age/progress: age of this session; Observe on planned route only. Session 10.
+- Age/progress: age of this session; Observe on planned route only. Session 13.
 - Do/watch: On this route, note any old pot/crate/heart/wonderitem source that is absent or has a different drop. Record room/landmark, age, tool, item and whether it respawns; skip already-collected sources.
 - Target: `fact` — fact: Spirit Temple resource-source audit.
 - Answer changes: Resolve the named inherited resource check only after stable identity; guide silence and a single empty random drop do not prove absence.
@@ -1352,7 +1352,7 @@ No in-game result is claimed by this track.
 
 ### RES11 — Shadow Temple
 
-- Age/progress: age of this session; Observe on planned route only. Session 11.
+- Age/progress: age of this session; Observe on planned route only. Session 14.
 - Do/watch: On this route, note any old pot/crate/heart/wonderitem source that is absent or has a different drop. Record room/landmark, age, tool, item and whether it respawns; skip already-collected sources.
 - Target: `fact` — fact: Shadow Temple resource-source audit.
 - Answer changes: Resolve the named inherited resource check only after stable identity; guide silence and a single empty random drop do not prove absence.
@@ -1360,7 +1360,7 @@ No in-game result is claimed by this track.
 
 ### RES12 — Castle/Tower
 
-- Age/progress: age of this session; Observe on planned route only. Session 12.
+- Age/progress: age of this session; Observe on planned route only. Session 15.
 - Do/watch: On this route, note any old pot/crate/heart/wonderitem source that is absent or has a different drop. Record room/landmark, age, tool, item and whether it respawns; skip already-collected sources.
 - Target: `fact` — fact: Castle/Tower resource-source audit.
 - Answer changes: Resolve the named inherited resource check only after stable identity; guide silence and a single empty random drop do not prove absence.
