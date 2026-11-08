@@ -8,7 +8,9 @@ repo).
 | Item | Where | Commit |
 |---|---|---|
 | 1 readers of each gift's item, flags to use, classes | `plans/03-game-data.md` section 19, this file | e47caf5 |
-| 2 `patch/gifts.py`: item swap, flag rewrites, skips | `src/clawshot/patch/gifts.py`, `src/clawshot/patch/gift_rules.toml`, `tests/test_gifts.py`, `tests/test_gifts_dump.py`; section 19 revised (reviewer, 08:40) | this file's second commit |
+| 2 `patch/gifts.py`: item swap, flag rewrites, skips | `src/clawshot/patch/gifts.py`, `src/clawshot/patch/gift_rules.toml`, `tests/test_gifts.py`, `tests/test_gifts_dump.py`; section 19 revised (reviewer, 08:40) | acde59a |
+| (needed by 2) a size formula for `GameDataList` | `src/clawshot/formats/rstb.py`, `tests/test_rstb_dump.py` (no owner this round; posted) | 0cf3725 |
+| 3 in-game test folders | `E:/OOTRemake/work/r5-gifts/ingame/`, this file | this file's third commit |
 
 ## Item 1: what reads each gift's item, and the classes
 
@@ -79,6 +81,49 @@ Checks:
 | `uv run pytest tests/test_gifts.py` | 13 passed: swap touches only the steps; a new flag is set after each step and replaces the read, and the file round-trips; an existing flag is read and nothing is set; skip re-points cases, `next` and entry points; refusals (stale item, a read of another flag, not a query, a step without `next`, skipped twice, unknown event); rules and plan refusals; `GameDataList` flags appended, the four layout values grown, the formula refused when it does not hold, a taken hash refused, big endian kept; every linked gift check in `locations.toml` has a rule |
 | `OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump tests/test_gifts_dump.py -s` | 3 passed: all 64 class 1-2 checks given `Item_Boomerang` at once: 54 flows changed, each reads back and differs from the game's only in its steps, given reads and skip predecessors (new events appended, actors only gain action names, entry points equal); every step gives the new item, every given read reads the flag, nothing leads to a skipped step; `GameDataList` differs only in the six added Bools and the four layout values (1,462,888 -> 1,463,136 bytes, within its size entry 1,463,176). Flows that grow (the fairies, `TriForcePoint` 27,768 -> 27,888 bytes, `Npc_Hylia_009_Adult`) can outgrow their size entry; `clawshot.patch.write` raises the entry, as for placement files |
 
+## Item 3: in-game tests (`E:/OOTRemake/work/r5-gifts/ingame/`)
+
+Built by `E:/OOTRemake/work/r5-gifts/make_tests.py` through `clawshot.patch.gifts` and the seed writer
+(`clawshot.patch.write` with an empty chest plan), so the files are what a seed would write. Each folder holds only the
+changed files under `romfs/`; each `Test - <name>.bat` was written from r2-test's fixed launcher: it starts
+`E:\Games\Hookshot\hookshot.exe` only, with `HOS_FS_OVERLAY` at the folder's `romfs`, on a copy of
+`E:/OOTRemake/work/save-backups/2026-11-07_llr-tower-before-pickup` in `ingame/user-<name>` (child Link at Lon Lon
+Ranch: Fairy Ocarina, Saria's Song, Zelda's Lullaby, Sun's Song, Slingshot, Goron Bracelet, a bottle, 68 rupees, no
+bomb bag, no Epona's Song, the cucco game and both Skull Kid prizes not done, no Great Fairy met: read with
+`clawshot.save`). Not run by me. After a test, `uv run python E:/OOTRemake/work/r5-gifts/ingame/check_save.py <name>`
+prints its flags from the test user's newest save.
+
+| Test | Changed | Files |
+|---|---|---|
+| `talon-boomerang` (round 4's, rebuilt) | LLR Talons Chickens -> `Item_Boomerang` | `Minigame_FindOutCucco` |
+| `skullkid-bombbag` (child NPC gift) | LW Skull Kid -> `Item_BombBag_Small` | `Npc_SkullKid_Child` |
+| `din-fairy-hookshot` (Great Fairy, new flag, old save) | LW Skull Kid -> Bomb Bag (to reach the fountain); DMT Great Fairy Reward -> `Item_Hookshot` | `Npc_SkullKid_Child`, `Dm_FairyFountain_Din` (297,920 -> 298,256 bytes), `TriForcePoint`, `GameDataList` (+1 Bool, 1,462,888 -> 1,462,932 bytes), the size table (three entries raised) |
+| `malon-song-heartpiece` (song) | Song from Malon -> `Obj_Heart_Piece` | `Dm_MelodyGet_Epona`, `Dm_SY_Ocarina` |
+
+**What Kareem should do and see** (each from its own launcher; in every test the log shows
+`fs: OpenFile(...<file>): from the overlay` for each changed file when the game first opens it):
+
+1. `talon-boomerang`: in the ranch house, play Talon's cucco game and win: **the Boomerang** (its model and get text)
+   instead of the milk bottle; it is in the item menu and usable. Talking to him again gives nothing more. Talon's lines
+   still talk about milk.
+2. `skullkid-bombbag`: in the Lost Woods, play Saria's Song to the Skull Kid on the stump: **the Bomb Bag** (model,
+   text, bombs usable) instead of the heart piece. Playing to him again gives nothing more.
+3. `din-fairy-hookshot`, the new-flag test, in this order:
+   - **The save loads** (it was made before the patch and has no entry for the new flag): Continue works, Link is where
+     he was.
+   - Get the Bomb Bag from the Skull Kid as in 2.
+   - On the Death Mountain summit, bomb the cracked wall, stand on the Triforce mark and play Zelda's Lullaby; the Great
+     Fairy asks 25 rupees; say yes: **the Hookshot** (model and get text) instead of Din's Fire. With no magic yet the
+     game may still show the magic gauge being born (the wrapper `GetInEvent_GreatFairyDin` does that when
+     `PlayerStatus.MPMax` is 0): **say whether a magic gauge appears, and whether it stays.**
+   - Leave the fountain, come back, play the lullaby again: **she only heals, asks no fee and gives no second
+     Hookshot.** (Unpatched, she would offer again, because she checks `IsGet.Item_DinFire`.)
+   - Let it autosave, quit to the title, Continue, go back and play again: **still only healing** (the new flag was saved).
+   - Optional: at the Hyrule Castle fountain the lullaby still does nothing (no Din's Fire): the item gate is kept.
+4. `malon-song-heartpiece`: at Lon Lon Ranch in the day, talk to Malon with the ocarina: the play-along runs as usual;
+   at the end **a Piece of Heart** instead of Epona's Song. **Epona's Song is not in the ocarina's song list**, and
+   talking to her again does not teach it again (or say if she does).
+
 ## Provisional choices (for review)
 
 1. **New `GameDataList` flags for "given", for the six Great Fairies only**, named `Clawshot.Gift.<flow>.<event>`
@@ -98,8 +143,12 @@ Checks:
 
 ## Questions for Kareem
 
-(none yet)
+1. **The four in-game tests above, above all `din-fairy-hookshot`**: does the old save load, does the fairy give the
+   Hookshot once and only heal afterwards, also after a reload, and does a magic gauge appear?
+2. **`malon-song-heartpiece`**: after the play-along, is Epona's Song absent from the song list (the play-along's own
+   add is skipped)?
 
 ## Cross-track posts (thread `cs-r5`)
 
-(none yet)
+- 08:22: item 1 (e47caf5), the classes, the Serenade inside the Ice Cavern chest's event, GameDataList heads-up.
+- 08:36: item 2 (acde59a), the `GameDataList` size formula commit (0cf3725) outside my files.
