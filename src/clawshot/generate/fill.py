@@ -217,7 +217,10 @@ def _fill_restrictive(
     native = world.settings.get("native_shop_items", ()) if "Shop" in settings.shuffle else ()
     # Reserve only the slots needed by remaining refills, not every shop slot.
     # Leave flexible native-display items until items that can only occupy chests.
-    items.sort(key=lambda name: (not world.items[name].priority, name not in native))
+    # Type-held progression (notably songs) must precede flexible items that could depend on it.
+    items.sort(
+        key=lambda name: (not world.items[name].priority, name not in native, name in settings.item_location_types)
+    )
     while items:
         item = items.pop()
         search = Search(world, [*assumed, *items])
