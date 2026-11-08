@@ -1,7 +1,8 @@
 """Forward return-kit fill must preserve compulsory child errands and bootstrap adult key doors."""
 
 from clawshot.generate import Settings, generate
-from clawshot.world import CHILD, Search
+from clawshot.generate.fill import allowed
+from clawshot.world import CHILD, Search, load_spec
 
 
 def return_spec():
@@ -81,3 +82,14 @@ def test_return_kit_stays_adult_and_keys_bootstrap_without_optional_child_loot()
     assert adult.holds("Forest Clear")
     assert adult.counts["Small Key (D)"] == 2
     assert {"First Key", "Second Key", "Adult Chest"} <= adult.collected
+
+
+def test_chest_and_shop_seed_is_beatable_with_gated_return_guarantee():
+    settings = Settings(shuffle=("Chest", "Shop"), logic={"age_return_guarantee": True, "free_time_travel": False})
+    result = generate(load_spec(), 0, settings)
+    search = Search(result.world)
+    search.collect_spheres(result.placements)
+    assert search.holds("Time Travel")
+    assert search.holds("Defeat Phantom Ganon")
+    assert search.won()
+    assert all(allowed(result.world, settings, name, result.placements[name]) for name in result.shuffled)
