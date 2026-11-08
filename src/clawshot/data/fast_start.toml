@@ -37,10 +37,20 @@ default = false
 skips = "Mido blocking the path to the Great Deku Tree until Link has the Kokiri Sword and a shield; he stands aside from the start. Either Deku or Hylian Shield works (Kareem, 2026-11-08)."
 state = "KokiriForest_Npc_Kokiri_Mido_Child_Blocker false (his BlockerParam blocks while it is true; Npc_Kokiri_Mido_Child sets it false when shown the sword and shield). His challenge steps Meet_DekuTree Step02/Step03 are skipped; the Deku Tree's talk still triggers (its area stays until Meet_DekuTree is past Step03) and sets Complete."
 source = "GameParameter/BlockerParam/Npc_Blocker_Mido in Pack/Actor/Npc_Kokiri_Mido_Child names the flag; flow Npc_Kokiri_Mido_Child Event26/Event29 clear it; GameDataList default true; r3-seed/user-seed-3 slot_05 has it false after the shield was shown."
-logic = "Seed fast_start mido sets skip_mido in the world: the child Showed Mido Sword & Shield event no longer needs equipment. open_forest and the separate forest-exit gate stay unchanged."
+logic = "In generator settings, legacy --skip mido aliases forest=open; that mode pairs this Mido flag with forest_exit. The standalone flag patch remains Mido-only."
 
 [setting.mido.game_data]
 "KokiriForest_Npc_Kokiri_Mido_Child_Blocker" = false
+
+[setting.forest_exit]
+default = false
+skips = "The child Kokiri blocking the bridge out of Kokiri Forest; Mido and the Deku Tree remain vanilla."
+state = "KokiriForest_Npc_Kokiri_007_Child_Blocker_00 false disables the bridge NPC's blocker AI and its sensor area. The transient KokiriForest_Npc_Kokiri_007_Child_Blocker already defaults false and is not changed. No Gohma/story quest is completed."
+source = "Build e0f3ccfa: Npc_Kokiri_007_Child.pack BlockerParam Npc_Blocker_Kokiri_007 GameDataToEnableAI names the _00 flag; KokiriForest_Child_Level_All_02_d26e nodes 5/0/6 delete Area_a467 when it is false, so nodes 1/4 cannot reassert the transient blocker. Npc_Kokiri_007_Child Event42 only clears _00; no flow sets it true. GameDataList default true, reset 8, save file 0."
+logic = "forest=closed_deku and open map to open_forest != closed, so can_leave_forest is true from the start; only open bypasses Mido."
+
+[setting.forest_exit.game_data]
+"KokiriForest_Npc_Kokiri_007_Child_Blocker_00" = false
 
 [setting.deku_tree]
 default = false
