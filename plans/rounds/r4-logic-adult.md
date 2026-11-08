@@ -364,3 +364,22 @@ Live search before: Ocarina/Song of Storms without Stone could enter neither gro
 Two regressions also keep both closed without the song. **Kareem: check direct roof jumps/Hover alternatives,
 the exact archery admission/time conditions and the carpenter-key sharing abstraction.** In-game: play
 Song of Storms at either visible grotto mark with no Echo Gem; it should open.
+
+### Shared integration findings
+
+Eurogamer's changes guide explicitly confirms that the adult Zora shop becomes accessible after Water Temple:
+https://www.eurogamer.net/all-new-changes-zelda-ocarina-of-time-switch-2. This resolves the earlier provisional
+published-route question above; the exact underlying BoolExp remains untraced. Updated the override's source,
+not its behavior.
+
+That guide also says time does not flow until meeting Zelda. cs4a has a `Time Flows` event and child night
+gates on its branch; adult `at_night` remains the compiler's inherited always-true abstraction on this base.
+Requested reviewer-level integration/global compiler semantics rather than adding a duplicate event in an
+unowned area or silently treating every adult night token as verified.
+
+cs4a reports the first Great Fairy must be DMT/HC and adds `Great Fairy Met` there. Source:
+https://games.gg/the-legend-of-zelda-ocarina-of-time-2026/guides/ocarina-of-time-remake-great-fairy-locations-rewards-and-costs.
+Fairy fees rise with visits and may exceed the default wallet. **Kareem/reviewer: what visit-order/fee
+guarantee must shuffled seeds enforce, and should night predicates be fixed globally?** These are shared
+engine/product decisions, not guessed by this track. The new events are not on the authorized base yet;
+adult fairy rewards still retain their old Lullaby prerequisites pending integration.
