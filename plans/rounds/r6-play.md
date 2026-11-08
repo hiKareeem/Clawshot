@@ -37,3 +37,18 @@ Checkpoint: `uv run pytest tests/test_world_remake.py tests/test_world_remake_pl
 Deku Shield, Boomerang and one stick reached 3F, basement, basement back room and Gohma as child;
 `Defeat Queen Gohma = True`, `Slingshot held = False`. Full gates reserved for the branch handoff,
 before any commit is posted as ready.
+
+## Item 2: shallow castle moat
+
+HF01 source: Kareem in game via Claude, 2026-11-08: the moat is shallow; no Silver Scale is needed.
+The current rules already agree: both `HF Ocarina of Time Item` and `Song from Ocarina of Time` are
+`is_child and has_all_stones`. No scale requirement was present to remove. Kept the rules intact and
+recorded the confirmation beside the child-field rules, rather than adding a duplicate override for the
+item already owned by `remake.toml` (`vanilla_fixed`). Read-only placement inventory identifies
+`Obj_Ocarina_Time_A_01` Hash 2802436684568022035 at (16,145,43), Child Static.
+
+`uv run pytest tests/test_world_remake_play.py -k moat -q`: **2 passed, 8 deselected**: both checks
+work with three stones and no scale, not two stones, and not as adult. First full-world smoke had not
+opened the forest exit: printed child frontier ended in Kokiri/Lost Woods. Supplying the actual
+`Defeat Queen Gohma` event opened the path and both moat checks became reachable with scale false.
+Ruff printed one required assertion-line join; applied that exact formatting correction.

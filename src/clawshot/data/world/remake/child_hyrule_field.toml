@@ -21,6 +21,12 @@
 # (-13,150,169), the ReDead grotto by Kakariko (163,156,27; Kak Redead Grotto, set by child_kakariko.toml), the cow
 # (-258,141,138), the Gold Skulltula in the southern wood (-156,144,338), the wetlands (40,145,342) and the east one
 # (180,157,190). The last two hold a Gossip Stone and no chest, fish, shrub or beehive.
+#
+# Confirmed unchanged: HF Ocarina of Time Item and Song from Ocarina of Time keep the translated
+# "is_child and has_all_stones" rule, without can_dive/Progressive_Scale. Source: Kareem in game via Claude,
+# 2026-11-08 (build e0f3ccfa): the castle moat is shallow and the Ocarina needs no Silver Scale (HF01).
+# Child_Static places Obj_Ocarina_Time_A_01 Hash 2802436684568022035 at (16,145,43).
+# The item's fixed tier is owned by remake.toml; no duplicate location override is needed here.
 
 # Grottos: every grotto entrance is visible in the remake and the Stone of Agony (now the Echo Gem) finds Gold
 # Skulltulas, not grottos (cross-area decision, Main, round 4). HyruleField's only two AgonyStoneReactArea actors

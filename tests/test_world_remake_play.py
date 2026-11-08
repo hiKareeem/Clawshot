@@ -51,3 +51,15 @@ def test_gohma_stun_still_needs_a_damaging_weapon(stun):
 def test_sword_alone_does_not_stun_gohma():
     world = starting_at("Queen Gohma Boss Room")
     assert not Search(world, ["Kokiri Sword"]).holds("Defeat Queen Gohma")
+
+
+@pytest.mark.parametrize("name", ["HF Ocarina of Time Item", "Song from Ocarina of Time"])
+def test_shallow_moat_needs_stones_but_no_scale(name):
+    world = starting_at("Hyrule Field")
+    search = Search(world, ["Kokiri Emerald", "Goron Ruby"])
+    assert not search.can_access(world.locations[name], CHILD)
+    search.collect("Zora Sapphire")
+    assert search.can_access(world.locations[name], CHILD)
+    assert not search.holds("Progressive Scale")
+    adult = starting_at("Hyrule Field", ADULT)
+    assert not Search(adult, ["Kokiri Emerald", "Goron Ruby", "Zora Sapphire"]).can_access(adult.locations[name], ADULT)
