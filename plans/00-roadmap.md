@@ -480,3 +480,20 @@ Owns `plans/playtest/` (new) and `plans/rounds/r5-playtest.md`; no code.
 4. `plans/playtest/answers.md`: one line per question for Claude to fill in after the session.
 
 ### After round 5
+
+**Round 5 result (2026-11-08):** all five tracks merged (`main` 6f7cbf0; 381 tests, 46 dump tests).
+- A, age travel: the remake keeps adult Link adult until the Forest sage (`SageOfForest_IsCompleted_Exp` gates the
+  pedestal); the search is chronological; `age_return_guarantee` on by default (D20, Kareem) and built into the fill;
+  `free_time_travel` (a pedestal patch, off) waits for its in-game test after Kareem's first pull.
+- B, shops: all 128 shelves traced; `--shuffle Shop` with native-display items only (D21); in game the slot swap
+  and a chest Deku Shield work, a stand-in display does not, slots restock; Mido takes any shield.
+- C, seeds: all 184 chests accounted for (164 shuffled, 20 excluded until their routes are known); four kept story
+  wrappers; fast start in seeds; seeds 3, 7, 22 (Chest) and shop-7 (Chest+Shop) in `E:/OOTRemake/work/r5-seed/`,
+  regenerated from `main` byte-identical.
+- D, gifts: 79 gift checks classed; `--shuffle Gift` for 45 swaps plus the Great Fairies (new saved Bools, D22,
+  worked on an old save) and the songs' play-along; songs and the Fairy Ocarina work from chests (D23).
+- E, playtest: 197 questions in 17 route sessions with prepared mods (`plans/playtest/`).
+
+For round 6 (to agree with Kareem): player-facing location descriptions for spoilers (Mido's chests are mirrored
+against the N64 names); a "songs anywhere" setting; gift items in chests as each is tested; the logic-session
+answers as they come; the rupee economy for early shop purchases.
