@@ -198,10 +198,12 @@ def _fill_restrictive(
     locations: list[str],
     items: list[str],
     assumed: list[str],
-) -> None:
+    shop_refills: int = 0,
+) -> int:
     """OoT Randomizer ``fill_restrictive``: take items from the end of ``items``; put each in a location that is
     reachable holding ``assumed``, the items still to place and whatever the placements so far give."""
     native = world.settings.get("native_shop_items", ()) if "Shop" in settings.shuffle else ()
+    # Reserve only the slots needed by remaining refills, not every shop slot.
     # Leave flexible native-display items until items that can only occupy chests.
     items.sort(key=lambda name: (not world.items[name].priority, name not in native))
     while items:
@@ -211,7 +213,11 @@ def _fill_restrictive(
         candidates = [name for name in locations if allowed(world, settings, name, item)]
         rng.shuffle(candidates)
         if item in native:
-            candidates.sort(key=lambda name: world.locations[name].type != "Shop")
+            reserve = (
+                shop_refills > 0 and sum(world.locations[name].type == "Shop" for name in locations) <= shop_refills
+            )
+            preferred = "Chest" if reserve and settings.item_location_types.get(item) != ("Shop",) else "Shop"
+            candidates.sort(key=lambda name: world.locations[name].type != preferred)
         spot = next((name for name in candidates if search.can_access(world.locations[name])), None)
         if spot is None:
             raise FillError(
@@ -220,6 +226,9 @@ def _fill_restrictive(
             )
         placements[spot] = item
         locations.remove(spot)
+        if item.startswith("Buy ") and settings.item_location_types.get(item) == ("Shop",):
+            shop_refills -= 1
+    return shop_refills
 
 
 def _fill_restrictive_fast(
@@ -229,19 +238,28 @@ def _fill_restrictive_fast(
     placements: dict[str, str],
     locations: list[str],
     items: list[str],
-) -> None:
+    shop_refills: int = 0,
+) -> int:
     """OoT Randomizer ``fill_restrictive_fast``: placement checks only the item's restriction."""
+    # Flexible native displays can still fill slots not needed by refills.
     while items and locations:
         item = items[-1]
         rng.shuffle(locations)
         if item in world.settings.get("native_shop_items", ()):
-            locations.sort(key=lambda name: world.locations[name].type != "Shop")
+            reserve = (
+                shop_refills > 0 and sum(world.locations[name].type == "Shop" for name in locations) <= shop_refills
+            )
+            preferred = "Chest" if reserve and settings.item_location_types.get(item) != ("Shop",) else "Shop"
+            locations.sort(key=lambda name: world.locations[name].type != preferred)
         spot = next((name for name in locations if allowed(world, settings, name, item)), None)
         if spot is None:
-            return
+            return shop_refills
         items.pop()
         placements[spot] = item
         locations.remove(spot)
+        if item.startswith("Buy ") and settings.item_location_types.get(item) == ("Shop",):
+            shop_refills -= 1
+    return shop_refills
 
 
 def _fast_fill(rng: random.Random, placements: dict[str, str], locations: list[str], items: list[str]) -> None:
@@ -336,6 +354,7 @@ def fill(
     # A non-progression item held to some location types goes with the priority items, which are placed only where
     # allowed() lets them; the rest go anywhere.
     held = settings.item_location_types
+    shop_refills = sum(item.startswith("Buy ") and held.get(item) == ("Shop",) for item in pool)
     priority = [i for i in unrestricted if not world.items[i].progression and (world.items[i].priority or i in held)]
     rest = [item for item in unrestricted if not world.items[item].progression and item not in priority]
 
@@ -343,15 +362,17 @@ def fill(
         # Boss keys are taken first, then small keys, then the rest (Fill.fill_dungeons_restrictive).
         order = {"BossKey": 3, "GanonBossKey": 3, "SmallKey": 2, "SmallKeyRing": 2}
         restricted.sort(key=lambda name: order.get(world.items[name].type, 1))
-        _fill_restrictive(world, settings, rng, placements, locations, restricted, unrestricted)
-    _fill_restrictive(world, settings, rng, placements, locations, progression, [])
+        shop_refills = _fill_restrictive(
+            world, settings, rng, placements, locations, restricted, unrestricted, shop_refills
+        )
+    shop_refills = _fill_restrictive(world, settings, rng, placements, locations, progression, [], shop_refills)
     if any(world.locations[name].type == "Shop" for name in shuffled):
         native = world.settings.get("native_shop_items", ())
         priority = [*priority, *rest]
         rest = []
         # Pop held items before flexible filler can consume their only destinations.
         priority.sort(key=lambda item: (item not in native, item in held))
-        _fill_restrictive_fast(world, settings, rng, placements, locations, priority)
+        _fill_restrictive_fast(world, settings, rng, placements, locations, priority, shop_refills)
     else:
         _fill_restrictive_fast(world, settings, rng, placements, locations, priority)
         _fast_fill(rng, placements, locations, rest)
