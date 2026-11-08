@@ -1,0 +1,208 @@
+# Gossip Stone hints (round 7, cs7a): how many of each kind, which locations always or sometimes get a hint, the hint
+# areas' names, each stone's player-facing place, and Clawshot's own wording. No game text: area and item names in a
+# seed's lines come from this file and from the player's dump (the item's own name) at generation time.
+#
+# Hint kinds (generate/hints.py), after OoT Randomizer's (Hints.py at 526b4c8d, MIT):
+#   always    a listed location, every one that is shuffled, before the rest
+#   woth      an area holding an item the goal cannot be reached without ("Way of the Hero")
+#   barren    an area where no shuffled location holds an item that can unlock anything ("foolish")
+#   item      where a progression item is (its area)
+#   sometimes a listed location and its item
+#   random    any shuffled location and its item
+#   junk      a line that says nothing
+# A hint naming a location is placed only on a stone readable with every other item collected (OoT Randomizer's
+# can_reach_hint), so the stone never needs the item it points at.
+
+[distributions.balanced]
+source = "OoT Randomizer data/Hints/balanced.json at 526b4c8d: woth 3.5, barren 2, random 6, item 5, junk 3, dungeon woth limit 2, barren limit 1; its song (1), overworld (2) and dungeon (1.5) kinds draw from the sometimes list here (4.5); entrance hints (3) need entrance shuffle and are left out; copies 1"
+dungeon_woth_limit = 2
+dungeon_barren_limit = 1
+weights = { woth = 3.5, barren = 2.0, item = 5.0, sometimes = 4.5, random = 6.0, junk = 3.0 }
+
+[distributions.strong]
+source = "OoT Randomizer data/Hints/strong.json at 526b4c8d: woth 3, barren 3, random 2, item 1, song 0.33 + overworld 0.66 + dungeon 0.66 as sometimes (1.65), no junk; copies 1 here (2 there for woth)"
+dungeon_woth_limit = 2
+dungeon_barren_limit = 1
+weights = { woth = 3.0, barren = 3.0, item = 1.0, sometimes = 1.65, random = 2.0, junk = 0.0 }
+
+[distributions.useless]
+source = "OoT Randomizer data/Hints/useless.json at 526b4c8d: every stone a junk line"
+dungeon_woth_limit = 0
+dungeon_barren_limit = 0
+always = false
+weights = { junk = 1.0 }
+
+# OoT Randomizer's always hints at its default settings (HintList.py conditional_always and hintTable at 526b4c8d;
+# the condition of each holds at Clawshot's world defaults: medallion bridge, 10 Big Poes, mask quest not complete).
+# Only locations a seed shuffles get a hint.
+[lists]
+always_source = "HintList.py:219-232 (conditional_always) and :560 (hintTable 'always') at 526b4c8d"
+always = [
+    "Song from Ocarina of Time",
+    "HF Ocarina of Time Item",
+    "Deku Theater Mask of Truth",
+    "DMT Biggoron",
+    "Kak 30 Gold Skulltula Reward",
+    "Kak 40 Gold Skulltula Reward",
+    "Kak 50 Gold Skulltula Reward",
+    "Kak 100 Gold Skulltula Reward",
+    "ZR Frogs Ocarina Game",
+    "KF Links House Cow",
+]
+sometimes_source = "HintList.py hintTable entries of type 'sometimes' (Master Quest ones left out) at 526b4c8d"
+sometimes = [
+    "Song from Royal Familys Tomb",
+    "Sheik in Forest",
+    "Sheik at Temple",
+    "Sheik in Crater",
+    "Sheik in Ice Cavern",
+    "Sheik in Kakariko",
+    "Sheik at Colossus",
+    "Market 10 Big Poes",
+    "Deku Theater Skull Mask",
+    "Kak 20 Gold Skulltula Reward",
+    "Kak Anju as Child",
+    "GC Darunias Joy",
+    "LW Skull Kid",
+    "LH Sun",
+    "Market Treasure Chest Game Reward",
+    "GF HBA 1500 Points",
+    "Graveyard Heart Piece Grave Chest",
+    "GC Maze Left Chest",
+    "GV Chest",
+    "GV Cow",
+    "HC GS Storms Grotto",
+    "HF GS Cow Grotto",
+    "HF Cow Grotto Cow",
+    "ZF GS Hidden Cave",
+    "Wasteland Chest",
+    "Wasteland GS",
+    "Graveyard Royal Familys Tomb Chest",
+    "ZF Bottom Freestanding PoH",
+    "GC Pot Freestanding PoH",
+    "ZD King Zora Thawed",
+    "DMC Deku Scrub",
+    "DMC GS Crate",
+    "LW Target in Woods",
+    "ZR Frogs in the Rain",
+    "LH Lab Dive",
+    "HC Great Fairy Reward",
+    "OGC Great Fairy Reward",
+    "Jabu Jabus Belly Boomerang Chest",
+    "Fire Temple Scarecrow Chest",
+    "Fire Temple Megaton Hammer Chest",
+    "Water Temple River Chest",
+    "Water Temple Central Pillar Chest",
+    "Water Temple Boss Key Chest",
+    "Water Temple GS Behind Gate",
+    "Gerudo Training Ground Underwater Silver Rupee Chest",
+    "Gerudo Training Ground Maze Path Final Chest",
+    "Spirit Temple Silver Gauntlets Chest",
+    "Spirit Temple Mirror Shield Chest",
+    "Shadow Temple Freestanding Key",
+    "Ice Cavern Iron Boots Chest",
+    "Ganons Castle Shadow Trial Golden Gauntlets Chest",
+]
+
+# Hint areas: a region's `hint` (OoT Randomizer's HintArea) or, inside a dungeon, its `dungeon`. A region with neither
+# takes the area of the nearest region it is entered from (HintArea.at). ROOT is not an area (Link's pocket).
+[areas]
+KOKIRI_FOREST = "Kokiri Forest"
+LOST_WOODS = "the Lost Woods"
+SACRED_FOREST_MEADOW = "the Sacred Forest Meadow"
+HYRULE_FIELD = "Hyrule Field"
+LON_LON_RANCH = "Lon Lon Ranch"
+MARKET = "the Market"
+TEMPLE_OF_TIME = "the Temple of Time"
+HYRULE_CASTLE = "Hyrule Castle"
+CASTLE_GROUNDS = "the castle grounds"
+OUTSIDE_GANONS_CASTLE = "the land outside Ganon's Castle"
+DEATH_MOUNTAIN_TRAIL = "Death Mountain Trail"
+GORON_CITY = "Goron City"
+DEATH_MOUNTAIN_CRATER = "Death Mountain Crater"
+ZORA_RIVER = "Zora's River"
+ZORAS_DOMAIN = "Zora's Domain"
+ZORAS_FOUNTAIN = "Zora's Fountain"
+LAKE_HYLIA = "Lake Hylia"
+KAKARIKO_VILLAGE = "Kakariko Village"
+GRAVEYARD = "the Graveyard"
+GERUDO_VALLEY = "Gerudo Valley"
+GERUDO_FORTRESS = "Gerudo's Fortress"
+THIEVES_HIDEOUT = "the Thieves' Hideout"
+HAUNTED_WASTELAND = "the Haunted Wasteland"
+DESERT_COLOSSUS = "the Desert Colossus"
+"Deku Tree" = "the Deku Tree"
+"Dodongos Cavern" = "Dodongo's Cavern"
+"Jabu Jabus Belly" = "Jabu-Jabu's Belly"
+"Forest Temple" = "the Forest Temple"
+"Fire Temple" = "the Fire Temple"
+"Water Temple" = "the Water Temple"
+"Shadow Temple" = "the Shadow Temple"
+"Spirit Temple" = "the Spirit Temple"
+"Bottom of the Well" = "the Bottom of the Well"
+"Ice Cavern" = "the Ice Cavern"
+"Gerudo Training Ground" = "the Gerudo Training Ground"
+"Ganons Castle" = "Ganon's Castle"
+
+# Clawshot's wording. {area}, {item} and {location} are filled in; {item} is the game's own name for the item in the
+# seed's text (the logic's name in a spoiler built without the dump).
+[wording]
+woth = "They say {area} holds something the hero cannot do without."
+barren = "They say searching {area} would only waste the hero's time."
+item = "They say {area} hides the {item}."
+location = "They say {location} holds the {item}."
+junk = [
+    "They say this stone has nothing to tell you today.",
+    "They say a stone never forgets, but it rarely remembers anything useful.",
+    "They say the owl knows every road, if only he would stop talking about them.",
+    "They say the Kokiri never grow up, but their pranks keep getting bigger.",
+    "They say the cuccos remember every hero who ever struck one.",
+    "They say Song of Time blocks are patient. Very, very patient.",
+    "They say a hero who reads every stone has read too many stones.",
+    "They say the Gold Skulltulas count every token you take.",
+]
+
+# Where each stone stands, for the spoiler and the play note (census.hints.STONE_LINKS evidence; round 6 found which
+# Kokiri Forest stone is which in game). Within the Deku Tree pair, the Sacred Forest Meadow maze pair, the three Lake
+# Hylia stones and the four Temple of Time stones, which name is which stone is not settled.
+[stones]
+"KF Gossip Stone" = "Kokiri Forest: by the Lost Woods entrance tunnel, near Mido's house"
+"KF Deku Tree Gossip Stone (Left)" = "Kokiri Forest: one of the two stones before the Deku Tree (left, unsettled)"
+"KF Deku Tree Gossip Stone (Right)" = "Kokiri Forest: one of the two stones before the Deku Tree (right, unsettled)"
+"LW Gossip Stone" = "Lost Woods: by the bridge to Hyrule Field and its Deku Scrub"
+"SFM Saria Gossip Stone" = "Sacred Forest Meadow: by Saria's stump and the warp pad"
+"SFM Maze Gossip Stone (Lower)" = "Sacred Forest Meadow: one of the two stones in the maze (lower, unsettled)"
+"SFM Maze Gossip Stone (Upper)" = "Sacred Forest Meadow: one of the two stones in the maze (upper, unsettled)"
+"SFM Song of Time Clearing Gossip Stone" = "Sacred Forest Meadow: the clearing behind the Song of Time blocks"
+"HF Southeast Grotto Gossip Stone" = "Hyrule Field: the east grotto, under a cover you bomb"
+"HF Open Grotto Gossip Stone" = "Hyrule Field: the open grotto by the wetlands"
+"HF Cow Grotto Gossip Stone" = "Hyrule Field: the cow grotto inside the ring of rocks"
+"LH Gossip Stone (Southeast)" = "Lake Hylia: one of the three shore stones (southeast, unsettled)"
+"LH Gossip Stone (Southwest)" = "Lake Hylia: one of the three shore stones (southwest, unsettled)"
+"LH Lab Gossip Stone" = "Lake Hylia: one of the three shore stones (by the laboratory, unsettled)"
+"ToT Gossip Stone (Left)" = "Temple of Time courtyard: the four stones in a row (far left, unsettled)"
+"ToT Gossip Stone (Left-Center)" = "Temple of Time courtyard: the four stones in a row (left of centre, unsettled)"
+"ToT Gossip Stone (Right-Center)" = "Temple of Time courtyard: the four stones in a row (right of centre, unsettled)"
+"ToT Gossip Stone (Right)" = "Temple of Time courtyard: the four stones in a row (far right, unsettled)"
+"HC Malon Gossip Stone" = "Hyrule Castle grounds: beside Malon and Talon (child)"
+"HC Rock Wall Gossip Stone" = "Hyrule Castle grounds: by the rock wall, near a Gold Skulltula"
+"HC Storms Grotto Gossip Stone" = "Hyrule Castle grounds: the Song of Storms grotto, behind a cracked wall"
+"Kak Open Grotto Gossip Stone" = "Kakariko Village: the open grotto with a chest"
+"Kak Bomb Grotto Gossip Stone" = "Kakariko Village: the bomb grotto with seven beehives"
+"Graveyard Gossip Stone" = "Graveyard: by the warp pad on the upper ledge"
+"DMT Gossip Stone" = "Death Mountain Trail: at the summit, by Biggoron"
+"DMT Cow Grotto Gossip Stone" = "Death Mountain Trail: the grotto with a cow"
+"GC Medigoron Gossip Stone" = "Goron City: beside Medigoron"
+"GC Maze Gossip Stone" = "Goron City: in the boulder maze"
+"DMC Gossip Stone" = "Death Mountain Crater: the upper crater, behind a cracked wall"
+"DMC Upper Grotto Gossip Stone" = "Death Mountain Crater: the upper grotto with a chest"
+"Dodongos Cavern Gossip Stone" = "Dodongo's Cavern: the first room, behind a cracked wall"
+"ZR Near Grottos Gossip Stone" = "Zora's River: by the grotto holes and the Piece of Heart"
+"ZR Near Domain Gossip Stone" = "Zora's River: upper river, by the Lost Woods shortcut"
+"ZR Open Grotto Gossip Stone" = "Zora's River: the open grotto with a chest and a Cucco"
+"ZR Storms Grotto Gossip Stone" = "Zora's River: the Song of Storms grotto"
+"ZD Gossip Stone" = "Zora's Domain"
+"ZF Jabu Gossip Stone" = "Zora's Fountain: near Lord Jabu-Jabu"
+"ZF Fairy Gossip Stone" = "Zora's Fountain: by the Great Fairy's cracked wall"
+"GV Gossip Stone" = "Gerudo Valley"
+"Colossus Gossip Stone" = "Desert Colossus"
