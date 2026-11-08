@@ -28,11 +28,3 @@ source = "Eurogamer, 'all new changes' (https://www.eurogamer.net/all-new-change
 rule = "can_play(Song_of_Storms)"
 was = "can_open_storm_grotto"
 source = "Eurogamer, 'all new changes' (https://www.eurogamer.net/all-new-changes-zelda-ocarina-of-time-switch-2): every grotto entrance is visible, the Stone of Agony is the Echo Gem and finds Gold Skulltulas; Eurogamer and Polygon Gold Skulltula guides: play the Song of Storms by the lone tree near the crawlspace to open the hole; data: Land_Kokiri_HidingHoleCover_A_01 13073548223054495027 and HidingHole_Entry_01 at (36,117,-106) beside Obj_Tree_A_01 (33,117,-106); the only AgonyStoneReactArea (16549736856740418131) is inside the grotto at (38,95,-104), not at the entrance"
-
-# Great Fairies: the first one visited must be Death Mountain Trail's or Hyrule Castle's, or the others do not
-# appear (cross-area decision, Main, round 4; DeathMountain defines the same event at the trail's fountain).
-
-[events."HC Great Fairy Fountain"."Great Fairy Met"]
-rule = "can_play(Zeldas_Lullaby)"
-new = true
-source = "games.gg (https://games.gg/the-legend-of-zelda-ocarina-of-time-2026/guides/ocarina-of-time-remake-great-fairy-locations-rewards-and-costs, 2026-11-06): the first Great Fairy visited must be Death Mountain Trail's or Hyrule Castle's, or the others do not appear; Nintendo Life Great Fairy guide: Zelda's Lullaby on the Triforce (Obj_TriForcePoint_A_01 at (118,109,-77)) calls her"

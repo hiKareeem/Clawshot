@@ -1,7 +1,8 @@
 # The remake's differences from OoT Randomizer's world, and Clawshot's own per-location facts, written by hand.
 # The translated region files stay exactly what `python -m clawshot.world.translate` writes; the loader applies
 # this file on top, then every `remake/*.toml` sorted by name (`clawshot.world.load.apply_overrides`; format:
-# plans/04-world-format.md, "Overrides"). One location, exit, event, region or key count is set in one file only.
+# plans/04-world-format.md, "Overrides"). One location, exit, event, region, key count or item is set in one file
+# only.
 #
 # [locations."<OoT Randomizer name>"]: `source` (required: who or what says so) and any of
 #   rule + was     the remake's requirement; `was` repeats the translated rule, so a change upstream is noticed
@@ -16,6 +17,8 @@
 # [exits."<region>"."<target>"], [events."<region>"."<event>"]: `source`, `rule`, and `was` (the translated rule
 #   it replaces) or `new = true` (an exit or event the translation lacks).
 # [key_counts]: the remake's number of a dungeon's small keys; a rule asking for more asks for that many.
+# [items."<name>"]: `source` and `alias = ["<item>", count]`: collecting the item also counts as that many of
+#   another.
 
 # Fixed items (D16, Kareem, round 2): the tier each progressive vanilla item is in the remake.
 
@@ -78,7 +81,9 @@ area = "DesertColossus"
 source = "census: Item_Shield_Mirror, in DesertColossus (03-game-data.md section 9, 'Moved')"
 
 # The Great Fairies of Death Mountain Trail and Hyrule Castle swapped gifts (confirmed in game by Kareem,
-# 2026-11-07, 03-game-data.md sections 5 and 9).
+# 2026-11-07, 03-game-data.md sections 5 and 9; the data agrees, section 12: the Hyrule Castle fountain's
+# Obj_TriForcePoint_A_01 runs Demo_FairyFountain_Power, whose fairy gives Item_FairyBless_MP). Zelda's Lullaby calls
+# every fairy but Din's only once Din's Fire is held; the other fountains' rules are in their area files.
 
 [locations."DMT Great Fairy Reward"]
 vanilla = "Dins Fire"
@@ -86,7 +91,43 @@ source = "Kareem, in game, 2026-11-07: the Death Mountain Trail fountain gives D
 
 [locations."HC Great Fairy Reward"]
 vanilla = "Magic Meter"
-source = "Kareem, in game, 2026-11-07: the Hyrule Castle fountain gives the magic meter (03-game-data.md section 9)"
+rule = "can_play(Zeldas_Lullaby) and Dins_Fire"
+was = "can_play(Zeldas_Lullaby)"
+source = "Kareem, in game, 2026-11-07: the Hyrule Castle fountain gives the magic meter (03-game-data.md section 9). Rule: event flow TriForcePoint, entry Sub_PlayOcarinaSequence_FairyFountain: after the Lullaby, EventQueryFairyFountainSelectSpecialAbility sends every fountain but Din's (SpecialAbility 2) to a switch on IsGet.Item_DinFire; without it Navi says 'It doesn't seem like anything happened' (Dm_FairyFountain_Power Talk_00/Talk_02) and the fairy stays away. Fee: Dm_FairyFountain_Power asks EventQueryHasRuppe 50 and pays -50 (GreatFairy_Price2 = 50); the starting wallet holds 200 (Item_Wallet_Small)"
+
+# The magic meter comes with every magic item (round 4 item 6, 03-game-data.md section 12). Each item's
+# PouchActorInfo row has `ExpansionAvility: MPMaxUP` with `MPMax: 24` (Item_FairyBless_MP, OoT Randomizer's
+# Magic Meter, too; Item_FairyBless_MPDouble 48), and the item-get flow `Dm_SY_Get:PouchAddItem` calls `MPOpen`, which
+# shows the magic gauge being born when `PlayerStatus.MPMax` is 0. So a rule asking for Magic_Meter is met by any of
+# them, wherever it was found.
+
+[items."Dins Fire"]
+alias = ["Magic Meter", 1]
+source = "RSDB PouchActorInfo Item_DinFire: ExpansionAvility MPMaxUP, MPMax 24; the Death Mountain Trail fairy's gift flow (Dm_SY_GetInEvent:GetInEvent_GreatFairyDin) shows the magic gauge born when the player had none (GreatFairy_HasNoMPOnDinDemo)"
+
+[items."Farores Wind"]
+alias = ["Magic Meter", 1]
+source = "RSDB PouchActorInfo Item_FaroreWind: ExpansionAvility MPMaxUP, MPMax 24"
+
+[items."Nayrus Love"]
+alias = ["Magic Meter", 1]
+source = "RSDB PouchActorInfo Item_NayruLove: ExpansionAvility MPMaxUP, MPMax 24"
+
+[items."Lens of Truth"]
+alias = ["Magic Meter", 1]
+source = "RSDB PouchActorInfo Item_GlassTruth: ExpansionAvility MPMaxUP, MPMax 24"
+
+[items."Fire Arrows"]
+alias = ["Magic Meter", 1]
+source = "RSDB PouchActorInfo Item_Arrow_Fire: ExpansionAvility MPMaxUP, MPMax 24"
+
+[items."Ice Arrows"]
+alias = ["Magic Meter", 1]
+source = "RSDB PouchActorInfo Item_Arrow_Ice: ExpansionAvility MPMaxUP, MPMax 24"
+
+[items."Light Arrows"]
+alias = ["Magic Meter", 1]
+source = "RSDB PouchActorInfo Item_Arrow_Light: ExpansionAvility MPMaxUP, MPMax 24"
 
 # Gold Skulltulas that need another item in the remake (03-game-data.md section 9, from Kareem and the Eurogamer
 # guide, 2026-11-07). The Death Mountain Trail one by the crater entrance (DMT GS Falling Rocks Path) needs the

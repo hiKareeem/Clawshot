@@ -18,6 +18,6 @@ was = "can_use(Boomerang) and (at_night or gold_skulls_ignore_daytime)"
 source = "Eurogamer, 17 changes: time does not flow until Link has met Zelda, so night needs the event 'Time Flows' (Main, round 4); data: Enemy_Skulltula_Gold 7152962033963346563 is Enemy_Skulltula_Gold_Nocturnal, at (14,108,23); Nintendo Life GS #55, Eurogamer and Polygon GS guides: child, night, Boomerang"
 
 [locations."ZF Great Fairy Reward"]
-rule = "can_play(Zeldas_Lullaby) and 'Great Fairy Met'"
+rule = "can_play(Zeldas_Lullaby) and Dins_Fire"
 was = "can_play(Zeldas_Lullaby)"
-source = "games.gg Great Fairy guide (2026-11-06): the first Great Fairy visited must be Death Mountain Trail's or Hyrule Castle's, or Zelda's Lullaby does not summon the others; 'Great Fairy Met' is set at those two fountains (Main, round 4). The fee (rising with each fairy met, 100 Rupees here in the usual order) is not modelled"
+source = "event flow TriForcePoint (Obj_TriForcePoint_A_03 runs Demo_FairyFountain_Frore, RSDB EventSetting), entry Sub_PlayOcarinaSequence_FairyFountain: every fountain but Din's needs IsGet.Item_DinFire before the fairy appears (03-game-data.md section 12). Fee: Dm_FairyFountain_Frore asks EventQueryHasRuppe 100 and pays -100, fixed (GreatFairy_Price3); the starting wallet holds 200"

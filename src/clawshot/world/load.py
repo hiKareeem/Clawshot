@@ -79,7 +79,7 @@ _LOCATION_FIELDS = frozenset(
 )
 _REGION_FIELDS = frozenset({"area", "dungeon", "scene", "hint", "time_passes", "provides_time"})
 _RULE_FIELDS = frozenset({"rule", "was", "new"})
-_TABLES = ("regions", "locations", "exits", "events", "key_counts")
+_TABLES = ("regions", "locations", "exits", "events", "key_counts", "items")
 
 
 def apply_overrides(spec: dict[str, Any], files: Sequence[tuple[str, Mapping[str, Any]]]) -> None:
@@ -101,6 +101,9 @@ def apply_overrides(spec: dict[str, Any], files: Sequence[tuple[str, Mapping[str
 
     ``[key_counts]``: ``"<key item>" = { count, source }``, the number of that key the remake has; a rule asking for
     more asks for that many (:class:`~clawshot.world.rules.Compiler`).
+
+    ``[items."<name>"]``: ``alias = ["<item>", count]``, a count of another item that collecting this one adds
+    (the remake's Din's Fire carries a magic meter), for an item that has no alias yet.
     """
     owner: dict[tuple[str, ...], str] = {}
     for label, overrides in files:
@@ -176,6 +179,26 @@ def apply_overrides(spec: dict[str, Any], files: Sequence[tuple[str, Mapping[str
                 raise WorldError(f"{label}: key_counts {item!r} needs a known item, a count and a source")
             counts[item] = entry["count"]
     spec["key_counts"] = counts
+
+    for label, overrides in files:
+        for name, fields in overrides.get("items", {}).items():
+            where = f"{label}: item {name!r}"
+            _check_fields(fields, frozenset({"alias"}), where)
+            info = spec["items"].get(name)
+            if info is None:
+                raise WorldError(f"{where} is not in the world")
+            if info.get("alias"):
+                raise WorldError(f"{where} already counts as {info['alias']}")
+            alias = fields.get("alias")
+            if not (
+                isinstance(alias, list)
+                and len(alias) == 2
+                and alias[0] in spec["items"]
+                and isinstance(alias[1], int)
+                and alias[1] >= 1
+            ):
+                raise WorldError(f"{where}: alias must be [a known item, a count of at least 1], not {alias!r}")
+            spec["items"][name] = {**info, "alias": list(alias)}
 
 
 def _entry_keys(table: Mapping[str, Any], nested: bool, where: str) -> list[tuple[str, ...]]:

@@ -18,3 +18,9 @@ source = "Banc DesertColossus_{Child,Adult}_{Static,Dynamic} read only (cs4b hel
 rule = "can_blast_or_smash"
 was = "has_explosives"
 source = "https://zeldacentral.com/games/ocarina-of-time-remake/great-fairy-fountains/: break the cracked red wall with Megaton Hammer. Read-only Obj_DesertColossus_CrackWall_A_01 pack also has ReactionForHammerAttack/StaticCrackObject and SimpleStone ChemicalParam RequestDeathIfExploded=true, corroborating the existing explosive route rather than removing it."
+
+# Great Fairy (round 4 item 6, track A by the reviewer's leave; 03-game-data.md section 12).
+[locations."Colossus Great Fairy Reward"]
+rule = "can_play(Zeldas_Lullaby) and Dins_Fire and Progressive_Wallet"
+was = "can_play(Zeldas_Lullaby)"
+source = "event flow TriForcePoint (Obj_TriForcePoint_A_05 in DesertColossus runs Demo_FairyFountain_Nayru, RSDB EventSetting), entry Sub_PlayOcarinaSequence_FairyFountain: every fountain but Din's needs IsGet.Item_DinFire before the fairy appears. Fee: Dm_FairyFountain_Nayru asks EventQueryHasRuppe 300 and pays -300, fixed (GreatFairy_Price5); the starting wallet (Item_Wallet_Small) holds 200, the Adult Wallet (Item_Wallet_Medium) 500 (RSDB PouchActorInfo AfterExpansionMaxNum)"

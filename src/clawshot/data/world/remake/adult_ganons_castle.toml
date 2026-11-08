@@ -51,3 +51,9 @@ rule = "can_play(Zeldas_Lullaby)"
 was = "(Small_Key_Ganons_Castle, 1) and can_play(Zeldas_Lullaby)"
 vanilla = "Rupee (1)"
 source = "Eurogamer section 8: the Lens-only chest and Triforce chest are in the same room before the single locked boulder-room door; Lullaby spawns a Green Rupee, not a second small key. Banc room 13 holds both chests and the Triforce point. Keep the root key-count cap of one, but also remove the phantom second key from the vanilla pool."
+
+# Great Fairy outside the castle (round 4 item 6, track A by the reviewer's leave; 03-game-data.md section 12).
+[locations."OGC Great Fairy Reward"]
+rule = "can_play(Zeldas_Lullaby) and Dins_Fire and Progressive_Wallet"
+was = "can_play(Zeldas_Lullaby)"
+source = "event flow TriForcePoint (Obj_TriForcePoint_A_06 in GanonCastle runs Demo_FairyFountain_Courage, RSDB EventSetting), entry Sub_PlayOcarinaSequence_FairyFountain: every fountain but Din's needs IsGet.Item_DinFire before the fairy appears. Fee: Dm_FairyFountain_Courage asks EventQueryHasRuppe 500 and pays -500, fixed (GreatFairy_Price6); the Adult Wallet (Item_Wallet_Medium) holds exactly 500, the starting one 200 (RSDB PouchActorInfo AfterExpansionMaxNum)"

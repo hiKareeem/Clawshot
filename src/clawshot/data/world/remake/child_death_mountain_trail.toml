@@ -45,8 +45,3 @@ source = "placement data DeathMountainTrail_Child_Dynamic/_Static; census src/cl
 rule = "is_child and Dins_Fire"
 was = "is_child"
 source = "event flow Npc_Kaepora_DeathMountainTrail, entry Talk: switch on GameData IsGet.Item_DinFire; only with it set does the owl reach the yes/no choice that plays Dm_DeathMtTrail_0030 and changes Banc to KakarikoVillage_Child (start FromMountainTrail); without it he only talks (hints at MountainTrail_FairyRockBreak). Eurogamer Kakariko page: the owl offers the flight after the Great Fairy atop Death Mountain (Din's Fire in the remake, remake.toml)"
-
-[events."DMT Great Fairy Fountain"."Great Fairy Met"]
-rule = "can_play(Zeldas_Lullaby)"
-new = true
-source = "games.gg, https://games.gg/the-legend-of-zelda-ocarina-of-time-2026/guides/ocarina-of-time-remake-great-fairy-locations-rewards-and-costs: the first Great Fairy must be Death Mountain Trail's or Hyrule Castle's, otherwise Zelda's Lullaby does not summon the others; this event marks the Death Mountain Trail one met (the fee, 25 rupees first, is not modelled)"

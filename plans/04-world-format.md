@@ -62,10 +62,10 @@ define the same event; it is held once any of them passes. A rule names an event
 The translated files stay exactly what the translator writes (`tests/test_world_translate.py` compares them byte
 for byte); everything written by hand is in `remake.toml` and the files of `remake/` (round 4: `child_<area>.toml`
 and `adult_<area>.toml`, one per area and logic track), applied by the loader after the translated files:
-`remake.toml` first, then `remake/*.toml` sorted by name (`load.apply_overrides`). One location, exit, event, region
-or key count may be set in one file only; a second file setting it stops the build, naming both files. New regions
-are added before any exit, event or location is applied, so a file may use a region another file adds. Each entry
-needs a `source` (who or what says so):
+`remake.toml` first, then `remake/*.toml` sorted by name (`load.apply_overrides`). One location, exit, event,
+region, key count or item may be set in one file only; a second file setting it stops the build, naming both files.
+New regions are added before any exit, event or location is applied, so a file may use a region another file adds.
+Each entry needs a `source` (who or what says so):
 
 ```toml
 [locations."Fire Temple GS Boss Key Loop"]
@@ -85,6 +85,10 @@ source = "..."
 
 [key_counts]
 "Small Key (Water Temple)" = { count = 4, source = "census: 4 key chests (N64: 6); 8 chain locks = 4 doors" }
+
+[items."Dins Fire"]
+alias = ["Magic Meter", 1]         # collecting Din's Fire also counts as one Magic Meter
+source = "PouchActorInfo Item_DinFire: ExpansionAvility MPMaxUP, MPMax 24"
 ```
 
 | Table, field | Meaning |
@@ -101,6 +105,7 @@ source = "..."
 | `[regions."<name>"]` | a region the translation lacks, with `area`, `dungeon`, `scene`, `hint`, `time_passes`, `provides_time` |
 | `[exits."<region>"."<target>"]`, `[events."<region>"."<event>"]` | `rule` with `was` (a change; `"False"` closes it) or with `new = true` (an addition) |
 | `[key_counts]` | the remake's number of a dungeon's small keys, where it has fewer than N64: a rule asking for more asks for that many |
+| `[items."<name>"]` | `alias = ["<item>", count]`: collecting the item also adds that many of another (an item without an alias of its own); the search counts both |
 
 **Key counts.** The census finds fewer small keys in three dungeons (Bottom of the Well 2 of 3, Water Temple 4 of
 6, Ganon's Castle 1 of 2), and the remake's locked doors (`Obj_DoorChainLock_A_01`, one on each side of a door)

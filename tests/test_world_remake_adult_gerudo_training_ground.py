@@ -36,9 +36,7 @@ def test_lobby_chests_need_the_eye_switch_and_the_lens(gtg_lobby, chest):
     location = gtg_lobby.locations[chest]
     search = Search(gtg_lobby, ["Bow"])
     assert not search.can_access(location, ADULT)
-    search.collect("Lens of Truth")
-    assert not search.can_access(location, ADULT)  # the Lens needs magic
-    search.collect("Magic Meter")
+    search.collect("Lens of Truth")  # the remake's Lens carries its own magic meter (remake.toml [items])
     assert search.can_access(location, ADULT)
 
 

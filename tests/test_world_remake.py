@@ -7,7 +7,7 @@ import pytest
 
 from clawshot.generate import Settings, prepare
 from clawshot.generate.fill import FillError, check_beatable
-from clawshot.world import CHILD, WorldError, build_world, load_spec, load_world, reachable
+from clawshot.world import ADULT, CHILD, Search, WorldError, build_world, load_spec, load_world, reachable
 from clawshot.world.load import apply_overrides
 
 WORLD_TOML = """
@@ -137,12 +137,29 @@ def test_an_exit_change_needs_the_translated_rule():
         ({"regions": {"Room": {"source": "s"}}}, "region 'Room' is already in the world"),
         ({"regions": {"Hall": {"floor": 2, "source": "s"}}}, "unknown fields \\['floor'\\]"),
         ({"locations": {"Gone": {"vanilla": "Slingshot", "source": "s"}}}, "location 'Gone' is not in the world"),
+        ({"items": {"Gone": {"alias": ["Slingshot", 1], "source": "s"}}}, "item 'Gone' is not in the world"),
+        ({"items": {"Slingshot": {"alias": ["Gone", 1], "source": "s"}}}, "alias must be \\[a known item"),
+        ({"items": {"Slingshot": {"alias": ["Slingshot", 0], "source": "s"}}}, "alias must be \\[a known item"),
         ({"walls": {}}, "unknown tables \\['walls'\\]"),
     ],
 )
 def test_bad_overrides_are_refused(overrides: dict, message: str):
     with pytest.raises(WorldError, match=message):
         apply_overrides(spec(), [("f", overrides)])
+
+
+def test_an_item_alias_also_counts_the_other_item():
+    """The remake's magic items each carry a magic meter: collecting one counts as the meter too."""
+    changed = spec()
+    changed["items"]["Bullet Bag"] = {}
+    alias = {"items": {"Bullet Bag": {"alias": ["Slingshot", 1], "source": "s"}}}
+    apply_overrides(changed, [("f", alias)])
+    world = build_world(changed)
+    assert world.items["Bullet Bag"].alias == ("Slingshot", 1)
+    assert reachable(world, []).counts.get("Lit", 0) == 0
+    assert reachable(world, ["Bullet Bag"]).counts["Lit"] == 1
+    with pytest.raises(WorldError, match=r"f: item 'Bullet Bag' already counts as \['Slingshot', 1\]"):
+        apply_overrides(changed, [("f", alias)])
 
 
 # Round 3's playtest slice: Kokiri Forest, the Lost Woods and the Deku Tree, beaten at Queen Gohma.
@@ -195,3 +212,41 @@ def test_night_comes_only_after_meeting_zelda():
     for name in night_only:
         assert not before.can_access(world.locations[name], CHILD), name
         assert after.can_access(world.locations[name], CHILD), name
+
+
+def fountain(region: str):
+    spec = load_spec()
+    spec["start"] = region
+    return build_world(spec)
+
+
+LULLABY = ["Fairy Ocarina", "Zeldas Lullaby"]
+
+
+def test_only_dins_fairy_comes_without_dins_fire():
+    """TriForcePoint: Zelda's Lullaby calls every Great Fairy but Din's only once Din's Fire is held, so the
+    Improved Spin (Hyrule Castle) cannot come first; the magic meter does not stand in for Din's Fire."""
+    dmt = fountain("DMT Great Fairy Fountain")
+    assert Search(dmt, LULLABY).can_access(dmt.locations["DMT Great Fairy Reward"], CHILD)
+    hc = fountain("HC Great Fairy Fountain")
+    spin = hc.locations["HC Great Fairy Reward"]
+    search = Search(hc, [*LULLABY, "Magic Meter"])
+    assert not search.can_access(spin, CHILD)
+    search.collect("Dins Fire")
+    assert search.can_access(spin, CHILD)
+
+
+@pytest.mark.parametrize(
+    ("region", "location"),
+    [
+        ("Colossus Great Fairy Fountain", "Colossus Great Fairy Reward"),
+        ("OGC Great Fairy Fountain", "OGC Great Fairy Reward"),
+    ],
+)
+def test_the_300_and_500_rupee_fairies_need_the_adult_wallet(region: str, location: str):
+    """Their fees are past the starting wallet's 200; the Adult Wallet holds 500."""
+    world = fountain(region)
+    search = Search(world, [*LULLABY, "Dins Fire"])
+    assert not search.can_access(world.locations[location], ADULT)
+    search.collect("Adult Wallet")
+    assert search.can_access(world.locations[location], ADULT)
