@@ -31,6 +31,35 @@ Checks:
   `E:/OOTRemake/work/r6-settings`. Created that external parent; one cause-aimed rerun passed above.
 - No LSP server is installed for Python; references were inspected with the known-symbol search fallback.
 
+## Item 2 — song mode and gift chest evidence
+
+`Settings.songs` / CLI `--songs song|anywhere`; default `song`, from the same default catalog and included in strings.
+Default: songs only on song checks and those checks accept only songs. `anywhere`: all twelve songs may leave
+song checks, still respecting Shop native-display and dungeon-item restrictions.
+
+Reviewer direction (Claude, 2026-11-08, responding to 10:26 post) supersedes the initial strict per-song proposal:
+all twelve share `Item_Melody_*` → pouch → `IsGet`; Storms was acquired and played from a chest.
+**The other eleven are inferred, not individually verified.** This exception is opt-in; no default changed.
+Non-song gift items still leave gifts only if already a vanilla chest item or individually listed with a source
+under `settings.toml [chest_verified]`: Fairy Ocarina and Song of Storms are the observed entries so far.
+The effective gift policy is rebuilt on replay, so a decoded song-only string can switch to anywhere without
+retaining stale derived song restrictions.
+
+Checks: `uv run pytest tests/test_settings_songs.py tests/test_settings.py tests/test_gifts.py -q`:
+**33 passed**. Sixty synthetic actual fills verify both song modes, Fairy Ocarina into chests, unverified letter
+kept in gifts, inferred Lullaby allowed into chests only in anywhere mode, and settings round trips.
+
+Requested warp experiment: `E:/OOTRemake/work/r6-settings/chest-ocarina-minuet/`, unrun copied launcher
+`Test - chest-ocarina-minuet.bat`, and `minuet-check.md`. New game, isolated user, release EXE only.
+Walking into Mido's house: far-right Hash `9725242744547055868` gives Fairy Ocarina; far-left Hash
+`4555665598794293658` gives Minuet of Forest. Independent written-tree diff verifies only these drops in both
+age copies; allocation checks pass. Child **510884 → 510976**, entry **511240**; Adult **516036 → 516128**,
+entry **516392**. No game or batch executed.
+
+**Kareem: run that new-game launcher, obtain both chests, check Minuet learned, leave the house and play it,
+accept warp: does child Link reach Sacred Forest Meadow's warp pad, and does learning persist after Continue?
+Record model/text and the `from the overlay` log.** Until then the warp result remains unverified.
+
 ## Cross-track requests
 
 Posted startup contract on `cs-r6`: cs6a owns `spoiler()`; preserve my separate settings-string field commit.

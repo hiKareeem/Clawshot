@@ -51,6 +51,7 @@ class Settings:
     item_location_types: dict[str, tuple[str, ...]] = field(default_factory=dict)
     exclusive_location_types: tuple[str, ...] = ()
     fast_start: tuple[str, ...] = tuple(DEFAULTS["fast_start"])
+    songs: str = DEFAULTS["songs"]
 
     def __post_init__(self) -> None:
         for name in ("shuffle", "areas", "fast_start", "exclusive_location_types"):
@@ -80,6 +81,8 @@ class Settings:
             raise ValueError(f"dungeon_items must be one of {DUNGEON_ITEM_CHOICES}, not {self.dungeon_items!r}")
         if self.goal is not None and not self.areas:
             raise ValueError("a goal is given only with the areas of a slice")
+        if self.songs not in ("song", "anywhere"):
+            raise ValueError("songs must be 'song' or 'anywhere'")
 
     def as_dict(self) -> dict[str, Any]:
         out: dict[str, Any] = {
@@ -87,6 +90,7 @@ class Settings:
             "dungeon_items": self.dungeon_items,
             "logic": {k: self.logic[k] for k in sorted(self.logic)},
             "fast_start": list(self.fast_start),
+            "songs": self.songs,
         }
         if self.areas:
             out["areas"] = list(self.areas)

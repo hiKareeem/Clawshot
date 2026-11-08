@@ -52,6 +52,7 @@ def main(argv: list[str] | None = None) -> int:
         help="location types; Shop: native displays; Gift: supported gifts; Scrub: once sales; Token: not enabled",
     )
     parser.add_argument("--dungeon-items", choices=DUNGEON_ITEM_CHOICES)
+    parser.add_argument("--songs", choices=("song", "anywhere"), help="song locations only (default), or all songs anywhere")
     parser.add_argument("--logic", nargs="*", default=[], metavar="NAME=VALUE", help="logic setting overrides")
     parser.add_argument("--areas", nargs="+", metavar="AREA", help="census areas of a slice")
     parser.add_argument("--goal", help="the slice's goal (a rule); needs --areas")
@@ -73,6 +74,7 @@ def main(argv: list[str] | None = None) -> int:
             ("areas", "areas"),
             ("goal", "goal"),
             ("skip", "fast_start"),
+            ("songs", "songs"),
         ):
             value = getattr(args, option)
             if value is not None:

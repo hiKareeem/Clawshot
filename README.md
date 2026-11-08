@@ -32,6 +32,11 @@ explicit command-line options override its fields, and `--logic name=value` over
 Reproduction requires the same seed, generator version and world data. Generator defaults are in
 `src/clawshot/data/settings.toml`; logic defaults are in `src/clawshot/data/world/`.
 
+With `--shuffle Chest Gift`, `--songs song` (default) keeps songs on song checks; `--songs anywhere` allows
+all twelve songs in chests. Only Storms has been played from a chest; the other eleven share its grant path
+and are inferred. Other gift-only items remain on gifts until individually observed in a chest; the sourced
+allowlist in `settings.toml` currently permits the Fairy Ocarina.
+
 ## Stack
 
 Python 3.12+ with uv. Reasons and alternatives: `plans/decisions.md`.
