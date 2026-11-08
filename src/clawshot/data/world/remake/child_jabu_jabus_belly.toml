@@ -1,0 +1,19 @@
+# Inside Jabu-Jabu's Belly, as the remake builds it (round 4, track A; the whole dungeon, both ages). Format:
+# plans/04-world-format.md, "Overrides". Every rule of the area was checked; the findings file
+# (E:/OOTRemake/work/r4-logic-child/findings/jabu_jabus_belly.md) lists what stays as OoT Randomizer has it.
+#
+# Guides (Switch 2 remake, 2026-11-05 to 07):
+#   Nintendo Life, https://www.nintendolife.com/guides/zelda-ocarina-of-time-lord-jabu-jabu-belly-walkthrough-switch-2
+#   IGN, https://www.ign.com/wikis/ocarina-of-time-remake/Lord_Jabu-Jabu's_Belly_Dungeon_Walkthrough
+#   Eurogamer and Polygon Gold Skulltula guides (local copies, E:/OOTRemake/work/r3/)
+# Placement data: InsideJabuJabuBelly_Static/_Dynamic, read by E:/OOTRemake/work/r4-logic-child/actors.py;
+# coordinates in metres, y up; room = DefaultDungeonRoomIndex (2 Ruto's room with the holes, 3 the basement below
+# it, 14 the water-switch room, 6 Big Octo).
+
+[locations."Jabu Jabus Belly Map Chest"]
+region = "Jabu Jabus Belly Main"
+source = "the map is before the Boomerang in the remake: Nintendo Life, in the basement room where Ruto is thrown across and the switch raises the water, an alcove holds the Dungeon Map chest; IGN: step on the switch to raise the water, then reach the chest on the east side holding the Dungeon Map. Data: Obj_TBox_A_02 14933854942830098290 (Item_Dungeon_Map, census-linked) in room 14 at (38,78,-57), with the two water switches Obj_InsideJabu_Jabu_StepSwitch_A_04 and the Water Switch Room Gold Skulltula (11513774157335944149, OoT Randomizer's region Main)"
+
+[locations."Jabu Jabus Belly GS Lobby Basement Upper"]
+region = "Jabu Jabus Belly Depths"
+source = "data: Enemy_Skulltula_Gold 11283202900158580106 (census: Upper, by height) in room 3 at (-15,90,-83), between the tentacle-blocked hole (Obj_InsideJabu_Jabu_Hole_A_03 (-9,91,-86), Obj_InsideJabu_Jabu_Tentacle_A_03 (-9,85,-86)) and Big Octo's door (-24,87,-88), its map icon at the ledge's height (MapIconOffsetAnchor 1360187271360393119, y 85). Nintendo Life: the basement's upper ledge, reached only by dropping down the north-west hole once the three tentacles are gone, has one Gold Skulltula inside the passage to the next room; IGN: on the ceiling of the corridor from that ledge to Big Octo's room, Boomerang; Polygon: after defeating the parasites drop into the new hole, on the ceiling; Eurogamer: in the tunnel to Big Octo's room (N64: next to the other one). The rule (Boomerang or Hookshot) stays; the region asks for the tentacles (Main -> Depths)"

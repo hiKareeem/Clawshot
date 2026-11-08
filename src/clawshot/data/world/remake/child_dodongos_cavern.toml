@@ -1,0 +1,116 @@
+# Dodongo's Cavern, as the remake builds it (round 4, track A; the whole dungeon, both ages). Format:
+# plans/04-world-format.md, "Overrides". Every rule of the area was checked; the findings file
+# (E:/OOTRemake/work/r4-logic-child/findings/dodongos_cavern.md) lists what stays as OoT Randomizer has it.
+#
+# Guides (Switch 2 remake, 2026-11-05 to 07):
+#   Nintendo Life, https://www.nintendolife.com/guides/zelda-ocarina-of-time-dodongo-cavern-walkthrough-switch-2
+#   IGN, https://www.ign.com/wikis/ocarina-of-time-remake/Dodongo_Cavern_Dungeon_Walkthrough
+#   QuestFern, https://questfern.com/oot/guides/dodongos-cavern-walkthrough/
+#   VGC, https://www.videogameschronicle.com/guide/all-dodongos-cavern-gold-skulltula-locations-in-zelda-ocarina-of-time-switch-2/
+#   Eurogamer and Polygon Gold Skulltula guides (local copies, E:/OOTRemake/work/r3/)
+# Placement data: DodongoCavern_Static/_Dynamic, read by E:/OOTRemake/work/r4-logic-child/actors.py; coordinates in
+# metres, y up; room = DefaultDungeonRoomIndex (1 main hall, 10 staircase room, 13 blade room with the Bomb Bag
+# ledge, 16 upper Lizalfos, 17 double eye-switch passage, 18 Gold Skulltula side room, 21 cracked floor, 22 boss).
+
+# The Bomb Bag ledge. OoT Randomizer's "Far Bridge" holds both the ledge with the Bomb Bag chest (reached from the
+# upper Lizalfos through the double eye-switch passage) and the bridge over the skull with the lift switch. In the
+# remake a bombable wall stands between them: data WallCrack 13202633467597206724 (room 13, (30,115,-23)) just west
+# of the Bomb Bag chest (39,116,-23), then a gate (23,113,-23) and the lift switch Obj_StepSwitch_A_01
+# 3277908769903275104 (17,112,-23) on the main hall's upper floor. "Far Bridge" stays the bridge side.
+
+[regions."Dodongos Cavern Bomb Bag Ledge"]
+area = "DodongoCavern"
+dungeon = "Dodongos Cavern"
+source = "remake: the Bomb Bag chest's ledge in the blade room (room 13 upper level) and the double eye-switch passage before it (room 17), cut off from the bridge over the skull by a bombable wall (WallCrack 13202633467597206724); Nintendo Life, IGN, QuestFern: bomb the wall behind the Bomb Bag chest to get back to the main hall"
+
+[locations."Dodongos Cavern Bomb Bag Chest"]
+region = "Dodongos Cavern Bomb Bag Ledge"
+source = "data: Obj_TBox_A_02 12161709650443144121 (Item_BombBag_Small), room 13 at (39,116,-23), west of it the WallCrack; IGN: the passage from the upper Lizalfos ends in front of the chest"
+
+[locations."Dodongos Cavern Double Eye Switch Room Pot 1"]
+region = "Dodongos Cavern Bomb Bag Ledge"
+source = "the double eye-switch passage (room 17: Obj_EyeSwitch_A_05 12790243399538496729 and 13951311116548645685, two Obj_DodongoCave_FireWall_A_01) lies between the upper Lizalfos and the Bomb Bag ledge, not on the bridge"
+
+[locations."Dodongos Cavern Double Eye Switch Room Pot 2"]
+region = "Dodongos Cavern Bomb Bag Ledge"
+source = "as Pot 1: room 17, between the upper Lizalfos and the Bomb Bag ledge"
+
+[exits."Dodongos Cavern Upper Lizalfos"."Dodongos Cavern Far Bridge"]
+rule = "False"
+was = "is_adult or Sticks or Slingshot or Bombs or Kokiri_Sword"
+source = "the upper Lizalfos lead to the Bomb Bag ledge (exit Upper Lizalfos -> Bomb Bag Ledge), not to the bridge: the bombable wall is between (WallCrack 13202633467597206724)"
+
+[exits."Dodongos Cavern Upper Lizalfos"."Dodongos Cavern Bomb Bag Ledge"]
+rule = "(is_adult or Sticks or Slingshot or Bombs or Kokiri_Sword) and (can_use(Slingshot) or can_use(Bow))"
+new = true
+source = "OoT Randomizer's rule for leaving the upper Lizalfos (Dodongos Cavern.json:136, defeat the pair), plus the double eye-switch passage: Nintendo Life, IGN and QuestFern shoot one eye, cross, then the second eye through a window before the fire returns; data: room 17 holds two Obj_EyeSwitch_A_05 with LimitTime 10 and two Obj_DodongoCave_FireWall_A_01. The Slingshot (child) or Bow (adult) is already needed one room before (Before Upper Lizalfos -> Upper Lizalfos)"
+
+[exits."Dodongos Cavern Bomb Bag Ledge"."Dodongos Cavern Upper Lizalfos"]
+rule = "can_use(Slingshot) or can_use(Bow)"
+new = true
+source = "back through the double eye-switch passage: the two timed eye switches (LimitTime 10) and fire walls of room 17 are on this way too; OoT Randomizer's Far Bridge -> Upper Lizalfos was True"
+
+[exits."Dodongos Cavern Bomb Bag Ledge"."Dodongos Cavern Far Bridge"]
+rule = "here(has_explosives)"
+new = true
+source = "Nintendo Life: bomb the wall west of the Bomb Bag chest to return to the main area; IGN: place a bomb at the cracked wall behind the chest, the lift switch is dead ahead; QuestFern: bomb the wall behind the chest. Data: WallCrack 13202633467597206724 (30,115,-23), no Bomb Flower on the ledge (the blade room's only one, (49,114,-12), is on the lower platforms). The Megaton Hammer on this wall is not checked"
+
+[exits."Dodongos Cavern Far Bridge"."Dodongos Cavern Upper Lizalfos"]
+rule = "False"
+was = "True"
+source = "the bridge reaches the upper Lizalfos only through the Bomb Bag ledge (exits Far Bridge -> Bomb Bag Ledge -> Upper Lizalfos)"
+
+[exits."Dodongos Cavern Far Bridge"."Dodongos Cavern Bomb Bag Ledge"]
+rule = "here(has_explosives)"
+new = true
+source = "the same bombable wall (WallCrack 13202633467597206724), from the main hall's side; that it breaks from this side too is not checked (question in the findings)"
+
+[exits."Dodongos Cavern Climb"."Dodongos Cavern Far Bridge"]
+rule = "False"
+was = "is_adult and (logic_dc_jump or Hover_Boots or Longshot)"
+source = "OoT Randomizer's adult way up from the blade room (the spike trap room jump, logic_dc_jump, or Hover Boots or Longshot) lands on the Bomb Bag ledge above the blade room, which the remake walls off from the bridge (WallCrack 13202633467597206724): exit Climb -> Bomb Bag Ledge carries the rule"
+
+[exits."Dodongos Cavern Climb"."Dodongos Cavern Bomb Bag Ledge"]
+rule = "is_adult and (logic_dc_jump or Hover_Boots or Longshot)"
+new = true
+source = "OoT Randomizer's rule (Dodongos Cavern.json:111), moved to the ledge it reaches: the Bomb Bag chest (39,116,-23) stands on the blade room's upper level (room 13), and Nintendo Life has Link leap from that ledge down onto the blade room's tall platforms. Adult only; that Hover Boots or the Longshot reach the ledge in the remake is not checked (question in the findings)"
+
+[locations."Dodongos Cavern Blade Room Pot 1"]
+rule = "can_use(Boomerang) or at('Dodongos Cavern Bomb Bag Ledge', True)"
+was = "can_use(Boomerang) or at('Dodongos Cavern Far Bridge', True)"
+source = "Nintendo Life: from the Bomb Bag chest one may leap south onto the tall platforms to smash the pots; the ledge is now its own region"
+
+[locations."Dodongos Cavern Blade Room Pot 2"]
+rule = "can_use(Boomerang) or at('Dodongos Cavern Bomb Bag Ledge', True)"
+was = "can_use(Boomerang) or at('Dodongos Cavern Far Bridge', True)"
+source = "as Pot 1 (Nintendo Life: leap south from the Bomb Bag ledge onto the tall platforms)"
+
+# Gold Skulltulas.
+
+[locations."Dodongos Cavern GS Alcove Above Stairs"]
+rule = "has_explosives"
+was = "can_use(Hookshot) or can_use(Boomerang)"
+source = "moved (plans/rounds/r3-census.md, 'Moved checks'): data Enemy_Skulltula_Gold 4565265801822094851 in room 18 at (21,112,-56), floor height (the room's two Enemy_Dodongo stand at y 112), behind WallCrack 1823997448213534774 (20,113,-44) off the bridge over the skull. Eurogamer and Polygon: Bombs required (child and adult), on the back of the rock spike; IGN: bomb the cracked wall in the hall's north-east corner, a detonating Dodongo can kill it; Nintendo Life, VGC: a bombable wall by the bridge. No guide asks for the Boomerang or Hookshot. The Megaton Hammer on this wall is not checked"
+
+[locations."Dodongos Cavern GS Vines Above Stairs"]
+rule = "at('Dodongos Cavern Climb', can_use(Slingshot) or can_use(Boomerang) or can_use(Bow) or can_use(Hookshot)) or (logic_dc_vines_gs and can_use(Longshot))"
+was = "at('Dodongos Cavern Climb', True) or (logic_dc_vines_gs and can_use(Longshot))"
+source = "data: Enemy_Skulltula_Gold 8470399761714006011 at y 120 on the climbing mesh, beside Enemy_Skullwalltula 6717968000149556429 (y 119), about 5 m above the upper floor by the door to the next room (y 115). IGN: hit them with the Slingshot, then climb the mesh for the token; Eurogamer: kill it before climbing up to its token; QuestFern: shoot it, then climb. Polygon lists no item. A ranged weapon is asked; the Boomerang, Bow and Hookshot are the usual Gold Skulltula weapons, not checked here (question in the findings)"
+
+# Checks the remake does not have.
+
+[locations."Dodongos Cavern Boss Room Chest"]
+n64_only = "no chest in the remake's boss rooms: room 21 (the cracked floor, Obj_DodongoCave_CrackFloor_A_01) and room 22 (King Dodongo, heart container, warp) hold none; all nine DodongoCavern chests are elsewhere (rooms 1, 5, 10, 11, 13, 16); no guide mentions one (IGN, Nintendo Life: bomb the floor and drop)"
+source = "placement data (Obj_TBox* in DodongoCavern_Static/_Dynamic); census (plans/rounds/r2-census.md: Boss Room Chest unmatched)"
+
+[locations."Dodongos Cavern Deku Scrub Lobby"]
+n64_only = "the remake's Dodongo's Cavern has one business scrub (Enemy_Scrub_Business 7388739057158296701, room 7, by the Dodongo room), none in the main hall; IGN walks both sides of the hall (map, blue rupee, Gossip Stone alcoves) and meets no scrub"
+source = "placement data; census (one DodongoCavern scrub; plans/rounds/r2-census.md); IGN and Nintendo Life walkthroughs"
+
+[locations."Dodongos Cavern Deku Scrub Near Bomb Bag Left"]
+n64_only = "no scrub by the Bomb Bag in the remake: the dungeon's only Enemy_Scrub_Business is in room 7, by the Dodongo room; the blade room (13) holds a Bomb Flower, chests, pots and spike traps (IGN, Nintendo Life)"
+source = "placement data; census (one DodongoCavern scrub; plans/rounds/r2-census.md)"
+
+[locations."Dodongos Cavern Deku Scrub Near Bomb Bag Right"]
+n64_only = "no scrub by the Bomb Bag in the remake: the dungeon's only Enemy_Scrub_Business is in room 7, by the Dodongo room"
+source = "placement data; census (one DodongoCavern scrub; plans/rounds/r2-census.md)"
