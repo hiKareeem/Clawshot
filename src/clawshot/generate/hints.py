@@ -49,7 +49,8 @@ MASK_OF_TRUTH = "Mask of Truth"
 ROOT = "Root"
 # Progression items that do not count as major for barren areas (OoT Randomizer's Item.majoritem at its defaults).
 NOT_MAJOR_TYPES = frozenset({"Shop", "Event", "Drop", "Token", "Map", "Compass"})
-NOT_MAJOR_PREFIXES = ("Bombchus", "Heart Container", "Piece of Heart")
+# Shop refills ("Buy ...") are type Shop in OoT Randomizer; the remake's own refill sizes are added as plain items.
+NOT_MAJOR_PREFIXES = ("Buy ", "Bombchus", "Heart Container", "Piece of Heart")
 
 
 class HintError(ValueError):

@@ -37,7 +37,7 @@ def world(goal="Hookshot and Bow"):
         "Lake Chest": chest("Rupees (5)"),
         **{name: {"type": "HintStone"} for name in STONES},
     }
-    items = {"Hookshot": {}, "Bow": {}, "Mask of Truth": {}, "Rupees (5)": {"class": "normal"}}
+    items = {"Hookshot": {}, "Bow": {}, "Mask of Truth": {}, "Rupees (5)": {"class": "normal"}, "Buy Bombchu (8)": {}}
     return build_world({"start": "Start", "goal": goal, "regions": regions, "locations": locations, "items": items})
 
 
@@ -86,6 +86,16 @@ def test_with_the_mask_a_stone_is_read_only_by_child_holding_it():
     for number in range(20):
         for hint in hints.choose(seed(number, with_mask), "mask"):
             assert hint.location != "Hut Chest"  # no stone is readable without the mask
+
+
+def test_a_shop_refill_is_not_a_major_item():
+    refill = seed(0).placements | {"Lake Chest": "Buy Bombchu (8)"}
+    kinds = set()
+    for number in range(30):
+        for hint in hints.choose(seed(number, refill), "always", "strong"):
+            kinds.add((hint.kind, hint.area))
+            assert not (hint.kind == "item" and hint.item == "Buy Bombchu (8)"), number
+    assert ("barren", "LAKE_HYLIA") in kinds  # the refill does not keep the lake off the barren list
 
 
 def test_useless_gives_only_junk_and_unknown_choices_are_refused():
