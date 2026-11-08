@@ -29,7 +29,9 @@ def gtg_statue_room():
 # Gerudo Training Ground
 
 
-@pytest.mark.parametrize("chest", ["Gerudo Training Ground Lobby Left Chest", "Gerudo Training Ground Lobby Right Chest"])
+@pytest.mark.parametrize(
+    "chest", ["Gerudo Training Ground Lobby Left Chest", "Gerudo Training Ground Lobby Right Chest"]
+)
 def test_lobby_chests_need_the_eye_switch_and_the_lens(gtg_lobby, chest):
     location = gtg_lobby.locations[chest]
     search = Search(gtg_lobby, ["Bow"])
