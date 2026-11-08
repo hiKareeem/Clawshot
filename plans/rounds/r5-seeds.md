@@ -129,3 +129,34 @@ Pytest basetemps were explicitly under `E:/OOTRemake/work/r5-seeds/` so dump-der
 outside the repo. Five completed parent smoke/probe scripts were removed after their evidence was recorded;
 the per-Hash research inventories remain outside the repo. No dependency, game/save file, window or game process
 was changed/started. No test or launcher was run through Hookshot.
+
+## Item 5: three generated baselines; authorized integration still required
+
+Generated `E:/OOTRemake/work/r5-seed/seed-{3,7,22}/`: each has `romfs`, `spoiler.json`, a short
+`play-note.md` with fifteen key-item locations/opening checks, and `size-check.json`. Each seed passed its
+finished-seed search before writing. All 184 chest identities are accounted for; each shuffles 164 checks.
+
+| Seed | Search spheres | Written overlay files checked |
+|---|---:|---:|
+| 3 | 24 | 58 |
+| 7 | 27 | 53 |
+| 22 | 28 | 59 |
+
+Every non-table file was independently decompressed/read back; sized resource entries cover their required
+allocation. Fast-start files use the validated non-growing/original-allocation policy above; the emitted size
+table itself parses. A second actual CLI process regenerated whole-game seed 7 with `PYTHONHASHSEED=31337`:
+exit 0, all 54 canonical files (`romfs` plus spoiler) byte-identical, zero differences. Temporary duplicate removed.
+
+Prepared release-only `Clawshot play seed.bat` plus `Play seed {3,7,22}.bat`, copied from the corrected r3
+pattern with separate round-5 user/log paths. Static check confirms executable exactly
+`E:\Games\Hookshot\hookshot.exe`, no work-build fallback; none was run. No user folder was created by launching.
+
+**Not final playable seeds:** these baselines precede track A's chronological return model. All three play
+notes explicitly say to regenerate after its authorized rebase; reachability spheres are not a legal itinerary.
+The 08:55 thread snapshot has track A/B handoffs but no authorization to rebase onto a newer main.
+**Claude: provide the authorized main revision containing the age model and shop/shield normalization.**
+Then verify physical found-Hylian-Shield coverage, regenerate the three outputs, rerun the four gates after
+integration and replace these provisional notes. No chronological/in-game success is claimed.
+
+Parent generation/determinism helper scripts were removed after recording this proof; no game-derived output
+is in the repository. No merge or push.
