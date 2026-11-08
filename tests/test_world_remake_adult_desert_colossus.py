@@ -15,3 +15,13 @@ def test_cliff_token_needs_longshot_as_adult_or_boomerang_as_child():
     assert not search.can_access(token, CHILD)
     search.collect("Boomerang")
     assert search.can_access(token, CHILD)
+
+
+def test_fairy_wall_accepts_the_documented_hammer_and_existing_bombs():
+    spec = load_spec()
+    spec["start"] = "Desert Colossus"
+    world = build_world(spec)
+    target = "Colossus Great Fairy Fountain"
+    assert not Search(world).can_reach(target, ADULT)
+    assert Search(world, ["Megaton Hammer"]).can_reach(target, ADULT)
+    assert Search(world, ["Bomb Bag"]).can_reach(target, ADULT)

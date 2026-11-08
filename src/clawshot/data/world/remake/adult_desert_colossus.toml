@@ -13,3 +13,8 @@ source = "Banc DesertColossus_{Child,Adult}_{Static,Dynamic} read only (cs4b hel
 [locations."Colossus Deku Scrub Grotto Front"]
 n64_only = "the remake's Colossus grotto holds a purple-rupee chest (census 1186167733408299582) and no Enemy_Scrub_Business; no business scrub is placed anywhere in DesertColossus (03-game-data.md section 5)"
 source = "Banc DesertColossus_{Child,Adult}_{Static,Dynamic} read only (cs4b helper, 2026-11-07); 03-game-data.md section 5 scrub table"
+
+[exits."Desert Colossus"."Colossus Great Fairy Fountain"]
+rule = "can_blast_or_smash"
+was = "has_explosives"
+source = "https://zeldacentral.com/games/ocarina-of-time-remake/great-fairy-fountains/: break the cracked red wall with Megaton Hammer. Read-only Obj_DesertColossus_CrackWall_A_01 pack also has ReactionForHammerAttack/StaticCrackObject and SimpleStone ChemicalParam RequestDeathIfExploded=true, corroborating the existing explosive route rather than removing it."
