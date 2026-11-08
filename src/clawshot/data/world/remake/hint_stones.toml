@@ -1,0 +1,51 @@
+# Gossip Stones (round 7, cs7a): the remake's differences from OoT Randomizer's `HintStone` locations, which the
+# translator keeps as hint locations (`World.hint_stones`). The census of the 40 talking stones and the link of each to
+# an OoT Randomizer stone is `clawshot.census.hints.STONE_LINKS` (plans/03-game-data.md section 22, round 6 cs6c).
+# Every OoT Randomizer stone that has a remake stone keeps its translated region and rule; the four below have none,
+# and the remake adds four stones OoT Randomizer does not have.
+
+[locations."KF Storms Grotto Gossip Stone"]
+n64_only = "the remake's storms grotto room holds the scrub trio and a chest, no stone (r4-logic-child.md; census.hints.OOTR_STONES_MISSING)"
+source = "03-game-data.md section 22: no Obj_GossipStone_A_01 in the KF storms grotto room"
+
+[locations."LW Near Shortcuts Grotto Gossip Stone"]
+n64_only = "the room under the boulder holds no stone (r4-logic-child.md; census.hints.OOTR_STONES_MISSING)"
+source = "03-game-data.md section 22: no Obj_GossipStone_A_01 in the LW near-shortcuts grotto room"
+
+[locations."HF Near Market Grotto Gossip Stone"]
+n64_only = "Hyrule Field has one generic grotto fewer; its east grotto stone (GOSSIP_HYRULE_FIELD_02) is linked to the Southeast grotto (census.hints.STONE_LINKS)"
+source = "03-game-data.md section 22: 40 talking stones, three generic-grotto stones in HyruleField"
+
+[locations."DMT Storms Grotto Gossip Stone"]
+n64_only = "the storms grotto holds Baby Dodongos, bomb flowers and rupees, no stone (r4-logic-child.md; census.hints.OOTR_STONES_MISSING)"
+source = "03-game-data.md section 22: no Obj_GossipStone_A_01 in the DMT storms grotto room"
+
+# The four remake-only stones. Region and rule follow the check or room they share.
+
+[locations."SFM Song of Time Clearing Gossip Stone"]
+new = true
+region = "Sacred Forest Meadow"
+type = "HintStone"
+rule = "is_adult and has_explosives and can_play(Song_of_Time)"
+source = "GOSSIP_KOKIRI_FOREST_02 (SacredForestMeadow): behind the Song of Time blocks with the Business Scrub Seed chest (Zelda Central remake gossip stones guide, https://zeldacentral.com/games/ocarina-of-time-remake/gossip-stones/); the rule is that chest's (remake/extra_sacred_forest_meadow.toml, cs5c)"
+
+[locations."Kak Bomb Grotto Gossip Stone"]
+new = true
+region = "Kakariko Village"
+type = "HintStone"
+rule = "can_blast_or_smash"
+source = "GOSSIP_DEATH_MOUNTAIN_TRAIL_01 (KakarikoVillage): Kakariko's only bomb grotto (Land_HidingHole_Base_A_01 at (-20,97,66)) holds the stone and seven beehives, under cover 12611727494616924395 (r4-logic-child.md, Kakariko; remake/child_kakariko.toml). Bomb grottos open with can_blast_or_smash in the remake: every entrance is visible and the Stone of Agony finds Gold Skulltulas (remake/child_hyrule_field.toml, round 4)"
+
+[locations."ZR Storms Grotto Gossip Stone"]
+new = true
+region = "ZR Storms Grotto"
+type = "HintStone"
+rule = "True"
+source = "GOSSIP_LOST_WOOD_01 (ZoraRiver): in the storms grotto room under cover 5489068764052953067 with a butterfly fairy and four pots (r4-logic-child.md, Zora's River; census.hints.STONE_LINKS)"
+
+[locations."DMT Cow Grotto Gossip Stone"]
+new = true
+region = "DMT Cow Grotto"
+type = "HintStone"
+rule = "True"
+source = "GOSSIP_HYRULE_CASTLE_03 (DeathMountainTrail): in the grotto room with the cow, beside the storms grotto room (census.hints.STONE_LINKS)"

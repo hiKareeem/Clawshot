@@ -327,6 +327,33 @@ OOTR_STONES_MISSING: dict[str, str] = {
     "DMT Storms Grotto Gossip Stone": "the storms grotto holds Baby Dodongos, bomb flowers and rupees (r4)",
 }
 
+# The remake-only stones (``None`` in :data:`STONE_LINKS`): their names in the world, where
+# ``data/world/remake/hint_stones.toml`` gives each a region and a rule.
+REMAKE_STONES: dict[tuple[str, str], str] = {
+    ("SacredForestMeadow", "GOSSIP_KOKIRI_FOREST_02"): "SFM Song of Time Clearing Gossip Stone",
+    ("KakarikoVillage", "GOSSIP_DEATH_MOUNTAIN_TRAIL_01"): "Kak Bomb Grotto Gossip Stone",
+    ("ZoraRiver", "GOSSIP_LOST_WOOD_01"): "ZR Storms Grotto Gossip Stone",
+    ("DeathMountainTrail", "GOSSIP_HYRULE_CASTLE_03"): "DMT Cow Grotto Gossip Stone",
+}
+
+
+def stone_labels() -> dict[str, str]:
+    """Each Gossip Stone of the world (its location name) to the message label it speaks, one label per stone.
+
+    A census entry linked to nothing that is not a remake-only stone is a second placement of a stone listed in
+    another area (the Kokiri Forest files' copy of the Lost Woods bridge stone): it adds no stone."""
+    named = {key: link or REMAKE_STONES.get(key) for key, (link, _evidence) in STONE_LINKS.items()}
+    labels: dict[str, str] = {}
+    for (area, label), name in named.items():
+        if name is None:
+            if not any(other_label == label and other for (_, other_label), other in named.items()):
+                raise HintCensusError(f"{area} {label}: neither linked, remake-only nor a copy of a linked stone")
+            continue
+        if name in labels or label in labels.values():
+            raise HintCensusError(f"{area} {label}: stone {name!r} or label {label} given twice")
+        labels[name] = label
+    return labels
+
 
 @dataclass(frozen=True)
 class HintGiver:
