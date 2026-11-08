@@ -195,7 +195,8 @@ platform" works: the adult's rule asks for the event the child set.
 ## Reachability
 
 `Search(world, items)` (ported from OoT Randomizer's `Search.py`): from the start region, child and adult are
-searched separately, sharing one set of items and events. A region is reached for an age at day, at night or both.
+searched separately. Before adult return unlocks, child uses an independent pre-pull item/event view; adult also
+uses adult finds. After return, they share inventory. A region is reached for an age at day, at night or both.
 An exit is taken when its rule passes for that age at that time; the target is reached at the same time, both
 times if `time_passes`, or its `provides_time`. Events are done whenever their rule passes in a reached region, and
 the search repeats until nothing changes. Collecting more items only adds, so the search resumes where it stopped.
@@ -210,6 +211,25 @@ The N64 free Fire Temple key is not carried over; its eight real keys must be co
 **Ages.** OoT Randomizer's start region `Root` is reached by both ages, and its exit to `Root Exits` needs
 `is_starting_age or Time_Travel`. The other age therefore starts only once the event `Time Travel` is held, which
 the Temple of Time's Master Sword Pedestal gives (an `Event` location in OoT Randomizer, an event here).
+
+The remake gates reverse travel on Forest quest completion. `world.toml` settings `age_return_event` and
+`age_return_region` name the completion event (`Defeat Phantom Ganon`, not the shuffled medal) and adult
+pedestal (`Beyond Door of Time`). Until both hold, child checks/events can use only starting inventory and
+items obtainable in a child-only prefix, never adult finds or their aliases. That prefix can finish before
+the chosen first pull; already-collected checks can join it without granting their item twice.
+An adult start has no child prefix before return. A partial world's missing gate stays closed.
+
+`age_return_guarantee = true` (provisional default, reviewer, round 5) adds a separate acceptance proof:
+cap each pre-pull item count in child-only collection to find its mandatory minimum for `age_pull_event`
+(`Time Travel`), then prove adult can open return with only those counts, starting inventory and adult checks.
+This includes the pull route's child prerequisites, not optional errands. Alternative routes may yield a
+conservative intersection and rejection. Off retains temporal correctness but does not promise safety after
+an early pull. Child-only goals that never open travel need no return proof.
+
+`free_time_travel = false` by default. With it on, the search uses unrestricted shared inventory and skips the
+extra return proof; `make_seed` automatically pairs that assumption with `patch.age`'s isolated pedestal
+placement transform. The Forest quest, sage reward and Sheik/Prelude gates remain unchanged. In-game proof
+is pending (`03-game-data.md` section 16); no GameDataList return-unlock Bool exists.
 
 **Time of day.** Without entrance shuffle OoT Randomizer assumes any time of day can be reached from wherever the
 player stands, and `at_day`/`at_night` are `True` (`RuleParser.at_day`: unless `world.ensure_tod_access`). Clawshot
