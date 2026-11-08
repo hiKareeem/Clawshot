@@ -55,13 +55,17 @@ def prepare(spec: Mapping[str, Any], settings: Settings) -> tuple[Settings, Worl
     """The settings as a seed uses them, and the world they build.
 
     With ``dungeon_items = "anywhere"`` the logic setting ``keysanity`` is set too, where the world has it.
-    ``skip_mido`` is derived from the same fast-start list the overlay writer uses; it cannot diverge.
+    ``open_forest`` and the legacy ``skip_mido`` rule flag derive from the same forest mode the overlay patches.
     """
     logic = dict(settings.logic)
+    if "open_forest" in spec.get("settings", {}):
+        if "open_forest" in logic and logic["open_forest"] != settings.forest:
+            raise FillError("open_forest logic must agree with the seed's forest setting")
+        logic["open_forest"] = settings.forest
     if "skip_mido" in spec.get("settings", {}):
-        skipped = "mido" in settings.fast_start
+        skipped = settings.forest == "open"
         if "skip_mido" in logic and logic["skip_mido"] != skipped:
-            raise FillError("skip_mido logic must agree with the seed's fast_start settings")
+            raise FillError("skip_mido logic must agree with the seed's forest setting")
         logic["skip_mido"] = skipped
     if settings.dungeon_items == "anywhere" and "keysanity" in spec.get("settings", {}):
         if logic.get("keysanity") is False:

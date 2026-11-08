@@ -1,7 +1,7 @@
 [events."Kokiri Forest"."Showed Mido Sword & Shield"]
 rule = "is_child and (skip_mido or (Kokiri_Sword and (Deku_Shield or Hylian_Shield)))"
 was = "is_child and Kokiri_Sword and Deku_Shield"
-source = "D18; mido changes only KokiriForest_Npc_Kokiri_Mido_Child_Blocker, not the exit guard (KokiriForest_Child_Level_All_02_d26e, separate Kokiri_007 flags/Get_StoneOfForest Complete). Kept Mido accepts either shield: Kareem in game 2026-11-08, r5-shops/shield-slot-hylian, Kokiri Sword plus Hylian Shield and no Deku Shield cleared his blocker."
+source = "D18; skip_mido is now derived only from forest=open (Round 6), paired with the independent bridge exit flag. The physical Mido flag remains KokiriForest_Npc_Kokiri_Mido_Child_Blocker. Kept Mido accepts either shield: Kareem in game 2026-11-08, r5-shops/shield-slot-hylian, Kokiri Sword plus Hylian Shield and no Deku Shield cleared his blocker."
 
 [events."KF Outside Deku Tree"."Showed Mido Sword & Shield"]
 rule = "is_child and (skip_mido or (Kokiri_Sword and (Deku_Shield or Hylian_Shield)))"
