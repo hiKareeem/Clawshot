@@ -62,7 +62,10 @@
   Hookshot once and only healed after, also after quit and continue (Kareem, 2026-11-08).
 - **D23 Songs go only to song locations; other gift items only to gift locations, until seen working in a chest**
   (Claude, round 5, provisional; OoT Randomizer's `shuffle_song_items = 'song'`). The Song of Storms in a chest
-  showed a green rupee with the song's text and set `IsGet.Item_Melody_StormSong`; whether it plays is untested.
+  showed a green rupee with the song's text and set `IsGet.Item_Melody_StormSong`; with the Fairy Ocarina (itself
+  from a chest) it plays as a learned song (Kareem, 2026-11-08). So songs and the Fairy Ocarina work in chests; the
+  default stays songs-on-song-locations (OoT Randomizer's default) and "songs anywhere" becomes a setting (round 6).
+  Other gift items stay on gift locations until each actor is seen in a chest.
 
 ## Open (only Kareem and his co-owner decide)
 

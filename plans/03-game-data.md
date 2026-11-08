@@ -1143,3 +1143,11 @@ frogs' bug game. None is changed.
 - `chest-song-storms` (track C's chest, a song actor as `Drop__DropActor`): the chest showed a green rupee model with
   the Song of Storms' pickup text, and the save has `IsGet.Item_Melody_StormSong` true. With no ocarina held, whether
   the song plays is not known yet (a follow-up test on the ranch save, which has the Fairy Ocarina).
+- `chest-ocarina-storms` (Claude's follow-up, new game, `E:/OOTRemake/work/r5-gifts/make_chest_ocarina_storms.py`;
+  the ranch save's Kakariko grotto chest was already opened): Mido's house, Hash `4555665598794293658` held
+  `Item_Melody_StormSong` and Hash `9725242744547055868` held `Item_Ocarina_Fairy`. **The Fairy Ocarina from a chest
+  works, and the Song of Storms from a chest plays as a learned song** (save: `IsGet.Item_Ocarina_Fairy`,
+  `IsGet.Item_Melody_StormSong`). The song still shows a green rupee in the chest. **Naming:** walking in, the far-left
+  chest is `4555665598794293658` (census and OoT Randomizer name "KF Midos Top Right Chest") and the far-right one
+  `9725242744547055868` ("KF Midos Top Left Chest"): the remake's row of four is mirrored against the N64 names, so a
+  spoiler's left and right for these chests are the player's right and left (the two middle chests are unchecked).
