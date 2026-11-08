@@ -7,7 +7,7 @@ import pytest
 
 from clawshot.generate import Settings, prepare
 from clawshot.generate.fill import FillError, check_beatable
-from clawshot.world import CHILD, WorldError, build_world, load_spec, reachable
+from clawshot.world import CHILD, WorldError, build_world, load_spec, load_world, reachable
 from clawshot.world.load import apply_overrides
 
 WORLD_TOML = """
@@ -177,3 +177,21 @@ def test_deku_tree_top_floor_and_basement_need_the_slingshot(deku_slice):
     # The Slingshot room and the map stay open without it: the room traps, it doesn't lock (round file, item 2).
     for name in ("Deku Tree Map Chest", "Deku Tree Slingshot Chest", "Deku Tree Slingshot Room Side Chest"):
         assert without.can_access(deku_slice.locations[name], CHILD), name
+
+
+def test_night_comes_only_after_meeting_zelda():
+    """The remake's clock starts once Link has met Zelda (event 'Time Flows' in the castle garden, which the Weird
+    Egg or the Chicken opens): before that a child gets no night-only check."""
+    world = load_world()
+    items = [
+        loc.vanilla
+        for loc in world.locations.values()
+        if loc.vanilla is not None and loc.vanilla not in ("Weird Egg", "Chicken")
+    ]
+    night_only = ("Graveyard Dampe Gravedigging Tour", "Kak GS Skulltula House", "Market Lost Dog")
+    before = reachable(world, items)
+    after = reachable(world, [*items, "Weird Egg"])
+    assert not before.holds("Time Flows") and after.holds("Time Flows")
+    for name in night_only:
+        assert not before.can_access(world.locations[name], CHILD), name
+        assert after.can_access(world.locations[name], CHILD), name
