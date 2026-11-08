@@ -64,6 +64,11 @@ progressive_items = false
 age_return_event = "Defeat Phantom Ganon"
 age_return_region = "Beyond Door of Time"
 
+# Provisional default, reviewer 2026-11-08: returning must not rely on optional child errands before the pull.
+# The search derives mandatory counts from each seed's child-only pull routes, including prerequisite items.
+age_return_guarantee = true
+age_pull_event = "Time Travel"
+
 # Each progressive item's tiers, lowest first. Tier n is an item of its own that counts as n of the progressive
 # item, so OoT Randomizer's rules ("Hookshot" = Progressive_Hookshot, "Longshot" = (Progressive_Hookshot, 2))
 # read fixed and progressive items alike. Finding a higher tier first gives that tier's ability [inference: the
