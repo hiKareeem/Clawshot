@@ -239,6 +239,41 @@ Reviewer authorized rebase onto main's `9c4abf0`. Restoring loader text first le
 `git restore -- src/clawshot/world/load.py` removed the local copy byte-for-byte, then `git rebase main` succeeded.
 No loader code was committed by cs4b. Area overrides now use the real prerequisite on the branch.
 
-## Remaining areas
+## Shadow Temple
 
-Shadow, Spirit and desert/endgame audit reports follow.
+Read every translated rule, the remake Eurogamer walkthrough and IGN's scythe-room description; compared Banc
+rooms/locks, chest drops, targets, skull-pot damage and the maze-door web. Five real keys/five ordinary locks:
+the fifth lock is on the spike-wall/Boss Key room, not the final boss approach. No Bomb Flowers or Song of Time
+blocks are placed in this dungeon.
+
+Changed: wind-corridor token moves from the skull-pot room and needs Longshot; boat token needs Scarecrow;
+three-skull token needs bombs; remove the Bracelet/Bomb Flower alternatives; the new maze-door web needs fire
+or an explosion; fifth key gates the spike-wall chests; remove the false fifth-key boss-door requirement.
+The unsupported N64 scarecrow/Time Block bridge bypass is closed. The post-boat cracked-pillar bridge needs
+Bomb Bag, not Bow. The scythe-room high silver rupee needs its grapple target. Two absent N64 chests are
+excluded (Invisible Spikes, Falling Spikes Upper); all five real key checks remain.
+
+Checked/unchanged normal routes: Lens entry, initial Hover crossing and boots chest; Map/Compass; five silver
+rupees for first key and pit shortcut; strength block under falling spikes; second/third/fourth key gates;
+Hookshot silver rupees; hidden bomb-wall key after fans; Lullaby boat; Din's Fire spike walls; boss key; Lens
+and ranged stun for Bongo Bongo; heart, medallion and blue warp. Pots/drops not named above are not certified.
+
+Sources:
+- https://www.eurogamer.net/shadow-temple-walkthrough-zelda-ocarina-of-time
+- https://www.ign.com/wikis/ocarina-of-time-remake/Shadow_Temple_Dungeon_Walkthrough
+- https://www.eurogamer.net/all-gold-skulltulas-locations-zelda-ocarina-of-time
+- https://www.videogameschronicle.com/guide/all-shadow-temple-gold-skulltula-locations-in-zelda-ocarina-of-time-switch-2/
+- https://game8.co/games/Zelda-Ocarina-of-Time/archives/637866
+
+**Kareem: are Iron Boots mandatory for the fan corridor, or can timed movement/Hookshot pass it as on N64?
+Does ordinary Hookshot reach the scythe-room high silver rupee? Can the invisible Floormaster be fought
+without Lenses? Can any scarecrow/hover route bypass the cracked-pillar bridge without Bomb Bag? Can Fire
+Arrows burn the spike walls instead of Din's Fire?** The fan and combat alternatives remain unresolved;
+no new Iron Boots or Lens combat requirement is inferred solely from a guide's recommended equipment.
+
+Verification: `uv run pytest tests/test_world_remake_adult_shadow.py -q`: **7 passed**. Live
+`smoke_shadow.py` starts with zero keys, collects Hover Boots and all five actual keys, reaches the Boss Key
+only after the fifth key, and wins against Bongo Bongo. No blocked progression checks. Before the bridge fix,
+live search printed Bow-only true/Bomb-Bag-only false; afterwards false/true. In-game: after landing from the
+boat, bomb the cracked pillar; the bridge should fall. With four keys the spike-wall room must remain locked;
+the invisible Floormaster supplies the fifth.

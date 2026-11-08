@@ -617,3 +617,23 @@ The per-area audit matrix (including adult rules checked unchanged in Kokiri, Lo
 Ranch, Kakariko, Graveyard, Trail and River) and every unresolved category are in the round file. In particular,
 reverse time travel after Forest is not represented chronologically by the monotone two-age search; that needs
 engine review, not a Forest requirement on initial adult access. No complete-game safety claim is made.
+
+### Shadow Temple
+
+Five real small keys, with the fifth lock on the spike-wall room containing the Boss Key, not on the boss
+approach. Locking the Boss Key chest behind five keys prevents placing the fifth key behind its own door.
+The post-boat cracked-pillar bridge uses Bomb Bag rather than N64's Bow/Bomb Flower solution. No Bomb
+Flowers or Time Blocks are placed, so Bracelet-based bomb supply and the old Time Block bridge bypass
+are unsupported. The maze entrance has a burnable/explodable web.
+
+The old single-pot token moved to the fan corridor (Longshot); the boat token needs Scarecrow. The triple-pot
+token appears only after bombing its skull. Invisible Spikes and Falling Spikes Upper are absent N64 chests;
+the falling-spikes floor Red Rupee and upper small key remain. The isolated route starts with zero keys,
+collects all five and wins. Fan-corridor Iron Boots and alternate combat/grapple ranges remain in-game
+questions, not additional inferred gates.
+
+Sources:
+- https://www.eurogamer.net/shadow-temple-walkthrough-zelda-ocarina-of-time
+- https://www.ign.com/wikis/ocarina-of-time-remake/Shadow_Temple_Dungeon_Walkthrough
+- https://www.eurogamer.net/all-gold-skulltulas-locations-zelda-ocarina-of-time
+- Banc/ShadowTemple placement and skull-pot/web actor parameters, read-only, build `e0f3ccfa`.

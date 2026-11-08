@@ -1,0 +1,115 @@
+# Shadow Temple, remake e0f3ccfa. Banc evidence from Banc/ShadowTemple/ShadowTemple_{Static,Dynamic}.bcett.byml.zs
+# (rooms are Dynamic.DefaultDungeonRoomIndex) and the actors' packs, read-only. Small-key locks: Obj_DoorChainLock_A_01
+# on the doors of rooms 8, 9/12, 14, 16 and 19 (five doors for five keys); the boss door has only the boss lock
+# (Obj_DoorChainLock_A_02, room 22). The Shadow Temple places no Bomb Flower and no Song of Time block.
+
+# Gold Skulltulas.
+
+[locations."Shadow Temple GS Single Giant Pot"]
+region = "Shadow Temple Wind Tunnel"
+rule = "can_use(Longshot)"
+was = "(Silver_Rupee_Shadow_Temple_Invisible_Spikes, 5)"
+source = "Not in a pot: on the wall below the hookshot crossing of the fan corridor (census room 14, Hash 15564367841356014861, under the room's Obj_HookShotTarget_A_01 pair); taken with the Longshot. https://www.eurogamer.net/all-gold-skulltulas-locations-zelda-ocarina-of-time (End Of Wind Tunnel Room); Polygon Gold Skulltula guide (Johnny Yu, 2026-11-07, B3 fans); https://game8.co/games/Zelda-Ocarina-of-Time/archives/637866 (#86); https://www.videogameschronicle.com/guide/all-shadow-temple-gold-skulltula-locations-in-zelda-ocarina-of-time-switch-2/ (Fans corridor)."
+
+[locations."Shadow Temple GS Near Ship"]
+rule = "can_use(Distant_Scarecrow)"
+was = "Longshot"
+source = "Scarecrow's Song then Longshot to Pierre on the platform by the ship: Eurogamer (Before Getting On Boat), Polygon (B4), Game8 #87 and VGC (Scarecrow near boat), URLs as for the GS Single Giant Pot. Banc room 17: Obj_ScarecrowMarker_B_00 and Npc_Pierre_CallOcarina at the Gold Skulltula (Hash 8823884712433934372)."
+
+[locations."Shadow Temple GS Triple Giant Pot"]
+rule = "Bombs or (logic_shadow_triple_pots and has_bombchus)"
+was = "True"
+source = "The Gold Skulltula pops out of the last of the three rotating skull pots once they are blown up: Eurogamer (Rotating Skull Room: 'in the Remake, you need to blow up the skull'), Polygon (B4: a bomb in each skull), VGC (Spinning pots room). Banc room 20: Enemy_Skulltula_Gold Hash 10270336409167849808 with Enemy_Skulltula_Gold_AppearPopOut; Obj_ShadowTemple_SkullPot_A_01 damage rates are 0 except bomb explosions (Life/DamageParameters/Obj_ShadowTemple_SkullPot_A_01). Same requirement as the 3 Spinning Pots Rupees exit below. Bombs also clear the web on the maze door."
+
+# Bomb Flowers are gone (no Obj_BombFlower anywhere in the dungeon); rooms 13 and 20 instead hold respawning pots
+# with Drop__DropTable DropTable_Obj_Bomb, which drop Obj_Bomb, a bomb-pouch pick-up (PouchContentParam Item_Bomb).
+
+[locations."Shadow Temple Freestanding Key"]
+rule = "(Silver_Rupee_Shadow_Temple_Invisible_Spikes, 5) and (Bombs or (logic_shadow_freestanding_key and has_bombchus))"
+was = "(Silver_Rupee_Shadow_Temple_Invisible_Spikes, 5) and (Bombs or Progressive_Strength_Upgrade or (logic_shadow_freestanding_key and has_bombchus))"
+source = "Banc room 13: Obj_Dungeon_SmallKey (Hash 12562389953863361839) lies inside Obj_ShadowTemple_SkullPot_A_01, which only bomb explosions damage; the room's two Obj_Pot_A_07_Respawn drop bomb-pouch pick-ups and no Bomb Flower is placed, so N64's Goron Bracelet route (a Bomb Flower) is unsupported."
+
+[exits."Shadow Temple Beyond Boat"."Shadow Temple 3 Spinning Pots Rupees"]
+rule = "Bombs or (logic_shadow_triple_pots and has_bombchus)"
+was = "Bombs or Progressive_Strength_Upgrade or (logic_shadow_triple_pots and has_bombchus)"
+source = "Banc room 20: the three Obj_ShadowTemple_SkullPot_A_01 take damage only from bomb explosions (ShadowTemple_SkullPot_DropControlActor holds the rupees); the room's Obj_Pot_A_07_Respawn drop bomb-pouch pick-ups and no Bomb Flower is placed, so the Goron Bracelet alternative is unsupported."
+
+# Beyond the boat: a burnable web (Obj_InsideTheDekuTree_SpiderWeb_A_02, room 17, Hash 14645737149650648667) covers
+# the door into the invisible maze (room 18, door 1.7 units away), from which rooms 19 (spike walls, Boss Key), 20
+# (skull pots) and 21 (invisible Floormaster) open. The web dies when burned or exploded (ChemicalParam/Obj_SpiderWeb:
+# RequestDeathIfBurned, RequestDeathIfExploded; DeathParam Obj_SpiderWeb_DamageBomb). Polygon (B4 Gold Skulltula:
+# 'set fire to the spider web covering the door', Fire Arrow or Din's Fire).
+
+[locations."Shadow Temple Invisible Floormaster Chest"]
+rule = "has_explosives or has_fire_source"
+was = "True"
+source = "Room 21 (Hash 17902550525792072472, Item_Dungeon_SmallKey) is behind the room-17 web on the maze door: fire (Polygon B4 Gold Skulltula) or an explosion (the web actor's ChemicalParam and DeathParam)."
+
+[locations."Shadow Temple Invisible Floormaster Pot 1"]
+rule = "has_explosives or has_fire_source"
+was = "True"
+source = "Room 21, behind the room-17 web on the maze door (see Invisible Floormaster Chest)."
+
+[locations."Shadow Temple Invisible Floormaster Pot 2"]
+rule = "has_explosives or has_fire_source"
+was = "True"
+source = "Room 21, behind the room-17 web on the maze door (see Invisible Floormaster Chest)."
+
+[locations."Shadow Temple 3 Spinning Pots Wonderitem"]
+rule = "can_use(Bow) and (has_explosives or has_fire_source)"
+was = "can_use(Bow)"
+source = "Room 20, behind the room-17 web on the maze door (see Invisible Floormaster Chest)."
+
+# The fifth small-key lock is on the spike-wall room's door (room 19: one Obj_DoorChainLock_A_01 with shutter event
+# Common_Dungeon_OpenDoorChainLockMoveToPlusZ_ThenLocked), not on the door past the fallen statue (room 22: no
+# small-key lock). Din's Fire also clears the maze web.
+
+[locations."Shadow Temple Spike Walls Left Chest"]
+rule = "(Small_Key_Shadow_Temple, 5) and can_use(Dins_Fire)"
+was = "can_use(Dins_Fire)"
+source = "Banc room 19 (Hash 9852624243105848451, Tbox_MagicJar_Large) is behind the dungeon's fifth small-key door (room 19 Obj_DoorChainLock_A_01 Hash 15182601213658853510)."
+
+[locations."Shadow Temple Boss Key Chest"]
+rule = "(Small_Key_Shadow_Temple, 5) and can_use(Dins_Fire)"
+was = "can_use(Dins_Fire)"
+source = "Banc room 19 (Hash 9221365632831348137, Item_Dungeon_BossKey) is behind the dungeon's fifth small-key door (room 19 Obj_DoorChainLock_A_01 Hash 15182601213658853510). Without this a fill may put the fifth key in the Boss Key chest, unreachable in the remake."
+
+[locations."Shadow Temple Spike Walls Pot"]
+rule = "(Small_Key_Shadow_Temple, 5) and (has_explosives or has_fire_source)"
+was = "True"
+source = "Room 19, behind the room-17 maze web and the fifth small-key door (see Spike Walls Left Chest). Banc room 19 places no Obj_Pot; whether this pot exists is not checked."
+
+[exits."Shadow Temple Before Boss"."Bongo Bongo Boss Room"]
+rule = "Boss_Key_Shadow_Temple"
+was = "(Small_Key_Shadow_Temple, 5) and Boss_Key_Shadow_Temple"
+source = "Banc room 22: the door past the fallen statue (Obj_ShadowTemple_Door_A_01 Hash 2192367679636495971) has no Obj_DoorChainLock_A_01; the boss door has only the boss lock (Obj_DoorChainLock_A_02 Hash 2886468236376982865). The fifth small key opens the spike-wall room instead."
+
+[exits."Shadow Temple Beyond Boat SoT Block"."Shadow Temple Before Boss"]
+rule = "False"
+was = "True"
+source = "N64 route past a Song of Time block from the far scarecrow ledge, unsupported: the remake's Shadow Temple places no Obj_SongOfTimeBlock_A_01 (Spirit Temple has three), and no remake source routes to the boss other than across the fallen statue. Until checked in game the boss approach is only the statue bridge."
+
+# The scythe room's ledge silver rupee is taken with a hookshot target (Banc room 6 Obj_HookShotTarget_A_01 Hash
+# 18426289742579299525; IGN: 'a high ledge with a Longshot target').
+
+[locations."Shadow Temple Scythe Shortcut Silver Rupee Ledge"]
+rule = "can_use(Hookshot)"
+was = "True"
+source = "https://www.ign.com/wikis/ocarina-of-time-remake/Shadow_Temple_Dungeon_Walkthrough (Finding the Compass: fourth silver rupee on a high ledge reached by its hookshot target); Banc room 6 Obj_HookShotTarget_A_01 Hash 18426289742579299525."
+
+# Chests the remake does not have. Banc chests: room 3 Map, 4 Hover Boots, 6 key, 7 Compass, 11 red rupee (floor) and
+# key (upper ledge), 15 invisible (Business Scrub seed), 16 green (appears) and invisible key, 19 magic jar and Boss
+# Key, 21 key (appears), 31 red and invisible red: 14 against OoT Randomizer's 16.
+
+[locations."Shadow Temple Invisible Spikes Chest"]
+n64_only = "the remake's invisible-spikes room (Banc room 12: the five Invisible Spikes silver rupees, four Obj_HookShotTarget_A_09, two ReDeads and the small-key door to room 9) holds no chest and no enemy counter; the dungeon's other 14 chests stand in other rooms"
+source = "Banc/ShadowTemple Static and Dynamic placement files, build e0f3ccfa (read-only inspection, round 4)"
+
+[locations."Shadow Temple Falling Spikes Upper Chest"]
+n64_only = "the remake's falling-spikes room (Banc room 11) holds two chests, not three: a red rupee on the floor (Hash 8858270325665149688, N64's Lower Chest) and the room's small key on the upper ledge (Hash 5781953901224064730, N64's Switch Chest); N64's upper rupee chest is the one missing. The remake's five small keys (rooms 6, 11, 16, 21 and the freestanding one in room 13) stay in the pool"
+source = "Banc/ShadowTemple Static and Dynamic placement files, build e0f3ccfa (read-only inspection, round 4); census key count 5"
+
+[exits."Shadow Temple Beyond Boat"."Shadow Temple Before Boss"]
+rule = "Bombs"
+was = "Bow or (logic_shadow_statue and has_bombchus) or shadow_temple_shortcuts"
+source = "https://www.eurogamer.net/shadow-temple-walkthrough-zelda-ocarina-of-time: place a Bomb beside the cracked brick pillar after the boat to create the bridge. The remake places no Bomb Flower to detonate with the N64 Bow route. N64 Bombchu/statue and shortcut bypasses are unverified."
