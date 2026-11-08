@@ -53,6 +53,11 @@ def main(argv: list[str] | None = None) -> int:
     )
     parser.add_argument("--dungeon-items", choices=DUNGEON_ITEM_CHOICES)
     parser.add_argument(
+        "--forest",
+        choices=("closed", "closed_deku", "open"),
+        help="closed: vanilla; closed_deku: exit only; open: exit and Mido",
+    )
+    parser.add_argument(
         "--songs", choices=("song", "anywhere"), help="song locations only (default), or all songs anywhere"
     )
     parser.add_argument(
@@ -72,7 +77,7 @@ def main(argv: list[str] | None = None) -> int:
         nargs="*",
         choices=list(gamedata.load()),
         default=None,
-        help="fast-start skips (default: intro); --skip alone disables all",
+        help="fast-start skips (default: intro); mido is a legacy alias for --forest open",
     )
     args = parser.parse_args(argv)
 
@@ -88,6 +93,7 @@ def main(argv: list[str] | None = None) -> int:
             ("songs", "songs"),
             ("shop_prices", "shop_prices"),
             ("cheap_deku_shield", "cheap_deku_shield"),
+            ("forest", "forest"),
         ):
             value = getattr(args, option)
             if value is not None:
@@ -98,6 +104,16 @@ def main(argv: list[str] | None = None) -> int:
             if not name or not sep:
                 parser.error(f"--logic expects NAME=VALUE, got {pair!r}")
             logic[name] = _logic_value(value)
+        aliases = set(overrides.get("fast_start", ())) & {"mido", "forest_exit"}
+        if aliases and args.forest is not None:
+            wanted = "open" if "mido" in aliases else "closed_deku"
+            if args.forest != wanted:
+                parser.error("--forest conflicts with legacy --skip mido/forest_exit")
+        if args.forest is not None or aliases:
+            explicit_logic = {pair.partition("=")[0] for pair in args.logic}
+            for name in ("open_forest", "skip_mido"):
+                if name not in explicit_logic:
+                    logic.pop(name, None)  # derived fields in an effective spoiler string must be rebuilt
         settings = replace(settings, **overrides, logic=logic)
         if settings.areas and not settings.goal:
             parser.error("--areas needs --goal (the world's goal lies outside most slices)")

@@ -42,6 +42,11 @@ exactly 10 rupees. `--cheap-deku-shield` (provisionally on) prices a Deku Shield
 without Shop shuffle; `--no-cheap-deku-shield` disables it. Exact prices replace conditional discounts.
 The logic uses the patched wallet requirement, preserving stock releases, refill gates and adult-only offers.
 
+`--forest closed` is the vanilla-like default (D24): Mido guards the Deku Tree and the bridge exit stays closed
+until Gohma. Advanced opt-ins: `closed_deku` opens only the bridge exit; `open` also bypasses Mido.
+Legacy `--skip mido` remains accepted as an alias for `--forest open`; it no longer selects a separate Mido-only
+generator mode. Explicit conflicting forest options are refused. Forest flags compose with shuffled gift save flags.
+
 ## Stack
 
 Python 3.12+ with uv. Reasons and alternatives: `plans/decisions.md`.

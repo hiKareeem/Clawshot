@@ -136,6 +136,61 @@ One read-only diagnostic initially accessed `.params` on a ForkEvent; the printe
 the event-type mistake. Typed `getattr` inspection then printed the real action, predecessor and completion flag.
 No unchanged retry, game boot or save write.
 
+Live corrected full-seed replay (277 checks, 18 spheres, 123 resources): original settings/fill/spoiler identical,
+all 120 shop copies read back at 10, every resource parsed/allocation checked; **only the Bolero flow changed**
+after the fix. Its Event1 now writes completion true, never the inventory flag. Evidence outside the repository:
+`combined-seed-verification.json` and `combined-seed-smoke.log`.
+
+## Added item 4 — forest modes (D24)
+
+Kareem decided **forest defaults to `closed`**, close to vanilla; `closed_deku` and `open` are advanced opt-ins.
+Defaults stay vanilla-like and difficulty is opt-in (D24, reviewer relay, 2026-11-08).
+
+| Mode | Bridge exit | Mido / Deku Tree path |
+|---|---|---|
+| `closed` (default) | vanilla, until Gohma | sword and shield |
+| `closed_deku` | open immediately | sword and shield |
+| `open` | open immediately | bypassed |
+
+`Settings.forest`, `--forest`, strings/spoilers, derived `logic.open_forest` and legacy `logic.skip_mido` all agree.
+Legacy `--skip mido` / old `fast_start` spelling canonicalizes to `forest=open`, not a hidden fourth mode.
+Explicit conflicting forest/skip options are rejected. When overriding a spoiler's forest mode, derived logic
+fields rebuild rather than carrying the old mode forward. The standalone flag patcher's `mido` primitive remains
+Mido-only; the generator's `open` combines it with the new independent `forest_exit` primitive.
+
+**The bridge's control flag is `KokiriForest_Npc_Kokiri_007_Child_Blocker_00`, Hash 3856422516**:
+default true, Bool, reset 8, save file 0. Its BlockerParam `Npc_Blocker_Kokiri_007` uses it as `GameDataToEnableAI`.
+Decoded `KokiriForest_Child_Level_All_02_d26e` nodes 5/0/6 delete `Area_a467` when false, disabling the contact
+sensor that could drive node 4's transient blocker true. The transient
+`KokiriForest_Npc_Kokiri_007_Child_Blocker` (Hash 4043170676) already defaults false; do **not** try to patch that
+unchanged default. `Npc_Kokiri_007_Child/Event42` only clears the control flag; no active flow writes it true.
+No quest step, Gohma flag, NPC actor or module is changed. This is a new-game initial-value patch, not a live-save edit.
+
+Forest/other initial-value edits now compose **before** gift-added save flags through the common writer.
+Previously a prebuilt fast-start GameDataList could collide with a gift's GameDataList transform; both changes
+must survive. Cutscene components remain prebuilt. Common compression/read-back/size-table handling stays intact.
+
+Checks:
+- Forest/legacy CLI/synthetic fast-start suite: **45 passed**.
+- Forest dump field diffs and real new saved fairy flag composed with the exit default: **3 passed**.
+- Actual full CLI from the settings string, seed 7, Chest+Shop+Gift / songs anywhere / affordable /
+  **closed_deku**, default early-return guarantee: **277 checks, 20 spheres, 118 resources**. Output
+  `seed-closed-deku-7`; independent read-back confirms exactly the original exit default changed, all four
+  changed fairies' new saved Bools and all four save-layout growth values retained.
+- The external verifier initially used the wrong ZF event suffix `Event144`; diagnostic printed added hashes
+  and the committed definition **`Dm_FairyFountain_Frore/Event174`, Hash 2751359020**. Corrected only that
+  verifier and rechecked the already-successful output (did not regenerate or rerun the CLI); passed.
+
+Player output: `forest-closed-deku/`, `Test - forest-closed-deku.bat`, `forest-check.md`, all under
+`E:/OOTRemake/work/r6-settings/`. New game, isolated user, release EXE only; no launcher run.
+One GameDataList Bool differs, **1462888 → 1462888**, existing allocation **1463176**, no table edit needed.
+**Kareem: without a sword/shield or Gohma clear, verify Mido still blocks but the bridge reaches Hyrule Field,
+then return/save/Continue and recheck; supply the overlay-open log and note any unexpected story advance.**
+
+Full gates: first sequence stopped at printed import ordering / imported fixture shadowing; corrected imports and
+made the new dump inventory audit self-contained. The next sequence was explicitly cancelled for this newly
+requested item 4, before changing code. All four complete gates will run again on the finished item-4 tree.
+
 ## Cross-track requests
 
 Posted startup contract on `cs-r6`: cs6a owns `spoiler()`; preserve my separate settings-string field commit.

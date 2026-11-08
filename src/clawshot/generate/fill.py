@@ -15,7 +15,7 @@ from collections.abc import Mapping
 from dataclasses import dataclass, field
 from typing import Any
 
-from clawshot.settings import DEFAULTS
+from clawshot.settings import CATALOG, DEFAULTS
 from clawshot.world.model import World
 from clawshot.world.rules import ADULT, CHILD
 from clawshot.world.search import Search
@@ -54,6 +54,7 @@ class Settings:
     songs: str = DEFAULTS["songs"]
     shop_prices: str = DEFAULTS["shop_prices"]
     cheap_deku_shield: bool = DEFAULTS["cheap_deku_shield"]
+    forest: str = DEFAULTS["forest"]
 
     def __post_init__(self) -> None:
         for name in ("shuffle", "areas", "fast_start", "exclusive_location_types"):
@@ -89,6 +90,15 @@ class Settings:
             raise ValueError("shop_prices must be 'vanilla' or 'affordable'")
         if not isinstance(self.cheap_deku_shield, bool):
             raise ValueError("cheap_deku_shield must be a boolean")
+        if not isinstance(self.forest, str) or self.forest not in CATALOG["forest"]:
+            raise ValueError("forest must be 'closed', 'closed_deku' or 'open'")
+        legacy = set(self.fast_start) & {"mido", "forest_exit"}
+        if legacy:
+            mode = "open" if "mido" in legacy else "closed_deku"
+            if self.forest not in ("closed", mode):
+                raise ValueError("legacy forest skips conflict with the forest setting")
+            object.__setattr__(self, "forest", mode)
+            object.__setattr__(self, "fast_start", tuple(name for name in self.fast_start if name not in legacy))
 
     def as_dict(self) -> dict[str, Any]:
         out: dict[str, Any] = {
@@ -99,6 +109,7 @@ class Settings:
             "songs": self.songs,
             "shop_prices": self.shop_prices,
             "cheap_deku_shield": self.cheap_deku_shield,
+            "forest": self.forest,
         }
         if self.areas:
             out["areas"] = list(self.areas)

@@ -7,6 +7,17 @@ fast_start = ["intro"]
 songs = "song"
 shop_prices = "vanilla"
 cheap_deku_shield = true # provisional, Round 6: 36 guaranteed forest rupees, near-total cost in seed 22
+forest = "closed" # D24, Kareem: defaults close to vanilla; closed_deku/open are opt-in advanced choices
+
+# Physical transforms are the same audited initial-value patcher as other fast start.
+[forest.closed]
+fast_start = []
+
+[forest.closed_deku]
+fast_start = ["forest_exit"]
+
+[forest.open]
+fast_start = ["mido", "forest_exit"]
 
 [prices]
 affordable = 10
