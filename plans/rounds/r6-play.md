@@ -173,3 +173,25 @@ Left for Claude/Kareem, not a reduced implementation scope:
 - Still unanswered original questions: unarmed Slingshot-room recovery, adult Bow/Hookshot vine routes.
 - The old module-only generation command in `04-world-format.md` is stale; supported CLI was used.
   That unrelated historical documentation was intentionally left outside this track's edits.
+
+## Authorized settings integration (`65bbcf7`)
+
+Claude's 2026-11-08 steer authorized `git rebase main` onto `65bbcf7`; completed cleanly (all five
+commits replayed). Numbered game-data sections remain 12–19, 21, 22, 23 in ascending order;
+section 20 is the names track's pending integration, not fabricated here.
+
+Rebased item commits supersede earlier IDs: `dab8c82` (item 1), `58ea0dc` (item 2), `c96360e` (item 3),
+`b97bf4b` (item 4), `ba1c321` (initial full-gate/handoff evidence).
+
+No production rule conflict. Replaced this track's low-level old Mido-only regression with the public
+`prepare(Settings(forest=...))` path and all three merged modes. This preserves D24: default closed
+keeps both gates; closed_deku opens bridge but still needs equipment for Mido/free shield; open allows
+meeting the tree and the free shield without equipment, and also opens the bridge.
+The gift event still records obtaining the shield before the story window closes.
+
+`uv run pytest tests/test_world_remake_play.py tests/test_world_remake.py tests/test_settings_forest.py -q`:
+**49 passed**. Live public API/CS1 smoke printed roundtrip true in all modes; without equipment:
+closed `(free shield, scrub room, bridge) = (False, False, False)`;
+closed_deku `(False, False, True)`; open `(True, True, True)`.
+This replaces only the obsolete Mido-skip-with-closed-bridge test state, not the observed gameplay source.
+All four full gates are rerun below after this integration.

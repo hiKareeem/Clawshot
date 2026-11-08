@@ -2,6 +2,7 @@
 
 import pytest
 
+from clawshot.generate import Settings, prepare
 from clawshot.world import ADULT, CHILD, Search, build_world, load_spec
 
 
@@ -88,15 +89,14 @@ def test_post_mido_free_shield_opens_the_scrub_without_buying_a_deku_shield():
     assert not search.can_reach("LW Bridge From Forest", CHILD)
 
 
-def test_mido_skip_still_allows_meeting_the_tree_then_getting_the_free_shield():
-    spec = load_spec()
-    spec["settings"]["skip_mido"] = True
-    world = build_world(spec)
+@pytest.mark.parametrize("forest", ["closed", "closed_deku", "open"])
+def test_free_shield_follows_the_merged_forest_mode_without_bootstrapping_mido(forest):
+    _, world = prepare(load_spec(), Settings(forest=forest))
     search = Search(world)
-    assert search.holds("Deku Shield")
+    assert search.holds("Deku Shield") is (forest == "open")
     assert not search.holds("Kokiri Sword")
-    assert search.can_reach("Deku Tree Slingshot Room", CHILD)
-    assert not search.can_reach("LW Bridge From Forest", CHILD)
+    assert search.can_reach("Deku Tree Slingshot Room", CHILD) is (forest == "open")
+    assert search.can_reach("LW Bridge From Forest", CHILD) is (forest != "closed")
 
 
 def test_adult_cannot_claim_the_child_shopkeepers_free_shield():
