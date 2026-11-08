@@ -146,3 +146,21 @@ def test_external_assumed_items_are_usable_in_the_child_prefix():
     search = Search(age_world(), ["Hookshot"])
     search.collect_spheres(PLACEMENTS)
     assert search.won()
+
+
+def test_beatable_seed_can_still_softlock_on_an_early_pull():
+    # Child Key is optional before the pedestal. The solver can choose to get it, but a player can skip it.
+    planned = Search(age_world(child_key=True))
+    planned.collect_spheres(PLACEMENTS)
+    assert planned.won()
+
+    pulled_early = Search(age_world(child_key=True, adult_start=True))
+    pulled_early.collect_spheres(PLACEMENTS)
+    assert pulled_early.counts["Hookshot"] == 1
+    assert not pulled_early.holds("Forest Clear")
+    assert not pulled_early.won()
+
+    prepared = Search(age_world(child_key=True, adult_start=True), ["Key"])
+    prepared.collect_spheres(PLACEMENTS)
+    assert prepared.holds("Forest Clear")
+    assert prepared.won()

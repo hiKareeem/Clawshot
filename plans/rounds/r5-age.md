@@ -96,3 +96,24 @@ Reviewer replaced the conditional initial-value approach: implement `patch/age.p
 as an isolated pedestal-placement edit, dump field-diff test, and a test overlay for Kareem. Do not fake a Bool
 or complete the Forest quest. Also trace what else Forest completion controls. Fast-start TOML may need no edit
 if its existing schema cannot express placements; the seed owner must wire the new patch alongside the logic flag.
+
+## Item 3: first-pull softlock and proposed guarantee
+
+**Proposal for Kareem/reviewer:** with gated return, require Forest completion and the adult return pedestal to
+be reachable using only adult checks plus the inventory **mandatory for the earliest first pull**. Optional
+child checks must not be assumed in that proof. A merely beatable seed proves there is an order, not that an
+early pull is safe. An alternative is explicit free travel (item 4), after its in-game check; changing its
+default is Kareem's product call, not this track's.
+
+`test_beatable_seed_can_still_softlock_on_an_early_pull` exercises the exact counterexample: a child key is
+available before pulling but optional. The normal child-start solver collects it and wins; an early adult
+start without that key collects the adult Hookshot but cannot clear Forest or return; carrying the child key
+before pulling clears Forest, returns, and wins. Targeted regression **1 passed**. A live library smoke printed
+the three corresponding sphere/Forest-clear/goal states: true/true, false/false, true/true.
+
+This proposal is **not silently added as a seed-rejection policy**: computing the mandatory first-pull inventory
+for arbitrary gift/logic settings, or forcing free travel on, is a separate accepted product guarantee.
+The implemented model rejects temporal circular dependencies, but it does not claim every player choice is
+softlock-proof. **Kareem: should seeds with free travel off guarantee return after the earliest possible pull,
+or is a spoiler/play-note instruction to finish required child checks acceptable?** Recommended: the guarantee,
+or free travel after its pedestal test, rather than relying only on a play note.
