@@ -179,7 +179,65 @@ ahead of 27 when those tracks arrive. No placeholders or unauthorized rebase nee
   return guarantee: **289 checks, 24 spheres, 124 romfs resources**, plus spoiler and play note. Exit **0**.
 - The two-process smoke driver's 180-second deadline expired during its second process, after the successful
   first output/log. Printed complete first output (126 files), first exit 0 and absent replay directory.
-  Resume only the second replay, preserving the first result, with a 3600-second deadline; result below.
+  Resumed only the second replay, preserving the first result, with a 3600-second deadline.
 
-Four complete gates are running on the finished source; ready/handoff evidence follows after they finish.
-No game, launcher, window or live user was touched; all output remains outside the repository.
+### Completed CLI replay
+
+Second actual CLI process (`PYTHONHASHSEED=701`, original 700), using the first output's effective CS1:
+exit **0**, **289 checks / 24 spheres**. **126/126 canonical files byte-identical**, including all
+124 romfs resources, spoiler and play note. The driver printed first-output 126 files, settings length
+1712 and absent second output before resuming; replay completed in 236.04 seconds under the longer deadline.
+Written native-heart readback matched all eight assignments: red rupees at Dodongo, Barinade, Gohma,
+Bongo Bongo, Twinrova and Morpha; Pieces of Heart at Volvagia and Phantom Ganon.
+
+Proof retained: `boss-seed-smoke-proof.json`, `cli-boss-0.log`, `cli-boss-1.log`. After proof, removed only
+the two session-created smoke overlays, completed failed/passing targeted seed-test basetemps and throwaway
+smoke driver. Requested two player overlays, their unrun launchers/checklists/checkers/builders and read-only
+research remain. No game, live user, original seed, dump or backup directory was touched.
+
+## Completed full gates and handoff
+
+All four commands ran in full once on source through **`b5fc987`**; no code changed during or after them.
+
+| Command | Observed result |
+|---|---|
+| `uv run ruff format --check` | **185 files already formatted** |
+| `uv run ruff check` | **All checks passed** |
+| `uv run pytest --basetemp E:/OOTRemake/work/r7-drops/gate-synthetic` | **531 passed, 72 skipped**, 687.28 s |
+| `OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump --basetemp E:/OOTRemake/work/r7-drops/gate-dump` | **71 passed, 532 deselected**, 1070.35 s |
+
+603 tests collected. The complete dump run includes all placement/EVFL/MSBT/census oracles, original seeds,
+all token copies, the native-token byte-preservation oracle and the whole-world written BossHeart seed.
+The synthetic gate includes the unchanged default/progressive/age-return sweeps and twenty native-destination
+boundary seeds. No weakened assertion, narrowed full gate, retry-count change or unchanged failing rerun.
+Both completed full-gate basetemps were removed, only after their processes finished.
+
+Branch **`r7/drops`**, in commit order:
+
+| Commit | Scope |
+|---|---|
+| `7fa2c15` | item 1: all eight spawn/flag/group contracts and native palette proposal |
+| `1f99ee4` | item 2: native transforms, regression oracles, King Dodongo isolated output/checklist |
+| `3347c7c` | item 3: retained-native-token grant experiment, byte-preservation regressions |
+| `f60c2c7` | shared actor table only |
+| `96ce2e3` | shared seed pipeline only |
+| `1e31f4d` | shared CLI only |
+| `b5fc987` | item 4: native-only fill policy, end-to-end regression, README and section 27 |
+
+The next documentation-only commit records these final results; its hash is in the chat handoff.
+No merge, push, stash, dependency change, game/launcher/window execution or write to game/backups/live users.
+
+### Remaining human checks / coordination
+
+- **Kareem:** run the two separate saved-copy launchers under
+  `E:/OOTRemake/work/r7-drops/ingame/`, with their short checklists: King Dodongo Hylian pickup/persistence;
+  native ranch token's actual Boomerang grant/count and enemy persistence. Require overlay logs and in-game
+  observations, not only the read-only save checkers. No gameplay acceptance is claimed.
+- **Kareem/reviewer:** native-only BossHeart palette is provisional; Heart Container grant/presentation from
+  a chest also needs observation before treating the opt-in as gameplay-certified. Defaults remain unchanged.
+- **Reviewer:** integrate sections 25/26 before 27 and review the three isolated shared-file commits.
+  Token remains refused: global PouchActor redirection is not per-check tokensanity.
+- The required shared/handoff thread posts could not be delivered because `cs-r7` is missing from the local
+  Bermuda store. Initial post failure and store diagnostics are above; `thread log --thread cs-r7` says empty,
+  but the threads table still has no such row. No forbidden thread-creation command or database mutation.
+  The intended handoff is this commit ledger, four passing gates, 126-file CLI replay and the two player outputs.
