@@ -94,3 +94,55 @@ no game verification is claimed for presentation-only output.
 `generate.names.load` was exercised on a session-created synthetic TOML outside the repository: preserved
 the logical key, grouped two physical IDs, kept Unicode and an empty non-OoTR identity. Smoke passed; the
 temporary synthetic file was removed. No dependency on a player dump is needed to read the catalog.
+
+## Item 2: audit of positional/provisional chest matches
+
+Read-only probes `audit_pairs.py`, `link_inventory.py` and `rule_equivalence.py` under
+`E:/OOTRemake/work/r6-names/` printed each current Hash, actual actor-to-item resolution, world vanilla,
+region, rule and compiled dependencies. Detailed evidence: `pair-audit.md` there; per-check sources for
+all 184 chests are in the catalog. No census/world identity or rule is changed.
+
+Recomputed original matching against the existing 184-chest inventory (exact same current IDs):
+49 current links agree with unique-item matching; two with residual matching (sole chests at Wasteland
+and Zora River); 98 are manually linked/corrected; 35 are remake-only. The three old automatic proposals
+that differ from current identities are the already-corrected DC Bomb Flower Platform, Ganon Spirit/Water,
+and LW Near Shortcuts falsely paired to the excluded elevated purple chest. None is reinstated.
+
+| Group | Remake items and effect of a label permutation |
+|---|---|
+| Mido, doorway order | Blue/Blue/Green/Blue; in-game settled. Same region, `True`. Naming orientation changes no access. N64 Bottom Right's Recovery Heart is replaced by its physical Blue Rupee through `remake_vanilla`. |
+| GC Center/Right blue pair (`1176975953041865014`, `14647422914070455120`) | Blue/Blue; same exact rule and region. Label-only. |
+| GC red/Left (`4402942101476009858`) and extra purple (`3870071239709713434`) | Red/Purple; NOT interchangeable with blue pockets: red is Hammer-or-Silver, purple Silver-only. The red/Left match is rock-layout evidence, not a proven N64-left viewing orientation. |
+| GTG Lobby Left/Right (`2436665354602612279`, `11182647876438515984`) | Blue/default Green; native mechanisms differ (east eye-switch drop versus west Lens chest). Both modeled with the conservative `(Bow or Slingshot) and Lens` union, same region: label permutation currently solver-neutral, not evidence that native requirements are equal. |
+| GTG Heavy Block First/Second (`6897789835137994741`, `3750231902048775592`) | Red/Bombs (5); room-clear versus cracked-wall chest. Both currently require `can_blast_or_smash`, same region: label permutation neutral under that union only. Third is the unique key; the extra Seed is the Bow-switch chest, not part of the ambiguous pair. |
+| Spirit invisible Left/Right (`9143177002861777924`, `14040210993541550542`) | Red/Red; same region and exact Lens rule. Label-only. |
+| Fire timed scarecrow trio (`862385681502746018`, `15073195886628236505`, `17001858340376096722`) | Purple/Red/Red; same region and Scarecrow requirement with supported tricks off. Which chest inherits the old name affects per-check vanilla identification, not supported access or the total actual pool. |
+| Ganon Light static blues (`1029712040059298120`, `7461796063704896255`, `14046623154429024571`) | Blue/Blue/Blue; same region, `True`. Positional N64 labels neutral within these three; trap positions remain out. |
+| Ganon Light “Invisible Enemies” key (`15320975652699461295`) versus first-room spawned Red (`14962432460641118089`) | Different items/mechanisms; both same region and Lens requirement with the unsupported Lens trick off. Preserve the unique-key correspondence, physical room labels and actual drops. Do not conflate with the second-room Lullaby Green Rupee, whose requirement differs. |
+| Well “Underwater Left” (`12988877782812797760`) | Actual east/right ladder dip, Blue Rupee. The old name is provisional; there is no west chest to swap with. Existing Lullaby requirement remains conservative pending water-state observation. |
+
+**Logic-sensitive boundaries:** GC red/purple versus blue pockets; GTG native eye/Lens and clear/wall
+requirements if the conservative unions are ever removed; Well east-dip water state. Within each listed
+ambiguous pair/group, the supported solver currently has equivalent access. Different vanilla items are
+explicitly not called identical: `remake_vanilla` resolves each physical actor, not the old N64 heart/ammo value.
+
+Resolved route/item distinctions stay distinct: DC lower-Lizalfos Red `7764016096998075927` versus Bomb Flower
+Platform Shield `11582649900854566065`; Ganon Water Bombchus `14404733996390762670` versus Spirit Seed
+`7899179288432849355`; Fire north flame-maze cell `12945617941305968586` versus Highest Goron
+`10521366928524045067`. Their room/event/landmark evidence corrected prior matches in round 5.
+
+Actual compiled-rule smoke exhausted child/adult × day/night/both × counts 0–3 for every read dependency
+(all local thresholds fit that range), also asserting same region. Equivalent results: Mido 6 states;
+GC blue 98,304; GTG lobby 1,536; GTG First/Second 24,576; Spirit invisible 96; Fire trio 384; Ganon blues 6;
+Ganon Lens key/spawn 96. Negative boundaries passed: child Bomb Bag opens GC blue, not red; adult Hammer
+opens red, not purple. This executes compiled predicates, not just string/dependency comparisons.
+Printed supported assumptions: `logic_fire_scarecrow`, `logic_lens_spirit`, `logic_lens_castle`,
+`logic_goron_city_leftmost` are all false. No gameplay certification is claimed.
+
+Sources: round-4 Goron City audit; round-5 adult/child chest inventories; current sourced overrides;
+https://www.eurogamer.net/gerudo-proving-grounds-walkthrough-zelda-ocarina-of-time ;
+https://www.eurogamer.net/spirit-temple-walkthrough-zelda-ocarina-of-time ;
+https://www.nintendolife.com/guides/zelda-ocarina-of-time-fire-temple-walkthrough-switch-2 ;
+https://www.eurogamer.net/inside-ganondorfs-castle-walkthrough-zelda-ocarina-of-time .
+**Kareem: existing GC bomb-only, GTG native-prerequisite and Well water-state questions remain useful;
+no Mido replay is requested.**

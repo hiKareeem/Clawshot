@@ -1306,6 +1306,13 @@ labels; the catalog reader smoke confirms the same counts. Shop rows use the cus
 shopkeeper, top/bottom row and far/inner left/right spots; this is placement-derived, not a new shop playtest.
 Static locators omit vanilla rewards/prices because shuffled placements/settings change them.
 
+Positional audit (`r6-names.md`, item 2): the ambiguous GC blue pair, GTG lobby and First/Second pairs,
+Spirit invisible pair, Fire timed scarecrow trio and Ganon Light blue/Lens pairs have equivalent modeled
+access within each candidate group, verified by compiled-rule execution. GTG's native mechanisms differ
+but intentionally share conservative unions. Do not generalize that label neutrality to GC's Hammer/Silver
+pockets or to the Well east-dip water condition; those affect prerequisites. Actual actor-derived vanilla
+items remain distinct. No link/rule is changed by presentation work.
+
 ## 21. Round 6: settings, prices and forest modes (cs6b)
 
 Build `e0f3ccfa`, read-only dump. Implementation, command evidence and the complete inventory-write audit:
