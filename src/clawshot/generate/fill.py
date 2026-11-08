@@ -1,9 +1,9 @@
 """The fill: OoT Randomizer's assumed fill (``Fill.py``, ``distribute_items_restrictive``, MIT), for one world.
 
 Order, as there: items restricted to some locations first (a dungeon's own keys, maps and compasses), then
-progression items, then priority items, then the rest. A restricted or progression item goes to a location that is
-reachable assuming the player holds every item not yet placed; that keeps every progression item reachable, so
-the game stays beatable. Priority items only respect their restriction; the rest go anywhere.
+bag-gated bomb ammo, progression items, priority items and the rest. Restricted and progression items go to
+locations reachable assuming the player holds every item not yet placed; that keeps every progression item
+reachable, so the game stays beatable. Priority items only respect their restriction; the rest go anywhere.
 """
 
 import base64
@@ -365,7 +365,7 @@ def _fill_bomb_ammo(
     )
     destinations = [name for name in locations if not without_bag.can_access(world.locations[name])]
     pool[:] = [item for item in pool if not item.startswith(prefixes)]
-    # Place constrained normal filler before unconstrained items can consume its only slots.
+    # Dungeon items already own their slots; place constrained ammo before unrestricted filler.
     # Assumed fill still requires actual reachability and respects dungeon/display restrictions.
     held = settings.item_location_types
     shop_refills = sum(item.startswith("Buy ") and held.get(item) == ("Shop",) for item in pool)
@@ -397,16 +397,10 @@ def fill(
     rng.shuffle(pool)
     locations = list(shuffled)
     _fill_age_return(world, settings, rng, placements, locations, pool)
-    _fill_bomb_ammo(world, settings, rng, placements, locations, pool)
     restricted = [item for item in pool if is_restricted(world, settings, item)]
     unrestricted = [item for item in pool if not is_restricted(world, settings, item)]
-    progression = [item for item in unrestricted if world.items[item].progression]
-    # A non-progression item held to some location types goes with the priority items, which are placed only where
-    # allowed() lets them; the rest go anywhere.
     held = settings.item_location_types
     shop_refills = sum(item.startswith("Buy ") and held.get(item) == ("Shop",) for item in pool)
-    priority = [i for i in unrestricted if not world.items[i].progression and (world.items[i].priority or i in held)]
-    rest = [item for item in unrestricted if not world.items[item].progression and item not in priority]
 
     if restricted:
         # Boss keys are taken first, then small keys, then the rest (Fill.fill_dungeons_restrictive).
@@ -415,6 +409,12 @@ def fill(
         shop_refills = _fill_restrictive(
             world, settings, rng, placements, locations, restricted, unrestricted, shop_refills
         )
+    _fill_bomb_ammo(world, settings, rng, placements, locations, unrestricted)
+    progression = [item for item in unrestricted if world.items[item].progression]
+    # A non-progression item held to some location types goes with the priority items, which are placed only where
+    # allowed() lets them; the rest go anywhere.
+    priority = [i for i in unrestricted if not world.items[i].progression and (world.items[i].priority or i in held)]
+    rest = [item for item in unrestricted if not world.items[item].progression and item not in priority]
     shop_refills = _fill_restrictive(world, settings, rng, placements, locations, progression, [], shop_refills)
     if any(world.locations[name].type == "Shop" for name in shuffled):
         native = world.settings.get("native_shop_items", ())
