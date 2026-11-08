@@ -34,6 +34,7 @@ from clawshot.patch.gamedata import GAME_DATA_LIST
 from clawshot.patch.items import ItemActors
 from clawshot.patch.plan import PatchError
 from clawshot.save import TYPES, murmur3_32
+from clawshot.settings import CATALOG, DEFAULTS
 from clawshot.world.model import World
 
 RULES_TOML = Path(__file__).with_name("gift_rules.toml")
@@ -432,9 +433,8 @@ def seed_setup(
     romfs: str | Path, spec: Mapping[str, Any], settings: Settings
 ) -> tuple[dict[str, Any], Settings, Callable[[Mapping[str, str]], dict[str, Callable[[bytes], bytes]]]]:
     """For ``--shuffle Gift``: the spec with the gifts that cannot move held vanilla, the settings shuffling the
-    gift types in place of ``Gift`` (songs held to song locations and song locations to songs, and every other gift
-    item whose actor no chest in the game gives held to the gift locations: :func:`held_items`), and the patch step
-    to pass to ``make_seed``."""
+    gift types in place of ``Gift`` and a placement policy from ``settings.songs`` plus the verified chest
+    actor list in ``data/settings.toml``), and the patch step to pass to ``make_seed``."""
     settings = replace(
         settings,
         shuffle=tuple(dict.fromkeys(t for s in settings.shuffle for t in (GIFT_TYPES if s == SHUFFLE else (s,)))),
@@ -445,12 +445,16 @@ def seed_setup(
     shuffled = seed_checks(world, census, definitions, rules, actors)
     vanilla = {name: world.locations[name].vanilla for name in shuffled}
     chest_actors = {loc.vanilla_item for loc in scan(romfs) if loc.kind == CHEST}
-    held = held_items(world, vanilla.values(), actors, chest_actors)
-    songs = (SONG_TYPE,) if any(types == (SONG_TYPE,) for types in held.values()) else ()
+    held = held_items(world, vanilla.values(), actors, chest_actors, songs=settings.songs)
+    songs = (SONG_TYPE,) if settings.songs == "song" else ()
     settings = replace(
         settings,
-        item_location_types={**settings.item_location_types, **held},
-        exclusive_location_types=tuple(dict.fromkeys([*settings.exclusive_location_types, *songs])),
+        # Rebuild the derived gift restrictions when replaying an effective spoiler string or changing songs.
+        item_location_types={
+            **{k: v for k, v in settings.item_location_types.items() if k not in vanilla.values()},
+            **held,
+        },
+        exclusive_location_types=tuple(t for t in settings.exclusive_location_types if t != SONG_TYPE) + songs,
     )
     dicts = zsdic.Dictionaries.from_romfs(Path(romfs))
     versions = {str(k): str(v) for k, v in read_romfs_byml(Path(romfs), dicts, FLOW_VERSIONS)["Versions"].items()}
@@ -460,15 +464,18 @@ def seed_setup(
 
 
 def held_items(
-    world: World, items: Iterable[str], actors: ItemActors, chest_actors: set[str]
+    world: World, items: Iterable[str], actors: ItemActors, chest_actors: set[str], *, songs: str = DEFAULTS["songs"]
 ) -> dict[str, tuple[str, ...]]:
-    """The gift items that may not go just anywhere: songs only to song locations (OoT Randomizer's
-    ``shuffle_song_items = 'song'``), and an item whose actor no chest in the game gives only to the other gift
-    locations, until such an actor is seen working in a chest."""
+    """Songs-on-songs by default; anywhere releases the whole song family (reviewer, Round 6).
+
+    The other eleven songs are inferred from the Song of Storms chest result, not individually verified.
+    Non-song gifts still need a vanilla chest actor or a sourced ``chest_verified`` catalog entry.
+    """
     out = {}
     for item in items:
         if world.items[item].type == SONG_TYPE:
-            out[item] = (SONG_TYPE,)
-        elif actors.actor(item) not in chest_actors:
-            out[item] = tuple(t for t in GIFT_TYPES if t != SONG_TYPE)
+            if songs == "song":
+                out[item] = (SONG_TYPE,)
+        elif actors.actor(item) not in chest_actors and actors.actor(item) not in CATALOG["chest_verified"]:
+            out[item] = tuple(t for t in GIFT_TYPES if songs == "anywhere" or t != SONG_TYPE)
     return dict(sorted(out.items()))
