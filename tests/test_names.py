@@ -5,6 +5,7 @@ from collections import defaultdict
 from pathlib import Path
 
 from clawshot.census.definitions import load as load_definitions
+from clawshot.patch.gifts import SHOPKEEPER_CHECK, SHOPKEEPER_STEPS
 
 CATALOG = Path(__file__).resolve().parents[1] / "src/clawshot/data/location_names.toml"
 GIFT_KINDS = {"npc_gift", "event_gift", "song"}
@@ -27,6 +28,8 @@ def test_every_chest_shop_and_linked_gift_has_directions_for_all_copies():
         key = definition.oot_randomizer_name or definition.name
         expected[key].add(str(definition.id))
         ootr[key] = definition.oot_randomizer_name
+    expected[SHOPKEEPER_CHECK].update(SHOPKEEPER_STEPS)
+    ootr[SHOPKEEPER_CHECK] = ""
     rows = catalog()
     actual = {row["location"]: row for row in rows}
     assert len(actual) == len(rows), "two descriptions for one logical check"
