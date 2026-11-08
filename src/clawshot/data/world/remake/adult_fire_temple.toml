@@ -40,7 +40,7 @@ source = "https://www.nintendolife.com/guides/zelda-ocarina-of-time-fire-temple-
 
 [locations."Fire Temple Boulder Maze Side Room Chest"]
 region = "Fire Temple Flame Maze"
-source = "https://www.nintendolife.com/guides/zelda-ocarina-of-time-fire-temple-walkthrough-switch-2 (Fire maze): the north outer room holds a Goron/key. Census room 11 Hash 10521366928524045067. Provisional world-name correspondence for the unlinked side-room key: lower maze now has the Map and one lower key, not two lower keys. No census link asserted."
+source = "https://www.nintendolife.com/guides/zelda-ocarina-of-time-fire-temple-walkthrough-switch-2 (Fire maze): the north outer room holds a Goron/key. Census room 10 Hash 12945617941305968586; room 11 Hash 10521366928524045067 is the Highest Goron check. Round 5 room/actor census links settle the earlier provisional identity."
 
 [exits."Fire Temple Boulder Maze Upper"."Fire Temple Flame Maze"]
 rule = "(Small_Key_Fire_Temple, 5)"
