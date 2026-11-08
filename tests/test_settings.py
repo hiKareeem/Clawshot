@@ -3,10 +3,10 @@ import json
 import zlib
 
 import pytest
+from test_generate import dungeon_world
 
 from clawshot.__main__ import main
 from clawshot.generate import Settings, generate, spoiler_json
-from test_generate import dungeon_world
 
 
 def test_string_round_trip_preserves_complete_settings_and_seed_behavior():

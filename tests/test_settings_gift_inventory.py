@@ -1,10 +1,10 @@
 import copy
 
 import pytest
+from test_gifts import FLOW, change, flowchart
 
 from clawshot.formats import evfl
 from clawshot.patch import gifts
-from test_gifts import FLOW, change, flowchart
 
 
 def test_terminal_inventory_write_becomes_completion_without_clearing_held_item():

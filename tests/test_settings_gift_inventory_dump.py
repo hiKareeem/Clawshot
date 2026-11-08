@@ -4,28 +4,37 @@ from pathlib import Path
 
 import pytest
 
-from clawshot.census.gifts import EVENT_SETTING, _callee, reachable
+from clawshot.census import definitions
+from clawshot.census.gifts import EVENT_SETTING, FLOW_VERSIONS, _callee, find_gifts, flow_files, reachable
 from clawshot.census.scan import read_romfs_byml
-from clawshot.formats import evfl
+from clawshot.formats import evfl, zsdic
 from clawshot.patch import gifts, shops
 from clawshot.patch.gamedata import GAME_DATA_LIST
 from clawshot.save import murmur3_32
-from test_gifts_dump import context  # noqa: F401 — shared fresh-dump patch context
 
 pytestmark = pytest.mark.dump
 
 
-def test_shuffled_gift_call_graphs_do_not_write_their_vanilla_isget(romfs, context):
-    dictionaries, files, changes = context
-    transforms = gifts.file_changes(changes, files)
+def test_shuffled_gift_call_graphs_do_not_write_their_vanilla_isget(romfs):
+    dictionaries = zsdic.Dictionaries.from_romfs(romfs)
+    versions = {str(k): str(v) for k, v in read_romfs_byml(romfs, dictionaries, FLOW_VERSIONS)["Versions"].items()}
+    files = flow_files(romfs, versions)
     charts = {}
     for flow, path in files.items():
-        data = dictionaries.decompress(path, (romfs / path).read_bytes())
-        if path in transforms:
-            data = transforms[path](data)
-        chart = evfl.read(data).flowchart
+        chart = evfl.read(dictionaries.decompress(path, (romfs / path).read_bytes())).flowchart
         if chart is not None:
             charts[flow] = chart
+    rules = gifts.load()
+    changes = gifts.plan(
+        {name: "Item_Boomerang" for name, rule in rules.items() if rule.cls != gifts.MORE},
+        find_gifts(charts, files),
+        definitions.load(),
+        rules,
+    )
+    transforms = gifts.file_changes(changes, files)
+    for flow in gifts.flows_changed(changes):
+        path = files[flow]
+        charts[flow] = evfl.read(transforms[path](dictionaries.decompress(path, (romfs / path).read_bytes()))).flowchart
     rows = {str(row["__RowId"]): row for row in read_romfs_byml(romfs, dictionaries, shops.POUCH_TABLE)}
     game_data = read_romfs_byml(romfs, dictionaries, GAME_DATA_LIST)
     saved = {int(row["Hash"]): row for row in game_data["Data"]["Bool"]}
