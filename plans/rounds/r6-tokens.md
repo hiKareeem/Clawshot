@@ -108,3 +108,81 @@ CLI integration heads-up, and section ordering. Reviewer approved repeat exclusi
 Initial external probe called `.files` on the SARC reader's dict. Printed `type(s)`/members showed the exact
 contract; changed to dict `.items()`/`len(s)` and the aimed rerun passed. No game data was written in repo.
 A patch targeting line 49 in a 48-line test was refused atomically; reread exact lines, then corrected the range.
+
+## Item 2: token grant and persistence
+
+Item 1 commit: `daee593`. Token research: external `token_trace.py`, `extract_ai.py`, `decode_ai.py`.
+Actor packs contain their own graphs (not loose `romfs/AI` or the global AI pack). Used the existing
+external GPL AINB decoder **unmodified** under `work/r4-fast-start/.venv`, never its source or code in repo.
+Decoded game data stays outside the repository. No NX2navi source or documentation read.
+
+- All **100 Gold Skulltulas / 114 placement copies** have permanent type-24 Bool64bitKey entries keyed by
+  enemy Hash. There is no placed `Obj_Token_Gold` per enemy: the drop is created at death.
+- Enemy pack: `DropTable_Token_Gold` -> one `Obj_Token_Gold`, probability 100, count 1.
+  Inherited `Drop` blackboard declares `Drop__DropActor` and `Drop__DropTable` as instance parameters.
+- Enemy utility graph nodes 0–2: `QueryGenericMakeOverwriteParam` ->
+  `QueryBlackboardOverwriteParamAddNoRespawnGmdHash` (key `GoldTokenGmdHash`) ->
+  `OneShotDropSetOverWriteParam`. Thus the spawned token receives the enemy's persistent key.
+- `Obj_Token_Gold` keeps special token AI, a non-instance `GoldTokenGmdHash` u64 blackboard key,
+  and `PouchContentParam.PouchActor = Item_Token_Gold`, fixed max 100. Auto pickup/repeated get presentation
+  enabled; its model/boomerang/Hookshot attachment remain native.
+- Token AI queries death reason; **reason 10** reaches `OneShotGoldTokenDeadAfter` plus the death-procedure
+  signal. Other reasons do not call that callback. The callback's engine implementation is not in the data.
+  [INFERENCE] It records collection against the passed enemy Hash; ordinary pickup AI lacks it.
+
+### Expressible experiment, not a safe tokensanity claim
+
+`patch/tokens.py` overrides only `Dynamic.Drop__DropActor` at a saved enemy Hash, across **all** its
+child/adult/Alternative copies. Enemy Gyaml, Hash, transform, appearance params, AiGroups and memberships
+stay equal. It refuses stale/wrong/missing enemies and non-pickup inventory actors (`Item_Boomerang` etc).
+Experiments use only actual pickup actors: token control, red rupee and the two freestanding-tested shields.
+Native drop-override execution and the replacement pickup's persistence still need the game result.
+Replacing the enemy Gyaml or globally changing every token's pouch identity is **not** implemented.
+
+Three overlays under `E:/OOTRemake/work/r6-tokens/ingame/`, built through `clawshot.patch.write`:
+
+| Name | Ranch tree enemy Hash 341792603838029977 drops | Changed placements / allocation |
+|---|---|---|
+| token-ranch-control | Obj_Token_Gold (positive control) | Adult +28 bytes / 456872; Child +24 / 395944 |
+| token-ranch-rupee | Obj_Rupee_Red | Adult +24 / 456872; Child +24 / 395944 |
+| token-ranch-hylian | Obj_Shield_Hylian | Adult +28 / 456872; Child +28 / 395944 |
+
+Each includes the raised resource size table. Same isolated-save launcher pattern as item 1; only the
+release executable, no launcher run. Read the six ranch backup saves: the target Hash is **unset in all six**;
+the Market crate and Kakariko tree token Hashes are already set in five, so neither is an appropriate backup test.
+
+**Kareem: load slot 01 with each corresponding launcher, record token count, roll into the ranch tree and
+kill its Gold Skulltula. Control must drop/collect a token, increase count by one and retire the enemy.
+Rupee/shield variants should show the new pickup, grant it without a token-count increase, and retire the
+same enemy permanently. First leave the drop uncollected and revisit: does the enemy return so the reward
+is not lost? Then collect, leave/re-enter, save/quit/continue, and roll the tree again: no duplicate.
+Does the shield hang at the original token height, and can it be collected normally/by Boomerang/Hookshot?**
+
+After each: `uv run python E:/OOTRemake/work/r6-tokens/ingame/check_save.py <name>` prints each slot's
+target Hash plus acquired-shield flags (read only). Compare the token count in the UI and the saved Hash.
+The log must show `HyruleField_Child_Static.bcett.byml.zs` and the size table `from the overlay`.
+Whether uncollected drops survive a reload and whether ordinary drops run the completion callback are
+**open prerequisites**, not solved by preserving the enemy Hash in the file.
+
+### House of Skulltula gift checks
+
+Already in `census/gifts.py` through literal wrapper calls; no second reward census or duplicate token
+location is needed. `GatheringTokenGold` linked steps: Event398 wallet (10), Event75 Echo Gem/Agony Stone
+(20), Event194 large wallet (30), Event200 large Bombchu bundle (40), Event219 Heart Piece (50), Event215
+Gold Rupee (100). Existing `gift_rules.toml` classes all six `swap`; 10–50 use saved per-threshold flags,
+100 quest completion. Event471 is an **unlinked repeat Gold Rupee**, not an additional once gift check.
+`--shuffle Gift` already handles supported rewards; its 40-token check stays vanilla because its logical
+Bombchu quantity does not exactly match `Item_BombchuBundle_Large` (round 5 finding), not because tokens
+need to own House gifts. Token count queries remain `PouchData.Item_Token_Gold.StockNum`.
+
+### Exercised verification
+
+- `uv run pytest tests/test_tokens.py -q`: **5 passed**; copies change together with identity/logic intact,
+  inventory-only actors and stale/missing enemies rejected.
+- `OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump tests/test_tokens_dump.py -q -s --basetemp E:/OOTRemake/work/r6-tokens/pytest-token`:
+  **1 passed**; exact inverse field diff over all 100 enemies / 114 copies. This is data proof, not persistence.
+- `uv run python E:/OOTRemake/work/r6-tokens/build_tokens.py`: three overlays built/read back; seven House
+  gift steps printed, six linked plus the repeat; release-only launchers statically checked.
+- Scoped ruff format/lint passed (three files).
+
+Posted token callback/persistence prerequisite and capacity integration choice on `cs-r6` at 10:29.
