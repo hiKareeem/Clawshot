@@ -1,7 +1,7 @@
 """From a seed to a mod folder: the item-to-actor table, the patch plan and the writer.
 
     out = make_seed(romfs, 12345, Settings())     # census, remake pool, fill, beatability search, plan
-    write_seed(out, romfs, Path("seed-12345"))     # <dir>/romfs/... and <dir>/spoiler.json
+    write_seed(out, romfs, Path("seed-12345"))     # romfs overlay, spoiler.json and play-note.md
 
 The chest pool uses ``remake_vanilla``; opt-in Shop locations use the native shop
 catalog. The fill and beatability search are ``clawshot.generate``'s.
@@ -16,7 +16,7 @@ from typing import Any
 
 from clawshot.census import definitions as census_definitions
 from clawshot.census.scan import scan
-from clawshot.generate import Seed, Settings, generate, prepare, spoiler
+from clawshot.generate import Seed, Settings, generate, play_note, prepare, spoiler
 from clawshot.generate.fill import shuffled_locations
 from clawshot.patch import events as chest_events
 from clawshot.patch import gamedata, scrubs, shops
@@ -102,10 +102,14 @@ def make_seed(
 
 
 def write_seed(output: SeedOutput, romfs: str | Path, out: str | Path) -> list[WrittenFile]:
-    """Write the seed's changed files under ``<out>/romfs`` and its spoiler log as ``<out>/spoiler.json``."""
+    """Write changed romfs files, ``spoiler.json`` and the readable ``play-note.md``."""
     out = Path(out)
+    log = output.spoiler()
+    spoiler_text = json.dumps(log, indent=2, ensure_ascii=False) + "\n"
+    note_text = play_note(output.seed, log)
     written = write(
         output.plan, romfs, out, extra_changes=output.extra_changes, fast_start_files=output.fast_start_files
     )
-    (out / "spoiler.json").write_text(output.spoiler_json(), encoding="utf-8", newline="\n")
+    (out / "spoiler.json").write_text(spoiler_text, encoding="utf-8", newline="\n")
+    (out / "play-note.md").write_text(note_text, encoding="utf-8", newline="\n")
     return written
