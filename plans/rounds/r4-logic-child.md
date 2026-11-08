@@ -100,7 +100,8 @@ ages) were changed only in their child part, flagged for track B; the five dunge
 - *The first Great Fairy must be Death Mountain Trail's or Hyrule Castle's* (games.gg,
   https://games.gg/the-legend-of-zelda-ocarina-of-time-2026/guides/ocarina-of-time-remake-great-fairy-locations-rewards-and-costs).
   Event `'Great Fairy Met'` at those two fountains; ZF's reward asks for it (DMC, Colossus, OGC: posted for track B).
-  Fees (25 to 500 rupees, rising per fairy met) are not modelled: there is no rupee logic.
+  Fees (25 to 500 rupees, rising per fairy met) are not modelled: there is no rupee logic. **Superseded by item 6**:
+  the data says only Din's fairy comes without Din's Fire, and the fees are fixed and modelled as wallets.
 
 | Area | Changed entries | Open questions |
 |---|---:|---:|
@@ -1375,6 +1376,60 @@ Checked again after items 3 and 4 (every `child_*.toml` file and track B's `adul
 spoilers still pass the beatability search on the slice (`verify_seeds.py`, seeds 3 / 7 / 22: 3 / 4 / 3 spheres), so
 the seeds Kareem plays stay in logic.
 
+## Item 6: the Great Fairies, from the data
+
+The reviewer's request (after items 1-5 went to main): trace the fairy flows, answer which fountain is which fairy,
+who can be met first, whether fees are fixed, what happens without the rupees and Kareem's question (Improved Spin
+before Din's Fire?), then model it. The answer, with the evidence, is in `plans/03-game-data.md` section 12 ("Great
+Fairies"). In short:
+
+- Death Mountain Trail is Din's fairy (Din's Fire, 25), Hyrule Castle the Power fairy (`Item_FairyBless_MP`: stronger
+  spin attack and a magic meter, 50), Zora's Fountain Farore's Wind (100), the crater double magic (200), the
+  Colossus Nayru's Love (300), Ganon's Castle halved damage (500): Kareem's table, from `RSDB/EventSetting` and the
+  `Obj_TriForcePoint_A_0N` placements.
+- Only Din's fairy comes without Din's Fire: flow `TriForcePoint` checks `IsGet.Item_DinFire` for the other five, and
+  Navi says nothing happened. **So no Improved Spin before Din's Fire.** No gift needs the magic meter or another
+  fairy met.
+- Fees are fixed per fairy (`EventQueryHasRuppe` constants), not rising per visit. Without the rupees the fairy sends
+  Link away and offers again at the next Lullaby.
+- Wallets: start 200, Adult Wallet 500, Giant Wallet 1000 (`PouchActorInfo` `AfterExpansionMaxNum`).
+- Every magic item (Din's Fire, Farore's Wind, Nayru's Love, Lens of Truth, the three magic arrows) and both fairy
+  magic gifts carry the magic meter (`ExpansionAvility: MPMaxUP`).
+
+Changes (this supersedes items 3 and 4's `'Great Fairy Met'`, taken from games.gg, which the data contradicts for
+Hyrule Castle):
+
+| Where | Entry | Before -> after |
+|---|---|---|
+| `src/clawshot/world/load.py`, `plans/04-world-format.md` | overrides table `[items."<name>"]` with `alias` (an item without one) | new |
+| `remake.toml` | `[items]` Din's Fire, Farore's Wind, Nayru's Love, Lens of Truth, Fire/Ice/Light Arrows | each also counts as one `Magic Meter` |
+| `remake.toml` | `HC Great Fairy Reward` | `can_play(Zeldas_Lullaby)` -> `... and Dins_Fire` |
+| `child_zoras_fountain.toml` | `ZF Great Fairy Reward` | `... and 'Great Fairy Met'` -> `... and Dins_Fire` |
+| `adult_death_mountain_crater.toml` (reviewer's leave) | `DMC Great Fairy Reward` | `can_play(Zeldas_Lullaby)` -> `... and Dins_Fire` |
+| `adult_desert_colossus.toml` (reviewer's leave) | `Colossus Great Fairy Reward` | `can_play(Zeldas_Lullaby)` -> `... and Dins_Fire and Progressive_Wallet` |
+| `adult_ganons_castle.toml` (reviewer's leave) | `OGC Great Fairy Reward` | `can_play(Zeldas_Lullaby)` -> `... and Dins_Fire and Progressive_Wallet` |
+| `child_hyrule_castle.toml`, `child_death_mountain_trail.toml` | events `Great Fairy Met` | removed |
+| `tests/test_world_remake_adult_gerudo_training_ground.py` (track B's) | lobby chests: "the Lens needs magic" | the Lens alone opens them (it carries its magic) |
+
+Tests (`tests/test_world_remake.py`): an item alias counts the other item and bad aliases are refused; Din's fairy
+comes with the Lullaby alone, Hyrule Castle's not with the magic meter but with Din's Fire; the Colossus and OGC
+fairies need the Adult Wallet. Scratch scripts (read only on the dump): `E:/OOTRemake/work/r4-logic-child/`
+`fairy_logic.py`, `fairy_flows.py`, `msbt_dump.py`, `rsdb_rows.py`, `gd_lookup.py`, `tfp_params.py`.
+
+Provisional: the magic meter as an item alias (collecting Din's Fire also counts one `Magic Meter`) rather than a
+rule-compiler change; a rule asking for two meters would now count two magic items as double magic, and none does.
+`IsGet.Item_DinFire` being set however Din's Fire is got is an inference; so is the note for the seed patch in section 12
+(the flows use each gift's own `IsGet` as "already given").
+
+In-game check for Kareem (one save, no Din's Fire yet): **play Zelda's Lullaby on the Triforce in the Hyrule Castle
+fountain.** Expected: Navi says "It doesn't seem like anything happened, but... I do sense some kind of mysterious
+power here" and no fairy comes. Then, with fewer than 25 rupees, at the Death Mountain Trail fountain: she appears,
+asks for 25 and sends Link away; playing again offers again.
+
+Gates on the branch: `ruff format --check` 94 files formatted, `ruff check` clean, `pytest` 297 passed / 26 skipped,
+`pytest -m dump` 25 passed; the three mini-seeds still pass the beatability search (`verify_seeds.py` 3 / 7 / 22: 3 /
+4 / 3 spheres).
+
 ## Questions for Kareem (the ones that change progression; every area's list is above)
 
 1. **Deku Tree: in the Slingshot room without the Slingshot (seed 3), how did you get out? Does continuing after a
@@ -1393,8 +1448,8 @@ the seeds Kareem plays stay in logic.
 8. **Hyrule Field and Kakariko: do the leafy grotto covers (tektite grotto west of the drawbridge, the ReDead grotto
    by the Kakariko steps) open with a bomb, or only with the Song of Storms?**
 9. **Kokiri Forest's grotto: does its chest appear only after the three Deku Scrubs, and do they need a shield?**
-10. **Do Great Fairies charge rupees, and does a fountain other than Death Mountain Trail's or Hyrule Castle's stay
-    empty while neither has been visited?**
+10. **Great Fairies (item 6): without Din's Fire, does Zelda's Lullaby at the Hyrule Castle fountain bring only
+    Navi's "It doesn't seem like anything happened"?**
 
 ## Provisional choices (for review)
 
@@ -1406,7 +1461,8 @@ the seeds Kareem plays stay in logic.
    Fountain.
 3. **`'Time Flows'` per rule**, not in the rule compiler (`rules.py` is no track's). A world-wide gate would also cover
    adult night rules; reviewer's call.
-4. **Great Fairy fees not modelled** (no rupee logic); only the first-fairy rule.
+4. **Great Fairies (item 6)**: the magic meter as an item alias of every magic item; fees as `Progressive_Wallet`
+   where they pass the starting 200.
 5. **The Door of Time is the vanilla one**: OoT Randomizer's `open_door_of_time` setting is not read, since the game
    cannot open the door otherwise without a code hook.
 6. **N64-only from placement data** where a grotto or room holds other actors and no check (grotto scrubs, generic
@@ -1446,5 +1502,5 @@ Each area batch was also checked before its commit on a `git archive` of the bra
 - Census links the area work suggests (census owner): Kak Open Grotto Chest 12902291359202819102, Kak Redead Grotto
   Chest 5755485285664292988, DC End of Bridge Chest 7524527082521156886, the LLR grotto scrubs, BotW's nine chests
   (`findings/bottom_of_the_well.md`).
-- Great Fairy fees and other rupee costs need rupee logic.
+- Other rupee costs (shops, Medigoron, the Bombchu salesman) against the remake's wallets (200 / 500 / 1000).
 - `'Time Flows'` as a compiler-level gate, and the adult night rules (track B).

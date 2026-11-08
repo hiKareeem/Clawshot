@@ -436,7 +436,8 @@ the eye. Nintendo Life's Deku Tree walkthrough (Switch 2) agrees on each point.
 | Time of day starts to flow only once Link has met Zelda | Eurogamer, "all new changes" | event `Time Flows` (HC Garden, child); every child `at_night` / `at_dampe_time` rule asks for it |
 | Every grotto entrance is visible; the Stone of Agony became the Echo Gem, which finds Gold Skulltulas | Eurogamer, "all new changes"; `AgonyStoneReactArea` only at Gold Skulltulas | `can_open_bomb_grotto` -> `can_blast_or_smash`, `can_open_storm_grotto` -> `can_play(Song_of_Storms)` |
 | Bomb and Song of Storms grottos have different covers | data: storms covers are `Land_Kokiri_HidingHoleCover_A_01` with an `EventProxyRequestActor`; bomb covers `Land_<Area>_HidingHoleCover_*` or a rock | Hyrule Field's tektite and ReDead grottos open with the Song of Storms |
-| The first Great Fairy visited must be Death Mountain Trail's or Hyrule Castle's; fees rise per fairy met (25 to 500 rupees) | games.gg Great Fairy guide; Nintendo Life (fees) | event `Great Fairy Met` at those two fountains; ZF's fairy asks for it; fees not modelled |
+| Zelda's Lullaby calls every Great Fairy but Death Mountain Trail's (Din's) only once Din's Fire is held; each fairy's fee is fixed (25 to 500 rupees) | flows `TriForcePoint`, `Dm_FairyFountain_*` (below) | the five other rewards ask for `Dins_Fire`, Colossus and OGC also for `Progressive_Wallet` |
+| Every magic item carries the magic meter | `PouchActorInfo` `ExpansionAvility: MPMaxUP` (below) | `[items]` aliases in `remake.toml`: each counts as a `Magic Meter` |
 | The Door of Time is the vanilla one (three stones, the Ocarina of Time, the Song of Time) | flow `DoorOfTime`, `Market_Child_DoorOfTime_OpenDoor` | OoT Randomizer's `open_door_of_time` setting is not read |
 | Kaepora Gaebora flies Link from the summit only once Din's Fire is held | flow `Npc_Kaepora_DeathMountainTrail` (`IsGet.Item_DinFire`) | `DMT Owl Flight` asks for `Dins_Fire`; Impa's cow-pen heart piece is reached only by the owl |
 | Many N64 grotto contents are gone: the grotto Deku Scrubs of Zora's River and Lake Hylia, Hyrule Field's three generic grotto chests and the tektite heart piece, the DMT storms grotto chest, the Royal Family's Tomb chest | placement data per grotto | `n64_only` with the actors found instead |
@@ -448,6 +449,57 @@ the bridge over the skull, which OoT Randomizer joins; the entrance boulder brea
 of the Well: the four chain locks sit on two doors (the central rooms); the Fire Keese and Like Like rooms need no key;
 there is no bomb flower. Ice Cavern: no heart piece, no loose rupees; a pool past the White Wolfos drops into Zora's
 Fountain (Iron Boots).
+
+**Great Fairies (item 6, from the data; build `e0f3ccfa`).** Scratch scripts in `E:/OOTRemake/work/r4-logic-child/`:
+`fairy_logic.py` (the flows' logic, cutscene actions dropped, with `clawshot.formats.evfl`), `msbt_dump.py` (texts,
+`Mals/USen`), `rsdb_rows.py`, `gd_lookup.py`, `tfp_params.py`. Each fountain's Triforce symbol is an
+`Obj_TriForcePoint_A_0N`; its `RSDB/EventSetting` row names the entry of flow `TriForcePoint` it runs, and that entry
+calls `Sub_PlayOcarinaSequence_FairyFountain` with a `SpecialAbility` number and then the fairy's own flow:
+
+| Banc area (actor) | `TriForcePoint` entry, `SpecialAbility` | Fairy, flow | Gift (`Dm_SY_GetInEvent`) | Fee (`EventQueryHasRuppe`, `Pay`) |
+|---|---|---|---|---|
+| DeathMountainTrail (`A_02`) | `Demo_FairyFountain_Din`, 2 | `Dm_Npc_GreatFairy_002`, `Dm_FairyFountain_Din` | `Item_DinFire` | 25 |
+| HyruleCastle (`A_01`) | `Demo_FairyFountain_Power`, 1 | `Dm_Npc_GreatFairy_001`, `Dm_FairyFountain_Power` | `Item_FairyBless_MP` (stronger spin attack, magic 24) | 50 |
+| ZoraFountain (`A_03`) | `Demo_FairyFountain_Frore`, 3 | `Dm_FairyFountain_Frore` | `Item_FaroreWind` | 100 |
+| DeathMountainCrater (`A_04`) | `Demo_FairyFountain_Wisdom`, 4 | `Dm_FairyFountain_Wisdom` | `Item_FairyBless_MPDouble` (magic 48) | 200 |
+| DesertColossus (`A_05`) | `Demo_FairyFountain_Nayru`, 5 | `Dm_FairyFountain_Nayru` | `Item_NayruLove` | 300 |
+| GanonCastle (`A_06`) | `Demo_FairyFountain_Courage`, 6 | `Dm_FairyFountain_Courage` | `Item_FairyBless_DefenseDouble` (damage halved) | 500 |
+
+This is Kareem's guide table: the summit fountain gives Din's Fire, Hyrule Castle's the "Gift of Improved Spin"
+(the Power fairy's text: "I've made your spin attack stronger"; the item is also a magic meter).
+
+- **Who can be met first.** `Sub_PlayOcarinaSequence_FairyFountain`, after the Lullaby, switches on
+  `EventQueryFairyFountainSelectSpecialAbility`: ability 2 (Din's) goes straight on; every other value first asks
+  `IsGet.Item_DinFire`, and without it Navi says "It doesn't seem like anything happened, but... I do sense some kind
+  of mysterious power here" (`Dm_FairyFountain_Power` `Talk_00` once `Get_StoneOfFire_IsCompleted_Exp`, before that
+  `Talk_02`, which adds "Let's come back later") and the fairy does not appear. So the first fairy is Din's, and the
+  gate is the item, not the visit: in a seed, Din's Fire found anywhere opens the other five [inference: `IsGet` is
+  set however the item is got]. `GreatFairy_MeetFirst` only picks the greeting ("It seems I'm not the first Great
+  Fairy you've met" for the others). Din's gift, with no magic yet (`PlayerStatus.MPMax` 0), shows the magic gauge
+  being born (`GreatFairy_HasNoMPOnDinDemo`). The guides' "Death Mountain Trail or Hyrule Castle first" is wrong for
+  Hyrule Castle.
+- **Kareem's question: Improved Spin before Din's Fire? No.** The Hyrule Castle fairy does not come without Din's
+  Fire. Neither gift asks for the magic meter or for another fairy met: `Dm_FairyFountain_Power` checks only
+  `HavePlayedEvent.Dm_FairyFountain_Power`, `IsGet.Item_FairyBless_MP` and the rupees.
+- **Fees are fixed per fairy**, not rising per visit: each flow asks one constant (`HasRuppe` 25, 50, 100, 200, 300,
+  500, matching the text variables `GreatFairy_Price1..6`, unsaved `Int`s). Track B's "rises with each visit" is the
+  guides' usual visiting order.
+- **Without the rupees** the fairy says "Seems you don't have enough rupees... Come back once you've saved up N
+  rupees" (`DontPay2`), the event quits (`EventRequestQuit`) and nothing is lost: the next Lullaby offers again
+  (`VisitedNoAbility`). Saying no to the offer (`DontPay1`) is the same.
+- **Wallets** (`RSDB/PouchActorInfo`, `AfterExpansionMaxNum`): `Item_Wallet_Small` 200 (the rupee's `SmallBagActor`;
+  a new game starts with it, section 14), `Item_Wallet_Medium` 500 (OoT Randomizer's Adult Wallet, 10 tokens),
+  `Item_Wallet_Large` 1000 (Giant Wallet, 30 tokens). Fees up to 200 fit the start; Nayru (300) and Courage (500)
+  need the Adult Wallet.
+- **The magic meter comes with every magic item.** `PouchActorInfo` gives `Item_DinFire`, `Item_FaroreWind`,
+  `Item_NayruLove`, `Item_GlassTruth` (Lens of Truth), `Item_Arrow_Fire/Ice/Light` and `Item_FairyBless_MP`
+  `ExpansionAvility: MPMaxUP`, `MPMax: 24` (`Item_FairyBless_MPDouble` 48), and the item-get flow
+  `Dm_SY_Get:PouchAddItem` calls `MPOpen`, which shows the gauge being born when `PlayerStatus.MPMax` is 0. OoT
+  Randomizer's `can_use` asks for the item and `Magic_Meter`; here each of those items counts as one `Magic Meter`
+  (an `[items]` alias, `plans/04-world-format.md`).
+- **For the seed patch.** The flows use each gift's own `IsGet` as "already given" (Din's `IsGet.Item_DinFire`,
+  Power's `IsGet.Item_FairyBless_MP`, ...) and `IsGet.Item_DinFire` as the gate for the other five. A seed that puts
+  another item at a fountain, or Din's Fire elsewhere, must keep both working as the logic assumes [inference].
 
 ## 13. Round 4: adult remake logic (cs4b)
 
