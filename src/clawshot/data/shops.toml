@@ -1,0 +1,1539 @@
+# Shop shelf and sale identities, build e0f3ccfa. No game resources.
+# Price = PouchActorInfo.BuyingPrice + ShopParam.GoodsList[index].PriceOffset.
+# Index is the game's slot selector, never its stable identity (file + Hash).
+
+[[slot]]
+id = "17336515988275376869"
+shop = "GC Shop"
+location = "GC Shop Item 1"
+file = "Banc/GoronCity/GoronCity_Adult_Static.bcett.byml.zs"
+owner = "Npc_Goron_011_Shop_Adult"
+owner_id = "11148119585223104732"
+member = "Component/ShopParam/Npc_Goron_011_Shop_Child.game__component__ShopParam.bgyml"
+index = 0
+vanilla_item = "Shop_Heart"
+price = 5
+
+[[slot]]
+id = "1979255831149252819"
+shop = "GC Shop"
+location = "GC Shop Item 2"
+file = "Banc/GoronCity/GoronCity_Adult_Static.bcett.byml.zs"
+owner = "Npc_Goron_011_Shop_Adult"
+owner_id = "11148119585223104732"
+member = "Component/ShopParam/Npc_Goron_011_Shop_Child.game__component__ShopParam.bgyml"
+index = 1
+vanilla_item = "Shop_Bottle_RedPotion"
+price = 30
+
+[[slot]]
+id = "12353176944776347148"
+shop = "GC Shop"
+location = "GC Shop Item 3"
+file = "Banc/GoronCity/GoronCity_Adult_Static.bcett.byml.zs"
+owner = "Npc_Goron_011_Shop_Adult"
+owner_id = "11148119585223104732"
+member = "Component/ShopParam/Npc_Goron_011_Shop_Child.game__component__ShopParam.bgyml"
+index = 2
+vanilla_item = "Shop_Bottle_Bug"
+price = 30
+
+[[slot]]
+id = "15075156905719609791"
+shop = "GC Shop"
+location = "GC Shop Item 4"
+file = "Banc/GoronCity/GoronCity_Adult_Static.bcett.byml.zs"
+owner = "Npc_Goron_011_Shop_Adult"
+owner_id = "11148119585223104732"
+member = "Component/ShopParam/Npc_Goron_011_Shop_Child.game__component__ShopParam.bgyml"
+index = 3
+vanilla_item = "Shop_Armor_Goron"
+price = 600
+
+[[slot]]
+id = "2024544143198404990"
+shop = "GC Shop"
+location = "GC Shop Item 5"
+file = "Banc/GoronCity/GoronCity_Adult_Static.bcett.byml.zs"
+owner = "Npc_Goron_011_Shop_Adult"
+owner_id = "11148119585223104732"
+member = "Component/ShopParam/Npc_Goron_011_Shop_Child.game__component__ShopParam.bgyml"
+index = 4
+vanilla_item = "Shop_BombBundle_01"
+price = 25
+
+[[slot]]
+id = "4051972258083132277"
+shop = "GC Shop"
+location = "GC Shop Item 6"
+file = "Banc/GoronCity/GoronCity_Adult_Static.bcett.byml.zs"
+owner = "Npc_Goron_011_Shop_Adult"
+owner_id = "11148119585223104732"
+member = "Component/ShopParam/Npc_Goron_011_Shop_Child.game__component__ShopParam.bgyml"
+index = 5
+vanilla_item = "Shop_BombBundle_02"
+price = 45
+
+[[slot]]
+id = "7766531338573556705"
+shop = "GC Shop"
+location = "GC Shop Item 7"
+file = "Banc/GoronCity/GoronCity_Adult_Static.bcett.byml.zs"
+owner = "Npc_Goron_011_Shop_Adult"
+owner_id = "11148119585223104732"
+member = "Component/ShopParam/Npc_Goron_011_Shop_Child.game__component__ShopParam.bgyml"
+index = 6
+vanilla_item = "Shop_BombBundle_03"
+price = 80
+
+[[slot]]
+id = "4809021128171462363"
+shop = "GC Shop"
+location = "GC Shop Item 8"
+file = "Banc/GoronCity/GoronCity_Adult_Static.bcett.byml.zs"
+owner = "Npc_Goron_011_Shop_Adult"
+owner_id = "11148119585223104732"
+member = "Component/ShopParam/Npc_Goron_011_Shop_Child.game__component__ShopParam.bgyml"
+index = 7
+vanilla_item = "Shop_BombBundle_04"
+price = 110
+
+[[slot]]
+id = "3512162152062029293"
+shop = "GC Shop"
+location = "GC Shop Item 1"
+file = "Banc/GoronCity/GoronCity_Child_Static.bcett.byml.zs"
+owner = "Npc_Goron_011_Shop_Child"
+owner_id = "5455377185827001076"
+member = "Component/ShopParam/Npc_Goron_011_Shop_Child.game__component__ShopParam.bgyml"
+index = 0
+vanilla_item = "Shop_Heart"
+price = 5
+
+[[slot]]
+id = "16994919311159696078"
+shop = "GC Shop"
+location = "GC Shop Item 2"
+file = "Banc/GoronCity/GoronCity_Child_Static.bcett.byml.zs"
+owner = "Npc_Goron_011_Shop_Child"
+owner_id = "5455377185827001076"
+member = "Component/ShopParam/Npc_Goron_011_Shop_Child.game__component__ShopParam.bgyml"
+index = 1
+vanilla_item = "Shop_Bottle_RedPotion"
+price = 30
+
+[[slot]]
+id = "5465750003560413462"
+shop = "GC Shop"
+location = "GC Shop Item 3"
+file = "Banc/GoronCity/GoronCity_Child_Static.bcett.byml.zs"
+owner = "Npc_Goron_011_Shop_Child"
+owner_id = "5455377185827001076"
+member = "Component/ShopParam/Npc_Goron_011_Shop_Child.game__component__ShopParam.bgyml"
+index = 2
+vanilla_item = "Shop_Bottle_Bug"
+price = 30
+
+[[slot]]
+id = "9081723785715040392"
+shop = "GC Shop"
+location = "GC Shop Item 4"
+file = "Banc/GoronCity/GoronCity_Child_Static.bcett.byml.zs"
+owner = "Npc_Goron_011_Shop_Child"
+owner_id = "5455377185827001076"
+member = "Component/ShopParam/Npc_Goron_011_Shop_Child.game__component__ShopParam.bgyml"
+index = 3
+vanilla_item = "Shop_Armor_Goron"
+price = 600
+
+[[slot]]
+id = "9587346236695312499"
+shop = "GC Shop"
+location = "GC Shop Item 5"
+file = "Banc/GoronCity/GoronCity_Child_Static.bcett.byml.zs"
+owner = "Npc_Goron_011_Shop_Child"
+owner_id = "5455377185827001076"
+member = "Component/ShopParam/Npc_Goron_011_Shop_Child.game__component__ShopParam.bgyml"
+index = 4
+vanilla_item = "Shop_BombBundle_01"
+price = 25
+
+[[slot]]
+id = "10981256749588857721"
+shop = "GC Shop"
+location = "GC Shop Item 6"
+file = "Banc/GoronCity/GoronCity_Child_Static.bcett.byml.zs"
+owner = "Npc_Goron_011_Shop_Child"
+owner_id = "5455377185827001076"
+member = "Component/ShopParam/Npc_Goron_011_Shop_Child.game__component__ShopParam.bgyml"
+index = 5
+vanilla_item = "Shop_BombBundle_02"
+price = 45
+
+[[slot]]
+id = "14612795868360326117"
+shop = "GC Shop"
+location = "GC Shop Item 7"
+file = "Banc/GoronCity/GoronCity_Child_Static.bcett.byml.zs"
+owner = "Npc_Goron_011_Shop_Child"
+owner_id = "5455377185827001076"
+member = "Component/ShopParam/Npc_Goron_011_Shop_Child.game__component__ShopParam.bgyml"
+index = 6
+vanilla_item = "Shop_BombBundle_03"
+price = 80
+
+[[slot]]
+id = "2540830164358535343"
+shop = "GC Shop"
+location = "GC Shop Item 8"
+file = "Banc/GoronCity/GoronCity_Child_Static.bcett.byml.zs"
+owner = "Npc_Goron_011_Shop_Child"
+owner_id = "5455377185827001076"
+member = "Component/ShopParam/Npc_Goron_011_Shop_Child.game__component__ShopParam.bgyml"
+index = 7
+vanilla_item = "Shop_BombBundle_04"
+price = 110
+
+[[slot]]
+id = "1034471250009702566"
+shop = "Kak Potion Shop"
+location = "Kak Potion Shop Item 1"
+file = "Banc/KakarikoVillage/KakarikoVillage_Adult_Alternative_Static.bcett.byml.zs"
+owner = "Npc_Hylia_020_Shop_Adult"
+owner_id = "8903332426713187672"
+member = "Component/ShopParam/Npc_Hylia_020_Shop.game__component__ShopParam.bgyml"
+index = 0
+vanilla_item = "Shop_Bottle_RedPotion"
+price = 30
+
+[[slot]]
+id = "8914926333771357265"
+shop = "Kak Potion Shop"
+location = "Kak Potion Shop Item 2"
+file = "Banc/KakarikoVillage/KakarikoVillage_Adult_Alternative_Static.bcett.byml.zs"
+owner = "Npc_Hylia_020_Shop_Adult"
+owner_id = "8903332426713187672"
+member = "Component/ShopParam/Npc_Hylia_020_Shop.game__component__ShopParam.bgyml"
+index = 1
+vanilla_item = "Shop_Bottle_GreenPotion"
+price = 30
+
+[[slot]]
+id = "14573579641810810967"
+shop = "Kak Potion Shop"
+location = "Kak Potion Shop Item 3"
+file = "Banc/KakarikoVillage/KakarikoVillage_Adult_Alternative_Static.bcett.byml.zs"
+owner = "Npc_Hylia_020_Shop_Adult"
+owner_id = "8903332426713187672"
+member = "Component/ShopParam/Npc_Hylia_020_Shop.game__component__ShopParam.bgyml"
+index = 2
+vanilla_item = "Shop_Bottle_HalfMilk"
+price = 20
+
+[[slot]]
+id = "13090519859098389042"
+shop = "Kak Potion Shop"
+location = "Kak Potion Shop Item 4"
+file = "Banc/KakarikoVillage/KakarikoVillage_Adult_Alternative_Static.bcett.byml.zs"
+owner = "Npc_Hylia_020_Shop_Adult"
+owner_id = "8903332426713187672"
+member = "Component/ShopParam/Npc_Hylia_020_Shop.game__component__ShopParam.bgyml"
+index = 3
+vanilla_item = "Shop_Bottle_Fairy"
+price = 50
+
+[[slot]]
+id = "9419965511399476345"
+shop = "Kak Potion Shop"
+location = "Kak Potion Shop Item 5"
+file = "Banc/KakarikoVillage/KakarikoVillage_Adult_Alternative_Static.bcett.byml.zs"
+owner = "Npc_Hylia_020_Shop_Adult"
+owner_id = "8903332426713187672"
+member = "Component/ShopParam/Npc_Hylia_020_Shop.game__component__ShopParam.bgyml"
+index = 4
+vanilla_item = "Shop_Bottle_BlueFire"
+price = 200
+
+[[slot]]
+id = "11639399395084703081"
+shop = "Kak Potion Shop"
+location = "Kak Potion Shop Item 6"
+file = "Banc/KakarikoVillage/KakarikoVillage_Adult_Alternative_Static.bcett.byml.zs"
+owner = "Npc_Hylia_020_Shop_Adult"
+owner_id = "8903332426713187672"
+member = "Component/ShopParam/Npc_Hylia_020_Shop.game__component__ShopParam.bgyml"
+index = 5
+vanilla_item = "Shop_Bottle_Poe"
+price = 200
+
+[[slot]]
+id = "3063235766944682979"
+shop = "Kak Potion Shop"
+location = "Kak Potion Shop Item 7"
+file = "Banc/KakarikoVillage/KakarikoVillage_Adult_Alternative_Static.bcett.byml.zs"
+owner = "Npc_Hylia_020_Shop_Adult"
+owner_id = "8903332426713187672"
+member = "Component/ShopParam/Npc_Hylia_020_Shop.game__component__ShopParam.bgyml"
+index = 6
+vanilla_item = "Shop_Bottle_Bug"
+price = 30
+
+[[slot]]
+id = "12023735427638332018"
+shop = "Kak Potion Shop"
+location = "Kak Potion Shop Item 8"
+file = "Banc/KakarikoVillage/KakarikoVillage_Adult_Alternative_Static.bcett.byml.zs"
+owner = "Npc_Hylia_020_Shop_Adult"
+owner_id = "8903332426713187672"
+member = "Component/ShopParam/Npc_Hylia_020_Shop.game__component__ShopParam.bgyml"
+index = 7
+vanilla_item = "Shop_Bottle_Fish"
+price = 50
+
+[[slot]]
+id = "10770932550933339193"
+shop = "Kak Bazaar"
+location = "Kak Bazaar Item 1"
+file = "Banc/KakarikoVillage/KakarikoVillage_Adult_Alternative_Static.bcett.byml.zs"
+owner = "Npc_Hylia_018_Shop_Adult"
+owner_id = "10336328836620744527"
+member = "Component/ShopParam/Npc_Hylia_018_Shop_Adult.game__component__ShopParam.bgyml"
+index = 0
+vanilla_item = "Shop_Heart"
+price = 5
+
+[[slot]]
+id = "7242922901245289051"
+shop = "Kak Bazaar"
+location = "Kak Bazaar Item 2"
+file = "Banc/KakarikoVillage/KakarikoVillage_Adult_Alternative_Static.bcett.byml.zs"
+owner = "Npc_Hylia_018_Shop_Adult"
+owner_id = "10336328836620744527"
+member = "Component/ShopParam/Npc_Hylia_018_Shop_Adult.game__component__ShopParam.bgyml"
+index = 1
+vanilla_item = "Shop_MagicJar_Small"
+price = 10
+
+[[slot]]
+id = "6472964510849521373"
+shop = "Kak Bazaar"
+location = "Kak Bazaar Item 3"
+file = "Banc/KakarikoVillage/KakarikoVillage_Adult_Alternative_Static.bcett.byml.zs"
+owner = "Npc_Hylia_018_Shop_Adult"
+owner_id = "10336328836620744527"
+member = "Component/ShopParam/Npc_Hylia_018_Shop_Adult.game__component__ShopParam.bgyml"
+index = 2
+vanilla_item = "Shop_DekuSeedBundle_02"
+price = 15
+
+[[slot]]
+id = "9329787277345810673"
+shop = "Kak Bazaar"
+location = "Kak Bazaar Item 4"
+file = "Banc/KakarikoVillage/KakarikoVillage_Adult_Alternative_Static.bcett.byml.zs"
+owner = "Npc_Hylia_018_Shop_Adult"
+owner_id = "10336328836620744527"
+member = "Component/ShopParam/Npc_Hylia_018_Shop_Adult.game__component__ShopParam.bgyml"
+index = 3
+vanilla_item = "Shop_ArrowBundle_01"
+price = 20
+
+[[slot]]
+id = "17252547494024141430"
+shop = "Kak Bazaar"
+location = "Kak Bazaar Item 5"
+file = "Banc/KakarikoVillage/KakarikoVillage_Adult_Alternative_Static.bcett.byml.zs"
+owner = "Npc_Hylia_018_Shop_Adult"
+owner_id = "10336328836620744527"
+member = "Component/ShopParam/Npc_Hylia_018_Shop_Adult.game__component__ShopParam.bgyml"
+index = 4
+vanilla_item = "Shop_BombBundle_01"
+price = 35
+
+[[slot]]
+id = "16693599174313571081"
+shop = "Kak Bazaar"
+location = "Kak Bazaar Item 6"
+file = "Banc/KakarikoVillage/KakarikoVillage_Adult_Alternative_Static.bcett.byml.zs"
+owner = "Npc_Hylia_018_Shop_Adult"
+owner_id = "10336328836620744527"
+member = "Component/ShopParam/Npc_Hylia_018_Shop_Adult.game__component__ShopParam.bgyml"
+index = 5
+vanilla_item = "Shop_DekuNutBundle_01"
+price = 20
+
+[[slot]]
+id = "11066753475037239452"
+shop = "Kak Bazaar"
+location = "Kak Bazaar Item 7"
+file = "Banc/KakarikoVillage/KakarikoVillage_Adult_Alternative_Static.bcett.byml.zs"
+owner = "Npc_Hylia_018_Shop_Adult"
+owner_id = "10336328836620744527"
+member = "Component/ShopParam/Npc_Hylia_018_Shop_Adult.game__component__ShopParam.bgyml"
+index = 6
+vanilla_item = "Shop_Weapon_Shield_Hylian"
+price = 80
+
+[[slot]]
+id = "15323969315798721959"
+shop = "Kak Bazaar"
+location = "Kak Bazaar Item 8"
+file = "Banc/KakarikoVillage/KakarikoVillage_Adult_Alternative_Static.bcett.byml.zs"
+owner = "Npc_Hylia_018_Shop_Adult"
+owner_id = "10336328836620744527"
+member = "Component/ShopParam/Npc_Hylia_018_Shop_Adult.game__component__ShopParam.bgyml"
+index = 7
+vanilla_item = "Shop_DekuStick"
+price = 10
+
+[[slot]]
+id = "2420643791120092389"
+shop = "Kak Potion Shop"
+location = "Kak Potion Shop Item 1"
+file = "Banc/KakarikoVillage/KakarikoVillage_Adult_Static.bcett.byml.zs"
+owner = "Npc_Hylia_020_Shop_Adult"
+owner_id = "8613531173945014363"
+member = "Component/ShopParam/Npc_Hylia_020_Shop.game__component__ShopParam.bgyml"
+index = 0
+vanilla_item = "Shop_Bottle_RedPotion"
+price = 30
+
+[[slot]]
+id = "8409930160770260951"
+shop = "Kak Potion Shop"
+location = "Kak Potion Shop Item 2"
+file = "Banc/KakarikoVillage/KakarikoVillage_Adult_Static.bcett.byml.zs"
+owner = "Npc_Hylia_020_Shop_Adult"
+owner_id = "8613531173945014363"
+member = "Component/ShopParam/Npc_Hylia_020_Shop.game__component__ShopParam.bgyml"
+index = 1
+vanilla_item = "Shop_Bottle_GreenPotion"
+price = 30
+
+[[slot]]
+id = "2176150328003949778"
+shop = "Kak Potion Shop"
+location = "Kak Potion Shop Item 3"
+file = "Banc/KakarikoVillage/KakarikoVillage_Adult_Static.bcett.byml.zs"
+owner = "Npc_Hylia_020_Shop_Adult"
+owner_id = "8613531173945014363"
+member = "Component/ShopParam/Npc_Hylia_020_Shop.game__component__ShopParam.bgyml"
+index = 2
+vanilla_item = "Shop_Bottle_HalfMilk"
+price = 20
+
+[[slot]]
+id = "2505209540695098876"
+shop = "Kak Potion Shop"
+location = "Kak Potion Shop Item 4"
+file = "Banc/KakarikoVillage/KakarikoVillage_Adult_Static.bcett.byml.zs"
+owner = "Npc_Hylia_020_Shop_Adult"
+owner_id = "8613531173945014363"
+member = "Component/ShopParam/Npc_Hylia_020_Shop.game__component__ShopParam.bgyml"
+index = 3
+vanilla_item = "Shop_Bottle_Fairy"
+price = 50
+
+[[slot]]
+id = "15457642551600550074"
+shop = "Kak Potion Shop"
+location = "Kak Potion Shop Item 5"
+file = "Banc/KakarikoVillage/KakarikoVillage_Adult_Static.bcett.byml.zs"
+owner = "Npc_Hylia_020_Shop_Adult"
+owner_id = "8613531173945014363"
+member = "Component/ShopParam/Npc_Hylia_020_Shop.game__component__ShopParam.bgyml"
+index = 4
+vanilla_item = "Shop_Bottle_BlueFire"
+price = 200
+
+[[slot]]
+id = "10498999850469822755"
+shop = "Kak Potion Shop"
+location = "Kak Potion Shop Item 6"
+file = "Banc/KakarikoVillage/KakarikoVillage_Adult_Static.bcett.byml.zs"
+owner = "Npc_Hylia_020_Shop_Adult"
+owner_id = "8613531173945014363"
+member = "Component/ShopParam/Npc_Hylia_020_Shop.game__component__ShopParam.bgyml"
+index = 5
+vanilla_item = "Shop_Bottle_Poe"
+price = 200
+
+[[slot]]
+id = "4010587438556269486"
+shop = "Kak Potion Shop"
+location = "Kak Potion Shop Item 7"
+file = "Banc/KakarikoVillage/KakarikoVillage_Adult_Static.bcett.byml.zs"
+owner = "Npc_Hylia_020_Shop_Adult"
+owner_id = "8613531173945014363"
+member = "Component/ShopParam/Npc_Hylia_020_Shop.game__component__ShopParam.bgyml"
+index = 6
+vanilla_item = "Shop_Bottle_Bug"
+price = 30
+
+[[slot]]
+id = "14581044945263333943"
+shop = "Kak Potion Shop"
+location = "Kak Potion Shop Item 8"
+file = "Banc/KakarikoVillage/KakarikoVillage_Adult_Static.bcett.byml.zs"
+owner = "Npc_Hylia_020_Shop_Adult"
+owner_id = "8613531173945014363"
+member = "Component/ShopParam/Npc_Hylia_020_Shop.game__component__ShopParam.bgyml"
+index = 7
+vanilla_item = "Shop_Bottle_Fish"
+price = 50
+
+[[slot]]
+id = "7341217590785857658"
+shop = "Kak Bazaar"
+location = "Kak Bazaar Item 1"
+file = "Banc/KakarikoVillage/KakarikoVillage_Adult_Static.bcett.byml.zs"
+owner = "Npc_Hylia_018_Shop_Adult"
+owner_id = "6549395678050650316"
+member = "Component/ShopParam/Npc_Hylia_018_Shop_Adult.game__component__ShopParam.bgyml"
+index = 0
+vanilla_item = "Shop_Heart"
+price = 5
+
+[[slot]]
+id = "9196056434848129628"
+shop = "Kak Bazaar"
+location = "Kak Bazaar Item 2"
+file = "Banc/KakarikoVillage/KakarikoVillage_Adult_Static.bcett.byml.zs"
+owner = "Npc_Hylia_018_Shop_Adult"
+owner_id = "6549395678050650316"
+member = "Component/ShopParam/Npc_Hylia_018_Shop_Adult.game__component__ShopParam.bgyml"
+index = 1
+vanilla_item = "Shop_MagicJar_Small"
+price = 10
+
+[[slot]]
+id = "12203225833235031646"
+shop = "Kak Bazaar"
+location = "Kak Bazaar Item 3"
+file = "Banc/KakarikoVillage/KakarikoVillage_Adult_Static.bcett.byml.zs"
+owner = "Npc_Hylia_018_Shop_Adult"
+owner_id = "6549395678050650316"
+member = "Component/ShopParam/Npc_Hylia_018_Shop_Adult.game__component__ShopParam.bgyml"
+index = 2
+vanilla_item = "Shop_DekuSeedBundle_02"
+price = 15
+
+[[slot]]
+id = "12821849920581332402"
+shop = "Kak Bazaar"
+location = "Kak Bazaar Item 4"
+file = "Banc/KakarikoVillage/KakarikoVillage_Adult_Static.bcett.byml.zs"
+owner = "Npc_Hylia_018_Shop_Adult"
+owner_id = "6549395678050650316"
+member = "Component/ShopParam/Npc_Hylia_018_Shop_Adult.game__component__ShopParam.bgyml"
+index = 3
+vanilla_item = "Shop_ArrowBundle_01"
+price = 20
+
+[[slot]]
+id = "17512265184304585271"
+shop = "Kak Bazaar"
+location = "Kak Bazaar Item 5"
+file = "Banc/KakarikoVillage/KakarikoVillage_Adult_Static.bcett.byml.zs"
+owner = "Npc_Hylia_018_Shop_Adult"
+owner_id = "6549395678050650316"
+member = "Component/ShopParam/Npc_Hylia_018_Shop_Adult.game__component__ShopParam.bgyml"
+index = 4
+vanilla_item = "Shop_BombBundle_01"
+price = 35
+
+[[slot]]
+id = "16973917980311026582"
+shop = "Kak Bazaar"
+location = "Kak Bazaar Item 6"
+file = "Banc/KakarikoVillage/KakarikoVillage_Adult_Static.bcett.byml.zs"
+owner = "Npc_Hylia_018_Shop_Adult"
+owner_id = "6549395678050650316"
+member = "Component/ShopParam/Npc_Hylia_018_Shop_Adult.game__component__ShopParam.bgyml"
+index = 5
+vanilla_item = "Shop_DekuNutBundle_01"
+price = 20
+
+[[slot]]
+id = "6438218320520635418"
+shop = "Kak Bazaar"
+location = "Kak Bazaar Item 7"
+file = "Banc/KakarikoVillage/KakarikoVillage_Adult_Static.bcett.byml.zs"
+owner = "Npc_Hylia_018_Shop_Adult"
+owner_id = "6549395678050650316"
+member = "Component/ShopParam/Npc_Hylia_018_Shop_Adult.game__component__ShopParam.bgyml"
+index = 6
+vanilla_item = "Shop_Weapon_Shield_Hylian"
+price = 80
+
+[[slot]]
+id = "17114479252530837728"
+shop = "Kak Bazaar"
+location = "Kak Bazaar Item 8"
+file = "Banc/KakarikoVillage/KakarikoVillage_Adult_Static.bcett.byml.zs"
+owner = "Npc_Hylia_018_Shop_Adult"
+owner_id = "6549395678050650316"
+member = "Component/ShopParam/Npc_Hylia_018_Shop_Adult.game__component__ShopParam.bgyml"
+index = 7
+vanilla_item = "Shop_DekuStick"
+price = 10
+
+[[slot]]
+id = "10357707628656499332"
+shop = "KF Shop"
+location = "KF Shop Item 1"
+file = "Banc/KokiriForest/KokiriForest_Adult_Static.bcett.byml.zs"
+owner = "Npc_Kokiri_001_Shop_Adult"
+owner_id = "11646512023836359537"
+member = "Component/ShopParam/Npc_Kokiri_001_Shop_Child.game__component__ShopParam.bgyml"
+index = 0
+vanilla_item = "Shop_Heart"
+price = 5
+
+[[slot]]
+id = "10608793909085719174"
+shop = "KF Shop"
+location = "KF Shop Item 2"
+file = "Banc/KokiriForest/KokiriForest_Adult_Static.bcett.byml.zs"
+owner = "Npc_Kokiri_001_Shop_Adult"
+owner_id = "11646512023836359537"
+member = "Component/ShopParam/Npc_Kokiri_001_Shop_Child.game__component__ShopParam.bgyml"
+index = 1
+vanilla_item = "Shop_DekuSeedBundle_02"
+price = 15
+
+[[slot]]
+id = "8442446062876759020"
+shop = "KF Shop"
+location = "KF Shop Item 3"
+file = "Banc/KokiriForest/KokiriForest_Adult_Static.bcett.byml.zs"
+owner = "Npc_Kokiri_001_Shop_Adult"
+owner_id = "11646512023836359537"
+member = "Component/ShopParam/Npc_Kokiri_001_Shop_Child.game__component__ShopParam.bgyml"
+index = 2
+vanilla_item = "Shop_DekuNutBundle_01"
+price = 20
+
+[[slot]]
+id = "5205605618390578983"
+shop = "KF Shop"
+location = "KF Shop Item 4"
+file = "Banc/KokiriForest/KokiriForest_Adult_Static.bcett.byml.zs"
+owner = "Npc_Kokiri_001_Shop_Adult"
+owner_id = "11646512023836359537"
+member = "Component/ShopParam/Npc_Kokiri_001_Shop_Child.game__component__ShopParam.bgyml"
+index = 3
+vanilla_item = "Shop_DekuNutBundle_02"
+price = 30
+
+[[slot]]
+id = "13457020963026830815"
+shop = "KF Shop"
+location = "KF Shop Item 5"
+file = "Banc/KokiriForest/KokiriForest_Adult_Static.bcett.byml.zs"
+owner = "Npc_Kokiri_001_Shop_Adult"
+owner_id = "11646512023836359537"
+member = "Component/ShopParam/Npc_Kokiri_001_Shop_Child.game__component__ShopParam.bgyml"
+index = 4
+vanilla_item = "Shop_DekuSeedBundle_01"
+price = 30
+
+[[slot]]
+id = "4359156404841200094"
+shop = "KF Shop"
+location = "KF Shop Item 6"
+file = "Banc/KokiriForest/KokiriForest_Adult_Static.bcett.byml.zs"
+owner = "Npc_Kokiri_001_Shop_Adult"
+owner_id = "11646512023836359537"
+member = "Component/ShopParam/Npc_Kokiri_001_Shop_Child.game__component__ShopParam.bgyml"
+index = 5
+vanilla_item = "Shop_DekuStickBundle_Medium"
+price = 40
+
+[[slot]]
+id = "6642704364901961822"
+shop = "KF Shop"
+location = "KF Shop Item 7"
+file = "Banc/KokiriForest/KokiriForest_Adult_Static.bcett.byml.zs"
+owner = "Npc_Kokiri_001_Shop_Adult"
+owner_id = "11646512023836359537"
+member = "Component/ShopParam/Npc_Kokiri_001_Shop_Child.game__component__ShopParam.bgyml"
+index = 6
+vanilla_item = "Shop_Weapon_Shield_Deku"
+price = 40
+
+[[slot]]
+id = "15352451833778770402"
+shop = "KF Shop"
+location = "KF Shop Item 8"
+file = "Banc/KokiriForest/KokiriForest_Adult_Static.bcett.byml.zs"
+owner = "Npc_Kokiri_001_Shop_Adult"
+owner_id = "11646512023836359537"
+member = "Component/ShopParam/Npc_Kokiri_001_Shop_Child.game__component__ShopParam.bgyml"
+index = 7
+vanilla_item = "Shop_DekuStick"
+price = 10
+
+[[slot]]
+id = "11595064306709942551"
+shop = "KF Shop"
+location = "KF Shop Item 1"
+file = "Banc/KokiriForest/KokiriForest_Child_Static.bcett.byml.zs"
+owner = "Npc_Kokiri_001_Shop_Child"
+owner_id = "14523757748432558778"
+member = "Component/ShopParam/Npc_Kokiri_001_Shop_Child.game__component__ShopParam.bgyml"
+index = 0
+vanilla_item = "Shop_Heart"
+price = 5
+
+[[slot]]
+id = "12274555791381804315"
+shop = "KF Shop"
+location = "KF Shop Item 2"
+file = "Banc/KokiriForest/KokiriForest_Child_Static.bcett.byml.zs"
+owner = "Npc_Kokiri_001_Shop_Child"
+owner_id = "14523757748432558778"
+member = "Component/ShopParam/Npc_Kokiri_001_Shop_Child.game__component__ShopParam.bgyml"
+index = 1
+vanilla_item = "Shop_DekuSeedBundle_02"
+price = 15
+
+[[slot]]
+id = "1212183037605930043"
+shop = "KF Shop"
+location = "KF Shop Item 3"
+file = "Banc/KokiriForest/KokiriForest_Child_Static.bcett.byml.zs"
+owner = "Npc_Kokiri_001_Shop_Child"
+owner_id = "14523757748432558778"
+member = "Component/ShopParam/Npc_Kokiri_001_Shop_Child.game__component__ShopParam.bgyml"
+index = 2
+vanilla_item = "Shop_DekuNutBundle_01"
+price = 20
+
+[[slot]]
+id = "12416733255464110660"
+shop = "KF Shop"
+location = "KF Shop Item 4"
+file = "Banc/KokiriForest/KokiriForest_Child_Static.bcett.byml.zs"
+owner = "Npc_Kokiri_001_Shop_Child"
+owner_id = "14523757748432558778"
+member = "Component/ShopParam/Npc_Kokiri_001_Shop_Child.game__component__ShopParam.bgyml"
+index = 3
+vanilla_item = "Shop_DekuNutBundle_02"
+price = 30
+
+[[slot]]
+id = "4804777660082210636"
+shop = "KF Shop"
+location = "KF Shop Item 5"
+file = "Banc/KokiriForest/KokiriForest_Child_Static.bcett.byml.zs"
+owner = "Npc_Kokiri_001_Shop_Child"
+owner_id = "14523757748432558778"
+member = "Component/ShopParam/Npc_Kokiri_001_Shop_Child.game__component__ShopParam.bgyml"
+index = 4
+vanilla_item = "Shop_DekuSeedBundle_01"
+price = 30
+
+[[slot]]
+id = "1748192465494650957"
+shop = "KF Shop"
+location = "KF Shop Item 6"
+file = "Banc/KokiriForest/KokiriForest_Child_Static.bcett.byml.zs"
+owner = "Npc_Kokiri_001_Shop_Child"
+owner_id = "14523757748432558778"
+member = "Component/ShopParam/Npc_Kokiri_001_Shop_Child.game__component__ShopParam.bgyml"
+index = 5
+vanilla_item = "Shop_DekuStickBundle_Medium"
+price = 40
+
+[[slot]]
+id = "8161552603046357963"
+shop = "KF Shop"
+location = "KF Shop Item 7"
+file = "Banc/KokiriForest/KokiriForest_Child_Static.bcett.byml.zs"
+owner = "Npc_Kokiri_001_Shop_Child"
+owner_id = "14523757748432558778"
+member = "Component/ShopParam/Npc_Kokiri_001_Shop_Child.game__component__ShopParam.bgyml"
+index = 6
+vanilla_item = "Shop_Weapon_Shield_Deku"
+price = 40
+
+[[slot]]
+id = "13192127861177212694"
+shop = "KF Shop"
+location = "KF Shop Item 8"
+file = "Banc/KokiriForest/KokiriForest_Child_Static.bcett.byml.zs"
+owner = "Npc_Kokiri_001_Shop_Child"
+owner_id = "14523757748432558778"
+member = "Component/ShopParam/Npc_Kokiri_001_Shop_Child.game__component__ShopParam.bgyml"
+index = 7
+vanilla_item = "Shop_DekuStick"
+price = 10
+
+[[slot]]
+id = "1333478118027005676"
+shop = "KF Shop"
+location = "KF Shop Item 1"
+file = "Banc/KokiriForest/KokiriForest_Child_Static.bcett.byml.zs"
+owner = "Npc_Kokiri_001_Shop_Child_ShortStock"
+owner_id = "5718011970080385357"
+member = "Component/ShopParam/Npc_Kokiri_001_Shop_Child_ShortStock.game__component__ShopParam.bgyml"
+index = 0
+vanilla_item = "Shop_Heart"
+price = 5
+
+[[slot]]
+id = "726499075643244587"
+shop = "KF Shop"
+location = "KF Shop Item 2"
+file = "Banc/KokiriForest/KokiriForest_Child_Static.bcett.byml.zs"
+owner = "Npc_Kokiri_001_Shop_Child_ShortStock"
+owner_id = "5718011970080385357"
+member = "Component/ShopParam/Npc_Kokiri_001_Shop_Child_ShortStock.game__component__ShopParam.bgyml"
+index = 1
+vanilla_item = "Shop_DekuSeedBundle_02"
+price = 15
+
+[[slot]]
+id = "15469014478079481125"
+shop = "KF Shop"
+location = "KF Shop Item 3"
+file = "Banc/KokiriForest/KokiriForest_Child_Static.bcett.byml.zs"
+owner = "Npc_Kokiri_001_Shop_Child_ShortStock"
+owner_id = "5718011970080385357"
+member = "Component/ShopParam/Npc_Kokiri_001_Shop_Child_ShortStock.game__component__ShopParam.bgyml"
+index = 2
+vanilla_item = "Shop_DekuNutBundle_01"
+price = 20
+
+[[slot]]
+id = "12981796475041639447"
+shop = "KF Shop"
+location = "KF Shop Item 4"
+file = "Banc/KokiriForest/KokiriForest_Child_Static.bcett.byml.zs"
+owner = "Npc_Kokiri_001_Shop_Child_ShortStock"
+owner_id = "5718011970080385357"
+member = "Component/ShopParam/Npc_Kokiri_001_Shop_Child_ShortStock.game__component__ShopParam.bgyml"
+index = 3
+vanilla_item = "Shop_DekuNutBundle_02"
+price = 30
+
+[[slot]]
+id = "8357016262118670446"
+shop = "KF Shop"
+location = "KF Shop Item 5"
+file = "Banc/KokiriForest/KokiriForest_Child_Static.bcett.byml.zs"
+owner = "Npc_Kokiri_001_Shop_Child_ShortStock"
+owner_id = "5718011970080385357"
+member = "Component/ShopParam/Npc_Kokiri_001_Shop_Child_ShortStock.game__component__ShopParam.bgyml"
+index = 4
+vanilla_item = "Shop_DekuSeedBundle_01"
+price = 30
+
+[[slot]]
+id = "15329846556357339265"
+shop = "KF Shop"
+location = "KF Shop Item 6"
+file = "Banc/KokiriForest/KokiriForest_Child_Static.bcett.byml.zs"
+owner = "Npc_Kokiri_001_Shop_Child_ShortStock"
+owner_id = "5718011970080385357"
+member = "Component/ShopParam/Npc_Kokiri_001_Shop_Child_ShortStock.game__component__ShopParam.bgyml"
+index = 5
+vanilla_item = "Shop_DekuStickBundle_Medium"
+price = 40
+
+[[slot]]
+id = "6236883368863181555"
+shop = "KF Shop"
+location = "KF Shop Item 7"
+file = "Banc/KokiriForest/KokiriForest_Child_Static.bcett.byml.zs"
+owner = "Npc_Kokiri_001_Shop_Child_ShortStock"
+owner_id = "5718011970080385357"
+member = "Component/ShopParam/Npc_Kokiri_001_Shop_Child_ShortStock.game__component__ShopParam.bgyml"
+index = 6
+vanilla_item = "Shop_Weapon_Shield_Deku"
+price = 40
+
+[[slot]]
+id = "15086736134255051687"
+shop = "KF Shop"
+location = "KF Shop Item 8"
+file = "Banc/KokiriForest/KokiriForest_Child_Static.bcett.byml.zs"
+owner = "Npc_Kokiri_001_Shop_Child_ShortStock"
+owner_id = "5718011970080385357"
+member = "Component/ShopParam/Npc_Kokiri_001_Shop_Child_ShortStock.game__component__ShopParam.bgyml"
+index = 7
+vanilla_item = "Shop_DekuStick"
+price = 10
+
+[[slot]]
+id = "13904446280042756301"
+shop = "Market Bombchu Shop"
+location = "Market Bombchu Shop Item 1"
+file = "Banc/Market/Market_Child_Static.bcett.byml.zs"
+owner = "Npc_Hylia_021_Shop_Child"
+owner_id = "13279196239484838949"
+member = "Component/ShopParam/Npc_Hylia_021_Shop.game__component__ShopParam.bgyml"
+index = 0
+vanilla_item = "Shop_BombchuBundle_03"
+price = 15
+
+[[slot]]
+id = "13242971960259401995"
+shop = "Market Bombchu Shop"
+location = "Market Bombchu Shop Item 2"
+file = "Banc/Market/Market_Child_Static.bcett.byml.zs"
+owner = "Npc_Hylia_021_Shop_Child"
+owner_id = "13279196239484838949"
+member = "Component/ShopParam/Npc_Hylia_021_Shop.game__component__ShopParam.bgyml"
+index = 1
+vanilla_item = "Shop_BombchuBundle_04"
+price = 45
+
+[[slot]]
+id = "12535663762055135836"
+shop = "Market Bombchu Shop"
+location = "Market Bombchu Shop Item 3"
+file = "Banc/Market/Market_Child_Static.bcett.byml.zs"
+owner = "Npc_Hylia_021_Shop_Child"
+owner_id = "13279196239484838949"
+member = "Component/ShopParam/Npc_Hylia_021_Shop.game__component__ShopParam.bgyml"
+index = 2
+vanilla_item = "Shop_BombchuBundle_05"
+price = 75
+
+[[slot]]
+id = "17558451189872819062"
+shop = "Market Bombchu Shop"
+location = "Market Bombchu Shop Item 4"
+file = "Banc/Market/Market_Child_Static.bcett.byml.zs"
+owner = "Npc_Hylia_021_Shop_Child"
+owner_id = "13279196239484838949"
+member = "Component/ShopParam/Npc_Hylia_021_Shop.game__component__ShopParam.bgyml"
+index = 3
+vanilla_item = "Shop_BombchuBundle_06"
+price = 120
+
+[[slot]]
+id = "10043319116785133483"
+shop = "Market Bombchu Shop"
+location = "Market Bombchu Shop Item 5"
+file = "Banc/Market/Market_Child_Static.bcett.byml.zs"
+owner = "Npc_Hylia_021_Shop_Child"
+owner_id = "13279196239484838949"
+member = "Component/ShopParam/Npc_Hylia_021_Shop.game__component__ShopParam.bgyml"
+index = 4
+vanilla_item = "Shop_BombchuBundle_01"
+price = 140
+
+[[slot]]
+id = "7981518132387036590"
+shop = "Market Bombchu Shop"
+location = "Market Bombchu Shop Item 6"
+file = "Banc/Market/Market_Child_Static.bcett.byml.zs"
+owner = "Npc_Hylia_021_Shop_Child"
+owner_id = "13279196239484838949"
+member = "Component/ShopParam/Npc_Hylia_021_Shop.game__component__ShopParam.bgyml"
+index = 5
+vanilla_item = "Shop_BombchuBundle_07"
+price = 210
+
+[[slot]]
+id = "15351736782374583877"
+shop = "Market Bombchu Shop"
+location = "Market Bombchu Shop Item 7"
+file = "Banc/Market/Market_Child_Static.bcett.byml.zs"
+owner = "Npc_Hylia_021_Shop_Child"
+owner_id = "13279196239484838949"
+member = "Component/ShopParam/Npc_Hylia_021_Shop.game__component__ShopParam.bgyml"
+index = 6
+vanilla_item = "Shop_BombchuBundle_02"
+price = 240
+
+[[slot]]
+id = "12426385834471778854"
+shop = "Market Bombchu Shop"
+location = "Market Bombchu Shop Item 8"
+file = "Banc/Market/Market_Child_Static.bcett.byml.zs"
+owner = "Npc_Hylia_021_Shop_Child"
+owner_id = "13279196239484838949"
+member = "Component/ShopParam/Npc_Hylia_021_Shop.game__component__ShopParam.bgyml"
+index = 7
+vanilla_item = "Shop_BombchuBundle_08"
+price = 300
+
+[[slot]]
+id = "3435311694892283854"
+shop = "Market Mask Shop"
+location = "Market Mask Shop Item 1"
+file = "Banc/Market/Market_Child_Static.bcett.byml.zs"
+owner = "Npc_Hylia_023_Shop_Child"
+owner_id = "7999639835085697318"
+member = "Component/ShopParam/Npc_Hylia_023_Shop.game__component__ShopParam.bgyml"
+index = 0
+vanilla_item = "Shop_Mask_Spooky"
+price = 0
+
+[[slot]]
+id = "10663283941529417575"
+shop = "Market Mask Shop"
+location = "Market Mask Shop Item 2"
+file = "Banc/Market/Market_Child_Static.bcett.byml.zs"
+owner = "Npc_Hylia_023_Shop_Child"
+owner_id = "7999639835085697318"
+member = "Component/ShopParam/Npc_Hylia_023_Shop.game__component__ShopParam.bgyml"
+index = 1
+vanilla_item = "Shop_Mask_Keaton"
+price = 0
+
+[[slot]]
+id = "10828340057543190252"
+shop = "Market Mask Shop"
+location = "Market Mask Shop Item 3"
+file = "Banc/Market/Market_Child_Static.bcett.byml.zs"
+owner = "Npc_Hylia_023_Shop_Child"
+owner_id = "7999639835085697318"
+member = "Component/ShopParam/Npc_Hylia_023_Shop.game__component__ShopParam.bgyml"
+index = 2
+vanilla_item = "Shop_Mask_Bunny"
+price = 0
+
+[[slot]]
+id = "3777780974748551665"
+shop = "Market Mask Shop"
+location = "Market Mask Shop Item 4"
+file = "Banc/Market/Market_Child_Static.bcett.byml.zs"
+owner = "Npc_Hylia_023_Shop_Child"
+owner_id = "7999639835085697318"
+member = "Component/ShopParam/Npc_Hylia_023_Shop.game__component__ShopParam.bgyml"
+index = 3
+vanilla_item = "Shop_Mask_Skull"
+price = 0
+
+[[slot]]
+id = "13988066728703442945"
+shop = "Market Mask Shop"
+location = "Market Mask Shop Item 5"
+file = "Banc/Market/Market_Child_Static.bcett.byml.zs"
+owner = "Npc_Hylia_023_Shop_Child"
+owner_id = "7999639835085697318"
+member = "Component/ShopParam/Npc_Hylia_023_Shop.game__component__ShopParam.bgyml"
+index = 4
+vanilla_item = "Shop_Mask_Zora"
+price = 0
+
+[[slot]]
+id = "3656390147213677788"
+shop = "Market Mask Shop"
+location = "Market Mask Shop Item 6"
+file = "Banc/Market/Market_Child_Static.bcett.byml.zs"
+owner = "Npc_Hylia_023_Shop_Child"
+owner_id = "7999639835085697318"
+member = "Component/ShopParam/Npc_Hylia_023_Shop.game__component__ShopParam.bgyml"
+index = 5
+vanilla_item = "Shop_Mask_Goron"
+price = 0
+
+[[slot]]
+id = "13546492277428144846"
+shop = "Market Mask Shop"
+location = "Market Mask Shop Item 7"
+file = "Banc/Market/Market_Child_Static.bcett.byml.zs"
+owner = "Npc_Hylia_023_Shop_Child"
+owner_id = "7999639835085697318"
+member = "Component/ShopParam/Npc_Hylia_023_Shop.game__component__ShopParam.bgyml"
+index = 6
+vanilla_item = "Shop_Mask_Gerudo"
+price = 0
+
+[[slot]]
+id = "12366349165653624138"
+shop = "Market Mask Shop"
+location = "Market Mask Shop Item 8"
+file = "Banc/Market/Market_Child_Static.bcett.byml.zs"
+owner = "Npc_Hylia_023_Shop_Child"
+owner_id = "7999639835085697318"
+member = "Component/ShopParam/Npc_Hylia_023_Shop.game__component__ShopParam.bgyml"
+index = 7
+vanilla_item = "Shop_Mask_Truth"
+price = 0
+
+[[slot]]
+id = "5784220025515362731"
+shop = "Market Bazaar"
+location = "Market Bazaar Item 1"
+file = "Banc/Market/Market_Child_Static.bcett.byml.zs"
+owner = "Npc_Hylia_018_Shop_Child"
+owner_id = "10766026530123553252"
+member = "Component/ShopParam/Npc_Hylia_018_Shop.game__component__ShopParam.bgyml"
+index = 0
+vanilla_item = "Shop_Heart"
+price = 5
+
+[[slot]]
+id = "5101608369586255705"
+shop = "Market Bazaar"
+location = "Market Bazaar Item 2"
+file = "Banc/Market/Market_Child_Static.bcett.byml.zs"
+owner = "Npc_Hylia_018_Shop_Child"
+owner_id = "10766026530123553252"
+member = "Component/ShopParam/Npc_Hylia_018_Shop.game__component__ShopParam.bgyml"
+index = 1
+vanilla_item = "Shop_MagicJar_Small"
+price = 10
+
+[[slot]]
+id = "13037119094293428679"
+shop = "Market Bazaar"
+location = "Market Bazaar Item 3"
+file = "Banc/Market/Market_Child_Static.bcett.byml.zs"
+owner = "Npc_Hylia_018_Shop_Child"
+owner_id = "10766026530123553252"
+member = "Component/ShopParam/Npc_Hylia_018_Shop.game__component__ShopParam.bgyml"
+index = 2
+vanilla_item = "Shop_DekuSeedBundle_02"
+price = 15
+
+[[slot]]
+id = "2470662836017610480"
+shop = "Market Bazaar"
+location = "Market Bazaar Item 4"
+file = "Banc/Market/Market_Child_Static.bcett.byml.zs"
+owner = "Npc_Hylia_018_Shop_Child"
+owner_id = "10766026530123553252"
+member = "Component/ShopParam/Npc_Hylia_018_Shop.game__component__ShopParam.bgyml"
+index = 3
+vanilla_item = "Shop_ArrowBundle_01"
+price = 20
+
+[[slot]]
+id = "14164799327792384879"
+shop = "Market Bazaar"
+location = "Market Bazaar Item 5"
+file = "Banc/Market/Market_Child_Static.bcett.byml.zs"
+owner = "Npc_Hylia_018_Shop_Child"
+owner_id = "10766026530123553252"
+member = "Component/ShopParam/Npc_Hylia_018_Shop.game__component__ShopParam.bgyml"
+index = 4
+vanilla_item = "Shop_BombBundle_01"
+price = 35
+
+[[slot]]
+id = "18157355906313333023"
+shop = "Market Bazaar"
+location = "Market Bazaar Item 6"
+file = "Banc/Market/Market_Child_Static.bcett.byml.zs"
+owner = "Npc_Hylia_018_Shop_Child"
+owner_id = "10766026530123553252"
+member = "Component/ShopParam/Npc_Hylia_018_Shop.game__component__ShopParam.bgyml"
+index = 5
+vanilla_item = "Shop_DekuNutBundle_01"
+price = 20
+
+[[slot]]
+id = "7804057436886816165"
+shop = "Market Bazaar"
+location = "Market Bazaar Item 7"
+file = "Banc/Market/Market_Child_Static.bcett.byml.zs"
+owner = "Npc_Hylia_018_Shop_Child"
+owner_id = "10766026530123553252"
+member = "Component/ShopParam/Npc_Hylia_018_Shop.game__component__ShopParam.bgyml"
+index = 6
+vanilla_item = "Shop_Weapon_Shield_Hylian"
+price = 80
+
+[[slot]]
+id = "18084221514669050690"
+shop = "Market Bazaar"
+location = "Market Bazaar Item 8"
+file = "Banc/Market/Market_Child_Static.bcett.byml.zs"
+owner = "Npc_Hylia_018_Shop_Child"
+owner_id = "10766026530123553252"
+member = "Component/ShopParam/Npc_Hylia_018_Shop.game__component__ShopParam.bgyml"
+index = 7
+vanilla_item = "Shop_DekuStick"
+price = 10
+
+[[slot]]
+id = "16342679806948549224"
+shop = "Market Potion Shop"
+location = "Market Potion Shop Item 1"
+file = "Banc/Market/Market_Child_Static.bcett.byml.zs"
+owner = "Npc_Hylia_020_Shop_Child"
+owner_id = "17877417271769900403"
+member = "Component/ShopParam/Npc_Hylia_020_Shop.game__component__ShopParam.bgyml"
+index = 0
+vanilla_item = "Shop_Bottle_RedPotion"
+price = 30
+
+[[slot]]
+id = "5615457568081558860"
+shop = "Market Potion Shop"
+location = "Market Potion Shop Item 2"
+file = "Banc/Market/Market_Child_Static.bcett.byml.zs"
+owner = "Npc_Hylia_020_Shop_Child"
+owner_id = "17877417271769900403"
+member = "Component/ShopParam/Npc_Hylia_020_Shop.game__component__ShopParam.bgyml"
+index = 1
+vanilla_item = "Shop_Bottle_GreenPotion"
+price = 30
+
+[[slot]]
+id = "16594423016797951568"
+shop = "Market Potion Shop"
+location = "Market Potion Shop Item 3"
+file = "Banc/Market/Market_Child_Static.bcett.byml.zs"
+owner = "Npc_Hylia_020_Shop_Child"
+owner_id = "17877417271769900403"
+member = "Component/ShopParam/Npc_Hylia_020_Shop.game__component__ShopParam.bgyml"
+index = 2
+vanilla_item = "Shop_Bottle_HalfMilk"
+price = 20
+
+[[slot]]
+id = "11528490284966062201"
+shop = "Market Potion Shop"
+location = "Market Potion Shop Item 4"
+file = "Banc/Market/Market_Child_Static.bcett.byml.zs"
+owner = "Npc_Hylia_020_Shop_Child"
+owner_id = "17877417271769900403"
+member = "Component/ShopParam/Npc_Hylia_020_Shop.game__component__ShopParam.bgyml"
+index = 3
+vanilla_item = "Shop_Bottle_Fairy"
+price = 50
+
+[[slot]]
+id = "6011696378209808077"
+shop = "Market Potion Shop"
+location = "Market Potion Shop Item 5"
+file = "Banc/Market/Market_Child_Static.bcett.byml.zs"
+owner = "Npc_Hylia_020_Shop_Child"
+owner_id = "17877417271769900403"
+member = "Component/ShopParam/Npc_Hylia_020_Shop.game__component__ShopParam.bgyml"
+index = 4
+vanilla_item = "Shop_Bottle_BlueFire"
+price = 200
+
+[[slot]]
+id = "1403700953474659107"
+shop = "Market Potion Shop"
+location = "Market Potion Shop Item 6"
+file = "Banc/Market/Market_Child_Static.bcett.byml.zs"
+owner = "Npc_Hylia_020_Shop_Child"
+owner_id = "17877417271769900403"
+member = "Component/ShopParam/Npc_Hylia_020_Shop.game__component__ShopParam.bgyml"
+index = 5
+vanilla_item = "Shop_Bottle_Poe"
+price = 200
+
+[[slot]]
+id = "8862936792925648296"
+shop = "Market Potion Shop"
+location = "Market Potion Shop Item 7"
+file = "Banc/Market/Market_Child_Static.bcett.byml.zs"
+owner = "Npc_Hylia_020_Shop_Child"
+owner_id = "17877417271769900403"
+member = "Component/ShopParam/Npc_Hylia_020_Shop.game__component__ShopParam.bgyml"
+index = 6
+vanilla_item = "Shop_Bottle_Bug"
+price = 30
+
+[[slot]]
+id = "6796029720660653103"
+shop = "Market Potion Shop"
+location = "Market Potion Shop Item 8"
+file = "Banc/Market/Market_Child_Static.bcett.byml.zs"
+owner = "Npc_Hylia_020_Shop_Child"
+owner_id = "17877417271769900403"
+member = "Component/ShopParam/Npc_Hylia_020_Shop.game__component__ShopParam.bgyml"
+index = 7
+vanilla_item = "Shop_Bottle_Fish"
+price = 50
+
+[[slot]]
+id = "68440390189505473"
+shop = "ZD Shop"
+location = "ZD Shop Item 1"
+file = "Banc/ZoraDomain/ZoraDomain_Adult_Alternative_Static.bcett.byml.zs"
+owner = "Npc_Zora_011_Shop_Adult"
+owner_id = "5551705225239492353"
+member = "Component/ShopParam/Npc_Zora_011_Shop.game__component__ShopParam.bgyml"
+index = 0
+vanilla_item = "Shop_Bottle_RedPotion"
+price = 30
+
+[[slot]]
+id = "1680449320526355316"
+shop = "ZD Shop"
+location = "ZD Shop Item 2"
+file = "Banc/ZoraDomain/ZoraDomain_Adult_Alternative_Static.bcett.byml.zs"
+owner = "Npc_Zora_011_Shop_Adult"
+owner_id = "5551705225239492353"
+member = "Component/ShopParam/Npc_Zora_011_Shop.game__component__ShopParam.bgyml"
+index = 1
+vanilla_item = "Shop_Bottle_GreenPotion"
+price = 30
+
+[[slot]]
+id = "9234916602077591207"
+shop = "ZD Shop"
+location = "ZD Shop Item 3"
+file = "Banc/ZoraDomain/ZoraDomain_Adult_Alternative_Static.bcett.byml.zs"
+owner = "Npc_Zora_011_Shop_Adult"
+owner_id = "5551705225239492353"
+member = "Component/ShopParam/Npc_Zora_011_Shop.game__component__ShopParam.bgyml"
+index = 2
+vanilla_item = "Shop_Bottle_Bug"
+price = 30
+
+[[slot]]
+id = "11864004513775532252"
+shop = "ZD Shop"
+location = "ZD Shop Item 4"
+file = "Banc/ZoraDomain/ZoraDomain_Adult_Alternative_Static.bcett.byml.zs"
+owner = "Npc_Zora_011_Shop_Adult"
+owner_id = "5551705225239492353"
+member = "Component/ShopParam/Npc_Zora_011_Shop.game__component__ShopParam.bgyml"
+index = 3
+vanilla_item = "Shop_Armor_Zora"
+price = 600
+
+[[slot]]
+id = "5711236115396681701"
+shop = "ZD Shop"
+location = "ZD Shop Item 5"
+file = "Banc/ZoraDomain/ZoraDomain_Adult_Alternative_Static.bcett.byml.zs"
+owner = "Npc_Zora_011_Shop_Adult"
+owner_id = "5551705225239492353"
+member = "Component/ShopParam/Npc_Zora_011_Shop.game__component__ShopParam.bgyml"
+index = 4
+vanilla_item = "Shop_ArrowBundle_01"
+price = 20
+
+[[slot]]
+id = "2083764746597287990"
+shop = "ZD Shop"
+location = "ZD Shop Item 6"
+file = "Banc/ZoraDomain/ZoraDomain_Adult_Alternative_Static.bcett.byml.zs"
+owner = "Npc_Zora_011_Shop_Adult"
+owner_id = "5551705225239492353"
+member = "Component/ShopParam/Npc_Zora_011_Shop.game__component__ShopParam.bgyml"
+index = 5
+vanilla_item = "Shop_ArrowBundle_02"
+price = 50
+
+[[slot]]
+id = "1464168721230727012"
+shop = "ZD Shop"
+location = "ZD Shop Item 7"
+file = "Banc/ZoraDomain/ZoraDomain_Adult_Alternative_Static.bcett.byml.zs"
+owner = "Npc_Zora_011_Shop_Adult"
+owner_id = "5551705225239492353"
+member = "Component/ShopParam/Npc_Zora_011_Shop.game__component__ShopParam.bgyml"
+index = 6
+vanilla_item = "Shop_Bottle_Fish"
+price = 30
+
+[[slot]]
+id = "407172431436964979"
+shop = "ZD Shop"
+location = "ZD Shop Item 8"
+file = "Banc/ZoraDomain/ZoraDomain_Adult_Alternative_Static.bcett.byml.zs"
+owner = "Npc_Zora_011_Shop_Adult"
+owner_id = "5551705225239492353"
+member = "Component/ShopParam/Npc_Zora_011_Shop.game__component__ShopParam.bgyml"
+index = 7
+vanilla_item = "Shop_ArrowBundle_03"
+price = 70
+
+[[slot]]
+id = "6482029965151015824"
+shop = "ZD Shop"
+location = "ZD Shop Item 1"
+file = "Banc/ZoraDomain/ZoraDomain_Adult_Static.bcett.byml.zs"
+owner = "Npc_Zora_011_Shop_Adult"
+owner_id = "7815387688212731871"
+member = "Component/ShopParam/Npc_Zora_011_Shop.game__component__ShopParam.bgyml"
+index = 0
+vanilla_item = "Shop_Bottle_RedPotion"
+price = 30
+
+[[slot]]
+id = "13414898983927272196"
+shop = "ZD Shop"
+location = "ZD Shop Item 2"
+file = "Banc/ZoraDomain/ZoraDomain_Adult_Static.bcett.byml.zs"
+owner = "Npc_Zora_011_Shop_Adult"
+owner_id = "7815387688212731871"
+member = "Component/ShopParam/Npc_Zora_011_Shop.game__component__ShopParam.bgyml"
+index = 1
+vanilla_item = "Shop_Bottle_GreenPotion"
+price = 30
+
+[[slot]]
+id = "3320419477327427990"
+shop = "ZD Shop"
+location = "ZD Shop Item 3"
+file = "Banc/ZoraDomain/ZoraDomain_Adult_Static.bcett.byml.zs"
+owner = "Npc_Zora_011_Shop_Adult"
+owner_id = "7815387688212731871"
+member = "Component/ShopParam/Npc_Zora_011_Shop.game__component__ShopParam.bgyml"
+index = 2
+vanilla_item = "Shop_Bottle_Bug"
+price = 30
+
+[[slot]]
+id = "13166851893817035932"
+shop = "ZD Shop"
+location = "ZD Shop Item 4"
+file = "Banc/ZoraDomain/ZoraDomain_Adult_Static.bcett.byml.zs"
+owner = "Npc_Zora_011_Shop_Adult"
+owner_id = "7815387688212731871"
+member = "Component/ShopParam/Npc_Zora_011_Shop.game__component__ShopParam.bgyml"
+index = 3
+vanilla_item = "Shop_Armor_Zora"
+price = 600
+
+[[slot]]
+id = "3052820561336725395"
+shop = "ZD Shop"
+location = "ZD Shop Item 5"
+file = "Banc/ZoraDomain/ZoraDomain_Adult_Static.bcett.byml.zs"
+owner = "Npc_Zora_011_Shop_Adult"
+owner_id = "7815387688212731871"
+member = "Component/ShopParam/Npc_Zora_011_Shop.game__component__ShopParam.bgyml"
+index = 4
+vanilla_item = "Shop_ArrowBundle_01"
+price = 20
+
+[[slot]]
+id = "13542715117931052230"
+shop = "ZD Shop"
+location = "ZD Shop Item 6"
+file = "Banc/ZoraDomain/ZoraDomain_Adult_Static.bcett.byml.zs"
+owner = "Npc_Zora_011_Shop_Adult"
+owner_id = "7815387688212731871"
+member = "Component/ShopParam/Npc_Zora_011_Shop.game__component__ShopParam.bgyml"
+index = 5
+vanilla_item = "Shop_ArrowBundle_02"
+price = 50
+
+[[slot]]
+id = "8813115213665249107"
+shop = "ZD Shop"
+location = "ZD Shop Item 7"
+file = "Banc/ZoraDomain/ZoraDomain_Adult_Static.bcett.byml.zs"
+owner = "Npc_Zora_011_Shop_Adult"
+owner_id = "7815387688212731871"
+member = "Component/ShopParam/Npc_Zora_011_Shop.game__component__ShopParam.bgyml"
+index = 6
+vanilla_item = "Shop_Bottle_Fish"
+price = 30
+
+[[slot]]
+id = "17635977932423757890"
+shop = "ZD Shop"
+location = "ZD Shop Item 8"
+file = "Banc/ZoraDomain/ZoraDomain_Adult_Static.bcett.byml.zs"
+owner = "Npc_Zora_011_Shop_Adult"
+owner_id = "7815387688212731871"
+member = "Component/ShopParam/Npc_Zora_011_Shop.game__component__ShopParam.bgyml"
+index = 7
+vanilla_item = "Shop_ArrowBundle_03"
+price = 70
+
+[[slot]]
+id = "9176923586745152655"
+shop = "ZD Shop"
+location = "ZD Shop Item 1"
+file = "Banc/ZoraDomain/ZoraDomain_Child_Static.bcett.byml.zs"
+owner = "Npc_Zora_011_Shop_Child"
+owner_id = "14511146929933517436"
+member = "Component/ShopParam/Npc_Zora_011_Shop.game__component__ShopParam.bgyml"
+index = 0
+vanilla_item = "Shop_Bottle_RedPotion"
+price = 30
+
+[[slot]]
+id = "11476986716356933396"
+shop = "ZD Shop"
+location = "ZD Shop Item 2"
+file = "Banc/ZoraDomain/ZoraDomain_Child_Static.bcett.byml.zs"
+owner = "Npc_Zora_011_Shop_Child"
+owner_id = "14511146929933517436"
+member = "Component/ShopParam/Npc_Zora_011_Shop.game__component__ShopParam.bgyml"
+index = 1
+vanilla_item = "Shop_Bottle_GreenPotion"
+price = 30
+
+[[slot]]
+id = "1608689548758434535"
+shop = "ZD Shop"
+location = "ZD Shop Item 3"
+file = "Banc/ZoraDomain/ZoraDomain_Child_Static.bcett.byml.zs"
+owner = "Npc_Zora_011_Shop_Child"
+owner_id = "14511146929933517436"
+member = "Component/ShopParam/Npc_Zora_011_Shop.game__component__ShopParam.bgyml"
+index = 2
+vanilla_item = "Shop_Bottle_Bug"
+price = 30
+
+[[slot]]
+id = "1896019874810434988"
+shop = "ZD Shop"
+location = "ZD Shop Item 4"
+file = "Banc/ZoraDomain/ZoraDomain_Child_Static.bcett.byml.zs"
+owner = "Npc_Zora_011_Shop_Child"
+owner_id = "14511146929933517436"
+member = "Component/ShopParam/Npc_Zora_011_Shop.game__component__ShopParam.bgyml"
+index = 3
+vanilla_item = "Shop_Armor_Zora"
+price = 600
+
+[[slot]]
+id = "7406968007557772004"
+shop = "ZD Shop"
+location = "ZD Shop Item 5"
+file = "Banc/ZoraDomain/ZoraDomain_Child_Static.bcett.byml.zs"
+owner = "Npc_Zora_011_Shop_Child"
+owner_id = "14511146929933517436"
+member = "Component/ShopParam/Npc_Zora_011_Shop.game__component__ShopParam.bgyml"
+index = 4
+vanilla_item = "Shop_ArrowBundle_01"
+price = 20
+
+[[slot]]
+id = "9694617930296799159"
+shop = "ZD Shop"
+location = "ZD Shop Item 6"
+file = "Banc/ZoraDomain/ZoraDomain_Child_Static.bcett.byml.zs"
+owner = "Npc_Zora_011_Shop_Child"
+owner_id = "14511146929933517436"
+member = "Component/ShopParam/Npc_Zora_011_Shop.game__component__ShopParam.bgyml"
+index = 5
+vanilla_item = "Shop_ArrowBundle_02"
+price = 50
+
+[[slot]]
+id = "6783598093601493412"
+shop = "ZD Shop"
+location = "ZD Shop Item 7"
+file = "Banc/ZoraDomain/ZoraDomain_Child_Static.bcett.byml.zs"
+owner = "Npc_Zora_011_Shop_Child"
+owner_id = "14511146929933517436"
+member = "Component/ShopParam/Npc_Zora_011_Shop.game__component__ShopParam.bgyml"
+index = 6
+vanilla_item = "Shop_Bottle_Fish"
+price = 30
+
+[[slot]]
+id = "10093301156052781138"
+shop = "ZD Shop"
+location = "ZD Shop Item 8"
+file = "Banc/ZoraDomain/ZoraDomain_Child_Static.bcett.byml.zs"
+owner = "Npc_Zora_011_Shop_Child"
+owner_id = "14511146929933517436"
+member = "Component/ShopParam/Npc_Zora_011_Shop.game__component__ShopParam.bgyml"
+index = 7
+vanilla_item = "Shop_ArrowBundle_03"
+price = 70

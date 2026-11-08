@@ -784,3 +784,31 @@ steps shared by all songs), then gives the song by name through `GetPouchContent
 name, so the get model and text should follow [inference]; the NPC's own lines (`EventFlowMsg/...` message ids) and the
 flags the flow sets do not change. A song needs its play-along changed too. Test folders for Talon's cucco game (milk
 bottle -> Heart Piece, -> Boomerang) are in `E:/OOTRemake/work/r4-evfl/ingame/`; not yet run in game.
+
+## 17. Round 5: shops and the Deku Shield (cs5b)
+
+Full trace, provisional choices and player checks: `plans/rounds/r5-shops.md`. `data/shops.toml` identifies
+all 128 shelf Hashes. Nine shops including mask loans, eight indices each; section 5's seven-slot count missed
+index 0 (the default when `ShopItemIndex` is absent). Age, Alternative and Kokiri short-stock copies remain
+separate Hashes, linked to the same logical shop slot.
+
+The shelf's `Gyaml` selects the display. The linked seller's actor pack selects the sale through its inherited
+`ShopRef` → `Component/ShopParam/*.bgyml` → `GoodsList[ShopItemIndex].Actor`. Price is the item's
+`RSDB/PouchActorInfo.BuyingPrice` plus per-slot `PriceOffset` and conditional offsets. Stock and release gates
+also live in `GoodsList`; most stock is unlimited. Market Hylian Shield is 80, discounted by 20 after
+`Npc_Hylia_Soldier_003_GateOpen`. Both tunics cost 600 (1000 wallet required). Shelf Hashes have no permanent
+save flag; seller stock actions record purchases and refresh boards.
+
+`DisplayShop` uses the selected sale item (`Shop_SelectItemName`) through engine purchase/get/pay/stock
+actions, rather than a literal gift grant. Actor identity supplies item UI text; merchant flavour messages are
+separate fixed IDs. Forty-three placed native display actors exist, including eight masks. Most chest major
+items have no native shop display; reviewer chose native-display-only destinations provisionally for round 5.
+
+Kokiri's post-purchase shield tutorial checks acquired `Weapon_Shield_Deku` and
+`KokiriForest_Meet_DekuTree_BoughtDekuShield`, then calls `Npc_Kokiri_010_Child:DekuShield_TutorialTalk` and sets
+the latter flag. It is not an unconditional slot-6 tutorial. `present_DekuSheld` is a post-Mido replacement
+route, guarded by quest state, equipped shield and its own talked flag; not a free pre-Mido check.
+
+Verification: all 128 shelves match their Banc placement, linked NPC, resolved sale actor and base price
+(`tests/test_shops_dump.py`, 1 passed). Live catalog smoke printed the same 128 and the three Kokiri shield
+copies at 40. No game was run; changed-sale UI, stock persistence and tutorial behavior await Kareem.
