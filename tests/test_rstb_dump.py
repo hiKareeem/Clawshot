@@ -19,7 +19,14 @@ def test_dump_size_table_round_trips(table_bytes):
 
 @pytest.mark.dump
 @pytest.mark.parametrize(
-    "pattern", ["Banc/*/*.bcett.byml.zs", "Event/EventFlow/*.bfevfl.zs", "Mals/*.sarc.zs", "Pack/Actor/*.pack.zs"]
+    "pattern",
+    [
+        "Banc/*/*.bcett.byml.zs",
+        "Event/EventFlow/*.bfevfl.zs",
+        "Mals/*.sarc.zs",
+        "Pack/Actor/*.pack.zs",
+        "GameData/GameDataList.Product.110.byml.zs",
+    ],
 )
 def test_dump_size_formula_fits_every_file(romfs, table_bytes, pattern):
     dicts, data = table_bytes

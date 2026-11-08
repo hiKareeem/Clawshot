@@ -32,6 +32,12 @@ OVERHEAD: dict[str, int] = {
 }
 ALIGNMENT = 32
 
+# Files with a formula of their own: resource path -> (alignment, overhead). GameDataList is one file: its entry
+# (1,463,176) is its size (1,462,888, a multiple of 8) + 288, which rounding to 32 would overshoot.
+OWN_FORMULA: dict[str, tuple[int, int]] = {
+    "GameData/GameDataList.Product.110.byml": (8, 288),
+}
+
 
 class RstbError(ValueError):
     pass
@@ -120,11 +126,15 @@ def write(table: ResourceSizeTable) -> bytes:
 
 def required_size(path: str, size: int) -> int:
     """The entry a file at ``path`` (resource or romfs path) needs when its decompressed size is ``size``:
-    ``size`` rounded up to 32 bytes plus the overhead of its type (:data:`OVERHEAD`).
+    ``size`` rounded up to 32 bytes plus the overhead of its type (:data:`OVERHEAD`), or a file's own formula
+    (:data:`OWN_FORMULA`).
 
     Raises :class:`RstbError` for a type whose formula has not been checked against the game.
     """
     path = resource_path(path)
+    if path in OWN_FORMULA:
+        alignment, overhead = OWN_FORMULA[path]
+        return (size + alignment - 1) // alignment * alignment + overhead
     for suffix, overhead in OVERHEAD.items():
         if path.endswith(suffix):
             return (size + ALIGNMENT - 1) // ALIGNMENT * ALIGNMENT + overhead
