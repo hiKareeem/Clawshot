@@ -107,6 +107,8 @@ class World:
         Partial worlds may omit either named event/region from their graph: return then stays closed.
         Neither a shuffled reward item nor an assumed starting age substitutes for the completion event.
         """
+        if self.settings.get("free_time_travel", False):
+            return None
         event = self.settings.get("age_return_event")
         region = self.settings.get("age_return_region")
         if event is None and region is None:

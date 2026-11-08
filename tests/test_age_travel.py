@@ -222,3 +222,13 @@ def test_mandatory_counts_include_child_prerequisites_not_just_the_pedestal():
     assert mandatory["Prize"] == 1
     assert "Hookshot" not in mandatory
     assert search.return_safe(placements)
+
+
+def test_free_travel_bypasses_both_return_gate_and_early_pull_guarantee():
+    world = guarantee(age_world())
+    world.settings["free_time_travel"] = True
+    search = Search(world)
+    search.collect_spheres(PLACEMENTS)
+    assert search.can_reach("Child Ledge", CHILD)
+    assert search.won()
+    assert search.return_safe(PLACEMENTS)

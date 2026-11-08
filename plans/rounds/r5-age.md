@@ -146,3 +146,67 @@ Additional small request from cs5c: `GanonBossKey` added to `DUNGEON_ITEM_TYPES`
 The first live allowed() smoke expected the Tower chest to be a Castle location; printed region metadata showed
 `dungeon = None`. Corrected the smoke to the real Castle trial (allowed true; Kokiri false), posted the separate
 Tower metadata defect to cs5c for its world integration and permanent fill coverage.
+
+## Item 4: default-off isolated pedestal patch
+
+`src/clawshot/patch/age.py`, setting `free_time_travel = false` in `world.toml`, matching model behavior.
+No fast-start TOML edit: its GameData/skippable schema cannot express placements, and the reviewer explicitly
+rejected a fake return Bool.
+
+In `Banc/Market/Market_Adult_Static.bcett.byml.zs`, find AiGroup Hash 2075259738076588912, not its list index.
+Replace `Market_Adult_Prefab_89da` with the game's existing `SpiritTemple_Prefab_5299` module. Read-only decoded
+module inspection shows exactly two nodes: attention `ReceiveDoAction` feeds the event request, and both
+actors' `Logic_Delete` inputs default false. Rebind just the module input Ids:
+`EventRequestActor_9bc1` → `EventRequestActor_7a32`;
+`Obj_TimeTemple_MasterSword_A_01_b347` → `CheckAttentionActor_8348`.
+Keep `Path`, `Reference`, the original actors/Hashes and their adult-to-child event unchanged. Validate original
+module, both references, both actor identities and the event before changing anything; refuse a stale contract.
+The transform reads its written BYML back; the common writer handles compression, output guards and size table.
+
+`age.changes(placements, free_time_travel=False)` satisfies the new `PatchStep` contract.
+`make_seed` automatically includes it when its resolved logic setting is true, so free-travel logic cannot
+silently emit an unpatched seed. That shared-file-only wiring is committed separately. The initial eager import
+caused Python's `-m` already-imported warning during the standalone smoke; moved the optional import inside
+`make_seed`, and `python -m clawshot.patch.age --help` then ran without the warning.
+
+### Evidence and player output
+
+- Synthetic age/patch run: **18 passed**, covering exact tree change, stale module/reference/event refusal
+  before mutation, free-travel chronological behavior and bypassed guarantee.
+- `OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump tests/test_age_dump.py -q -s`: **1 passed**.
+  Only the target group's Logic and two Ids differ; every actor, other group, table and byte order is preserved.
+- Actual CLI `python -m clawshot.patch.age --romfs ... --out E:/OOTRemake/work/r5-age/free-time-travel
+  --free-time-travel` wrote **2 files**: adult Market Static (30,540 → 30,596 bytes; compressed 9,733 → 9,695)
+  and size table (entry 30,824 → 30,888; table length unchanged 1,761,406).
+- Actual seed CLI, seed 7 / three-area Deku slice / `--logic free_time_travel=true`, wrote
+  `E:/OOTRemake/work/r5-age/seed-free-smoke/`: **12 shuffled checks, 4 spheres, 8 files**, including the adult
+  pedestal and raised size table. This exercises automatic logic-to-patch pairing through the real public CLI.
+  It is not the requested whole-game player seed (track C owns those).
+- Player instructions: `E:/OOTRemake/work/r5-age/free-time-travel-check.md`. No game/launcher was run.
+  **Kareem: after the first pull but before Forest clear, check the overlay log, the adult pedestal prompt,
+  child return and a second adult pull. No premature Forest reward/Prelude. Later, clear Forest normally,
+  check the sage/reward occurs once and Sheik still teaches Prelude.** Default stays off until verified.
+
+### Forest-step risk census
+
+Section 16 lists the readers and their effects. Scanned all 914 flow files: the completion expression has
+62 switch readers in 41 files; decoded logic has pedestal, Sheik and Mido readers. Direct quest-step readers
+include the Forest Poe substeps, boss room Step07/Complete, SageRoom/LostWood Step09, adult Kokiri and child
+Hyrule Field completion conditions. The escape flow's incomplete branch reserves SageRoom with boot event
+`ForestTemple_SageOfForest_SageRoom`; Event211 runs `Dm_Awake_Forest`, Event213 runs its actual reward, and
+Event199 completes the quest. Forcing Complete at New Game could bypass that real sequence; this patch changes
+none of those readers or the Enum. Other completion-dependent branches include Saria's Song, arrival scenes
+and numerous NPC/shop interactions.
+
+The reused module has no room-specific node beyond its two bound actors [observed from its decoded graph],
+but runtime compatibility, pre-Forest child revisits and the second pull still need Kareem's check.
+The distinct Sheik area trigger (`Market_Adult_Prefab_edc2`) remains Forest-gated, so free travel does not
+promise early Prelude.
+
+### New backup and integration
+
+Reviewer authorized rebase onto main `cd592e3`; completed cleanly before the pedestal work.
+Read the six newly supplied nested saves in `2026-11-08_0802-before-adult/save/<user>/`: all also show
+`Sequence_IsChildhood = true`, `Step_SageOfForest = Ready`, first-pull/first-return false, DoorOfTime
+NotReady or Step02. Eighteen inspected saves in total, still no adult-ready backup; no live game save was read.
+Posted all integration contracts and the Ganon Tower dungeon-metadata request on the thread.

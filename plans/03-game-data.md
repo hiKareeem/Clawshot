@@ -808,7 +808,8 @@ story effects and is not a safe substitute.
 Published corroboration (facts only):
 https://www.nintendolife.com/guides/zelda-ocarina-of-time-forest-temple-walkthrough-switch-2
 describes return travel and Prelude after Forest Temple.
-All twelve saves in the supplied backup directories are child-era (`Sequence_IsChildhood = true`,
+All eighteen saves inspected in the two original directories and the nested
+`2026-11-08_0802-before-adult/save/<user>/` backup are child-era (`Sequence_IsChildhood = true`,
 `Step_SageOfForest = Ready`), so they do not corroborate current adult progress.
 **Kareem: check the adult pedestal before and after the Forest blue warp, and supply adult save copies.**
 
@@ -816,6 +817,49 @@ The search keeps an independent pre-pull child inventory until the Forest comple
 to `Beyond Door of Time` both hold. Adult-found items, aliases and events cannot unlock child checks before
 that return; child checks available without adult finds can all be collected before the first pull.
 The gate is data (`world.toml` settings), not a Forest Medallion inventory test.
+
+`age_return_guarantee = true` is the reviewer's provisional default: cap each count in actual child-only
+collection to find its mandatory first-pull minimum, then prove adult can open return using only those
+minima, starting inventory and adult checks. Optional child loot cannot satisfy that proof.
+Turning the guarantee off retains temporal correctness but permits early-pull softlocks.
+
+### Isolated free-travel setting (off)
+
+No fake GameData default: `patch/age.py` changes only AiGroup Hash 2075259738076588912 in
+`Banc/Market/Market_Adult_Static.bcett.byml.zs`. It substitutes the existing ungated module
+`SpiritTemple_Prefab_5299` (attention actor `ReceiveDoAction` → event request, default `Logic_Delete = false`)
+for `Market_Adult_Prefab_89da`, rebinding its two input Ids to the existing actors. Actor Hashes, paths,
+transforms, the adult-to-child request, every other group, event flows and GameDataList stay unchanged.
+With `free_time_travel = true`, `make_seed` adds this transform automatically and the search uses free travel;
+the extra return guarantee does nothing. Default remains false pending the in-game test.
+
+The overlay grows 30,540 → 30,596 decompressed bytes; the common writer raises the resource entry
+30,824 → 30,888. Output and play instructions:
+`E:/OOTRemake/work/r5-age/free-time-travel/` and `free-time-travel-check.md`.
+The dump oracle verifies that the only tree changes are that group's Logic and its two References' Ids.
+
+### Why not force the Forest quest complete?
+
+The gate protects more than travel; the isolated patch leaves all these readers untouched:
+
+| Reader | What the quest/completion value controls |
+|---|---|
+| `Dm_SY_BancChange_EscapeDungeon` Event204 | first Forest clear enters SageRoom with boot event `ForestTemple_SageOfForest_SageRoom`; the completed branch does not repeat that first-clear route |
+| same flow Event211/Event213/Event199 | Saria's sage scene (`Dm_Awake_Forest`), Forest reward (`Dm_Awake_Forest_Get`), then actual quest completion |
+| `Market_Adult_Prefab_edc2` | Sheik/Prelude's separate area trigger requires Forest completion; early return does not teach Prelude |
+| `SageRoom_520d`, `LostWood_Common_7c9e` | exact Step09 checks on the Forest sage/return sequence |
+| `ForestTemple_Level_Room_02_*`, `...Room_22_Prefab_c724` | Poe quest substeps and later Step07/Complete conditions |
+| `KokiriForest_Adult_Level_All_01_796d`, `HyruleField_Child_Prefab_c27b` | completion-dependent area logic |
+| `LostWood_Adult_Prefab_33c5`, Mido/NPC/shop flows | post-Forest interaction variants; Mido's nearby state |
+| `Dm_SY_BancChangeArrive` Event507, `Dm_SY_Ocarina_SariaSong` Event42 | post-Forest arrival and Saria's Song interaction branches |
+
+The direct completion expression appears in 62 switch steps across 41 flow files (all flows scanned), plus
+the three decoded logic modules named above (pedestal, Sheik and Mido). Other quest-step readers include the
+listed dungeon/area modules. Initializing the entire quest to Complete could skip the actual sage/reward
+sequence and advance unrelated interactions; keeping the real quest untouched avoids that data-side risk.
+**Kareem: before Forest clear, test child return and the second adult pull without premature Prelude/reward;
+after Forest, verify the sage/reward happens once and Sheik still teaches Prelude.** Runtime compatibility of
+the reused module, pre-Forest child revisits and the second pull remain unverified until that test.
 
 ## 17. Round 5: shops and the Deku Shield (cs5b)
 
