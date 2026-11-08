@@ -215,36 +215,37 @@ All three now use **`E:\Games\Hookshot\bin\hookshot.exe`**, set **`HOOKSHOT_NO_U
 Updated all three player checklists and section 21 to prohibit the outer launcher, which ignores `--user`.
 The external builders were already deleted, so no stale generator can recreate an unsafe batch here.
 
-## Branch commit ledger
+## Branch commit ledger (rebased onto `main` `29ebecf`)
 
-| Commit | Scope |
+| Original → rebased | Scope |
 |---|---|
-| `860d466` | Item 1: codec, centralized generator defaults, CLI and deterministic replay regression |
-| `a274339` | Isolated spoiler settings-string field |
-| `8e35d5d` | Item 2: songs setting, sourced chest evidence, fill policy regressions |
-| `2f9b27b` | Isolated gift policy integration |
-| `832b573` | Item 3: exact prices, cheap shield, CLI and price regressions |
-| `ad0bea7` | Isolated shop wallet rule rebuilding |
-| `3e4f0d1` | Isolated price-logic preparation hook |
-| `0ec0866` | Isolated price patch registration |
-| `0dcd3a5` | Explicit vanilla-price opt-outs in existing field-diff oracles |
-| `02c2da5` | Reviewer-requested gifts-only Bolero redirect and inventory safety regressions |
-| `4f1941b` | All-79 gift audit table/evidence |
-| `95c153d` | Added item 4: forest modes, legacy alias, D24 and tests |
-| `bf596d5` | Isolated bridge exit flag definition |
-| `abd9be3` | Isolated composable initial-value patch helper |
-| `0cd6fbb` | Isolated forest/fast-start and gift GameData composition |
-| `ec3d8a3` | Derived forest logic and sourced legacy Mido rule note |
-| `737a91c` | Delete obsolete Mido-only generator assertions |
-| `2db0c13` | Import cleanup and independent dump graph context |
-| `8b2314a` | Section 21, complete track ledger and Hookshot v2.0.1 safety notes |
-| `2e9d88f` | Isolated world-format documentation for replay, forest and effective prices |
+| `860d466` → `eeffc4f` | Item 1: codec, centralized generator defaults, CLI and deterministic replay regression |
+| `a274339` → `db3df0a` | Isolated spoiler settings-string field |
+| `8e35d5d` → `d0f8ce0` | Item 2: songs setting, sourced chest evidence, fill policy regressions |
+| `2f9b27b` → `f2c775e` | Isolated gift policy integration |
+| `832b573` → `fc928e0` | Item 3: exact prices, cheap shield, CLI and price regressions |
+| `ad0bea7` → `dd6a7d5` | Isolated shop wallet rule rebuilding |
+| `3e4f0d1` → `ea6211c` | Isolated price-logic preparation hook |
+| `0ec0866` → `181a347` | Isolated price patch registration |
+| `0dcd3a5` → `a7341f8` | Explicit vanilla-price opt-outs in existing field-diff oracles |
+| `02c2da5` → `3929ed0` | Reviewer-requested gifts-only Bolero redirect and inventory safety regressions |
+| `4f1941b` → `fca904c` | All-79 gift audit table/evidence |
+| `95c153d` → `fd22fcd` | Added item 4: forest modes, legacy alias, D24 and tests |
+| `bf596d5` → `51384b8` | Isolated bridge exit flag definition |
+| `abd9be3` → `319808c` | Isolated composable initial-value patch helper |
+| `0cd6fbb` → `82b5496` | Isolated forest/fast-start and gift GameData composition |
+| `ec3d8a3` → `251e04e` | Derived forest logic and sourced legacy Mido rule note |
+| `737a91c` → `9905bfc` | Delete obsolete Mido-only generator assertions |
+| `2db0c13` → `016be3b` | Import cleanup and independent dump graph context |
+| `8b2314a` → `8034a19` | Section 21, complete track ledger and Hookshot v2.0.1 safety notes |
+| `2e9d88f` → `e944997` | Isolated world-format documentation for replay, forest and effective prices |
+| `58dbe9d` → `b0ae167` | Pre-rebase full gates and handoff |
 
-The final gate/handoff documentation commit follows this ledger; its ID is posted on `cs-r6`
+The post-rebase verification/handoff commit follows this ledger; its ID is posted on `cs-r6`
 and in the final handoff (a commit cannot include its own hash).
 
 
-## Completed full gates and handoff
+## Pre-rebase completed full gates and handoff
 
 All four required commands completed on the finished code, after item 4 and the inventory redirect:
 
@@ -280,4 +281,49 @@ Left for Claude/Kareem, not unfinished code:
 
 No dependency or lockfile edits requested, no game data committed, no source-dump or save writes, and no write/read
 of Kareem's active `E:/OOTRemake/work/r5-seed/` output or users.
+
+## Authorized rebase onto `main` `29ebecf`
+
+Claude authorized `git rebase main` after tracks C/D merged. All 21 track commits replayed.
+Resolved the CLI conflict by keeping D's Scrub/Token choices/help and `default=None`, so a supplied string's
+shuffle list survives unless explicitly overridden. The patch pipeline auto-merged D's early Token refusal and
+Scrub setup with the price step and forest-before-gift GameData composition; no upstream hooks were dropped.
+Resolved the research append conflict as section **19, 21, 22, 23**, retaining C/D text intact; section 20 is
+still A's integration. The ledger above maps every original commit to its rebased ID.
+
+### Integration-only priority collision, fixed in `cdf2e9b`
+
+The first additional all-four-kinds CS1 CLI smoke refused seed 7 after the existing ten-attempt bound.
+Printed first-fill values instead of retrying unchanged: both capacity holds were exactly `("Scrub",)`,
+no holds were empty, and all four once-sale slots contained unrestricted rupees before capacities were placed.
+The Shop branch merges priority with ordinary filler; its native/non-native sort had erased the held-item
+priority the standalone Scrub branch retained. Added a stable held-item tie-break within that existing ordering;
+no retry-count, destination-policy, price, saved-flag or logic changes.
+
+Synthetic regression: only one Scrub capacity destination, one native Shop and one unrestricted chest.
+Before the fix, seed 3 with one attempt failed with `['Capacity', 'Native']` unplaced; after, all twenty
+deterministic seed permutations preserve Capacity→Scrub, Native→Shop and Rupee→Chest, one attempt each.
+The complete pre-fix gate job was cancelled before editing code; a new full four-gate sequence runs on the fix.
+The same actual combined CLI command then succeeded: **281 checks, 20 spheres, 123 resources**, full world,
+default gated-return guarantee. No seed/mode/guarantee was changed to make that smoke pass.
+
+Token override smoke used that combined string plus `--shuffle Token`: exit **1**, expected
+`GoldTokenGmdHash` callback/persistence refusal, no stdout and no output directory created.
+
+### Independent integrated overlay read-back and replay
+
+`E:/OOTRemake/work/r6-settings/rebased-integration-proof.json` and `rebased-replay.log` record:
+- All four scrub families: every tier grant and selection matches the assigned actor, native 100/40 fees stay
+  intact; restoring only those actor fields reproduces the entire original flow tree, including gates.
+- Both capacity items stay at Scrubs; their effective-string restrictions remain exactly `("Scrub",)`.
+- All **120 physical Shop copies** show their assigned native display at exactly 10, no conditional discount,
+  unchanged stock and releases.
+- Bridge default false, Mido default true; four saved gift Bools remain false/reset 8/save 0 with **32 bytes**
+  layout growth. Remove the new Bools and growth: the tree is exactly the selected initial-value transform.
+- Effective spoiler string round-trips; a separate CLI replay process with `PYTHONHASHSEED=31337` reproduces
+  **all 124 files byte-identically** (123 resources plus spoiler). Spoiler has 19 progression-bearing spheres;
+  the CLI's 20 spheres also include its non-progression-only sphere.
+
+Both temporary diagnostic/verification scripts were removed after use. No player launcher, game or user folder
+was run or changed; these overlays are generation/read-back/search evidence only.
 
