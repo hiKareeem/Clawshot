@@ -1,0 +1,35 @@
+# Lost Woods, child side, as the remake builds it (round 4, track A). Format: plans/04-world-format.md,
+# "Overrides". What was checked and left as OoT Randomizer has it: E:/OOTRemake/work/r4-logic-child/findings/lost_woods.md.
+#
+# Sources:
+# - Nintendo Life, "Lost Woods correct path guide" (Switch 2), 2026-11-05/06,
+#   https://www.nintendolife.com/guides/zelda-ocarina-of-time-lost-woods-path-guide-maze-directions-switch-2
+# - Nintendo Life, "All Heart Piece locations" and "All Gold Skulltula locations" (Switch 2),
+#   https://www.nintendolife.com/guides/zelda-ocarina-of-time-heart-piece-locations-switch-2
+#   https://www.nintendolife.com/guides/zelda-ocarina-of-time-gold-skulltula-locations-rewards-switch-2
+# - Game8, "100% Walkthrough Guide" (Switch 2 remake), https://game8.co/games/Zelda-Ocarina-of-Time/archives/480402
+# - Zelda Central, Ocarina of Time Remake guide, "Lost Woods and Sacred Grove", "Last child errands",
+#   https://zeldacentral.com/games/ocarina-of-time-remake/walkthrough/lost-woods-and-sacred-grove/
+# - Placement data (LostWood_{Child,Adult}_{Static,Dynamic}, read by E:/OOTRemake/work/r4-logic-child/actors.py),
+#   Banc coordinates in metres, y up, +x east, +z south.
+
+# The maze lets a child through to the Sacred Forest Meadow only once he has met Zelda.
+
+[exits."LW Beyond Mido"."SFM Entryway"]
+rule = "is_adult or at('HC Garden Skippable Locations', is_child)"
+was = "True"
+source = "Nintendo Life Lost Woods guide: until Link has met Zelda at Hyrule Castle he cannot leave the maze at its end even on the right path, so Saria's Song waits until then; the condition is OoT Randomizer's own for having met Zelda (its Song from Saria rule, Overworld.json:435). Data: the end of the maze is the transition FieldAndDungeonEntranceEventRequestActor 10348290711387667549 at (24,112,-84) to SacredForestMeadow_FrontOfLostWood. Shared rule: the adult part is kept (track B)"
+
+# The grotto under the boulder at (28,95,-28) (Obj_BrokenRock_A_01 12960902182455217518; its N64 chest is n64_only in
+# remake.toml): the room below (y 83, exit flower Obj_Plant_MagicBeanLeaf_A_02 9944683785031540917) holds a patch of
+# nine Obj_Plant_Grass_A_01 with Drop__DropActor=Animal_Insect (the bugs stay) and nothing else.
+
+[events."LW Near Shortcuts Grotto".Fairy]
+rule = "False"
+was = "(can_summon_gossip_fairy and has_bottle) or (can_use(Sticks) and has_bottle)"
+source = "data: no Obj_GossipStone and no Animal_ButterflyToFairy in the room under (28,95,-28); the LostWood Banc's only Gossip Stone (3395815220990187073) is by the bridge scrub at (-36,95,72) and its only butterflies (Animal_ButterflyToFairy 12302030190286938663) are above ground at (7,101,-48), beyond Mido"
+
+[events."LW Near Shortcuts Grotto".Fish]
+rule = "False"
+was = "has_bottle"
+source = "data: no fish (Animal_Fish_*, FishAnchor) in the LostWood Banc; its only water (Obj_WaterPlane_A_01 10199661799331481022 at (64,99,-26)) is the river to Zora's River, above ground"

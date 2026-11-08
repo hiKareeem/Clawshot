@@ -1,0 +1,40 @@
+# Sacred Forest Meadow, child side, as the remake builds it (round 4, track A). Format: plans/04-world-format.md,
+# "Overrides". What was checked and left as OoT Randomizer has it:
+# E:/OOTRemake/work/r4-logic-child/findings/sacred_forest_meadow.md.
+#
+# Sources:
+# - Eurogamer, "17 changes to know before playing Ocarina of Time on Switch 2", 2026-11-05,
+#   https://www.eurogamer.net/all-new-changes-zelda-ocarina-of-time-switch-2
+# - Nintendo Life, "Lost Woods correct path guide" (Switch 2),
+#   https://www.nintendolife.com/guides/zelda-ocarina-of-time-lost-woods-path-guide-maze-directions-switch-2
+# - Zelda Central, Ocarina of Time Remake guide, "Business Scrubs and Scrub Seeds",
+#   https://zeldacentral.com/games/ocarina-of-time-remake/business-scrubs/
+# - plans/03-game-data.md section 5 (business scrubs per area) and the census (src/clawshot/data/locations.toml).
+# - Placement data (SacredForestMeadow_{Child,Adult}_{Static,Dynamic}, read by
+#   E:/OOTRemake/work/r4-logic-child/actors.py) and the logic module
+#   Logic/Gimmick_Ocarina_Appearance_01_SacredForest_9560.logic.module.ainb (read only); Banc coordinates in metres,
+#   y up, +x east, +z south.
+#
+# The meadow has three holes. (-4,100,2), open: the fairy fountain. (-2,100,51), by the Wolfos gate on the entryway
+# side, under a Land_Kokiri_HidingHoleCover_A_01 that the Song of Storms logic module removes: the Wolfos grotto.
+# (1,114,-85), at the top near Saria, under a Land_SacredForest_HidingHoleCover_A_02: it drops into a clearing with
+# a Gossip Stone, Song of Time blocks and the remake-only Business Scrub Seed chest 1764383515296652106, and no scrub.
+# So the Wolfos grotto opens with the Song of Storms, and N64's storms grotto scrubs are gone.
+
+[exits."SFM Entryway"."SFM Wolfos Grotto"]
+rule = "can_play(Song_of_Storms)"
+was = "can_open_bomb_grotto"
+source = "data: the Wolfos room (Enemy_Wolfos 2984701310024756335 and 9279649981051854896, chest Obj_TBox_A_01_NoBake 7995233962349162969 = census SFM Wolfos Grotto Chest, raised by SacredForestMeadow_Gimmick_TreasureChestAppears) lies under the hole at (-2,100,51), exit flower Obj_Plant_MagicBeanLeaf_A_02 10428901801067773662 at (-2,83,51); the hole is covered by Land_Kokiri_HidingHoleCover_A_01 8456945034417122929 with EventProxyRequestActor 17940740399107341776, and the module Gimmick_Ocarina_Appearance_01_SacredForest (ActorLogicHidingHoleCoverDisappearSrom, instance Land_Kokiri_HidingHoleCover_A_01_f0fe) removes it: the meadow's Song of Storms hole. No bomb rock there. Eurogamer, 17 changes: entrances are visible, bomb or Song of Storms is obvious, no Stone of Agony (cross-area decision, Main, round 4). Not seen in game (question in the findings). Shared rule: the same cover is in the adult file"
+
+[exits."Sacred Forest Meadow"."SFM Storms Grotto"]
+rule = "can_play(Song_of_Storms)"
+was = "can_open_storm_grotto"
+source = "Eurogamer, 17 changes: grotto entrances are visible, the Stone of Agony is the Echo Gem (cross-area decision, Main, round 4). The remake's hole at this place, (1,114,-85) under Land_SacredForest_HidingHoleCover_A_02 15024208487326008169, is not the one the Song of Storms module opens (that is the Wolfos grotto's) and holds none of N64's checks (the two scrubs are n64_only below); what opens it is a question in the findings"
+
+[locations."SFM Deku Scrub Grotto Rear"]
+n64_only = "no business scrub in the remake's Sacred Forest Meadow: the SacredForestMeadow Banc has no Enemy_Scrub_Business (only the maze's Enemy_Scrub_Mad); the hole at the place of N64's storms grotto, (1,114,-85), drops into a clearing with a Gossip Stone (3160651735793949664), Song of Time blocks and a Business Scrub Seed chest (1764383515296652106)"
+source = "data (SacredForestMeadow_*_Static); plans/03-game-data.md section 5: business scrubs are in HyruleField, LostWood, KokiriForest, DMC and four dungeons, none in SFM; census: no scrub in SacredForestMeadow; Zelda Central business scrub list (9 stops) has none in the Sacred Grove"
+
+[locations."SFM Deku Scrub Grotto Front"]
+n64_only = "no business scrub in the remake's Sacred Forest Meadow (see SFM Deku Scrub Grotto Rear)"
+source = "data (SacredForestMeadow_*_Static: no Enemy_Scrub_Business); plans/03-game-data.md section 5; census: no scrub in SacredForestMeadow"

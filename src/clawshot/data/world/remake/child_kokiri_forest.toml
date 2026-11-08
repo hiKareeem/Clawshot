@@ -1,0 +1,46 @@
+# Kokiri Forest, child side, as the remake builds it (round 4, track A). Format: plans/04-world-format.md,
+# "Overrides". What was checked and left as OoT Randomizer has it: E:/OOTRemake/work/r4-logic-child/findings/kokiri_forest.md.
+#
+# Sources:
+# - Eurogamer, "17 changes to know before playing Ocarina of Time on Switch 2", 2026-11-05,
+#   https://www.eurogamer.net/all-new-changes-zelda-ocarina-of-time-switch-2
+# - Nintendo Life, walkthrough hub and "All Gold Skulltula locations" (Switch 2), 2026-11-05,
+#   https://www.nintendolife.com/guides/zelda-ocarina-of-time-walkthrough-switch-2-remake
+#   https://www.nintendolife.com/guides/zelda-ocarina-of-time-gold-skulltula-locations-rewards-switch-2
+# - Zelda Central, Ocarina of Time Remake guide, "Lost Woods and Sacred Grove",
+#   https://zeldacentral.com/games/ocarina-of-time-remake/walkthrough/lost-woods-and-sacred-grove/
+# - Placement data (KokiriForest_{Child,Adult}_{Static,Dynamic} and InsideTheDekuTree_Static, read by
+#   E:/OOTRemake/work/r4-logic-child/actors.py), Banc coordinates in metres, y up, +x east, +z south.
+
+# Kokiri Forest's one grotto. Its entrance (-52,122,-63) is under a Land_Kokiri_HidingHoleCover_A_01 with an
+# EventProxyRequestActor, the cover the remake's Song of Storms grottos have (SFM's is opened by the logic module
+# Gimmick_Ocarina_Appearance_01_SacredForest). The room below (y 104) is not N64's generic grotto: it holds the Deku
+# Scrub trio of the Deku Tree's boss door and the chest is its reward.
+
+[exits."Kokiri Forest"."KF Storms Grotto"]
+rule = "can_play(Song_of_Storms)"
+was = "can_open_storm_grotto"
+source = "Eurogamer, 17 changes: every grotto entrance is visible and it is obvious whether a bomb or the Song of Storms opens it; the Stone of Agony is now the Echo Gem, which finds Gold Skulltulas (cross-area decision, Main, round 4). Data: Land_Kokiri_HidingHoleCover_A_01 389687166017056250 and FldObj_AirWall_HidingHoleCover 580769817455966707 at (-52,122,-63), EventProxyRequestActor 4820144275644776441 linked to the cover"
+
+[locations."KF Storms Grotto Chest"]
+rule = "is_adult or has_shield"
+was = "True"
+source = "data: the grotto room (y 104) holds Scrub_Deku_Brothers_Manager 13177382922536876309 with three Enemy_Scrub_Deku_Brothers (2219448075374411954, 10012060099588200540, 11848146308442013121, ShootOrder/DefeatedOrder set, talk event Enemy_Scrub_Deku_D_T_003), the same actors and hint text as the Deku Tree's boss-door trio (InsideTheDekuTree room 9, manager 16939690382671270717); the last scrub links to the chest Obj_TBox_A_01_NoBake 14818888396401495482 (census KF Storms Grotto Chest), a chest that appears. OoT Randomizer's rule for that trio is has_shield (Deku Tree.json:84), kept. Not seen in game (question in the findings). Shared rule: the trio and chest are in the adult file too (9098168071222924162); the adult part is kept as OoT Randomizer has it (track B)"
+
+[events."KF Storms Grotto".Fairy]
+rule = "False"
+was = "(can_summon_gossip_fairy and has_bottle) or (can_use(Sticks) and has_bottle)"
+source = "data: no Obj_GossipStone and no Animal_ButterflyToFairy in the grotto room (y 104 under (-52,122,-63)); KokiriForest has no Animal_ButterflyToFairy at all, and its nearest Gossip Stone (15788731894432615343) stands outside, by the entrance at (-49,121,-59)"
+
+[events."KF Storms Grotto".Fish]
+rule = "False"
+was = "has_bottle"
+source = "data: no fish (Animal_Fish_*, FishAnchor) anywhere in the KokiriForest Banc; the grotto room holds the Deku Scrub trio and its chest"
+
+# Night: the remake's clock starts only once Link has met Zelda (cross-area decision, Main, round 4; the event
+# 'Time Flows' is set in child_hyrule_castle.toml).
+
+[locations."KF GS Know It All House"]
+rule = "is_child and can_child_attack and ((at_night and 'Time Flows') or gold_skulls_ignore_daytime) and (had_night_start or can_leave_forest or can_play(Suns_Song) or gold_skulls_ignore_daytime)"
+was = "is_child and can_child_attack and (at_night or gold_skulls_ignore_daytime) and (had_night_start or can_leave_forest or can_play(Suns_Song) or gold_skulls_ignore_daytime)"
+source = "Eurogamer, 17 changes: time does not flow until Link has met Zelda, so night needs 'Time Flows'; data: Enemy_Skulltula_Gold 17067594426901953848 with Enemy_Skulltula_Gold_Nocturnal=True at (-84,118,-18), Child_Static only; Nintendo Life GS #3 (night, no item) and Zelda Central GS #16 (night, on the big trunk by the Know-It-All house)"
