@@ -1,0 +1,4 @@
+[locations."Market 10 Big Poes"]
+rule = "is_adult and (Big_Poe or (Bottle_with_Big_Poe, 5))"
+was = "is_adult and (Big_Poe or (Bottle_with_Big_Poe, big_poe_count))"
+source = "https://www.nintendolife.com/guides/zelda-ocarina-of-time-bottle-locations-switch-2 (Bottle 5): adult Poe Collector awards the bottle for five Poes in the remake, not ten. Retain the stable N64 location name; Big Poe event still represents repeatable Epona/Bow/bottle hunting. N64 big_poe_count settings do not patch the remake's collector."
