@@ -18,7 +18,7 @@ A *spec* is the data as plain dicts, merged from the files (``load_spec``) or wr
 """
 
 import tomllib
-from collections.abc import Mapping
+from collections.abc import Mapping, Sequence
 from pathlib import Path
 from typing import Any
 
@@ -44,7 +44,8 @@ def _read(path: Path) -> dict[str, Any]:
 def load_spec(directory: Path = DATA_DIR) -> dict[str, Any]:
     """Merge the data files named by ``<directory>/world.toml`` into one spec. ``world.toml``'s own ``[settings]``
     and ``[items]`` (Clawshot's, not OoT Randomizer's) add to the generated tables; a name in both is an error.
-    Its ``overrides`` file (the remake's differences, by hand) is applied last: :func:`apply_overrides`."""
+    Its ``overrides`` file (the remake's differences, by hand) and then every ``*.toml`` in the folder of the same
+    name (``remake.toml``, then ``remake/*.toml`` sorted by name) are applied last: :func:`apply_overrides`."""
     meta = _read(directory / "world.toml")
     spec: dict[str, Any] = {"start": meta["start"], "goal": meta["goal"], "regions": [], "locations": {}}
     for name in ("items", "helpers"):
@@ -66,58 +67,143 @@ def load_spec(directory: Path = DATA_DIR) -> dict[str, Any]:
                 raise WorldError(f"{file}: location {location!r} is described twice")
             spec["locations"][location] = info
     if "overrides" in meta:
-        apply_overrides(spec, _read(directory / meta["overrides"]), meta["overrides"])
+        main = directory / meta["overrides"]
+        more = sorted((main.parent / main.stem).glob("*.toml"), key=lambda path: path.name)
+        apply_overrides(spec, [(path.relative_to(directory).as_posix(), _read(path)) for path in [main, *more]])
     return spec
 
 
-# Fields an override may set on a location, besides ``source``; ``rule`` needs ``was``.
-_OVERRIDE_FIELDS = frozenset({"rule", "was", "type", "vanilla", "vanilla_fixed", "n64_only", "area", "keep_vanilla"})
+# Fields an override may set, besides ``source``. A location's ``rule`` needs ``was``; ``region`` moves it.
+_LOCATION_FIELDS = frozenset(
+    {"rule", "was", "type", "vanilla", "vanilla_fixed", "n64_only", "area", "keep_vanilla", "region"}
+)
+_REGION_FIELDS = frozenset({"area", "dungeon", "scene", "hint", "time_passes", "provides_time"})
+_RULE_FIELDS = frozenset({"rule", "was", "new"})
+_TABLES = ("regions", "locations", "exits", "events", "key_counts")
 
 
-def apply_overrides(spec: dict[str, Any], overrides: Mapping[str, Any], label: str = "overrides") -> None:
-    """Apply the remake's differences to a spec merged from the translated files, in place.
+def apply_overrides(spec: dict[str, Any], files: Sequence[tuple[str, Mapping[str, Any]]]) -> None:
+    """Apply the remake's differences, ``(label, table)`` per overrides file, to a spec merged from the translated
+    files, in place. Every entry needs a ``source`` (why, with the evidence), and one entry (a region, a location,
+    an exit, an event, a key count) may be set in one file only.
 
-    ``[locations."<name>"]``: ``source`` (required: why, with the evidence) and any of ``rule`` (the remake's
-    requirement; ``was`` must repeat the translated rule, so a change upstream is noticed), ``type`` (the remake's
-    kind of check, as an OoT Randomizer location type), ``vanilla`` (the remake's vanilla item), ``vanilla_fixed``,
-    ``n64_only``, ``area`` (the census area, where the check lies outside its region's Banc folder) and
-    ``keep_vanilla`` (the reason a check of a shuffled type keeps its vanilla item). ``[key_counts]``:
-    ``"<key item>" = { count, source }``, the number of that key the remake has; a rule asking for more asks for
-    that many (:class:`~clawshot.world.rules.Compiler`).
+    ``[regions."<name>"]``: a region the translation lacks (a remake room OoT Randomizer folds into another), with
+    ``area``, ``dungeon``, ``scene``, ``hint``, ``time_passes``, ``provides_time`` as a translated region has them.
+
+    ``[locations."<name>"]``: any of ``rule`` (the remake's requirement; ``was`` must repeat the translated rule, so
+    a change upstream is noticed), ``region`` (the region it moves to), ``type`` (the remake's kind of check, as an
+    OoT Randomizer location type), ``vanilla`` (the remake's vanilla item), ``vanilla_fixed``, ``n64_only``,
+    ``area`` (the census area, where the check lies outside its region's Banc folder) and ``keep_vanilla`` (the
+    reason a check of a shuffled type keeps its vanilla item).
+
+    ``[exits."<region>"."<target>"]`` and ``[events."<region>"."<event>"]``: ``rule`` with ``was`` (the translated
+    rule it replaces) or with ``new = true`` (an exit or event the translation lacks).
+
+    ``[key_counts]``: ``"<key item>" = { count, source }``, the number of that key the remake has; a rule asking for
+    more asks for that many (:class:`~clawshot.world.rules.Compiler`).
     """
-    unknown_tables = sorted(set(overrides) - {"locations", "key_counts"})
-    if unknown_tables:
-        raise WorldError(f"{label}: unknown tables {unknown_tables}")
-    rules: dict[str, dict[str, Any]] = {}
+    owner: dict[tuple[str, ...], str] = {}
+    for label, overrides in files:
+        unknown_tables = sorted(set(overrides) - set(_TABLES))
+        if unknown_tables:
+            raise WorldError(f"{label}: unknown tables {unknown_tables}")
+        for table in _TABLES:
+            for key in _entry_keys(overrides.get(table, {}), table in ("exits", "events"), f"{label}: [{table}]"):
+                if (table, *key) in owner:
+                    raise WorldError(f"{label}: {table} {' -> '.join(key)!r} is also set in {owner[(table, *key)]}")
+                owner[(table, *key)] = label
+
+    regions = {region["name"]: region for region in spec["regions"]}
+    for label, overrides in files:
+        for name, fields in overrides.get("regions", {}).items():
+            where = f"{label}: region {name!r}"
+            _check_fields(fields, _REGION_FIELDS, where)
+            if name in regions:
+                raise WorldError(f"{where} is already in the world")
+            region = {"name": name, **fields, "events": {}, "locations": {}, "exits": {}}
+            spec["regions"].append(region)
+            regions[name] = region
+
+    for label, overrides in files:
+        for kind, singular in (("exits", "exit to"), ("events", "event")):
+            for region_name, entries in overrides.get(kind, {}).items():
+                if region_name not in regions:
+                    raise WorldError(f"{label}: {kind} of region {region_name!r}, which is not in the world")
+                rules = regions[region_name].setdefault(kind, {})
+                for name, fields in entries.items():
+                    where = f"{label}: region {region_name!r}, {singular} {name!r}"
+                    _check_fields(fields, _RULE_FIELDS, where)
+                    if "rule" not in fields or ("was" in fields) == bool(fields.get("new")):
+                        raise WorldError(f"{where}: needs rule, and was (a change) or new = true (an addition)")
+                    if fields.get("new"):
+                        if name in rules:
+                            raise WorldError(f"{where}: new, but the region has it already")
+                    else:
+                        _check_was(rules, name, fields["was"], where)
+                    rules[name] = {"rule": fields["rule"], "source": fields["source"]}
+
+    holder: dict[str, dict[str, Any]] = {}
     for region in spec["regions"]:
         for name in region.get("locations", {}):
-            rules[name] = region["locations"]
-    for name, fields in overrides.get("locations", {}).items():
-        where = f"{label}: location {name!r}"
-        if name not in spec["locations"] or name not in rules:
-            raise WorldError(f"{where} is not in the world")
-        unknown = sorted(set(fields) - _OVERRIDE_FIELDS - {"source"})
-        if unknown:
-            raise WorldError(f"{where}: unknown fields {unknown}")
-        if not fields.get("source"):
-            raise WorldError(f"{where}: no source")
-        if ("rule" in fields) != ("was" in fields):
-            raise WorldError(f"{where}: rule and was go together")
-        if "rule" in fields:
-            current, _ = _rule_entry(rules[name][name], where)
-            if " ".join(current.split()) != " ".join(fields["was"].split()):
-                raise WorldError(f"{where}: was {fields['was']!r}, but the translated rule is {current!r}")
-            rules[name][name] = fields["rule"]
-        info = dict(spec["locations"][name])
-        info.update({k: v for k, v in fields.items() if k not in ("rule", "was", "source")})
-        info["override"] = fields["source"]
-        spec["locations"][name] = info
+            holder[name] = region
+    for label, overrides in files:
+        for name, fields in overrides.get("locations", {}).items():
+            where = f"{label}: location {name!r}"
+            if name not in spec["locations"] or name not in holder:
+                raise WorldError(f"{where} is not in the world")
+            _check_fields(fields, _LOCATION_FIELDS, where)
+            if ("rule" in fields) != ("was" in fields):
+                raise WorldError(f"{where}: rule and was go together")
+            rules = holder[name]["locations"]
+            if "rule" in fields:
+                _check_was(rules, name, fields["was"], where)
+                rules[name] = fields["rule"]
+            if "region" in fields:
+                target = regions.get(fields["region"])
+                if target is None:
+                    raise WorldError(f"{where}: region {fields['region']!r} is not in the world")
+                target.setdefault("locations", {})[name] = rules.pop(name)
+                holder[name] = target
+            info = dict(spec["locations"][name])
+            info.update({k: v for k, v in fields.items() if k not in ("rule", "was", "region", "source")})
+            info["override"] = fields["source"]
+            spec["locations"][name] = info
+
     counts: dict[str, int] = {}
-    for item, entry in overrides.get("key_counts", {}).items():
-        if item not in spec["items"] or not isinstance(entry.get("count"), int) or not entry.get("source"):
-            raise WorldError(f"{label}: key_counts {item!r} needs a known item, a count and a source")
-        counts[item] = entry["count"]
+    for label, overrides in files:
+        for item, entry in overrides.get("key_counts", {}).items():
+            if item not in spec["items"] or not isinstance(entry.get("count"), int) or not entry.get("source"):
+                raise WorldError(f"{label}: key_counts {item!r} needs a known item, a count and a source")
+            counts[item] = entry["count"]
     spec["key_counts"] = counts
+
+
+def _entry_keys(table: Mapping[str, Any], nested: bool, where: str) -> list[tuple[str, ...]]:
+    """The keys of an overrides table: ``(name,)``, or ``(region, name)`` for exits and events."""
+    if not nested:
+        return [(name,) for name in table]
+    keys = []
+    for region, entries in table.items():
+        if not isinstance(entries, Mapping) or not all(isinstance(fields, Mapping) for fields in entries.values()):
+            raise WorldError(f'{where}: {region!r} must hold one table per name ("<region>"."<name>")')
+        keys.extend((region, name) for name in entries)
+    return keys
+
+
+def _check_fields(fields: Mapping[str, Any], allowed: frozenset[str], where: str) -> None:
+    unknown = sorted(set(fields) - allowed - {"source"})
+    if unknown:
+        raise WorldError(f"{where}: unknown fields {unknown}")
+    if not fields.get("source"):
+        raise WorldError(f"{where}: no source")
+
+
+def _check_was(rules: Mapping[str, Any], name: str, was: str, where: str) -> None:
+    if name not in rules:
+        raise WorldError(f"{where} is not in the world")
+    current, _ = _rule_entry(rules[name], where)
+    if " ".join(current.split()) != " ".join(was.split()):
+        raise WorldError(f"{where}: was {was!r}, but the translated rule is {current!r}")
 
 
 def _item(name: str, info: Mapping[str, Any]) -> Item:

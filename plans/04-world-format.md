@@ -57,11 +57,15 @@ define the same event; it is held once any of them passes. A rule names an event
 `items.toml` name) and its `LocationList.py` line. Location names are OoT Randomizer's; the census
 (`src/clawshot/data/locations.toml`) links them to the remake's IDs through `oot_randomizer_name`.
 
-### Overrides (`remake.toml`)
+### Overrides (`remake.toml` and `remake/*.toml`)
 
 The translated files stay exactly what the translator writes (`tests/test_world_translate.py` compares them byte
-for byte); everything written by hand about a location is in `remake.toml`, applied by the loader after the
-translated files (`load.apply_overrides`). Each entry needs a `source` (who or what says so):
+for byte); everything written by hand is in `remake.toml` and the files of `remake/` (round 4: `child_<area>.toml`
+and `adult_<area>.toml`, one per area and logic track), applied by the loader after the translated files:
+`remake.toml` first, then `remake/*.toml` sorted by name (`load.apply_overrides`). One location, exit, event, region
+or key count may be set in one file only; a second file setting it stops the build, naming both files. New regions
+are added before any exit, event or location is applied, so a file may use a region another file adds. Each entry
+needs a `source` (who or what says so):
 
 ```toml
 [locations."Fire Temple GS Boss Key Loop"]
@@ -69,19 +73,33 @@ rule = "can_use(Megaton_Hammer)"   # the remake's requirement
 was = "True"                       # the translated rule it replaces: a change upstream stops the build
 source = "03-game-data.md section 9 (Kareem and the Eurogamer guide, 2026-11-07): ..."
 
+[regions."Deku Tree Upper Floors"]  # a remake room OoT Randomizer folds into another region
+area = "InsideTheDekuTree"
+dungeon = "Deku Tree"
+source = "..."
+
+[exits."Deku Tree Lobby"."Deku Tree Upper Floors"]
+rule = "can_use(Slingshot)"
+new = true                         # an exit the translation lacks; a changed one gives `was` instead
+source = "..."
+
 [key_counts]
 "Small Key (Water Temple)" = { count = 4, source = "census: 4 key chests (N64: 6); 8 chain locks = 4 doors" }
 ```
 
-| Field | Meaning |
+| Table, field | Meaning |
 |---|---|
+| `[locations."<name>"]` | a location of the translated world |
 | `rule` + `was` | the remake's requirement, replacing the translated one (which `was` repeats) |
+| `region` | the region the location moves to (translated or from `[regions]`), its rule unchanged unless `rule` is given |
 | `type` | the remake's kind of check, as an OoT Randomizer type (the Dampé race heart piece is a chest here) |
 | `vanilla` | the item the remake gives here, where it differs (the swapped Great Fairies) |
 | `vanilla_fixed` | with fixed items, the tier a check whose vanilla item is progressive gives (`LW Gift from Saria`: `Fairy Ocarina`) |
 | `n64_only` | the check does not exist in the remake; the reason gives the evidence. Neither shuffled nor placed; set only with evidence |
 | `area` | the census area, where the remake places the check outside its region's Banc folder (`Location.area`) |
 | `keep_vanilla` | the check keeps its vanilla item though its type is shuffled (D17: the Treasure Chest Game room boxes) |
+| `[regions."<name>"]` | a region the translation lacks, with `area`, `dungeon`, `scene`, `hint`, `time_passes`, `provides_time` |
+| `[exits."<region>"."<target>"]`, `[events."<region>"."<event>"]` | `rule` with `was` (a change; `"False"` closes it) or with `new = true` (an addition) |
 | `[key_counts]` | the remake's number of a dungeon's small keys, where it has fewer than N64: a rule asking for more asks for that many |
 
 **Key counts.** The census finds fewer small keys in three dungeons (Bottom of the Well 2 of 3, Water Temple 4 of

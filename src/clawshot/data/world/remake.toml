@@ -1,14 +1,20 @@
 # The remake's differences from OoT Randomizer's world, and Clawshot's own per-location facts, written by hand.
 # The translated region files stay exactly what `python -m clawshot.world.translate` writes; the loader applies
-# this file on top (`clawshot.world.load.apply_overrides`; format: plans/04-world-format.md, "Overrides").
+# this file on top, then every `remake/*.toml` sorted by name (`clawshot.world.load.apply_overrides`; format:
+# plans/04-world-format.md, "Overrides"). One location, exit, event, region or key count is set in one file only.
 #
 # [locations."<OoT Randomizer name>"]: `source` (required: who or what says so) and any of
 #   rule + was     the remake's requirement; `was` repeats the translated rule, so a change upstream is noticed
+#   region         the region the location moves to (a translated one or one from [regions])
 #   vanilla        the item the remake gives here, where it differs from OoT Randomizer's vanilla item
 #   vanilla_fixed  with fixed items (D16), the tier a check whose vanilla item is progressive gives
 #   n64_only       the check does not exist in the remake: neither shuffled nor placed
 #   area           the census area, where the remake places the check outside its region's Banc folder
 #   keep_vanilla   the check keeps its vanilla item even when its type is shuffled
+# [regions."<name>"]: a region the translation lacks: `source`, and `area`, `dungeon`, `scene`, `hint`,
+#   `time_passes`, `provides_time` as a translated region has them.
+# [exits."<region>"."<target>"], [events."<region>"."<event>"]: `source`, `rule`, and `was` (the translated rule
+#   it replaces) or `new = true` (an exit or event the translation lacks).
 # [key_counts]: the remake's number of a dungeon's small keys; a rule asking for more asks for that many.
 
 # Fixed items (D16, Kareem, round 2): the tier each progressive vanilla item is in the remake.
