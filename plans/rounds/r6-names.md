@@ -253,3 +253,26 @@ the two LW capacity families cost 40. For a required Scrub source, the route mus
 than a free Collect. Planned isolated producer-file metadata handoff into world settings reads the existing
 `SALES` values directly; generate will not import the patch layer or duplicate the native-price table.
 This cutover, together with canonical Shop pricing, is waiting on the authorized main rebase.
+
+## Baseline handoff / integration blocker
+
+All reachable work on the authorized pre-settings base is committed and passes the four full gates.
+The original three items and the played seed-shop-7 opening regression are implemented. Final integrated
+readiness is blocked only by the coordinator-controlled base move: `clawshot.settings.shop_price` and the
+Scrub producer are not in this branch's authorized base. The API and native prices are known and were
+read/smoke-checked; copying producer files or adding a compatibility shim would violate the clean cutover.
+No merge, unauthorized rebase, push or stash was performed.
+
+After Claude says the settings producer is on main and authorizes this worktree's rebase:
+
+1. `git rebase main`; preserve `settings_string`, the settings/forest/price `prepare` hooks, composed
+   GameData handling, Scrub setup/Token refusal and ordered sections 20–23.
+2. Change the presentation's Shop metadata to call the canonical `shop_price` contract already posted,
+   using each placed item's native display, actual slot price and actual seed settings.
+3. Export the existing Scrub `SALES` prices as internal spec/world metadata in its own small producer-file
+   commit, then consume them in the note. No copied price table or generate-to-patch import.
+4. Exercise legacy, cheap-shield/affordable and needed-Scrub purchase notes; rerun all four full gates
+   after that integration, record new hashes/results and post final ready handoff.
+
+The coordinator was notified on `cs-r6`; no information question for Kareem is blocking code.
+Unresolved location observations stay documented above and do not silently enable checks.
