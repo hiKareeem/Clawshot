@@ -168,3 +168,42 @@ an option); `keep_style` keeps the stone's look. (4) **Settings**: `hints` (`alw
 `mask` as vanilla) and the distribution, through track B's settings string. (5) A `make_seed` extra step returning the
 archive and flow transforms, the hints in the spoiler, and a dump test that every hint names a placed item at a
 reachable stone.
+
+## Questions for Kareem
+
+1. **`gossip-kf-line`** (item 4): does the Kokiri Forest stone by the Lost Woods entrance speak without the Mask of
+   Truth and show the Clawshot line naming the Boomerang? Optionally: which Deku Tree stone label is on the left?
+2. **Languages:** should a seed's hint text cover every language archive (English text in all of them) or only the
+   English ones?
+3. **Mask of Truth:** should stones speak without it (OoT Randomizer's default) or need it, as vanilla?
+4. Low priority: at the Temple of Time's four stones, which label (01-04) is the far left facing the temple?
+
+## Left for later
+
+- Hints themselves (round 7, design note above): stones as world locations, hint selection, the seed step.
+- The Temple of Time altar (a cutscene's text) and Ganondorf's line are not traced; the frogs, Big Poes and Deku
+  Theater lines as hint slots are not traced.
+- Renaming a stone's placement `Name` is untested (not needed now: one label per stone).
+- Naming an item at run time through a String64 variable and a group 2 type 3 tag (mechanism (b), section 22) is
+  described, not implemented or tested.
+
+## Cross-track posts (thread `cs-r6`)
+
+- None needed during the round: no other track's file was changed. Handoff post below.
+
+## Gates (on b4059e9, base main `57c2a57`)
+
+```
+uv run ruff format --check                                  150 files already formatted
+uv run ruff check                                           All checks passed!
+uv run pytest                                               411 passed, 55 skipped
+OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump      54 passed, 412 deselected
+```
+
+## Handoff
+
+Commits on `r6/hints` (not rebased; main has not moved for this track): `2272d6a` item 1 (MSBT), `a14aed7` item 2
+(Gossip Stone census, hint givers), `ddbb286` item 3 (text patches, item-get text and model), `b4059e9` item 4 (test
+output, design note, `msbt.normalized`, `text.keep_style`), then this round-file commit. Section 22 of
+`03-game-data.md` is appended after section 19; sections 20 and 21 (tracks A and B) are not on main yet, so on a rebase
+it moves after them. Left: the in-game check (Kareem), the product questions above, and round 7's hints.
