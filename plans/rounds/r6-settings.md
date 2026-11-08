@@ -109,8 +109,9 @@ and inspects GameData write destinations (`GameDataName`, `DstGameDataName`, `Ga
 parameters. Rooting every internal entry also yields unresolved generic callback arguments; inspected their
 literal call-site sources across active flows: no `IsGet.*` or `PouchData.*` flag is supplied to those generic
 flag arguments. The remaining generic pouch bindings are the normal census grant wrappers, not new literal grants.
-Metadata inventories are external: `gift-write-audit.json`, `gift-bound-write-audit.json`; research scripts there
-are own code, no GPL implementation or decoded data committed.
+Metadata inventories are external: `gift-write-audit.json`, `gift-bound-write-audit.json`. The research used own
+external code; eight throwaway builders/auditors/verifiers and their cache were removed after the recorded proof.
+No GPL implementation or decoded data was committed.
 
 | Finding | Flow / event | Treatment |
 |---|---|---|
@@ -121,7 +122,7 @@ are own code, no GPL implementation or decoded data committed.
 | Timed-trade removals | `Npc_Hylia_045_Adult/Event137`, `Npc_Hylia_017_Adult/Event56`, `Npc_Zora_KingZora_adult/Event47`, all `Num=-1` | Class 3, not shuffled; legitimate consumption/retry paths retained |
 
 **No other independent vanilla inventory grant was found.** Section 19's original Sheik-in-Crater row now needs
-the above extra rewrite; section 21 will carry that pointer rather than modifying another track's section.
+the above extra rewrite; section 21 now carries that pointer rather than modifying another track's section.
 The completion Bool exists in the original GameDataList: Hash **10850286**, default false, reset **8**, save file **0**.
 No new Bool, save-layout edit or inventory clear is introduced for this fix.
 
@@ -194,8 +195,9 @@ requested item 4, before changing code. All four complete gates will run again o
 ## Cross-track requests
 
 Posted startup contract on `cs-r6`: cs6a owns `spoiler()`; preserve my separate settings-string field commit.
-Gift-policy changes need a separate `patch/gifts.py` commit; price logic needs separate world/seed integration
-commits. No overlapping chest/name edits. Section 21 will follow section 20 in the shared game-data plan.
+Shared gift, price, forest and seed hooks were isolated and posted. No overlapping chest/name edits.
+Only my section 21 is appended in this branch's shared game-data plan; insert section 20 ahead of it when
+integrating the readable-names track. No unauthorized rebase, merge or push.
 
 ## Provisional choices / questions
 
@@ -203,3 +205,39 @@ commits. No overlapping chest/name edits. Section 21 will follow section 20 in t
 - Strings are versioned format, not portable promises across generator/data versions.
 - **Kareem: confirm default-on `cheap_deku_shield` (10 rupees), as provisionally specified for Round 6.**
 - In-game acceptance remains Kareem's: file round trips and search proofs do not certify gameplay.
+
+## Hookshot v2.0.1 launcher safety
+
+Reviewer announced the layout change after these outputs were built. Re-read all three Track B batch files and
+the corrected approved template: Claude had already updated them. Preserved those edits, no batch executed.
+All three now use **`E:\Games\Hookshot\bin\hookshot.exe`**, set **`HOOKSHOT_NO_UPDATE_CHECK=1`**, and stop with
+`exit /b 1` when it is missing; no fallback. Their separate `--user` and overlay/log paths are unchanged.
+Updated all three player checklists and section 21 to prohibit the outer launcher, which ignores `--user`.
+The external builders were already deleted, so no stale generator can recreate an unsafe batch here.
+
+## Branch commit ledger
+
+| Commit | Scope |
+|---|---|
+| `860d466` | Item 1: codec, centralized generator defaults, CLI and deterministic replay regression |
+| `a274339` | Isolated spoiler settings-string field |
+| `8e35d5d` | Item 2: songs setting, sourced chest evidence, fill policy regressions |
+| `2f9b27b` | Isolated gift policy integration |
+| `832b573` | Item 3: exact prices, cheap shield, CLI and price regressions |
+| `ad0bea7` | Isolated shop wallet rule rebuilding |
+| `3e4f0d1` | Isolated price-logic preparation hook |
+| `0ec0866` | Isolated price patch registration |
+| `0dcd3a5` | Explicit vanilla-price opt-outs in existing field-diff oracles |
+| `02c2da5` | Reviewer-requested gifts-only Bolero redirect and inventory safety regressions |
+| `4f1941b` | All-79 gift audit table/evidence |
+| `95c153d` | Added item 4: forest modes, legacy alias, D24 and tests |
+| `bf596d5` | Isolated bridge exit flag definition |
+| `abd9be3` | Isolated composable initial-value patch helper |
+| `0cd6fbb` | Isolated forest/fast-start and gift GameData composition |
+| `ec3d8a3` | Derived forest logic and sourced legacy Mido rule note |
+| `737a91c` | Delete obsolete Mido-only generator assertions |
+| `2db0c13` | Import cleanup and independent dump graph context |
+
+Section 21 and final gate/handoff documentation commits follow this ledger; their IDs are posted on `cs-r6`
+and in the final handoff (a commit cannot include its own hash).
+

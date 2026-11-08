@@ -1243,6 +1243,75 @@ frogs' bug game. None is changed.
   `9725242744547055868` ("KF Midos Top Left Chest"): the remake's row of four is mirrored against the N64 names, so a
   spoiler's left and right for these chests are the player's right and left (the two middle chests are unchecked).
 
+## 21. Round 6: settings, prices and forest modes (cs6b)
+
+Build `e0f3ccfa`, read-only dump. Implementation, command evidence and the complete inventory-write audit:
+`plans/rounds/r6-settings.md`. Generated resources and audit inventories stay under
+`E:/OOTRemake/work/r6-settings/`; no game/launcher was run.
+
+**Replay.** `Settings.to_string()` / `from_string()`, CLI `--settings` and `--print-settings` use canonical `CS1`:
+sorted JSON overrides against `data/settings.toml`, zlib and URL-safe base64; defaults alone are `CS1`.
+Shuffled kinds, dungeon items, logic (including travel/return guarantee), fast start, songs, prices and forest
+mode participate. Spoilers store both settings and their string. Explicit CLI options win; unchanged seed/string,
+generator and world data reproduce byte-identical resources, including effective gift-policy replay.
+
+**Songs and gift actors.** `songs=song` remains default; `anywhere` is opt-in and releases all twelve songs from
+song checks, subject to native Shop displays and other existing destination restrictions. Only Storms was played
+from a chest: the other eleven are **inferred** from the shared `Item_Melody_*` pouch/IsGet grant path (Claude's
+Round 6 review), not individually verified. Non-song gift-only items still require individual chest evidence;
+the sourced `settings.toml [chest_verified]` entries are Fairy Ocarina and Song of Storms (section 19).
+
+**Independent inventory writes: correction to section 19's Sheik-in-Crater row.** All 79 linked gift roots and
+their called entries were audited, including bound wrapper arguments and GameData/pouch destinations.
+The twelve play-along adds already have skip rules; ordinary census grants and legitimate egg/trade consumption
+are retained. One additional independent ownership write required a redirect:
+
+| Check | Flow / event | Original destination | Redirect |
+|---|---|---|---|
+| Sheik in Crater (Bolero) | `Dm_MelodyGet_Fire/Event1`, terminal after `C21/Event131` | `IsGet.Item_Melody_FireBolero` | `HavePlayedEvent.Dm_MelodyGet_Fire` |
+
+`Value=true`, Index and terminal edge stay unchanged: never clear a Bolero learned elsewhere. The completion
+Bool already exists (Hash 10850286, reset 8, save file 0); this redirect adds no save flag/layout change.
+A failing-before/passing-after dump regression requires every changed gift's call graph to contain no direct
+write of its vanilla IsGet. Full audit classifications, including legitimate removals, are in the round report.
+
+**Prices.** `shop_prices=vanilla` by default; `affordable` makes every shuffled shop offer exactly 10 through
+`GoodsList.PriceOffset = target - item base price`. Exact pricing clears conditional discounts; the original
+Market Hylian Shield's -20 soldier discount would otherwise make an affordable offer negative.
+`cheap_deku_shield=true` is provisional: the actual Deku Shield anywhere in Kokiri shop costs 10, even with
+shops unshuffled; another item in the old shield slot is not discounted by that rule. Stock, releases and
+tutorials are unchanged. Wallet predicates rebuild from the same price policy, retaining 200/500/1000 capacities,
+adult stock, Dodongo-clear and acquired-refill gates. Kokiri's original offers all cost 5–40, within the start wallet.
+
+**Forest (D24, Kareem).** Default **`closed`**, close to vanilla: Mido guards the Deku Tree and Gohma gates the bridge.
+Advanced opt-ins: `closed_deku` opens only the bridge exit; `open` also bypasses Mido. Defaults stay vanilla-like;
+difficulty is opt-in. `--forest` maps to `logic.open_forest` and derives the legacy `skip_mido` flag.
+Old `--skip mido` / fast-start spelling remains accepted as an alias for `forest=open`; conflicts are refused.
+
+The bridge control is `KokiriForest_Npc_Kokiri_007_Child_Blocker_00` (Hash 3856422516): default true, reset 8,
+save file 0. `Npc_Blocker_Kokiri_007.GameDataToEnableAI` reads it; module
+`KokiriForest_Child_Level_All_02_d26e` nodes 5/0/6 disable the sensor area when false, preventing the transient
+blocker from being reasserted. `Npc_Kokiri_007_Child/Event42` only clears it. The transient
+`KokiriForest_Npc_Kokiri_007_Child_Blocker` already defaults false (Hash 4043170676), so it is left alone.
+The new `fast_start.toml forest_exit` primitive changes only the control flag; `open` also selects the existing
+Mido primitive. No quest completion, actor or logic module is changed. Initial values compose before gift-added
+saved Bools through the common writer; neither side overwrites the other's GameDataList changes.
+
+**Player checks, not yet in-game certified:** under `E:/OOTRemake/work/r6-settings/`, each has a copied release-only,
+isolated new-game launcher and its checklist. `chest-ocarina-minuet`: Fairy Ocarina plus Minuet in Mido's house
+(far-right / far-left); **Kareem: does Minuet play and warp child Link to Sacred Forest Meadow?**
+`shop-prices-10`: controlled native Kokiri stock; **verify displayed price, exactly 10 paid, shield acquired and
+normal restock/tutorial/release gates.** `forest-closed-deku`: one initial Bool changed, GameDataList unchanged
+length 1462888, allocation 1463176; **before sword/shield or Gohma, verify Mido blocks while the bridge exit works,
+also after return/save/Continue.** Each result needs its `from the overlay` log.
+Hookshot v2.0.1 safety: these launchers use only `E:\Games\Hookshot\bin\hookshot.exe`, set
+`HOOKSHOT_NO_UPDATE_CHECK=1`, and stop if it is missing. Never fall back to the folder's `hookshot.exe`:
+it is now the updater/launcher and ignores `--user`, risking the main save with the overlay.
+
+Live full CLI smoke with Chest+Shop+Gift, songs anywhere, affordable, closed_deku and default return guarantee:
+277 checks, 20 spheres, 118 resources; independent read-back preserved the exit default and all four new fairy
+save flags/layout growth. This is generation/data proof, not an in-game completion claim.
+
 ## 22. Round 6: message text, Gossip Stones, item-get text (cs6c)
 
 How each was found and the scratch scripts (`E:/OOTRemake/work/r6-hints/`, read only on the dump; their decoded text
