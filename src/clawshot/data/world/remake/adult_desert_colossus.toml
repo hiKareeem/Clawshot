@@ -1,0 +1,15 @@
+# Remake build e0f3ccfa, Desert Colossus ("Evil Desert Colossus" in the remake). Generated desert_colossus.toml
+# stays untouched. Banc/DesertColossus read only (cs4b helper, 2026-11-07); +x east, +z south.
+
+[locations."Colossus GS Tree"]
+rule = "(can_use(Longshot) or can_use(Boomerang)) and (at_night or gold_skulls_ignore_daytime)"
+was = "can_use(Hookshot) and (at_night or gold_skulls_ignore_daytime)"
+source = "Moved to the rock face north-west of the Spirit Temple (census 15057756765324812936 at -170.1/101.8/-47.9, Enemy_Skulltula_Gold_Nocturnal, in both age files; plans/rounds/r3-census.md). Longshot as adult: https://www.nintendolife.com/guides/zelda-ocarina-of-time-gold-skulltula-locations-rewards-switch-2#gold-skulltula-95; night, Longshot (adult) or Boomerang (child): the Polygon and Eurogamer remake Skulltula guides (round-3 local copies E:/OOTRemake/work/r3/gs-guide-polygon.txt, gs-guide-eurogamer.txt). No guide lists the N64 Hookshot."
+
+[locations."Colossus Deku Scrub Grotto Rear"]
+n64_only = "the remake's Colossus grotto (under Obj_LiftRock_B_01 at -115.5/-26.7) holds a purple-rupee chest (census 1186167733408299582) and no Enemy_Scrub_Business; no business scrub is placed anywhere in DesertColossus (03-game-data.md section 5)"
+source = "Banc DesertColossus_{Child,Adult}_{Static,Dynamic} read only (cs4b helper, 2026-11-07); 03-game-data.md section 5 scrub table"
+
+[locations."Colossus Deku Scrub Grotto Front"]
+n64_only = "the remake's Colossus grotto holds a purple-rupee chest (census 1186167733408299582) and no Enemy_Scrub_Business; no business scrub is placed anywhere in DesertColossus (03-game-data.md section 5)"
+source = "Banc DesertColossus_{Child,Adult}_{Static,Dynamic} read only (cs4b helper, 2026-11-07); 03-game-data.md section 5 scrub table"

@@ -383,3 +383,30 @@ Fairy fees rise with visits and may exceed the default wallet. **Kareem/reviewer
 guarantee must shuffled seeds enforce, and should night predicates be fixed globally?** These are shared
 engine/product decisions, not guessed by this track. The new events are not on the authorized base yet;
 adult fairy rewards still retain their old Lullaby prerequisites pending integration.
+
+## Desert Colossus
+
+Read every translated rule, remake token guides and both-age Banc placements. Changed the former tree
+token to Longshot as adult or Boomerang as child (night retained); it is now on the north-west rock face
+Hash `15057756765324812936`, present in both age variants. Excluded the two absent business scrubs: the
+grotto under the lift rock instead has a purple-rupee chest Hash `1186167733408299582`, no business scrub.
+No old scrub name is falsely assigned to that new chest.
+
+Checked/unchanged normal routes: Spirit entrance/exit and hands; bean-platform heart and bean token route;
+bug soil token; strength-rock grotto entrance; bomb-wall fairy fountain and Lullaby. New fairy first-visit/
+fee prerequisites are the shared integration question above, not certified by that unchanged Lullaby rule.
+
+Sources:
+- https://www.nintendolife.com/guides/zelda-ocarina-of-time-gold-skulltula-locations-rewards-switch-2#gold-skulltula-95
+- https://www.eurogamer.net/all-gold-skulltulas-locations-zelda-ocarina-of-time
+- Round-three census and Banc/DesertColossus child/adult placements, read-only, build `e0f3ccfa`.
+
+**Kareem: can ordinary Hookshot reach the cliff token from another standing point? Can the bean-platform
+heart/token be reached with Hover Boots/Longshot without the planted bean? Confirm the new grotto chest's
+independent world identity before adding it to the graph.** Night availability shares the unresolved global
+`Time Flows` question. Unlisted pots/wonder items are not independently verified.
+
+Verification: `uv run pytest tests/test_world_remake_adult_desert_colossus.py -q`: **1 passed**. Live search
+with daytime restrictions explicitly ignored (isolating collection reach) printed adult Hookshot false,
+adult Longshot true, child Longshot false, child Boomerang true. In-game: visit the north-west cliff at night
+in each age and test those collection ranges.

@@ -672,3 +672,15 @@ Sources:
 - https://zeldacentral.com/games/ocarina-of-time-remake/walkthrough/gerudo-proving-grounds/
 - https://www.eurogamer.net/all-new-changes-zelda-ocarina-of-time-switch-2
 - Banc/GerudoTrainingGround block/eye/wall and placement data, read-only, build `e0f3ccfa`.
+
+### Desert Colossus
+
+The old tree token is now on the north-west cliff, in both age variants: adult Longshot or child Boomerang.
+The grotto under the lift rock holds a purple-rupee chest, not the two N64 business scrubs; those scrub
+locations are excluded rather than falsely naming the new chest. Fairy visit-order/fees and bean/hover
+alternatives remain the round file's integration/in-game questions.
+
+Sources:
+- https://www.nintendolife.com/guides/zelda-ocarina-of-time-gold-skulltula-locations-rewards-switch-2#gold-skulltula-95
+- https://www.eurogamer.net/all-gold-skulltulas-locations-zelda-ocarina-of-time
+- Banc/DesertColossus child/adult placements, read-only, build `e0f3ccfa`.
