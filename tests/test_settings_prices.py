@@ -4,7 +4,7 @@ from dataclasses import replace
 import pytest
 
 from clawshot.formats import byml, sarc
-from clawshot.generate import Settings, prepare
+from clawshot.generate import Settings, generate, prepare
 from clawshot.patch import shops
 from clawshot.settings import shop_price
 from clawshot.world.load import load_spec
@@ -72,3 +72,26 @@ def test_price_fields_round_trip_and_bad_types_are_refused():
         replace(settings, shop_prices="random")
     with pytest.raises(ValueError):
         replace(settings, cheap_deku_shield="false")
+
+
+def test_shop_fill_preserves_scrub_only_capacity_destinations():
+    places = {
+        "Only Scrub": ("Scrub", "Capacity"),
+        "Shop": ("Shop", "Native"),
+        "Chest": ("Chest", "Rupee"),
+    }
+    spec = {
+        "start": "Root",
+        "goal": "True",
+        "settings": {"native_shop_items": ["Native"]},
+        "items": {name: {"class": "normal"} for name in ("Capacity", "Native", "Rupee")},
+        "regions": [{"name": "Root", "locations": {name: "True" for name in places}}],
+        "locations": {name: {"type": kind, "vanilla": item} for name, (kind, item) in places.items()},
+    }
+    settings = Settings(
+        shuffle=("Chest", "Shop", "Scrub"),
+        item_location_types={"Capacity": ("Scrub",)},
+    )
+    for number in range(20):
+        seed = generate(spec, number, settings, attempts=1)
+        assert seed.placements == {"Only Scrub": "Capacity", "Shop": "Native", "Chest": "Rupee"}

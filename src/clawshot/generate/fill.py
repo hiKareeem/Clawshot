@@ -349,7 +349,8 @@ def fill(
         native = world.settings.get("native_shop_items", ())
         priority = [*priority, *rest]
         rest = []
-        priority.sort(key=lambda item: item not in native)
+        # Pop held items before flexible filler can consume their only destinations.
+        priority.sort(key=lambda item: (item not in native, item in held))
         _fill_restrictive_fast(world, settings, rng, placements, locations, priority)
     else:
         _fill_restrictive_fast(world, settings, rng, placements, locations, priority)

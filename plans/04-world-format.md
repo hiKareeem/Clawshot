@@ -264,7 +264,9 @@ resources under `<dir>/romfs/` plus `<dir>/spoiler.json`:
    Then OoT Randomizer's assumed fill, with `random.Random(seed)`: restricted items first (a dungeon's keys, maps and
    compasses, when `dungeon_items = "own_dungeon"`; boss keys, then small keys, then the rest), then progression
    items, each to a location reachable while assuming every item not yet placed; then priority items (restriction
-   only); then the rest, anywhere. A failed fill is retried with the same generator, up to 10 times.
+   only); then the rest, anywhere. With Shop enabled, filler also uses restriction checks: type-held items precede
+   flexible filler within the native-display ordering, so rupees cannot consume Scrub-only capacity destinations.
+   A failed fill is retried with the same generator, up to 10 times.
 3. The beatability search on the result: collect sphere by sphere from the start; the goal must hold. A seed that
    fails is never returned.
 4. The spoiler log, JSON: `generator` (with version), `seed`, `settings`, `settings_string`,
