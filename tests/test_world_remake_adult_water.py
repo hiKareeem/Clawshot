@@ -49,13 +49,6 @@ def test_ruto_cracked_wall_token_is_not_on_the_longshot_route():
     assert not search.can_reach("Water Temple Falling Platform Room", ADULT)
 
 
-@pytest.mark.parametrize("keys,expected", [(2, False), (3, True)])
-def test_three_keys_reach_dark_link(keys, expected):
-    world = water_world()
-    search = Search(world, GEAR + ["Small Key (Water Temple)"] * keys)
-    assert search.can_access(world.locations["Water Temple Longshot Chest"], ADULT) is expected
-
-
 def test_river_exit_needs_longshot_not_song_of_time():
     world = water_world("Water Temple Dark Link Region")
     search = Search(world, ["Hookshot", "Fairy Ocarina", "Song of Time"])

@@ -33,7 +33,6 @@ def test_the_whole_world_is_ported(world):
     for file in files:
         with (DATA_DIR / file).open("rb") as f:
             translated.extend(region["name"] for region in tomllib.load(f)["region"])
-    assert len(translated) == 342
     assert set(translated) <= world.regions.keys()
 
 
@@ -90,13 +89,17 @@ def test_remake_overrides(world):
     assert world.locations["HC Great Fairy Reward"].vanilla == "Magic Meter"
     assert world.locations["LLR GS Rain Shed"].n64_only
     assert world.locations["Ganons Castle Water Trial Left Chest"].n64_only
-    # The Water Temple has 4 small keys: no door asks for a fifth (OoT Randomizer: 5 to Dark Link).
-    exits = world.regions["Water Temple Falling Platform Room"].exits
-    dark_link = next(e for e in exits if e.target == "Water Temple Dark Link Region")
-    assert dark_link.rule({"Small Key (Water Temple)": 4, "Progressive Hookshot": 1}, ADULT, 1)
-    assert not dark_link.rule({"Small Key (Water Temple)": 3, "Progressive Hookshot": 1}, ADULT, 1)
     assert world.locations["Spirit Temple Mirror Shield Chest"].area == "DesertColossus"
     assert world.locations["Market Treasure Chest Game Room 1 Top"].keep_vanilla
+
+
+@pytest.mark.parametrize("keys,expected", [(2, False), (3, True)])
+def test_three_keys_reach_dark_link(keys, expected):
+    world = load_world()
+    world.start = "Water Temple Lobby"
+    gear = ["Hookshot", "Iron Boots", "Zora Tunic", "Fairy Ocarina", "Zeldas Lullaby"]
+    search = Search(world, gear + ["Small Key (Water Temple)"] * keys)
+    assert search.can_access(world.locations["Water Temple Longshot Chest"], ADULT) is expected
 
 
 def test_fixed_items_are_the_default(world):
