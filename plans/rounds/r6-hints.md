@@ -6,7 +6,8 @@ Branch `r6/hints`, from main `57c2a57`. Owns `src/clawshot/formats/msbt.py`, `sr
 
 | Item | Where | Commit |
 |---|---|---|
-| 1 `formats/msbt` | `src/clawshot/formats/msbt.py`, `tests/test_msbt.py`, `tests/test_msbt_dump.py` | (this commit) |
+| 1 `formats/msbt` | `src/clawshot/formats/msbt.py`, `tests/test_msbt.py`, `tests/test_msbt_dump.py` | 2272d6a |
+| 2 Gossip Stone census, other hint givers | `src/clawshot/census/hints.py`, `tests/test_hints.py`, `tests/test_hints_dump.py`, section 22 | (this commit) |
 
 ## Item 1: `clawshot.formats.msbt`
 
@@ -32,3 +33,43 @@ Checks:
 |---|---|
 | `uv run pytest tests/test_msbt.py` | 14 passed: a file built byte by byte reads into the expected labels, text and tags and writes back identical; bucket entries follow the message index; a changed or added message reads back with the others intact; size and alignment; refusals (reserved bytes in text, UTF-16, a label in the wrong bucket, an unknown section, a tag running past its message) |
 | `OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump tests/test_msbt_dump.py -s` | 1 passed: 16 archives, 8640 message files, 338,208 messages, every file byte-identical after read and write; every archive byte-identical through `sarc` |
+
+## Item 2: Gossip Stones and the other hint givers (`clawshot.census.hints`)
+
+The facts are in section 22. How they were found (scratch scripts in `E:/OOTRemake/work/r6-hints/`, `uv run python ...`
+from this worktree; `lib.py` caches decoded placements and text under `cache/`, outside the repo):
+
+- `explore` of every `Banc` actor name for stones, signs, owls (one-off), then `stone_context.py` (the actors within
+  25 m of each stone) and `grotto_link.py` (grotto exits, rooms and covers near each stone); covers and chests by
+  `Hash` against round 4's grotto rows (`r4-logic-child.md`).
+- `lib.show_flow('GossipStone')` printed the flow; the instance-name talk step was found by `talk_survey.py`, which
+  lists every talk action in every flow (only `GossipStone`, signs, `RestrictedDoor` and Pierre pick text by instance
+  name) and writes each flow's message ids to `flow_messages.json`.
+- The text of `GossipStone.msbt`, `Npc_SkullDad.msbt`, the diaries, Sheik and Kaepora (USen) was read locally to know
+  which line is which; nothing of it is in the repo.
+- OoT Randomizer's `HintStone`s and their regions: `LocationList.py` and `data/World/*.json` at `526b4c8d`
+  (`E:/OOTRemake/work/r2-world/OoT-Randomizer`).
+
+What the module gives: `scan_stones(banc)` / `read_stones(romfs)` (41 `GossipStone`s: area, label, position, both
+copies' file and `Hash`, ages, presence flags), `talk_gates(flowchart)` (the switches every path to the stone's line
+passes, with their case) and `needs_mask_of_truth`, `read_flow` (the flow file the game loads, through the census's
+versions list), `STONE_LINKS` (each stone to an OoT Randomizer stone or `None`, with its evidence),
+`OOTR_STONES_MISSING`, and `HINT_GIVERS` (flow, message file, labels).
+
+Checks:
+
+| Command | Result |
+|---|---|
+| `uv run pytest tests/test_hints.py` | 7 passed: age copies merged, a label shared by two areas kept as two stones, unnamed silent stones and `DreamWorld` left out; one label at two places in an area and a talking stone without a name refused; gates are only the switches every path passes (a random branch both ways is not one), with and without the equip gate; a flow that never reaches the line refused; no OoT Randomizer stone linked twice |
+| `OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump tests/test_hints_dump.py -s` | 4 passed: 41 stones, 40 labels, every stone in `STONE_LINKS` and back, 36 linked + 4 missing = OoT Randomizer's 40; every label in `GossipStone.msbt` of all 16 languages; the gates are exactly Mask of Truth held (Event112, case 0) and worn (Event25, case 0); every hint giver's flow shows its labels and every language has them |
+
+Provisional (for review): the order inside the Deku Tree pair, the SFM maze pair, the three Lake Hylia stones and the
+four Temple of Time stones (labels only: each group is one OoT Randomizer region), and the east Hyrule Field grotto
+as "Southeast" rather than "Near Market". **Kareem, when convenient (low priority): at the Temple of Time's four
+stones, which label (01-04) is the far left when facing the temple?** The test output in item 4 can answer it for one
+stone.
+
+Finding for the logic (round 4's `child_*` files, no owner this round; not changed): the Zora's River storms grotto
+holds a talking stone (`GOSSIP_LOST_WOOD_01`), so its `Fairy` event could use `can_summon_gossip_fairy`; and the
+Kokiri Forest stone by the stick-bag scrub and the Kakariko beehive grotto stone are gossip fairies OoT Randomizer
+does not model. Stricter as it is; nothing breaks.

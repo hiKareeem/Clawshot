@@ -1243,6 +1243,70 @@ frogs' bug game. None is changed.
   `9725242744547055868` ("KF Midos Top Left Chest"): the remake's row of four is mirrored against the N64 names, so a
   spoiler's left and right for these chests are the player's right and left (the two middle chests are unchecked).
 
+## 22. Round 6: message text, Gossip Stones, item-get text (cs6c)
+
+How each was found and the scratch scripts (`E:/OOTRemake/work/r6-hints/`, read only on the dump; their decoded text
+stays there): `plans/rounds/r6-hints.md`. Build `e0f3ccfa`. No game text is quoted here.
+
+**Message files** (`clawshot.formats.msbt`). `Mals/<language>.Product.110.sarc.zs` (16 languages: `USen`, `EUen`,
+`JPja`, ...) is a SARC of 540 MSBT files each: `EventFlowMsg/<flow>.msbt` (an NPC's or cutscene's lines),
+`LayoutMsg/...` (menus), `LocationMsg/Location.msbt` (place names), `StaticMsg/...`, `ChallengeMsg/...`. Every file
+is MSBT v3, little-endian, UTF-8, with only `LBL1` (labels) and `TXT2` (text): no attributes, no styles. A flow shows
+a line by `MessageId: "EventFlowMsg/<file>:<label>"` on a talk step (`EventTalk` of `Npc_*`, `Npc_Navi`,
+`Npc_EventStarter`), so changing what an NPC says is changing that label's text in the archive; the flow does not
+change. Control tags inside text: group 0 the library's own (ruby, font, size, colour, page break), group 2 a value
+filled in at run time from a game-data name (`PouchData.Item_Token_Gold.StockNum`, `Shop_SelectItemName`,
+`UI_MessageTargetActorName`, `Npc_TimeSignal.Hour`, ...), group 201 grammar (articles, gender) in the European
+languages, groups 1, 3, 4, 5 timing, voice and animation cues. All 8640 files read and write back byte-identical, and
+each archive writes back byte-identical through `clawshot.formats.sarc` (its default alignment, 8); the size-table
+overhead for `Mals/*.sarc` is +312 (section 11).
+
+**Gossip Stones** (`clawshot.census.hints`). 41 talking stones, each an `Obj_GossipStone_A_01` placed in the child and
+the adult file as two actors with **different `Hash` values** (unlike chests) and the same `Name`
+(`GOSSIP_<AREA>_<NN>`, 40 names). No `Dynamic` parameters; `Presence.FlagName` `GossipStoneDisappear.<Name>`
+(negated; Zora's Domain adult: `IsAppear_GossipStone_ZoraDomain_Adult`); three `Reference` links each (an
+`Obj_FairySpirit` with `IsGossipStoneAppearance`, anchors `FairySpirit_AppearPoint` and `PlayerPos`: the fairy that
+playing a song summons). An unnamed `Obj_GossipStone_A_02` in Zora's Domain's adult `Dynamic` files (`Presence`
+`SageOfWater_IsAfter_Step08_Exp`, no links) does not talk.
+
+- **Text:** flow `GossipStone`, entry `Talk`: with the mask worn, the stone's line is
+  `Npc_EventStarter.EventTalkWithInstanceNameLabel {MstxtName: GossipStone}` (Event18): the message of
+  `EventFlowMsg/GossipStone.msbt` whose label is the stone's `Name`. Before it, a stone line `Talk_03` + `Talk_10`
+  the first time (`HaveTalked_MaskTruth_GossipStone` unset) or `Talk_12` after; after it, one of two closing lines at
+  random (`GOSSIP_RumorCommon_01`/`_02`), and the first time a Navi balloon (232) and the flag set. Every stone label
+  exists in all 16 languages. The names do not follow the areas (`GOSSIP_HYRULE_CASTLE_03` stands in a Death
+  Mountain Trail grotto), and `GOSSIP_LOST_WOOD_02` names two stones (the Lost Woods bridge and a remake-only stone in
+  Kokiri Forest by the stick-bag scrub): those two always say the same line unless a patch renames one (its placement
+  `Name`; `Presence.FlagName` is a separate field) [inference: untested].
+- **The Mask of Truth is needed**, as on N64: every path from `Talk` to Event18 passes `PouchSystemActor`
+  `EventQueryIsExistInPouch {Actor: Armor_Child_Mask_Truth}` case 0 (Event112) and `Player_Event`
+  `EventQueryPlayerIsEquipArmor {ArmorName: Armor_Child_Mask_Truth}` case 0 (Event25). Without the mask Navi talks
+  instead (`Talk_00`, `_05`, `_09`, `_13`, `_15`, `_19`, `_22`, `_30`), and hitting a stone tells the time
+  (`ReceiveSwordDamageByPlayer`, `Reaction_*`). Making stones talk without the mask is a flow edit (Event112's and
+  Event25's case 1 pointed at case 0's next), which round 6's test output makes (item 4 below).
+- **Against OoT Randomizer** (`LocationList.py` at `526b4c8d`, 40 `HintStone`s): 36 stones match one each
+  (`STONE_LINKS`, evidence per stone: nearby actors, grotto rooms and covers, round 4's grotto findings, Zelda Central's
+  remake guide https://zeldacentral.com/games/ocarina-of-time-remake/gossip-stones/); within the Deku Tree pair, the
+  SFM maze pair, the three Lake Hylia stones and the four Temple of Time stones, which name goes to which stone is not
+  settled (each group is one OoT Randomizer region, so no logic depends on it), nor whether the east Hyrule Field
+  grotto is N64's Southeast or Near Market grotto. Four OoT Randomizer stones have none here: the KF Storms, LW Near
+  Shortcuts and DMT Storms grottos hold no stone (round 4), and Hyrule Field has one generic grotto fewer. Five stones
+  are remake-only: Kokiri Forest by the stick-bag scrub, the Sacred Forest Meadow clearing behind the Song of Time
+  block, a Kakariko grotto with a beehive, the Zora's River storms grotto, and the Death Mountain Trail cow grotto.
+
+**Other hint givers** (`HINT_GIVERS`; each label checked to be shown by its flow and present in every language):
+
+| Giver | Flow | Lines | As a hint |
+|---|---|---|---|
+| Skulltula House | `GatheringTokenGold` (shows `Npc_SkullDad.msbt`) | `Talk_28`, `_23`, `_24`, `_25`, `_26`, `_27`: one per token count (10 ... 100); they name no reward | OoT Randomizer's "N Skulltulas Reward Hint": the line can name the reward |
+| Dampé's diary (adult) | `Diary_Hylia_Dampe_Adult` | `Talk_03`: the page about his grave | "Dampe Diary Hint" (where the Hookshot is) |
+| Sheik (adult, before the Forest Temple) | `Npc_Hylia_Sheik_Adult` | `Talk_01`, `Talk_03`: send Link to the Sheikah's tool in Kakariko | the Hookshot's place |
+| Kaepora Gaebora | `Npc_Kaepora_DeathMountainTrail` (`Npc_Kaepora.msbt`), `Npc_Kaepora_LakeHylia` | directions and flight offers | none in OoT Randomizer |
+| Navi | `NaviHint` (`NaviHint_Dungeon_*`), `Navi_EnemyHint_*`, 27 `NaviAreaHintEventActor` placements | area and enemy tips | none in OoT Randomizer; a possible free hint slot |
+
+The Temple of Time altar's text is part of a cutscene (`Dm_TimeTemple_0020`), not a talk step; not traced further.
+Many NPCs also have `Mask_NN` lines for when Link wears a mask (the Mask of Truth reads minds), a further slot.
+
 ## 23. Round 6: one-time scrubs and Gold Skulltula drop experiments (cs6d)
 
 Build `e0f3ccfa`, dump/save backups read-only. Full 21-actor ledger, flow/event/Hash evidence,
