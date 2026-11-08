@@ -18,8 +18,8 @@ from clawshot.census import definitions as census_definitions
 from clawshot.census.scan import scan
 from clawshot.generate import Seed, Settings, generate, play_note, prepare, spoiler
 from clawshot.generate.fill import shuffled_locations
+from clawshot.patch import drops, gamedata, scrubs, shops
 from clawshot.patch import events as chest_events
-from clawshot.patch import gamedata, scrubs, shops
 from clawshot.patch import items as item_actors
 from clawshot.patch.plan import Links, PatchError, Plan, link, make_plan, remake_vanilla
 from clawshot.patch.write import FileChanges, WrittenFile, write
@@ -59,8 +59,8 @@ def make_seed(
     """Fill a seed; kind-specific steps turn placements into decompressed file transforms."""
     if "Token" in settings.shuffle:
         raise PatchError(
-            "Token shuffle is not enabled: replacement pickups have not proved the GoldTokenGmdHash "
-            "collection callback or persistence. Run the r6-tokens ranch control/rupee/shield experiments first."
+            "Token shuffle is not enabled: per-enemy grant selection and GoldTokenGmdHash persistence "
+            "are unverified. The r7-drops native-token-boomerang experiment changes all tokens, not a seed."
         )
     spec = load_spec() if spec is None else spec
     if scrubs.SHUFFLE in settings.shuffle:
@@ -74,7 +74,8 @@ def make_seed(
     table.check(world.items)
     chests = [name for name in shuffled_locations(world, settings) if world.locations[name].type == "Chest"]
     shop_locations = tuple(name for name in shuffled_locations(world, settings) if world.locations[name].type == "Shop")
-    if len(chests) + len(shop_locations) != len(shuffled_locations(world, settings)) and not extra_steps:
+    boss_hearts = sum(world.locations[name].type == drops.SHUFFLE for name in shuffled_locations(world, settings))
+    if len(chests) + len(shop_locations) + boss_hearts != len(shuffled_locations(world, settings)) and not extra_steps:
         raise PatchError("non-chest shuffle needs a kind-specific extra patch step")
     if shop_locations or settings.cheap_deku_shield:
         extra_steps = (
@@ -86,8 +87,13 @@ def make_seed(
                 cheap_deku_shield=settings.cheap_deku_shield,
             ),
         )
-    links = link(world, chests, census_definitions.load(), scan(romfs))
-    out = generate(spec, seed, settings, vanilla=remake_vanilla(world, links, table))
+    definitions, census = census_definitions.load(), scan(romfs)
+    links = link(world, chests, definitions, census)
+    vanilla = remake_vanilla(world, links, table)
+    if drops.SHUFFLE in settings.shuffle:
+        settings, step = drops.seed_setup(world, settings, census, definitions, vanilla)
+        extra_steps = (*extra_steps, step)
+    out = generate(spec, seed, settings, vanilla=vanilla)
     changes = tuple(step(out.placements) for step in extra_steps)
     if any(setting.game_data for setting in chosen):
         changes = ({gamedata.GAME_DATA_LIST: partial(gamedata.patch_initial_values, chosen=chosen)}, *changes)
