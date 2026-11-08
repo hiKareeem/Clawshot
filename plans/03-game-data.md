@@ -1027,8 +1027,9 @@ Deku Tree with Mido skipped and no equipment, but cannot leave the forest until 
 `E:/OOTRemake/work/r5-shops/shield-slot-hylian`, he had the Kokiri Sword and a bought Hylian Shield, no Deku
 Shield; Mido let him through and `KokiriForest_Npc_Kokiri_Mido_Child_Blocker` was false in the save.
 All three definitions of `Showed Mido Sword & Shield` now accept `Deku_Shield or Hylian_Shield`; the normal
-definitions still require the Kokiri Sword unless Mido is skipped. Found-shield helper semantics are the shop
-track's shared normalization and must be checked after it lands on main.
+definitions still require the Kokiri Sword unless Mido is skipped. Shop normalization recognizes physical
+chest-found shields: both Deku and Hylian Shield now pass their respective helper and Mido regressions without
+opening the independent forest exit.
 
 ## 19. Round 5: what reads a gift's item, and how each gift check is changed (cs5d)
 

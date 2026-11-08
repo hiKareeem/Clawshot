@@ -10,9 +10,10 @@ Chest linking/planning only handles `Chest`; other kinds use these steps. A non-
 
 Verification: `uv run pytest tests/test_patch.py tests/test_seed.py -q`: **20 passed** (including shared-file composition and all-or-nothing failure). Scoped ruff lint/format checks passed (4 files). Live dump-backed seed 7 slice with a registered transform wrote 6 files; the transform received the already chest-patched Banc (3,639 actors); temporary output removed. This item is committed and posted separately before chest coverage work.
 
-## Questions and provisional choices
+## Verification status
 
-- Whole-game seed outputs are search-verified, not in-game certified. Track A's chronological age model requires regeneration once Claude authorizes a rebase.
+Whole-game outputs are search-verified, not in-game certified. The final four outputs below include the reviewed
+chronological model and default-on earliest-return guarantee; no integration prerequisite remains.
 
 ## Item 2 prerequisites and investigation
 
@@ -130,7 +131,7 @@ outside the repo. Five completed parent smoke/probe scripts were removed after t
 the per-Hash research inventories remain outside the repo. No dependency, game/save file, window or game process
 was changed/started. No test or launcher was run through Hookshot.
 
-## Item 5: three generated baselines; authorized integration still required
+## Item 5: original pre-age baselines (superseded)
 
 Generated `E:/OOTRemake/work/r5-seed/seed-{3,7,22}/`: each has `romfs`, `spoiler.json`, a short
 `play-note.md` with fifteen key-item locations/opening checks, and `size-check.json`. Each seed passed its
@@ -151,12 +152,8 @@ Prepared release-only `Clawshot play seed.bat` plus `Play seed {3,7,22}.bat`, co
 pattern with separate round-5 user/log paths. Static check confirms executable exactly
 `E:\Games\Hookshot\hookshot.exe`, no work-build fallback; none was run. No user folder was created by launching.
 
-**Not final playable seeds:** these baselines precede track A's chronological return model. All three play
-notes explicitly say to regenerate after its authorized rebase; reachability spheres are not a legal itinerary.
-The 08:55 thread snapshot has track A/B handoffs but no authorization to rebase onto a newer main.
-**Claude: provide the authorized main revision containing the age model and shop/shield normalization.**
-Then verify physical found-Hylian-Shield coverage, regenerate the three outputs, rerun the four gates after
-integration and replace these provisional notes. No chronological/in-game success is claimed.
+These pre-age baselines were explicitly marked provisional while awaiting the reviewed age model. They have
+now been replaced by the four final integrated outputs below, including new route notes and return proofs.
 
 Parent generation/determinism helper scripts were removed after recording this proof; no game-derived output
 is in the repository. No merge or push.
@@ -177,8 +174,8 @@ The first combined gate stopped at Ruff's printed `I001`: auto-merged `gamedata`
 grouping. Grouped those imports exactly as diagnosed; the restarted gate targets that cause, not an unchanged
 retry. No source behavior changed by that import cleanup.
 
-The earlier age/shops authorization request is partially answered: shops is integrated; final seed regeneration
-still waits for Claude's next authorization after track A merges. Existing three outputs stay provisional.
+At this checkpoint only shops was integrated; age regeneration awaited the next authorization. That dependency
+is resolved by the final `2d7c02a` integration below.
 
 Post-rebase delivery ledger (the earlier IDs above are historical): `4c5e465` Ganon-key type,
 `ce15fa8` tower ownership, `0366a6e` Fire identity, `97912bc` coverage, `42b5c12` wrappers,
@@ -204,3 +201,68 @@ default intro skip and the default-on chronological return guarantee.
 The focused oracle rerun exposed a second printed test-helper assumption: it tried zstd decoding the intro's
 plain `.bgyml`. Resource reads now decode only `.zs`, as the writer does. After that cause-aimed correction,
 `test_seed_shop_copies_share_the_placement_and_keep_slot_prices`: **1 passed**.
+
+## Final integrated main (`2d7c02a`)
+
+Authorized rebase completed. Sections are **16, 17, 18, 19**; native-shop, gift and chest-filler actor blocks
+all remain under `[items]`, with `[aliases]` last. The fill conflict was additive settings only: kept all main
+shop restrictions, gift item/exclusive-type fields and age return-kit stages; added `fast_start`.
+Kept both automatic free-travel placement patch pairing (off by default) and fast-start file handling.
+CLI retains Gift setup and the fast-start option.
+
+All four full gates on the integration passed:
+
+| Command | Observed result |
+|---|---|
+| `uv run ruff format --check` | 140 files formatted |
+| `uv run ruff check` | All checks passed |
+| `uv run pytest` | 381 passed, 46 skipped |
+| `OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump` | 45 passed, 382 deselected |
+
+Both pytest basetemps stayed under `E:/OOTRemake/work/r5-seeds/`. The corrected combined shop/default-intro
+allocation oracle passed in this full dump run. No retries, weakened generation assertions or world logic
+were added to get these gates through.
+
+Final code ledger above base `2d7c02a`: `27b750e` key type, `4b7e5ff` tower ownership, `b205c73` Fire identity,
+`a05226e` whole-game coverage, `a76c19f` wrappers, `c3dc76c` twenty-exclusion oracle, `b8aa345` fast start,
+`99e1ca5` baseline evidence, `4f0b9a6` found-shield coverage, `8015de5` combined allocation-oracle correction.
+
+### Final generated outputs
+
+All four were regenerated with code **`8015de5`**, based on reviewed main **`2d7c02a`**, after the four full
+gates passed. Inputs: whole world, own-dungeon keys, default `intro` skip only, Mido kept,
+`age_return_guarantee = true`, `free_time_travel = false`. No Gift shuffle.
+
+| Folder under `E:/OOTRemake/work/r5-seed/` | Shuffled checks | Search spheres | Overlay files checked |
+|---|---:|---:|---:|
+| `seed-3` | 164 Chest | 27 | 60 |
+| `seed-7` | 164 Chest | 28 | 60 |
+| `seed-22` | 164 Chest | 23 | 61 |
+| `seed-shop-7` | 164 Chest + 64 Shop | 26 | 77 |
+
+Each has `romfs/`, `spoiler.json`, `play-note.md`, `size-check.json`, `return-proof.json`. Every seed passed
+the finished-seed oracle before writing and a fresh search with the chronological return guarantee afterward.
+The separate adult-only proof reaches Phantom Ganon and the return pedestal from mandatory first-pull
+inventory, without optional child loot. That raw inventory and its proof spheres are recorded per output.
+
+Every written file was decompressed when appropriate and parsed; all non-table allocations cover their
+verified formula or the fast-start non-growing/original-allocation policy. The size table itself parses.
+The combined output independently checked **120 physical shop copies** against their placed native display,
+GoodsList actor and original slot price. Live opening-route smoke found **KF Shop Item 8: Hylian Shield,
+10 rupees**, child-accessible with only Kokiri Sword; that specific pre-Mido purchase is in its short note.
+
+An actual second full Chest+Shop CLI invocation (`--seed 7 --shuffle Chest Shop`, hash seed 31337) exited **0**:
+all **78 canonical files** (77 overlay files plus spoiler) byte-identical to the library-generated combined seed.
+Temporary duplicate removed. All four outputs were published only after every build/check succeeded; only
+this session's three known provisional output folders were replaced. No user/save folder was deleted.
+All provisional/NOT-final marks are gone from the output folder and its notes.
+
+Unrun release-only launchers: `Play seed 3.bat`, `Play seed 7.bat`, `Play seed 22.bat`,
+`Play shop seed 7.bat`; shared launcher argument `shop-7` selects `seed-shop-7` and a separate
+`user-seed-shop-7`. Only `E:\Games\Hookshot\hookshot.exe`; no fallback build. Fresh New Game, not a baseline save.
+The parent generation helper was removed after proof. `verification.json` records the four results.
+
+**Kareem's remaining in-game check:** pick a fresh isolated seed; confirm spoiler rewards plus the overlay-open
+log, then adult Forest completion, return at the Temple pedestal and second pull. Confirm the four retained
+chest wrappers keep their quest/song continuation, and no shuffled sword chest gives an extra vanilla sword.
+No game/launcher was started by this track; no in-game certification, merge or push is claimed.
