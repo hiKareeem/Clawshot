@@ -73,6 +73,15 @@ age_pull_event = "Time Travel"
 # This bypasses only the adult attention-actor gate, not Forest completion, rewards or Sheik's Prelude.
 free_time_travel = false
 
+# Return-kit fill constraint (reviewer, round 5): Forest's checked rules need Bow, strength, grapple and keys.
+# Fixed gauntlet tiers otherwise let child bypass Saria -> bracelet before the pull, stranding adult at Mido.
+# Put every shuffled strength-family source in an adult-only check, preserving that unshuffled child dependency.
+age_return_fill_families = ["Bow", "Progressive Hookshot", "Progressive Strength Upgrade", "Small Key (Forest Temple)", "Boss Key (Forest Temple)"]
+age_return_bypass_families = ["Progressive Strength Upgrade"]
+# Safe lower bound under that constraint: Door of Time requires Ocarina 2 + Time; child DC entrance needs
+# strength, whose unshuffled child gift requires Saria. No optional Bomb Bag, boots, wallet or child chest loot.
+age_return_fill_inventory = { "Ocarina" = 2, "Song of Time" = 1, "Sarias Song" = 1, "Progressive Strength Upgrade" = 1 }
+
 # Each progressive item's tiers, lowest first. Tier n is an item of its own that counts as n of the progressive
 # item, so OoT Randomizer's rules ("Hookshot" = Progressive_Hookshot, "Longshot" = (Progressive_Hookshot, 2))
 # read fixed and progressive items alike. Finding a higher tier first gives that tier's ability [inference: the
