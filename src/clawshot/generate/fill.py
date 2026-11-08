@@ -62,6 +62,8 @@ def is_restricted(world: World, settings: Settings, item: str) -> bool:
 
 def allowed(world: World, settings: Settings, location: str, item: str) -> bool:
     """Whether ``item`` may go to ``location`` at all, reachable or not."""
+    if world.locations[location].type == "Shop" and item not in world.settings.get("native_shop_items", ()):
+        return False
     if not is_restricted(world, settings, item):
         return True
     return world.regions[world.locations[location].region].dungeon == world.items[item].dungeon
