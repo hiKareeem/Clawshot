@@ -1776,6 +1776,10 @@ songs remain family-inferred in opt-in anywhere mode; no new gift experiment act
 **Kareem: confirm the three native presentation paths and four new gift grants, including
 Time replacing Fairy without losing Storms; report the grotto's actual appearance prerequisite.**
 
+**In game (Kareem via Claude, 2026-11-08, Hookshot 2.0.1, `chest-gift-models`):** the Song of Storms shows the ocarina stand-in; Din's Fire gives the
+magic meter and the spell works; the Adult's Wallet holds 500. The Fairy Ocarina still shows no model, so the bind
+change did not reach it (round 8). The Ocarina of Time chest was not reported.
+
 ## 27. Round 7: boss-heart pickups and native token callback experiment (cs7c)
 
 Build `e0f3ccfa`, read-only dump/save backups. Reproducible probes, outputs and unrun isolated launchers:
@@ -1852,3 +1856,7 @@ No game or launcher has been run by the agent.
 validated distinct actor definitions/registration, or an upstream hook; no global experiment is presented
 as tokensanity. Four-gate and actual CLI/replay results are recorded in the round report.
 
+**In game (Kareem via Claude, 2026-11-08, Hookshot 2.0.1):** King Dodongo's Heart Container swapped for a Hylian Shield: the shield appeared in its
+place, no heart was added, and it did not come back (`dodongo-heart-hylian`). The native token with its pouch
+redirected to the Boomerang dropped as a token, was collected and counted as a token, and gave no Boomerang
+(`native-token-boomerang`): the pouch reference does not decide a token's grant. Tokens stay unshuffled.

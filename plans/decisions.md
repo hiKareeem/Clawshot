@@ -80,6 +80,13 @@
   (Kareem, 2026-11-08, Claude's provisional picks). `hints = mask` (vanilla) is an option; Kareem's note for it: a
   stone's hint can be read only once the mask is held, so in that mode hints must stay useful from the point the
   mask is obtained (no hints about items the player must already have collected to get the mask).
+- **D27 Boss Heart Containers hold only native floor pick-ups** (Claude, 2026-11-08, after Kareem's King Dodongo
+  test; provisional as D21). `--shuffle BossHeart` (off) places only the five pick-ups the boss rooms can show
+  (Heart Container, Piece of Heart, Deku Shield, Hylian Shield, red rupee), because majors on the floor crash
+  (#287 signature, section 11).
+- **D28 The Kokiri shopkeeper's gift holds only items no seed needs while it can be missed** (Kareem accepted
+  Claude's recommendation, 2026-11-08). The gift is once-only (round 7, game-confirmed) but its vanilla window ends
+  at Gohma or the castle visit; extending the window is later work.
 
 ## Open (only Kareem and his co-owner decide)
 
