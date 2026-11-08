@@ -429,6 +429,26 @@ Slingshot; OoT Randomizer's single "Lobby" region (floors 1-3) let the basement 
 with a falling ladder (`Obj_InsideTheDekuTree_FallingLadder_A_01`, y 116) above it: once in, Link leaves by shooting
 the eye. Nintendo Life's Deku Tree walkthrough (Switch 2) agrees on each point.
 
+**Rules that cross areas** (each as overrides in the area files; sources in them):
+
+| Remake change | Evidence | In the logic |
+|---|---|---|
+| Time of day starts to flow only once Link has met Zelda | Eurogamer, "all new changes" | event `Time Flows` (HC Garden, child); every child `at_night` / `at_dampe_time` rule asks for it |
+| Every grotto entrance is visible; the Stone of Agony became the Echo Gem, which finds Gold Skulltulas | Eurogamer, "all new changes"; `AgonyStoneReactArea` only at Gold Skulltulas | `can_open_bomb_grotto` -> `can_blast_or_smash`, `can_open_storm_grotto` -> `can_play(Song_of_Storms)` |
+| Bomb and Song of Storms grottos have different covers | data: storms covers are `Land_Kokiri_HidingHoleCover_A_01` with an `EventProxyRequestActor`; bomb covers `Land_<Area>_HidingHoleCover_*` or a rock | Hyrule Field's tektite and ReDead grottos open with the Song of Storms |
+| The first Great Fairy visited must be Death Mountain Trail's or Hyrule Castle's; fees rise per fairy met (25 to 500 rupees) | games.gg Great Fairy guide; Nintendo Life (fees) | event `Great Fairy Met` at those two fountains; ZF's fairy asks for it; fees not modelled |
+| The Door of Time is the vanilla one (three stones, the Ocarina of Time, the Song of Time) | flow `DoorOfTime`, `Market_Child_DoorOfTime_OpenDoor` | OoT Randomizer's `open_door_of_time` setting is not read |
+| Kaepora Gaebora flies Link from the summit only once Din's Fire is held | flow `Npc_Kaepora_DeathMountainTrail` (`IsGet.Item_DinFire`) | `DMT Owl Flight` asks for `Dins_Fire`; Impa's cow-pen heart piece is reached only by the owl |
+| Many N64 grotto contents are gone: the grotto Deku Scrubs of Zora's River and Lake Hylia, Hyrule Field's three generic grotto chests and the tektite heart piece, the DMT storms grotto chest, the Royal Family's Tomb chest | placement data per grotto | `n64_only` with the actors found instead |
+| Bombchu Bowling opens after Dodongo's Cavern; the shooting gallery's child prize is a bullet bag | flows `MiniGame_BombchuBowling`, `MiniGame_HitTarget` | `'Defeat King Dodongo'`; `vanilla_fixed` |
+
+**Dungeons.** Dodongo's Cavern: a bombable wall (`WallCrack` 13202633467597206724) separates the Bomb Bag ledge from
+the bridge over the skull, which OoT Randomizer joins; the entrance boulder breaks only by the bracelet's bomb flower
+(scripted, no damage component). Jabu-Jabu: the map chest is in the water-switch room, before the Boomerang. Bottom
+of the Well: the four chain locks sit on two doors (the central rooms); the Fire Keese and Like Like rooms need no key;
+there is no bomb flower. Ice Cavern: no heart piece, no loose rupees; a pool past the White Wolfos drops into Zora's
+Fountain (Iron Boots).
+
 ## 13. Round 4: adult remake logic (cs4b)
 
 Audit evidence, unresolved alternatives and reproducible checks are in `plans/rounds/r4-logic-adult.md`.
