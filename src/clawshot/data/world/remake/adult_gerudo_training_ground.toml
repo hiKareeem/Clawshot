@@ -7,8 +7,8 @@
 # The maze keeps N64's door structure: EG spends 1/2/4/5/7 keys to the hidden-ceiling, purple, red, arrow and Ice
 # Arrow chests (ZC: seven doors to the Ice Arrow), exactly OoT Randomizer's worst-order counts 3/4/6/7/9 minus the two
 # other maze doors, so the maze key rules stand. The ninth key (N64's freestanding key) is the maze chest
-# 1883068192328530224 by the lava-room door. Root override restoration is cs4a's fa9ed2b, census link cs4d's
-# f3fb5ef; integration pending. Do not duplicate the root location entry here.
+# 1883068192328530224 by the lava-room door. Root restoration and census link are integrated on main ab941d2;
+# the adult override must not duplicate that root location entry.
 
 [locations."Gerudo Training Ground Lobby Left Chest"]
 rule = "(can_use(Bow) or can_use(Slingshot)) and can_use(Lens_of_Truth)"

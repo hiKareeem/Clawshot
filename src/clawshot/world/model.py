@@ -92,7 +92,7 @@ class World:
     start_tod: int
     goal: Rule
     start_items: tuple[str, ...] = ()
-    """Items held before any check (OoT Randomizer's precollected items: ocarina buttons, a Fire Temple key)."""
+    """Items held before any check (precollected items such as the ocarina buttons)."""
     dangling_exits: list[tuple[str, str]] = field(default_factory=list)
     """Exits whose target region is not in this world (a partial port): never taken."""
     undefined_events: list[str] = field(default_factory=list)
