@@ -411,3 +411,63 @@ went on; he could move, and picked up the **Hylian Shield** with the screen froz
 worked: a pick-up notice for the shield he already had, no duplicate. So two major `Obj_` pick-ups that belong to no
 logic group work as freestanding items; the Fire Arrows crash belongs to that actor. Only the chest at the heart
 piece is left to test.
+
+## 14. A new game and its opening cutscenes (round 4, cs4c)
+
+How it was found: AINB modules decoded with dt-12345's `ainb` 0.2.16 (GPL, unmodified, in a scratch venv under
+`E:/OOTRemake/work/r4-fast-start/`), event flows from round 1's decode, the decoded placement files, `RSDB`
+tables, and `clawshot.save` on Kareem's saves; his round 3 seed-3 run (`r3-seed/user-seed-3`, six autosaves from a
+new game to the Deku Tree, 19:27 to 19:36) is the timeline. The writer is `clawshot.patch.gamedata` with
+`src/clawshot/data/fast_start.toml`; details and checks in `plans/rounds/r4-fast-start.md`.
+
+**New Game, step by step.** `Sequence/NormalTitle` (title menu) → `ConfirmationNewGame` →
+`SeqExecuteResetGameData` (ResetType 3, then 5) → `OnResetGameData` → `Sequence/Opening`, with no flag test on the
+way. `Opening` runs `SetPouchAndStatusForGameStart` (3 hearts: `Life`/`MaxLife` 12, no magic, small wallet, Kokiri
+and adult tunics), changes to `KokiriForest_Child`, requests event `Opening_LoadingKokiriForest` (flow
+`OpeningEvent`: `EventTransition Dm_Kokiri_0000`, the opening movie, then waits for the area to load and fades in)
+and sets `Sequence_ReservedBootEventName = Opening_Introduction` (flow `OpeningEvent`: time 6:00, challenge
+`Meet_DekuTree` to `Step01`, `Dm_Kokiri_0030` (the Deku Tree sends Navi, Navi wakes Link), Navi marked talked to,
+autosave). The reset sets every entry to its `DefaultValue`; every per-slot story flag has `ResetTypeValue` bit 3
+(8 or 24) and system entries (`Sequence_*`) have 0, so ResetType 3 resets bit 3 [inference from the values].
+
+**The first autosave of a new game** (slot written right after the opening) differs from the defaults in 20 Bools
+(`HavePlayedEvent` of `Dm_Kokiri_0000`, `_0030`, `Opening_Introduction`, `Opening_LoadingKokiriForest`,
+`HaveTalked.Npc_Navi`, `IsGet.Armor_Adult_Normal`, ...), 7 Ints, no placement flag, and in the challenge enums:
+`Meet_DekuTree` at `Step01` and 39 of the 45 challenges moved from `NotReady` to `Ready`, presumably by the
+challenge manager (no flow or sequence of the opening names that step).
+
+**Challenge progress is game data.** Each `RSDB/Challenge` row has an Enum `Step_<challenge>` in `GameDataList`
+whose `RawValues` are its steps (`NotReady`, `Ready`, then the row's steps); flows move it with
+`ChallengeSystemActor.EventExecuteProgressChallengeStep`, logic reads it with `HoldChallengeCurrentStepCheckOrder`
+(outputs is-after, is-before, is-equal) and BoolExp entries such as `Meet_DekuTree_IsAfter_Step01_Exp`. Several
+story triggers fire only at exactly one step (the Market arrival at `Goto_HyruleCastle` `Step02`, Zelda's
+courtyard at `Step04`), so a skipped step can stop a chain. Whether a progress call can move a step backwards is
+not known (the in-game test of `fast_start` `all` shows it).
+
+**How cutscenes are gated.** In the world an `EventRequestActor` (`Dynamic.RequestEventName`) is driven by a logic
+module (`AiGroups`, matched by reference `Id`) that ANDs an `Area` hit with flag tests, mostly
+`HoldGameDataHavePlayedEvent` on the cutscene itself; flows test `EventQueryHavePlayedEvent` (case 1 = not played,
+[inference] from how `Meet_DekuTree` and `Dm_SY_BancChangeArrive` branch). Placement `Presence.FlagName` hides or
+shows actors by flag (the fog over the Deku Tree's face until
+`HavePlayedEvent.Dm_Kokiri_0070`). Skipping is a game feature for every cutscene except three whose setting
+component list sets `SkipSetting` `DisableSkip`: `Dm_Kokiri_0000` (the opening movie), `Dm_Title_0005` and
+`Dm_StaffCredit_0005`.
+
+| Scene | Event(s) | Gate | State it leaves | `fast_start` |
+|---|---|---|---|---|
+| Opening movie | `Opening_LoadingKokiriForest` → `Dm_Kokiri_0000` | none: `Sequence/Opening` | nothing read later | `intro`: skippable |
+| Navi wakes Link | `Opening_Introduction` → `Dm_Kokiri_0030` | none: reserved boot event | `Meet_DekuTree` `Step01`, Navi talked | not offered (skippable already) |
+| Saria at the door, Saria meets Navi | `Dm_Kokiri_0045` → `_0050`; `Dm_Kokiri_0060` | module `..._Npc_Kokiri_Saria_Child_a766` | `KokiriForest_LinkHouseDoor_Open`; house door module also opens on `HavePlayedEvent.Dm_Kokiri_0050` | `saria` |
+| Mido's block | blocker AI | `KokiriForest_Npc_Kokiri_Mido_Child_Blocker` (default true) | flow `Npc_Kokiri_Mido_Child` clears it, `Meet_DekuTree` `Step02`/`Step03` | `mido` (logic: Mido no longer needs sword and shield) |
+| Deku Tree's talk | `KokiriForest_Meet_DekuTree_MeetDekuTree_01` → `Dm_Kokiri_0070`, `_0075` | module `..._All_02_a798`, until `Meet_DekuTree` past `Step03` | `KokiriForest_Meet_DekuTree_OpenDekuTreeMouth`; `Meet_DekuTree` `Complete`; `Get_StoneOfForest` `GoInside` | `deku_tree` |
+| Kaepora, Hyrule Field | `HyruleField_Goto_HyruleCastle_Kaepora` → `Dm_HrlField_0000`, `_0005`, `_0010` | module `HyruleField_Child_Prefab_de5f`: `Dm_HrlField_0010` not played, `Goto_HyruleCastle` not past `Step01` | `Goto_HyruleCastle` `Step02`; adds `Pouch_Amiibo` | `kaepora` |
+| Kaepora, Lost Woods | `Dm_LostWood_0010` | flow `Dm_SY_BancChangeArrive` Event213 | none found | `kaepora` |
+| Zelda's courtyard | `HyruleCastle_Goto_HyruleCastle_MeetZelda` → `Dm_HrlCastle_0030` ... `_0060` | module `HyruleCastle_Prefab_941f`: `Goto_HyruleCastle` exactly `Step04` | Zelda's Letter (`Dm_HrlCastle_0050`: `Dm_SY_GetInEvent:GetInEvent_Zeldaletter`), `Goto_HyruleCastle` `Complete`, `DoorOfTime` `Step01`; Impa then teaches Zelda's Lullaby (`DoorOfTime` → `Dm_MelodyGet_Zelda`) | not offered: it gives two checks (letter, song) |
+
+Other Kaepora Gaebora scenes (Lake Hylia `Dm_LakeHrl_0010`/`_0011`, Death Mountain Trail `Dm_DeathMtTrail_0030`)
+are flights or talks from his NPC flows (`Npc_Kaepora_*`) and are not offered.
+
+**Not settable through initial values:** the opening movie and Navi's wake-up (sequence-driven), and anything that
+must give an item (the pouch is not a flag). The intro can be removed entirely by starting
+`OpeningEvent:Opening_LoadingKokiriForest` after the movie (an event-flow edit; a scratch test of it is in
+`E:/OOTRemake/work/r4-fast-start/intro-removed`).
