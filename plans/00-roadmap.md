@@ -393,7 +393,8 @@ Owns `src/clawshot/world/search.py`, `src/clawshot/world/model.py`, `tests/test_
    (spiritual stones, the Ocarina of Time, the Song of Time, the Door of Time), and when adult Link can put the sword
    back. Round 4's track B read a walkthrough saying only after the Forest Temple. Look at the Temple of Time and
    Master Sword event flows (`clawshot.formats.evfl`), the flags they ask (`GameDataList`), and the save reader on
-   Kareem's save backups (his main game has an adult Link: what flags it has set). Cite the flow, entry and flag.
+   Kareem's save backups (all still child-era on 2026-11-08; he is playing to adult Link now, and a save taken after
+   the first pull will follow). Cite the flow, entry and flag.
 2. If returning is gated, model it in the search: an item found as adult before the gate opens is not usable as
    child until the gate opens. Tests: a seed that needs an adult-found item as child before the gate is not
    beatable; the same after the gate is.
