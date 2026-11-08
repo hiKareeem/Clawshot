@@ -146,3 +146,58 @@ https://www.nintendolife.com/guides/zelda-ocarina-of-time-fire-temple-walkthroug
 https://www.eurogamer.net/inside-ganondorfs-castle-walkthrough-zelda-ocarina-of-time .
 **Kareem: existing GC bomb-only, GTG native-prerequisite and Well water-state questions remain useful;
 no Mido replay is requested.**
+
+## Item 3: readable output and logic-derived opening
+
+`spoiler()` preserves world-keyed `placements` and progression `spheres`, adding `locations` metadata
+(player name, where, OoTR identity, physical IDs, provenance; shops include price/release).
+`play_note()` renders those descriptions beside unchanged world/OoTR keys for every shuffled reward.
+The isolated shared writer change emits `play-note.md` beside `spoiler.json`, computing both before
+romfs writing so a presentation/proof error cannot leave a partially written seed.
+
+### Reviewer extension: the actual opening route
+
+Kareem's reported seed-shop-7 lock is ground truth, not replayed: its Hylian Shield passes Mido but cannot
+reflect the Slingshot-room scrub's nuts as child. The existing `here(has_shield)` logic also needs the
+post-Mido Deku Shield purchase. The old handwritten “buy Hylian, then clear Tree” note omitted it.
+
+`generate.route.opening` now proves a concrete child-only source witness for the catalog's presentation
+milestone (`Defeat Queen Gohma`, entry `Deku Tree Lobby`), through existing logic rather than new game rules:
+
+1. Find the first collection prefix that actually reaches the milestone.
+2. Reverse-delete source checks while the milestone remains reachable, retaining one sufficient witness
+   even with OR alternatives (not the unsound intersection of individually optional items).
+3. Replay those sources one at a time through `Search.child_only`, prioritizing currently reachable
+   outside-dungeon prerequisites before entering. Adult-only finds/events cannot satisfy child requirements.
+4. For every acquisition, reverse-delete prior sources against actual access to that check; list the
+   predecessor items/counts and source steps. Entry preparation covers the selected clear, not merely the
+   weaker lobby reachability predicate. Finish is checked against the actual milestone event.
+
+This is a deterministic deletion-minimal witness, not a claim of shortest travel, globally cheapest
+shopping, every possible route or exact rupee earnings. Alias/count semantics remain Search's.
+The opening table includes each needed purchase with physical shelf, price and original shelf-release
+condition; ordinary sphere finds are explicitly not a mandatory shopping list.
+
+Observed regenerated baseline (outside the protected active folder): Sword from Mido second-left;
+Hylian Shield from KF8 (10); Deku Shield from KF6 (40), requiring the prior Sword/Hylian to open its
+post-Mido shelf; THEN enter the Deku Tree; Slingshot from the falling-platform room's upper chest;
+complete Gohma. The actual CLI wrote 228 shuffled checks, 26 spheres, 77 romfs resources plus spoiler/note
+under `E:/OOTRemake/work/r6-names/smoke-shop7/`. No active seed/user/save was read or changed.
+
+`tests/test_names_route.py`: **2 passed**, including OR alternatives, optional-source deletion, required
+purchase-before-entry ordering and rejection of an adult-only pickup faking child access.
+Catalog + presentation + route synthetic checks: **4 passed**. `tests/test_names_dump.py`:
+**1 passed**, recreating seed 7 Chest+Shop and checking its serialized spoiler and rendered note put the
+KF6 Deku Shield purchase before Tree entry, with Sword/Hylian prerequisites and the post-Mido release.
+Scoped format/lint passed. The complete four-gate chain is running; no full-ready claim yet.
+
+Canonical settings integration prerequisite: cs6b's `clawshot.settings.shop_price` is the shared price API;
+this pre-settings baseline still has fixed vanilla slot prices. Requested authorized rebase once its
+producer is on main; the final settings-aware presenter will call that API, not duplicate pricing policy.
+The actor used for cheap-shield pricing must be the placed native display, not the original shelf item.
+
+### Launcher safety update (reviewer, Hookshot 2.0.1)
+
+No launcher was created/run by this track. For any future launcher, the ONLY executable is now
+`E:\Games\Hookshot\bin\hookshot.exe`, with `HOOKSHOT_NO_UPDATE_CHECK=1`, and missing exe is a hard stop.
+Never fall back to the folder-root launcher: it ignores `--user` and can target Kareem's main save.

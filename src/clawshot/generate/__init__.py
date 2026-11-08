@@ -10,16 +10,18 @@ only randomness is ``random.Random(seed)``, and every list the fill walks is in 
 import json
 import random
 from collections.abc import Mapping
-from dataclasses import dataclass, replace
+from dataclasses import asdict, dataclass, replace
 from importlib.metadata import version
 from typing import Any
 
+from clawshot.generate import names as location_names
 from clawshot.generate.fill import FillError, Settings, check_beatable, fill, shuffled_locations
+from clawshot.generate.route import opening
 from clawshot.world.load import build_world
 from clawshot.world.model import World
 from clawshot.world.shops import with_shop_prices
 
-__all__ = ["FillError", "Seed", "Settings", "generate", "prepare", "spoiler", "spoiler_json", "world_spec"]
+__all__ = ["FillError", "Seed", "Settings", "generate", "play_note", "prepare", "spoiler", "spoiler_json", "world_spec"]
 
 FILL_ATTEMPTS = 10
 
@@ -114,23 +116,133 @@ def generate(
     return Seed(world, seed, settings, placements, shuffled_locations(world, settings), spheres)
 
 
+def _required_items(seed: Seed, sources: tuple[str, ...]) -> list[dict[str, Any]]:
+    by_item: dict[str, list[str]] = {}
+    for source in sources:
+        by_item.setdefault(seed.placements[source], []).append(source)
+    return [{"item": item, "count": len(names), "sources": names} for item, names in by_item.items()]
+
+
 def spoiler(seed: Seed) -> dict[str, Any]:
-    """The spoiler log: seed, settings, the shuffled placements, and the progression items sphere by sphere
-    (spheres holding no progression item are left out)."""
+    """Keep world-keyed placements/spheres and add physical descriptions plus a replayed opening witness."""
     items = seed.world.items
     spheres = [
         {name: seed.placements[name] for name in sphere if items[seed.placements[name]].progression}
         for sphere in seed.spheres
     ]
+    catalog = location_names.load()
+    shops = location_names.shops()
+
+    def describe(name: str) -> dict[str, Any]:
+        description = catalog.get(name)
+        # A custom world has no physical census: retain its own name/region, without inventing IDs or prices.
+        result = (
+            asdict(description)
+            if description is not None
+            else {"name": name, "where": seed.world.locations[name].region, "oot_randomizer_name": ""}
+        )
+        if name in shops:
+            result.update(shops[name])
+        return result
+
+    locations = {name: describe(name) for name in seed.shuffled}
+    route = opening(seed)
+    opening_log = None
+    if route is not None:
+        steps = []
+        goal_regions = list(dict.fromkeys(event.region for event in seed.world.events if event.name == route.event))
+        for step in route.steps:
+            info = (
+                describe(step.location) | {"item": seed.placements[step.location]}
+                if step.kind == "collect"
+                else {
+                    "name": route.name if step.kind == "enter" else route.event,
+                    "where": route.region if step.kind == "enter" else " / ".join(goal_regions),
+                    "item": None,
+                }
+            )
+            steps.append(
+                info | {"kind": step.kind, "location": step.location, "requires": _required_items(seed, step.requires)}
+            )
+        opening_log = {"name": route.name, "event": route.event, "region": route.region, "steps": steps}
     return {
         "generator": f"clawshot {version('clawshot')}",
         "seed": seed.seed,
         "settings": seed.settings.as_dict(),
         "settings_string": seed.settings.to_string(),
         "placements": {name: seed.placements[name] for name in seed.shuffled},
+        "locations": locations,
+        "opening_route": opening_log,
         "spheres": [sphere for sphere in spheres if sphere],
     }
 
 
 def spoiler_json(seed: Seed) -> str:
     return json.dumps(spoiler(seed), indent=2, ensure_ascii=False) + "\n"
+
+
+def _markdown_cell(text: str) -> str:
+    return text.replace("\n", " ").replace("|", r"\|")
+
+
+def play_note(seed: Seed, log: Mapping[str, Any] | None = None) -> str:
+    """Render the logic-derived opening and every shuffled destination from one spoiler snapshot."""
+    log = spoiler(seed) if log is None else log
+    descriptions = log["locations"]
+    collected = {name: index for index, sphere in enumerate(seed.spheres, 1) for name in sphere}
+    lines = [f"# Clawshot seed {seed.seed}", ""]
+    route = log["opening_route"]
+    if route is not None:
+        lines.extend(
+            [
+                f"## Opening: {route['name']}",
+                "",
+                "This is one replayed logic witness, not every optional sphere find.",
+                "Entry preparation covers the planned clear, not just reaching the lobby.",
+                "Prices are before conditional discounts; logic checks wallet capacity, not cash earned.",
+                "",
+                "| Step | Action | Check / where / world identity | Item | Needed beforehand | Price / shelf release |",
+                "|---|---|---|---|---|---|",
+            ]
+        )
+        indices = {step["location"]: i for i, step in enumerate(route["steps"], 1) if step["kind"] == "collect"}
+        for index, step in enumerate(route["steps"], 1):
+            action = (
+                ("Buy" if "price" in step else "Collect") if step["kind"] == "collect" else step["kind"].capitalize()
+            )
+            place = f"{step['name']} — {step['where']}"
+            if step["location"] not in (step["name"], step["where"]):
+                place += f" [{step['location']}]"
+            needed = []
+            for requirement in step["requires"]:
+                item = requirement["item"]
+                if requirement["count"] != 1:
+                    item += f" × {requirement['count']}"
+                references = ", ".join(str(indices[source]) for source in requirement["sources"])
+                needed.append(f"{item} (step {references})")
+            sale = f"{step['price']} rupees; {step['opens']}" if "price" in step else "—"
+            cells = (str(index), action, place, step["item"] or "—", "; ".join(needed) or "None", sale)
+            lines.append("| " + " | ".join(_markdown_cell(cell) for cell in cells) + " |")
+        lines.append("")
+    lines.extend(
+        [
+            "## All shuffled rewards",
+            "",
+            "Full search spheres include non-progression finds; this table is not a mandatory play order.",
+            "— means the search did not collect that check. Settings are in `spoiler.json`.",
+            "",
+            "| Sphere | Location | Where | World / OoTR check | Item |",
+            "|---|---|---|---|---|",
+        ]
+    )
+    for name in sorted(seed.shuffled, key=lambda name: collected.get(name, len(seed.spheres) + 1)):
+        description = descriptions[name]
+        cells = (
+            str(collected.get(name, "—")),
+            description["name"],
+            description["where"],
+            name,
+            seed.placements[name],
+        )
+        lines.append("| " + " | ".join(_markdown_cell(cell) for cell in cells) + " |")
+    return "\n".join(lines) + "\n"

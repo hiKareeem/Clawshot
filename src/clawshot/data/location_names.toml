@@ -1,3 +1,10 @@
+[opening]
+name = "Deku Tree"
+event = "Defeat Queen Gohma"
+region = "Deku Tree Lobby"
+age = "child"
+# A presentation milestone, not another access rule: route.py proves it through the existing world/search.
+
 # Readable check labels, directions and provenance; no game resources.
 # World/OoTR keys and physical Hash/flow identities are unchanged.
 # Directions identify checks, not a guarantee of access: exclusions/rules remain in world data.

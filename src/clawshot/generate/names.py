@@ -28,3 +28,22 @@ def load(path: Path = CATALOG) -> dict[str, LocationName]:
             row["name"], row["where"], row["oot_randomizer_name"], row["source"], tuple(row["ids"])
         )
     return result
+
+
+def shops() -> dict[str, dict]:
+    """Physical-slot prices and release predicates, independent of shelf contents."""
+    data = tomllib.loads((CATALOG.parent / "shops.toml").read_text(encoding="utf-8"))
+    result = {}
+    for slot in data["slot"]:
+        name = slot["location"]
+        if name in result:
+            result[name]["price"] = max(result[name]["price"], slot["price"])
+            continue
+        rule = data.get("availability", {}).get(name, {}).get("rule", "True")
+        release = (
+            "No additional shelf-release gate"
+            if rule == "True"
+            else rule.replace("is_adult", "adult Link").replace("is_child", "child Link").replace("_", " ")
+        )
+        result[name] = {"price": slot["price"], "opens": release, "release_rule": rule}
+    return result

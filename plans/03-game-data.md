@@ -1313,6 +1313,18 @@ but intentionally share conservative unions. Do not generalize that label neutra
 pockets or to the Well east-dip water condition; those affect prerequisites. Actual actor-derived vanilla
 items remain distinct. No link/rule is changed by presentation work.
 
+The spoiler keeps internal placement/sphere keys and adds readable `locations` plus a logic-derived
+`opening_route`; the writer emits `play-note.md` from the same snapshot. The opening is a replayed,
+deletion-minimal child-only source witness, with actual predecessor items/counts per step, purchases,
+physical shelves, prices and shelf-release conditions. It is not all optional sphere loot and not a
+rupee-earnings proof.
+
+Kareem's seed-shop-7 note bug (reviewer, 2026-11-08): Hylian Shield passes Mido but does not reflect the
+child Slingshot-room scrub's nuts. The old prose omitted the later Deku Shield purchase that the existing
+`here(has_shield)` logic needs. Regenerated outside the protected seed, the new serialized witness orders
+Sword (Mido second-left), Hylian Shield (KF8), Deku Shield (KF6, after Mido), THEN Tree entry and the
+Slingshot-room upper chest. Synthetic route boundaries and the real-spoiler/note regression pass.
+
 ## 21. Round 6: settings, prices and forest modes (cs6b)
 
 Build `e0f3ccfa`, read-only dump. Implementation, command evidence and the complete inventory-write audit:
