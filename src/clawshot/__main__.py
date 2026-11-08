@@ -10,6 +10,8 @@ The intro is skippable by default; ``--skip`` alone disables all fast start.
 ``--areas`` with ``--goal`` makes a slice: only those areas' regions, beaten when the goal holds (round 3's
 playtest: ``--areas KokiriForest LostWood InsideTheDekuTree --goal "'Defeat Queen Gohma'"``). ``--shuffle Gift`` also
 moves the event gifts that can be changed (``clawshot.patch.gifts``); the others keep their items.
+``--shuffle Scrub`` adds the four saved one-time scrub families; repeat vendors stay vanilla.
+``Token`` is reserved and refused until replacement-pickup persistence is verified.
 """
 
 import argparse
@@ -40,9 +42,9 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--shuffle",
         nargs="+",
-        choices=("Chest", "Shop", gifts.SHUFFLE),
+        choices=("Chest", "Shop", gifts.SHUFFLE, "Scrub", "Token"),
         default=list(Settings().shuffle),
-        help="location types to shuffle; Shop uses native displays only; Gift the event gifts that can be changed",
+        help="location types; Shop: native displays; Gift: supported gifts; Scrub: once sales; Token: not enabled",
     )
     parser.add_argument("--dungeon-items", choices=DUNGEON_ITEM_CHOICES, default=Settings().dungeon_items)
     parser.add_argument("--logic", nargs="*", default=[], metavar="NAME=VALUE", help="logic setting overrides")
