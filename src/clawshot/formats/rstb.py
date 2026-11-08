@@ -36,6 +36,8 @@ ALIGNMENT = 32
 # (1,463,176) is its size (1,462,888, a multiple of 8) + 288, which rounding to 32 would overshoot.
 OWN_FORMULA: dict[str, tuple[int, int]] = {
     "GameData/GameDataList.Product.110.byml": (8, 288),
+    # ActorInfo: 1,934,492 raw -> 1,937,560; Round 7 same-shape model/heap field substitutions only.
+    "RSDB/ActorInfo.Product.111.rstbl.byml": (32, 3064),
 }
 
 

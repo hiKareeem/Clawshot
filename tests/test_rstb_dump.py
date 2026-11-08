@@ -26,6 +26,7 @@ def test_dump_size_table_round_trips(table_bytes):
         "Mals/*.sarc.zs",
         "Pack/Actor/*.pack.zs",
         "GameData/GameDataList.Product.110.byml.zs",
+        "RSDB/ActorInfo.Product.111.rstbl.byml.zs",
     ],
 )
 def test_dump_size_formula_fits_every_file(romfs, table_bytes, pattern):
