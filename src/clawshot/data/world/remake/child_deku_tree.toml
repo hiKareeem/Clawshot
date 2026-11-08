@@ -2,9 +2,9 @@
 # "Overrides". Evidence per entry; the round file (plans/rounds/r4-logic-child.md) lists what was checked.
 #
 # OoT Randomizer's "Deku Tree Lobby" holds floors 1 to 3. In the remake the climb from 2F to 3F passes a vine wall
-# with Skullwalltulas that only the Slingshot clears, and the basement opens only by dropping from 3F into the 1F
-# web, so 3F and everything below 1F need the Slingshot. Seed 3 of round 3 (Slingshot in the basement chest) was
-# beatable in OoT Randomizer's logic and not in the game (plans/00-roadmap.md, "Round 3 result").
+# with Skullwalltulas cleared by the Slingshot or Boomerang (Kareem, 2026-11-08). The basement opens only by
+# dropping from 3F into the 1F web, so either weapon is needed for that route. Round 3 seed 3 had neither
+# available before the basement and was not beatable in game (plans/00-roadmap.md, "Round 3 result").
 #
 # Guide: Nintendo Life, "Great Deku Tree walkthrough" (Switch 2), 2026-11-05,
 # https://www.nintendolife.com/guides/zelda-ocarina-of-time-great-deku-tree-walkthrough-switch-2
@@ -17,9 +17,9 @@ dungeon = "Deku Tree"
 source = "remake: 3F of the lobby (room 0 above y 120, Skulltulas at y 127) and the compass room (room 3: compass chest y 120, side chest y 126, Gold Skulltula y 121, the floor switch Obj_StepSwitch_A_02 and three Obj_InsideTheDekuTree_ElevatorLift platforms); Nintendo Life guide, 'Compass (3F)'"
 
 [exits."Deku Tree Lobby"."Deku Tree Top Floor"]
-rule = "can_use(Slingshot)"
+rule = "can_use(Slingshot) or can_use(Boomerang)"
 new = true
-source = "Kareem, round 3 seed 3: the Slingshot is needed to climb to the top floor; Nintendo Life guide: the Slingshot shoots down the Skulltulas that block the vine wall up to 3F; data: three Enemy_Skullwalltula on the lobby wall at y 113-116 between the map chest (2F, y 108) and 3F (y 120). Boomerang, Bow and Hookshot are not checked in the remake (question in the round file)"
+source = "Kareem in game via Claude, 2026-11-08, seed-shop-7 (build e0f3ccfa, Hookshot 2.0.1): the Boomerang clears the vine wall to 3F as the Slingshot does. Data: room 0 Enemy_Skullwalltula Hashes 2729587378952040865, 16183956171357380613 and 3995458350586152163 at y 113-116 between the map chest and 3F. Bow/Hookshot alternatives remain unverified"
 
 [exits."Deku Tree Top Floor"."Deku Tree Lobby"]
 rule = "True"
@@ -55,6 +55,16 @@ source = "data: Enemy_Skulltula_Gold 13609975487234437568, room 3 at y 121; Nint
 # the drop (Slingshot chest y 112, side chest y 116). OoT Randomizer's room has no exit (it is a dead end there).
 
 [exits."Deku Tree Slingshot Room"."Deku Tree Lobby"]
-rule = "can_use(Slingshot) or can_use(Bow)"
+rule = "can_use(Slingshot) or can_use(Boomerang) or can_use(Bow)"
 new = true
-source = "Kareem, round 3 seed 3: the Slingshot is needed to leave the Slingshot room; Nintendo Life guide: shoot the switch above the door you came through to drop it and escape. The Bow (adult) is OoT Randomizer's other way to hit an eye switch (Deku Tree.json:43), not checked in the remake"
+source = "Kareem in game via Claude, 2026-11-08, seed-shop-7 (build e0f3ccfa, Hookshot 2.0.1): the Boomerang hits the Slingshot-room exit switch. Static Banc room 2: Obj_EyeSwitch_A_02 Hash 9080063866993537303 drives event request and FallingLadder Hash 2096903280161003875 via module InsideTheDekuTree_Level_Room_C_Prefab_efa7. Bow is the retained OoT Randomizer eye-switch alternative, not newly verified"
+
+[exits."Deku Tree Basement"."Deku Tree Basement Back Room"]
+rule = "here(has_fire_source_with_torch or can_use(Bow)) and here(can_use(Slingshot) or can_use(Boomerang) or can_use(Bow))"
+was = "here(has_fire_source_with_torch or can_use(Bow)) and here(can_use(Slingshot) or can_use(Bow))"
+source = "Kareem in game via Claude, 2026-11-08: Boomerang activates the Slingshot-room Obj_EyeSwitch_A_02. Static Banc room 5 uses the same actor (Hash 10433048972954508847), no per-placement weapon override, with the same BootUp event output in module InsideTheDekuTree_Level_Room_F_Prefab_bdf4. Same switch response applied here; fire requirement retained"
+
+[events."Queen Gohma Boss Room"."Defeat Queen Gohma"]
+rule = "(Nuts or can_use(Slingshot) or can_use(Boomerang)) and can_jumpslash"
+was = "(Nuts or can_use(Slingshot)) and can_jumpslash"
+source = "Kareem in game via Claude, 2026-11-08, seed-shop-7 (build e0f3ccfa, Hookshot 2.0.1): Boomerang stuns Gohma. Static Banc room 10 boss Enemy_DungeonBoss_Gohma Hash 15302759724049838417; stun is not damage, so the existing can_jumpslash requirement stays"

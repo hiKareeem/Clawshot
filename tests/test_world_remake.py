@@ -172,8 +172,7 @@ def deku_slice():
 
 
 def test_deku_tree_slingshot_in_the_basement_is_not_beatable(deku_slice):
-    """Round 3 seed 3: the Slingshot in the basement chest. The remake needs the Slingshot to climb to 3F, and the
-    basement opens only from 3F."""
+    """Round 3 seed 3: the Slingshot is in the basement and no Boomerang is available before 3F."""
     vanilla = {name: loc.vanilla for name, loc in deku_slice.locations.items() if loc.vanilla is not None}
     check_beatable(deku_slice, vanilla)
     swapped = vanilla | {
@@ -184,14 +183,17 @@ def test_deku_tree_slingshot_in_the_basement_is_not_beatable(deku_slice):
         check_beatable(deku_slice, swapped)
 
 
-def test_deku_tree_top_floor_and_basement_need_the_slingshot(deku_slice):
-    others = [loc.vanilla for loc in deku_slice.locations.values() if loc.vanilla not in (None, "Slingshot")]
+@pytest.mark.parametrize("weapon", ["Slingshot", "Boomerang"])
+def test_deku_tree_top_floor_and_basement_need_a_verified_ranged_weapon(deku_slice, weapon):
+    others = [
+        loc.vanilla for loc in deku_slice.locations.values() if loc.vanilla not in (None, "Slingshot", "Boomerang")
+    ]
     without = reachable(deku_slice, others)
-    with_slingshot = reachable(deku_slice, [*others, "Slingshot"])
+    with_weapon = reachable(deku_slice, [*others, weapon])
     for name in ("Deku Tree Compass Chest", "Deku Tree GS Compass Room", "Deku Tree Basement Chest"):
         assert not without.can_access(deku_slice.locations[name]), name
-        assert with_slingshot.can_access(deku_slice.locations[name], CHILD), name
-    # The Slingshot room and the map stay open without it: the room traps, it doesn't lock (round file, item 2).
+        assert with_weapon.can_access(deku_slice.locations[name], CHILD), name
+    # Entry still needs a Deku Shield, not either ranged weapon; exit/reload recovery is a separate question.
     for name in ("Deku Tree Map Chest", "Deku Tree Slingshot Chest", "Deku Tree Slingshot Room Side Chest"):
         assert without.can_access(deku_slice.locations[name], CHILD), name
 
