@@ -488,3 +488,37 @@ are flights or talks from his NPC flows (`Npc_Kaepora_*`) and are not offered.
 must give an item (the pouch is not a flag). The intro can be removed entirely by starting
 `OpeningEvent:Opening_LoadingKokiriForest` after the movie (an event-flow edit; a scratch test of it is in
 `E:/OOTRemake/work/r4-fast-start/intro-removed`).
+
+## 15. Round 4: event flows and gifts (cs4d)
+
+How each was found and the scratch scripts: `plans/rounds/r4-evfl.md`. Build `e0f3ccfa`.
+
+**Event flows** (`clawshot.formats.evfl`, written from the files and the ZeldaMods wiki's description; all 914 flows
+write back byte-identical). Version 0.4.0.0: 653 files hold one flowchart, 261 one timeline (cutscene timing, cuts
+named `C01`...), none both. Beyond the wiki's version: 0x30-byte events; event type 5 calls an entry point and
+branches on the value a type-6 event there returns (583 returns); entry points may carry variables (5 do).
+Thirteen flows exist in two versions, `X.bfevfl.zs` and `X.110.bfevfl.zs`; `Event/EventFlow/EventFlowFileEntry.
+Product.110.byml.zs` lists those 13 with version `110` (the five medallion flows, Dampé's `Npc_Hylia_Dampe_001`, the
+horse race, `DreamBossStage` and five cutscenes), so the game presumably loads the `.110` file [inference].
+
+**Gifts.** Every gift is `PouchSystemActor.EventTriggerAddOrRemovePouchContent` with a literal item, reached directly
+or through one of 64 wrapper entry points that pass an argument down (found by following `Argument` parameters to a
+fixed point; section 4 named the main ones). Outside the scrub sales and DreamWorld, **148 steps give an item by
+name**: 96 `npc_gift`, 26 `event_gift` (cutscene flows `Dm_*`), 26 `song`. Against OoT Randomizer: all 12 songs, all
+9 boss rewards (stones and medallions), 8 of 9 cutscene gifts (not `Gift from Sages`) and 50 of 71 NPC checks are
+given by a flow step; the 21 others are the 9 cows (D11), two placed pick-ups (`LH Sun`, `LH Underwater Item`), and
+ten with no literal step (the five frog song rupees and `Frogs in the Rain`, loach fishing, the bowling bomb, the
+treasure-game salesman's key, Granny's blue potion). Remake-only or unclear: a Market bottle
+(`Npc_Hylia_020_Shop_Child`, entry `Item_Bottle_TutorialEvent_Talk`), a Deku Shield from the Kokiri shopkeeper (entry
+`present_DekuSheld`), the frogs' bug game (a heart piece and a blue rupee), and the lake scientist's dive heart piece
+in his *child-era* flow (`Npc_Hylia_045_Child`, OoT Randomizer's adult `LH Lab Dive`).
+
+**Songs are granted twice.** Each `Dm_MelodyGet_*` flow first runs `Dm_SY_Ocarina:LearningOcarinaPlayAuto` (the
+play-along), which adds the song the game's current melody state names (`EventQueryMelodyTypeForNormal`, 13 direct
+steps shared by all songs), then gives the song by name through `GetPouchContent:GetPouchContentByActorName`.
+
+**Changing a gift.** The item is one string parameter of the step (`ActorName`, `ReveiveItem` (sic), `Actor`,
+`TakenRewardActor`); every wrapper ends in `Dm_SY_GetInEvent:*` or `GetPouchContent:*`, which show the item by actor
+name, so the get model and text should follow [inference]; the NPC's own lines (`EventFlowMsg/...` message ids) and the
+flags the flow sets do not change. A song needs its play-along changed too. Test folders for Talon's cucco game (milk
+bottle -> Heart Piece, -> Boomerang) are in `E:/OOTRemake/work/r4-evfl/ingame/`; not yet run in game.
