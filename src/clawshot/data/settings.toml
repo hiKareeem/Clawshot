@@ -5,6 +5,14 @@ shuffle = ["Chest"]
 dungeon_items = "own_dungeon"
 fast_start = ["intro"]
 songs = "song"
+shop_prices = "vanilla"
+cheap_deku_shield = true # provisional, Round 6: 36 guaranteed forest rupees, near-total cost in seed 22
+
+[prices]
+affordable = 10
+shield_shop = "KF Shop"
+shield_actor = "Shop_Weapon_Shield_Deku"
+source = "Round 6 Track B, Kareem's early-forest rupee count; GoodsList PriceOffset verified by round 5 shop test"
 
 # Actors actually acquired and used from a chest, not inferred from a successful gift swap.
 [chest_verified.Item_Ocarina_Fairy]

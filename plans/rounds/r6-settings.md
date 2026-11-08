@@ -60,6 +60,44 @@ entry **516392**. No game or batch executed.
 accept warp: does child Link reach Sacred Forest Meadow's warp pad, and does learning persist after Continue?
 Record model/text and the `from the overlay` log.** Until then the warp result remains unverified.
 
+## Item 3 — prices and wallet predicates
+
+`shop_prices = vanilla|affordable`, default vanilla; `cheap_deku_shield = true`, provisional default.
+CLI `--shop-prices` and `--[no-]cheap-deku-shield`; both participate in strings/spoilers.
+Affordable makes every shuffled shop offer **exactly 10**, including unchanged placed actors.
+The cheap-shield rule follows the actual Deku Shield sold anywhere in Kokiri shop, not the original slot
+when it contains another item. It also applies with shops unshuffled. Other shops and masks stay untouched.
+
+`GoodsList.PriceOffset = target - item base price`. An exact-price setting clears conditional discounts:
+the dump has one such list (Market Bazaar Hylian Shield, soldier-gate discount **-20**); retaining it at 10
+would give a negative price. Vanilla-price mode retains that discount, original stock and release predicates.
+No sale model, message, pouch, restock or tutorial policy was changed.
+
+One neutral `shop_price()` decision is shared by patching and world preparation. Shop wallet predicates rebuild
+from their original pre-wallet access rule on a copy, rather than layering 10 over a surviving 600-rupee gate.
+Affordable applies only to shuffled Shop checks; price-only cheap shield is included even without Shop shuffle.
+All Kokiri original prices are **5–40**, so a shield moved inside Kokiri remains in the starting-wallet tier.
+Adult stock, Dodongo-clear and Blue-Fire/refill gates remain; wallet capacities stay 200/500/1000.
+
+Checks so far:
+- `uv run pytest tests/test_settings_prices.py tests/test_settings.py tests/test_settings_songs.py
+  tests/test_shop_logic.py tests/test_shops.py -q`: **49 passed**.
+- Actual whole-game CLI, seed 7, `--shuffle Chest Shop Gift --songs anywhere --shop-prices affordable`:
+  **277 shuffled checks, 18 spheres, 123 overlay files**, finished-seed beatability and default-on chronological
+  early-return guarantee passed before writing. Output stays in `E:/OOTRemake/work/r6-settings/seed-affordable-anywhere-7`.
+- Controlled output `shop-prices-10`, `Test - shop-prices-10.bat`, `price-check.md` in the same external root:
+  native Kokiri stock, eight logical prices 10 through the real PatchStep; all age/short-stock copies.
+  Independent field diff preserves every field except price offsets. Adult **715636 → 715716**, child
+  **715276 → 715356**, short-stock **717144 → 717144**, allocations checked/raised by the writer.
+  Copied release-only new-game launcher uses its own user, never run.
+
+**Kareem: test that controlled price overlay: shield/menu 10, purchase subtracts exactly 10, actual shield,
+normal tutorial/restock, early nuts 10, five later offers still story-locked; report overlay log.**
+
+The old chest-only field-diff oracle and preserved-vanilla-price shop oracle now explicitly opt out of the new
+default cheap shield; separate dump regressions cover the new default's exact fields and full affordable prices.
+The existing generation/beatability assertions were not relaxed.
+
 ## Cross-track requests
 
 Posted startup contract on `cs-r6`: cs6a owns `spoiler()`; preserve my separate settings-string field commit.

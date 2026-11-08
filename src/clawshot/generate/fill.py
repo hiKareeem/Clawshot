@@ -52,6 +52,8 @@ class Settings:
     exclusive_location_types: tuple[str, ...] = ()
     fast_start: tuple[str, ...] = tuple(DEFAULTS["fast_start"])
     songs: str = DEFAULTS["songs"]
+    shop_prices: str = DEFAULTS["shop_prices"]
+    cheap_deku_shield: bool = DEFAULTS["cheap_deku_shield"]
 
     def __post_init__(self) -> None:
         for name in ("shuffle", "areas", "fast_start", "exclusive_location_types"):
@@ -83,6 +85,10 @@ class Settings:
             raise ValueError("a goal is given only with the areas of a slice")
         if self.songs not in ("song", "anywhere"):
             raise ValueError("songs must be 'song' or 'anywhere'")
+        if self.shop_prices not in ("vanilla", "affordable"):
+            raise ValueError("shop_prices must be 'vanilla' or 'affordable'")
+        if not isinstance(self.cheap_deku_shield, bool):
+            raise ValueError("cheap_deku_shield must be a boolean")
 
     def as_dict(self) -> dict[str, Any]:
         out: dict[str, Any] = {
@@ -91,6 +97,8 @@ class Settings:
             "logic": {k: self.logic[k] for k in sorted(self.logic)},
             "fast_start": list(self.fast_start),
             "songs": self.songs,
+            "shop_prices": self.shop_prices,
+            "cheap_deku_shield": self.cheap_deku_shield,
         }
         if self.areas:
             out["areas"] = list(self.areas)

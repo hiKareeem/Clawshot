@@ -13,6 +13,7 @@ from pathlib import Path
 
 from clawshot.formats import byml, sarc, zsdic
 from clawshot.patch.plan import PatchError
+from clawshot.settings import DEFAULTS, shop_price
 
 SHOPS_TOML = Path(__file__).resolve().parents[1] / "data" / "shops.toml"
 POUCH_TABLE = "RSDB/PouchActorInfo.Product.111.rstbl.byml.zs"
@@ -108,6 +109,7 @@ class Sale:
     display: str
     base_price: int
     bundle: int = 1
+    price: int | None = None
 
 
 def patch_shelves(data: bytes, changes: tuple[tuple[Slot, Sale], ...]) -> bytes:
@@ -153,7 +155,7 @@ def patch_shelves(data: bytes, changes: tuple[tuple[Slot, Sale], ...]) -> bytes:
 
 
 def patch_goods(data: bytes, changes: tuple[tuple[Slot, Sale], ...]) -> bytes:
-    """Change the sale as well as its display; preserve the destination's price."""
+    """Change sale/display together. Preserve destination price/discounts unless an exact price is requested."""
     pack = sarc.read(data)
     members = {}
     seen = {}
@@ -174,7 +176,11 @@ def patch_goods(data: bytes, changes: tuple[tuple[Slot, Sale], ...]) -> bytes:
         if actor_name(goods["Actor"]) != slot.vanilla_item:
             raise PatchError(f"{slot.pack}: sale {slot.index} no longer holds {slot.vanilla_item}: {goods}")
         goods["Actor"] = actor_path(sale.actor)
-        goods["PriceOffset"] = byml.I32(slot.price - sale.base_price)
+        price = slot.price if sale.price is None else sale.price
+        goods["PriceOffset"] = byml.I32(price - sale.base_price)
+        if sale.price is not None and "ConditionalPriceOffsetList" in goods:
+            # Exact-price settings must not become negative after the vanilla soldier discount.
+            goods["ConditionalPriceOffsetList"] = []
     for name, document in members.items():
         pack[name] = byml.dump(document)
         if difference := byml.difference(document.root, byml.read(pack[name])):
@@ -191,6 +197,7 @@ def changes(
     *,
     displays: Mapping[str, str] | None = None,
     slots: tuple[Slot, ...] | None = None,
+    prices: Mapping[str, int] | None = None,
 ) -> dict[str, Callable[[bytes], bytes]]:
     """Decompressed resource transforms for logical slot -> sale actor.
 
@@ -208,6 +215,8 @@ def changes(
     known = {slot.location for slot in slots}
     if unknown := sales.keys() - known:
         raise PatchError(f"unknown shop locations: {sorted(unknown)}")
+    if unknown := (prices or {}).keys() - sales.keys():
+        raise PatchError(f"prices need a sale actor for locations: {sorted(unknown)}")
     shelves, owners = {}, {}
     for slot in slots:
         if slot.location not in sales:
@@ -218,10 +227,11 @@ def changes(
             raise PatchError(f"{slot.location}: no native shop display for {display}")
         if actor not in pouch or not (romfs / f"Pack/Actor/{display}.pack.zs").is_file():
             raise PatchError(f"{slot.location}: unknown sale actor or display: {actor}, {display}")
-        if actor == slot.vanilla_item and display == slot.vanilla_item:
+        price = (prices or {}).get(slot.location)
+        if actor == slot.vanilla_item and display == slot.vanilla_item and price is None:
             continue
         row = pouch[actor]
-        sale = Sale(actor, display, int(row.get("BuyingPrice", 0)), int(row.get("BundleActorNum", 1)))
+        sale = Sale(actor, display, int(row.get("BuyingPrice", 0)), int(row.get("BundleActorNum", 1)), price)
         if sale.bundle > 1 and not (romfs / f"Pack/Actor/Shop_Board_Bundle_{sale.bundle:02d}.pack.zs").is_file():
             raise PatchError(f"{slot.location}: no quantity board for bundle {sale.bundle}")
         if display != slot.vanilla_item:
@@ -242,8 +252,14 @@ def native_items(path: str | Path = SHOPS_TOML) -> dict[str, dict]:
     return items
 
 
-def patch_step(romfs: str | Path, locations: tuple[str, ...]) -> Callable[[Mapping[str, str]], dict]:
-    """Register only the shuffled Shop locations, never overwrite vanilla shops."""
+def patch_step(
+    romfs: str | Path,
+    locations: tuple[str, ...],
+    *,
+    shop_prices: str = DEFAULTS["shop_prices"],
+    cheap_deku_shield: bool = DEFAULTS["cheap_deku_shield"],
+) -> Callable[[Mapping[str, str]], dict]:
+    """Shuffle selected shelves; price settings also cover an unshuffled Kokiri Deku Shield."""
     palette = native_items()
     slots = load()
 
@@ -254,6 +270,20 @@ def patch_step(romfs: str | Path, locations: tuple[str, ...]) -> Callable[[Mappi
             if item not in palette:
                 raise PatchError(f"{name}: {item!r} has no native shop display")
             sales[name] = palette[item]["display"]
-        return changes(romfs, sales, slots=slots) if sales else {}
+        prices = {}
+        for slot in slots:
+            actor = sales.get(slot.location, slot.vanilla_item)
+            price = shop_price(
+                slot.shop,
+                actor,
+                slot.price,
+                shuffled=slot.location in locations,
+                policy=shop_prices,
+                cheap_shield=cheap_deku_shield,
+            )
+            if price != slot.price or (slot.location in locations and shop_prices == "affordable"):
+                sales.setdefault(slot.location, actor)
+                prices[slot.location] = price
+        return changes(romfs, sales, slots=slots, prices=prices) if sales else {}
 
     return step

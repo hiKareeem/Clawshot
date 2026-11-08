@@ -61,6 +61,11 @@ def test_print_settings_needs_no_dump_and_explicit_options_override_string(capsy
                 "age_return_guarantee=false",
                 "--dungeon-items",
                 "anywhere",
+                "--songs",
+                "anywhere",
+                "--shop-prices",
+                "affordable",
+                "--no-cheap-deku-shield",
                 "--print-settings",
             ]
         )
@@ -71,3 +76,6 @@ def test_print_settings_needs_no_dump_and_explicit_options_override_string(capsy
     assert chosen.fast_start == ()
     assert chosen.dungeon_items == "anywhere"
     assert chosen.logic == {"free_time_travel": True, "age_return_guarantee": False}
+    assert chosen.songs == "anywhere"
+    assert chosen.shop_prices == "affordable"
+    assert chosen.cheap_deku_shield is False

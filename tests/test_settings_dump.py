@@ -14,11 +14,14 @@ pytestmark = pytest.mark.dump
 
 def test_settings_string_and_spoiler_replay_write_identical_folders(romfs, tmp_path):
     settings = Settings(
-        shuffle=("Chest", "Gift"),
+        shuffle=("Chest", "Shop", "Gift"),
         areas=("KokiriForest", "LostWood", "InsideTheDekuTree"),
         goal="'Defeat Queen Gohma'",
         fast_start=("intro", "mido"),
         logic={"free_time_travel": True, "age_return_guarantee": False},
+        songs="anywhere",
+        shop_prices="affordable",
+        cheap_deku_shield=False,
     )
     text = settings.to_string()
     folders = []

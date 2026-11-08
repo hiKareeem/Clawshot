@@ -37,6 +37,11 @@ all twelve songs in chests. Only Storms has been played from a chest; the other 
 and are inferred. Other gift-only items remain on gifts until individually observed in a chest; the sourced
 allowlist in `settings.toml` currently permits the Fairy Ocarina.
 
+`--shop-prices vanilla` (default) keeps original slot prices; `affordable` makes every shuffled shop item
+exactly 10 rupees. `--cheap-deku-shield` (provisionally on) prices a Deku Shield in Kokiri shop at 10 even
+without Shop shuffle; `--no-cheap-deku-shield` disables it. Exact prices replace conditional discounts.
+The logic uses the patched wallet requirement, preserving stock releases, refill gates and adult-only offers.
+
 ## Stack
 
 Python 3.12+ with uv. Reasons and alternatives: `plans/decisions.md`.
