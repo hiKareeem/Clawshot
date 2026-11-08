@@ -163,6 +163,10 @@
 "Scrub Business Seed" = { actor = "Item_ScrubBusinessSeed", source = "D12; census: remake-only chest filler" }
 "Magic Jar" = { actor = "Tbox_MagicJar_Large", source = "census: Shadow Temple Spike Walls Left Chest" }
 
+# Round 6 one-time scrub pool: fixed first-tier capacities (D16), not yet chest-tested.
+"Deku Stick Capacity" = { actor = "Item_StickBag_Medium", source = "Enemy_Scrub_Business_Common Event322/Event555; fixed Medium tier for Scrub shuffle, r6-tokens.md" }
+"Deku Nut Capacity" = { actor = "Item_NutBag_Medium", source = "Enemy_Scrub_Business_Common Event326; fixed Medium tier for Scrub shuffle, r6-tokens.md" }
+
 [aliases]
 # Chests without an instance Drop__DropActor use this actor rather than the TBox spelling.
 "Obj_Rupee_Green" = "TBox_Rupee_Green"
