@@ -11,6 +11,7 @@ The intro is skippable by default; ``--skip`` alone disables all fast start.
 playtest: ``--areas KokiriForest LostWood InsideTheDekuTree --goal "'Defeat Queen Gohma'"``). ``--shuffle Gift`` also
 moves the event gifts that can be changed (``clawshot.patch.gifts``); the others keep their items.
 ``--shuffle Scrub`` adds the four saved one-time scrub families; repeat vendors stay vanilla.
+``--shuffle BossHeart`` adds native-only boss-heart pickups (off; in-game acceptance pending).
 ``Token`` is reserved and refused until replacement-pickup persistence is verified.
 """
 
@@ -47,9 +48,12 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--shuffle",
         nargs="+",
-        choices=("Chest", "Shop", gifts.SHUFFLE, "Scrub", "Token"),
+        choices=("Chest", "Shop", gifts.SHUFFLE, "Scrub", "BossHeart", "Token"),
         default=None,
-        help="location types; Shop: native displays; Gift: supported gifts; Scrub: once sales; Token: not enabled",
+        help=(
+            "types; Shop: native displays; Gift: supported; Scrub: once sales; "
+            "BossHeart: native pickups; Token: disabled"
+        ),
     )
     parser.add_argument("--dungeon-items", choices=DUNGEON_ITEM_CHOICES)
     parser.add_argument(
