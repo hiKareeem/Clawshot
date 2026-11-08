@@ -130,8 +130,8 @@ type = "Chest"
 source = "census: a chest in the remake (5534919361313859554, one of the four MiniGame_DampeRace_OpenGoalTBox chests, Obj_Heart_Piece), like the race's Hookshot chest; plans/rounds/r2-census.md"
 
 [locations."Gerudo Training Ground Freestanding Key"]
-n64_only = "no freestanding small key in GerudoTrainingGround; its nine keys are all in chests (census)"
-source = "03-game-data.md section 9; plans/rounds/r2-census.md"
+type = "Chest"
+source = "track B (cs4b), thread cs-r4, 2026-11-07 20:08: the remake puts this key in a chest, census 1883068192328530224 (Dynamic, room 8, the east maze cell beside the lava door, next to the right-maze chests); same region (Central Maze Right)"
 
 # The six N64 Ice Trap chests are trap chests (Obj_TBox_A_04) that hold no item (03-game-data.md section 2); trap
 # chests stay out (D10, Kareem).
