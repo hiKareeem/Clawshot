@@ -432,3 +432,84 @@ strength requirement; it no longer needs Hookshot merely because N64 labels the 
 The strength-free version remains unverified. Targeted Shadow rerun **8 passed**; live smoke explicitly
 excludes `n64_only` checks, still collects all five keys from zero and wins. The spike-wall pot prints its
 exclusion reason (absent locations remain represented in `World`, but are excluded from placement).
+
+## Ganon's Castle and Tower
+
+Read every translated rule, Eurogamer's complete castle walkthrough and all trial-room Banc placements.
+Changed: Golden Gauntlets rock blocks Fire entrance; Shadow ending replaces Hammer with Golden Gauntlets
+(the chest's vanilla reward cannot be assumed when shuffled); ordinary Bow through the lit torch opens
+Shadow's first crossing. Forest wind-room exit now requires Time, Hover Boots and grapple as well as five
+rupees, until individual diamond names are paired. Spirit's ceiling web adds a fire-source requirement.
+Light's Lullaby chest is in the same room as the real key, needs no prior key, and gives a Green Rupee:
+corrected both its rule and vanilla pool item. A one-key rule cap alone had left two keys in the pool.
+Excluded the absent Spirit Invisible Chest and four hidden-room business scrubs; fairies remain.
+
+Checked/unchanged normal routes: Forest combat/torch door; Water bottle/Blue Fire/ice puzzle/Hammer;
+Shadow Hover crossing and Lens path; Fire Gauntlets/heat/rupees/Longshot exit; Light entrance Gauntlets,
+Lens key, one lock, boulder rupees and invisible ending; Spirit rupees/grated Bombchu switch/Mirror Shield;
+all six Light-Arrow clear events; six-trial tower gate; Lizalfos/Stalfos/Iron Knuckle combat abstraction;
+Boss Key chest/door; final Light-Arrow goal abstraction and tower pots. Light's extra red-rupee spawn chest
+has no old world name; it is not assigned a false identity.
+
+Source: https://www.eurogamer.net/inside-ganondorfs-castle-walkthrough-zelda-ocarina-of-time and
+Banc/InsideGanonCastle, build `e0f3ccfa`, read-only. In particular room 1 has rocks at both Fire/Light doors;
+Shadow room 8 has floor switches and a lift rock, while the only Hammer switch is Water room 6.
+
+**Kareem: pair Forest's five diamond names and test alternate jumps/short-Hookshot ranges. Can the Spirit
+ceiling web be burned by an ordinary arrow through a lit candle, or by Din's Fire from below? Can the Shadow
+rock or invisible chest-switch path be bypassed with Hover/Longshot? Does the final Light-Arrow-only solver
+goal faithfully cover the remake's combat/equipment requirements?** These alternatives are not certified.
+
+Shared ownership collision: attempting the Lens rule on `Ganons Castle Shadow Trial Golden Gauntlets Chest`
+printed `also set in remake.toml` (root owns its `vanilla_fixed`). Removed the duplicate; did not weaken the
+loader or invent a proxy region. **Reviewer/cs4a: please add `rule = "can_use(Lens_of_Truth)"`, `was = "True"`
+to that root entry, preserving its canonical reward, or explicitly verify a lensless route.** It currently
+retains the old optimistic `True` rule. Other castle corrections are independently usable.
+
+Verification: `uv run pytest tests/test_world_remake_adult_ganons_castle.py -q`: **7 passed**. Initial gate
+smoke showed Tunic-only Fire entrance true, Shadow Hammer/no-Gauntlets true and Gauntlets/no-Hammer false,
+and Forest five-rupees/no-gear true. Corrected route tests reverse those unsafe predicates. Live full-castle
+smoke starts without Golden Gauntlets (Fire closed), collects them from Shadow, clears all six trials,
+collects exactly one real small key and the Boss Key, reaches tower and wins; no blocked progression.
+In-game: check Fire's entrance rock, Shadow's stone/floor switch, and the Green-Rupee Lullaby chest before
+spending the one Light-trial key.
+
+## Haunted Wasteland / Mirage Desert
+
+Read every translated rule, Eurogamer's Mirage Desert route and both-age Banc inventory. Four old crates are
+excluded; the single physical crate at (-56,98.9,-55.2), age hashes `12727181966767362695` /
+`17072091790119450948`, is provisionally the geographically matching `Wasteland Crate Near Colossus`.
+Checked/unchanged: quicksand crossing's Hover/Longshot alternatives; Phantom Guide Lenses; ruin torches/fire
+chest; moved ruin token; salesman; reverse-desert setting and four pots. Source:
+https://www.eurogamer.net/zelda-ocarina-of-time-mirage-desert.
+
+**Kareem: does either Hover Boots or Longshot suffice alone for quicksand (the guide uses both)? Confirm the
+surviving crate's world-name pairing, ordinary-Hookshot token reach, salesman price/wallet and pot contents.**
+The ruin chest now contains a Business Scrub Seed, but that item has no world item representation on this
+base; its old nonprogression vanilla value is not falsely aliased to another item. **Reviewer: assign the new
+item's world representation before claiming vanilla-pool parity.** Live loading prints exactly one retained
+Wasteland crate. In-game: follow the ruin's three-torch puzzle and confirm the seed reward and crate position.
+
+### Remaining Gerudo/Colossus source findings
+
+Valley ledge heart is a chest, not a Collectable crate; corrected its shuffle kind. Existing `can_break_crate`
+already permits item-free collection, so no invented attack gate was removed. Excluded its separate obsolete
+crate, absent storm-grotto scrubs/beehive and eight absent underwater-grotto rupees. Fortress's old child
+freestanding heart is absent: the two remake hearts are roof chest and horseback archery. Archery thresholds
+are 750/1,400, not the retained N64 names 1,000/1,500 (rules do not encode score). Sources:
+https://www.eurogamer.net/zelda-ocarina-of-time-gerudo-valley and
+https://www.eurogamer.net/zelda-ocarina-of-time-gerudo-fortress.
+
+Colossus fairy wall accepts Hammer on the documented route. Read-only actor-pack inspection also shows
+`ReactionForHammerAttack` and `RequestDeathIfExploded`, so changed `has_explosives` to `can_blast_or_smash`,
+not Hammer-only. Source: https://zeldacentral.com/games/ocarina-of-time-remake/great-fairy-fountains/.
+Focused Castle/Colossus/Gerudo run **10 passed** before the final Light-key regression (now Castle has 7).
+Live search prints fairy wall Hammer true/Bomb Bag true and Valley heart type Chest.
+
+**Kareem: what opens the Valley underwater hole now that the silver rock is gone? Map the new grotto chests
+before adding world names; check the cow crate/waterfall wonderitems, fortress signs/crates and daytime
+archery admission. Is the old Fortress storms grotto actually the new always-open drop-hole, and are its old
+fairies gone? Does capture still permit all four jail rescue routes? Is Outside Ganon's Castle's fairy path
+barrier-gated as well as Gauntlets-gated?** Old uncertain gates/resources stay explicitly unverified; neither
+unknown grotto entrance was changed to an unconditional free passage. Fairy fees/night semantics remain
+the shared questions above.

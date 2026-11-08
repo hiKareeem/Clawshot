@@ -1,0 +1,53 @@
+# Ganon's Castle/Tower, remake e0f3ccfa. Banc/InsideGanonCastle read-only.
+# Walkthrough: https://www.eurogamer.net/inside-ganondorfs-castle-walkthrough-zelda-ocarina-of-time
+
+[exits."Ganons Castle Main"."Ganons Castle Fire Trial"]
+rule = "can_use(Golden_Gauntlets) and (logic_fewer_tunic_requirements or can_use(Goron_Tunic))"
+was = "logic_fewer_tunic_requirements or can_use(Goron_Tunic)"
+source = "Eurogamer section 7: lift the rock at the red door with Golden Gauntlets, then equip Goron Tunic. Banc main room 1 Obj_LiftRock_C_01 (-15.2,103.9,-48.3) blocks that door, not just the existing Light-trial entrance."
+
+[exits."Ganons Castle Shadow Trial Second Gap"."Ganons Castle Shadow Trial Ending"]
+rule = "can_use(Golden_Gauntlets) and (logic_lens_castle or can_use(Lens_of_Truth) or (Longshot and Hover_Boots))"
+was = "Megaton_Hammer and (logic_lens_castle or can_use(Lens_of_Truth) or (Longshot and Hover_Boots))"
+source = "Eurogamer section 6: lift the black-and-gold stone, step on the floor switch, then cross the invisible path. Banc room 8 has Obj_LiftRock_C_05 and two Obj_StepSwitch_A_01, no Hammer switch (the castle's Hammer switch is in Water room 6). The gauntlets cannot be assumed just because this trial's vanilla chest holds them: it may be shuffled."
+
+[exits."Ganons Castle Forest Trial Wind Room"."Ganons Castle Forest Trial Ending"]
+rule = "(Silver_Rupee_Ganons_Castle_Forest_Trial, 5) and can_play(Song_of_Time) and can_use(Hover_Boots) and can_use(Hookshot)"
+was = "(Silver_Rupee_Ganons_Castle_Forest_Trial, 5)"
+source = "Eurogamer section 3: one diamond uses the Time Block, another platform uses Hover Boots, and the raised pillar uses a grapple target. Banc room 3 has the Time Block/sign, step switch and target. Individual N64 diamond names are unpaired, so enforce the combined traversal at their onward door instead of guessing their identity. Short-Hookshot range and alternate jumps remain unverified."
+
+[exits."Ganons Castle Spirit Trial Second Room Back"."Ganons Castle Spirit Trial Ending"]
+rule = "is_adult and Bow and Mirror_Shield and has_fire_source"
+was = "is_adult and Bow and Mirror_Shield"
+source = "Eurogamer section 2: burn the ceiling web to admit light before the Mirror Shield sun switch. Banc room 17 Obj_InsideGanonCastle_SpiderWeb_A_01 Hash 11199917721416469949. A normal fire source is required conservatively; firing a plain arrow through a lit candle or other fire-source/range alternatives need an in-game check."
+
+[locations."Ganons Castle Spirit Trial Invisible Chest"]
+n64_only = "Spirit rooms 16/17 contain only the Crystal Switch Chest (Business Scrub Seed), not a second invisible chest"
+source = "Eurogamer section 2; complete Banc room-16/17 chest enumeration, build e0f3ccfa."
+
+[locations."Ganons Castle Deku Scrub Left"]
+n64_only = "the hidden room now contains fairies and pots, no business scrubs"
+source = "Eurogamer Collect a Fairy explicitly distinguishes the original's scrubs; Banc InsideGanonCastle contains no business-scrub actor."
+
+[locations."Ganons Castle Deku Scrub Center-Left"]
+n64_only = "the hidden room now contains fairies and pots, no business scrubs"
+source = "Eurogamer Collect a Fairy and Banc InsideGanonCastle, as for Ganons Castle Deku Scrub Left."
+
+[locations."Ganons Castle Deku Scrub Center-Right"]
+n64_only = "the hidden room now contains fairies and pots, no business scrubs"
+source = "Eurogamer Collect a Fairy and Banc InsideGanonCastle, as for Ganons Castle Deku Scrub Left."
+
+[locations."Ganons Castle Deku Scrub Right"]
+n64_only = "the hidden room now contains fairies and pots, no business scrubs"
+source = "Eurogamer Collect a Fairy and Banc InsideGanonCastle, as for Ganons Castle Deku Scrub Left."
+
+[exits."Ganons Castle Shadow Trial"."Ganons Castle Shadow Trial First Gap"]
+rule = "can_use(Longshot) or can_use(Bow)"
+was = "can_use(Longshot) or can_use(Fire_Arrows)"
+source = "Eurogamer section 5: shoot an ordinary arrow through the lit torch into the unlit torch to raise the platforms. No Fire Arrows are required for this documented route; the grapple-target Longshot alternative remains."
+
+[locations."Ganons Castle Light Trial Lullaby Chest"]
+rule = "can_play(Zeldas_Lullaby)"
+was = "(Small_Key_Ganons_Castle, 1) and can_play(Zeldas_Lullaby)"
+vanilla = "Rupee (1)"
+source = "Eurogamer section 8: the Lens-only chest and Triforce chest are in the same room before the single locked boulder-room door; Lullaby spawns a Green Rupee, not a second small key. Banc room 13 holds both chests and the Triforce point. Keep the root key-count cap of one, but also remove the phantom second key from the vanilla pool."

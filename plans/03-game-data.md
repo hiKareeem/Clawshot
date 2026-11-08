@@ -684,3 +684,30 @@ Sources:
 - https://www.nintendolife.com/guides/zelda-ocarina-of-time-gold-skulltula-locations-rewards-switch-2#gold-skulltula-95
 - https://www.eurogamer.net/all-gold-skulltulas-locations-zelda-ocarina-of-time
 - Banc/DesertColossus child/adult placements, read-only, build `e0f3ccfa`.
+
+### Ganon's Castle/Tower and remaining desert findings
+
+Fire entrance and Shadow's exit stone require Golden Gauntlets. Shadow's first torch accepts an ordinary
+arrow through the lit torch, not just Fire Arrows; its exit uses a floor switch, not Hammer. Forest's wind
+trial needs Time/Hover/grapple traversal; Spirit has a ceiling web requiring fire before reflected light.
+Light's Lullaby chest is before the single lock and gives a Green Rupee, not a second small key. Both its
+rule and vanilla item are corrected; a one-key rule cap alone had left a phantom second key in the pool.
+Four castle scrubs and Spirit Invisible Chest are absent. A live six-trial route wins with exactly one key.
+
+The root override owns Shadow's Golden Gauntlets chest; its Lens-path rule needs an owner-side update,
+recorded in the round file, rather than a duplicate adult entry. Night/first-fairy/fees, lensless paths,
+grapple ranges and plain-arrow fire transfer remain explicit review/in-game questions.
+
+Valley's ledge heart is a Chest; obsolete grotto scrubs, hive, eight underwater rupees and its old heart crate
+are excluded. Fortress's child freestanding heart is absent; HBA thresholds are 750/1,400 (old names retained).
+Wasteland retains one physical crate, provisionally the Colossus-side name; its Business Scrub Seed chest
+needs a world-item representation before vanilla-pool parity can be claimed. Colossus fairy wall accepts
+Hammer and explosions, corroborated by its actor parameters.
+
+Sources:
+- https://www.eurogamer.net/inside-ganondorfs-castle-walkthrough-zelda-ocarina-of-time
+- https://www.eurogamer.net/zelda-ocarina-of-time-mirage-desert
+- https://www.eurogamer.net/zelda-ocarina-of-time-gerudo-valley
+- https://www.eurogamer.net/zelda-ocarina-of-time-gerudo-fortress
+- https://zeldacentral.com/games/ocarina-of-time-remake/great-fairy-fountains/
+- Read-only Banc inventories and Colossus cracked-wall actor parameters, build `e0f3ccfa`.
