@@ -112,3 +112,89 @@ Failures were diagnosed, not retried unchanged:
   raw/rounded/allocation/row count, added the measured own-file formula, then the aimed rerun passed.
 - Coordination database metadata confirms **no cs-r7 thread exists**; no message data edited/read through
   SQL, no thread created. Shared writer/formats changes are isolated commits for review; post remains blocked.
+
+## Item 3: exact gift-actor gaps and one player output
+
+Read-only `inventory_gifts.py` scanned all **148 gift steps / 82 distinct actors**, joined linked
+checks/rules and current seed eligibility, and compared exact actors with native chest contents and
+sourced observations. Full identifier/check inventory stays in external `unverified-gifts.json`.
+The raw difference is 77; `Obj_Shield_Deku` has the explicit successful round-5 chest result and is
+therefore not listed as unobserved below. This leaves **76 exact-actor evidence gaps**. Raw pickup
+rupee spellings are not silently equated to tested `TBox_Rupee_*` display/grant paths.
+
+Only the existing Minuet observation was added to the shared allowlist: `0cd8feb` (settings-only).
+Storms and Fairy Ocarina were already recorded. The other ten ordinary songs keep the reviewer-approved
+family inference in opt-in anywhere mode; **no newly prepared gift experiment releases any actor**.
+The unlinked/repeat/upgrade/class-three entries below are an inventory, not requests to shuffle them.
+
+### Current shuffle, non-song (25)
+
+- `Item_AgonyStone`, `Item_Arrow_Light`, `Item_Bottle`, `Item_Bottle_Milk`.
+- `Item_BrokenSword`, `Item_ClaimCheck`, `Item_CojiroCucco`, `Item_DinFire`.
+- `Item_FairyBless_DefenseDouble`, `Item_FaroreWind`, `Item_NayruLove`, `Item_Ocarina_Time`.
+- `Item_OddPowder`, `Item_PoacherSaw`, `Item_PocketEgg`, `Item_Prescription`.
+- `Item_Scale_Gold`, `Item_Scale_Silver`, `Item_Sword_Biggoron`, `Item_Token_Gerudo`.
+- `Item_Wallet_Large`, `Item_Wallet_Medium`, `Item_WeirdEgg`, `Item_ZeldaLetter`.
+- `Obj_Rupee_Gold`.
+
+### Song family inferred, not individually observed (10)
+
+- `Item_Melody_EponaSong`, `Item_Melody_FireBolero`, `Item_Melody_LightPrelude`, `Item_Melody_SariaSong`.
+- `Item_Melody_ShadowNocturne`, `Item_Melody_SpiritRequiem`, `Item_Melody_SunSong`, `Item_Melody_TimeSong`.
+- `Item_Melody_WaterSerenade`, `Item_Melody_ZeldaLullaby`.
+
+### Held/unlinked/class-three or mismatched-tier actors (41)
+
+- `Item_AlarmCucco`, `Item_BombBag_Large`, `Item_BombBag_Medium`, `Item_BombchuBundle_Large`.
+- `Item_BombchuBundle_Medium`, `Item_BulletBag_Large`, `Item_BulletBag_Medium`, `Item_EyeDrop`.
+- `Item_EyeballFrog`, `Item_FairyBless_MP`, `Item_FairyBless_MPDouble`, `Item_Gauntlet_Goron`.
+- `Item_MagicBean`, `Item_Mask_Truth`, `Item_Medal_Fire`, `Item_Medal_Forest`.
+- `Item_Medal_Light`, `Item_Medal_Shadow`, `Item_Medal_Spirit`, `Item_Medal_Water`.
+- `Item_Melody_ScarecrowSong`, `Item_NutBag_Large`, `Item_NutBag_Medium`, `Item_OddMushroom`.
+- `Item_PocketCucco`, `Item_Quiver_Large`, `Item_Quiver_Medium`, `Item_StickBag_Large`.
+- `Item_StickBag_Medium`, `Item_Stone_Fire`, `Item_Stone_Forest`, `Item_Stone_Water`.
+- `Obj_Armor_Goron`, `Obj_Armor_Zora`, `Obj_Rupee_Blue`, `Obj_Rupee_Purple`.
+- `Obj_Rupee_Red`, `Pouch_Amiibo`, `Shop_BombchuBundle_01`, `Shop_Sword_Giant`.
+- `Weapon_Sword_Master`.
+
+### Controlled output
+
+One launcher: `E:/OOTRemake/work/r7-getitem/ingame/Test - chest-gift-models.bat`.
+Overlay: adjacent `chest-gift-models/romfs`; empty new-game user `user-chest-gift-models`.
+Checklist: `ingame/checklist.md`; read-only post-play report `ingame/check_save.py`.
+Built by `build_chest_gifts.py` through the real `ChestChange`/`Plan`/common writer and `getitem.changes`.
+This is an explicit controlled experiment, **not a search-certified playable seed**.
+
+| Place / Hash | Item and expected evidence |
+|---|---|
+| Mido middle-left / `12786193094758345086` | Fairy Ocarina first: brown native model, correct text and usable ocarina |
+| Mido far-left / `4555665598794293658` | Storms: brown-ocarina stand-in rather than green rupee; correct song text; play outside and get rain |
+| Mido middle-right / `10831981390482426294` | Din's Fire: native model/text, usable spell and magic gauge |
+| Mido far-right / `9725242744547055868` | Adult Wallet: native model/text and 500 capacity |
+| Training-area ledge / `16757992849254467386` | Ocarina of Time: blue native model/text, usable upgraded ocarina; Storms retained; **no sword/equip/cutscene** |
+| Storms grotto / `14818888396401495482` | Echo Gem: native model/text, equipment/Skulltula signal, retained after Continue; conditional native puzzle check |
+
+Five are reachable without progression items. The sixth uses the ocarina/Storms from the first two;
+its native scrub order/chest appearance remains a research question, not a made-up gate. The checklist
+explains the vanilla 40-rupee shop Deku Shield if required (no price patch). The sword chest no longer
+supplies a sword, so the experiment cannot rely on kept Mido/free merchant access. The upper bridge
+ledge's seventh chest stays untouched because its route is unresolved; no chest was moved/duplicated
+and no new saved flag or world requirement was created merely to pack more tests into this output.
+
+**Kareem: run that one new-game launcher; report each model AND actual item use/menu/capacity, then
+Save/Continue persistence. Does the patched Fairy/Time Ocarina still play normally, including after
+Time replaces Fairy? Does Storms retain its song identity despite its stand-in model? Does the grotto
+chest appear with the native puzzle, or is an additional prerequisite needed?** The exact overlay-open
+paths and crash-stop instruction are in the short external checklist. No game run by the agent.
+
+Observed build: **six saved Hashes, four Banc files, three actor packs, ActorInfo and size table = nine
+resources**. Independent inverse tree comparison over every placement file allows only six drop values
+and removal of the unsafe sword event. All other actors/groups/transforms/flags are identical.
+All output resources parse/fit the effective table; SHA256 of every input resource was unchanged after
+building. No generated data or launcher is committed in the repository. Static read-back of the saved
+launcher confirms only the bin executable, update-check suppression, missing-exe stop, isolated user,
+correct overlay/log and no backup or main-user access. No batch/dry-run execution.
+
+Small diagnosed edit failure: the save-checker footer patch named a nonexistent line; the tool refused
+atomically. Re-read the exact footer, removed the unverified wallet-data lookup and kept wallet capacity
+as a UI observation. No source save was opened or fabricated to validate a guessed key.
