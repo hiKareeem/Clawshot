@@ -55,6 +55,14 @@ class Search:
         self._initial_counts = dict(self.counts)
 
     @classmethod
+    def child_only(cls, world: World, items: Iterable[str] = ()) -> "Search":
+        """A child-only collection proof: adult regions, events and finds cannot supply prerequisites."""
+        search = cls(world, items)
+        search._starting_child = True
+        search._adult_enabled = False
+        return search
+
+    @classmethod
     def adult_after_pull(cls, world: World, items: Iterable[str] = ()) -> "Search":
         """An actual adult phase: no further child collection until return, with the pull already performed."""
         search = cls(world, items)
