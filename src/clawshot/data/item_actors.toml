@@ -119,3 +119,45 @@
 "Buy Bombchu (8)" = { actor = "Shop_BombchuBundle_06", source = "PouchActorInfo Shop_BombchuBundle_06; native Shop actor pack, build e0f3ccfa" }
 "Buy Bombchu (15)" = { actor = "Shop_BombchuBundle_07", source = "PouchActorInfo Shop_BombchuBundle_07; native Shop actor pack, build e0f3ccfa" }
 "Buy Bombchu (30)" = { actor = "Shop_BombchuBundle_08", source = "PouchActorInfo Shop_BombchuBundle_08; native Shop actor pack, build e0f3ccfa" }
+#
+# Gift items (round 5, track D): the actor the linked census gift step gives (src/clawshot/patch/gift_rules.toml,
+# plans/03-game-data.md section 19). Given from a gift step in the game; not yet seen in a chest.
+"Adult Wallet" = { actor = "Item_Wallet_Medium", source = "gift: Kak 10 Gold Skulltula Reward" }
+"Biggoron Sword" = { actor = "Item_Sword_Biggoron", source = "gift: DMT Biggoron" }
+"Bolero of Fire" = { actor = "Item_Melody_FireBolero", source = "gift: Sheik in Crater" }
+"Bottle" = { actor = "Item_Bottle", source = "gift: Kak Anju as Child, Market 10 Big Poes" }
+"Bottle with Milk" = { actor = "Item_Bottle_Milk", source = "gift: LLR Talons Chickens" }
+"Broken Sword" = { actor = "Item_BrokenSword", source = "gift: GV Trade Poachers Saw" }
+"Claim Check" = { actor = "Item_ClaimCheck", source = "gift: DMT Trade Eyedrops" }
+"Cojiro" = { actor = "Item_CojiroCucco", source = "gift: Kak Anju Trade Pocket Cucco" }
+"Dins Fire" = { actor = "Item_DinFire", source = "gift: DMT Great Fairy Reward" }
+"Double Defense" = { actor = "Item_FairyBless_DefenseDouble", source = "gift: OGC Great Fairy Reward" }
+"Eponas Song" = { actor = "Item_Melody_EponaSong", source = "gift: Song from Malon" }
+"Fairy Ocarina" = { actor = "Item_Ocarina_Fairy", source = "gift: LW Gift from Saria" }
+"Farores Wind" = { actor = "Item_FaroreWind", source = "gift: ZF Great Fairy Reward" }
+"Gerudo Membership Card" = { actor = "Item_Token_Gerudo", source = "gift: Hideout Gerudo Membership Card" }
+"Giant Wallet" = { actor = "Item_Wallet_Large", source = "gift: Kak 30 Gold Skulltula Reward" }
+"Golden Scale" = { actor = "Item_Scale_Gold", source = "gift: LH Adult Fishing" }
+"Goron Bracelet" = { actor = "Item_Gauntlet_Goron", source = "gift: GC Darunias Joy" }
+"Light Arrows" = { actor = "Item_Arrow_Light", source = "gift: ToT Light Arrows Cutscene" }
+"Minuet of Forest" = { actor = "Item_Melody_ForestMinuet", source = "gift: Sheik in Forest" }
+"Nayrus Love" = { actor = "Item_NayruLove", source = "gift: Colossus Great Fairy Reward" }
+"Nocturne of Shadow" = { actor = "Item_Melody_ShadowNocturne", source = "gift: Sheik in Kakariko" }
+"Ocarina of Time" = { actor = "Item_Ocarina_Time", source = "gift: HF Ocarina of Time Item" }
+"Odd Potion" = { actor = "Item_OddPowder", source = "gift: Kak Granny Trade Odd Mushroom" }
+"Poachers Saw" = { actor = "Item_PoacherSaw", source = "gift: LW Trade Odd Potion" }
+"Pocket Egg" = { actor = "Item_PocketEgg", source = "gift: Kak Anju as Adult" }
+"Prelude of Light" = { actor = "Item_Melody_LightPrelude", source = "gift: Sheik at Temple" }
+"Prescription" = { actor = "Item_Prescription", source = "gift: DMT Trade Broken Sword" }
+"Requiem of Spirit" = { actor = "Item_Melody_SpiritRequiem", source = "gift: Sheik at Colossus" }
+"Rupees (200)" = { actor = "Obj_Rupee_Gold", source = "gift: Kak 100 Gold Skulltula Reward" }
+"Sarias Song" = { actor = "Item_Melody_SariaSong", source = "gift: Song from Saria" }
+"Serenade of Water" = { actor = "Item_Melody_WaterSerenade", source = "gift: Sheik in Ice Cavern" }
+"Silver Scale" = { actor = "Item_Scale_Silver", source = "gift: ZD Diving Minigame" }
+"Song of Storms" = { actor = "Item_Melody_StormSong", source = "gift: Song from Windmill" }
+"Song of Time" = { actor = "Item_Melody_TimeSong", source = "gift: Song from Ocarina of Time" }
+"Stone of Agony" = { actor = "Item_AgonyStone", source = "gift: Kak 20 Gold Skulltula Reward" }
+"Suns Song" = { actor = "Item_Melody_SunSong", source = "gift: Song from Royal Familys Tomb" }
+"Weird Egg" = { actor = "Item_WeirdEgg", source = "gift: HC Malon Egg" }
+"Zeldas Letter" = { actor = "Item_ZeldaLetter", source = "gift: HC Zeldas Letter" }
+"Zeldas Lullaby" = { actor = "Item_Melody_ZeldaLullaby", source = "gift: Song from Impa" }
