@@ -24,6 +24,7 @@ from typing import Any
 
 from clawshot.world.model import DUNGEON_ITEM_TYPES, Event, Exit, Item, Location, Region, World
 from clawshot.world.rules import ALL_TIMES, DAY, NIGHT, Compiler, ItemFacts, RuleError
+from clawshot.world.shops import apply_shop_data
 
 DATA_DIR = Path(__file__).resolve().parents[1] / "data" / "world"
 
@@ -70,6 +71,9 @@ def load_spec(directory: Path = DATA_DIR) -> dict[str, Any]:
         main = directory / meta["overrides"]
         more = sorted((main.parent / main.stem).glob("*.toml"), key=lambda path: path.name)
         apply_overrides(spec, [(path.relative_to(directory).as_posix(), _read(path)) for path in [main, *more]])
+    shop_data = directory.parent / "shops.toml"
+    if shop_data.is_file():
+        apply_shop_data(spec, _read(shop_data))
     return spec
 
 
