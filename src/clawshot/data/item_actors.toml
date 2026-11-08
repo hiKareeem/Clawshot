@@ -83,3 +83,39 @@
 "Small Key (Bottom of the Well)" = { actor = "Item_Dungeon_SmallKey", source = "census: 1 chest in BottomOfTheWell" }
 "Small Key (Gerudo Training Ground)" = { actor = "Item_Dungeon_SmallKey", source = "census: 9 chests in GerudoTrainingGround" }
 "Small Key (Ganons Castle)" = { actor = "Item_Dungeon_SmallKey", source = "census: 1 chest in InsideGanonCastle" }
+
+# Native shop pouch actors may also be granted through the chest get event.
+# Counts/targets come from PouchActorInfo; in-game certification remains per family (D15).
+"Goron Tunic" = { actor = "Shop_Armor_Goron", source = "PouchActorInfo Shop_Armor_Goron; native Shop actor pack, build e0f3ccfa" }
+"Zora Tunic" = { actor = "Shop_Armor_Zora", source = "PouchActorInfo Shop_Armor_Zora; native Shop actor pack, build e0f3ccfa" }
+"Buy Heart" = { actor = "Shop_Heart", source = "PouchActorInfo Shop_Heart; native Shop actor pack, build e0f3ccfa" }
+"Buy Magic Jar" = { actor = "Shop_MagicJar_Small", source = "PouchActorInfo Shop_MagicJar_Small; native Shop actor pack, build e0f3ccfa" }
+"Buy Deku Nut (5)" = { actor = "Shop_DekuNutBundle_01", source = "PouchActorInfo Shop_DekuNutBundle_01; native Shop actor pack, build e0f3ccfa" }
+"Buy Deku Nut (10)" = { actor = "Shop_DekuNutBundle_02", source = "PouchActorInfo Shop_DekuNutBundle_02; native Shop actor pack, build e0f3ccfa" }
+"Buy Deku Stick (1)" = { actor = "Shop_DekuStick", source = "PouchActorInfo Shop_DekuStick; native Shop actor pack, build e0f3ccfa" }
+"Buy Deku Stick (5)" = { actor = "Shop_DekuStickBundle_Medium", source = "PouchActorInfo Shop_DekuStickBundle_Medium; native Shop actor pack, build e0f3ccfa" }
+"Buy Deku Seeds (10)" = { actor = "Shop_DekuSeedBundle_02", source = "PouchActorInfo Shop_DekuSeedBundle_02; native Shop actor pack, build e0f3ccfa" }
+"Buy Deku Seeds (30)" = { actor = "Shop_DekuSeedBundle_01", source = "PouchActorInfo Shop_DekuSeedBundle_01; native Shop actor pack, build e0f3ccfa" }
+"Buy Fish" = { actor = "Shop_Bottle_Fish", source = "PouchActorInfo Shop_Bottle_Fish; native Shop actor pack, build e0f3ccfa" }
+"Buy Bottle Bug" = { actor = "Shop_Bottle_Bug", source = "PouchActorInfo Shop_Bottle_Bug; native Shop actor pack, build e0f3ccfa" }
+"Buy Blue Fire" = { actor = "Shop_Bottle_BlueFire", source = "PouchActorInfo Shop_Bottle_BlueFire; native Shop actor pack, build e0f3ccfa" }
+"Buy Fairy's Spirit" = { actor = "Shop_Bottle_Fairy", source = "PouchActorInfo Shop_Bottle_Fairy; native Shop actor pack, build e0f3ccfa" }
+"Buy Red Potion for 30 Rupees" = { actor = "Shop_Bottle_RedPotion", source = "PouchActorInfo Shop_Bottle_RedPotion; native Shop actor pack, build e0f3ccfa" }
+"Buy Green Potion" = { actor = "Shop_Bottle_GreenPotion", source = "PouchActorInfo Shop_Bottle_GreenPotion; native Shop actor pack, build e0f3ccfa" }
+"Buy Half Milk" = { actor = "Shop_Bottle_HalfMilk", source = "PouchActorInfo Shop_Bottle_HalfMilk; native Shop actor pack, build e0f3ccfa" }
+"Buy Poe" = { actor = "Shop_Bottle_Poe", source = "PouchActorInfo Shop_Bottle_Poe; native Shop actor pack, build e0f3ccfa" }
+"Buy Arrows (10)" = { actor = "Shop_ArrowBundle_01", source = "PouchActorInfo Shop_ArrowBundle_01; native Shop actor pack, build e0f3ccfa" }
+"Buy Arrows (30)" = { actor = "Shop_ArrowBundle_02", source = "PouchActorInfo Shop_ArrowBundle_02; native Shop actor pack, build e0f3ccfa" }
+"Buy Arrows (50)" = { actor = "Shop_ArrowBundle_03", source = "PouchActorInfo Shop_ArrowBundle_03; native Shop actor pack, build e0f3ccfa" }
+"Buy Bombs (5) for 35 Rupees" = { actor = "Shop_BombBundle_01", source = "PouchActorInfo Shop_BombBundle_01; native Shop actor pack, build e0f3ccfa" }
+"Buy Bombs (10)" = { actor = "Shop_BombBundle_02", source = "PouchActorInfo Shop_BombBundle_02; native Shop actor pack, build e0f3ccfa" }
+"Buy Bombs (20)" = { actor = "Shop_BombBundle_03", source = "PouchActorInfo Shop_BombBundle_03; native Shop actor pack, build e0f3ccfa" }
+"Buy Bombs (30)" = { actor = "Shop_BombBundle_04", source = "PouchActorInfo Shop_BombBundle_04; native Shop actor pack, build e0f3ccfa" }
+"Buy Bombchu (10)" = { actor = "Shop_BombchuBundle_01", source = "PouchActorInfo Shop_BombchuBundle_01; native Shop actor pack, build e0f3ccfa" }
+"Buy Bombchu (20)" = { actor = "Shop_BombchuBundle_02", source = "PouchActorInfo Shop_BombchuBundle_02; native Shop actor pack, build e0f3ccfa" }
+"Buy Bombchu (1)" = { actor = "Shop_BombchuBundle_03", source = "PouchActorInfo Shop_BombchuBundle_03; native Shop actor pack, build e0f3ccfa" }
+"Buy Bombchu (3)" = { actor = "Shop_BombchuBundle_04", source = "PouchActorInfo Shop_BombchuBundle_04; native Shop actor pack, build e0f3ccfa" }
+"Buy Bombchu (5)" = { actor = "Shop_BombchuBundle_05", source = "PouchActorInfo Shop_BombchuBundle_05; native Shop actor pack, build e0f3ccfa" }
+"Buy Bombchu (8)" = { actor = "Shop_BombchuBundle_06", source = "PouchActorInfo Shop_BombchuBundle_06; native Shop actor pack, build e0f3ccfa" }
+"Buy Bombchu (15)" = { actor = "Shop_BombchuBundle_07", source = "PouchActorInfo Shop_BombchuBundle_07; native Shop actor pack, build e0f3ccfa" }
+"Buy Bombchu (30)" = { actor = "Shop_BombchuBundle_08", source = "PouchActorInfo Shop_BombchuBundle_08; native Shop actor pack, build e0f3ccfa" }
