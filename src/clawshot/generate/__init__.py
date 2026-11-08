@@ -120,6 +120,7 @@ def spoiler(seed: Seed) -> dict[str, Any]:
         "generator": f"clawshot {version('clawshot')}",
         "seed": seed.seed,
         "settings": seed.settings.as_dict(),
+        "settings_string": seed.settings.to_string(),
         "placements": {name: seed.placements[name] for name in seed.shuffled},
         "spheres": [sphere for sphere in spheres if sphere],
     }
