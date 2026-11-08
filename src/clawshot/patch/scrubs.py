@@ -141,7 +141,14 @@ def seed_setup(spec: Mapping[str, Any], settings: Settings):
         elif info.get("type") in ("Scrub", "GrottoScrub") and not info.get("keep_vanilla"):
             info = {**info, "keep_vanilla": "scrub shuffle: repeat/rotating vendor, not a saved one-time family"}
         locations[name] = info
-    spec = {**spec, "locations": locations}
+    spec = {
+        **spec,
+        "locations": locations,
+        "settings": {
+            **spec.get("settings", {}),
+            "scrub_sale_prices": {name: sale.price for name, sale in SALES.items()},
+        },
+    }
     held = dict(settings.item_location_types)
     for item in CAPACITIES:
         held[item] = (SHUFFLE,) if item not in held else tuple(t for t in held[item] if t == SHUFFLE)
