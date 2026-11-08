@@ -7,6 +7,8 @@ or patch-layer imports are needed to build/search a world.
 from collections.abc import Mapping
 from typing import Any
 
+from clawshot.settings import shop_price
+
 
 def apply_shop_data(spec: dict[str, Any], data: Mapping[str, Any]) -> None:
     native = data["items"]
@@ -20,6 +22,7 @@ def apply_shop_data(spec: dict[str, Any], data: Mapping[str, Any]) -> None:
         spec["items"][name] = {**old, "class": entry["class"]}
     regions = {name: region for region in spec["regions"] for name in region.get("locations", {})}
     slots = {}
+    price_rules = spec.setdefault("shop_price_rules", {})
     for slot in data["slot"]:
         if slot["vanilla_item"] in by_actor:
             slots.setdefault(slot["location"], []).append(slot)
@@ -34,12 +37,49 @@ def apply_shop_data(spec: dict[str, Any], data: Mapping[str, Any]) -> None:
         if info["type"] != "Shop":
             raise ValueError(f"shops.toml: {name} is not a Shop location")
         spec["locations"][name] = {**info, "vanilla": item, "override": "shops.toml: shelf/seller census"}
-        price = max(slot["price"] for slot in copies)
-        wallet = next((tier["rule"] for tier in data["wallet"] if price <= tier["capacity"]), "False")
+        price = shop_price(copies[0]["shop"], copies[0]["vanilla_item"], max(slot["price"] for slot in copies))
         old = regions[name]["locations"][name]
         old_rule = old if isinstance(old, str) else old["rule"]
         availability = data.get("availability", {}).get(name, {}).get("rule", "True")
-        regions[name]["locations"][name] = {
-            "rule": f"({old_rule}) and ({wallet}) and ({availability})",
-            "source": f"shops.toml: price {price}; 200/500/1000 wallets; original shelf releases",
+        price_rules[name] = {
+            "shop": copies[0]["shop"],
+            "actor": copies[0]["vanilla_item"],
+            "price": max(slot["price"] for slot in copies),
+            "base_rule": f"({old_rule}) and ({availability})",
+            "wallet": data["wallet"],
         }
+        regions[name]["locations"][name] = _priced_rule(price_rules[name], price)
+
+
+def _priced_rule(entry: Mapping[str, Any], price: int) -> dict[str, str]:
+    wallet = next((tier["rule"] for tier in entry["wallet"] if price <= tier["capacity"]), "False")
+    return {
+        "rule": f"({entry['base_rule']}) and ({wallet})",
+        "source": f"shops.toml/settings.toml: price {price}; 200/500/1000 wallets; original shelf releases",
+    }
+
+
+def with_shop_prices(
+    spec: Mapping[str, Any], shuffle: tuple[str, ...], policy: str, cheap_shield: bool
+) -> Mapping[str, Any]:
+    """Recompile only price predicates on a copy; no old wallet clause survives affordable mode."""
+    entries = spec.get("shop_price_rules", {})
+    if not entries:
+        return spec
+    rules = {}
+    for name, entry in entries.items():
+        # Kokiri's original slots all fit the starting wallet (5–40 rupees); moving a cheap
+        # shield within that shop cannot change its wallet tier. Affordable is slot-wide.
+        info = spec["locations"][name]
+        shuffled = "Shop" in shuffle and not info.get("keep_vanilla") and not info.get("n64_only")
+        price = shop_price(
+            entry["shop"], entry["actor"], entry["price"], shuffled=shuffled, policy=policy, cheap_shield=cheap_shield
+        )
+        rules[name] = _priced_rule(entry, price)
+    regions = []
+    for region in spec["regions"]:
+        locations = region.get("locations", {})
+        if locations.keys() & rules.keys():
+            region = {**region, "locations": {name: rules.get(name, rule) for name, rule in locations.items()}}
+        regions.append(region)
+    return {**spec, "regions": regions}
