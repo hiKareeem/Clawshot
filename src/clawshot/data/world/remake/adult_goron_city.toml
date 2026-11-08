@@ -1,0 +1,4 @@
+[locations."GC GS Center Platform"]
+rule = "can_use(Hookshot)"
+was = "is_adult"
+source = "https://www.nintendolife.com/guides/zelda-ocarina-of-time-gold-skulltula-locations-rewards-switch-2#gold-skulltula-46: token is on the ceiling near the north side of the entrance, reached with Hookshot, not simply by being adult. Census Hash 18139423190738716302 is adult-only."
