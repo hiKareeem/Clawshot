@@ -38,3 +38,24 @@ The inherited component's exact runtime-allocation formula is not yet claimed. C
 ### Shared-file request
 
 The required correction needs the common writer to include embedded ShopParam allocations in its single size-table transaction, after all price/sale transforms compose. Proposed isolated `patch/write.py` commit: invoke a shop-owned allocation updater on final actor-pack bytes; take the maximum across all copies, never lower existing entries, and emit the table if a nested entry changed even when no outer entry grew. Keep all price policy in cs6b's code. This avoids a forbidden second size-table transform or writing loose copies of packed game resources.
+
+## Item 2: isolated save-copy bisects
+
+Built eight external overlays with independent users and copied, statically checked launchers under `E:/OOTRemake/work/r6-shopfix/`. `checklist.md` gives the short route and `bisect-manifest.json` records files and allocation deltas. Copied the corrected `r5-gifts/ingame/Test - talon-boomerang.bat` template, retaining **only** `E:\Games\Hookshot\bin\hookshot.exe`, `HOOKSHOT_NO_UPDATE_CHECK=1`, missing-exe stop and explicit `--user`. No batch was executed, including dry-run mode.
+
+Starting save: byte-identical copies of `2026-11-07_llr-tower-before-pickup`, known child ranch checkpoint (manual slot 01); leave ranch, cross north Hyrule Field to Castle Town, Sun's Song if night. This is closer than the new Dodongo snapshot. Read-only inspection confirmed all 24 backup slots are child; the newer snapshot's saved scene is `DodongoCavern`, while older manual saves use an empty reserved scene string, so the known ranch provenance is used rather than inventing a scene from that empty field.
+
+| Suffix after `Test - ` | Controlled overlay |
+|---|---|
+| `01-potion-alone` | Suspect Market Potion pack alone + outer-size table |
+| `02-potion-allocation-fixed` | Identical pack bytes; only member allocation 7984 -> 8080 |
+| `03-bazaar-alone` | Market Bazaar pack alone + outer-size table |
+| `04-bombchu-alone` | Market Bombchu pack alone + outer-size table |
+| `05-market-banc-alone` | Market child Static only + outer-size table |
+| `06-market-all` | Three suspect Market packs + Market Static + outer-size table |
+| `07-market-allocations-fixed` | Identical 06 packs/Banc; only Bazaar +64 and Potion +96 embedded entries raised |
+| `08-seed-potion-reverted` | All original seed-shop-7 resources, but Potion child pack restored byte-identically from dump |
+
+**Kareem: try 07 first: enter town, then Bazaar and Potion Shop, open their menus, quit.** The hypothesis predicts a successful load with changed native shelves. If successful, 02 isolates the same correction to one pack (shelves remain vanilla). Deliberate crash controls 01/06 are optional only if Claude needs confirmation; do not replay eight runs unnecessarily. Logs are inside each `user-<suffix>/hookshot_log.txt`; look for the table and selected files `from the overlay`. Success remains unobserved.
+
+`uv run python E:/OOTRemake/work/r6-shopfix/build_bisects.py` completed: all eight overlays decompressed/parsed; eight user copies matched every source save byte; paired 01/02 and 06/07 pack/Banc bytes matched; SHA256 of all backup files and original seed files unchanged. Statically checked every launcher for bin executable, updater suppression, missing-exe stop, isolated user/log/overlay and no work-build fallback. No original seed/user or backup was changed. Full repository gates will run on the completed item-3 fix before code readiness is posted.
