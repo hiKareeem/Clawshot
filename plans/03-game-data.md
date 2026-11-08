@@ -501,6 +501,14 @@ This is Kareem's guide table: the summit fountain gives Din's Fire, Hyrule Castl
   Power's `IsGet.Item_FairyBless_MP`, ...) and `IsGet.Item_DinFire` as the gate for the other five. A seed that puts
   another item at a fountain, or Din's Fire elsewhere, must keep both working as the logic assumes [inference].
 
+**In game (Kareem, 2026-11-08, `E:/OOTRemake/work/r5-seed/seed-shop-7`, child with the Kokiri Sword and a Hylian
+Shield, no Deku Shield):** the Deku Tree room before the Slingshot room locks Link in with a Deku Scrub. The sword
+and Deku Sticks can't reach it, Deku Nuts don't stop it, and **a child's Hylian Shield does not reflect its nuts**.
+So OoT Randomizer's `here(has_shield)` (a child needs the Deku Shield) holds in the remake; the seed's logic asked for
+it (the Deku Shield at KF Shop Item 6, after Mido), but its play note named only the Hylian Shield. Whether the
+Slingshot or Boomerang beat the scrub is untested (Kareem expects they do; both are inside that seed's Slingshot
+room).
+
 ## 13. Round 4: adult remake logic (cs4b)
 
 Audit evidence, unresolved alternatives and reproducible checks are in `plans/rounds/r4-logic-adult.md`.
