@@ -155,10 +155,43 @@ def test_dump_gift_shuffle_slice_writes_each_moved_gift(romfs, tmp_path):
     rules = gifts.load()
     for name in seed.shuffled:
         if name in rules:
-            assert rules[name].cls != gifts.MORE and not (rules[name].given and rules[name].flag is None), name
+            assert rules[name].cls != gifts.MORE, name
     held = settings.item_location_types
     assert held, "no gift item is held"
     for name, item in seed.placements.items():
         if name in seed.shuffled and item in held:
             assert seed.world.locations[name].type in held[item], (name, item)
     print(f"moved gifts: {[(n, seed.placements[n]) for n in moved]}")
+
+
+@pytest.mark.dump
+def test_dump_gift_shuffle_moves_great_fairies_through_their_new_flags(romfs):
+    from clawshot.generate import Settings, prepare
+    from clawshot.world.load import load_spec
+
+    spec, settings, step = gifts.seed_setup(romfs, load_spec(), Settings(shuffle=(gifts.SHUFFLE,)))
+    fairies = {n: info for n, info in spec["locations"].items() if n.endswith("Great Fairy Reward")}
+    moving = sorted(n for n, info in fairies.items() if not info.get("keep_vanilla"))
+    # the two Magic Meter fairies stay: their pool item is a tier (MP or MP double), not one actor
+    assert moving == [
+        "Colossus Great Fairy Reward",
+        "DMT Great Fairy Reward",
+        "OGC Great Fairy Reward",
+        "ZF Great Fairy Reward",
+    ]
+    _, world = prepare(spec, settings)
+    placements = {name: loc.vanilla for name, loc in world.locations.items()}
+    placements["DMT Great Fairy Reward"], placements["ZF Great Fairy Reward"] = "Farores Wind", "Dins Fire"
+    transforms = step(placements)
+    dicts = zsdic.Dictionaries.from_romfs(romfs)
+    data = dicts.decompress(GAME_DATA_LIST, (romfs / GAME_DATA_LIST).read_bytes())
+    before, after = byml.read(data), byml.read(transforms[GAME_DATA_LIST](data))
+    added = [int(e["Hash"]) for e in after["Data"]["Bool"][len(before["Data"]["Bool"]) :]]
+    # the Din flag's name is the one Kareem's save showed set (03-game-data.md section 19, in game)
+    assert len(added) == 2 and murmur3_32(b"Clawshot.Gift.Dm_FairyFountain_Din.Event212") in added
+    steps = gifts.check_steps(scan_gifts(romfs), definitions.load())
+    for name, actor in (("DMT Great Fairy Reward", "Item_FaroreWind"), ("ZF Great Fairy Reward", "Item_DinFire")):
+        for s in steps[name]:
+            out = transforms[s.file](dicts.decompress(s.file, (romfs / s.file).read_bytes()))
+            event = next(e for e in evfl.read(out).flowchart.events if e.name == s.event)
+            assert event.params[s.param] == actor, s.id

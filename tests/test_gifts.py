@@ -299,10 +299,10 @@ def test_seed_checks_take_changeable_gifts_whose_pool_item_is_what_they_give():
             "Chest X": _Loc("Chest", "A"),
         }
     )
-    assert gifts.seed_checks(world, gs, defs, rules, actors) == ["Check A", "Check E"]
-    assert gifts.seed_checks(world, gs, defs, rules, actors, new_flags=True) == ["Check A", "Check C", "Check E"]
+    # Check C has no existing given flag: it moves with a new GameDataList flag, as the Great Fairies do
+    assert gifts.seed_checks(world, gs, defs, rules, actors) == ["Check A", "Check C", "Check E"]
     world.locations["Check A"].keep_vanilla = "D17"
-    assert gifts.seed_checks(world, gs, defs, rules, actors) == ["Check E"]
+    assert gifts.seed_checks(world, gs, defs, rules, actors) == ["Check C", "Check E"]
 
 
 def test_restrict_spec_holds_the_other_gift_locations_vanilla():

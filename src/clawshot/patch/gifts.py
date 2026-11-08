@@ -371,13 +371,12 @@ def seed_checks(
     definitions: Iterable[Definition],
     rules: Mapping[str, Rule],
     actors: ItemActors,
-    new_flags: bool = False,
 ) -> list[str]:
     """The world locations a gift shuffle may move, in world order: a gift check of class ``swap`` or ``rewrite``
     whose vanilla logic item's actor (``item_actors.toml``) is what every one of its steps gives, so the pool item it
-    adds is the one it gave. ``new_flags``: also the checks that need a new GameDataList flag (the Great Fairies),
-    which wait for the in-game test that an older save still loads. The :data:`ANCHORS` stay vanilla unless the
-    world's ``free_time_travel`` setting is on."""
+    adds is the one it gave. A Great Fairy, given once through a new GameDataList flag, is one of them (Kareem, in
+    game, 2026-11-08: the game keeps the flag and an older save loads; 03-game-data.md section 19). The
+    :data:`ANCHORS` stay vanilla unless the world's ``free_time_travel`` setting is on."""
     steps = check_steps(gifts, definitions)
     free = world.settings.get(FREE_TIME_TRAVEL) is True
     out = []
@@ -386,8 +385,6 @@ def seed_checks(
         if loc.type not in GIFT_TYPES or name not in steps or rule is None or rule.cls == MORE:
             continue
         if loc.vanilla is None or loc.n64_only is not None or loc.keep_vanilla is not None:
-            continue
-        if rule.given and rule.flag is None and not new_flags:
             continue
         if name in ANCHORS and not free:
             continue
@@ -432,7 +429,7 @@ def seed_step(
 
 
 def seed_setup(
-    romfs: str | Path, spec: Mapping[str, Any], settings: Settings, new_flags: bool = False
+    romfs: str | Path, spec: Mapping[str, Any], settings: Settings
 ) -> tuple[dict[str, Any], Settings, Callable[[Mapping[str, str]], dict[str, Callable[[bytes], bytes]]]]:
     """For ``--shuffle Gift``: the spec with the gifts that cannot move held vanilla, the settings shuffling the
     gift types in place of ``Gift`` (songs held to song locations and song locations to songs, and every other gift
@@ -445,7 +442,7 @@ def seed_setup(
     census, definitions = scan_gifts(romfs), census_definitions.load()
     rules, actors = load(), item_actors.load()
     _, world = prepare(spec, settings)
-    shuffled = seed_checks(world, census, definitions, rules, actors, new_flags)
+    shuffled = seed_checks(world, census, definitions, rules, actors)
     vanilla = {name: world.locations[name].vanilla for name in shuffled}
     chest_actors = {loc.vanilla_item for loc in scan(romfs) if loc.kind == CHEST}
     held = held_items(world, vanilla.values(), actors, chest_actors)
