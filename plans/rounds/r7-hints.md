@@ -4,16 +4,21 @@ Branch `r7/hints`, from main `e498402`. Owns `src/clawshot/generate/hints.py`, t
 `src/clawshot/patch/text.py`, `tests/test_hints*.py`, this file and section 25 of `plans/03-game-data.md`. Scratch
 scripts and decoded data: `E:/OOTRemake/work/r7-hints/` (outside the repo).
 
+Rebased onto main `dfe923a` (the Jabu-Jabu rule and D26); commit ids below are after the rebase (before it:
+abbce51, 7fe1e63, a567b05, 2cb1e98, dded73e, 7fe2e97, 93dde8c, e4c9d43, a341990, in that order).
+
 | Item | Where | Commit |
 |---|---|---|
-| 1 Gossip Stones in the world (shared world files) | `world/translate.py`, translated region files, `world/model.py`, `world/load.py`, `04-world-format.md` | abbce51 |
-| 1 the 40 stones, one label each | `data/world/remake/hint_stones.toml`, `census/hints.py` (`REMAKE_STONES`, `stone_labels`), `tests/test_hints_world.py` | 7fe1e63 |
-| 2 hint selection | `data/hints.toml`, `generate/hints.py`, `tests/test_hints_select.py` | a567b05 |
-| 3 hint settings (shared files) | `generate/fill.py` (`Settings`), `data/settings.toml`, `__main__.py`, `tests/test_hints_settings.py` | 2cb1e98 |
-| 4 the stones' lines | `patch/text.py` (hint step), `tests/test_hints_lines.py`, item hints once per item | dded73e |
-| 4 seed step, spoiler, play note (shared files) | `generate/__init__.py` (`Seed.hints`, `spoiler`, `play_note`), `patch/__init__.py` (`hint_step`), `tests/test_hints_seed_dump.py` | 7fe2e97 |
-| 4 fix: shop refills are not major items | `generate/hints.py`, `tests/test_hints_select.py` | 93dde8c |
-| 4 section 25, this file | `plans/03-game-data.md`, `plans/rounds/r7-hints.md` | (round-file commit) |
+| 1 Gossip Stones in the world (shared world files) | `world/translate.py`, translated region files, `world/model.py`, `world/load.py`, `04-world-format.md` | 914d375 |
+| 1 the 40 stones, one label each | `data/world/remake/hint_stones.toml`, `census/hints.py` (`REMAKE_STONES`, `stone_labels`), `tests/test_hints_world.py` | 0fb2d53 |
+| 2 hint selection | `data/hints.toml`, `generate/hints.py`, `tests/test_hints_select.py` | e7c03dc |
+| 3 hint settings (shared files) | `generate/fill.py` (`Settings`), `data/settings.toml`, `__main__.py`, `tests/test_hints_settings.py` | 9f2dbd0 |
+| 4 the stones' lines | `patch/text.py` (hint step), `tests/test_hints_lines.py`, item hints once per item | 512adb2 |
+| 4 seed step, spoiler, play note (shared files) | `generate/__init__.py` (`Seed.hints`, `spoiler`, `play_note`), `patch/__init__.py` (`hint_step`), `tests/test_hints_seed_dump.py` | e96ff8e |
+| 4 fix: shop refills are not major items | `generate/hints.py`, `tests/test_hints_select.py` | af7cd2d |
+| D26 mask rule (reviewer steer) | `generate/hints.py` (`mask_prerequisites`), tests, `settings.toml` comment | 86cb02d |
+| 4 section 25, this file | `plans/03-game-data.md`, `plans/rounds/r7-hints.md` | a341990, then the handoff commit |
+| gate fix: the seed oracle allows the hint text files (shared test, r5's) | `tests/test_seed_dump.py` | f180296 |
 
 ## Item 1: Gossip Stones as hint locations
 
@@ -123,8 +128,8 @@ Checks:
 | Command | Result |
 |---|---|
 | `uv run pytest tests/test_hints_lines.py tests/test_hints_text.py -q` | 12 passed: a short hint keeps the stone's colour, size and voice and colours the two names, back to the stone's colour after each; 40 six-letter words at width 30 make rows of four words, a page break every second row reopening size and colour (not the voice), no word split, nothing lost; the archive transform changes only the hinted stone and no other file; a label the archive lacks is refused |
-| `OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump tests/test_hints_seed_dump.py -s -q` | 4 passed (52 s): seed 7, Chest+Shop, `always` and `mask`: 40 hints on the 40 labels in world order; every hint naming a location names its placed item at a shuffled location, and a fresh search with that item withheld reaches the stone (with `mask`, as child holding the mask); Way of the Hero, item and junk hints present (`always`: 5 woth, 2 barren, 9 item, 9 sometimes, 11 random, 4 junk; `mask`: 4, 3, 12, 10, 9, 2); all 16 archives change, the flow only with `always`; every archive's stone line reads, page breaks as spaces, exactly the spoiler's text |
-| `uv run pytest tests/test_hints_select.py -q` | 9 passed, adding: a shop refill (`Buy Bombchu (8)`, a progression item in the world) gets no item hint and leaves its area barren. It failed before the fix (printed seed 2 naming the refill), found in 7c's first build, which hinted "Eight Bombchus" and "Five Deku Sticks" |
+| `OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump tests/test_hints_seed_dump.py -s -q` (after the rebase, within the full dump gate) | 4 passed: seed 7, Chest+Shop, `always` and `mask`: 40 hints on the 40 labels in world order; every hint naming a location names its placed item at a shuffled location, and a fresh search with that item withheld reaches the stone (with `mask`, as child holding the mask); with `mask` no hint names one of the five mask prerequisites (KF Kokiri Sword Chest, KF Midos Bottom Left and Top Left Chests, Deku Tree Slingshot Room Side Chest, Dodongos Cavern End of Bridge Chest); Way of the Hero, item and junk present (`mask`: 4 woth, 3 barren, 6 item, 10 sometimes, 13 random, 4 junk); all 16 archives change, the flow only with `always`; every archive's stone line reads, page breaks as spaces, exactly the spoiler's text |
+| `uv run pytest tests/test_hints_select.py -q` | 10 passed, adding: a shop refill (`Buy Bombchu (8)`, a progression item in the world) gets no item hint and leaves its area barren (it failed before the fix, printed seed 2 naming the refill; found in 7c's first build, which hinted "Eight Bombchus" and "Five Deku Sticks"); with the mask behind the Hookshot, `mask_prerequisites` is the Hookshot's chest and the mask's own, neither is ever named under `mask` while the Hookshot's chest is under `always`, and the Bow found after the mask still is |
 | `uv run python -m clawshot --romfs E:/Games/Hookshot/romfs --seed 7 --out E:/OOTRemake/work/r7-hints/smoke-7` | exit 0, 79 files (the 16 archives, the flow, the size table for the three growing archives); spoiler `hints` 40 lines, `play-note.md` has the Gossip Stones table |
 
 ### The test output `seed-shop-7c` (`E:/OOTRemake/work/r7-hints/`)
@@ -148,6 +153,11 @@ hints are `choose(seed, "always", "balanced")`; the text goes through `patch.tex
   `seed-shop-7c\romfs`, log `seed-shop-7c\hookshot_log.txt`. Not run by me (checked by reading it).
 - `uv run python E:/OOTRemake/work/r7-hints/readback_7c.py` read the written `USen` archive and flow back from the
   output folder: the lines below with their tags, and no Mask of Truth question left in the flow.
+- Rebuilt after the rebase onto `dfe923a` (the Jabu-Jabu rule): beatable, 25 spheres, the same 40 lines; 77 files
+  byte-identical to 7b's, 14 added; the readback repeated.
+- Cost: choosing hints takes about 1 s a seed (one search per shuffled progression item for Way of the Hero), so
+  `tests/test_world_data.py::test_seeds_with_the_default_settings_are_beatable` (200 seeds) took 384 s in a full run
+  while the game was running on this PC, and the CLI's seed 7 about 150 s with the 16 archives.
 
 **What Kareem should do and see** (quit 7b first; 7c continues a copy of the 7b save, so nothing in 7b changes):
 
@@ -193,3 +203,27 @@ hints are `choose(seed, "always", "balanced")`; the text goes through `patch.tex
   `load.py`), 2cb1e98 (settings: `hints`, `hint_distribution`, CLI), 7fe2e97 (seed: `Seed.hints`, `spoiler`,
   `play_note`, `make_seed` hint step; hint seeds now write the size table for `CNzh`/`KRko`/`TWzh`) with e4c9d43
   (D26 mask rule). Handoff post below.
+
+## Gates (on f180296, rebased on main `dfe923a`)
+
+```
+uv run ruff format --check                                  186 files already formatted
+uv run ruff check                                           All checks passed!
+uv run pytest                                               535 passed, 73 skipped (650 s)
+OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump      72 passed, 536 deselected (833 s)
+```
+
+The first dump run after the rebase failed 3 tests, `tests/test_seed_dump.py::test_written_files_differ_only_where_the_plan_says[1-3]`:
+the Kokiri Forest slice's folder listed the 16 language archives and the stone flow (the slice has stones, so it
+gets hints) where the oracle expected only chest files, the intro and the size table. f180296 adds the other steps'
+files to the expected list and checks their size-table entries are raised only to what they need; the three then
+passed (each "other steps: 17 files, size table written"), and the full dump gate above.
+
+## Handoff
+
+Commits on `r7/hints` (rebased on `dfe923a`): 914d375 world (stones as hint locations, shared), 0fb2d53 the 40
+stones and labels, e7c03dc hint selection, 9f2dbd0 settings (shared), 512adb2 the stones' lines, e96ff8e seed step,
+spoiler and play note (shared), af7cd2d shop refills not major, 86cb02d the D26 mask rule, a341990 round file and
+section 25, f180296 the seed oracle test (shared), then this commit. Checked: the four gates above, the CLI smoke,
+`seed-shop-7c` built, read back and compared with 7b by SHA-256. Left: Kareem's in-game check of `seed-shop-7c`
+(item 4), the distribution question, other hint givers and the unsettled stone names (above).
