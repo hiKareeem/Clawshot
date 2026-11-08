@@ -1274,6 +1274,38 @@ frogs' bug game. None is changed.
   `9725242744547055868` ("KF Midos Top Left Chest"): the remake's row of four is mirrored against the N64 names, so a
   spoiler's left and right for these chests are the player's right and left (the two middle chests are unchecked).
 
+## 20. Round 6: readable location names (cs6a)
+
+Player-facing names are presentation, not new census/world identities or new reachability rules.
+`data/location_names.toml` links the world key to its physical Hashes or gift flow steps, a short label,
+one-line directions and evidence. The scope includes held/excluded checks so their labels stay stable when
+settings change; their existing exclusions are not lifted. Detailed verification and questions:
+`plans/rounds/r6-names.md`. Research stays under `E:/OOTRemake/work/r6-names/`.
+
+**Mido's house:** use left-to-right from the entrance looking at the chests, not N64's top/bottom labels.
+All four are now settled in game (Kareem, 2026-11-08; Claude's reviewer update). `seed-shop-7` identifies
+far left (`Top Right`, Mirror Shield) and second from left (`Bottom Right`, Kokiri Sword); the earlier
+`chest-ocarina-storms` test identifies far right (`Top Left`), leaving third as `Bottom Left` by elimination.
+Both right-hand checks held Blue Rupees in the seed. The placement order independently agrees:
+
+| Doorway view | Hash | Existing OoTR identity |
+|---|---|---|
+| Far left | `4555665598794293658` | `KF Midos Top Right Chest` |
+| Middle left | `12786193094758345086` | `KF Midos Bottom Right Chest` |
+| Middle right | `10831981390482426294` | `KF Midos Bottom Left Chest` |
+| Far right | `9725242744547055868` | `KF Midos Top Left Chest` |
+
+The middle-right chest's vanilla item is a Green Rupee; the other three are Blue Rupees. All four have
+the same region and unconditional local rule, so the naming orientation does not change access logic.
+No location definition, item grant or rule is renamed.
+
+Catalog coverage: 184 chests, 72 shop slots (including eight unshuffled mask loans), all 79 linked gift
+checks (six Great Fairies included), plus cs6d's four opt-in once-sale Scrub families. **339 descriptions
+cover 414 physical Hash/flow identities.** `tests/test_names.py` checks completeness/copy IDs and unique
+labels; the catalog reader smoke confirms the same counts. Shop rows use the customer's view facing the
+shopkeeper, top/bottom row and far/inner left/right spots; this is placement-derived, not a new shop playtest.
+Static locators omit vanilla rewards/prices because shuffled placements/settings change them.
+
 ## 21. Round 6: settings, prices and forest modes (cs6b)
 
 Build `e0f3ccfa`, read-only dump. Implementation, command evidence and the complete inventory-write audit:
