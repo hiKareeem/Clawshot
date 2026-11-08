@@ -607,3 +607,28 @@ Kareem's `seed-shop-7` run (2026-11-08), each to settle against the data and app
 4. Record each in `plans/playtest/answers.md` and section 12.
 
 ### After round 6
+
+**Round 6 result (2026-11-08):** all six tracks merged (`main` a786358; 511 tests, 68 dump tests).
+- A, names: a sourced player-facing catalogue (335 checks); spoilers carry the names and a `play-note.md` with a
+  logic-built opening route, shelf positions and prices.
+- B, settings: one settings string (`--settings`, recorded in the spoiler, byte-identical replay); songs anywhere
+  (opt-in, all 12); `shop_prices` and `cheap_deku_shield` (on); forest closed by default with `closed_deku` and
+  `open` (D24); a fill fix that keeps held-item priority when shops are shuffled.
+- C, hints: `formats/msbt` (8,640 message files in 16 languages round-trip byte-identical); 40 Gossip Stones
+  catalogued; `patch/text`; a custom stone line test output.
+- D, scrubs: `--shuffle Scrub` for the four one-time sale families (nine copies; repeat vendors stay vanilla); Gold
+  Skulltula tokens not shuffled (a replaced token has no persistence).
+- E, shop crash: shuffled shop goods grew a file inside the seller pack past its size-table entry; the writer now
+  raises nested entries (game-confirmed in Castle Town, purchases work). Shop refills stay in shops; bomb and
+  Bombchu pickups only where the Bomb Bag is guaranteed (D25); Buy Blue Fire only where the game sells it.
+  `seed-shop-7b` is seed-shop-7 with the size fix only, for Kareem's save.
+- F, play findings: the Boomerang works for the Deku Tree's switches, the vine wall and Gohma; the Kokiri
+  shopkeeper's free Deku Shield (repeats while none is equipped) is a logic event, not a check; the moat needs no
+  scale.
+
+Waiting on Kareem in game: `seed-shop-7b`; the Minuet, closed-Deku and Gossip Stone tests; `free_time_travel` after
+his first Master Sword pull; the logic-session route cards.
+
+For round 7 (to agree with Kareem): hints on Gossip Stones (track C's design note); gift items in chests as each is
+tested; a once-only gate for the shopkeeper's shield so it can be a check; boss Heart Containers as checks; token
+persistence; the advanced options (bomb pickups as bags, open Deku) as Kareem asks for them.
