@@ -41,6 +41,14 @@
 - **D17 Treasure Chest Game: only the reward chest is shuffled** (Kareem, 2026-11-07). The 11 game boxes stay
   vanilla for now (Ship of Harkinian has shuffling them as an option; a later setting). The reward chest joins
   the chests once its contents swap is tested in game.
+- **D18 Fast start: the intro skip is on by default; Saria, Mido, the Deku Tree's talk and Kaepora are settings**
+  (Claude, round 4 spec; both settings' in-game tests passed for Kareem, 2026-11-07). Skipping Mido changes the
+  logic (no sword and shield to reach the Deku Tree).
+- **D19 The Deku Shield and shop contents are shuffled with the other items** (Kareem, 2026-11-07, after seed 22
+  needed nearly every rupee in the forest for the shield). The logic places the shield: with Mido kept, it must be
+  reachable before him; with Mido skipped, anywhere the logic allows. Shop contents (shopsanity) join once a
+  changed shop slot is tested in game, like the other kinds (D15). Buying the shield plays a short tutorial: the
+  test checks it with another item in that slot.
 
 ## Open (only Kareem and his co-owner decide)
 

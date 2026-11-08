@@ -489,6 +489,13 @@ must give an item (the pouch is not a flag). The intro can be removed entirely b
 `OpeningEvent:Opening_LoadingKokiriForest` after the movie (an event-flow edit; a scratch test of it is in
 `E:/OOTRemake/work/r4-fast-start/intro-removed`).
 
+**In game (Kareem, 2026-11-07, Hookshot `foliage-linux-updater`, new games):** `intro` (the movie made skippable)
+worked; he saved after Navi woke Link. `all` (`--skip intro saria mido deku_tree kaepora`) worked: he walked
+straight to the Great Deku Tree. Its first autosave read `Step_Meet_DekuTree = Complete`,
+`Step_Get_StoneOfForest = GoInside`, `Step_Goto_HyruleCastle = Step02`, `KokiriForest_Npc_Kokiri_Mido_Child_Blocker =
+False`, `KokiriForest_Meet_DekuTree_OpenDekuTreeMouth = True`: the opening did not set the quest steps back.
+`intro-removed` and the owl after the Deku Tree are not tested yet.
+
 ## 15. Round 4: event flows and gifts (cs4d)
 
 How each was found and the scratch scripts: `plans/rounds/r4-evfl.md`. Build `e0f3ccfa`.
