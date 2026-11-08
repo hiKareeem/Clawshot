@@ -353,3 +353,10 @@ Owns `src/clawshot/formats/evfl.py` (new), `src/clawshot/census/` (gifts), `src/
 
 Kareem tests the mini-seeds on the corrected Deku Tree logic and the fast-start outputs. Round 5: whole-game
 chest seeds over the checked logic, gifts through the flows, and in-game checks for the logic questions.
+
+Engine questions from track B for round 5 (`plans/rounds/r4-logic-adult.md`): (1) the Forest Temple walkthrough
+says the remake lets adult Link return to child only after the Forest Temple; the search shares one inventory
+across ages and can't tell an adult-found item used as child before that, so it needs an age-travel model, not a
+data gate; (2) Great Fairies: the first must be the Death Mountain Trail or Hyrule Castle one, and their fees rise
+with each visit and may exceed the default wallet. The adult rules keep conservative routes where the remake is
+unproven (stricter than the game, never looser); their in-game questions are in bold in the round file.
