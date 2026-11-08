@@ -99,3 +99,24 @@ Evidence:
 - 7b's spoiler was checked again byte-identical to 7's after this smoke. **Never replace 7b with the new refill-restricted fill.**
 
 Shared changes are isolated per round rules: `generate/__init__.py` effective-settings hook and `generate/fill.py` capacity/priority correction. Reviewer authorized rebase onto main **65bbcf7** at this clean checkpoint; preserve cs6b's canonical pricing, forest defaults, settings string and held priority, then run all four gates.
+
+## Item 4(b): ammo/container audit; rule proposed, not applied
+
+The full family/count/container table is in section 24, from `PouchActorInfo` `BundleActor -> SmallBagActor` and bag expansion/full-stock fields. External `audit_ammo.py` resolved every selected target and wrote `ammo-container-audit.json`; no decoded tree entered the repository.
+
+- Native and shop bombs share `Item_Bomb -> Item_BombBag_Small` (20); Bombchus share the same bag through `Item_Bombchu`. The bag expands both types, stock-max on get; Bombchu refill-on-bag is conditional on its IsGet.
+- Native/shop arrows share `Item_Arrow_Normal -> Item_Quiver_Small` (30), not Bow; shop seeds share `Item_DekuSeed -> Item_BulletBag_Small` (30), not Slingshot.
+- Nut/stick rows explicitly allow automatic small-bag acquisition; capacities 20 nuts /10 sticks. Chest bundle counts are 3 nuts, 3 sticks, 5 bombs, 5 Bombchus, arrows 3/5/10, not necessarily the old OoTR names' quantities.
+- Bomb/arrow/seed automatic container behavior for every entry/path remains **inferred from the shared get-event metadata**, not separately certified. Only Kareem's Shop Bombs(10) chest case is observed: old Basement placement grants Bomb Bag +20 bombs and sets `IsGet.Item_BombBag_Small` without a pre-existing bag.
+
+**Kareem: proposed rule for confirmed native chest bomb/Bombchu packs: the search should count the Bomb Bag they actually grant, or those packs must stay at checks reachable with an independently held Bomb Bag. Prefer counting the real grant after the family check; otherwise a hidden early bag changes D20's earliest-pull route.** Do not add Bow/Slingshot ownership just because an arrow/seed pack names a quiver/bullet bag. No ammo aliases, actors, chest restrictions or world logic were changed for this finding.
+
+## Item 4(c): 7b is not regenerated under new defaults/policy
+
+Reviewer correction followed: **7b's spoiler is byte-for-byte equal to 7's**. It was built before the new-seed restriction and before the settings rebase. Its preserved placement bytes include the old Buy refills in chests, including the Basement Bombs(10); no claim that 7b obeys the new-seed policy. The refill-restricted new smoke differs at 127 checks and would require a restart. 7b is the size-fix-only continuation, not that smoke and not a seed with main's new forest/price defaults.
+
+## Authorized rebase
+
+Rebase onto **65bbcf7** completed. `prepare` keeps both the canonical price transformation and the new Buy-held map, plus cs6b's forest/settings behavior. The fill keeps main's held-priority sort and the exact remaining-refill reserve; no duplicate competing policy path. Sections already present remain in numeric order (19,21,22,23,24; track A's section20 has not been merged here). No merge/push/stash or other-track worktree edit.
+
+Post-rebase scoped proof: `uv run python .../check_shop_logic.py` and `uv run pytest tests/test_shop_logic.py tests/test_shop_allocations.py -q`: **26 live capability checks; 32 tests passed**. The capability diagnostic initially expected Buy Bombchu + Bomb Bag to satisfy `has_bombchus` under defaults; printed `free_bombchu_drops=True` and helper source show that mode needs an actual Bombchu item. Corrected only the diagnostic: bought access supplies `can_refill_bombchus`; with free drops off, Bomb Bag + bought access supplies `has_bombchus`. Default mode under-credits Buy-only first acquisition conservatively. No helper/rule was changed to make the assertion pass.

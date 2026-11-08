@@ -1614,3 +1614,39 @@ Normal/progression/spare-capacity synthetic cases pass across 20 seeds each with
 An actual new Chest+Shop CLI seed 7 has **228 checks, 25 spheres, 80 resources; 59 Buy refills, zero outside Shop**.
 It differs at **127 placements** from the old seed. This policy is for **new seeds only**; 7b stays the byte-identical
 spoiler/placement continuation above. No increased retry limit or weakened beatability oracle.
+
+### Ammo packs and their containers (reviewer item 4b)
+
+Read-only source: `RSDB/PouchActorInfo.Product.111.rstbl.byml.zs`, following `BundleActor` to the counted item,
+then its `SmallBagActor`; the bag's `AfterExpansionMaxNum`, `ExpansionMaxNumActor`, `IsItemStockMaxIfGet` and
+`ActorFullOnlyIfIsGetWhenGetBag`. Reproducer/report: `E:/OOTRemake/work/r6-shopfix/audit_ammo.py` and
+`ammo-container-audit.json`. Identifiers/counts below are findings, not copied resource trees.
+
+| Ammo actor(s) | Bundle count | SmallBagActor target / capacity | Missing-container finding |
+|---|---|---|---|
+| `Shop_BombBundle_01` / `_02` / `_03` / `_04` | 5 / 10 / 20 / 30 | `Item_BombBag_Small`, 20 | `_02` **observed** from a chest: Bomb Bag +20 bombs; other variants share `Item_Bomb` chain |
+| `Item_BombBundle_Small` | 5 | same Bomb Bag, 20 | Same `Item_Bomb` chain; get-event bag grant **inferred**, not separately played |
+| `Shop_BombchuBundle_01` / `_02` / `_03` / `_04` / `_05` / `_06` / `_07` / `_08` | 10 / 20 / 1 / 3 / 5 / 8 / 15 / 30 | same Bomb Bag, 20 | `Item_Bombchu` shares the bag; grant inferred; Bombchus were bought in 07 |
+| `Item_BombchuBundle_Small` | 5 | same Bomb Bag, 20 | Same `Item_Bombchu` chain; get-event bag grant inferred |
+| `Shop_ArrowBundle_01` / `_02` / `_03` | 10 / 30 / 50 | `Item_Quiver_Small`, 30 | `Item_Arrow_Normal` chain; bag grant inferred; **no Bow grant in these rows** |
+| `TBox_ArrowBundle_Small` / `_Medium` / `_Large` | 3 / 5 / 10 | same small quiver, 30 | Same arrow chain; bag grant inferred, not a Bow |
+| `Shop_DekuSeedBundle_01` / `_02` | 30 / 10 | `Item_BulletBag_Small`, 30 | `Item_DekuSeed` chain; bag grant inferred; **no Slingshot grant in these rows** |
+| `Shop_DekuNutBundle_01` / `_02` | 5 / 10 | `Item_NutBag_Small`, 20 | Base `Item_DekuNut` explicitly has `IsAbleToGetBagIfGet = true` |
+| `TBox_DekuNutBundle` | 3 | same small nut bag, 20 | Same explicit auto-bag nut chain |
+| `Shop_DekuStick`; `Shop_DekuStickBundle_Medium` | 1; 5 | `Item_StickBag_Small`, 10 | Single Shop stick and base `Item_DekuStick` explicitly permit getting the bag |
+| `Item_DekuStickBundle_Small` | 3 | same small stick bag, 10 | Same explicit auto-bag stick chain |
+
+The Bomb Bag expands **both** bombs and Bombchus; `IsItemStockMaxIfGet = true`, while
+`ActorFullOnlyIfIsGetWhenGetBag` singles out Bombchus. Exact first-Bombchu fill ordering is not established by
+metadata alone. Small quiver/bullet bag also set stock-max on bag acquisition; nut/stick bags do not.
+`SmallBagActor` is a real container link, not by itself proof of every ordinary dropped-pickup path:
+the bomb/arrow/seed rows omit `IsAbleToGetBagIfGet`, whereas a chest uses the `GetPouchContent` get-event grant.
+Only the reported Shop Bombs(10) chest case is gameplay-certified here.
+
+Kareem's Basement Chest finding: old seed 7 placed **Buy Bombs (10)** / `Shop_BombBundle_02`; with no Bomb Bag,
+the chest gave a Bomb Bag and 20 bombs, and the save has `IsGet.Item_BombBag_Small` (Kareem via Claude).
+**Proposal, not implemented:** once the native chest bomb/Bombchu variants are confirmed, count their bag grant
+as the logical `Bomb Bag` as well as the ammo; alternatively restrict them to checks reachable with a Bomb Bag
+already obtained independently, never let the ammo satisfy its own prerequisite. Merely leaving an uncounted
+early bag grant can alter the earliest-pull assumptions behind D20. Quiver/bullet bag capacity must not be
+misrepresented as Bow/Slingshot ownership. No ammo actor mapping, alias, chest rule or unrelated logic was changed.
