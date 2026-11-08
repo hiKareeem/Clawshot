@@ -10,6 +10,7 @@ catalog. The fill and beatability search are ``clawshot.generate``'s.
 import json
 from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass, replace
+from functools import partial
 from pathlib import Path
 from typing import Any
 
@@ -22,6 +23,7 @@ from clawshot.patch import gamedata, scrubs, shops
 from clawshot.patch import items as item_actors
 from clawshot.patch.plan import Links, PatchError, Plan, link, make_plan, remake_vanilla
 from clawshot.patch.write import FileChanges, WrittenFile, write
+from clawshot.settings import CATALOG
 from clawshot.world.load import load_spec
 
 __all__ = ["PatchError", "PatchStep", "SeedOutput", "make_seed", "write_seed"]
@@ -65,8 +67,8 @@ def make_seed(
         spec, settings, step = scrubs.seed_setup(spec, settings)
         extra_steps = (*extra_steps, step)
     fast_settings = gamedata.load()
-    chosen = gamedata.select(fast_settings, list(settings.fast_start))
-    settings = replace(settings, fast_start=tuple(s.name for s in chosen))
+    names = [*settings.fast_start, *CATALOG["forest"][settings.forest]["fast_start"]]
+    chosen = gamedata.select(fast_settings, names)
     _, world = prepare(spec, settings)
     table = item_actors.load()
     table.check(world.items)
@@ -87,11 +89,15 @@ def make_seed(
     links = link(world, chests, census_definitions.load(), scan(romfs))
     out = generate(spec, seed, settings, vanilla=remake_vanilla(world, links, table))
     changes = tuple(step(out.placements) for step in extra_steps)
+    if any(setting.game_data for setting in chosen):
+        changes = ({gamedata.GAME_DATA_LIST: partial(gamedata.patch_initial_values, chosen=chosen)}, *changes)
     if world.settings.get("free_time_travel", False):
         from clawshot.patch.age import changes as age_changes
 
         changes += (age_changes(out.placements, free_time_travel=True),)
-    fast_files = tuple(gamedata.build(romfs, list(settings.fast_start), fast_settings)) if chosen else ()
+    # GameData defaults compose before gift flag additions; only cutscene component files are prebuilt.
+    event_settings = {s.name: replace(s, game_data={}) for s in chosen if s.skippable}
+    fast_files = tuple(gamedata.build(romfs, list(event_settings), event_settings)) if event_settings else ()
     return SeedOutput(out, links, make_plan(out, links, table, chest_events.load()), changes, fast_files)
 
 
