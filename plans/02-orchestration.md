@@ -34,7 +34,10 @@ skill). This file is the project's own version; where it differs from Overread, 
    then merge to `main`, gates again on `main`, decisions moved into `decisions.md` with who proposed them.
 6. **Kareem's checks.** One message with what to run, where, and what he should see, in order.
 7. **Cleanup.** Close each merged track's terminal (`hc kill <address>; hc rm <address>`, or `herdr-app do
-   space.close` for an app space), then `git worktree remove` and delete the branch.
+   space.close` for an app space), then `git worktree remove` and delete the branch. Before deleting, list the
+   branch's commits after the head you reviewed (`git log <reviewed head>..<branch>`): an agent may commit after the
+   review snapshot (a steer it answered). `git cherry` alone can't tell those from commits whose patch changed when
+   a conflict was resolved during the merge.
 
 ## Gates
 
