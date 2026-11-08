@@ -56,6 +56,13 @@
 - **D21 Shops take only items with a native shop display** (Claude, round 5, provisional; Kareem not yet asked
   whether he wants majors in shops). A stand-in display does not work as tried: changing only the seller's
   `GoodsList` actor left the shelf's Deku Shield on sale (Kareem in game, 2026-11-08).
+- **D22 A gift's "already given" check uses an existing once-only flag, else a new saved `GameDataList` Bool**
+  (cs5d, reviewed by Claude, round 5). The Great Fairies have no once-only flag of their own; the new Bool
+  (`Clawshot.Gift.<flow>.<event>`) worked in game: a save made before the patch loaded, the fairy gave the
+  Hookshot once and only healed after, also after quit and continue (Kareem, 2026-11-08).
+- **D23 Songs go only to song locations; other gift items only to gift locations, until seen working in a chest**
+  (Claude, round 5, provisional; OoT Randomizer's `shuffle_song_items = 'song'`). The Song of Storms in a chest
+  showed a green rupee with the song's text and set `IsGet.Item_Melody_StormSong`; whether it plays is untested.
 
 ## Open (only Kareem and his co-owner decide)
 
