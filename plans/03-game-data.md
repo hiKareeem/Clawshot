@@ -529,3 +529,26 @@ steps shared by all songs), then gives the song by name through `GetPouchContent
 name, so the get model and text should follow [inference]; the NPC's own lines (`EventFlowMsg/...` message ids) and the
 flags the flow sets do not change. A song needs its play-along changed too. Test folders for Talon's cucco game (milk
 bottle -> Heart Piece, -> Boomerang) are in `E:/OOTRemake/work/r4-evfl/ingame/`; not yet run in game.
+## 13. Round 4: adult remake logic (cs4b)
+
+Audit evidence, unresolved alternatives and reproducible checks are in `plans/rounds/r4-logic-adult.md`.
+Overrides are separate `src/clawshot/data/world/remake/adult_*.toml`; generated N64 rules stay untouched.
+Guide facts are evidence for the described route, not proof of every alternative; unresolved routes are not
+certified as remake-safe. Build `e0f3ccfa`; placement reads only, no game boot.
+
+### Forest Temple
+
+The front door now consumes a small key. The west lobby lock therefore needs two acquired keys and the
+straightened corridor needs three. The Bow route still needs three and the frozen-eye hall five: the old
+pre-Bow lock is absent. Read-only Static Banc inspection found five pairs of small-key locks at room
+boundaries 0/1, 5/5, 9/10, 17/18, 20/23. The well switch/map route uses a Hookshot target; the east-garden
+token uses the scarecrow. The frozen eye and rotating basement's new iced eye use arrows through a lit torch.
+
+Sources (facts only):
+- https://www.nintendolife.com/guides/zelda-ocarina-of-time-forest-temple-walkthrough-switch-2
+- https://www.nintendolife.com/guides/zelda-ocarina-of-time-gold-skulltula-locations-rewards-switch-2#forest-temple
+- https://www.ign.com/wikis/ocarina-of-time-remake/Biggest_Changes_and_Differences
+
+Unsettled: ordinary-Hookshot west-garden access, hand collection of the entrance/basement tokens, Phantom
+Ganon with Hookshot, Din's Fire at the iced eyes, N64 pots/drops and alternate traversal. Exact in-game
+questions are in the round file. Five locks, not an N64 count plus a sixth inferred lock.

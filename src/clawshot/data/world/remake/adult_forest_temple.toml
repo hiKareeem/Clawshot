@@ -1,0 +1,38 @@
+# Remake build e0f3ccfa. Keep generated Forest Temple.toml untouched.
+# Five small-key doors remain: entrance, west lobby, twisted hall, post-Bow, frozen-eye hall.
+# The old pre-Bow lock is gone, so later totals stay at three/five, not four/six.
+
+[exits."Forest Temple Lobby"."Forest Temple Central Area"]
+rule = "(Small_Key_Forest_Temple, 1) and (is_adult or can_child_attack or Nuts)"
+was = "is_adult or can_child_attack or Nuts"
+source = "https://www.nintendolife.com/guides/zelda-ocarina-of-time-forest-temple-walkthrough-switch-2 (Three Small Keys): first key opens the front door; IGN Biggest_Changes_and_Differences confirms new lock. cs4b read-only Banc ForestTemple_Static: paired locks in rooms 0/1, 5/5, 9/10, 17/18, 20/23 (2026-11-07, e0f3ccfa)."
+
+[exits."Forest Temple Central Area"."Forest Temple Block Push Room"]
+rule = "(Small_Key_Forest_Temple, 2)"
+was = "(Small_Key_Forest_Temple, 1)"
+source = "https://www.nintendolife.com/guides/zelda-ocarina-of-time-forest-temple-walkthrough-switch-2 (Moving blocks): locked west lobby door follows the newly locked entrance; two keys spent to enter."
+
+[exits."Forest Temple Block Push Room"."Forest Temple Straightened Hall"]
+rule = "Progressive_Strength_Upgrade and (Small_Key_Forest_Temple, 3) and can_use(Bow)"
+was = "Progressive_Strength_Upgrade and (Small_Key_Forest_Temple, 2) and can_use(Bow)"
+source = "https://www.nintendolife.com/guides/zelda-ocarina-of-time-forest-temple-walkthrough-switch-2 (Moving blocks; Boss Key): entrance, west lobby and twisted-corridor locks precede the eye switch and Boss Key. The Bow route already counts three keys."
+
+[exits."Forest Temple NW Outdoors"."Forest Temple Outdoors High Balconies"]
+rule = "can_use(Hookshot)"
+was = "here(is_adult or has_explosives or ((Boomerang or Nuts or Deku_Shield) and (Sticks or Kokiri_Sword or Slingshot)))"
+source = "https://www.nintendolife.com/guides/zelda-ocarina-of-time-forest-temple-walkthrough-switch-2 (Three Small Keys): after climbing the vines, Hookshot to a target to reach the well-draining switch; Hookshot also reaches the map ledge. No N64 no-Hookshot balcony route is verified."
+
+[locations."Forest Temple GS Raised Island Courtyard"]
+rule = "can_use(Scarecrow)"
+was = "can_use(Hookshot) or (logic_forest_outdoor_east_gs and can_use(Boomerang)) or at('Forest Temple Falling Room', can_use(Bow) or can_use(Dins_Fire) or has_explosives)"
+source = "https://www.nintendolife.com/guides/zelda-ocarina-of-time-gold-skulltula-locations-rewards-switch-2#gold-skulltula-66; plans/rounds/r3-census.md: east-garden ledge, scarecrow marker in room 14. Scarecrow's Song and Hookshot/Longshot reach the ledge; the falling-room route is not verified in the remake."
+
+[exits."Forest Temple Frozen Eye Switch Room"."Forest Temple Falling Room"]
+rule = "can_use(Bow)"
+was = "Bow or can_use(Dins_Fire)"
+source = "https://www.nintendolife.com/guides/zelda-ocarina-of-time-forest-temple-walkthrough-switch-2 (The Bow): activate the torch, fire an arrow through it into the iced eye switch; only this remake route is verified, not N64 Din's Fire access."
+
+[exits."Forest Temple Basement"."Forest Temple Before Boss"]
+rule = "can_use(Bow)"
+was = "True"
+source = "https://www.nintendolife.com/guides/zelda-ocarina-of-time-forest-temple-walkthrough-switch-2 (Rotating basement): rotate the torch into line with the iced eye, then shoot through it to melt and activate the boss-room route."
