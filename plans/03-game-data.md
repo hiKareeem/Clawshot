@@ -552,3 +552,22 @@ Sources (facts only):
 Unsettled: ordinary-Hookshot west-garden access, hand collection of the entrance/basement tokens, Phantom
 Ganon with Hookshot, Din's Fire at the iced eyes, N64 pots/drops and alternate traversal. Exact in-game
 questions are in the round file. Five locks, not an N64 count plus a sixth inferred lock.
+
+### Water Temple
+
+The four-key graph, not just a cap: pillar lock → middle-water west lock → high-west falling-platform lock
+reaches Longshot; fourth key (middle-water Bow/Longshot/underwater block room) opens the north basement lock.
+The pillar basement chest is now a Red Rupee (Hash 11682974908842171598) and has a token in that room.
+Compass moved to the south bomb/boots/Hookshot route. The old falling-platform token is in the Ruto-side
+middle-water cracked room; the third key is instead past a middle-floor east bomb wall, underwater Stingers
+and a geyser switch (room 4 Hash 16490222392193949581). The river exit uses Longshot targets, not Song of Time;
+there is no river key chest. Nine chests/four keys in Banc agree with those routes. The boss slope uses Boots.
+
+Sources:
+- https://www.ign.com/wikis/ocarina-of-time-remake/Water_Temple_Dungeon_Walkthrough
+- https://www.nintendolife.com/guides/zelda-ocarina-of-time-water-temple-walkthrough-switch-2
+
+`adult_water_temple.toml` moves checks as well as changing rules. Its retained unlinked N64 name
+`Water Temple Cracked Wall Chest` for the east-geyser key is provisional world nomenclature, not a census
+link. The normal route bootstraps all four keys and Longshot without free Water keys. Hookshot/Longshot
+token ranges and N64 alternate traversal remain in-game questions in the round file.

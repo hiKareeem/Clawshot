@@ -1,0 +1,118 @@
+# Remake build e0f3ccfa. Existing four-key cap in remake.toml is not a door graph.
+# Sources below describe routes; no N64 alternate key/water-level bypass is assumed.
+
+[regions."Water Temple East Geyser Room"]
+area = "WaterTemple"
+dungeon = "Water Temple"
+source = "https://www.ign.com/wikis/ocarina-of-time-remake/Water_Temple_Dungeon_Walkthrough (Raising the Water Level to 3F): middle-floor east bomb wall, submerged Stinger passage, switch-operated geyser, third key. Banc room 4 chest Hash 16490222392193949581."
+
+[events."Water Temple Lobby"."Raise Water Level"]
+rule = "can_use(Hookshot) and can_play(Zeldas_Lullaby) and (Small_Key_Water_Temple, 2)"
+was = "(is_adult and (Hookshot or Hover_Boots or Bow)) or (has_fire_source_with_torch and can_use_projectile)"
+source = "https://www.ign.com/wikis/ocarina-of-time-remake/Water_Temple_Dungeon_Walkthrough: raising from low to high uses Lullaby at middle/high murals, Hookshot targets/switches, and pillar then west-middle-floor locks. Two acquired keys suffice to restore high water; a third opens the falling-platform door."
+
+[locations."Water Temple Map Chest"]
+rule = "True"
+was = "Raise_Water_Level"
+source = "https://www.ign.com/wikis/ocarina-of-time-remake/Water_Temple_Dungeon_Walkthrough (Finding the Dungeon Map): swim up after meeting Ruto and open the chest before lowering water or using a key."
+
+[locations."Water Temple Compass Chest"]
+region = "Water Temple South Basement"
+rule = "can_use(Hookshot)"
+was = "(can_play(Zeldas_Lullaby) or Iron_Boots) and Hookshot"
+source = "https://www.ign.com/wikis/ocarina-of-time-remake/Water_Temple_Dungeon_Walkthrough (Finding the Compass): the south bomb wall/underwater passage leads to target platforms and a Like Like guarding the Compass. Banc room 3, Hash 16424266294822218796; not the old N64 compass alcove."
+
+[exits."Water Temple Lowered Water Levels"."Water Temple South Basement"]
+rule = "has_explosives and can_use(Iron_Boots) and can_use(Hookshot)"
+was = "has_explosives and (Iron_Boots or can_dive) and (Hookshot or Hover_Boots)"
+source = "https://www.ign.com/wikis/ocarina-of-time-remake/Water_Temple_Dungeon_Walkthrough (Finding the Compass): bomb wall, sink through passage with Iron Boots, Hookshot over gaps. Scale/Hover alternatives are not verified."
+
+[exits."Water Temple Lowered Water Levels"."Water Temple Middle Water Level"]
+rule = "(Small_Key_Water_Temple, 1) and can_use(Hookshot) and can_play(Zeldas_Lullaby)"
+was = "Bow or can_use(Dins_Fire) or (Child_Water_Temple and Sticks) or ((Small_Key_Water_Temple, 5) and Hookshot)"
+source = "https://www.ign.com/wikis/ocarina-of-time-remake/Water_Temple_Dungeon_Walkthrough (Raising the Water Level to 2F): spend a key at the pillar door, Hookshot to the mural and play Lullaby. A Bow alone does not replace that lock."
+
+[locations."Water Temple Central Pillar Chest"]
+rule = "can_use(Iron_Boots) and can_use(Zora_Tunic) and can_use(Hookshot)"
+was = "((Small_Key_Water_Temple, 5) or Bow or can_use(Dins_Fire)) and Iron_Boots and Zora_Tunic and Hookshot"
+vanilla = "Rupees (20)"
+source = "https://www.ign.com/wikis/ocarina-of-time-remake/Water_Temple_Dungeon_Walkthrough (Raising the Water Level to 3F): the pillar basement chest now holds a Red Rupee, not a key. Census room 2 Hash 11682974908842171598 TBox_Rupee_Red. The one-key pillar route already gates this region."
+
+[locations."Water Temple GS Behind Gate"]
+region = "Water Temple Middle Water Level"
+rule = "can_use(Iron_Boots) and can_use(Zora_Tunic) and can_use(Hookshot)"
+was = "True"
+source = "https://www.ign.com/wikis/ocarina-of-time-remake/Water_Temple_Dungeon_Walkthrough (Gold Skulltula 73): in the pillar basement red-rupee room, not the N64 south bomb route. Census room 2 Hash 16157272130665282352."
+
+[locations."Water Temple GS Central Pillar"]
+region = "Water Temple Middle Water Level"
+rule = "can_use(Longshot)"
+was = "((Longshot or (logic_water_central_gs_fw and Hookshot and can_use(Farores_Wind))) and ((Small_Key_Water_Temple, 5) or Bow or can_use(Dins_Fire))) or (logic_water_central_gs_irons and Hookshot and Iron_Boots and (Bow or can_use(Dins_Fire))) or (logic_water_central_gs_fw and Child_Water_Temple and Boomerang and can_use(Farores_Wind) and Raise_Water_Level and ((Small_Key_Water_Temple, 5) or Sticks or can_use(Dins_Fire)))"
+source = "https://www.ign.com/wikis/ocarina-of-time-remake/Water_Temple_Dungeon_Walkthrough (Gold Skulltula 76): Longshot reaches the high target inside the unlocked pillar. One acquired key plus the middle-water route, not a fifth key or torch bypass."
+
+[exits."Water Temple Middle Water Level"."Water Temple East Geyser Room"]
+rule = "has_explosives and can_use(Iron_Boots) and can_use(Hookshot)"
+new = true
+source = "https://www.ign.com/wikis/ocarina-of-time-remake/Water_Temple_Dungeon_Walkthrough (Small Key 3): middle-floor east cracked wall, submerged passage and geyser switch."
+
+[locations."Water Temple Cracked Wall Chest"]
+region = "Water Temple East Geyser Room"
+rule = "True"
+was = "has_explosives"
+source = "https://www.ign.com/wikis/ocarina-of-time-remake/Water_Temple_Dungeon_Walkthrough (Small Key 3); census room 4 Hash 16490222392193949581. Provisional world-name correspondence: retain this unlinked N64 key-check name for the remodeled middle-floor bomb-wall/geyser route; no census link is asserted. The old Ruto-side cracked room holds a token instead."
+
+[locations."Water Temple GS Falling Platform Room"]
+region = "Water Temple Cracked Wall"
+rule = "has_explosives"
+was = "can_use(Longshot) or (logic_water_falling_platform_gs_hookshot and can_use(Hookshot)) or (logic_water_falling_platform_gs_boomerang and can_use(Boomerang))"
+source = "https://www.ign.com/wikis/ocarina-of-time-remake/Water_Temple_Dungeon_Walkthrough (Gold Skulltula 74): bomb the middle-level Ruto-side wall to find Shell Blades and the token; census room 25 Hash 4399424945134189769. Not in the falling-platform room and not Longshot-gated."
+
+[exits."Water Temple Lobby"."Water Temple Falling Platform Room"]
+rule = "Raise_Water_Level and (Small_Key_Water_Temple, 3)"
+was = "Raise_Water_Level and (Small_Key_Water_Temple, 4)"
+source = "https://www.ign.com/wikis/ocarina-of-time-remake/Water_Temple_Dungeon_Walkthrough (Finding the Longshot): third spent key opens the high west falling-platform door after pillar and middle-water locks."
+
+[exits."Water Temple Falling Platform Room"."Water Temple Dark Link Region"]
+rule = "can_use(Hookshot)"
+was = "can_use(Hookshot) and (Small_Key_Water_Temple, 5)"
+source = "https://www.ign.com/wikis/ocarina-of-time-remake/Water_Temple_Dungeon_Walkthrough (Finding the Longshot): moving targets and dragon switch puzzle lead directly to Dark Link; no fourth/fifth small-key door here."
+
+[exits."Water Temple Dark Link Region"."Water Temple River"]
+rule = "can_use(Longshot)"
+was = "can_play(Song_of_Time)"
+source = "https://www.ign.com/wikis/ocarina-of-time-remake/Water_Temple_Dungeon_Walkthrough (Finding the Boss Key): the river is reached by Longshot targets above the chest; the N64 Song of Time block is gone."
+
+[locations."Water Temple River Chest"]
+n64_only = "No chest on the remodeled rapids exit: IGN and Nintendo Life describe only the eye-gate exit, without a key chest; read-only Banc has nine chests total (four keys, map, compass, Longshot, boss key, pillar Red Rupee), none in river room 21."
+source = "https://www.ign.com/wikis/ocarina-of-time-remake/Water_Temple_Dungeon_Walkthrough (Finding the Boss Key); https://www.nintendolife.com/guides/zelda-ocarina-of-time-water-temple-walkthrough-switch-2 (Water rapids); cs4b read-only WaterTemple Banc/census, e0f3ccfa, 2026-11-07."
+
+[exits."Water Temple Lowered Water Levels"."Water Temple Central Bow Target"]
+rule = "False"
+was = "Progressive_Strength_Upgrade and Bow and (logic_water_central_bow or Hover_Boots or Longshot)"
+source = "https://www.ign.com/wikis/ocarina-of-time-remake/Water_Temple_Dungeon_Walkthrough (Small Key 4): the middle-floor north eye/target and submerged block route is reached at middle water, not lowered water."
+
+[exits."Water Temple Middle Water Level"."Water Temple Central Bow Target"]
+rule = "can_use(Bow) and can_use(Longshot) and can_use(Iron_Boots) and Progressive_Strength_Upgrade"
+was = "Progressive_Strength_Upgrade and logic_water_central_bow and Child_Water_Temple and Slingshot"
+source = "https://www.ign.com/wikis/ocarina-of-time-remake/Water_Temple_Dungeon_Walkthrough (Small Key 4): shoot north eye, Longshot to the distant target and ceiling alcove, pull/push underwater block with Iron Boots. No Hover shortcut verified."
+
+[exits."Water Temple Dive"."Water Temple North Basement"]
+rule = "can_use(Iron_Boots) and can_use(Longshot) and (Small_Key_Water_Temple, 4)"
+was = "(Iron_Boots or can_play(Zeldas_Lullaby)) and (Longshot or (logic_water_north_basement and Hover_Boots)) and (Small_Key_Water_Temple, 4)"
+source = "https://www.ign.com/wikis/ocarina-of-time-remake/Water_Temple_Dungeon_Walkthrough (Finding the Boss Key): sink to north basement, Longshot across to the fourth locked door."
+
+[exits."Water Temple North Basement"."Water Temple Boss Key Chest Room"]
+rule = "can_use(Iron_Boots) and has_explosives and Progressive_Strength_Upgrade"
+was = "(Small_Key_Water_Temple, 5) and (logic_water_bk_jump_dive or Iron_Boots) and (logic_water_north_basement_ledge_jump or Hover_Boots or (has_explosives and Progressive_Strength_Upgrade))"
+source = "https://www.ign.com/wikis/ocarina-of-time-remake/Water_Temple_Dungeon_Walkthrough (Finding the Boss Key): after fourth lock, bomb three walls, move block onto switch and cross geysers to the boulder corridor. There is no fifth lock."
+
+[locations."Water Temple GS Near Boss Key Chest"]
+region = "Water Temple Boss Key Chest Room"
+rule = "can_use(Longshot)"
+was = "True"
+source = "https://www.ign.com/wikis/ocarina-of-time-remake/Water_Temple_Dungeon_Walkthrough (Gold Skulltula 77): boulder corridor reached after bomb walls/block/geysers. Eurogamer remake guide requires Longshot; ordinary Hookshot reach is disputed by Nintendo Life and remains a question. Census room 24 Hash 186694424287048567."
+
+[exits."Water Temple Before Boss"."Morpha Boss Room"]
+rule = "Boss_Key_Water_Temple and can_use(Iron_Boots)"
+was = "Boss_Key_Water_Temple"
+source = "https://www.ign.com/wikis/ocarina-of-time-remake/Water_Temple_Dungeon_Walkthrough (Boss door): Iron Boots provide footing up the water-covered spike slope before opening the boss door."
