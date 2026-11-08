@@ -513,3 +513,71 @@ fairies gone? Does capture still permit all four jail rescue routes? Is Outside 
 barrier-gated as well as Gauntlets-gated?** Old uncertain gates/resources stay explicitly unverified; neither
 unknown grotto entrance was changed to an unconditional free passage. Fairy fees/night semantics remain
 the shared questions above.
+
+## Handoff commit ledger
+
+Branch `r4/logic-adult`, based on the reviewer-authorized `main` loader prerequisite. No merge or push.
+The first three IDs changed during the authorized rebase; use this ledger, not earlier thread IDs.
+
+| Commit | Scope |
+|---|---|
+| `5a3c6ca` | Forest locks/traversal |
+| `3d49bd8` | Water four-key graph |
+| `bb93f16` | Fire real locks/pillar |
+| `96de461` | Initial crater heart gate (corrected below) |
+| `b7bd622` | Goron City ceiling token |
+| `272e61b` | Lake entry/restored-water routes |
+| `4c2e30c` | Domain thaw/shop/token |
+| `a0fa4cd` | Fountain Gauntlets/Lens tunnel |
+| `3140d39` | Five-Poe bottle threshold |
+| `a8002bf` | Documented Light Arrows route |
+| `22aee05` | Corroborated child crater climb |
+| `b036547` | Authorized phantom starting Fire-key removal |
+| `64d22a4` | Shadow locks/bombs/moved checks |
+| `f160bd2` | Spirit light/statue checks |
+| `0c1f39a` | Gerudo trials and storm grottos |
+| `457371a` | Domain source corroboration/shared-gate questions |
+| `24dd60e` | Colossus cliff token/absent scrubs |
+| `e1e988d` | Shadow ceiling ride/absent pot |
+| `6cc13c2` | Castle trials and one-key Light route |
+| `80f5b59` | Gerudo chest kind/absent pickups |
+| `da67b7f` | Absent Wasteland crates |
+| `5af3435` | Colossus Hammer wall access |
+| `0e8e1ea` | GTG regression formatting |
+
+Six session-created throwaway smoke scripts were removed after their observed outputs were recorded here.
+Permanent behavior regressions remain. Read-only research material stays outside the repository; no game
+data, dependency, game/save file, game process or window was changed/started.
+
+## Final gate results and review blockers
+
+| Command | Observed result |
+|---|---|
+| `uv run ruff format --check` | Passed: 83 files formatted |
+| `uv run ruff check` | Passed |
+| `uv run pytest` | **248 passed, 18 skipped, 2 failed**, 79.44 s |
+| `OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump` | **17 passed**, 251 deselected, 73.94 s |
+
+The first formatting/lint attempt printed one 122-character parametrization against the 120-column limit.
+Wrapped that exact decorator; the aimed rerun above passed. No unchanged failing command was retried.
+
+The full synthetic run includes the vanilla placement and 200 default generated-seed searches; neither is
+among its failures. Both remaining failures are in the unowned `tests/test_world_data.py`:
+
+- line 28: fixed translated-era `len(world.regions) == 342`, actual **343** after the Water region split.
+- line 88: three keys expected not to pass the Dark Link exit, actual **True**. The preceding route already
+  enforces the remake's three locks; this exit is a grapple crossing, not another lock.
+
+**Reviewer: remove the obsolete count assertion and old Water predicate subsection, rather than repinning
+343 or another incidental exit count. The dedicated Water tests exercise the actual route and self-locks.
+Alternatively authorize this track to make the shared-test change.** Requested on `cs-r4`; no shared-test
+edit or unrequested rebase was made. Track A's region-test change exists on its branch, not this authorized base.
+
+**Not merge-ready until the shared failures and root Golden Gauntlets chest Lens-path request are resolved.**
+Also integrate cs4a/cs4d's ninth GTG key; settle shared night/first-fairy/fee semantics before claiming full-game
+seed safety. In-game questions and exact checks are bold in their area sections. Existing Spirit cross-age
+key pessimism and monotone time travel remain engine limitations, not concealed by free items.
+
+Reachable track work is committed area by area, with source evidence, targeted regressions and live search
+proof. No compensating key data was added; both phantom Fire start key and extra castle pool key are gone.
+No game was launched. This is a source/search audit handoff, not an in-game certification.
