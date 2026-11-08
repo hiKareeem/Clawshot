@@ -116,10 +116,11 @@ def generate(
     return Seed(world, seed, settings, placements, shuffled_locations(world, settings), spheres)
 
 
-def _required_items(seed: Seed, sources: tuple[str, ...]) -> list[dict[str, Any]]:
+def _required_items(seed: Seed, sources: tuple[str, ...], visits: Mapping[str, dict]) -> list[dict[str, Any]]:
     by_item: dict[str, list[str]] = {}
     for source in sources:
-        by_item.setdefault(seed.placements[source], []).append(source)
+        item = visits[source]["item"] if source in visits else seed.placements[source]
+        by_item.setdefault(item, []).append(source)
     return [{"item": item, "count": len(names), "sources": names} for item, names in by_item.items()]
 
 
@@ -152,22 +153,32 @@ def spoiler(seed: Seed) -> dict[str, Any]:
     route = opening(seed)
     opening_log = None
     if route is not None:
-        steps = []
         goal_regions = list(dict.fromkeys(event.region for event in seed.world.events if event.name == route.event))
-        for step in route.steps:
-            info = (
-                describe(step.location) | {"item": seed.placements[step.location]}
-                if step.kind == "collect"
-                else {
+
+        def describe_step(step):
+            if step.kind == "visit":
+                info = route.visits[step.location]
+            elif step.kind == "collect":
+                info = describe(step.location) | {"item": seed.placements[step.location]}
+            else:
+                info = {
                     "name": route.name if step.kind == "enter" else route.event,
                     "where": route.region if step.kind == "enter" else " / ".join(goal_regions),
                     "item": None,
                 }
-            )
-            steps.append(
-                info | {"kind": step.kind, "location": step.location, "requires": _required_items(seed, step.requires)}
-            )
-        opening_log = {"name": route.name, "event": route.event, "region": route.region, "steps": steps}
+            return info | {
+                "kind": step.kind,
+                "location": step.location,
+                "requires": _required_items(seed, step.requires, route.visits),
+                "alternatives": [describe_step(alternative) for alternative in step.alternatives],
+            }
+
+        opening_log = {
+            "name": route.name,
+            "event": route.event,
+            "region": route.region,
+            "steps": [describe_step(step) for step in route.steps],
+        }
     return {
         "generator": f"clawshot {version('clawshot')}",
         "seed": seed.seed,
@@ -203,16 +214,22 @@ def play_note(seed: Seed, log: Mapping[str, Any] | None = None) -> str:
                 "This is one replayed logic witness, not every optional sphere find.",
                 "Entry preparation covers the planned clear, not just reaching the lobby.",
                 "Prices are before conditional discounts; logic checks wallet capacity, not cash earned.",
+                "An alternative row replaces its visit; it is not an additional required purchase.",
                 "",
                 "| Step | Action | Check / where / world identity | Item | Needed beforehand | Price / shelf release |",
                 "|---|---|---|---|---|---|",
             ]
         )
-        indices = {step["location"]: i for i, step in enumerate(route["steps"], 1) if step["kind"] == "collect"}
-        for index, step in enumerate(route["steps"], 1):
+        indices = {
+            step["location"]: i for i, step in enumerate(route["steps"], 1) if step["kind"] in ("collect", "visit")
+        }
+
+        def render_step(index: str, step: Mapping[str, Any], alternative: bool = False) -> None:
             action = (
                 ("Buy" if "price" in step else "Collect") if step["kind"] == "collect" else step["kind"].capitalize()
             )
+            if alternative:
+                action += " (alternative)"
             place = f"{step['name']} — {step['where']}"
             if step["location"] not in (step["name"], step["where"]):
                 place += f" [{step['location']}]"
@@ -224,8 +241,15 @@ def play_note(seed: Seed, log: Mapping[str, Any] | None = None) -> str:
                 references = ", ".join(str(indices[source]) for source in requirement["sources"])
                 needed.append(f"{item} (step {references})")
             sale = f"{step['price']} rupees; {step['opens']}" if "price" in step else "—"
-            cells = (str(index), action, place, step["item"] or "—", "; ".join(needed) or "None", sale)
+            if "not_equipped" in step:
+                sale += f"; no {step['not_equipped']} equipped (unequip it if owned)"
+            cells = (index, action, place, step["item"] or "—", "; ".join(needed) or "None", sale)
             lines.append("| " + " | ".join(_markdown_cell(cell) for cell in cells) + " |")
+
+        for index, step in enumerate(route["steps"], 1):
+            render_step(str(index), step)
+            for alternative in step["alternatives"]:
+                render_step(f"{index} alt", alternative, alternative=True)
         lines.append("")
     lines.extend(
         [

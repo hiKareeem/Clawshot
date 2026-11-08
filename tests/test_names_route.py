@@ -6,7 +6,7 @@ from clawshot.generate import Settings, generate, play_note, spoiler
 from clawshot.generate.route import opening
 
 
-def opening_world(*, child_shield=True):
+def opening_world(*, child_shield=True, paid_shield="Later Shelf"):
     locations = {
         "Sword A": {"type": "NPC", "vanilla": "Sword"},
         "Sword B": {"type": "NPC", "vanilla": "Sword"},
@@ -17,8 +17,8 @@ def opening_world(*, child_shield=True):
     }
     later = {}
     if child_shield:
-        locations["Later Shelf"] = {"type": "Shop", "vanilla": "Deku Shield"}
-        later["Later Shelf"] = "True"
+        locations[paid_shield] = {"type": "Shop", "vanilla": "Deku Shield"}
+        later[paid_shield] = "True"
     return {
         "start": "Village",
         "goal": "'Defeat Queen Gohma'",
@@ -87,3 +87,41 @@ def test_required_scrub_reward_is_a_priced_purchase_before_dungeon_entry():
     purchase_row = next(row for row in rows if "| Later Shelf —" in row)
     assert "| Buy |" in purchase_row
     assert "| 40 rupees;" in purchase_row
+
+
+def free_shield_world():
+    spec = opening_world(paid_shield="KF Shop Item 6")
+    spec["regions"][0]["exits"]["KF Kokiri Shop"] = "True"
+    spec["regions"].append(
+        {"name": "KF Kokiri Shop", "events": {"Deku Shield": "age == 'child' and at('After Gate', age == 'child')"}}
+    )
+    return spec
+
+
+def test_free_event_is_an_explicit_required_visit_not_a_pool_check_or_purchase():
+    seed = generate(free_shield_world(), 7, Settings(shuffle=()))
+    log = spoiler(seed)
+    steps = log["opening_route"]["steps"]
+    free = next(step for step in steps if step["kind"] == "visit")
+    entry = next(step for step in steps if step["kind"] == "enter")
+    assert free["item"] == "Deku Shield" and free["price"] == 0
+    assert free["not_equipped"] == "Deku Shield"  # Ownership is not the offer's exclusion.
+    assert {item["item"] for item in free["requires"]} == {"Sword", "Hylian Shield"}
+    assert steps.index(free) < steps.index(entry)
+    assert "Deku Shield" in {item["item"] for item in entry["requires"]}
+    assert not any(step["kind"] == "collect" and step["item"] == "Deku Shield" for step in steps)
+    assert [alt["location"] for alt in free["alternatives"]] == ["KF Shop Item 6"]
+    assert free["alternatives"][0]["price"] == 10
+    assert free["location"] not in seed.placements and free["location"] not in seed.world.locations
+    assert any(event.name == "Deku Shield" for event in seed.world.events)
+
+
+def test_free_shield_cannot_replace_the_initial_shield_needed_to_pass_mido():
+    spec = free_shield_world()
+    spec["locations"]["Early Shelf"]["vanilla"] = "Deku Shield"
+    spec["regions"][0]["exits"]["After Gate"] = "Sword and 'Deku Shield'"
+    seed = generate(spec, 7, Settings(shuffle=()))
+    steps = spoiler(seed)["opening_route"]["steps"]
+    assert not any(step["kind"] == "visit" for step in steps)
+    first_shield = next(step for step in steps if step["item"] == "Deku Shield")
+    assert first_shield["location"] == "Early Shelf"

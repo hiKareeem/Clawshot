@@ -1320,10 +1320,14 @@ physical shelves, prices and shelf-release conditions. It is not all optional sp
 rupee-earnings proof.
 
 Kareem's seed-shop-7 note bug (reviewer, 2026-11-08): Hylian Shield passes Mido but does not reflect the
-child Slingshot-room scrub's nuts. The old prose omitted the later Deku Shield purchase that the existing
-`here(has_shield)` logic needs. Regenerated outside the protected seed, the new serialized witness orders
-Sword (Mido second-left), Hylian Shield (KF8), Deku Shield (KF6, after Mido), THEN Tree entry and the
-Slingshot-room upper chest. Synthetic route boundaries and the real-spoiler/note regression pass.
+child Slingshot-room scrub's nuts. The first fix exposed the missing paid Shield prerequisite. Section 12's
+later GIFT02 finding supplies a free alternative: pass Mido, talk to the Great Deku Tree, return to the child
+Kokiri shopkeeper before Gohma/castle quest completion, with **no Deku Shield equipped** (an owned one can
+be unequipped). The note now prefers that free visit and shows an accessible paid shelf as an alternative,
+not another required purchase. The event is materialized only in a private presentation proof so it cannot
+silently supply inventory: the actual seed's world, pool and shuffled identities are unchanged. The real
+seed-7 spoiler/note regression verifies the visit and its Sword/Hylian predecessors before Tree entry;
+F's Boomerang route supplies the regenerated seed's ranged tool.
 
 Presentation prices use `clawshot.settings.shop_price` with the **placed** native display, physical slot
 price, shuffled membership and effective seed settings. A moved Kokiri Deku Shield is discounted; the old

@@ -5,6 +5,15 @@ region = "Deku Tree Lobby"
 age = "child"
 # A presentation milestone, not another access rule: route.py proves it through the existing world/search.
 
+[[opening.visit]]
+event = "Deku Shield"
+region = "KF Kokiri Shop"
+name = "Kokiri shopkeeper's free Deku Shield"
+where = "Kokiri Forest, Kokiri Shop: talk to the child shopkeeper at the counter, not a shelf. First pass Mido, talk to the Great Deku Tree to advance the meeting quest, then return to the shop."
+opens = "Child Link, after the Deku Tree meeting quest advances; before Gohma/Forest Stone or the castle-visit quest is completed"
+not_equipped = "Deku Shield"
+source = "Kareem in game via Claude, 2026-11-08, seed-shop-7; plans/03-game-data.md section 12, GIFT02. child_kokiri_forest.toml event at KF Kokiri Shop proves access. present_DekuSheld Event45 checks equipped Deku Shield, not ownership; both grant branches give Obj_Shield_Deku, without a purchase."
+
 # Readable check labels, directions and provenance; no game resources.
 # World/OoTR keys and physical Hash/flow identities are unchanged.
 # Directions identify checks, not a guarantee of access: exclusions/rules remain in world data.

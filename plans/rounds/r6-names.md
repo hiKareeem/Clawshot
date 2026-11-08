@@ -367,3 +367,52 @@ their respective process completed; no game/user/save/dump path was deleted.
 The canonical-price/base-move blocker is resolved. No remaining code blocker, compatibility shim,
 dependency change, merge, push or stash. Outstanding in-game/identity observations are the explicitly
 documented research limits above, not enabled checks or claims of game certification.
+
+## Authorized F integration: explicit free-shield visit
+
+Claude authorized `main` at `a81faf9`; the clean `git rebase main` completed without conflicts. Section
+order is unchanged. Read F's `child_kokiri_forest.toml` event and section 12/GIFT02; read D25 in decisions.
+No ammo placement/logic policy was changed by this track.
+
+### Problem and proof design
+
+The census-backed `make_seed` probe after F showed Sword (Mido second-left), Hylian Shield (KF8), then
+Tree entry and Boomerang: the shield supplied by the logic event was invisible in the note. Played-seed
+assertions use this actual remake pool, not `generate(load_spec())`'s translated N64 vanilla-item pool.
+
+`location_names.toml [opening]` now describes the specific event visit: shopkeeper at the counter (not
+a shelf), child Link after passing Mido and advancing the Deku Tree meeting quest, before Gohma/Forest
+Stone or castle-visit completion. `not_equipped = "Deku Shield"` is an equipment condition, not an
+ownership prohibition; the rendered instruction says to unequip an owned Shield.
+
+For route proof only, the selected compiled F event becomes an explicit source in a copied world/view.
+Its exact access rule and region are reused, not restated in Python. The actual seed/world/events,
+placements, shuffled IDs and pool are untouched. Removing the implicit grant from this private view means
+deletion-minimization and replay must account for the visit as a real predecessor source. Zero-price visits
+are retained ahead of removable paid replacements; this is one sufficient witness, not a global economy
+optimizer or an earned-cash proof.
+
+Paid alternatives come from actual placed items and canonical slot/seed prices. Each must be accessible
+as child **before** granting the free Shield, and gets its own minimized predecessor proof. A note row
+labelled `N alt` replaces visit N; it is not an extra mandatory purchase. A free Shield cannot circularly
+provide the initial Shield needed to pass kept Mido.
+
+### Checks and actual surface
+
+Targeted: **11 synthetic passed**, including explicit-event dependency/unchanged-pool and initial-Mido-
+Shield boundaries; **1 dump passed**, the updated real seed-shop-7 serialized spoiler/note regression.
+It checks the free event/region, zero price, not-equipped condition, Sword/Hylian prerequisites, KF6
+paid alternative at the default cheap price, ordering and all predecessor references.
+
+Actual CLI: `uv run python -m clawshot --romfs E:/Games/Hookshot/romfs --seed 7 --shuffle Chest Shop
+--no-cheap-deku-shield --out E:/OOTRemake/work/r6-names/free-shield-shop7`.
+Observed **228 shuffled checks, 25 spheres, 77 romfs resources**, plus spoiler/note. The real rendered
+opening is Sword (Mido middle-left), buy Hylian (KF8), **visit shopkeeper for free Deku Shield**, enter
+Tree, obtain Boomerang from the falling-platform-room chest, complete Gohma. The visit gives the exact
+counter/tree-quest/early-story/equipment instructions; KF6 appears only as its **40-rupee alternative**.
+Default cheap-shield mode's alternative is 10, verified by the real dump regression. Neither mode makes
+the free visit a shuffled check or another paid shelf.
+
+Scoped formatting left all four Python files unchanged; full format check: **178 files already formatted**;
+full lint: **all checks passed**. The full synthetic and dump gates are running on this completed code.
+No game, launcher, window, active seed/user/save folder or dump file was changed.
