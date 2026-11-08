@@ -411,6 +411,8 @@ def fill(
         )
     type_held = [item for item in unrestricted if item in held]
     unrestricted = [item for item in unrestricted if item not in held]
+    # Sparse native shop whitelists must keep their slots before general refills take them.
+    type_held.sort(key=lambda item: sum(allowed(world, settings, name, item) for name in locations), reverse=True)
     shop_refills = _fill_restrictive(world, settings, rng, placements, locations, type_held, unrestricted, shop_refills)
     _fill_bomb_ammo(world, settings, rng, placements, locations, unrestricted)
     progression = [item for item in unrestricted if world.items[item].progression]
