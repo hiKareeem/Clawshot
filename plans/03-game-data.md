@@ -973,14 +973,18 @@ quest step) that the path reads before the step and sets after it, checked by re
 - A Bool query's case 0 is true, case 1 false (`IsExistInPouch` the same: case 0 = held).
 - `HavePlayedEvent.<row>` is set when the event ends, also when the player declines and the flow quits:
   `Dm_FairyFountain_Power` asks its own `HavePlayedEvent` inside that event to tell a first visit from a later one, and
-  offers again after a refusal. So it marks "visited", not "given".
-- The save's Bool section holds exactly the `GameDataList` Bools with `SaveFileIndex` 0 (10212 in every slot read);
-  `MetaData.SaveDataOffsetPos[0]` (95704) is where `progress.sav`'s entry table ends, 0x20 + 8 × (11925 entries of
-  file 0 outside `Bool64bitKey`, + 1 `Bool64bitKey` pair, + 33 section headers). `GameDataList`'s Bool list is not sorted
-  by hash.
-- Story gates mostly read quest steps and events, not items: `DoorOfTime` asks `Get_StoneOfFire_IsCompleted_Exp`,
-  `Get_StoneOfWater_IsCompleted_Exp` and `HavePlayedEvent.Dm_MelodyGet_Zelda`; no flow, logic module or placement reads
-  `Item_Stone_*` or `Item_Medal_*`.
+  offers again after a refusal, so it marks "visited", not "given" [inference from the flows: that the game sets it
+  when a refused visit quits is not observed].
+- The save's Bool section holds exactly the `GameDataList` Bools with `SaveFileIndex` 0 (10212 in every slot read).
+  `MetaData` gives the save layout: `SaveDataOffsetPos[0]` (95704) is where `progress.sav`'s entry table ends, 0x20 + 8 ×
+  (11925 entries of file 0 outside `Bool64bitKey`, + 1 `Bool64bitKey` pair, + 33 section headers), and
+  `AllDataSaveOffset` (106216) is the same for every entry of a saved type in any file (13239: all but `Bool64bitKey`,
+  `BoolExp` and `Struct`). `GameDataList`'s Bool list is not sorted by hash.
+- **Logic fact for shuffling boss rewards (not this round): the story gates read the dungeons' quest steps, not the
+  stones or medallions.** `DoorOfTime` asks `Get_StoneOfFire_IsCompleted_Exp`, `Get_StoneOfWater_IsCompleted_Exp` and
+  `HavePlayedEvent.Dm_MelodyGet_Zelda`; no flow, logic module or placement reads `Item_Stone_*` or `Item_Medal_*`. With
+  the rewards moved, the Door of Time (and the later gates that count medallions [inference: not each read]) would
+  follow the bosses beaten, not the rewards held, unless those reads are rewritten or the logic asks for the bosses.
 
 **Item gates elsewhere stay item reads**, because the logic models them as items: `TriForcePoint` Event8
 (`IsGet.Item_DinFire` before any other Great Fairy), `Npc_Kaepora_DeathMountainTrail` (Din's Fire), the castle-grounds
@@ -998,12 +1002,20 @@ code paths, both steps).
    item, or the cutscene playing once (its trigger tests the cutscene's `HavePlayedEvent`, section 14 [inference per
    cutscene]); nothing reads the vanilla item as "already given".
 2. **Swap plus rewrite** (19): the flow reads the vanilla item as "already given", or the step does more than give.
-   - *Given flag* (six Great Fairies, Song from Windmill): no existing flag is set only on the gift path (`Meet_GreatFairy_01`
-     defaults to true, Din's fairy has none, `HavePlayedEvent` marks a visit), so the patch adds a saved Bool per check to
+   - *Given flag* (six Great Fairies, Song from Windmill). An existing flag is used where one is set once the check is
+     given and on no other path: the windmill's `HavePlayedEvent.Dm_MelodyGet_Storm` (the Song of Storms cutscene, an
+     `EventSetting` row with no refusal in it; `Npc_Hylia_009_Child` reads it for lines only). For the fairies none is:
+     `HavePlayedEvent.Dm_FairyFountain_<fairy>` ends every visit, refusal included (the flows' `VisitedNoAbility` branch
+     exists for "visited, not given"); `Meet_GreatFairy_02` to `_05` are set at the start of `FirstTimeAnother_<fairy>`,
+     before the offer (Frore Event51, Wisdom Event42, Nayru Event48, Courage Event47), and by Din's `GreatFairy_Disappear`;
+     `Meet_GreatFairy_01` (Power) defaults to true; Din's fairy has no flag of its own; `GreatFairy_MeetFirst` (also set
+     on a refusal), `GreatFairy_AlreadyAppeared`, the count `Meet_GreatFairy_RemainNumber` and the quest
+     `Meet_GreatFairy` are shared by all six. So, as a last resort, the patch adds a saved Bool per fairy check to
      `GameDataList` (`Clawshot.Gift.<flow>.<event>` of the check's first step; `ResetTypeValue` 8, `SaveFileIndex` 0, as
-     9338 story flags; `MetaData` file-0 offset and size raised by 8 bytes per flag), sets it right after each gift step,
-     and turns the listed "already given" reads into reads of it. Whether the game keeps a Bool it did not ship with is
-     the in-game test (the Din fairy output, `plans/rounds/r5-gifts.md`).
+     9338 story flags), grows the save layout in `MetaData` by one pair per flag (`SaveDataOffsetPos[0]`,
+     `SaveDataSize[0]`, `AllDataSaveOffset`, `AllDataSaveSize`, +8 bytes each), sets the flag right after the gift step,
+     and turns the listed "already given" reads into reads of it. Whether the game keeps a Bool it did not ship with, and
+     still loads a save made before, is the in-game test (`plans/rounds/r5-gifts.md`, item 3).
    - *Skip* (the twelve songs, DMT Biggoron): each song flow first runs the shared play-along
      (`Dm_SY_Ocarina:LearningOcarinaPlayAuto` / `...ForSeek`), which adds the song of the current melody through one step
      per song (`Dm_SY_Ocarina` Event59 to Event71, chosen by `EventQueryMelodyTypeForNormal` Event45 or Event66) and is
@@ -1077,7 +1089,7 @@ code paths, both steps).
 | Song from Ocarina of Time | `Dm_MelodyGet_Time` Event4 | `Item_Melody_TimeSong` | the cutscene plays once | none | 2 | skip the play-along add `Dm_SY_Ocarina/Event63` |
 | Song from Royal Familys Tomb | `Dm_MelodyGet_Sun_03` Event34 | `Item_Melody_SunSong` | `RoyalFamilyTomb_MelodyGet_Clear` | none | 2 | skip the play-along add `Dm_SY_Ocarina/Event62` |
 | Song from Saria | `Dm_MelodyGet_Saria` Event109 | `Item_Melody_SariaSong` | the cutscene plays once | item gates kept: `Npc_Kokiri_009_Child`, `Npc_Kokiri_Mido_Child`; lines: 4 flows | 2 | skip the play-along add `Dm_SY_Ocarina/Event61` |
-| Song from Windmill | `Dm_MelodyGet_Storm` Event29 | `Item_Melody_StormSong` | none: `IsGet.Item_Melody_StormSong` in `Npc_Hylia_009_Adult` | lines: 3 flows; item gate kept: logic module `KakarikoVillage_Adult_Common_7d34` enables the windmill's Song of Storms spot on `IsGet.Item_Melody_StormSong` | 2 | skip the play-along add `Dm_SY_Ocarina/Event64`; flag: `Npc_Hylia_009_Adult` Event9, 17, 31, 69 (learn or play branch, lines) |
+| Song from Windmill | `Dm_MelodyGet_Storm` Event29 | `Item_Melody_StormSong` | none: `IsGet.Item_Melody_StormSong` in `Npc_Hylia_009_Adult` | lines: 3 flows; item gate kept: logic module `KakarikoVillage_Adult_Common_7d34` enables the windmill's Song of Storms spot on `IsGet.Item_Melody_StormSong` | 2 | skip the play-along add `Dm_SY_Ocarina/Event64`; `Npc_Hylia_009_Adult` Event9, 17, 31, 69 (learn or play branch, lines) read `HavePlayedEvent.Dm_MelodyGet_Storm` |
 | ZF Great Fairy Reward | `Dm_FairyFountain_Frore` Event174 | `Item_FaroreWind` | none: `IsGet.<gift>` in `Dm_FairyFountain_Frore` | lines: 2 flows | 2 | flag: own-flow read, `TriForcePoint` `Check_Complete` read, the two count reads in `Dm_FairyFountain_Din`; keep `TriForcePoint` Event8 (`IsGet.Item_DinFire`, the gate for the other five) |
 | Barinade | `Dm_ZoraFountain_0030` Event3 | `Item_Stone_Water` | the cutscene plays once | none | 3 | no flow reads the reward; the game's story gates read the dungeon's quest step instead (`DoorOfTime` asks `Get_StoneOfFire_IsCompleted_Exp`, ...), so a moved reward breaks them both ways |
 | Bongo Bongo | `Dm_Awake_Shadow_Get` Event3 | `Item_Medal_Shadow` | the cutscene plays once | none | 3 | no flow reads the reward; the game's story gates read the dungeon's quest step instead (`DoorOfTime` asks `Get_StoneOfFire_IsCompleted_Exp`, ...), so a moved reward breaks them both ways |
