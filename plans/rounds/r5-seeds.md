@@ -179,3 +179,28 @@ retry. No source behavior changed by that import cleanup.
 
 The earlier age/shops authorization request is partially answered: shops is integrated; final seed regeneration
 still waits for Claude's next authorization after track A merges. Existing three outputs stay provisional.
+
+Post-rebase delivery ledger (the earlier IDs above are historical): `4c5e465` Ganon-key type,
+`ce15fa8` tower ownership, `0366a6e` Fire identity, `97912bc` coverage, `42b5c12` wrappers,
+`6bded97` isolated oracle correction, `0134887` fast start, `cacb2a1` baseline evidence,
+`741303d` found-shield integration coverage/import grouping.
+
+An independent TOML parse also confirmed the two actor blocks remain in `[items]`: shop `Buy Magic Jar`
+maps to `Shop_MagicJar_Small`, chest `Magic Jar` to `Tbox_MagicJar_Large`, Scrub Business Seed to its item
+actor and the 30-Bombchu shop bundle to its native actor. The green-rupee alias remains in `[aliases]`.
+The synthetic gate finished **342 passed, 40 skipped**; format **130 files** and lint passed.
+
+The shops-rebase dump gate finished **38 passed, 1 failed, 343 deselected**. Failure was the existing shop
+seed test applying `rstb.required_size` to the now-default intro component, a format without a verified generic
+formula. Printed the actual failed output: **512 -> 384 bytes**, original/output allocation both **5736**.
+Updated only that test's allocation oracle: selected fast-start resources must independently be non-growing,
+fit their entry and retain the original table allocation; every other written resource still needs its verified
+formula. Fast start remains enabled in this combined Chest+Shop test. No formula was invented or error hidden.
+
+Claude then authorized final rebase onto `2d7c02a` (shops + age + gifts). The final request supersedes waiting
+for A: rerun all gates on that integration, then replace the three baselines and add `seed-shop-7`, all with
+default intro skip and the default-on chronological return guarantee.
+
+The focused oracle rerun exposed a second printed test-helper assumption: it tried zstd decoding the intro's
+plain `.bgyml`. Resource reads now decode only `.zs`, as the writer does. After that cause-aimed correction,
+`test_seed_shop_copies_share_the_placement_and_keep_slot_prices`: **1 passed**.

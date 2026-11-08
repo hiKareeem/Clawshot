@@ -69,7 +69,8 @@ def test_seed_shop_copies_share_the_placement_and_keep_slot_prices(romfs, tmp_pa
 
     def resource(path):
         overlay = out / "romfs" / path
-        return dictionaries.decompress(path, (overlay if overlay.exists() else romfs / path).read_bytes())
+        data = (overlay if overlay.exists() else romfs / path).read_bytes()
+        return dictionaries.decompress(path, data) if path.endswith(".zs") else data
 
     for slot in shops.load():
         if slot.location not in output.seed.shuffled:
@@ -87,8 +88,21 @@ def test_seed_shop_copies_share_the_placement_and_keep_slot_prices(romfs, tmp_pa
         assert goods.get("StockNum") == original_goods.get("StockNum")
         assert goods.get("Release") == original_goods.get("Release")
     table = rstb.read(resource(rstb.TABLE_PATH))
+    original_table = rstb.read(dictionaries.decompress(rstb.TABLE_PATH, (romfs / rstb.TABLE_PATH).read_bytes()))
+    fast_start_paths = {file.path for file in output.fast_start_files}
     for info in written:
-        if info.path != rstb.TABLE_PATH:
+        if info.path == rstb.TABLE_PATH:
+            continue
+        if info.path in fast_start_paths:
+            # Fast-start edits retain their original allocation: fixed-layout values or a shrinking intro tree.
+            original = (romfs / info.path).read_bytes()
+            if info.path.endswith(".zs"):
+                original = dictionaries.decompress(info.path, original)
+            changed_size = len(resource(info.path))
+            assert changed_size <= len(original)
+            assert changed_size <= table.get(info.path)
+            assert table.get(info.path) == original_table.get(info.path)
+        else:
             assert table.get(info.path) >= rstb.required_size(info.path, info.new_size)
 
 
