@@ -244,3 +244,20 @@ Shared contracts/commits posted on `cs-r6`; cs6a received all four names, stable
 cs6b was asked to include Scrub/Token in the settings codec's public values. No shared dependency file edited.
 Section 23 cannot be appended in numeric order until the other tracks' sections 20–22 are on the authorized
 base; the research and reproducible findings are complete here meanwhile.
+
+## Player artifact audit and cleanup
+
+Independent audit of all seven saved launchers: executable exactly the release path, seven distinct isolated
+users, backup copy direction outward only, no work-build fallback. Parsed and size-checked every emitted
+resource against its effective resource table: four one-flow scrub outputs, three two-Banc token outputs.
+All passed; no launcher executed. Player checklist: external `ingame/checklist.md`; read-only checker:
+`ingame/check_save.py`.
+
+Completed full-seed replay outputs, replay/smoke scripts and the artifact-audit script were removed after
+proof. Only paths created in this session were removed; controlled player overlays, research and their builders
+remain. Cleanup also named two pytest basetemps that did not exist (those earlier tests used no tmp fixture):
+`rm` printed the missing paths; no retry was needed. The preceding four real smoke paths were removed.
+The active full-gate basetemps were not touched.
+
+Prepared section 23 at `E:/OOTRemake/work/r6-tokens/section23.md`; numeric-order integration is the only
+documentation prerequisite outstanding, posted to the reviewer. No section 20–22 placeholders were invented.
