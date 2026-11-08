@@ -159,7 +159,31 @@ Base **65bbcf7**, branch `r6/shopfix`; earlier hashes in tool/thread checkpoints
 | `2cbfc1a` | item4(a) failing-before/passing-after boundary tests and confirmed game result |
 | `71ed737` | item4(b/c) ammo table, proposed rule only, unchanged 7b contract |
 | `d97ba2c` | native refusal table, purchase observations and logic audit |
+| `8ad7753` | rebased ledger and completed smoke cleanup |
 
 ## Cleanup
 
-Removed only this session's completed three future-seed/replay smoke folders, two targeted pytest basetemps and throwaway generation/diagnostic builders after recording their evidence. Requested eight bisect overlays and all their users remain, including Kareem's played07 user; 7b and its launcher remain. Read-only audit reproducers, decoded local audit reports, CLI transcripts and verification JSON remain outside the repository. No source dump, backup, original seed/user, junction, other track file or dependency was removed or changed. Full-gate basetemps remain until that run finishes.
+Removed only this session's completed three future-seed/replay smoke folders, both targeted and both full-gate pytest basetemps, and throwaway generation/diagnostic builders after recording their evidence. Requested eight bisect overlays and all their users remain, including Kareem's played07 user; 7b and its launcher remain. Read-only audit reproducers, decoded local audit reports, CLI transcripts and verification JSON remain outside the repository. No source dump, backup, original seed/user, junction, other track file or dependency was removed or changed.
+
+## Full integration gates
+
+Run once on the integrated code after rebase, with pytest temporary output explicitly outside the repository:
+
+| Command | Observed result |
+|---|---|
+| `uv run ruff format --check` | **171 files already formatted** |
+| `uv run ruff check` | **All checks passed** |
+| `uv run pytest --basetemp E:/OOTRemake/work/r6-shopfix/pytest-full-synthetic` | **468 passed, 66 skipped**, 527.46 s |
+| `OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump --basetemp E:/OOTRemake/work/r6-shopfix/pytest-full-dump` | **65 passed, 469 deselected**, 594.64 s |
+
+All four full gates passed on the integrated code; no gate was narrowed or rerun unchanged. The synthetic gate covers all new Shop destination/capacity tests and inherited settings/age/gift/scrub tests; the dump gate includes the real failing-before/passing-after embedded Potion allocation oracle. No failing check remains.
+
+## Final handoff
+
+- **Crash fixed and confirmed in game:** 07 loads town, randomized shelves/prices/descriptions and successful Bombchu/stick/heart purchases; overlay log observed by Kareem.
+- **Continuation:** `E:/OOTRemake/work/r5-seed/seed-shop-7b/`, launcher `E:/OOTRemake/work/r5-seed/Play shop seed 7b.bat`. Quit before first launch; the human-run launcher makes its separate save copy once. **7b spoiler equals 7 byte-for-byte; only the size table differs among resources.** It does not include new refill placement rules, price defaults or forest defaults.
+- **New seeds:** every Buy refill stays at Shop; exact slot reservation prevents both refill and chest-only-filler starvation. Integrated string replay: 81 identical canonical files; 59 Buy refills, none in chests.
+- **Reports:** section24 has ammo/container and purchase-condition/refusal-ID tables; this file has scoped commit ledger, failure payloads, smoke proof and all four complete gate results.
+- **Left for review/owners, not silently implemented:** native chest bomb/Bombchu container grants need the proposed logical bag-count/pre-owned-bag decision and any desired family checks; the pre-existing selected-Blue-Fire/Potion-slot gate mismatch is explicitly reported above. Extra buyable test was cancelled by reviewer, not left unfinished.
+
+No game/launcher/window started by the agent; no merge, push, stash, dependency edit, or write under the game dump/backups/original seed/user. Final documentation commit hash is posted in the handoff thread and chat.
