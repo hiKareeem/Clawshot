@@ -12,6 +12,7 @@ from dataclasses import dataclass, field
 from typing import Any
 
 from clawshot.world.model import World
+from clawshot.world.rules import ADULT, CHILD
 from clawshot.world.search import Search
 
 DUNGEON_ITEM_CHOICES = ("own_dungeon", "anywhere")
@@ -148,6 +149,61 @@ def _fast_fill(rng: random.Random, placements: dict[str, str], locations: list[s
         placements[locations.pop()] = items.pop()
 
 
+def _age_family(world: World, item: str) -> str:
+    alias = world.items[item].alias
+    return alias[0] if alias is not None else item
+
+
+def _fill_age_return(
+    world: World,
+    settings: Settings,
+    rng: random.Random,
+    placements: dict[str, str],
+    locations: list[str],
+    pool: list[str],
+) -> None:
+    """Forward-place the data-defined return kit in an adult phase, before the usual assumed fill.
+
+    Bypass families additionally need an adult-only destination: otherwise an optional early child pickup
+    could bypass an unshuffled child prerequisite (the remake's Saria/bracelet route).
+    """
+    families = world.settings.get("age_return_fill_families", ())
+    if world.age_return is None or not world.settings.get("age_return_guarantee", False) or not families:
+        return
+    bypass = world.settings.get("age_return_bypass_families", ())
+    staged = [item for item in pool if _age_family(world, item) in families]
+    if not staged:
+        return
+    for item in staged:
+        pool.remove(item)
+    # Small keys must bootstrap the entrance before a boss key can consume its only reachable chest.
+    order = {"SmallKey": 0, "SmallKeyRing": 0, "BossKey": 2, "GanonBossKey": 2}
+    staged.sort(key=lambda name: order.get(world.items[name].type, 1))
+    maximal = Search(world, [*pool, *staged, *placements.values()])
+    child_access = {name for name in locations if maximal.can_access(world.locations[name], CHILD)}
+    inventory = world.settings.get("age_return_fill_inventory", {})
+    search = Search.adult_after_pull(world, (name for name, count in inventory.items() for _ in range(count)))
+    while staged:
+        search.collect_spheres(placements)
+        for index, item in enumerate(staged):
+            candidates = [
+                name
+                for name in locations
+                if allowed(world, settings, name, item)
+                and (_age_family(world, item) not in bypass or name not in child_access)
+                and search.can_access(world.locations[name], ADULT)
+            ]
+            if candidates:
+                rng.shuffle(candidates)
+                location = candidates[0]
+                placements[location] = item
+                locations.remove(location)
+                staged.pop(index)
+                break
+        else:
+            raise FillError(f"no adult return-kit destination for {staged!r}")
+
+
 def fill(
     world: World, settings: Settings, rng: random.Random, vanilla: Mapping[str, str] | None = None
 ) -> dict[str, str]:
@@ -170,12 +226,13 @@ def fill(
     }
     pool = [vanilla_item(name) for name in shuffled]
     rng.shuffle(pool)
+    locations = list(shuffled)
+    _fill_age_return(world, settings, rng, placements, locations, pool)
     restricted = [item for item in pool if is_restricted(world, settings, item)]
     unrestricted = [item for item in pool if not is_restricted(world, settings, item)]
     progression = [item for item in unrestricted if world.items[item].progression]
     priority = [item for item in unrestricted if world.items[item].priority]
     rest = [item for item in unrestricted if not world.items[item].progression and not world.items[item].priority]
-    locations = list(shuffled)
 
     if restricted:
         # Boss keys are taken first, then small keys, then the rest (Fill.fill_dungeons_restrictive).
