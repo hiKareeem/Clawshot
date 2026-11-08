@@ -4,7 +4,7 @@ from collections import Counter
 
 import pytest
 
-from clawshot.generate import Settings, generate
+from clawshot.generate import Settings, generate, prepare
 from clawshot.generate.fill import allowed, fill, shuffled_locations
 from clawshot.world import build_world
 from clawshot.world.load import load_spec
@@ -171,3 +171,73 @@ def test_shop_mini_seed_is_beatable_with_shield_in_the_shared_pool(spec):
     for name in seed.shuffled:
         if seed.world.locations[name].type == "Shop":
             assert allowed(seed.world, settings, name, seed.placements[name])
+
+
+def test_buy_refill_destination_boundary_uses_effective_settings(spec):
+    settings, world = prepare(
+        spec, Settings(shuffle=("Chest", "Shop"), item_location_types={"Kokiri Sword": ("Chest",)})
+    )
+    assert not allowed(world, settings, "Deku Tree Basement Chest", "Buy Bombs (10)")
+    assert allowed(world, settings, "KF Shop Item 7", "Buy Bombs (10)")
+    for item in world.items:
+        if item.startswith("Buy "):
+            assert settings.item_location_types[item] == ("Shop",)
+    assert settings.item_location_types["Kokiri Sword"] == ("Chest",)
+    assert allowed(world, settings, "Deku Tree Basement Chest", "Deku Shield")
+    unchanged, _ = prepare(spec, Settings(item_location_types={"Kokiri Sword": ("Chest",)}))
+    assert unchanged.item_location_types == {"Kokiri Sword": ("Chest",)}
+
+
+@pytest.mark.parametrize("shield_class", ["normal", "progression"])
+def test_new_chest_shop_seed_never_places_buy_refills_in_chests(shield_class):
+    spec = {
+        "start": "Start",
+        "goal": "Sword",
+        "settings": {"native_shop_items": ["Buy Bombs (10)", "Buy Arrows (10)", "Shield"]},
+        "items": {
+            "Sword": {},
+            "Shield": {"class": shield_class},
+            "Buy Bombs (10)": {"class": "priority"},
+            "Buy Arrows (10)": {"class": "priority"},
+        },
+        "regions": [
+            {
+                "name": "Start",
+                "locations": {
+                    "Shop A": {"rule": "True", "type": "Shop", "vanilla": "Buy Bombs (10)"},
+                    "Shop B": {"rule": "True", "type": "Shop", "vanilla": "Buy Arrows (10)"},
+                    "Chest A": {"rule": "True", "type": "Chest", "vanilla": "Sword"},
+                    "Chest B": {"rule": "True", "type": "Chest", "vanilla": "Shield"},
+                },
+            }
+        ],
+    }
+    settings = Settings(shuffle=("Chest", "Shop"))
+    for number in range(20):
+        seed = generate(spec, number, settings, attempts=1)
+        assert {seed.placements["Shop A"], seed.placements["Shop B"]} == {"Buy Bombs (10)", "Buy Arrows (10)"}
+        assert {seed.placements["Chest A"], seed.placements["Chest B"]} == {"Sword", "Shield"}
+
+
+def test_refill_reservation_also_leaves_space_for_chest_only_filler():
+    spec = {
+        "start": "Start",
+        "goal": "Sword",
+        "settings": {"native_shop_items": ["Buy Bombs (10)", "Shield"]},
+        "items": {"Sword": {}, "Shield": {}, "Buy Bombs (10)": {"class": "priority"}, "Rupee": {"class": "normal"}},
+        "regions": [
+            {
+                "name": "Start",
+                "locations": {
+                    "Shop A": {"rule": "True", "type": "Shop", "vanilla": "Buy Bombs (10)"},
+                    "Shop B": {"rule": "True", "type": "Shop", "vanilla": "Shield"},
+                    "Chest A": {"rule": "True", "type": "Chest", "vanilla": "Sword"},
+                    "Chest B": {"rule": "True", "type": "Chest", "vanilla": "Rupee"},
+                },
+            }
+        ],
+    }
+    for number in range(20):
+        seed = generate(spec, number, Settings(shuffle=("Chest", "Shop")), attempts=1)
+        assert {seed.placements["Shop A"], seed.placements["Shop B"]} == {"Buy Bombs (10)", "Shield"}
+        assert {seed.placements["Chest A"], seed.placements["Chest B"]} == {"Sword", "Rupee"}

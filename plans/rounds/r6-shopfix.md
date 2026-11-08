@@ -77,3 +77,25 @@ Measured all nine unique original ShopParams (including masks): rounded raw byte
 `E:/OOTRemake/work/r5-seed/Play shop seed 7b.bat` is copied/adapted from the mandated corrected save-copy template, with bin executable, updater suppression and missing-exe stop. It is **unrun**. When Kareem runs it after quitting, it reads his original seed-7 save as the source of a one-time independent `user-seed-shop-7b` copy, never writes/deletes the source, then continues that copy with 7b's overlay and its own log. The agent has not read or copied the active original user's saves. No fresh new game or vanilla ranch save is substituted for his seed progress.
 
 Reviewer added item 4: future seeds keep every `Buy ...` refill at Shop destinations; ammo/container metadata is reported without changing chest ammo logic. Reviewer explicitly corrected item 4(c): **7b stays size-fix-only**, so its existing chest `Buy ...` items remain; a newly filled seed under the restriction is a restart, not a compatible continuation.
+
+### Item 3 in-game confirmation (Kareem via Claude, 2026-11-08)
+
+Kareem ran **07-market-allocations-fixed**: Castle Town loaded without crashing; Bazaar and Potion shelves were randomized with prices/descriptions, and the log shows the overlay. The nested size correction is confirmed in game. He subsequently bought Bombchus at Bazaar, and a Deku Stick and a heart once he could hold them. The initial refusals were native can't-hold checks, not another shop patch failure. Reviewer cancelled the extra buyable experiment; none was built or run.
+
+## Item 4(a): future seeds keep refills in shops
+
+Effective `Settings.item_location_types` now holds **every** `Buy ...` item to `("Shop",)` when Shop is shuffled, through `prepare`; existing non-refill restrictions remain. `allowed()` is unchanged. With Shop vanilla the added policy does nothing. Physical shields/tunics and actual chest-ammo items are not classified as Buy refills.
+
+The fill needs the matching capacity invariant: remaining Shop destinations must cover remaining shop-only refills. Both progression and filler retain the old native-Shop preference only while spare slots exist; flexible native items prefer chests at the refill reserve. This preserves room for both shop-only refills and non-display chest filler. Held filler still precedes unrestricted filler when Shop merges them (same prerequisite correction as cs6b).
+
+Evidence:
+
+- Boundary regression fails before: `allowed(..., "Deku Tree Basement Chest", "Buy Bombs (10)")` was true. It passes after, preserves physical-shield chest placement and other held-item settings, and leaves vanilla-Shop settings unchanged.
+- Synthetic exact-capacity normal and progression cases, plus a spare-shop/non-display-filler case, each cover 20 seeds with `attempts=1`. Before the fixes they printed `Buy Bombs (10)` unplaced, or `Buy Bombs (10), Rupee` unplaced. After: **4 focused tests passed**.
+- First whole-world diagnostic's final error was Fire small-key placement, also seen with legacy settings. Instrumentation printed each bounded attempt: the usable candidate had **24 Shop slots for 36 remaining refills**, after flexible progression consumed shelves. An all-chest preference overcorrected and stranded chest-only filler. Final implementation reserves the **exact remaining count**, not every shop. No retries, key rules or oracle requirements were changed.
+- An early full-spec `generate` test omitted remake census vanilla overrides; replaced that invalid test setup with synthetic boundary cases. Actual public CLI below uses `make_seed` and the real census pool.
+- A shell-backend timeout produced no test output; process diagnostics showed no surviving shopfix pytest. A direct scenario printed the exact unplaced-refill cause before the aimed fix. A later metadata diagnostic tried `Location.dungeon`; printed AttributeError, so no dungeon inference was made from that field (dungeon belongs to the region).
+- Final real CLI: `uv run python -m clawshot --romfs E:/Games/Hookshot/romfs --seed 7 --shuffle Chest Shop --out E:/OOTRemake/work/r6-shopfix/new-seed-refills`: **228 checks, 25 spheres, 80 resources**, exit 0. Parsed spoiler: **59 Buy refills, zero outside Shop**. **127 placements differ** from old seed 7. This is smoke output for new-seed behavior, not Kareem's continuation.
+- 7b's spoiler was checked again byte-identical to 7's after this smoke. **Never replace 7b with the new refill-restricted fill.**
+
+Shared changes are isolated per round rules: `generate/__init__.py` effective-settings hook and `generate/fill.py` capacity/priority correction. Reviewer authorized rebase onto main **65bbcf7** at this clean checkpoint; preserve cs6b's canonical pricing, forest defaults, settings string and held priority, then run all four gates.

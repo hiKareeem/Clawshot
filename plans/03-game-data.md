@@ -1581,8 +1581,9 @@ The writer previously raised only outer pack allocations, not the modified membe
 Market Potion's embedded `Npc_Hylia_020_Shop` component grows **1088 -> 1156** bytes, rounded **1088 -> 1184**,
 but its entry stayed **7984**. The supplied GeneralFormatAsync crash names `Component/ShopPa` in x6/x7 and has
 `[x19+0x080] = 000004a000000484`: **0x484 = 1156**, **0x4a0 = 1184**, identifying this component's sizes.
-**[INFERENCE]** Its stale allocation leaves the parser/allocation destination null; runtime confirmation still
-requires Kareem's overlay log and successful town/shop entry.
+**Confirmed in game (Kareem via Claude, 2026-11-08):** 07's identical Market packs/Banc with only the embedded
+allocations raised loads Castle Town without a crash, with randomized Bazaar/Potion shelves, prices and descriptions;
+the log shows the overlay. The exact internal null-allocation operation remains inferred, not reverse-engineered.
 
 All nine distinct original seller ShopParam resources were measured: rounded raw size + **6896** parsed overhead,
 with **80** more for Market Bazaar's one conditional-price element. `patch.shops.member_growth` preserves the
@@ -1600,4 +1601,16 @@ New-seed refill restrictions below do not alter this continuation.
 Verification: real Potion writer regression fails before (**7984 != 8080**) and passes after. Nine focused
 synthetic checks pass; the actual 7b generator/writer/search smoke parses all 77 resources and proves the exact
 spoiler/resource equality above. Controlled short checks are under `E:/OOTRemake/work/r6-shopfix/`; try
-`Test - 07-market-allocations-fixed.bat` from the copied child ranch checkpoint first. No game/launcher was run.
+`Test - 07-market-allocations-fixed.bat` from the copied child ranch checkpoint first. No game/launcher was run by the agent.
+
+### New-seed refill placement boundary
+
+When Shop is shuffled, `prepare` derives `Settings.item_location_types` holding every `Buy ...` item to Shop,
+through the existing `allowed()` path. Physical shields/tunics and native chest ammo remain distinct items.
+The fill reserves the exact number of remaining shop-only refills across progression/filler stages, leaving spare
+Shop slots available to flexible native items and protecting chest capacity for non-display items.
+Normal/progression/spare-capacity synthetic cases pass across 20 seeds each with one attempt.
+
+An actual new Chest+Shop CLI seed 7 has **228 checks, 25 spheres, 80 resources; 59 Buy refills, zero outside Shop**.
+It differs at **127 placements** from the old seed. This policy is for **new seeds only**; 7b stays the byte-identical
+spoiler/placement continuation above. No increased retry limit or weakened beatability oracle.
