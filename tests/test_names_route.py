@@ -114,6 +114,18 @@ def test_free_event_is_an_explicit_required_visit_not_a_pool_check_or_purchase()
     assert free["alternatives"][0]["price"] == 10
     assert free["location"] not in seed.placements and free["location"] not in seed.world.locations
     assert any(event.name == "Deku Shield" for event in seed.world.events)
+    purchase = free["alternatives"][0]
+    assert {item["item"] for item in purchase["requires"]} == {"Sword", "Hylian Shield"}
+    for index, step in enumerate(steps):
+        prior = {earlier["location"] for earlier in steps[:index] if earlier["kind"] in ("collect", "visit")}
+        for option in (step, *step["alternatives"]):
+            assert all(set(item["sources"]) <= prior for item in option["requires"]), option
+    note = play_note(seed, log)
+    rows = [line for line in note.splitlines() if line.startswith("| ")]
+    entry_row = next(line for line in rows if "| Enter |" in line)
+    visit_row = next(line for line in rows if f"[{free['location']}]" in line)
+    alternative_row = next(line for line in rows if f"[{purchase['location']}]" in line)
+    assert note.index(visit_row) < note.index(alternative_row) < note.index(entry_row)
 
 
 def test_free_shield_cannot_replace_the_initial_shield_needed_to_pass_mido():

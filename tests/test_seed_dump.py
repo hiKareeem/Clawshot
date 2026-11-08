@@ -2,19 +2,25 @@
 says, field by field; the same seed gives the same folder in two processes; the data files fit the dump."""
 
 import copy
+import json
 import os
 import subprocess
 import sys
+from dataclasses import replace
 
 import pytest
 
 from clawshot.census.scan import CHEST, scan
 from clawshot.formats import byml, rstb, zsdic
-from clawshot.generate import Settings
+from clawshot.generate import Settings, prepare
 from clawshot.patch import events as chest_events
 from clawshot.patch import items as item_actors
 from clawshot.patch import make_seed, write_seed
 from clawshot.patch.plan import DROP_KEY, EVENT_KEY, Plan
+from clawshot.world.load import load_spec
+from clawshot.world.model import Location
+from clawshot.world.rules import CHILD
+from clawshot.world.search import Search
 
 pytestmark = pytest.mark.dump
 
@@ -117,3 +123,63 @@ def test_every_chest_override_in_the_game_is_classified(romfs):
     events = chest_events.load()
     found = {loc.event for loc in scan(romfs) if loc.kind == CHEST and loc.event is not None}
     assert sorted(found - events.keys()) == []
+
+
+def test_seed_7_cli_writes_a_play_note_with_a_child_opening_to_gohma(romfs, tmp_path):
+    out = tmp_path / "seed7"
+    argv = [
+        sys.executable,
+        "-m",
+        "clawshot",
+        "--romfs",
+        str(romfs),
+        "--seed",
+        "7",
+        "--shuffle",
+        "Chest",
+        "Shop",
+        "--out",
+        str(out),
+    ]
+    result = subprocess.run(
+        argv,
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        env={**os.environ, "PYTHONIOENCODING": "utf-8"},
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+    log = json.loads((out / "spoiler.json").read_text(encoding="utf-8"))
+    route = log["opening_route"]
+    assert route["event"] == "Defeat Queen Gohma"
+    steps = route["steps"]
+    complete = steps[-1]
+    assert (complete["kind"], complete["location"]) == ("complete", route["event"])
+    _, world = prepare(load_spec(), Settings(**log["settings"]))
+    visits = {}
+    implicit = list(world.events)
+    for step in steps:
+        if step["kind"] == "visit":
+            event = next(e for e in implicit if e.region == step["region"] and e.name == step["event"])
+            visits[step["location"]] = Location(
+                step["location"], event.region, event.rule, "Event", event.name, event.source
+            )
+            implicit.remove(event)
+    # Do not let an implicit gift supply an item before the note tells the player to visit it.
+    search = Search.child_only(replace(world, events=implicit))
+    for step in steps:
+        if step["kind"] in ("collect", "visit"):
+            location = visits[step["location"]] if step["kind"] == "visit" else world.locations[step["location"]]
+            assert step["item"] == log["placements"].get(step["location"], location.vanilla), step
+            assert search.can_access(location, CHILD), step
+            search.collect(step["item"])
+        elif step["kind"] == "enter":
+            assert search.can_reach(step["location"], CHILD), step
+        else:
+            assert step["kind"] == "complete", step
+            assert search.holds(step["location"]), step
+    note = (out / "play-note.md").read_text(encoding="utf-8")
+    rows = note.splitlines()
+    entry_row = next(row for row in rows if "| Enter |" in row)
+    complete_row = next(row for row in rows if "| Complete |" in row and complete["name"] in row)
+    assert note.index(entry_row) < note.index(complete_row)
