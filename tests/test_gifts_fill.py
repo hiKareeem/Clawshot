@@ -69,3 +69,28 @@ def test_type_held_song_is_placed_before_flexible_progression_can_depend_on_it()
     assert seed.placements == {"Early Chest": "Bomb Bag", "Storms Chest": "Hammer", "Bag Song": "Storms"}
     sphere_of = {name: index for index, sphere in enumerate(seed.spheres) for name in sphere}
     assert sphere_of["Early Chest"] < sphere_of["Bag Song"] < sphere_of["Storms Chest"]
+
+
+def test_type_held_ammo_still_requires_an_independent_bag():
+    spec = {
+        "start": "Start",
+        "goal": "Bomb_Bag",
+        "items": {"Bomb Bag": {}, "Bombs (5)": {"class": "normal"}, "Rupee": {"class": "normal"}},
+        "regions": [
+            {
+                "name": "Start",
+                "locations": {
+                    "Open A": {"rule": "True", "type": "Chest", "vanilla": "Bomb Bag"},
+                    "Open B": {"rule": "True", "type": "Chest", "vanilla": "Rupee"},
+                    "Bag Required": {"rule": "Bomb_Bag", "type": "Chest", "vanilla": "Bombs (5)"},
+                },
+            }
+        ],
+    }
+    settings = Settings(item_location_types={"Bombs (5)": ("Chest",)})
+    for number in range(20):
+        seed = generate(spec, number, settings, attempts=1)
+        assert seed.placements["Bag Required"] == "Bombs (5)", (number, seed.placements)
+        sphere_of = {name: index for index, sphere in enumerate(seed.spheres) for name in sphere}
+        bag = next(name for name, item in seed.placements.items() if item == "Bomb Bag")
+        assert sphere_of[bag] < sphere_of["Bag Required"]

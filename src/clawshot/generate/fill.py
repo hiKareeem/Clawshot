@@ -22,6 +22,7 @@ from clawshot.world.rules import ADULT, CHILD
 from clawshot.world.search import Search
 
 DUNGEON_ITEM_CHOICES = ("own_dungeon", "anywhere")
+_BOMB_AMMO_PREFIXES = ("Bombs (", "Bombchus (")
 
 
 class FillError(RuntimeError):
@@ -352,21 +353,21 @@ def _fill_bomb_ammo(
     (plans/03-game-data.md section 24). Buy refills remain in shops; never count any pack
     or logical bag alias in the counterfactual inventory.
     """
-    prefixes = ("Bombs (", "Bombchus (")
-    ammo = [item for item in pool if item.startswith(prefixes)]
+    ammo = [item for item in pool if item.startswith(_BOMB_AMMO_PREFIXES)]
     if not ammo:
         return
     sources = {
         name
         for name in world.items
-        if _age_family(world, name) == "Bomb Bag" or name.startswith((*prefixes, "Buy Bombs (", "Buy Bombchu ("))
+        if _age_family(world, name) == "Bomb Bag"
+        or name.startswith((*_BOMB_AMMO_PREFIXES, "Buy Bombs (", "Buy Bombchu ("))
     }
     without_bag = Search(
         replace(world, start_items=tuple(item for item in world.start_items if item not in sources)),
         (item for item in [*pool, *placements.values()] if item not in sources),
     )
     destinations = [name for name in locations if not without_bag.can_access(world.locations[name])]
-    pool[:] = [item for item in pool if not item.startswith(prefixes)]
+    pool[:] = [item for item in pool if not item.startswith(_BOMB_AMMO_PREFIXES)]
     # Dungeon items already own their slots; place constrained ammo before unrestricted filler.
     # Assumed fill still requires actual reachability and respects dungeon/display restrictions.
     held = settings.item_location_types
@@ -411,8 +412,9 @@ def fill(
         shop_refills = _fill_restrictive(
             world, settings, rng, placements, locations, restricted, unrestricted, shop_refills
         )
-    type_held = [item for item in unrestricted if item in held]
-    unrestricted = [item for item in unrestricted if item not in held]
+    # Type-held ammo still needs the stronger D25 bag gate in its dedicated stage.
+    type_held = [item for item in unrestricted if item in held and not item.startswith(_BOMB_AMMO_PREFIXES)]
+    unrestricted = [item for item in unrestricted if item not in held or item.startswith(_BOMB_AMMO_PREFIXES)]
     # Sparse native shop whitelists must keep their slots before general refills take them.
     type_held.sort(key=lambda item: sum(allowed(world, settings, name, item) for name in locations), reverse=True)
     shop_refills = _fill_restrictive(world, settings, rng, placements, locations, type_held, unrestricted, shop_refills)
