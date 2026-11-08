@@ -88,11 +88,20 @@ def test_written_files_differ_only_where_the_plan_says(romfs, tmp_path, seed_num
             f"{f.new_compressed_size}, size-table entry {table.get(path)} -> {f.new_entry} (needs {need})"
         )
 
+    # The other steps' files (the slice's Gossip Stone hints: language archives and the stone flow): each entry
+    # raised to what its written size needs, nothing else.
+    extra = sorted({path for changes in output.extra_changes for path in changes})
+    for path in extra:
+        need = rstb.required_size(path, len(dicts.decompress(path, (out / "romfs" / path).read_bytes())))
+        expected_table.set(path, max(table.get(path), need))
+    print(f"  other steps: {len(extra)} files")
+
     raised = expected_table != table
     files = sorted(p.relative_to(out).as_posix() for p in out.rglob("*") if p.is_file())
     table_file = [f"romfs/{rstb.TABLE_PATH}"] if raised else []
+    planned = [*plan.files(), *extra]
     assert files == sorted(
-        ["spoiler.json", "play-note.md", f"romfs/{INTRO}", *(f"romfs/{path}" for path in plan.files()), *table_file]
+        ["spoiler.json", "play-note.md", f"romfs/{INTRO}", *(f"romfs/{p}" for p in planned), *table_file]
     )
     if raised:
         new_table = rstb.read(dicts.decompress(rstb.TABLE_PATH, (out / "romfs" / rstb.TABLE_PATH).read_bytes()))
