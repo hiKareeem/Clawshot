@@ -127,7 +127,8 @@ def test_blue_fire_seed_cannot_bootstrap_from_an_ungated_potion_slot(spec):
             "native_shop_items": ["Buy Blue Fire", "Buy Fish"],
             "shop_item_locations": full_world.settings["shop_item_locations"],
         },
-        "items": {"Buy Blue Fire": {}, "Buy Fish": {"class": "normal"}, "Blue Fire": {}},
+        # Buying the first Blue Fire sets its owned-content flag; only then does Potion slot5 open.
+        "items": {"Buy Blue Fire": {"alias": ["Blue Fire", 1]}, "Buy Fish": {"class": "normal"}, "Blue Fire": {}},
         "regions": [
             {
                 "name": "Start",
