@@ -2,10 +2,11 @@
 
     python -m clawshot.census.write_locations --romfs <dir> --ootr <LocationList.py> [--out <file>] [--fresh]
 
-Runs the census on ``<romfs>`` (read only), matches it against OoT Randomizer's ``LocationList.py`` (the file at
-:data:`clawshot.census.ootr.OOTR_COMMIT`; not in this repository) and writes ``locations.toml``. For every id already
-in the output file, its ``name`` and ``oot_randomizer_name`` are kept (hand edits), unless ``--fresh``. Prints how
-each OoT Randomizer name was found and which ids were dropped.
+Runs the census on ``<romfs>`` (read only): the placement checks, matched against OoT Randomizer's ``LocationList.py``
+(the file at :data:`clawshot.census.ootr.OOTR_COMMIT`; not in this repository), then the event gifts
+(:mod:`clawshot.census.gifts`), and writes ``locations.toml``. For every id already in the output file, its ``name``
+and ``oot_randomizer_name`` are kept (hand edits), unless ``--fresh``. Prints how each OoT Randomizer name was found
+and which ids were dropped.
 """
 
 import argparse
@@ -14,6 +15,7 @@ from collections import Counter
 from pathlib import Path
 
 from clawshot.census import definitions, ootr
+from clawshot.census.gifts import scan_gifts
 from clawshot.census.scan import scan
 
 
@@ -33,7 +35,7 @@ def main(argv: list[str] | None = None) -> int:
     existing = {}
     if args.out.exists() and not args.fresh:
         existing = {d.id: d for d in definitions.load(args.out)}
-    defs = definitions.build(locations, matches, existing)
+    defs = definitions.build(locations, matches, existing, scan_gifts(args.romfs))
 
     known = {o.name for o in table}
     unknown = sorted({d.oot_randomizer_name for d in defs if d.oot_randomizer_name} - known)
@@ -46,7 +48,7 @@ def main(argv: list[str] | None = None) -> int:
     ids = {d.id for d in defs}
     kept = sum(1 for i in existing if i in ids)
     print(f"{len(defs)} locations written to {args.out}; {kept} kept their names from the previous file")
-    for i in sorted(set(existing) - ids):
+    for i in sorted(set(existing) - ids, key=str):
         print(f"dropped (no longer in the census): {i} {existing[i].name}")
     basis = Counter(m.basis for i, m in matches.items() if i not in existing)
     print("new OoT Randomizer names by basis:", dict(sorted(basis.items())))

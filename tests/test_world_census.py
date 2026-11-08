@@ -24,9 +24,14 @@ COVERED = {
     "MaskShop": {"shop_slot"},
     "GS Token": {"gold_skulltula"},
     "Collectable": {"freestanding"},  # heart pieces and small keys
+    # Event gifts (clawshot.census.gifts): a gift's kind follows its flow, not OoT Randomizer's type.
+    "NPC": {"npc_gift", "event_gift"},
+    "Song": {"song"},
+    "Cutscene": {"event_gift"},
+    "Boss": {"event_gift"},  # spiritual stones and medallions
 }
 # Not in the census: freestanding rupees and hearts, pots, crates, beehives, wonder items, rupee towers, silver
-# rupees (N64 shuffles the census has no kind for), and NPC, cutscene, song and boss-reward gifts (event flows).
+# rupees (N64 shuffles the census has no kind for).
 SKIPPED = {
     "Freestanding",
     "Pot",
@@ -37,10 +42,6 @@ SKIPPED = {
     "Wonderitem",
     "RupeeTower",
     "SilverRupee",
-    "NPC",
-    "Cutscene",
-    "Song",
-    "Boss",
 }
 # Covered locations with no census link and no n64_only reason, against main at the time of writing (round 3):
 # lower it as the census links more.
@@ -78,7 +79,8 @@ def test_links_match_kind_and_area(world, definitions):
             both.append(name)
         kinds = COVERED.get(location.type, set())
         for d in defs:
-            if d.kind not in kinds or d.area != location.area:
+            # A gift's area is empty where the placements name no single area that starts its flow.
+            if d.kind not in kinds or (d.area or location.area) != location.area:
                 wrong.append(f"{name}: census {d.id} is {d.kind} in {d.area}, expected {kinds} in {location.area}")
     assert not both, f"linked from the census and marked n64_only: {both}"
     assert not wrong, "\n".join(wrong)

@@ -1,6 +1,8 @@
 # Clawshot location definitions: one [[location]] per check in the remake (plans/decisions.md D4, D5).
-#   id                   the actor Hash (decimal; a string, as TOML integers are signed 64-bit)
-#   kind, area           census kind and Banc folder; vanilla_item: the actor name the check gives
+#   id                   the actor Hash (decimal; a string, as TOML integers are signed 64-bit), or for an event
+#                        gift <flow>/<event>
+#   kind, area           census kind and Banc folder (empty for a gift the data places in no single one)
+#   vanilla_item         the actor name the check gives
 #   name                 readable and unique
 #   oot_randomizer_name  the OoT Randomizer location that is the same check, empty where none or unsure:
 #                        LocationList.py (MIT) of https://github.com/OoTRandomizer/OoT-Randomizer
@@ -3823,3 +3825,1187 @@ area = "ZoraRiver"
 name = "ZR Near Open Grotto Freestanding PoH"
 vanilla_item = "Obj_Heart_Piece"
 oot_randomizer_name = "ZR Near Open Grotto Freestanding PoH"
+
+[[location]]
+id = "Dm_Awake_Fire_Get/Event13"
+kind = "event_gift"
+area = ""
+name = "Volvagia"
+vanilla_item = "Item_Medal_Fire"
+oot_randomizer_name = "Volvagia"
+
+[[location]]
+id = "Dm_Awake_Forest_Get/Event13"
+kind = "event_gift"
+area = ""
+name = "Phantom Ganon"
+vanilla_item = "Item_Medal_Forest"
+oot_randomizer_name = "Phantom Ganon"
+
+[[location]]
+id = "Dm_Awake_Shadow_Get/Event3"
+kind = "event_gift"
+area = ""
+name = "Bongo Bongo"
+vanilla_item = "Item_Medal_Shadow"
+oot_randomizer_name = "Bongo Bongo"
+
+[[location]]
+id = "Dm_Awake_Spirit_Get/Event14"
+kind = "event_gift"
+area = ""
+name = "Twinrova"
+vanilla_item = "Item_Medal_Spirit"
+oot_randomizer_name = "Twinrova"
+
+[[location]]
+id = "Dm_Awake_Water_Get/Event13"
+kind = "event_gift"
+area = ""
+name = "Morpha"
+vanilla_item = "Item_Medal_Water"
+oot_randomizer_name = "Morpha"
+
+[[location]]
+id = "Dm_DeathMtTrail_0025/Event26"
+kind = "event_gift"
+area = ""
+name = "King Dodongo"
+vanilla_item = "Item_Stone_Fire"
+oot_randomizer_name = "King Dodongo"
+
+[[location]]
+id = "Dm_DeathMtTrail_0050/Event21"
+kind = "event_gift"
+area = ""
+name = "DMT Trade Eyedrops"
+vanilla_item = "Item_ClaimCheck"
+oot_randomizer_name = "DMT Trade Eyedrops"
+
+[[location]]
+id = "Dm_FairyFountain_Courage/Event144"
+kind = "event_gift"
+area = ""
+name = "OGC Great Fairy Reward"
+vanilla_item = "Item_FairyBless_DefenseDouble"
+oot_randomizer_name = "OGC Great Fairy Reward"
+
+[[location]]
+id = "Dm_FairyFountain_Din/Event212"
+kind = "event_gift"
+area = ""
+name = "DMT Great Fairy Reward"
+vanilla_item = "Item_DinFire"
+oot_randomizer_name = "DMT Great Fairy Reward"
+
+[[location]]
+id = "Dm_FairyFountain_Frore/Event174"
+kind = "event_gift"
+area = ""
+name = "ZF Great Fairy Reward"
+vanilla_item = "Item_FaroreWind"
+oot_randomizer_name = "ZF Great Fairy Reward"
+
+[[location]]
+id = "Dm_FairyFountain_Nayru/Event163"
+kind = "event_gift"
+area = ""
+name = "Colossus Great Fairy Reward"
+vanilla_item = "Item_NayruLove"
+oot_randomizer_name = "Colossus Great Fairy Reward"
+
+[[location]]
+id = "Dm_FairyFountain_Power/Event141"
+kind = "event_gift"
+area = ""
+name = "HC Great Fairy Reward"
+vanilla_item = "Item_FairyBless_MP"
+oot_randomizer_name = "HC Great Fairy Reward"
+
+[[location]]
+id = "Dm_FairyFountain_Wisdom/Event144"
+kind = "event_gift"
+area = ""
+name = "DMC Great Fairy Reward"
+vanilla_item = "Item_FairyBless_MPDouble"
+oot_randomizer_name = "DMC Great Fairy Reward"
+
+[[location]]
+id = "Dm_FinalBattle_0010/Event173"
+kind = "event_gift"
+area = ""
+name = "Dm_FinalBattle_0010 Event173 (Weapon_Sword_Master)"
+vanilla_item = "Weapon_Sword_Master"
+oot_randomizer_name = ""
+
+[[location]]
+id = "Dm_Gerudo_0025/Event294"
+kind = "event_gift"
+area = ""
+name = "Hideout Gerudo Membership Card"
+vanilla_item = "Item_Token_Gerudo"
+oot_randomizer_name = "Hideout Gerudo Membership Card"
+
+[[location]]
+id = "Dm_Goron_0030/Event127"
+kind = "event_gift"
+area = ""
+name = "GC Darunias Joy"
+vanilla_item = "Item_Gauntlet_Goron"
+oot_randomizer_name = "GC Darunias Joy"
+
+[[location]]
+id = "Dm_HrlCastle_0050/Event59"
+kind = "event_gift"
+area = ""
+name = "HC Zeldas Letter"
+vanilla_item = "Item_ZeldaLetter"
+oot_randomizer_name = "HC Zeldas Letter"
+
+[[location]]
+id = "Dm_Kokiri_0130/Event22"
+kind = "event_gift"
+area = ""
+name = "Queen Gohma"
+vanilla_item = "Item_Stone_Forest"
+oot_randomizer_name = "Queen Gohma"
+
+[[location]]
+id = "Dm_Kokiri_0155/Event68"
+kind = "event_gift"
+area = ""
+name = "LW Gift from Saria"
+vanilla_item = "Item_Ocarina_Fairy"
+oot_randomizer_name = "LW Gift from Saria"
+
+[[location]]
+id = "Dm_LostWood_0040/Event17"
+kind = "event_gift"
+area = ""
+name = "LW Target in Woods [Event17]"
+vanilla_item = "Item_BulletBag_Large"
+oot_randomizer_name = "LW Target in Woods"
+
+[[location]]
+id = "Dm_LostWood_0040/Event30"
+kind = "event_gift"
+area = ""
+name = "LW Target in Woods [Event30]"
+vanilla_item = "Item_BulletBag_Medium"
+oot_randomizer_name = "LW Target in Woods"
+
+[[location]]
+id = "Dm_LostWood_0040/Event37"
+kind = "event_gift"
+area = ""
+name = "Dm_LostWood_0040 Event37 (TBox_Rupee_Green)"
+vanilla_item = "TBox_Rupee_Green"
+oot_randomizer_name = ""
+
+[[location]]
+id = "Dm_MelodyGet_Epona/Event11"
+kind = "song"
+area = ""
+name = "Song from Malon"
+vanilla_item = "Item_Melody_EponaSong"
+oot_randomizer_name = "Song from Malon"
+
+[[location]]
+id = "Dm_MelodyGet_Fire/Event192"
+kind = "song"
+area = ""
+name = "Sheik in Crater"
+vanilla_item = "Item_Melody_FireBolero"
+oot_randomizer_name = "Sheik in Crater"
+
+[[location]]
+id = "Dm_MelodyGet_Forest/Event22"
+kind = "song"
+area = ""
+name = "Sheik in Forest"
+vanilla_item = "Item_Melody_ForestMinuet"
+oot_randomizer_name = "Sheik in Forest"
+
+[[location]]
+id = "Dm_MelodyGet_Saria/Event109"
+kind = "song"
+area = ""
+name = "Song from Saria"
+vanilla_item = "Item_Melody_SariaSong"
+oot_randomizer_name = "Song from Saria"
+
+[[location]]
+id = "Dm_MelodyGet_Shadow/Event21"
+kind = "song"
+area = ""
+name = "Sheik in Kakariko"
+vanilla_item = "Item_Melody_ShadowNocturne"
+oot_randomizer_name = "Sheik in Kakariko"
+
+[[location]]
+id = "Dm_MelodyGet_Shine/Event53"
+kind = "song"
+area = ""
+name = "Sheik at Temple"
+vanilla_item = "Item_Melody_LightPrelude"
+oot_randomizer_name = "Sheik at Temple"
+
+[[location]]
+id = "Dm_MelodyGet_Spilit/Event17"
+kind = "song"
+area = "DesertColossus"
+name = "Sheik at Colossus"
+vanilla_item = "Item_Melody_SpiritRequiem"
+oot_randomizer_name = "Sheik at Colossus"
+
+[[location]]
+id = "Dm_MelodyGet_Storm/Event29"
+kind = "song"
+area = ""
+name = "Song from Windmill"
+vanilla_item = "Item_Melody_StormSong"
+oot_randomizer_name = "Song from Windmill"
+
+[[location]]
+id = "Dm_MelodyGet_Sun_03/Event34"
+kind = "song"
+area = ""
+name = "Song from Royal Familys Tomb"
+vanilla_item = "Item_Melody_SunSong"
+oot_randomizer_name = "Song from Royal Familys Tomb"
+
+[[location]]
+id = "Dm_MelodyGet_Time/Event4"
+kind = "song"
+area = ""
+name = "Song from Ocarina of Time"
+vanilla_item = "Item_Melody_TimeSong"
+oot_randomizer_name = "Song from Ocarina of Time"
+
+[[location]]
+id = "Dm_MelodyGet_Time/Event70"
+kind = "event_gift"
+area = ""
+name = "HF Ocarina of Time Item"
+vanilla_item = "Item_Ocarina_Time"
+oot_randomizer_name = "HF Ocarina of Time Item"
+
+[[location]]
+id = "Dm_MelodyGet_Water/Event29"
+kind = "song"
+area = ""
+name = "Sheik in Ice Cavern"
+vanilla_item = "Item_Melody_WaterSerenade"
+oot_randomizer_name = "Sheik in Ice Cavern"
+
+[[location]]
+id = "Dm_MelodyGet_Zelda/Event111"
+kind = "song"
+area = ""
+name = "Song from Impa"
+vanilla_item = "Item_Melody_ZeldaLullaby"
+oot_randomizer_name = "Song from Impa"
+
+[[location]]
+id = "Dm_SY_Ocarina/Event59"
+kind = "song"
+area = ""
+name = "Dm_SY_Ocarina Event59 (Item_Melody_ZeldaLullaby)"
+vanilla_item = "Item_Melody_ZeldaLullaby"
+oot_randomizer_name = ""
+
+[[location]]
+id = "Dm_SY_Ocarina/Event60"
+kind = "song"
+area = ""
+name = "Dm_SY_Ocarina Event60 (Item_Melody_EponaSong)"
+vanilla_item = "Item_Melody_EponaSong"
+oot_randomizer_name = ""
+
+[[location]]
+id = "Dm_SY_Ocarina/Event61"
+kind = "song"
+area = ""
+name = "Dm_SY_Ocarina Event61 (Item_Melody_SariaSong)"
+vanilla_item = "Item_Melody_SariaSong"
+oot_randomizer_name = ""
+
+[[location]]
+id = "Dm_SY_Ocarina/Event62"
+kind = "song"
+area = ""
+name = "Dm_SY_Ocarina Event62 (Item_Melody_SunSong)"
+vanilla_item = "Item_Melody_SunSong"
+oot_randomizer_name = ""
+
+[[location]]
+id = "Dm_SY_Ocarina/Event63"
+kind = "song"
+area = ""
+name = "Dm_SY_Ocarina Event63 (Item_Melody_TimeSong)"
+vanilla_item = "Item_Melody_TimeSong"
+oot_randomizer_name = ""
+
+[[location]]
+id = "Dm_SY_Ocarina/Event64"
+kind = "song"
+area = ""
+name = "Dm_SY_Ocarina Event64 (Item_Melody_StormSong)"
+vanilla_item = "Item_Melody_StormSong"
+oot_randomizer_name = ""
+
+[[location]]
+id = "Dm_SY_Ocarina/Event65"
+kind = "song"
+area = ""
+name = "Dm_SY_Ocarina Event65 (Item_Melody_ForestMinuet)"
+vanilla_item = "Item_Melody_ForestMinuet"
+oot_randomizer_name = ""
+
+[[location]]
+id = "Dm_SY_Ocarina/Event67"
+kind = "song"
+area = ""
+name = "Dm_SY_Ocarina Event67 (Item_Melody_FireBolero)"
+vanilla_item = "Item_Melody_FireBolero"
+oot_randomizer_name = ""
+
+[[location]]
+id = "Dm_SY_Ocarina/Event68"
+kind = "song"
+area = ""
+name = "Dm_SY_Ocarina Event68 (Item_Melody_WaterSerenade)"
+vanilla_item = "Item_Melody_WaterSerenade"
+oot_randomizer_name = ""
+
+[[location]]
+id = "Dm_SY_Ocarina/Event69"
+kind = "song"
+area = ""
+name = "Dm_SY_Ocarina Event69 (Item_Melody_SpiritRequiem)"
+vanilla_item = "Item_Melody_SpiritRequiem"
+oot_randomizer_name = ""
+
+[[location]]
+id = "Dm_SY_Ocarina/Event70"
+kind = "song"
+area = ""
+name = "Dm_SY_Ocarina Event70 (Item_Melody_ShadowNocturne)"
+vanilla_item = "Item_Melody_ShadowNocturne"
+oot_randomizer_name = ""
+
+[[location]]
+id = "Dm_SY_Ocarina/Event71"
+kind = "song"
+area = ""
+name = "Dm_SY_Ocarina Event71 (Item_Melody_LightPrelude)"
+vanilla_item = "Item_Melody_LightPrelude"
+oot_randomizer_name = ""
+
+[[location]]
+id = "Dm_SY_Ocarina/Event81"
+kind = "song"
+area = ""
+name = "Dm_SY_Ocarina Event81 (Item_Melody_ScarecrowSong)"
+vanilla_item = "Item_Melody_ScarecrowSong"
+oot_randomizer_name = ""
+
+[[location]]
+id = "Dm_SageRoom_0005/Event48"
+kind = "event_gift"
+area = ""
+name = "ToT Reward from Rauru"
+vanilla_item = "Item_Medal_Light"
+oot_randomizer_name = "ToT Reward from Rauru"
+
+[[location]]
+id = "Dm_TimeTemple_0130/Event85"
+kind = "event_gift"
+area = ""
+name = "ToT Light Arrows Cutscene"
+vanilla_item = "Item_Arrow_Light"
+oot_randomizer_name = "ToT Light Arrows Cutscene"
+
+[[location]]
+id = "Dm_ZoraFountain_0030/Event3"
+kind = "event_gift"
+area = ""
+name = "Barinade"
+vanilla_item = "Item_Stone_Water"
+oot_randomizer_name = "Barinade"
+
+[[location]]
+id = "DoorOfTime/Event115"
+kind = "npc_gift"
+area = ""
+name = "DoorOfTime Event115 (Weapon_Sword_Master)"
+vanilla_item = "Weapon_Sword_Master"
+oot_randomizer_name = ""
+
+[[location]]
+id = "GatheringTokenGold/Event398"
+kind = "npc_gift"
+area = "KakarikoVillage"
+name = "Kak 10 Gold Skulltula Reward"
+vanilla_item = "Item_Wallet_Medium"
+oot_randomizer_name = "Kak 10 Gold Skulltula Reward"
+
+[[location]]
+id = "GatheringTokenGold/Event75"
+kind = "npc_gift"
+area = "KakarikoVillage"
+name = "Kak 20 Gold Skulltula Reward"
+vanilla_item = "Item_AgonyStone"
+oot_randomizer_name = "Kak 20 Gold Skulltula Reward"
+
+[[location]]
+id = "GatheringTokenGold/Event194"
+kind = "npc_gift"
+area = "KakarikoVillage"
+name = "Kak 30 Gold Skulltula Reward"
+vanilla_item = "Item_Wallet_Large"
+oot_randomizer_name = "Kak 30 Gold Skulltula Reward"
+
+[[location]]
+id = "GatheringTokenGold/Event200"
+kind = "npc_gift"
+area = "KakarikoVillage"
+name = "Kak 40 Gold Skulltula Reward"
+vanilla_item = "Item_BombchuBundle_Large"
+oot_randomizer_name = "Kak 40 Gold Skulltula Reward"
+
+[[location]]
+id = "GatheringTokenGold/Event219"
+kind = "npc_gift"
+area = "KakarikoVillage"
+name = "Kak 50 Gold Skulltula Reward"
+vanilla_item = "Obj_Heart_Piece"
+oot_randomizer_name = "Kak 50 Gold Skulltula Reward"
+
+[[location]]
+id = "GatheringTokenGold/Event215"
+kind = "npc_gift"
+area = "KakarikoVillage"
+name = "Kak 100 Gold Skulltula Reward"
+vanilla_item = "Obj_Rupee_Gold"
+oot_randomizer_name = "Kak 100 Gold Skulltula Reward"
+
+[[location]]
+id = "GatheringTokenGold/Event471"
+kind = "npc_gift"
+area = "KakarikoVillage"
+name = "GatheringTokenGold Event471 (Obj_Rupee_Gold)"
+vanilla_item = "Obj_Rupee_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "Goto_HyruleCastle/Event35"
+kind = "npc_gift"
+area = ""
+name = "HC Malon Egg"
+vanilla_item = "Item_WeirdEgg"
+oot_randomizer_name = "HC Malon Egg"
+
+[[location]]
+id = "Goto_HyruleCastle/Event205"
+kind = "npc_gift"
+area = ""
+name = "Goto_HyruleCastle Event205 (Pouch_Amiibo)"
+vanilla_item = "Pouch_Amiibo"
+oot_randomizer_name = ""
+
+[[location]]
+id = "Goto_HyruleCastle/Event20"
+kind = "npc_gift"
+area = ""
+name = "Goto_HyruleCastle Event20 (Item_AlarmCucco)"
+vanilla_item = "Item_AlarmCucco"
+oot_randomizer_name = ""
+
+[[location]]
+id = "LostWood_ScrubForestStageElder_SkullMaskFirst/Event29"
+kind = "npc_gift"
+area = ""
+name = "Deku Theater Skull Mask [Event29]"
+vanilla_item = "Item_StickBag_Medium"
+oot_randomizer_name = "Deku Theater Skull Mask"
+
+[[location]]
+id = "LostWood_ScrubForestStageElder_SkullMaskFirst/Event32"
+kind = "npc_gift"
+area = ""
+name = "Deku Theater Skull Mask [Event32]"
+vanilla_item = "Item_StickBag_Large"
+oot_randomizer_name = "Deku Theater Skull Mask"
+
+[[location]]
+id = "LostWood_ScrubForestStageElder_TrueMaskFirst/Event2"
+kind = "npc_gift"
+area = ""
+name = "Deku Theater Mask of Truth [Event2]"
+vanilla_item = "Item_NutBag_Medium"
+oot_randomizer_name = "Deku Theater Mask of Truth"
+
+[[location]]
+id = "LostWood_ScrubForestStageElder_TrueMaskFirst/Event31"
+kind = "npc_gift"
+area = ""
+name = "Deku Theater Mask of Truth [Event31]"
+vanilla_item = "Item_NutBag_Large"
+oot_randomizer_name = "Deku Theater Mask of Truth"
+
+[[location]]
+id = "MiniGame_BombchuBowling/Event81"
+kind = "npc_gift"
+area = "Market"
+name = "MiniGame_BombchuBowling Event81 (Obj_Rupee_Red)"
+vanilla_item = "Obj_Rupee_Red"
+oot_randomizer_name = ""
+
+[[location]]
+id = "MiniGame_BombchuBowling/Event143"
+kind = "npc_gift"
+area = "Market"
+name = "Market Bombchu Bowling Second Prize"
+vanilla_item = "Obj_Heart_Piece"
+oot_randomizer_name = "Market Bombchu Bowling Second Prize"
+
+[[location]]
+id = "MiniGame_BombchuBowling/Event304"
+kind = "npc_gift"
+area = "Market"
+name = "Market Bombchu Bowling First Prize [Event304]"
+vanilla_item = "Item_BombBag_Medium"
+oot_randomizer_name = "Market Bombchu Bowling First Prize"
+
+[[location]]
+id = "MiniGame_BombchuBowling/Event306"
+kind = "npc_gift"
+area = "Market"
+name = "Market Bombchu Bowling First Prize [Event306]"
+vanilla_item = "Item_BombBag_Large"
+oot_randomizer_name = "Market Bombchu Bowling First Prize"
+
+[[location]]
+id = "MiniGame_BombchuBowling/Event309"
+kind = "npc_gift"
+area = "Market"
+name = "Market Bombchu Bowling Bombchus"
+vanilla_item = "Item_BombchuBundle_Medium"
+oot_randomizer_name = "Market Bombchu Bowling Bombchus"
+
+[[location]]
+id = "MiniGame_Diving/Event15"
+kind = "npc_gift"
+area = "ZoraDomain"
+name = "MiniGame_Diving Event15 (Obj_Rupee_Red)"
+vanilla_item = "Obj_Rupee_Red"
+oot_randomizer_name = ""
+
+[[location]]
+id = "MiniGame_Diving/Event21"
+kind = "npc_gift"
+area = "ZoraDomain"
+name = "ZD Diving Minigame"
+vanilla_item = "Item_Scale_Silver"
+oot_randomizer_name = "ZD Diving Minigame"
+
+[[location]]
+id = "MiniGame_Fishing/Event573"
+kind = "npc_gift"
+area = ""
+name = "LH Child Fishing [Event573]"
+vanilla_item = "Obj_Heart_Piece"
+oot_randomizer_name = "LH Child Fishing"
+
+[[location]]
+id = "MiniGame_Fishing/Event579"
+kind = "npc_gift"
+area = ""
+name = "LH Adult Fishing [Event579]"
+vanilla_item = "Item_Scale_Gold"
+oot_randomizer_name = "LH Adult Fishing"
+
+[[location]]
+id = "MiniGame_Fishing/Event821"
+kind = "npc_gift"
+area = ""
+name = "LH Child Fishing [Event821]"
+vanilla_item = "Obj_Heart_Piece"
+oot_randomizer_name = "LH Child Fishing"
+
+[[location]]
+id = "MiniGame_Fishing/Event822"
+kind = "npc_gift"
+area = ""
+name = "LH Adult Fishing [Event822]"
+vanilla_item = "Item_Scale_Gold"
+oot_randomizer_name = "LH Adult Fishing"
+
+[[location]]
+id = "MiniGame_Fishing/Event374"
+kind = "npc_gift"
+area = ""
+name = "MiniGame_Fishing Event374 (Obj_Rupee_Purple)"
+vanilla_item = "Obj_Rupee_Purple"
+oot_randomizer_name = ""
+
+[[location]]
+id = "MiniGame_Fishing/Event378"
+kind = "npc_gift"
+area = ""
+name = "MiniGame_Fishing Event378 (Obj_Rupee_Purple)"
+vanilla_item = "Obj_Rupee_Purple"
+oot_randomizer_name = ""
+
+[[location]]
+id = "MiniGame_Fishing/Event382"
+kind = "npc_gift"
+area = ""
+name = "MiniGame_Fishing Event382 (Obj_Rupee_Blue)"
+vanilla_item = "Obj_Rupee_Blue"
+oot_randomizer_name = ""
+
+[[location]]
+id = "MiniGame_Fishing/Event383"
+kind = "npc_gift"
+area = ""
+name = "MiniGame_Fishing Event383 (Obj_Rupee_Red)"
+vanilla_item = "Obj_Rupee_Red"
+oot_randomizer_name = ""
+
+[[location]]
+id = "MiniGame_Fishing/Event384"
+kind = "npc_gift"
+area = ""
+name = "MiniGame_Fishing Event384 (Obj_Rupee_Red)"
+vanilla_item = "Obj_Rupee_Red"
+oot_randomizer_name = ""
+
+[[location]]
+id = "MiniGame_Fishing/Event385"
+kind = "npc_gift"
+area = ""
+name = "MiniGame_Fishing Event385 (Obj_Rupee_Purple)"
+vanilla_item = "Obj_Rupee_Purple"
+oot_randomizer_name = ""
+
+[[location]]
+id = "MiniGame_FrogTenors/Event161"
+kind = "npc_gift"
+area = ""
+name = "MiniGame_FrogTenors Event161 (Obj_Heart_Piece)"
+vanilla_item = "Obj_Heart_Piece"
+oot_randomizer_name = ""
+
+[[location]]
+id = "MiniGame_FrogTenors/Event162"
+kind = "npc_gift"
+area = ""
+name = "MiniGame_FrogTenors Event162 (Obj_Rupee_Blue)"
+vanilla_item = "Obj_Rupee_Blue"
+oot_randomizer_name = ""
+
+[[location]]
+id = "MiniGame_FrogTenors/Event75"
+kind = "npc_gift"
+area = ""
+name = "MiniGame_FrogTenors Event75 (Obj_Heart_Piece)"
+vanilla_item = "Obj_Heart_Piece"
+oot_randomizer_name = ""
+
+[[location]]
+id = "MiniGame_FrogTenors/Event76"
+kind = "npc_gift"
+area = ""
+name = "MiniGame_FrogTenors Event76 (Obj_Rupee_Blue)"
+vanilla_item = "Obj_Rupee_Blue"
+oot_randomizer_name = ""
+
+[[location]]
+id = "MiniGame_FrogTenors/Event384"
+kind = "npc_gift"
+area = ""
+name = "ZR Frogs Ocarina Game"
+vanilla_item = "Obj_Heart_Piece"
+oot_randomizer_name = "ZR Frogs Ocarina Game"
+
+[[location]]
+id = "MiniGame_HitTarget/Event8"
+kind = "npc_gift"
+area = ""
+name = "MiniGame_HitTarget Event8 (Obj_Rupee_Red)"
+vanilla_item = "Obj_Rupee_Red"
+oot_randomizer_name = ""
+
+[[location]]
+id = "MiniGame_HitTarget/Event378"
+kind = "npc_gift"
+area = ""
+name = "Market Shooting Gallery Reward [Event378]"
+vanilla_item = "Item_BulletBag_Large"
+oot_randomizer_name = "Market Shooting Gallery Reward"
+
+[[location]]
+id = "MiniGame_HitTarget/Event241"
+kind = "npc_gift"
+area = ""
+name = "Market Shooting Gallery Reward [Event241]"
+vanilla_item = "Item_BulletBag_Medium"
+oot_randomizer_name = "Market Shooting Gallery Reward"
+
+[[location]]
+id = "MiniGame_HitTarget/Event242"
+kind = "npc_gift"
+area = ""
+name = "Kak Shooting Gallery Reward [Event242]"
+vanilla_item = "Item_Quiver_Large"
+oot_randomizer_name = "Kak Shooting Gallery Reward"
+
+[[location]]
+id = "MiniGame_HitTarget/Event381"
+kind = "npc_gift"
+area = ""
+name = "Kak Shooting Gallery Reward [Event381]"
+vanilla_item = "Item_Quiver_Medium"
+oot_randomizer_name = "Kak Shooting Gallery Reward"
+
+[[location]]
+id = "MiniGame_HitTarget/Event382"
+kind = "npc_gift"
+area = ""
+name = "MiniGame_HitTarget Event382 (Obj_Rupee_Purple)"
+vanilla_item = "Obj_Rupee_Purple"
+oot_randomizer_name = ""
+
+[[location]]
+id = "MiniGame_HorseRace/Event93"
+kind = "npc_gift"
+area = "HyruleField"
+name = "MiniGame_HorseRace Event93 (Obj_Rupee_Red)"
+vanilla_item = "Obj_Rupee_Red"
+oot_randomizer_name = ""
+
+[[location]]
+id = "Minigame_CatchCucco/Event181"
+kind = "npc_gift"
+area = "KakarikoVillage"
+name = "Kak Anju as Child"
+vanilla_item = "Item_Bottle"
+oot_randomizer_name = "Kak Anju as Child"
+
+[[location]]
+id = "Minigame_CatchCucco/Event62"
+kind = "npc_gift"
+area = "KakarikoVillage"
+name = "Minigame_CatchCucco Event62 (Obj_Rupee_Red)"
+vanilla_item = "Obj_Rupee_Red"
+oot_randomizer_name = ""
+
+[[location]]
+id = "Minigame_FindOutCucco/Event23"
+kind = "npc_gift"
+area = "HyruleField"
+name = "LLR Talons Chickens"
+vanilla_item = "Item_Bottle_Milk"
+oot_randomizer_name = "LLR Talons Chickens"
+
+[[location]]
+id = "Minigame_HorsebackArchery/Event317"
+kind = "npc_gift"
+area = "GerudoFortress"
+name = "Minigame_HorsebackArchery Event317 (Obj_Rupee_Purple)"
+vanilla_item = "Obj_Rupee_Purple"
+oot_randomizer_name = ""
+
+[[location]]
+id = "Minigame_HorsebackArchery/Event319"
+kind = "npc_gift"
+area = "GerudoFortress"
+name = "GF HBA 1500 Points [Event319]"
+vanilla_item = "Item_Quiver_Large"
+oot_randomizer_name = "GF HBA 1500 Points"
+
+[[location]]
+id = "Minigame_HorsebackArchery/Event320"
+kind = "npc_gift"
+area = "GerudoFortress"
+name = "GF HBA 1500 Points [Event320]"
+vanilla_item = "Item_Quiver_Medium"
+oot_randomizer_name = "GF HBA 1500 Points"
+
+[[location]]
+id = "Minigame_HorsebackArchery/Event322"
+kind = "npc_gift"
+area = "GerudoFortress"
+name = "GF HBA 1000 Points"
+vanilla_item = "Obj_Heart_Piece"
+oot_randomizer_name = "GF HBA 1000 Points"
+
+[[location]]
+id = "Npc_Bonooru/Event159"
+kind = "song"
+area = "HyruleField"
+name = "Npc_Bonooru Event159 (Item_Melody_ScarecrowSong)"
+vanilla_item = "Item_Melody_ScarecrowSong"
+oot_randomizer_name = ""
+
+[[location]]
+id = "Npc_Goron_006_Child/Event58"
+kind = "npc_gift"
+area = "GoronCity"
+name = "GC Rolling Goron as Child [Event58]"
+vanilla_item = "Item_BombBag_Medium"
+oot_randomizer_name = "GC Rolling Goron as Child"
+
+[[location]]
+id = "Npc_Goron_006_Child/Event92"
+kind = "npc_gift"
+area = "GoronCity"
+name = "GC Rolling Goron as Child [Event92]"
+vanilla_item = "Item_BombBag_Large"
+oot_randomizer_name = "GC Rolling Goron as Child"
+
+[[location]]
+id = "Npc_Goron_Biggoron_Adult/Event123"
+kind = "npc_gift"
+area = "DeathMountainTrail"
+name = "DMT Biggoron"
+vanilla_item = "Item_Sword_Biggoron"
+oot_randomizer_name = "DMT Biggoron"
+
+[[location]]
+id = "Npc_Goron_Biggoron_Adult/Event232"
+kind = "npc_gift"
+area = "DeathMountainTrail"
+name = "DMT Trade Broken Sword"
+vanilla_item = "Item_Prescription"
+oot_randomizer_name = "DMT Trade Broken Sword"
+
+[[location]]
+id = "Npc_Goron_Medigoron_Adult/Event11"
+kind = "npc_gift"
+area = "GoronCity"
+name = "GC Medigoron"
+vanilla_item = "Shop_Sword_Giant"
+oot_randomizer_name = "GC Medigoron"
+
+[[location]]
+id = "Npc_Hylia_001_Adult/Event4"
+kind = "npc_gift"
+area = "KakarikoVillage"
+name = "Kak Man on Roof"
+vanilla_item = "Obj_Heart_Piece"
+oot_randomizer_name = "Kak Man on Roof"
+
+[[location]]
+id = "Npc_Hylia_012_Adult/Event58"
+kind = "npc_gift"
+area = "GerudoValley"
+name = "GV Trade Poachers Saw"
+vanilla_item = "Item_BrokenSword"
+oot_randomizer_name = "GV Trade Poachers Saw"
+
+[[location]]
+id = "Npc_Hylia_017_Adult/Event100"
+kind = "npc_gift"
+area = "LostWood"
+name = "LW Trade Cojiro [Event100]"
+vanilla_item = "Item_OddMushroom"
+oot_randomizer_name = "LW Trade Cojiro"
+
+[[location]]
+id = "Npc_Hylia_017_Adult/Event116"
+kind = "npc_gift"
+area = "LostWood"
+name = "LW Trade Cojiro [Event116]"
+vanilla_item = "Item_OddMushroom"
+oot_randomizer_name = "LW Trade Cojiro"
+
+[[location]]
+id = "Npc_Hylia_020_Shop_Child/Event171"
+kind = "npc_gift"
+area = "Market"
+name = "Npc_Hylia_020_Shop_Child Event171 (Item_Bottle)"
+vanilla_item = "Item_Bottle"
+oot_randomizer_name = ""
+
+[[location]]
+id = "Npc_Hylia_023_Shop_Child/Event51"
+kind = "npc_gift"
+area = "Market"
+name = "Npc_Hylia_023_Shop_Child Event51 (Item_Mask_Truth)"
+vanilla_item = "Item_Mask_Truth"
+oot_randomizer_name = ""
+
+[[location]]
+id = "Npc_Hylia_044_Adult/Event3"
+kind = "npc_gift"
+area = "HountedWasteland"
+name = "Wasteland Bombchu Salesman"
+vanilla_item = "Shop_BombchuBundle_01"
+oot_randomizer_name = "Wasteland Bombchu Salesman"
+
+[[location]]
+id = "Npc_Hylia_045_Adult/Event26"
+kind = "npc_gift"
+area = "HyruleField"
+name = "LH Trade Eyeball Frog [Event26]"
+vanilla_item = "Item_EyeDrop"
+oot_randomizer_name = "LH Trade Eyeball Frog"
+
+[[location]]
+id = "Npc_Hylia_045_Adult/Event27"
+kind = "npc_gift"
+area = "HyruleField"
+name = "LH Trade Eyeball Frog [Event27]"
+vanilla_item = "Item_EyeDrop"
+oot_randomizer_name = "LH Trade Eyeball Frog"
+
+[[location]]
+id = "Npc_Hylia_045_Adult/Event45"
+kind = "npc_gift"
+area = "HyruleField"
+name = "LH Trade Eyeball Frog [Event45]"
+vanilla_item = "Item_EyeDrop"
+oot_randomizer_name = "LH Trade Eyeball Frog"
+
+[[location]]
+id = "Npc_Hylia_045_Child/Event113"
+kind = "npc_gift"
+area = "HyruleField"
+name = "LH Lab Dive"
+vanilla_item = "Obj_Heart_Piece"
+oot_randomizer_name = "LH Lab Dive"
+
+[[location]]
+id = "Npc_Hylia_048_BottleShop/Event329"
+kind = "npc_gift"
+area = "Market"
+name = "Market 10 Big Poes"
+vanilla_item = "Item_Bottle"
+oot_randomizer_name = "Market 10 Big Poes"
+
+[[location]]
+id = "Npc_Hylia_048_BottleShop/Event330"
+kind = "npc_gift"
+area = "Market"
+name = "Npc_Hylia_048_BottleShop Event330 (Obj_Rupee_Gold)"
+vanilla_item = "Obj_Rupee_Gold"
+oot_randomizer_name = ""
+
+[[location]]
+id = "Npc_Hylia_049_Adult/Event234"
+kind = "npc_gift"
+area = "KakarikoVillage"
+name = "Kak Anju Trade Pocket Cucco"
+vanilla_item = "Item_CojiroCucco"
+oot_randomizer_name = "Kak Anju Trade Pocket Cucco"
+
+[[location]]
+id = "Npc_Hylia_049_Adult/Event264"
+kind = "npc_gift"
+area = "KakarikoVillage"
+name = "Kak Anju as Adult"
+vanilla_item = "Item_PocketEgg"
+oot_randomizer_name = "Kak Anju as Adult"
+
+[[location]]
+id = "Npc_Hylia_053_Adult/Event167"
+kind = "npc_gift"
+area = "KakarikoVillage"
+name = "Kak Granny Trade Odd Mushroom"
+vanilla_item = "Item_OddPowder"
+oot_randomizer_name = "Kak Granny Trade Odd Mushroom"
+
+[[location]]
+id = "Npc_Hylia_Dampe_001/Event628"
+kind = "npc_gift"
+area = "Graveyard"
+name = "Npc_Hylia_Dampe_001 Event628 (Obj_Heart_Piece)"
+vanilla_item = "Obj_Heart_Piece"
+oot_randomizer_name = ""
+
+[[location]]
+id = "Npc_Hylia_RunningMan_Adult/Event125"
+kind = "npc_gift"
+area = ""
+name = "Npc_Hylia_RunningMan_Adult Event125 (Obj_Rupee_Purple)"
+vanilla_item = "Obj_Rupee_Purple"
+oot_randomizer_name = ""
+
+[[location]]
+id = "Npc_Hylia_RunningMan_Adult/Event133"
+kind = "npc_gift"
+area = ""
+name = "Npc_Hylia_RunningMan_Adult Event133 (Obj_Rupee_Red)"
+vanilla_item = "Obj_Rupee_Red"
+oot_randomizer_name = ""
+
+[[location]]
+id = "Npc_Kokiri_001_Shop_Child/Event116"
+kind = "npc_gift"
+area = "KokiriForest"
+name = "Npc_Kokiri_001_Shop_Child Event116 (Obj_Shield_Deku)"
+vanilla_item = "Obj_Shield_Deku"
+oot_randomizer_name = ""
+
+[[location]]
+id = "Npc_Kokiri_001_Shop_Child/Event117"
+kind = "npc_gift"
+area = "KokiriForest"
+name = "Npc_Kokiri_001_Shop_Child Event117 (Obj_Shield_Deku)"
+vanilla_item = "Obj_Shield_Deku"
+oot_randomizer_name = ""
+
+[[location]]
+id = "Npc_Kokiri_005_Child/Event92"
+kind = "npc_gift"
+area = "KokiriForest"
+name = "Npc_Kokiri_005_Child Event92 (Obj_Rupee_Blue)"
+vanilla_item = "Obj_Rupee_Blue"
+oot_randomizer_name = ""
+
+[[location]]
+id = "Npc_Kokiri_008_Child/Event224"
+kind = "npc_gift"
+area = "KokiriForest"
+name = "Npc_Kokiri_008_Child Event224 (Obj_Rupee_Blue)"
+vanilla_item = "Obj_Rupee_Blue"
+oot_randomizer_name = ""
+
+[[location]]
+id = "Npc_Kokiri_Fado_Adult/Event123"
+kind = "npc_gift"
+area = "LostWood"
+name = "LW Trade Odd Potion"
+vanilla_item = "Item_PoacherSaw"
+oot_randomizer_name = "LW Trade Odd Potion"
+
+[[location]]
+id = "Npc_SkullKid_Child/Event71"
+kind = "npc_gift"
+area = "LostWood"
+name = "LW Skull Kid"
+vanilla_item = "Obj_Heart_Piece"
+oot_randomizer_name = "LW Skull Kid"
+
+[[location]]
+id = "Npc_SkullKid_Child_02/Event22"
+kind = "npc_gift"
+area = "LostWood"
+name = "Npc_SkullKid_Child_02 Event22 (Obj_Rupee_Blue)"
+vanilla_item = "Obj_Rupee_Blue"
+oot_randomizer_name = ""
+
+[[location]]
+id = "Npc_SkullKid_Child_02/Event23"
+kind = "npc_gift"
+area = "LostWood"
+name = "Npc_SkullKid_Child_02 Event23 (Obj_Rupee_Red)"
+vanilla_item = "Obj_Rupee_Red"
+oot_randomizer_name = ""
+
+[[location]]
+id = "Npc_SkullKid_Child_02/Event24"
+kind = "npc_gift"
+area = "LostWood"
+name = "LW Ocarina Memory Game"
+vanilla_item = "Obj_Heart_Piece"
+oot_randomizer_name = "LW Ocarina Memory Game"
+
+[[location]]
+id = "Npc_SkullKid_Child_02/Event154"
+kind = "npc_gift"
+area = "LostWood"
+name = "Npc_SkullKid_Child_02 Event154 (Obj_Rupee_Blue)"
+vanilla_item = "Obj_Rupee_Blue"
+oot_randomizer_name = ""
+
+[[location]]
+id = "Npc_Zora_011_Shop_Adult/Event2"
+kind = "npc_gift"
+area = "ZoraDomain"
+name = "Npc_Zora_011_Shop_Adult Event2 (Obj_Armor_Zora)"
+vanilla_item = "Obj_Armor_Zora"
+oot_randomizer_name = ""
+
+[[location]]
+id = "Npc_Zora_KingZora_adult/Event131"
+kind = "npc_gift"
+area = "ZoraDomain"
+name = "ZD Trade Prescription [Event131]"
+vanilla_item = "Item_EyeballFrog"
+oot_randomizer_name = "ZD Trade Prescription"
+
+[[location]]
+id = "Npc_Zora_KingZora_adult/Event87"
+kind = "npc_gift"
+area = "ZoraDomain"
+name = "ZD Trade Prescription [Event87]"
+vanilla_item = "Item_EyeballFrog"
+oot_randomizer_name = "ZD Trade Prescription"
+
+[[location]]
+id = "SageOfFire/Event18"
+kind = "npc_gift"
+area = ""
+name = "GC Rolling Goron as Adult"
+vanilla_item = "Obj_Armor_Goron"
+oot_randomizer_name = "GC Rolling Goron as Adult"
+
+[[location]]
+id = "SageOfWater/Event242"
+kind = "npc_gift"
+area = ""
+name = "ZD King Zora Thawed"
+vanilla_item = "Obj_Armor_Zora"
+oot_randomizer_name = "ZD King Zora Thawed"
+
+[[location]]
+id = "SimpleShop/Event182"
+kind = "npc_gift"
+area = ""
+name = "ZR Magic Bean Salesman"
+vanilla_item = "Item_MagicBean"
+oot_randomizer_name = "ZR Magic Bean Salesman"
+
+[[location]]
+id = "SubEvent_FindRichard/Event73"
+kind = "npc_gift"
+area = ""
+name = "SubEvent_FindRichard Event73 (Obj_Rupee_Blue)"
+vanilla_item = "Obj_Rupee_Blue"
+oot_randomizer_name = ""
+
+[[location]]
+id = "SubEvent_FindRichard/Event16"
+kind = "npc_gift"
+area = ""
+name = "Market Lost Dog"
+vanilla_item = "Obj_Heart_Piece"
+oot_randomizer_name = "Market Lost Dog"
+
+[[location]]
+id = "SubEvent_GetSwordBigGoron/Event82"
+kind = "npc_gift"
+area = ""
+name = "SubEvent_GetSwordBigGoron Event82 (Item_PocketCucco)"
+vanilla_item = "Item_PocketCucco"
+oot_randomizer_name = ""
+
+[[location]]
+id = "SubEvent_GetSwordBigGoron/Event113"
+kind = "npc_gift"
+area = ""
+name = "SubEvent_GetSwordBigGoron Event113 (Item_PocketCucco)"
+vanilla_item = "Item_PocketCucco"
+oot_randomizer_name = ""
+
+[[location]]
+id = "SubEvent_MaskSalesman/Event365"
+kind = "npc_gift"
+area = "Market"
+name = "SubEvent_MaskSalesman Event365 (Obj_Rupee_Gold)"
+vanilla_item = "Obj_Rupee_Gold"
+oot_randomizer_name = ""

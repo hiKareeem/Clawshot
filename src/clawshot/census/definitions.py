@@ -1,9 +1,10 @@
 """The committed location definitions, ``src/clawshot/data/locations.toml`` (decisions D4, D5).
 
-One ``[[location]]`` table per check: ``id`` (the actor Hash, in decimal, as a string because TOML integers are
-signed 64-bit), ``kind``, ``area``, ``name`` (readable, unique), ``vanilla_item`` (actor name) and
-``oot_randomizer_name`` (empty where no OoT Randomizer location is the same check). Identifiers and names only:
-no game data.
+One ``[[location]]`` table per check: ``id``, ``kind``, ``area``, ``name`` (readable, unique), ``vanilla_item``
+(actor name) and ``oot_randomizer_name`` (empty where no OoT Randomizer location is the same check). A placement
+check's id is its actor Hash, in decimal, as a string because TOML integers are signed 64-bit; an event gift's id is
+``<flow>/<event>`` (:mod:`clawshot.census.gifts`) and its area is empty where the data names no single one.
+Identifiers and names only: no game data.
 """
 
 import re
@@ -13,6 +14,7 @@ from collections.abc import Iterable, Mapping, Sequence
 from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
 
+from clawshot.census.gifts import Gift
 from clawshot.census.ootr import OOTR_COMMIT, Match, shops, spots
 from clawshot.census.scan import GOLD_SKULLTULA, HEART_CONTAINER, SHOP_SLOT, Location
 
@@ -21,8 +23,10 @@ FIELDS = ("id", "kind", "area", "name", "vanilla_item", "oot_randomizer_name")
 
 HEADER = f"""\
 # Clawshot location definitions: one [[location]] per check in the remake (plans/decisions.md D4, D5).
-#   id                   the actor Hash (decimal; a string, as TOML integers are signed 64-bit)
-#   kind, area           census kind and Banc folder; vanilla_item: the actor name the check gives
+#   id                   the actor Hash (decimal; a string, as TOML integers are signed 64-bit), or for an event
+#                        gift <flow>/<event>
+#   kind, area           census kind and Banc folder (empty for a gift the data places in no single one)
+#   vanilla_item         the actor name the check gives
 #   name                 readable and unique
 #   oot_randomizer_name  the OoT Randomizer location that is the same check, empty where none or unsure:
 #                        LocationList.py (MIT) of https://github.com/OoTRandomizer/OoT-Randomizer
@@ -38,7 +42,7 @@ class DefinitionError(ValueError):
 
 @dataclass(frozen=True)
 class Definition:
-    id: int
+    id: int | str  # an actor Hash, or "<flow>/<event>" for an event gift
     kind: str
     area: str
     name: str
@@ -52,7 +56,8 @@ def loads(text: str) -> list[Definition]:
     for row in rows:
         if set(row) != set(FIELDS):
             raise DefinitionError(f"location {row.get('id')}: fields {sorted(row)}, expected {sorted(FIELDS)}")
-        out.append(Definition(int(row["id"]), *(str(row[f]) for f in FIELDS[1:])))
+        raw = str(row["id"])
+        out.append(Definition(int(raw) if raw.isdigit() else raw, *(str(row[f]) for f in FIELDS[1:])))
     ids = Counter(d.id for d in out)
     names = Counter(d.name for d in out)
     duplicates = [i for i, n in ids.items() if n > 1] + [s for s, n in names.items() if n > 1]
@@ -120,14 +125,23 @@ def _group_sizes(locations: Sequence[Location]) -> dict[int, int]:
     return size
 
 
+def gift_name(gift: Gift) -> str:
+    return f"{gift.flow} {gift.event} ({gift.vanilla_item})"
+
+
 def build(
-    locations: Sequence[Location], matches: Mapping[int, Match], existing: Mapping[int, Definition] = {}
+    locations: Sequence[Location],
+    matches: Mapping[int, Match],
+    existing: Mapping[int | str, Definition] = {},
+    gifts: Sequence[Gift] = (),
 ) -> list[Definition]:
-    """Definitions for the census, in its order. ``name`` and ``oot_randomizer_name`` come from ``existing`` where it
-    has the id (hand edits), otherwise from ``matches`` or a generated name. Names are made unique with a suffix."""
+    """Definitions for the census, in its order, then the gifts. ``name`` and ``oot_randomizer_name`` come from
+    ``existing`` where it has the id (hand edits), otherwise from ``matches`` or a generated name (a gift's links to
+    OoT Randomizer are made by hand). Names are made unique with a suffix."""
     group = _group_sizes(locations)
-    base: dict[int, str] = {}
-    ootr: dict[int, str] = {}
+    rows: list[tuple[int | str, str, str, str]] = []  # id, kind, area, vanilla item
+    base: dict[int | str, str] = {}
+    ootr: dict[int | str, str] = {}
     for loc in locations:
         match = matches.get(loc.id)
         ootr[loc.id] = match.name if match else ""
@@ -135,22 +149,27 @@ def build(
         if group.get(loc.id, 1) > 1:
             name += f" [{variant(loc)}]"
         base[loc.id] = name
+        rows.append((loc.id, loc.kind, loc.area, loc.vanilla_item))
+    for gift in gifts:
+        ootr[gift.id] = ""
+        base[gift.id] = gift_name(gift)
+        rows.append((gift.id, gift.kind, gift.area, gift.vanilla_item))
     used = {d.name for i, d in existing.items() if i in base}
-    new_counts = Counter(base[loc.id] for loc in locations if loc.id not in existing)
+    new_counts = Counter(base[i] for i, *_ in rows if i not in existing)
     index: dict[str, int] = defaultdict(int)
     out = []
-    for loc in locations:
-        if loc.id in existing:
-            name, oot_name = existing[loc.id].name, existing[loc.id].oot_randomizer_name
+    for i, kind, area, item in rows:
+        if i in existing:
+            name, oot_name = existing[i].name, existing[i].oot_randomizer_name
         else:
-            name, oot_name = base[loc.id], ootr[loc.id]
+            name, oot_name = base[i], ootr[i]
             if new_counts[name] > 1 or name in used:
                 stem = name
                 while name in used or name == stem:
                     index[stem] += 1
                     name = f"{stem} #{index[stem]}"
             used.add(name)
-        out.append(Definition(loc.id, loc.kind, loc.area, name, loc.vanilla_item, oot_name))
+        out.append(Definition(i, kind, area, name, item, oot_name))
     names = Counter(d.name for d in out)
     duplicates = sorted(n for n, c in names.items() if c > 1)
     if duplicates:
