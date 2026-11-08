@@ -210,3 +210,4 @@ GE01→XC04 are aliases with no separate errand. There are 186 routed checks and
 | XC18 | [2](session-2.md) | Kokiri elevated purple chest climb/spawn; Hash 4349272251343787229 | not yet played | — |
 | XC19 | [2](session-2.md) | Lost Woods elevated purple chest climb/spawn; Hash 17479747339356189279 | not yet played | — |
 | XC20 | [8](session-8.md) | Fountain upper ruins purple chest route/spawn; Hash 15055117029957340138 | not yet played | — |
+| SHOP01 | later | With the Deku Shield in no shop: burn it (fire Keese or a torch), then talk to the Kokiri shopkeeper after Mido: does he give a replacement (`present_DekuSheld`)? | not yet played | — |

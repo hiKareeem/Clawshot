@@ -847,3 +847,19 @@ Output safety: quantity-board removal also removes the board's `SimultaneousGrou
 memberships, not just its actor and seller links. A live generated-overlay smoke exposed the stale memberships;
 the aimed fix and synthetic/all-shop dump regressions pass. Rebuilt smoke outputs contain no dangling board
 references. No game boot or crash was needed to diagnose this.
+
+**In game (Kareem, 2026-11-08, Hookshot release build in his folder, new games; logs show each changed file
+`from the overlay`; saves read with `clawshot.save`):**
+
+- `shield-slot-hylian`: the Kokiri shield shelf showed the Hylian Shield, and its name, description and every text
+  were the Hylian Shield's; 40 rupees; it auto-equipped; the save has `IsGet.Weapon_Shield_Hylian`, no Deku Shield,
+  `KokiriForest_Meet_DekuTree_BoughtDekuShield` false; no tutorial. **Mido let Link through with the Kokiri Sword
+  and the Hylian Shield** (`KokiriForest_Npc_Kokiri_Mido_Child_Blocker` false): the remake's Mido takes any shield.
+- `mido-chest-deku`: Mido's chest gave the Deku Shield; no tutorial (it follows buying, as traced); Mido let Link
+  through.
+- `shield-display-boomerang`: no change: the shelf, text, price, cutscene and tutorial were the Deku Shield's and
+  the Deku Shield was given, though the log shows the changed seller pack loaded. What a slot sells follows the
+  shelf's display actor; a stand-in display needs more than `GoodsList` (D21).
+- **A bought slot restocks** (no "sold out"), the Hylian Shield in the changed slot too. Every native shop item is
+  re-buyable equipment or a consumable, so a shuffled slot is a permanent purchase. To check later: with the Deku
+  Shield shuffled out of every shop, whether the shopkeeper's `present_DekuSheld` route replaces a burned shield.
