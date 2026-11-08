@@ -405,3 +405,9 @@ later start of that build lost the device the same way, the control included, so
 caches (moved to `E:/OOTRemake/work/hookshot-main/cache-1848-device-lost/`) were broken, not the variants; whether
 the Deku Shield variant caused it is open. Tests 3 and 4 (chest at the heart piece) are to run again on the release
 build.
+
+Correction (Kareem, the same evening): the "hang" was the picture stopping on the loading screen while the game
+went on; he could move, and picked up the **Hylian Shield** with the screen frozen. The first **Deku Shield** run
+worked: a pick-up notice for the shield he already had, no duplicate. So two major `Obj_` pick-ups that belong to no
+logic group work as freestanding items; the Fire Arrows crash belongs to that actor. Only the chest at the heart
+piece is left to test.
