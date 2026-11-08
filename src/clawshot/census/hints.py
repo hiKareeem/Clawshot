@@ -171,13 +171,19 @@ def read_stones(romfs: str | Path) -> list[GossipStone]:
     return scan_stones({path: read_romfs_byml(romfs, dicts, path) for path in paths})
 
 
-def read_flow(romfs: str | Path, flow: str) -> evfl.Flowchart:
-    """The flowchart of ``flow`` as the game loads it (``<flow>.<version>`` where the versions list names one)."""
+def flow_path(romfs: str | Path, flow: str) -> str:
+    """The romfs path of ``flow`` as the game loads it (``<flow>.<version>`` where the versions list names one)."""
     romfs = Path(romfs)
     dicts = zsdic.Dictionaries.from_romfs(romfs)
     versions = {str(k): str(v) for k, v in read_romfs_byml(romfs, dicts, FLOW_VERSIONS)["Versions"].items()}
-    path = flow_files(romfs, versions)[flow]
-    chart = evfl.read(dicts.decompress(path, (romfs / path).read_bytes())).flowchart
+    return flow_files(romfs, versions)[flow]
+
+
+def read_flow(romfs: str | Path, flow: str) -> evfl.Flowchart:
+    """The flowchart of ``flow`` as the game loads it."""
+    romfs = Path(romfs)
+    path = flow_path(romfs, flow)
+    chart = evfl.read(zsdic.Dictionaries.from_romfs(romfs).decompress(path, (romfs / path).read_bytes())).flowchart
     if chart is None:
         raise HintCensusError(f"{path} holds no flowchart")
     return chart

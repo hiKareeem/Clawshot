@@ -1307,6 +1307,43 @@ playing a song summons). An unnamed `Obj_GossipStone_A_02` in Zora's Domain's ad
 The Temple of Time altar's text is part of a cutscene (`Dm_TimeTemple_0020`), not a talk step; not traced further.
 Many NPCs also have `Mask_NN` lines for when Link wears a mask (the Mask of Truth reads minds), a further slot.
 
+**Item-get text and model** (`clawshot.patch.text`; flows `GetPouchContent`, `Dm_SY_Get`; actor packs):
+
+- **One path for chests, NPCs and shops.** A chest's default event passes its content to
+  `GetPouchContent:GetPouchContentByActorNameForTreasureBox`, NPC gifts reach `GetPouchContentByActorName` through
+  their wrappers (section 4), and both run entry `GetPouchContent`: `PouchSystemActor.EventTriggerSetForGetWindow
+  {Actor}`, `OpenGetWindow`, then `EventTriggerAddOrRemovePouchContent {IsSetMessageTargetActorName: True}`. A shop
+  sets `Shop_SelectItemName` to the shelf item and its menu lines name it with a run-time tag (group 2 type 3 on that
+  variable); Kareem saw the name, description and every text follow the shelf item (section 17).
+- **The text is the item's.** `OpenGetWindow` branches on `EventQueryCheckUIMessageTargetActorName`: own windows
+  for heart pieces, Gold Skulltula tokens, bottles, minigame small keys, magic, the Spiritual Stones of Fire and
+  Water, the Claim Check, Iron and Hover Boots, the Longshot and Biggoron's Sword; every other item gets
+  `DefaultGetMessage`, the lines `Dm_SY_Get:GetMessage` and `GetCaption`, whose only content is a run-time tag (group
+  2, types 23 and 19) on `UI_MessageTargetActorName`. Each item's texts are in `ActorMsg/PouchContent.msbt` as
+  `<key>_Name`, `_Caption`, `_GetMessage`, `_GetCaption` (some `_SecondGetCaption`, `_ShopCaption`), where `<key>` is
+  the actor's `ActorName` component (`ActorNameRef` in its pack: `TBox_Rupee_Red` -> `Obj_Rupee_Red`,
+  `Item_Sword_Kokiri` -> `Weapon_Sword_Kokiri`, `Item_HeavyBoot` -> `Armor_Adult_HeavyBoot`). 359 of the 393
+  pouch actors with a pack have get texts under that key (the rest are base actors, default equipment and the small
+  bags no check gives); all 106 actors of `item_actors.toml` have a name and get text in all 16 languages. That the
+  two tags resolve to `<key>_GetMessage`/`_GetCaption` is an inference from the templates, and every in-game result
+  agrees (the Boomerang, rupees and the Song of Storms from chests each showed their own text).
+- **The model is the actor's `ModelInfo`** (`FmdbName`). All 12 `Item_Melody_*` actors use `Obj_Rupee`, the
+  rupee model (green, its default colour [inference]), so a song from a chest shows a green rupee with the song's
+  text, as Kareem saw; songs are shown by their own cutscenes otherwise. Other stand-in models: Farore's Wind and
+  Nayru's Love show Din's Fire's model, the Pocket Egg the Weird Egg's, the Longshot the Hookshot's, the blue and
+  green potions the red potion's; bombs, nuts, sticks and keys their pickup models.
+- **Naming an item in an NPC's line**: (a) per language, replace the line's message with text that includes that
+  language's `<key>_Name` (its parts, grammar tags included): `patch.text.item_name` and `edit_messages`; a seed then
+  writes the language archives it supports (about 2.4 MB each, changed archives only). (b) At run time, as the
+  business scrubs do: the flow sets a String64 game-data variable to the actor
+  (`GameDataActor.EventTriggerSetGameDataString64`, e.g. `Scrub_Business_TempItemName_00`) and the line holds a group
+  2 type 3 tag on it; this needs a flow edit and a line with the tag, but no item names per language. (a) is
+  implemented; (b) suits an item only known at run time. Either way the NPC's other lines (about its vanilla item)
+  stay unless they are rewritten too.
+- **A Gossip Stone without the mask:** `patch.text.gossip_without_mask` points both answers of Event112 and Event25
+  at the stone's path; the flow keeps its size (93,400 bytes). The stone's first-time opener (`Talk_03`, `Talk_10`)
+  mentions the mask; `Talk_12` is the repeat opener.
+
 ## 23. Round 6: one-time scrubs and Gold Skulltula drop experiments (cs6d)
 
 Build `e0f3ccfa`, dump/save backups read-only. Full 21-actor ledger, flow/event/Hash evidence,
