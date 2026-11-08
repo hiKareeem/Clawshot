@@ -265,3 +265,9 @@ evidence outside the repository. No game/launcher/dry-run/window, backup/live-us
   posts returned that exact error; read-only thread metadata corroborated it). The final handoff post
   is attempted once with the final commit and complete gate results; its outcome is reported in chat.
   No unauthorized thread creation, alternative recipient or other agent terminal access.
+
+Final handoff post for head `ddbc5e4` was attempted after all four gates passed and returned:
+`bermuda: no thread cs-r7: create it with bermuda thread new cs-r7` (exit 1). No retry or
+thread-creation command was issued. Gate evidence commit: `ddbc5e4`; this last documentation-only
+commit records the actual post failure. Delivery is blocked only on the coordinator restoring the thread;
+the complete branch/artifact handoff is supplied directly in chat.
