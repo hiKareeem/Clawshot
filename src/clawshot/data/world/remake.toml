@@ -61,7 +61,9 @@ source = "D16; census 'Water Temple Longshot Chest' holds Item_Longshot"
 
 [locations."Ganons Castle Shadow Trial Golden Gauntlets Chest"]
 vanilla_fixed = "Golden Gauntlets"
-source = "D16; census 'Ganons Castle Shadow Trial Golden Gauntlets Chest' holds Item_Gauntlet_Gold"
+rule = "can_use(Lens_of_Truth)"
+was = "True"
+source = "D16; census 'Ganons Castle Shadow Trial Golden Gauntlets Chest' holds Item_Gauntlet_Gold. Rule: track B (cs4b), thread cs-r4, 2026-11-07 20:56: in the remake the chest is reached by a hidden switch path that needs the Lens of Truth (plans/rounds/r4-logic-adult.md)"
 
 # Moved: the remake places these two Spirit Temple chests in the DesertColossus Banc folder (03-game-data.md
 # section 9, "Moved"; census, round 2). Logic unchanged: they are reached from inside the temple as on N64.
