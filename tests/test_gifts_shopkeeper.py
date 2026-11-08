@@ -6,7 +6,7 @@ import pytest
 
 from clawshot.census.gifts import Gift
 from clawshot.formats import evfl
-from clawshot.generate import Settings, prepare
+from clawshot.generate import Settings, generate, prepare
 from clawshot.patch import gifts
 from clawshot.patch.items import loads as load_actors
 from clawshot.world.load import load_spec
@@ -162,3 +162,25 @@ def test_placed_reward_removes_implicit_shield_and_cannot_bootstrap_mido():
     _, opened = prepare(changed, Settings(forest="open"))
     assert Search.child_only(opened).can_access(opened.locations[gifts.SHOPKEEPER_CHECK], "child")
     assert not Search(opened).can_access(opened.locations[gifts.SHOPKEEPER_CHECK], "adult")
+
+
+def test_missable_shopkeeper_never_holds_progression_in_generated_seeds():
+    spec = {
+        "start": gifts.SHOPKEEPER_REGION,
+        "goal": "Deku_Shield",
+        "items": {"Deku Shield": {}, "Rupee": {"class": "normal"}},
+        "locations": {"Independent Chest": {"type": "Chest", "vanilla": "Rupee"}},
+        "regions": [
+            {
+                "name": gifts.SHOPKEEPER_REGION,
+                "events": {"Deku Shield": {"rule": "True", "source": "synthetic native gift"}},
+                "locations": {"Independent Chest": "True"},
+            }
+        ],
+    }
+    converted = gifts.shopkeeper_spec(spec)
+    settings = Settings(shuffle=("Chest", converted["locations"][gifts.SHOPKEEPER_CHECK]["type"]), fast_start=())
+    for number in range(20):
+        seed = generate(converted, number, settings, attempts=1)
+        reward = seed.placements[gifts.SHOPKEEPER_CHECK]
+        assert not seed.world.items[reward].progression, (number, seed.placements)

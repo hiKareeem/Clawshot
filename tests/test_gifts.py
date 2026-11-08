@@ -16,10 +16,13 @@ from clawshot.formats.evfl import (
     SubFlowEvent,
     SwitchEvent,
 )
+from clawshot.generate import Settings
+from clawshot.generate.fill import allowed
 from clawshot.patch import gifts
 from clawshot.patch import items as item_actors
 from clawshot.patch.gifts import GiftChange, GiftPatchError, Rule
 from clawshot.save import murmur3_32
+from clawshot.world import build_world
 
 FLOW = "Npc_Test"
 
@@ -335,20 +338,42 @@ def test_seed_step_changes_only_moved_gifts():
     assert fc.events[1].params["ActorName"] == fc.events[4].params["ActorName"] == "Item_New"
 
 
-class _Item:
-    def __init__(self, type="Item"):
-        self.type = type
-
-
-def test_held_items_keep_songs_to_songs_and_chestless_actors_to_gifts():
-    world = _World({})
-    world.items = {"Lullaby": _Item("Song"), "Letter": _Item(), "Heart": _Item()}
+def test_chestless_actors_and_songs_respect_destination_and_missable_policies():
+    world = build_world(
+        {
+            "start": "Root",
+            "goal": "True",
+            "items": {"Lullaby": {"type": "Song"}, "Letter": {}, "Heart": {"class": "normal"}},
+            "regions": [
+                {
+                    "name": "Root",
+                    "locations": {
+                        "Chest": {"rule": "True", "type": "Chest", "vanilla": "Heart"},
+                        "Gift": {"rule": "True", "type": "NPC", "vanilla": "Letter"},
+                        "Song": {"rule": "True", "type": "Song", "vanilla": "Lullaby"},
+                        "Missable": {"rule": "True", "type": "Missable", "vanilla": "Heart"},
+                    },
+                }
+            ],
+        }
+    )
     actors = item_actors.loads(
         '[items]\nLullaby = { actor = "Item_Melody_Z" }\nLetter = { actor = "Item_Letter" }\n'
         'Heart = { actor = "Obj_Heart_Piece" }\n'
     )
-    held = gifts.held_items(world, ["Letter", "Lullaby", "Heart", "Letter"], actors, {"Obj_Heart_Piece"})
-    assert held == {"Letter": ("NPC", "Cutscene", "Boss"), "Lullaby": ("Song",)}
+    held = gifts.held_items(world, ["Letter", "Lullaby", "Heart"], actors, {"Obj_Heart_Piece"}, songs="song")
+    settings = Settings(item_location_types=held)
+    assert allowed(world, settings, "Gift", "Letter")
+    assert not allowed(world, settings, "Chest", "Letter")
+    assert not allowed(world, settings, "Song", "Letter")
+    assert not allowed(world, settings, "Missable", "Letter")
+    assert allowed(world, settings, "Song", "Lullaby")
+    assert not allowed(world, settings, "Chest", "Lullaby")
+    assert not allowed(world, settings, "Gift", "Lullaby")
+    assert not allowed(world, settings, "Missable", "Lullaby")
+    assert allowed(world, settings, "Chest", "Heart")
+    assert allowed(world, settings, "Gift", "Heart")
+    assert allowed(world, settings, "Missable", "Heart")
 
 
 def test_anchors_stay_vanilla_unless_time_travel_is_free():

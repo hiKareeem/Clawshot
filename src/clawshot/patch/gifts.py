@@ -416,7 +416,8 @@ def file_changes(changes: Sequence[GiftChange], files: Mapping[str, str]) -> dic
 
 # --- seeds --------------------------------------------------------------------------------------------------------
 
-GIFT_TYPES = ("NPC", "Song", "Cutscene", "Boss")  # the world's location types of event gifts (OoT Randomizer's)
+# World event-gift types; Missable is a remake-only non-progression check.
+GIFT_TYPES = ("NPC", "Song", "Cutscene", "Boss", "Missable")
 SHUFFLE = "Gift"  # the --shuffle value
 SONG_TYPE = "Song"
 FREE_TIME_TRAVEL = "free_time_travel"  # the world setting that lifts the anchors
@@ -435,7 +436,7 @@ def shopkeeper_spec(spec: Mapping[str, Any]) -> dict[str, Any]:
             events = dict(region["events"])
             rule = events.pop("Deku Shield")
             locations[SHOPKEEPER_CHECK] = {
-                "type": "NPC",
+                "type": "Missable",
                 "vanilla": "Deku Shield",
                 "source": rule["source"],
             }
@@ -523,7 +524,7 @@ def seed_setup(
     """For ``--shuffle Gift``: the spec with the gifts that cannot move held vanilla, the settings shuffling the
     gift types in place of ``Gift`` and a placement policy from ``settings.songs`` plus the verified chest
     actor list in ``data/settings.toml``), and the patch step to pass to ``make_seed``."""
-    if SHUFFLE in settings.shuffle or "NPC" in settings.shuffle:
+    if SHUFFLE in settings.shuffle or "Missable" in settings.shuffle:
         spec = shopkeeper_spec(spec)
     settings = replace(
         settings,
