@@ -261,3 +261,58 @@ The active full-gate basetemps were not touched.
 
 Prepared section 23 at `E:/OOTRemake/work/r6-tokens/section23.md`; numeric-order integration is the only
 documentation prerequisite outstanding, posted to the reviewer. No section 20–22 placeholders were invented.
+
+Token rollout has a second boundary beyond persistence: most inventory-only major `Item_*` actors have no
+freestanding pickup behavior. The experiment API deliberately rejects them. Even a successful shield/rupee
+persistence result would not by itself certify arbitrary-item tokensanity or token grants from chests.
+No custom actor pack, chest-in-place-of-enemy conversion or global token pouch swap was invented.
+
+## Full gates and handoff
+
+One complete gate chain, all passed on the implemented tree (no full-suite retry):
+
+| Command | Observed result |
+|---|---|
+| `uv run ruff format --check` | 148 files already formatted |
+| `uv run ruff check` | All checks passed |
+| `uv run pytest --basetemp E:/OOTRemake/work/r6-tokens/gate-synthetic` | **395 passed, 50 skipped**, 353.00 s |
+| `OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump --basetemp E:/OOTRemake/work/r6-tokens/gate-dump` | **49 passed, 396 deselected**, 631.67 s |
+
+The dump gate includes the whole-world Scrub writer regression and every token copy's exact field diff,
+plus the unchanged format/census/gift/shop/chest oracles. All dump-derived temporary output remained outside
+the repository. Runtime smoke and the separate-interpreter replay are recorded under item 3, not inferred
+from tests. No game/launcher/GUI was started, no in-game certification claimed.
+
+Branch commits, in order:
+
+1. `daee593`: item 1, four once-sale transforms + complete scrub census trace + tests.
+2. `7f4ee0b`: item 2, token drop experiments + callback/persistence trace + tests.
+3. `9b60b4e`: isolated two-capacity actor mappings.
+4. `de1fe3c`: isolated automatic Scrub setup/extra-step hook.
+5. `5a823fc`: isolated pre-generation Token refusal.
+6. `b0f3f33`: isolated CLI choices/help.
+7. `8079e15`: item 3, reviewed Scrub fill domains + synthetic/full-seed regressions + smoke evidence.
+8. `cee5424`: player-artifact audit and ordered documentation prerequisite.
+9. Final documentation-only gate/handoff commit follows; its hash is posted with the handoff.
+
+### What remains external
+
+- **Kareem:** run the controlled scrub and ranch-token checklists, observe overlay log plus actual item/count/
+  persistence results. The token callback and inventory-only-major pickup boundaries prevent Token seed use;
+  it is explicitly refused, not silently narrowed to a no-op shuffle. Scrub remains opt-in.
+- **Reviewer:** confirm the fixed Medium capacity policy; integrate settings/name/price-track shared changes
+  preserving both automatic patch registrations. Scrub/Token public codec values were requested on the thread.
+  No other track's in-flight code was copied or merged here.
+- **Ordered documentation prerequisite:** sections 20–22 are not on this authorized worktree base and no main
+  movement/rebase authorization has been received. Section 23 is fully prepared at
+  `E:/OOTRemake/work/r6-tokens/section23.md`; append it after those sections during ordered integration, or
+  authorize the rebase so this track can append it. All its underlying evidence is committed in this report.
+  This is an explicit outstanding integration step, not a claim that `03-game-data.md` was updated.
+
+No merge, push, stash, dependency edit, live-save read/write or game-folder write. Only this session's completed
+smoke scaffolds/basetemps were removed; requested experiments and reproducible research remain.
+
+Gate-output cleanup diagnosis: Git Bash `rm` removed the real test directories but refused pytest's Windows
+`*current` directory symlinks. Printed `Get-Item` metadata confirmed `Directory, ReparsePoint`,
+`LinkType=SymbolicLink`, targets inside these session basetemps. One aimed cleanup removed only those
+links with `[IO.Directory]::Delete(path, false)`, then the empty basetemps; exit 0, no link traversal.
