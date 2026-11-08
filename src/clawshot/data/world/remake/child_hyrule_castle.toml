@@ -1,0 +1,38 @@
+# Hyrule Castle, child side, as the remake builds it (round 4, track A). Format: plans/04-world-format.md,
+# "Overrides". What was checked and left as OoT Randomizer has it: E:/OOTRemake/work/r4-logic-child/findings/hyrule_castle.md.
+#
+# Sources:
+# - Nintendo Life, "Hyrule Castle walkthrough" (Switch 2), 2026-11-05,
+#   https://www.nintendolife.com/guides/zelda-ocarina-of-time-hyrule-castle-walkthrough-weird-egg-wake-up-cucco-switch-2
+# - Nintendo Life, "All Great Fairy Fountain locations" (Switch 2), 2026-11-06,
+#   https://www.nintendolife.com/guides/zelda-ocarina-of-time-great-fairy-fountain-locations-all-switch-2
+# - Eurogamer, "All new changes in the Ocarina of Time remake", https://www.eurogamer.net/all-new-changes-zelda-ocarina-of-time-switch-2
+# - games.gg, "Great Fairy locations, rewards and costs" (2026-11-06),
+#   https://games.gg/the-legend-of-zelda-ocarina-of-time-2026/guides/ocarina-of-time-remake-great-fairy-locations-rewards-and-costs
+# - Gold Skulltula guides (Eurogamer, Polygon; local copies in E:/OOTRemake/work/r3/, facts only).
+# - Placement data (HyruleCastle_Static/_Dynamic, read by E:/OOTRemake/work/r4-logic-child/actors.py), Banc
+#   coordinates in metres, y up.
+
+# Time of day: the remake's clock starts only once Link has met Zelda. Rules in other areas ask for this event
+# with every child `at_night` / `at_dampe_time` (cross-area decision, Main, round 4).
+
+[events."HC Garden"."Time Flows"]
+rule = "is_child"
+new = true
+source = "Eurogamer, 'all new changes' (https://www.eurogamer.net/all-new-changes-zelda-ocarina-of-time-switch-2): time does not start to flow until Link has met Princess Zelda; she is met in the castle garden (Npc_Hylia_Zelda_Child 13027585550451396507 at (5,128,-257); Nintendo Life Hyrule Castle guide, steps 8-10)"
+
+# Grottos: every grotto entrance is visible in the remake and the Stone of Agony (now the Echo Gem) finds Gold
+# Skulltulas, not grottos (cross-area decision, Main, round 4).
+
+[exits."Hyrule Castle Grounds"."HC Storms Grotto"]
+rule = "can_play(Song_of_Storms)"
+was = "can_open_storm_grotto"
+source = "Eurogamer, 'all new changes' (https://www.eurogamer.net/all-new-changes-zelda-ocarina-of-time-switch-2): every grotto entrance is visible, the Stone of Agony is the Echo Gem and finds Gold Skulltulas; Eurogamer and Polygon Gold Skulltula guides: play the Song of Storms by the lone tree near the crawlspace to open the hole; data: Land_Kokiri_HidingHoleCover_A_01 13073548223054495027 and HidingHole_Entry_01 at (36,117,-106) beside Obj_Tree_A_01 (33,117,-106); the only AgonyStoneReactArea (16549736856740418131) is inside the grotto at (38,95,-104), not at the entrance"
+
+# Great Fairies: the first one visited must be Death Mountain Trail's or Hyrule Castle's, or the others do not
+# appear (cross-area decision, Main, round 4; DeathMountain defines the same event at the trail's fountain).
+
+[events."HC Great Fairy Fountain"."Great Fairy Met"]
+rule = "can_play(Zeldas_Lullaby)"
+new = true
+source = "games.gg (https://games.gg/the-legend-of-zelda-ocarina-of-time-2026/guides/ocarina-of-time-remake-great-fairy-locations-rewards-and-costs, 2026-11-06): the first Great Fairy visited must be Death Mountain Trail's or Hyrule Castle's, or the others do not appear; Nintendo Life Great Fairy guide: Zelda's Lullaby on the Triforce (Obj_TriForcePoint_A_01 at (118,109,-77)) calls her"

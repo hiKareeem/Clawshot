@@ -1,0 +1,98 @@
+# Hyrule Castle Market (Banc folder Market), child side, as the remake builds it (round 4, track A). Format:
+# plans/04-world-format.md, "Overrides". What was checked and left as OoT Randomizer has it:
+# E:/OOTRemake/work/r4-logic-child/findings/market.md.
+#
+# Sources:
+# - Nintendo Life, "All Heart Piece locations" (Switch 2), 2026-11-06,
+#   https://www.nintendolife.com/guides/zelda-ocarina-of-time-heart-piece-locations-switch-2
+# - Nintendo Life, walkthrough hub (Switch 2), https://www.nintendolife.com/guides/zelda-ocarina-of-time-walkthrough-switch-2-remake
+# - Eurogamer, "All new changes in the Ocarina of Time remake", https://www.eurogamer.net/all-new-changes-zelda-ocarina-of-time-switch-2
+# - Event flows (romfs EventFlow, decoded in E:/OOTRemake/work/r1-research/decoded/evfl_all.json): a switch's case 0
+#   is "yes" (the shops' opening-hours checks only read sensibly that way: each hour range answered in case 0
+#   gets its own "closed" line, and the last case 1 is an error branch).
+# - Placement data (Market_Child_Static/_Dynamic, read by E:/OOTRemake/work/r4-logic-child/actors.py), Banc
+#   coordinates in metres, y up.
+
+# Night: the remake's clock starts only once Link has met Zelda ('Time Flows', child_hyrule_castle.toml;
+# cross-area decision, Main, round 4), so every child night rule asks for it.
+
+[locations."Market Night Red Rupee Crate"]
+rule = "is_child and (at_night and 'Time Flows') and (deadly_bonks != 'ohko' or Fairy or (can_use(Nayrus_Love) and shuffle_overworld_entrances == 'off'))"
+was = "is_child and at_night and (deadly_bonks != 'ohko' or Fairy or (can_use(Nayrus_Love) and shuffle_overworld_entrances == 'off'))"
+source = "Eurogamer, 'all new changes': time does not flow until Link has met Zelda (event 'Time Flows')"
+
+[locations."Market Night Green Rupee Crate 1"]
+rule = "is_child and (at_night and 'Time Flows') and (deadly_bonks != 'ohko' or Fairy or (can_use(Nayrus_Love) and shuffle_overworld_entrances == 'off'))"
+was = "is_child and at_night and (deadly_bonks != 'ohko' or Fairy or (can_use(Nayrus_Love) and shuffle_overworld_entrances == 'off'))"
+source = "Eurogamer, 'all new changes': time does not flow until Link has met Zelda (event 'Time Flows')"
+
+[locations."Market Night Green Rupee Crate 2"]
+rule = "is_child and (at_night and 'Time Flows') and (deadly_bonks != 'ohko' or Fairy or (can_use(Nayrus_Love) and shuffle_overworld_entrances == 'off'))"
+was = "is_child and at_night and (deadly_bonks != 'ohko' or Fairy or (can_use(Nayrus_Love) and shuffle_overworld_entrances == 'off'))"
+source = "Eurogamer, 'all new changes': time does not flow until Link has met Zelda (event 'Time Flows')"
+
+[locations."Market Night Green Rupee Crate 3"]
+rule = "is_child and (at_night and 'Time Flows') and (deadly_bonks != 'ohko' or Fairy or (can_use(Nayrus_Love) and shuffle_overworld_entrances == 'off'))"
+was = "is_child and at_night and (deadly_bonks != 'ohko' or Fairy or (can_use(Nayrus_Love) and shuffle_overworld_entrances == 'off'))"
+source = "Eurogamer, 'all new changes': time does not flow until Link has met Zelda (event 'Time Flows')"
+
+[locations."Market Night Balcony Wonderitem 1"]
+rule = "is_child and (at_night and 'Time Flows')"
+was = "is_child and at_night"
+source = "Eurogamer, 'all new changes': time does not flow until Link has met Zelda (event 'Time Flows')"
+
+[locations."Market Night Balcony Wonderitem 2"]
+rule = "is_child and (at_night and 'Time Flows')"
+was = "is_child and at_night"
+source = "Eurogamer, 'all new changes': time does not flow until Link has met Zelda (event 'Time Flows')"
+
+[exits."Market"."Market Treasure Chest Game"]
+rule = "is_child and (at_night and 'Time Flows')"
+was = "is_child and at_night"
+source = "Eurogamer, 'all new changes': time does not flow until Link has met Zelda (event 'Time Flows'); Nintendo Life heart piece guide: the Treasure Chest shop opens at night; flow MiniGame_SequentialChoiceTreasure: closed from 06:00 to 21:00"
+
+[exits."Market Back Alley"."Market Bombchu Shop"]
+rule = "(at_night and 'Time Flows')"
+was = "at_night"
+source = "Eurogamer, 'all new changes': time does not flow until Link has met Zelda (event 'Time Flows'); flow Npc_Hylia_021_Shop_Child, CheckRestrictedDoor: the Bombchu Shop door is closed from 06:00 to 21:00"
+
+[exits."Market Back Alley"."Market Man in Green House"]
+rule = "(at_night and 'Time Flows')"
+was = "at_night"
+source = "Eurogamer, 'all new changes': time does not flow until Link has met Zelda (event 'Time Flows')"
+
+[locations."Market Lost Dog"]
+rule = "is_child and (at_night and 'Time Flows')"
+was = "is_child and at_night"
+source = "Eurogamer, 'all new changes': time does not flow until Link has met Zelda (event 'Time Flows'); Nintendo Life heart piece guide: at night the woman who lost Richard waits by the market entrance, Richard is in the back alley (Animal_Dog_Richard_01, HeartPieceAnchor SubEvent_FindRichard_GetHeartPiece at (2,100,27))"
+
+# Bombchu Bowling: the alley lady lets Link play only once the Stone of Fire quest is complete (Dodongo's Cavern
+# beaten), and lends ten Bombchus per round. Prizes in order: Bombchus (first clear), a bigger Bomb Bag (second),
+# the Heart Piece (third), then a red rupee. OoT Randomizer's explosives are kept (the conservative rule; King
+# Dodongo's own rule asks for explosives anyway).
+
+[locations."Market Bombchu Bowling First Prize"]
+rule = "has_explosives and 'Defeat King Dodongo'"
+was = "has_explosives"
+source = "flow MiniGame_BombchuBowling, AfterWakeUp: Get_StoneOfFire_IsCompleted_Exp (the Stone of Fire quest enum at 'Complete', after BossBattle and EscapeDungeon) gates the offer, otherwise the lady refuses; Start: EventPlayerSetItemForMiniGame (10 rental items, ExplainRentalItem); GetPrise: second clear gives Item_BombBag_Medium (Item_BombBag_Large if held); Nintendo Life heart piece guide: bowling opens after Dodongo Cavern"
+
+[locations."Market Bombchu Bowling Second Prize"]
+rule = "has_explosives and 'Defeat King Dodongo'"
+was = "has_explosives"
+source = "flow MiniGame_BombchuBowling: Get_StoneOfFire_IsCompleted_Exp gates the game; GetPrise: third clear gives Obj_Heart_Piece (HeartPieceAnchor MiniGame_BombchuBowling_ClearThirdTime at (-22,110,9)); Nintendo Life heart piece guide: after Dodongo Cavern, one prize is a Heart Piece"
+
+[locations."Market Bombchu Bowling Bombchus"]
+rule = "found_bombchus and 'Defeat King Dodongo'"
+was = "found_bombchus"
+source = "flow MiniGame_BombchuBowling: Get_StoneOfFire_IsCompleted_Exp gates the game; GetPrise: first clear gives Item_BombchuBundle_Medium"
+
+[locations."Market Bombchu Bowling Bomb"]
+rule = "has_explosives and 'Defeat King Dodongo'"
+was = "has_explosives"
+source = "flow MiniGame_BombchuBowling: Get_StoneOfFire_IsCompleted_Exp gates the game; GetPrise: every clear after the third gives Obj_Rupee_Red"
+
+# Shooting gallery: the child prize is a bigger bullet bag, never the Slingshot (the gallery lends one).
+
+[locations."Market Shooting Gallery Reward"]
+vanilla_fixed = "Bullet Bag (40)"
+source = "flow MiniGame_HitTarget, Child_Reward: Item_BulletBag_Medium (Item_BulletBag_Large if the Medium bag is held), once (MiniGame_HitTarget_HrlCity_Get_BulletBag), then rupees; no check for Item_Range_SlingShot, the game equips its own (EventPlayerSetItemForMiniGame, 15 shots). As the Lost Woods target game (remake.toml). OoT Randomizer's progressive Slingshot here let the logic give a child a Slingshot for free"
