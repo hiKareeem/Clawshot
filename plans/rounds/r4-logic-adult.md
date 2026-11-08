@@ -164,7 +164,7 @@ rules stay Track A's. No empty override files were created merely to claim area 
 | Kakariko | Hookshot roofs and adult/night roof token; adult Bow gallery; Pocket Egg/Talon/Cojiro; Song of Storms as adult | none | exact Nocturne trigger without all first-three medallions; free-jump windmill heart; roof jumps/shop prices |
 | Graveyard | adult Dampé race has no equipment prerequisite; Song of Time exit to windmill; bean/Longshot heart route; Din's Fire Shadow entrance | none | repeat-race chest choice; hand-collect heart alternatives; ordinary adult grave opening times |
 | Death Mountain Trail | adult two grey-rock tokens need Hammer; Biggoron trades/receipt and three-day wait | none | N64 damage-drop heart, bean/Hover summit routes and exact timed-delivery safety |
-| Death Mountain Crater | adult Hookshot bridge/Sheik/Fire entrance; bean-volcano heart; Hammer fairy entrance; Tunic heat protection | wall heart uses documented adult Hookshot+Tunic route | child drop to wall heart, no-Tunic brief visits, N64 Hover/Longshot drops; fairy prices |
+| Death Mountain Crater | adult Hookshot bridge/Sheik/Fire entrance; bean-volcano heart; Hammer fairy entrance; Tunic heat protection | wall heart also has a documented child heat-risk climb; adult safe route needs Tunic, no Hookshot | no-Tunic adult brief visits, N64 Hover/Longshot drops, OHKO timing; fairy prices |
 | Goron City | stop rolling Goron with bombs/bomb flowers; Tunic and Darunia passage; statue route; grey rocks | ceiling token now requires Hookshot, not adult alone | Bow stopping Goron; grotto lava crossings; wallet/price requirements |
 | Zora River | adult two high tokens Hookshot/night; waterfall Lullaby; normal river passage | none | adult no-bomb boulder passage; Hover/bean heart alternatives; underwater rupees |
 | Zora Domain | Blue Fire thaws King and grants Tunic; prescription/frog; frozen high token | Hookshot collection; adult lake shortcut after Water clear; shop not opened by Blue Fire alone | post-clear shop reopening provisional; ordinary Bow/ranged token alternatives; night flag |
@@ -192,7 +192,7 @@ Sources (facts only; normal-route descriptions, not inferred sequence-break proo
 - https://www.ign.com/wikis/ocarina-of-time-remake/Water_Temple_Dungeon_Walkthrough
 
 **Kareem: check the unresolved column area by area before trusting full-game seeds. In particular: does the Zora
-shop reopen immediately after Morpha? Can the crater wall heart be reached as child by a short drop? Do Light
+shop reopen immediately after Morpha? Do Light
 Arrows require all five adult medallions, or only Shadow/Spirit if obtained early? Is Fire Arrows collection
 possible at low water via the scarecrow? Does Lenses of Truth still consume magic?** Conservative documented
 routes are modeled where alternatives lack remake proof; they can make logic stricter than the game.
@@ -211,6 +211,20 @@ Additional Fountain/Market tests **2 passed**. `smoke_overworld.py` exercised al
 each printed false before its required item/event and true afterwards; Golden Scale/Longshot could not replace
 Boots, and Blue Fire could not open the adult shop. Separate live library smoke printed cave false before Lenses/
 true after without Bombs, and Poe reward false at four/true at five.
+
+Further source check corrected the provisional crater override before handoff:
+https://www.eurogamer.net/zelda-ocarina-of-time-death-mountain-crater explicitly describes child climbing down
+from the summit to the wall heart before burning, and adult collection made safe by the Tunic. The Nintendo
+Life Hookshot approach is not exclusive. Rule now allows child `can_take_damage` or adult Tunic, without
+Hookshot. Updated regression **1 passed**. Child-side approach/heat regions remain cs4a's; brief adult
+no-Tunic/OHKO timing remains unverified.
+
+Further read-only gate research: ZoraDomain adult shop module `ZoraDomain_Adult_Common_1185` and shop ice module
+`..._8ac9` name `SageOfWater_IsCompleted_Exp`; Market Sheik module `Market_Adult_Prefab_7f43` names
+`AllSage_IsAfter_Ready_Exp`. The BoolExp entries exist in GameDataList. String co-occurrence alone is not a
+decoded truth table, so the exact post-clear shop/Light Arrows trigger questions are retained. Eurogamer's
+Big Poe guide independently confirms 500 points/five Poes for the Bottle and 1000 for the Gold Rupee:
+https://www.eurogamer.net/big-poe-locations-in-zelda-ocarina-of-time.
 
 ## Loader prerequisite and rebase
 

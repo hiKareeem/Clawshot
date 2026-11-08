@@ -597,7 +597,8 @@ the pillar and reaches Volvagia. Default-settings proof waits on removing the ph
 - After Water Temple, the Domain thaws and its lake shortcut works as adult. Blue Fire on King Zora does not
   unseal the shop during Water Temple. Reopening after the whole-area thaw is provisional, not a traced flag.
 - Zora Fountain's hidden cave uses Silver Gauntlets and Lenses; the extra bombable rocks were original-only.
-- The documented crater wall-heart route uses adult Hookshot/Goron Tunic, then descends the grating.
+- The crater wall-heart has a child heat-risk climb from the summit; the adult Tunic route is safe, without
+  needing Hookshot. Eurogamer's explicit alternate route corrects Nintendo Life's nonexclusive Hookshot approach.
 - The adult Poe Collector's bottle threshold is five; its world name remains `Market 10 Big Poes`.
 - Light Arrows' documented route is all five adult sages. Reduced-medallion triggers need an in-game check.
 
@@ -609,6 +610,8 @@ Sources:
 - https://www.nintendolife.com/guides/zelda-ocarina-of-time-bow-arrow-fire-ice-light-arrows-switch-2
 - https://www.nintendolife.com/guides/zelda-ocarina-of-time-bottle-locations-switch-2
 - https://www.ign.com/wikis/ocarina-of-time-remake/Water_Temple_Dungeon_Walkthrough
+- https://www.eurogamer.net/zelda-ocarina-of-time-death-mountain-crater
+- https://www.eurogamer.net/big-poe-locations-in-zelda-ocarina-of-time
 
 The per-area audit matrix (including adult rules checked unchanged in Kokiri, Lost Woods, Meadow, Field,
 Ranch, Kakariko, Graveyard, Trail and River) and every unresolved category are in the round file. In particular,
