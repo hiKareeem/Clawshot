@@ -1,0 +1,67 @@
+# Fast start: what a new game skips, one setting per table (plans/03-game-data.md, section 14).
+#
+# A setting changes the game's own data, never its code:
+#   game_data  initial values in GameData/GameDataList.Product.110.byml.zs, by flag name. A new game resets every
+#              flag to these values (Sequence/NormalTitle: SeqExecuteResetGameData before Sequence/Opening), so a
+#              cutscene whose trigger tests a flag does not start, and the state it would have left is there from
+#              the start. Values: true/false for a Bool, the step name for an Enum (a challenge's Step_<name>).
+#   skippable  events whose SkipSetting (DisableSkip) is removed from their event-setting component list, so the
+#              player can skip them with the skip button like every other cutscene. For cutscenes no flag gates.
+#
+# Each setting says what it skips, the state the game must still reach (`state`), where the facts come from
+# (`source`), and, where it changes what a seed's logic may assume, `logic`. Facts are from build e0f3ccfa.
+# `default = true` settings are on unless a run names its own list.
+
+[setting.intro]
+default = true
+skips = "The opening movie (Dm_Kokiri_0000: the narrated prologue, the Great Deku Tree's dream and Navi's flight) becomes skippable with the skip button; it is the only story cutscene the game forbids skipping."
+state = "None: skipping a cutscene runs the rest of its flow. OpeningEvent:Opening_LoadingKokiriForest goes on to wait for Kokiri Forest to load and fade in."
+source = "Sequence/NormalTitle.module.ainb runs Sequence/Opening.module.ainb unconditionally after a New Game reset; Opening requests Opening_LoadingKokiriForest (OpeningEvent Event3: EventTransition Dm_Kokiri_0000) and reserves Opening_Introduction (Dm_Kokiri_0030, Navi wakes Link, skippable). Event/EventSetting/EventSettingComponentList/Dm_Kokiri_0000 sets SkipSetting DisableSkip (IsDisableSkip true); only Dm_Title_0005 and Dm_StaffCredit_0005 share it; Dm_Kokiri_0095 has the same parent list without it. No GameDataList flag gates the opening."
+skippable = ["Dm_Kokiri_0000"]
+
+[setting.saria]
+default = false
+skips = "Saria waking Link at his door and walking him out (Dm_Kokiri_0045, Dm_Kokiri_0050) and her greeting Navi (Dm_Kokiri_0060)."
+state = "Link's house door open (KokiriForest_LinkHouseDoor_Open: Dm_Kokiri_0045 sets it; the house prefab logic swaps the closed event door for an open one when it or HavePlayedEvent.Dm_Kokiri_0050 is set), and Saria counted as talked to. The basic-controls tutorial balloon (KokiriForest_Tutorial_BasicGuide) still shows: its logic waits for HavePlayedEvent.Dm_Kokiri_0030 and _0050."
+source = "Logic KokiriForest_Child_Level_Npc_Kokiri_Saria_Child_a766 (request when Dm_Kokiri_0060 not played, area hit; areas removed once Dm_Kokiri_0045 or _0060 played), Land_Kokiri_House_A_Prefab_5d58 (door), flow Dm_Kokiri_0045 (sets the door flag, HaveTalked Saria, Dm_Kokiri_0050_After_Near_End, then EventTransition Dm_Kokiri_0050); Kareem's new game r3-seed/user-seed-3 slot_03 (19:30) has exactly these set after the scene."
+
+[setting.saria.game_data]
+"HavePlayedEvent.Dm_Kokiri_0045" = true
+"HavePlayedEvent.Dm_Kokiri_0050" = true
+"HavePlayedEvent.Dm_Kokiri_0060" = true
+"KokiriForest_LinkHouseDoor_Open" = true
+"HaveTalked.Npc_Kokiri_Saria_Child" = true
+
+[setting.mido]
+default = false
+skips = "Mido blocking the path to the Great Deku Tree until Link has the Kokiri Sword and a Deku Shield; he stands aside from the start."
+state = "KokiriForest_Npc_Kokiri_Mido_Child_Blocker false (his BlockerParam blocks while it is true; Npc_Kokiri_Mido_Child sets it false when shown the sword and shield). His challenge steps Meet_DekuTree Step02/Step03 are skipped; the Deku Tree's talk still triggers (its area stays until Meet_DekuTree is past Step03) and sets Complete."
+source = "GameParameter/BlockerParam/Npc_Blocker_Mido in Pack/Actor/Npc_Kokiri_Mido_Child names the flag; flow Npc_Kokiri_Mido_Child Event26/Event29 clear it; GameDataList default true; r3-seed/user-seed-3 slot_05 has it false after the shield was shown."
+logic = "The Deku Tree no longer needs the Kokiri Sword and Deku Shield: OoT Randomizer's event 'Showed Mido Sword & Shield' holds from the start (KF Outside Deku Tree as with open_forest = 'open' for child). Not wired into seeds yet."
+
+[setting.mido.game_data]
+"KokiriForest_Npc_Kokiri_Mido_Child_Blocker" = false
+
+[setting.deku_tree]
+default = false
+skips = "The Great Deku Tree's talk on arrival (event KokiriForest_Meet_DekuTree_MeetDekuTree_01: Dm_Kokiri_0070 and Dm_Kokiri_0075); his mouth is open from the start."
+state = "KokiriForest_Meet_DekuTree_OpenDekuTreeMouth true (the Deku Tree actor reads it; Dm_Kokiri_0075 Event43 sets it); challenge Meet_DekuTree at Complete and Get_StoneOfForest at GoInside (Dm_Kokiri_0075 Event39/Event40); HavePlayedEvent.Dm_Kokiri_0070, which also removes the fog over the tree's face (Presence of EftLoc_DekuTree_Fog_HideFace_00) and makes Meet_DekuTree skip Dm_Kokiri_0070 if the talk ever runs."
+source = "Logic KokiriForest_Child_Level_All_02_a798: the talk's EventRequestActor fires on an area that is removed once Meet_DekuTree_IsAfter_Step03_Exp holds (Step_Meet_DekuTree past Step03); flows Meet_DekuTree and Dm_Kokiri_0075; challenge progress is the GameDataList Enum Step_<challenge> (RawValues = the challenge's steps); r3-seed/user-seed-3 slot_00 (after the talk and entering the tree) has Meet_DekuTree Complete and Get_StoneOfForest MeetBoss."
+
+[setting.deku_tree.game_data]
+"HavePlayedEvent.Dm_Kokiri_0070" = true
+"KokiriForest_Meet_DekuTree_OpenDekuTreeMouth" = true
+"Step_Meet_DekuTree" = "Complete"
+"Step_Get_StoneOfForest" = "GoInside"
+
+[setting.kaepora]
+default = false
+skips = "Kaepora Gaebora's first talk when Link enters Hyrule Field (event HyruleField_Goto_HyruleCastle_Kaepora: Dm_HrlField_0000, _0005, _0010) and his talk in the Lost Woods after Saria's Song (Dm_LostWood_0010)."
+state = "Challenge Goto_HyruleCastle at Step02, as the Hyrule Field talk leaves it (Goto_HyruleCastle Event14): the Market entry event (Market_Child_Prefab_c061) only fires at exactly Step02 and the later steps chain from it up to Zelda's courtyard (HyruleCastle_Prefab_941f fires at exactly Step04). UI_IsFinishChallengeMenuOpenEvent true (the talk sets it; the Main, PlusMenu and ChallengeLog sequences read it). Not restored: the talk also adds Pouch_Amiibo (Event205). Side effect of Step02 from the start: the Kokiri in front of the shop no longer stops Link (KokiriForest_Kokiri_011_StopInFrontOfShop_00 is removed once Goto_HyruleCastle reaches Step01)."
+source = "Logic HyruleField_Child_Prefab_de5f (request when Dm_HrlField_0010 not played, area hit; area removed once Goto_HyruleCastle is past Step01); flow Goto_HyruleCastle entry Goto_HyruleCastle_Kaepora_00; flow Dm_SY_BancChangeArrive Event213 plays Dm_LostWood_0010 unless played."
+
+[setting.kaepora.game_data]
+"HavePlayedEvent.Dm_HrlField_0010" = true
+"HavePlayedEvent.Dm_LostWood_0010" = true
+"UI_IsFinishChallengeMenuOpenEvent" = true
+"Step_Goto_HyruleCastle" = "Step02"
