@@ -195,7 +195,7 @@ the two session-created smoke overlays, completed failed/passing targeted seed-t
 smoke driver. Requested two player overlays, their unrun launchers/checklists/checkers/builders and read-only
 research remain. No game, live user, original seed, dump or backup directory was touched.
 
-## Completed full gates and handoff
+## Pre-rebase full gates and handoff (historical commit IDs)
 
 All four commands ran in full once on source through **`b5fc987`**; no code changed during or after them.
 
@@ -241,3 +241,52 @@ No merge, push, stash, dependency change, game/launcher/window execution or writ
   Bermuda store. Initial post failure and store diagnostics are above; `thread log --thread cs-r7` says empty,
   but the threads table still has no such row. No forbidden thread-creation command or database mutation.
   The intended handoff is this commit ledger, four passing gates, 126-file CLI replay and the two player outputs.
+
+## Reviewer-requested rebase onto dfe923a
+
+Claude created `cs-r7`; both previously failed commands were reposted unchanged and in original order as
+`cs7c` (scope note, then `a7f20bf` handoff). Both posts succeeded. The missing-thread blocker above is historical.
+
+At Claude's next instruction, the branch was clean (`git status --porcelain=v1`: empty), local main resolved
+to `dfe923a1a9498cf0b8eca457711ee71da68866dd`, and `git rebase main` replayed all eight commits without conflict.
+This incorporates the reviewed Jabu Beginning -> Main override and D26. The earlier IDs and gate ledger above
+describe pre-rebase history; the rebased ledger and fresh gate results supersede them below.
+
+Fresh actual CLI smoke on the rebased source:
+`uv run python -m clawshot --romfs E:/Games/Hookshot/romfs --seed 7 --out
+E:/OOTRemake/work/r7-drops/rebased-seed-smoke --shuffle Chest Shop Gift Scrub BossHeart --songs anywhere`.
+Exit **0**, **289 checks / 24 spheres**, **124 romfs files**; read-back spoiler contained 289 placements and
+the full output contained **126 files**. Removed only this new smoke overlay after its process finished.
+No game, launcher, backup or live user was touched.
+
+### Fresh final gates after rebase
+
+All four full gates passed on rebased source through **`0cd8073`**. Only this round report changed afterward.
+
+| Command | Observed result |
+|---|---|
+| `uv run ruff format --check` | **185 files already formatted** |
+| `uv run ruff check` | **All checks passed** |
+| `uv run pytest --basetemp E:/OOTRemake/work/r7-drops/gate-rebased-synthetic` | **533 passed, 72 skipped**, 788.35 s |
+| `OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump --basetemp E:/OOTRemake/work/r7-drops/gate-rebased-dump` | **71 passed, 534 deselected**, 756.10 s |
+
+605 tests collected. Both completed rebased gate basetemps removed only after the entire command exited 0.
+No source/test changes, failed reruns, narrowed gate or assertion changes were needed for the rebase.
+The fresh combined CLI smoke above is a new real generation; the earlier 126-file byte-identical two-process
+replay remains pre-rebase evidence, not a claim that a new post-rebase replay was run.
+
+Rewritten commit ledger, in original order:
+
+| Historical | Rebased | Scope |
+|---|---|---|
+| `7fa2c15` | `c1a7386` | item 1 research |
+| `1f99ee4` | `4fb4cbd` | item 2 native swap and Dodongo output |
+| `3347c7c` | `db70911` | item 3 retained-native-token experiment |
+| `f60c2c7` | `58ad1c5` | shared actor mapping |
+| `96ce2e3` | `c9a1445` | shared seed pipeline |
+| `1e31f4d` | `c1d9f84` | shared CLI |
+| `b5fc987` | `50b48b3` | item 4 integration |
+| `a7f20bf` | `0cd8073` | pre-rebase handoff report |
+
+This evidence is committed separately and posted as the superseding `cs7c` handoff to `cs-r7`; its hash is
+in the chat/thread handoff. Human gameplay/review checks above remain outstanding; defaults unchanged.
