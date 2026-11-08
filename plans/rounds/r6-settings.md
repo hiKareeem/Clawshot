@@ -98,6 +98,44 @@ The old chest-only field-diff oracle and preserved-vanilla-price shop oracle now
 default cheap shield; separate dump regressions cover the new default's exact fields and full affordable prices.
 The existing generation/beatability assertions were not relaxed.
 
+## Reviewer-requested follow-up — independent inventory writes
+
+Claude approved redirecting an independent vanilla `IsGet` write to the check's own completion flag, never
+`Value=false`, and requested an all-79-check audit before the one gifts-only fix commit.
+
+Fresh read-only audit: **640 active flowcharts**, **79 linked checks** (93 census steps), all events/entries
+in each gift root, transitive called entries and `EventTransition` targets. A second pass binds wrapper arguments
+and inspects GameData write destinations (`GameDataName`, `DstGameDataName`, `GameDataA/B`) and pouch actor/item
+parameters. Rooting every internal entry also yields unresolved generic callback arguments; inspected their
+literal call-site sources across active flows: no `IsGet.*` or `PouchData.*` flag is supplied to those generic
+flag arguments. The remaining generic pouch bindings are the normal census grant wrappers, not new literal grants.
+Metadata inventories are external: `gift-write-audit.json`, `gift-bound-write-audit.json`; research scripts there
+are own code, no GPL implementation or decoded data committed.
+
+| Finding | Flow / event | Treatment |
+|---|---|---|
+| Bolero independent learned flag | `Dm_MelodyGet_Fire/Event1`, reached from `C21` via `Event131` | `IsGet.Item_Melody_FireBolero` → `HavePlayedEvent.Dm_MelodyGet_Fire`; `Value=true`, Index, terminal edge and all other fields unchanged |
+| Twelve play-along adds | `Dm_SY_Ocarina/Event59`–`Event65`, `Event67`–`Event71` | Existing per-song skip rules already bypass these; retained |
+| Actual direct census grants | `Dm_MelodyGet_Time/Event70`, `Dm_Kokiri_0155/Event68` | Existing item replacement, not an extra grant |
+| Egg hatching consumes egg | `Goto_HyruleCastle/Event55`, `Num=-1` | Legitimate world conversion, not extra ownership; retained |
+| Timed-trade removals | `Npc_Hylia_045_Adult/Event137`, `Npc_Hylia_017_Adult/Event56`, `Npc_Zora_KingZora_adult/Event47`, all `Num=-1` | Class 3, not shuffled; legitimate consumption/retry paths retained |
+
+**No other independent vanilla inventory grant was found.** Section 19's original Sheik-in-Crater row now needs
+the above extra rewrite; section 21 will carry that pointer rather than modifying another track's section.
+The completion Bool exists in the original GameDataList: Hash **10850286**, default false, reset **8**, save file **0**.
+No new Bool, save-layout edit or inventory clear is introduced for this fix.
+
+Regression first: new whole-dump changed-gift graph check failed with exactly
+`Sheik in Crater / Dm_MelodyGet_Fire / Event1 / IsGet.Item_Melody_FireBolero / Value=true`.
+After the cause-specific redirect, synthetic gift safety suite **24 passed**; the new dump graph check plus
+existing every-flow field-diff/every-grant checks **3 passed, 3 deselected**. The redirect is guarded against
+stale actions, wrong vanilla flag or false writes. Existing completion flags only; no arbitrary inventory target.
+The dump oracle also verifies the target is an existing saved Bool and that every other event field is unchanged.
+
+One read-only diagnostic initially accessed `.params` on a ForkEvent; the printed AttributeError identified
+the event-type mistake. Typed `getattr` inspection then printed the real action, predecessor and completion flag.
+No unchanged retry, game boot or save write.
+
 ## Cross-track requests
 
 Posted startup contract on `cs-r6`: cs6a owns `spoiler()`; preserve my separate settings-string field commit.
