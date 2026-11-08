@@ -17,6 +17,7 @@ from clawshot.formats.evfl import (
     SwitchEvent,
 )
 from clawshot.patch import gifts
+from clawshot.patch import items as item_actors
 from clawshot.patch.gifts import GiftChange, GiftPatchError, Rule
 from clawshot.save import murmur3_32
 
@@ -258,3 +259,76 @@ def test_every_linked_gift_check_has_a_rule():
     for rule in rules.values():
         for ref in (*rule.given, *rule.skip):
             assert ref.split("/")[1].startswith("Event"), ref
+
+
+class _Loc:
+    def __init__(self, type, vanilla, n64_only=None, keep_vanilla=None):
+        self.type, self.vanilla, self.n64_only, self.keep_vanilla = type, vanilla, n64_only, keep_vanilla
+
+
+class _World:
+    def __init__(self, locations):
+        self.locations = locations
+
+
+def test_seed_checks_take_changeable_gifts_whose_pool_item_is_what_they_give():
+    def step(flow: str, item: str) -> Gift:
+        return Gift(f"{flow}/Event1", "npc_gift", flow, "f", (), "Event1", "W:G", "ActorName", item, "")
+
+    gs = [step("A", "Item_A"), step("B", "Item_B"), step("C", "Item_C"), step("D", "Item_D"), step("E", "Item_E")]
+    defs = [Definition(g.id, "npc_gift", "", g.flow, g.vanilla_item, f"Check {g.flow}") for g in gs]
+    rules = {
+        "Check A": Rule("Check A", "swap"),
+        "Check B": Rule("Check B", "more", reason="r"),
+        "Check C": Rule("Check C", "rewrite", given=("C/Event0",)),  # needs a new flag
+        "Check D": Rule("Check D", "swap"),
+        "Check E": Rule("Check E", "rewrite", given=("E/Event0",), flag="HavePlayedEvent.E"),
+    }
+    actors = item_actors.loads(
+        '[items]\nA = { actor = "Item_A" }\nB = { actor = "Item_B" }\nC = { actor = "Item_C" }\n'
+        'D = { actor = "Item_Other" }\nE = { actor = "Item_E" }\n'
+    )
+    world = _World(
+        {
+            "Check A": _Loc("NPC", "A"),
+            "Check B": _Loc("Boss", "B"),
+            "Check C": _Loc("NPC", "C"),
+            "Check D": _Loc("NPC", "D"),  # its pool item's actor is not what it gives
+            "Check E": _Loc("Song", "E"),
+            "Chest X": _Loc("Chest", "A"),
+        }
+    )
+    assert gifts.seed_checks(world, gs, defs, rules, actors) == ["Check A", "Check E"]
+    assert gifts.seed_checks(world, gs, defs, rules, actors, new_flags=True) == ["Check A", "Check C", "Check E"]
+    world.locations["Check A"].keep_vanilla = "D17"
+    assert gifts.seed_checks(world, gs, defs, rules, actors) == ["Check E"]
+
+
+def test_restrict_spec_holds_the_other_gift_locations_vanilla():
+    spec = {
+        "start": "Root",
+        "locations": {
+            "Moves": {"type": "NPC", "vanilla": "A"},
+            "Stays": {"type": "Song", "vanilla": "B"},
+            "Kept": {"type": "Boss", "vanilla": "C", "keep_vanilla": "own reason"},
+            "Chest": {"type": "Chest", "vanilla": "D"},
+        },
+    }
+    out = gifts.restrict_spec(spec, ["Moves"])
+    assert "keep_vanilla" not in out["locations"]["Moves"]
+    assert out["locations"]["Stays"]["keep_vanilla"].startswith("gift shuffle")
+    assert out["locations"]["Kept"]["keep_vanilla"] == "own reason"
+    assert out["locations"]["Chest"] == spec["locations"]["Chest"]
+    assert "keep_vanilla" not in spec["locations"]["Stays"]  # the spec given is not changed
+
+
+def test_seed_step_changes_only_moved_gifts():
+    defs = [Definition(s.id, "npc_gift", "", "n", s.vanilla_item, "Test Check") for s in STEPS]
+    actors = item_actors.loads('[items]\nOld = { actor = "Item_Old" }\nNew = { actor = "Item_New" }\n')
+    rules = {"Test Check": Rule("Test Check", "swap")}
+    step = gifts.seed_step(["Test Check"], STEPS, defs, rules, actors, {"Test Check": "Old"}, {FLOW: "flow.bfevfl"})
+    assert step({"Test Check": "Old"}) == {}
+    out = step({"Test Check": "New"})
+    data = evfl.write(EventFlowFile(FLOW, flowchart=flowchart()))
+    fc = evfl.read(out["flow.bfevfl"](data)).flowchart
+    assert fc.events[1].params["ActorName"] == fc.events[4].params["ActorName"] == "Item_New"

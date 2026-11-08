@@ -124,3 +124,36 @@ def test_dump_game_data_list_differs_only_in_the_added_flags(romfs, context):
         after["MetaData"][key] = before["MetaData"][key]
     assert byml.difference(before, after) is None
     print(f"{GAME_DATA_LIST}: {len(data)} -> {len(out)} bytes, {len(names)} flags")
+
+
+@pytest.mark.dump
+def test_dump_gift_shuffle_slice_writes_each_moved_gift(romfs, tmp_path):
+    from clawshot.generate import Settings
+    from clawshot.patch import items as item_actors
+    from clawshot.patch import make_seed, write_seed
+    from clawshot.world.load import load_spec
+
+    settings = Settings(
+        shuffle=("Chest", gifts.SHUFFLE),
+        areas=("KokiriForest", "LostWood", "InsideTheDekuTree"),
+        goal="'Defeat Queen Gohma'",
+    )
+    spec, settings, step = gifts.seed_setup(romfs, load_spec(), settings)
+    assert gifts.SHUFFLE not in settings.shuffle and set(gifts.GIFT_TYPES) <= set(settings.shuffle)
+    output = make_seed(romfs, 7, settings, spec, extra_steps=[step])
+    write_seed(output, romfs, tmp_path / "seed")
+    seed, actors = output.seed, item_actors.load()
+    steps = gifts.check_steps(scan_gifts(romfs), definitions.load())
+    moved = [n for n in seed.shuffled if n in steps and seed.placements[n] != seed.world.locations[n].vanilla]
+    assert moved, "the slice moved no gift"
+    dicts = zsdic.Dictionaries.from_romfs(romfs)
+    for name in moved:
+        for s in steps[name]:
+            data = dicts.decompress(s.file, (tmp_path / "seed" / "romfs" / s.file).read_bytes())
+            event = next(e for e in evfl.read(data).flowchart.events if e.name == s.event)
+            assert event.params[s.param] == actors.actor(seed.placements[name]), s.id
+    rules = gifts.load()
+    for name in seed.shuffled:
+        if name in rules:
+            assert rules[name].cls != gifts.MORE and not (rules[name].given and rules[name].flag is None), name
+    print(f"moved gifts: {[(n, seed.placements[n]) for n in moved]}")

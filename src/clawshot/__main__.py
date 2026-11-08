@@ -7,7 +7,8 @@ Reads the player's dump (read only), shuffles chests and optionally native shop 
 checks beatability, and writes changed resources (plus the size table when needed)
 under ``<out>/romfs`` and the placements/spheres/patch plan to ``<out>/spoiler.json``.
 ``--areas`` with ``--goal`` makes a slice: only those areas' regions, beaten when the goal holds (round 3's
-playtest: ``--areas KokiriForest LostWood InsideTheDekuTree --goal "'Defeat Queen Gohma'"``).
+playtest: ``--areas KokiriForest LostWood InsideTheDekuTree --goal "'Defeat Queen Gohma'"``). ``--shuffle Gift`` also
+moves the event gifts that can be changed (``clawshot.patch.gifts``); the others keep their items.
 """
 
 import argparse
@@ -17,10 +18,10 @@ from pathlib import Path
 
 from clawshot.generate import FillError, Settings
 from clawshot.generate.fill import DUNGEON_ITEM_CHOICES
-from clawshot.patch import PatchError, make_seed, write_seed
+from clawshot.patch import PatchError, gifts, make_seed, write_seed
 from clawshot.patch.items import ItemActorError
 from clawshot.patch.write import check_output_folder
-from clawshot.world.load import WorldError
+from clawshot.world.load import WorldError, load_spec
 
 
 def _logic_value(text: str) -> object:
@@ -68,7 +69,11 @@ def main(argv: list[str] | None = None) -> int:
         parser.error(str(e))
     try:
         check_output_folder(args.romfs, args.out)
-        output = make_seed(args.romfs, args.seed, settings)
+        spec, steps = None, []
+        if gifts.SHUFFLE in settings.shuffle:
+            spec, settings, step = gifts.seed_setup(args.romfs, load_spec(), settings)
+            steps.append(step)
+        output = make_seed(args.romfs, args.seed, settings, spec, extra_steps=steps)
         written = write_seed(output, args.romfs, args.out)
     except (FillError, WorldError, PatchError, ItemActorError) as e:
         print(f"error: {e}", file=sys.stderr)

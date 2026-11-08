@@ -18,16 +18,23 @@ the file it writes reads back as the changed tree. New events are appended, so e
 
 import tomllib
 from collections.abc import Callable, Iterable, Mapping, Sequence
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from pathlib import Path
+from typing import Any
 
+from clawshot.census import definitions as census_definitions
 from clawshot.census.definitions import Definition
-from clawshot.census.gifts import Gift
-from clawshot.formats import byml, evfl
+from clawshot.census.gifts import FLOW_VERSIONS, Gift, flow_files, scan_gifts
+from clawshot.census.scan import read_romfs_byml
+from clawshot.formats import byml, evfl, zsdic
 from clawshot.formats.byml import I32, U32
+from clawshot.generate import Settings, prepare
+from clawshot.patch import items as item_actors
 from clawshot.patch.gamedata import GAME_DATA_LIST
+from clawshot.patch.items import ItemActors
 from clawshot.patch.plan import PatchError
 from clawshot.save import TYPES, murmur3_32
+from clawshot.world.model import World
 
 RULES_TOML = Path(__file__).with_name("gift_rules.toml")
 SWAP, REWRITE, MORE = "swap", "rewrite", "more"
@@ -344,3 +351,92 @@ def file_changes(changes: Sequence[GiftChange], files: Mapping[str, str]) -> dic
     if names:
         out[GAME_DATA_LIST] = game_data_transform(names)
     return out
+
+
+# --- seeds --------------------------------------------------------------------------------------------------------
+
+GIFT_TYPES = ("NPC", "Song", "Cutscene", "Boss")  # the world's location types of event gifts (OoT Randomizer's)
+SHUFFLE = "Gift"  # the --shuffle value
+
+
+def seed_checks(
+    world: World,
+    gifts: Iterable[Gift],
+    definitions: Iterable[Definition],
+    rules: Mapping[str, Rule],
+    actors: ItemActors,
+    new_flags: bool = False,
+) -> list[str]:
+    """The world locations a gift shuffle may move, in world order: a gift check of class ``swap`` or ``rewrite``
+    whose vanilla logic item's actor (``item_actors.toml``) is what every one of its steps gives, so the pool item it
+    adds is the one it gave. ``new_flags``: also the checks that need a new GameDataList flag (the Great Fairies),
+    which wait for the in-game test that an older save still loads."""
+    steps = check_steps(gifts, definitions)
+    out = []
+    for name, loc in world.locations.items():
+        rule = rules.get(name)
+        if loc.type not in GIFT_TYPES or name not in steps or rule is None or rule.cls == MORE:
+            continue
+        if loc.vanilla is None or loc.n64_only is not None or loc.keep_vanilla is not None:
+            continue
+        if rule.given and rule.flag is None and not new_flags:
+            continue
+        if {s.vanilla_item for s in steps[name]} != {actors.actors.get(loc.vanilla)}:
+            continue
+        out.append(name)
+    return out
+
+
+def restrict_spec(spec: Mapping[str, Any], shuffled: Iterable[str]) -> dict[str, Any]:
+    """A copy of the world spec in which every gift-type location outside ``shuffled`` keeps its vanilla item."""
+    keep = set(shuffled)
+    locations = {}
+    for name, info in spec["locations"].items():
+        if info.get("type") in GIFT_TYPES and name not in keep and not info.get("keep_vanilla"):
+            info = {
+                **info,
+                "keep_vanilla": "gift shuffle: not changeable yet (gift_rules.toml, plans/03-game-data.md section 19)",
+            }
+        locations[name] = info
+    return {**spec, "locations": locations}
+
+
+def seed_step(
+    shuffled: Sequence[str],
+    gifts: Iterable[Gift],
+    definitions: Iterable[Definition],
+    rules: Mapping[str, Rule],
+    actors: ItemActors,
+    vanilla: Mapping[str, str],
+    files: Mapping[str, str],
+) -> Callable[[Mapping[str, str]], dict[str, Callable[[bytes], bytes]]]:
+    """The seed's patch step for gifts: placements (location -> logic item) in, the flow and GameDataList
+    transforms out, for every shuffled gift location whose item changed (``vanilla``: location -> its logic item)."""
+    gifts, definitions = list(gifts), list(definitions)
+
+    def step(placements: Mapping[str, str]) -> dict[str, Callable[[bytes], bytes]]:
+        moved = {name: actors.actor(placements[name]) for name in shuffled if placements[name] != vanilla[name]}
+        return file_changes(plan(moved, gifts, definitions, rules), files)
+
+    return step
+
+
+def seed_setup(
+    romfs: str | Path, spec: Mapping[str, Any], settings: Settings, new_flags: bool = False
+) -> tuple[dict[str, Any], Settings, Callable[[Mapping[str, str]], dict[str, Callable[[bytes], bytes]]]]:
+    """For ``--shuffle Gift``: the spec with the gifts that cannot move held vanilla, the settings shuffling the
+    gift types in place of ``Gift``, and the patch step to pass to ``make_seed``."""
+    settings = replace(
+        settings,
+        shuffle=tuple(dict.fromkeys(t for s in settings.shuffle for t in (GIFT_TYPES if s == SHUFFLE else (s,)))),
+    )
+    census, definitions = scan_gifts(romfs), census_definitions.load()
+    rules, actors = load(), item_actors.load()
+    _, world = prepare(spec, settings)
+    shuffled = seed_checks(world, census, definitions, rules, actors, new_flags)
+    dicts = zsdic.Dictionaries.from_romfs(Path(romfs))
+    versions = {str(k): str(v) for k, v in read_romfs_byml(Path(romfs), dicts, FLOW_VERSIONS)["Versions"].items()}
+    files = flow_files(Path(romfs), versions)
+    vanilla = {name: world.locations[name].vanilla for name in shuffled}
+    step = seed_step(shuffled, census, definitions, rules, actors, vanilla, files)
+    return restrict_spec(spec, shuffled), settings, step
