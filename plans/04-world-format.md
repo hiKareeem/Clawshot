@@ -253,7 +253,12 @@ dungeon's small keys from the start; key logic is exercised by the seed tests, w
    `Settings.shuffle` (default `Chest`, M2's chest shuffle), that have a vanilla item and are neither `n64_only` nor
    `keep_vanilla` are shuffled, every other location keeps its vanilla item. The pool is the vanilla items of the
    shuffled locations.
-2. OoT Randomizer's assumed fill, with `random.Random(seed)`: restricted items first (a dungeon's keys, maps and
+2. With the return guarantee on and free travel off, first forward-place `age_return_fill_families` at
+   adult-reachable checks from `age_return_fill_inventory` plus adult pickups. Sources in
+   `age_return_bypass_families` additionally need strictly adult-only destinations: strength tiers otherwise
+   bypass the child's Saria/bracelet dependency and strand adult at Mido. Small keys bootstrap first, boss keys
+   last. The independent first-pull oracle checks the finished placements, not just this construction.
+   Then OoT Randomizer's assumed fill, with `random.Random(seed)`: restricted items first (a dungeon's keys, maps and
    compasses, when `dungeon_items = "own_dungeon"`; boss keys, then small keys, then the rest), then progression
    items, each to a location reachable while assuming every item not yet placed; then priority items (restriction
    only); then the rest, anywhere. A failed fill is retried with the same generator, up to 10 times.
