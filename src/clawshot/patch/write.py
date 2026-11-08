@@ -2,12 +2,16 @@
 resource size table when a changed file needs a bigger entry, through ``clawshot.formats``. Nothing under the
 romfs is written."""
 
+from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
 
 from clawshot.census.scan import DEFAULT_CHEST_DROP
 from clawshot.formats import byml, rstb, zsdic
 from clawshot.patch.plan import DROP_KEY, EVENT_KEY, PatchError, Plan
+
+FileChanges = Mapping[str, Callable[[bytes], bytes]]
+"""Romfs-relative paths to transforms of decompressed file bytes. Transforms must validate their read-back."""
 
 
 @dataclass(frozen=True)
@@ -60,7 +64,13 @@ def patch_tree(tree: dict, path: str, plan: Plan) -> None:
             del dynamic[EVENT_KEY]
 
 
-def write(plan: Plan, romfs: str | Path, out: str | Path) -> list[WrittenFile]:
+def write(
+    plan: Plan,
+    romfs: str | Path,
+    out: str | Path,
+    *,
+    extra_changes: Sequence[FileChanges] = (),
+) -> list[WrittenFile]:
     """Write every file the plan changes to ``<out>/romfs/``, compressed with the dictionary its name calls for.
 
     Each changed file's resource-size-table entry is raised to ``rstb.required_size`` when it is short (never
@@ -73,16 +83,25 @@ def write(plan: Plan, romfs: str | Path, out: str | Path) -> list[WrittenFile]:
     table_data = dicts.decompress(rstb.TABLE_PATH, table_compressed)
     table = rstb.read(table_data)
     built: list[tuple[WrittenFile, bytes]] = []
-    for path in plan.files():
-        compressed = (romfs / PurePosixPath(path)).read_bytes()
-        data = dicts.decompress(path, compressed)
-        document = byml.load(data)
-        patch_tree(document.root, path, plan)
-        new_data = byml.dump(document)
-        if (d := byml.difference(document.root, byml.read(new_data))) is not None:
-            raise PatchError(f"{path}: the written file does not read back as the changed tree: {d}")
-        new_compressed = dicts.compress(path, new_data)
-        if dicts.decompress(path, new_compressed) != new_data:
+    paths = sorted(set(plan.files()).union(*(changes.keys() for changes in extra_changes)))
+    for path in paths:
+        relative = PurePosixPath(path)
+        if relative.is_absolute() or ".." in relative.parts or "\\" in path or ":" in path or path == rstb.TABLE_PATH:
+            raise PatchError(f"invalid patch path {path!r}")
+        compressed = (romfs / relative).read_bytes()
+        data = dicts.decompress(path, compressed) if path.endswith(".zs") else compressed
+        new_data = data
+        if plan.for_file(path):
+            document = byml.load(new_data)
+            patch_tree(document.root, path, plan)
+            new_data = byml.dump(document)
+            if (d := byml.difference(document.root, byml.read(new_data))) is not None:
+                raise PatchError(f"{path}: the written file does not read back as the changed tree: {d}")
+        for changes in extra_changes:
+            if transform := changes.get(path):
+                new_data = transform(new_data)
+        new_compressed = dicts.compress(path, new_data) if path.endswith(".zs") else new_data
+        if path.endswith(".zs") and dicts.decompress(path, new_compressed) != new_data:
             raise PatchError(f"{path}: the compressed file does not decompress to the written bytes")
         entry = table.get(path)
         if entry is None:

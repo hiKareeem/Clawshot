@@ -412,3 +412,32 @@ def test_writer_gives_the_same_bytes_twice(world, links, fake_romfs, tmp_path):
     write(plan, fake_romfs, tmp_path / "b")
     for path in plan.files():
         assert (tmp_path / "a" / "romfs" / path).read_bytes() == (tmp_path / "b" / "romfs" / path).read_bytes()
+
+
+def test_extra_steps_compose_with_chests_and_each_other(world, links, fake_romfs, tmp_path):
+    def mark(data):
+        document = byml.load(data)
+        document.root["Actors"][-1]["Dynamic"] = {"Seen": document.root["Actors"][0]["Dynamic"]["Drop__DropActor"]}
+        return byml.dump(document)
+
+    def finish(data):
+        document = byml.load(data)
+        document.root["Actors"][-1]["Dynamic"]["Seen"] += "!"
+        return byml.dump(document)
+
+    out = tmp_path / "composed"
+    write(swap_plan(world, links), fake_romfs, out, extra_changes=({CHILD: mark}, {CHILD: finish}))
+    dicts = zsdic.Dictionaries.from_romfs(fake_romfs)
+    tree = byml.read(dicts.decompress(CHILD, (out / "romfs" / CHILD).read_bytes()))
+    assert tree["Actors"][0]["Dynamic"]["Drop__DropActor"] == "TBox_Rupee_Blue"
+    assert tree["Actors"][-1]["Dynamic"]["Seen"] == "TBox_Rupee_Blue!"
+
+
+def test_extra_step_failure_writes_nothing(world, links, fake_romfs, tmp_path):
+    def fail(data):
+        raise PatchError("gift no longer matches its census")
+
+    out = tmp_path / "failed"
+    with pytest.raises(PatchError, match="gift no longer matches"):
+        write(swap_plan(world, links), fake_romfs, out, extra_changes=({CHILD: fail},))
+    assert not out.exists()

@@ -8,7 +8,7 @@ search are ``clawshot.generate``'s.
 """
 
 import json
-from collections.abc import Mapping
+from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -20,10 +20,14 @@ from clawshot.generate.fill import shuffled_locations
 from clawshot.patch import events as chest_events
 from clawshot.patch import items as item_actors
 from clawshot.patch.plan import Links, PatchError, Plan, link, make_plan, remake_vanilla
-from clawshot.patch.write import WrittenFile, write
+from clawshot.patch.write import FileChanges, WrittenFile, write
 from clawshot.world.load import load_spec
 
-__all__ = ["PatchError", "SeedOutput", "make_seed", "write_seed"]
+__all__ = ["PatchError", "PatchStep", "SeedOutput", "make_seed", "write_seed"]
+
+# A kind-specific step closes over its census/romfs context. File transforms receive decompressed bytes;
+# multiple steps touching one file compose in registration order, after the chest changes.
+PatchStep = Callable[[Mapping[str, str]], FileChanges]
 
 
 @dataclass(frozen=True)
@@ -31,6 +35,7 @@ class SeedOutput:
     seed: Seed
     links: Links
     plan: Plan
+    extra_changes: tuple[FileChanges, ...] = ()
 
     def spoiler(self) -> dict[str, Any]:
         return spoiler(self.seed) | {"patch": self.plan.as_dict()}
@@ -39,20 +44,31 @@ class SeedOutput:
         return json.dumps(self.spoiler(), indent=2, ensure_ascii=False) + "\n"
 
 
-def make_seed(romfs: str | Path, seed: int, settings: Settings, spec: Mapping[str, Any] | None = None) -> SeedOutput:
-    """Run the census on ``romfs`` (read only), fill a seed from the remake's chest contents and plan its patch."""
+def make_seed(
+    romfs: str | Path,
+    seed: int,
+    settings: Settings,
+    spec: Mapping[str, Any] | None = None,
+    *,
+    extra_steps: Sequence[PatchStep] = (),
+) -> SeedOutput:
+    """Fill a seed; kind-specific steps turn placements into decompressed file transforms."""
     spec = load_spec() if spec is None else spec
     _, world = prepare(spec, settings)
     table = item_actors.load()
     table.check(world.items)
-    links = link(world, shuffled_locations(world, settings), census_definitions.load(), scan(romfs))
+    chests = [name for name in shuffled_locations(world, settings) if world.locations[name].type == "Chest"]
+    if len(chests) != len(shuffled_locations(world, settings)) and not extra_steps:
+        raise PatchError("non-chest shuffle needs a kind-specific extra patch step")
+    links = link(world, chests, census_definitions.load(), scan(romfs))
     out = generate(spec, seed, settings, vanilla=remake_vanilla(world, links, table))
-    return SeedOutput(out, links, make_plan(out, links, table, chest_events.load()))
+    changes = tuple(step(out.placements) for step in extra_steps)
+    return SeedOutput(out, links, make_plan(out, links, table, chest_events.load()), changes)
 
 
 def write_seed(output: SeedOutput, romfs: str | Path, out: str | Path) -> list[WrittenFile]:
     """Write the seed's changed files under ``<out>/romfs`` and its spoiler log as ``<out>/spoiler.json``."""
     out = Path(out)
-    written = write(output.plan, romfs, out)
+    written = write(output.plan, romfs, out, extra_changes=output.extra_changes)
     (out / "spoiler.json").write_text(output.spoiler_json(), encoding="utf-8", newline="\n")
     return written

@@ -147,6 +147,8 @@ def make_plan(seed: Seed, links: Links, items: ItemActors, events: Mapping[str, 
     """The changes that give every shuffled location its placed item."""
     changes, unchanged = [], []
     for name in seed.shuffled:
+        if name not in links.chests:
+            continue  # Other shuffled kinds are handled by make_seed's registered patch steps.
         item = seed.placements[name]
         actor = items.actor(item)
         for chest in links.chests[name]:
