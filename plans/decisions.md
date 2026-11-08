@@ -49,6 +49,13 @@
   reachable before him; with Mido skipped, anywhere the logic allows. Shop contents (shopsanity) join once a
   changed shop slot is tested in game, like the other kinds (D15). Buying the shield plays a short tutorial: the
   test checks it with another item in that slot.
+- **D20 Seeds guarantee adult Link can get back to child** (Kareem, 2026-11-08). The remake keeps adult Link adult
+  until the Forest Temple's sage (section 16); `age_return_guarantee` (on) accepts a seed only if adult can open
+  the return with what the first sword pull requires plus adult checks, so an early pull cannot lock a player out.
+  It stays the default until the `free_time_travel` pedestal patch passes its in-game test.
+- **D21 Shops take only items with a native shop display** (Claude, round 5, provisional; Kareem not yet asked
+  whether he wants majors in shops). A stand-in display does not work as tried: changing only the seller's
+  `GoodsList` actor left the shelf's Deku Shield on sale (Kareem in game, 2026-11-08).
 
 ## Open (only Kareem and his co-owner decide)
 
