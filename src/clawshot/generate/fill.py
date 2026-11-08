@@ -12,7 +12,7 @@ import json
 import random
 import zlib
 from collections.abc import Mapping
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from typing import Any
 
 from clawshot.settings import CATALOG, DEFAULTS
@@ -324,6 +324,43 @@ def _fill_age_return(
             raise FillError(f"no adult return-kit destination for {staged!r}")
 
 
+def _fill_bomb_ammo(
+    world: World,
+    settings: Settings,
+    rng: random.Random,
+    placements: dict[str, str],
+    locations: list[str],
+    pool: list[str],
+) -> None:
+    """D25: native bomb/Bombchu packs cannot become an unmodelled first Bomb Bag.
+
+    The audited item and Shop bundle actors share SmallBagActor = Item_BombBag_Small
+    (plans/03-game-data.md section 24). Buy refills remain in shops; never count any pack
+    or logical bag alias in the counterfactual inventory.
+    """
+    prefixes = ("Bombs (", "Bombchus (")
+    ammo = [item for item in pool if item.startswith(prefixes)]
+    if not ammo:
+        return
+    sources = {
+        name
+        for name in world.items
+        if _age_family(world, name) == "Bomb Bag" or name.startswith((*prefixes, "Buy Bombs (", "Buy Bombchu ("))
+    }
+    without_bag = Search(
+        replace(world, start_items=tuple(item for item in world.start_items if item not in sources)),
+        (item for item in [*pool, *placements.values()] if item not in sources),
+    )
+    destinations = [name for name in locations if not without_bag.can_access(world.locations[name])]
+    pool[:] = [item for item in pool if not item.startswith(prefixes)]
+    # Place constrained normal filler before unconstrained items can consume its only slots.
+    # Assumed fill still requires actual reachability and respects dungeon/display restrictions.
+    held = settings.item_location_types
+    shop_refills = sum(item.startswith("Buy ") and held.get(item) == ("Shop",) for item in pool)
+    _fill_restrictive(world, settings, rng, placements, destinations, ammo, pool, shop_refills)
+    locations[:] = [name for name in locations if name not in placements]
+
+
 def fill(
     world: World, settings: Settings, rng: random.Random, vanilla: Mapping[str, str] | None = None
 ) -> dict[str, str]:
@@ -348,6 +385,7 @@ def fill(
     rng.shuffle(pool)
     locations = list(shuffled)
     _fill_age_return(world, settings, rng, placements, locations, pool)
+    _fill_bomb_ammo(world, settings, rng, placements, locations, pool)
     restricted = [item for item in pool if is_restricted(world, settings, item)]
     unrestricted = [item for item in pool if not is_restricted(world, settings, item)]
     progression = [item for item in unrestricted if world.items[item].progression]

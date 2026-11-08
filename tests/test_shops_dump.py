@@ -1,11 +1,14 @@
 """Shop definitions are metadata only; the oracle is the player's read-only dump."""
 
+from dataclasses import replace
+
 import pytest
 
 from clawshot.census.scan import scan
 from clawshot.formats import byml, rstb, sarc, zsdic
 from clawshot.generate import Settings
-from clawshot.patch import make_seed, shops, write_seed
+from clawshot.patch import items, make_seed, shops, write_seed
+from clawshot.world.search import Search
 
 pytestmark = pytest.mark.dump
 
@@ -176,3 +179,40 @@ def test_shop_writer_sizes_embedded_components_not_only_the_seller_pack(romfs, t
             size = len(dictionaries.decompress(path, info.read_bytes()))
             original.set(path, max(original.get(path), rstb.required_size(path, size)))
     assert table == original
+
+
+@pytest.mark.parametrize("shuffle", [("Chest",), ("Chest", "Shop")])
+def test_real_seed_ammo_never_occupies_a_bag_free_destination(romfs, shuffle):
+    seed = make_seed(romfs, 7, Settings(shuffle=shuffle)).seed
+    # Identify actual bag-granting packs independently of the fill's logical item-family check.
+    actors = items.load().actors
+    packs = {
+        name
+        for name, actor in actors.items()
+        if actor.startswith(("Item_BombBundle_", "Item_BombchuBundle_", "Shop_BombBundle_", "Shop_BombchuBundle_"))
+    }
+    sources = packs | {
+        name
+        for name, item in seed.world.items.items()
+        if name == "Bomb Bag" or item.alias and item.alias[0] == "Bomb Bag"
+    }
+    # Unshuffled N64-derived checks can still name these other counts without actor mappings.
+    # They must not reopen bombchu routes in the supposedly pack-free inventory.
+    sources |= {
+        "Bombs (5)",
+        "Bombs (10)",
+        "Bombs (20)",
+        "Bombchus (5)",
+        "Bombchus (10)",
+        "Bombchus (20)",
+        "Buy Bombs (5) for 25 Rupees",
+    }
+    world = replace(seed.world, start_items=tuple(item for item in seed.world.start_items if item not in sources))
+    without_bag = Search(world, (item for item in seed.placements.values() if item not in sources))
+    ammo = {
+        name: seed.placements[name]
+        for name in seed.shuffled
+        if seed.placements[name] in packs and not seed.placements[name].startswith("Buy ")
+    }
+    early = [(name, item) for name, item in ammo.items() if without_bag.can_access(world.locations[name])]
+    assert early == [], early

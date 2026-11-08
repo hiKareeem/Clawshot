@@ -3,12 +3,14 @@ adult-only item, 200 seeds, and byte-identical spoilers."""
 
 import json
 import random
+from dataclasses import replace
 
 import pytest
 
 from clawshot.generate import FillError, Settings, generate, spoiler_json
 from clawshot.generate.fill import allowed, check_beatable, fill, shuffled_locations
 from clawshot.world import build_world
+from clawshot.world.search import Search
 
 HELPERS = {
     "is_child": "age == 'child'",
@@ -242,3 +244,106 @@ def test_items_held_to_location_types_go_only_there():
         "A": ["y"],
         "B": ["x"],
     }
+
+
+@pytest.mark.parametrize(
+    ("ammo", "classification"),
+    [
+        ("Bombs (5)", "normal"),
+        ("Bombs (10)", "priority"),
+        ("Bombs (20)", "normal"),
+        ("Bombchus (5)", "progression"),
+        ("Bombchus (10)", "progression"),
+        ("Bombchus (20)", "progression"),
+    ],
+)
+def test_ammo_seed_requires_bag_even_with_every_other_item(ammo, classification):
+    spec = {
+        "start": "Start",
+        "goal": "Bomb_Bag",
+        "items": {
+            "Bomb Bag": {},
+            "Hammer": {},
+            ammo: {"class": classification},
+            "Rupee": {"class": "normal"},
+        },
+        "regions": [
+            {
+                "name": "Start",
+                "locations": {
+                    "Early Bag": chest("Bomb Bag"),
+                    "Early Hammer": chest("Hammer"),
+                    "Hammer Bypass": chest("Rupee", "Bomb_Bag or Hammer"),
+                    "Bag Required": chest(ammo, "Bomb_Bag"),
+                },
+            }
+        ],
+    }
+    # A currently missing Hammer does not make its bypass a guaranteed-bag destination.
+    for number in range(20):
+        seed = generate(spec, number, Settings(), attempts=1)
+        without_bag = Search(seed.world, ["Hammer", "Rupee"])
+        destination = next(name for name, item in seed.placements.items() if item == ammo)
+        assert not without_bag.can_access(seed.world.locations[destination]), (number, seed.placements)
+        assert destination == "Bag Required"
+
+
+def test_bag_requirement_excludes_aliases_and_all_other_ammo_packs():
+    ammo = ("Bombs (5)", "Bombchus (5)", "Bombchus (10)")
+    spec = {
+        "start": "Start",
+        "goal": "Bomb_Bag",
+        "items": {
+            "Bomb Bag": {},
+            "Spare Bag": {"alias": ["Bomb Bag", 1]},
+            "Bombs (5)": {"class": "normal"},
+            "Bombchus (5)": {},
+            "Bombchus (10)": {},
+        },
+        "regions": [
+            {
+                "name": "Start",
+                "locations": {
+                    "Early Bag": chest("Bomb Bag"),
+                    "Early Spare Bag": chest("Spare Bag"),
+                    "Bomb Wall": chest(ammo[0], "Bomb_Bag or Bombchus_5"),
+                    "Bombchu Wall": chest(ammo[1], "Bomb_Bag or Bombchus_10"),
+                    "Bag Required": chest(ammo[2], "Bomb_Bag"),
+                },
+            }
+        ],
+    }
+    for number in range(20):
+        seed = generate(spec, number, Settings(), attempts=1)
+        without_bag = Search(seed.world)
+        for name, item in seed.placements.items():
+            if item in ammo:
+                assert not without_bag.can_access(seed.world.locations[name]), (number, seed.placements)
+        # These are truly accessible after an independent bag, not a mutually locked ammo cycle.
+        spheres = Search(seed.world).collect_spheres(seed.placements)
+        sphere_of = {name: index for index, sphere in enumerate(spheres) for name in sphere}
+        first_bag = min(sphere_of[name] for name, item in seed.placements.items() if item in ("Bomb Bag", "Spare Bag"))
+        assert all(sphere_of[name] > first_bag for name, item in seed.placements.items() if item in ammo)
+    # Starting items must not leak excluded sources into the counterfactual search.
+    world = replace(build_world(spec), start_items=("Spare Bag", "Bombchus (10)"))
+    assert fill(world, Settings(), random.Random(0))["Early Bag"] in ("Bomb Bag", "Spare Bag")
+
+
+def test_ammo_fill_rejects_world_without_a_guaranteed_bag_destination():
+    spec = {
+        "start": "Start",
+        "goal": "Bomb_Bag",
+        "items": {"Bomb Bag": {}, "Hammer": {}, "Bombs (5)": {"class": "normal"}},
+        "regions": [
+            {
+                "name": "Start",
+                "locations": {
+                    "Bag": chest("Bomb Bag"),
+                    "Hammer": chest("Hammer"),
+                    "Bypass": chest("Bombs (5)", "Bomb_Bag or Hammer"),
+                },
+            }
+        ],
+    }
+    with pytest.raises(FillError):
+        generate(spec, 0, Settings(), attempts=1)
