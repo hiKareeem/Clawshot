@@ -147,6 +147,78 @@ Cross-track dependency posted: `load._start_items` still injects an N64 free Fir
 not grant. These real-key data rules require cs4a to remove it. Do not treat default-settings seeds as verified
 until that removal; no compensating shim was added to the data.
 
+## Shared overworld: adult-side audit
+
+Every adult-specific location/event/exit expression was reviewed in the files below. "Unchanged" means the
+named normal route agrees with sources, not that every N64 alternative or pot/drop is certified. Shared child
+rules stay Track A's. No empty override files were created merely to claim area coverage.
+
+| Area | Checked/unchanged normal routes | Changes | Unresolved |
+|---|---|---|---|
+| Kokiri Forest | adult House of Twins token needs Hookshot/night; forest exits and shop access | none | bean-platform rupees, Hover alternatives, adult outside-Deku drops |
+| Lost Woods | adult Mido passage Saria's Song; bean ride to Above Theater token; Cojiro→Mushroom and Potion→Saw | none | Hover/Longshot bridge geometry; underwater river shortcut; trade timers vs N64 reset assumptions |
+| Sacred Forest Meadow | adult maze passage and Minuet; Hookshot entrance ledge and token | none | night-only token flag disagrees with some guide descriptions; alternate combat/traversal |
+| Hyrule Field | free main-area boundaries; adult Big Poe hunting needs Epona/Bow/bottle | none | old grotto Hammer alternatives, pots/wonder items, new wetland-crate token absent from world |
+| Lon Lon Ranch | adult/day Epona's Song, Ingo races and escape; stables/house; cows remain excluded | none | hurdle rewards; new tower token not modeled; race-money abstraction |
+| Market | ruined adult town, adult Poe Collector, five-Poe bottle reward, all other shop/minigame access child-only | five bottled Poes rather than ten; stable N64 name retained | adult pot counts, collector reward flag after repeat visits |
+| Kakariko | Hookshot roofs and adult/night roof token; adult Bow gallery; Pocket Egg/Talon/Cojiro; Song of Storms as adult | none | exact Nocturne trigger without all first-three medallions; free-jump windmill heart; roof jumps/shop prices |
+| Graveyard | adult Dampé race has no equipment prerequisite; Song of Time exit to windmill; bean/Longshot heart route; Din's Fire Shadow entrance | none | repeat-race chest choice; hand-collect heart alternatives; ordinary adult grave opening times |
+| Death Mountain Trail | adult two grey-rock tokens need Hammer; Biggoron trades/receipt and three-day wait | none | N64 damage-drop heart, bean/Hover summit routes and exact timed-delivery safety |
+| Death Mountain Crater | adult Hookshot bridge/Sheik/Fire entrance; bean-volcano heart; Hammer fairy entrance; Tunic heat protection | wall heart uses documented adult Hookshot+Tunic route | child drop to wall heart, no-Tunic brief visits, N64 Hover/Longshot drops; fairy prices |
+| Goron City | stop rolling Goron with bombs/bomb flowers; Tunic and Darunia passage; statue route; grey rocks | ceiling token now requires Hookshot, not adult alone | Bow stopping Goron; grotto lava crossings; wallet/price requirements |
+| Zora River | adult two high tokens Hookshot/night; waterfall Lullaby; normal river passage | none | adult no-bomb boulder passage; Hover/bean heart alternatives; underwater rupees |
+| Zora Domain | Blue Fire thaws King and grants Tunic; prescription/frog; frozen high token | Hookshot collection; adult lake shortcut after Water clear; shop not opened by Blue Fire alone | post-clear shop reopening provisional; ordinary Bow/ranged token alternatives; night flag |
+| Zora Fountain | adult ice platforms/Ice entrance; Boots bottom-heart; Gauntlet hidden-cave rock | hidden-cave route uses Lenses, removes original-only bomb rocks | lensless invisible-enemy tunnel, magic cost, night token flag, no-Tunic bottom-heart dive |
+| Lake Hylia | bean/scarecrow roof heart; Golden Scale lab dive; adult fishing; tree token Longshot; lab crate Boots/Hookshot; child-taught adult Scarecrow | Boots entry (not Scale/Longshot); Fire Arrows only at restored lake; adult return shortcut after Water clear | low-water Fire Arrows via scarecrow; Lab token without Tunic; fishing rewards and timed-trade shortcuts |
+| Temple of Time | Prelude after Forest, Rauru reward, initial age change at pedestal | documented five-adult-sage Light Arrows route instead of N64 Shadow+Spirit-only helper | reduced-medallion trigger; reverse-age chronology (below) |
+
+Specific changed checks live in `adult_death_mountain_crater.toml`, `adult_goron_city.toml`,
+`adult_lake_hylia.toml`, `adult_zoras_domain.toml`, `adult_zoras_fountain.toml`, `adult_market.toml`,
+`adult_temple_of_time.toml`; each has a `source`. The adult shop reopening after Water clear is provisional:
+IGN explicitly says it stays sealed while doing Water even after freeing King Zora; Nintendo Life says the
+Domain thaws afterwards, and both adult Banc variants place shops. This does not prove its exact reopening flag.
+
+Sources (facts only; normal-route descriptions, not inferred sequence-break proof):
+- https://www.nintendolife.com/guides/zelda-ocarina-of-time-walkthrough-switch-2-remake
+- https://www.nintendolife.com/guides/zelda-ocarina-of-time-gold-skulltula-locations-rewards-switch-2
+- https://www.eurogamer.net/all-gold-skulltulas-locations-zelda-ocarina-of-time
+- https://www.nintendolife.com/guides/zelda-ocarina-of-time-heart-piece-locations-switch-2
+- https://www.nintendolife.com/guides/zelda-ocarina-of-time-biggeron-sword-trading-sequence-switch-2
+- https://www.nintendolife.com/guides/zelda-ocarina-of-time-scarecrows-song-switch-2
+- https://www.nintendolife.com/guides/zelda-ocarina-of-time-horse-epona-how-to-get-switch-2
+- https://www.nintendolife.com/guides/zelda-ocarina-of-time-bottle-locations-switch-2
+- https://www.nintendolife.com/guides/zelda-ocarina-of-time-bow-arrow-fire-ice-light-arrows-switch-2
+- https://www.nintendolife.com/guides/zelda-ocarina-of-time-great-fairy-fountain-locations-all-switch-2
+- https://www.ign.com/wikis/ocarina-of-time-remake/Water_Temple_Dungeon_Walkthrough
+
+**Kareem: check the unresolved column area by area before trusting full-game seeds. In particular: does the Zora
+shop reopen immediately after Morpha? Can the crater wall heart be reached as child by a short drop? Do Light
+Arrows require all five adult medallions, or only Shadow/Spirit if obtained early? Is Fire Arrows collection
+possible at low water via the scarecrow? Does Lenses of Truth still consume magic?** Conservative documented
+routes are modeled where alternatives lack remake proof; they can make logic stricter than the game.
+
+**Reverse time travel:** the Forest walkthrough says child return unlocks only after Forest Temple. `Search`
+retains reachable child regions and one shared inventory across ages, so it cannot distinguish a newly found
+adult item used on the child side before reverse travel unlocks. Gating initial `Time Travel` on Forest would
+deadlock adult access. This is an engine/temporal-model question, posted to the reviewer, not fixed by inventing
+a data gate. Normal child-start monotone search may still find a valid order, but it is not a chronological
+playthrough proof.
+
+Verification: shared-overworld targeted run had **8 passed, 1 failed**. The failed shortcut test was blocked by
+the test's assumption, not the rule: printed path `Domain → River → Field → Lake` was open while the direct
+shortcut predicate was false. Isolated the direct source exit; rerun of both shortcut directions **2 passed**.
+Additional Fountain/Market tests **2 passed**. `smoke_overworld.py` exercised all seven changed route groups:
+each printed false before its required item/event and true afterwards; Golden Scale/Longshot could not replace
+Boots, and Blue Fire could not open the adult shop. Separate live library smoke printed cave false before Lenses/
+true after without Bombs, and Poe reward false at four/true at five.
+
+## Loader prerequisite and rebase
+
+Reviewer authorized rebase onto main's `9c4abf0`. Restoring loader text first left an EOL-only dirty state:
+`git rebase main` refused unstaged changes; `git diff -- load.py` showed only the CRLF normalization warning.
+`git restore -- src/clawshot/world/load.py` removed the local copy byte-for-byte, then `git rebase main` succeeded.
+No loader code was committed by cs4b. Area overrides now use the real prerequisite on the branch.
+
 ## Remaining areas
 
-Shadow, Spirit, desert/endgame and shared adult-overworld audits follow.
+Shadow, Spirit and desert/endgame audit reports follow.

@@ -1,0 +1,5 @@
+# Remake build e0f3ccfa; child-side traversal remains Track A's.
+[locations."DMC Wall Freestanding PoH"]
+rule = "can_use(Hookshot) and can_use(Goron_Tunic)"
+was = "True"
+source = "https://www.nintendolife.com/guides/zelda-ocarina-of-time-heart-piece-locations-switch-2 (Heart Piece 27): adult Hookshot/Goron Tunic route to the Biggoron-side entrance, then descend the grating toward the crater. This is the documented safe route; child drop/heat-damage routes remain unverified (round file)."

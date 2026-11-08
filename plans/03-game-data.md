@@ -587,3 +587,30 @@ The N64 free Fire key in `world.load._start_items` is not an actual remake start
 to remove it; real-key overrides must not be evaluated with that phantom key. An isolated keysanity-true search
 starts with zero Fire keys, collects all eight through the real routes, obtains Hammer and boss key, lowers
 the pillar and reaches Volvagia. Default-settings proof waits on removing the phantom key.
+
+### Adult shared overworld
+
+- Goron City's adult token is on the ceiling: Hookshot, not adult age alone. The frozen Domain token likewise
+  needs collection reach, not just Bow or Magic Meter.
+- Water Temple entrance uses Iron Boots/Hookshot; the N64 Scale/Longshot alternative has no remake proof.
+  The documented Fire Arrows route needs the lake restored by Morpha; low-water scarecrow collection is unverified.
+- After Water Temple, the Domain thaws and its lake shortcut works as adult. Blue Fire on King Zora does not
+  unseal the shop during Water Temple. Reopening after the whole-area thaw is provisional, not a traced flag.
+- Zora Fountain's hidden cave uses Silver Gauntlets and Lenses; the extra bombable rocks were original-only.
+- The documented crater wall-heart route uses adult Hookshot/Goron Tunic, then descends the grating.
+- The adult Poe Collector's bottle threshold is five; its world name remains `Market 10 Big Poes`.
+- Light Arrows' documented route is all five adult sages. Reduced-medallion triggers need an in-game check.
+
+Sources:
+- https://www.nintendolife.com/guides/zelda-ocarina-of-time-gold-skulltula-locations-rewards-switch-2
+- https://www.eurogamer.net/all-gold-skulltulas-locations-zelda-ocarina-of-time
+- https://www.nintendolife.com/guides/zelda-ocarina-of-time-heart-piece-locations-switch-2
+- https://www.nintendolife.com/guides/zelda-ocarina-of-time-biggeron-sword-trading-sequence-switch-2
+- https://www.nintendolife.com/guides/zelda-ocarina-of-time-bow-arrow-fire-ice-light-arrows-switch-2
+- https://www.nintendolife.com/guides/zelda-ocarina-of-time-bottle-locations-switch-2
+- https://www.ign.com/wikis/ocarina-of-time-remake/Water_Temple_Dungeon_Walkthrough
+
+The per-area audit matrix (including adult rules checked unchanged in Kokiri, Lost Woods, Meadow, Field,
+Ranch, Kakariko, Graveyard, Trail and River) and every unresolved category are in the round file. In particular,
+reverse time travel after Forest is not represented chronologically by the monotone two-age search; that needs
+engine review, not a Forest requirement on initial adult access. No complete-game safety claim is made.
