@@ -358,6 +358,11 @@ def file_changes(changes: Sequence[GiftChange], files: Mapping[str, str]) -> dic
 GIFT_TYPES = ("NPC", "Song", "Cutscene", "Boss")  # the world's location types of event gifts (OoT Randomizer's)
 SHUFFLE = "Gift"  # the --shuffle value
 SONG_TYPE = "Song"
+FREE_TIME_TRAVEL = "free_time_travel"  # the world setting that lifts the anchors
+# Gift checks a seed keeps vanilla while adult Link cannot go back freely: the adult-return guarantee (D20) relies on
+# them (Saria's Song -> Darunia's Joy gives the child the Goron Bracelet; shuffled strength upgrades are placed
+# adult-only).
+ANCHORS = {"GC Darunias Joy": "the child's Goron Bracelet anchors the adult-return guarantee (D20)"}
 
 
 def seed_checks(
@@ -371,8 +376,10 @@ def seed_checks(
     """The world locations a gift shuffle may move, in world order: a gift check of class ``swap`` or ``rewrite``
     whose vanilla logic item's actor (``item_actors.toml``) is what every one of its steps gives, so the pool item it
     adds is the one it gave. ``new_flags``: also the checks that need a new GameDataList flag (the Great Fairies),
-    which wait for the in-game test that an older save still loads."""
+    which wait for the in-game test that an older save still loads. The :data:`ANCHORS` stay vanilla unless the
+    world's ``free_time_travel`` setting is on."""
     steps = check_steps(gifts, definitions)
+    free = world.settings.get(FREE_TIME_TRAVEL) is True
     out = []
     for name, loc in world.locations.items():
         rule = rules.get(name)
@@ -381,6 +388,8 @@ def seed_checks(
         if loc.vanilla is None or loc.n64_only is not None or loc.keep_vanilla is not None:
             continue
         if rule.given and rule.flag is None and not new_flags:
+            continue
+        if name in ANCHORS and not free:
             continue
         if {s.vanilla_item for s in steps[name]} != {actors.actors.get(loc.vanilla)}:
             continue
