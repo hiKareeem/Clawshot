@@ -31,7 +31,11 @@ def _intended(fc: evfl.Flowchart, flow: str, changes) -> set[int]:
     out = set()
     for change in changes:
         out |= {index[s.event] for s in change.steps if s.flow == flow}
-        out |= {index[r.split("/")[1]] for r in (*change.rule.given, *change.rule.writes) if r.split("/")[0] == flow}
+        out |= {
+            index[r.split("/")[1]]
+            for r in (*change.rule.given, *change.rule.writes, *change.rule.once)
+            if r.split("/")[0] == flow
+        }
         for ref in change.rule.skip:
             if ref.split("/")[0] == flow:
                 i = index[ref.split("/")[1]]
@@ -88,9 +92,9 @@ def test_dump_every_step_gives_the_new_item_and_given_reads_read_the_flag(romfs,
         for step in change.steps:
             event = next(e for e in trees[step.flow].events if e.name == step.event)
             assert event.params[step.param] == NEW_ITEM, step.id
-            if change.new_flag:
+            if change.new_flag or change.rule.once:
                 added = trees[step.flow].events[event.next]
-                assert added.params == {"GameDataName": change.new_flag, "Index": -1, "Value": True}, step.id
+                assert added.params == {"GameDataName": change.flag, "Index": -1, "Value": True}, step.id
         for ref in change.rule.given:
             flow, name = ref.split("/")
             event = next(e for e in trees[flow].events if e.name == name)

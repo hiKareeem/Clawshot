@@ -1,4 +1,4 @@
-"""Gifts through the event flows: make a gift check give another item (plans/03-game-data.md sections 15 and 19).
+"""Gifts through the event flows: make a gift check give another item (plans/03-game-data.md sections 19 and 28).
 
     rules = load()                                            # gift_rules.toml: each check's class and edits
     changes = plan({"LLR Talons Chickens": "Item_Boomerang"}, scan_gifts(romfs), definitions.load(), rules)
@@ -10,6 +10,8 @@ the vanilla item (``IsGet.<item>``) turned into reads of the check's own flag, a
 out of the flow (their predecessors point at their ``next``). The flag is an existing one the game sets once the check
 is given (``flag`` in the rules) or, as a last resort, a saved Bool the patch adds to ``GameDataList`` and sets right
 after each step. A ``more`` check cannot be changed yet.
+The remake-only shopkeeper check groups its two stable grant IDs explicitly. Its ``once`` gate replaces the
+equipped-shield test with a saved Bool, set after both grants even when the shuffled reward stays a shield.
 
 The transforms take and return decompressed files, so they compose with the other kinds' changes to the same file
 (``clawshot.patch.write``); each one refuses a file that does not hold what the census and the rules say, and checks
@@ -41,12 +43,18 @@ RULES_TOML = Path(__file__).with_name("gift_rules.toml")
 SWAP, REWRITE, MORE = "swap", "rewrite", "more"
 CLASSES = (SWAP, REWRITE, MORE)
 FLAG_PREFIX = "Clawshot.Gift."
-FIELDS = {"class", "gate", "given", "flag", "skip", "reason", "writes"}
+FIELDS = {"class", "gate", "given", "flag", "skip", "reason", "writes", "once"}
 
 GAME_DATA_ACTOR = "GameDataActor"
 READ_QUERY = "EventQueryIsGameDataBool"
 SET_ACTION = "EventTriggerSetGameDataBool"
 NEW_EVENT_PREFIX = "ClawshotGift"
+
+# Two already-censused branches of one remake-only check; no invented OoTR link (section 28).
+SHOPKEEPER_CHECK = "KF Shopkeeper Gift"
+SHOPKEEPER_FLOW = "Npc_Kokiri_001_Shop_Child"
+SHOPKEEPER_STEPS = tuple(f"{SHOPKEEPER_FLOW}/{event}" for event in ("Event116", "Event117"))
+SHOPKEEPER_REGION = "KF Kokiri Shop"
 
 # GameDataList: a saved story flag as the game's own (9338 of its Bools), and the save layout it implies.
 FLAG_RESET_TYPE = 8
@@ -63,7 +71,7 @@ class GiftPatchError(PatchError):
 
 @dataclass(frozen=True)
 class Rule:
-    check: str  # the OoT Randomizer name
+    check: str  # the world check name (OoTR or remake-only)
     cls: str
     gate: str = ""
     given: tuple[str, ...] = ()  # "<flow>/<event>" reads that mean "given"
@@ -71,6 +79,7 @@ class Rule:
     skip: tuple[str, ...] = ()  # "<flow>/<event>" steps taken out
     reason: str = ""
     writes: tuple[str, ...] = ()  # vanilla IsGet writes redirected to an existing check-completion flag
+    once: tuple[str, ...] = ()  # equipped-shield queries replaced by saved check-completion queries
 
 
 def _ref(check: str, value: object) -> str:
@@ -97,12 +106,15 @@ def loads(text: str) -> dict[str, Rule]:
             tuple(_ref(check, r) for r in entry.get("skip", [])),
             entry.get("reason", ""),
             tuple(_ref(check, r) for r in entry.get("writes", [])),
+            tuple(_ref(check, r) for r in entry.get("once", [])),
         )
-        if (rule.given or rule.skip or rule.flag or rule.writes) and cls != REWRITE:
-            raise GiftPatchError(f"{check}: given, flag, skip and writes belong to class {REWRITE!r}, not {cls!r}")
-        if cls == REWRITE and not (rule.given or rule.skip or rule.writes):
+        if (rule.given or rule.skip or rule.flag or rule.writes or rule.once) and cls != REWRITE:
+            raise GiftPatchError(
+                f"{check}: given, flag, skip, writes and once belong to class {REWRITE!r}, not {cls!r}"
+            )
+        if cls == REWRITE and not (rule.given or rule.skip or rule.writes or rule.once):
             raise GiftPatchError(f"{check}: class {REWRITE!r} with nothing to rewrite")
-        if rule.flag is not None and not (rule.given or rule.writes):
+        if rule.flag is not None and not (rule.given or rule.writes or rule.once):
             raise GiftPatchError(f"{check}: a flag without reads or writes to rewrite")
         if rule.writes and (not isinstance(rule.flag, str) or not rule.flag.startswith("HavePlayedEvent.")):
             raise GiftPatchError(f"{check}: writes need an existing per-check event completion flag")
@@ -129,19 +141,20 @@ class GiftChange:
     @property
     def flag(self) -> str | None:
         """The flag the check's "given" reads read, or None when it has none."""
-        if not (self.rule.given or self.rule.writes):
+        if not (self.rule.given or self.rule.writes or self.rule.once):
             return None
         return self.rule.flag or FLAG_PREFIX + self.steps[0].id.replace("/", ".")
 
     @property
     def new_flag(self) -> str | None:
         """The flag the patch adds to GameDataList and sets after each step, or None."""
-        return self.flag if self.rule.given and self.rule.flag is None else None
+        return self.flag if (self.rule.given or self.rule.once) and self.rule.flag is None else None
 
 
 def check_steps(gifts: Iterable[Gift], definitions: Iterable[Definition]) -> dict[str, tuple[Gift, ...]]:
-    """OoT Randomizer name -> the census gift steps linked to it, in census order."""
+    """World check name -> its census gift steps, including the remake-only shopkeeper, in census order."""
     name_of = {d.id: d.oot_randomizer_name for d in definitions if isinstance(d.id, str) and d.oot_randomizer_name}
+    name_of.update({step: SHOPKEEPER_CHECK for step in SHOPKEEPER_STEPS})
     out: dict[str, list[Gift]] = {}
     for gift in gifts:
         if gift.id in name_of:
@@ -161,6 +174,8 @@ def plan(
     for check in sorted(placements):
         if check not in steps:
             raise GiftPatchError(f"{check}: no census gift step is linked to it")
+        if check == SHOPKEEPER_CHECK and {step.id for step in steps[check]} != set(SHOPKEEPER_STEPS):
+            raise GiftPatchError(f"{check}: expected both grant branches {SHOPKEEPER_STEPS}")
         rule = rules.get(check)
         if rule is None:
             raise GiftPatchError(f"{check}: no rule in gift_rules.toml")
@@ -247,6 +262,23 @@ def _redirect_write(fc: evfl.Flowchart, flow: str, ref: str, vanilla: set[str], 
     params["GameDataName"] = flag
 
 
+def _once_gate(fc: evfl.Flowchart, flow: str, ref: str, flag: str) -> None:
+    """Replace the shopkeeper's equipped-shield test, preserving its no-gift return and offer branch."""
+    event = fc.events[_index(fc, flow, ref.split("/")[1])]
+    if not isinstance(event, evfl.SwitchEvent):
+        raise GiftPatchError(f"{ref}: not an equipped-shield query")
+    actor = fc.actors[event.actor]
+    if (
+        (actor.name, actor.queries[event.query]) != ("Player_Event", "EventQueryPlayerIsEquipWeapon")
+        or event.params != {"ArmorName": "Weapon_Shield_Deku", "WeaponSlot": 4}
+        or sorted(case for case, _ in event.cases) != [0, 1]
+    ):
+        raise GiftPatchError(f"{ref}: unexpected equipped-shield gate: {event}")
+    event.actor = _game_data_actor(fc, flow)
+    event.query = _slot(fc.actors[event.actor].queries, READ_QUERY)
+    event.params = {"GameDataName": flag, "Index": -1}
+
+
 def _skip(fc: evfl.Flowchart, flow: str, ref: str) -> None:
     i = _index(fc, flow, ref.split("/")[1])
     event = fc.events[i]
@@ -278,14 +310,17 @@ def patch_flowchart(fc: evfl.Flowchart, flow: str, changes: Sequence[GiftChange]
         for step in change.steps:
             if step.flow == flow:
                 _set_item(fc, step, change.item)
-                if change.new_flag:
-                    _set_flag_after(fc, step, change.new_flag)
+                if change.new_flag or change.rule.once:
+                    _set_flag_after(fc, step, change.flag)
         for ref in change.rule.given:
             if ref.split("/")[0] == flow:
                 _read_flag(fc, flow, ref, vanilla, change.flag)
         for ref in change.rule.writes:
             if ref.split("/")[0] == flow:
                 _redirect_write(fc, flow, ref, vanilla, change.flag)
+        for ref in change.rule.once:
+            if ref.split("/")[0] == flow:
+                _once_gate(fc, flow, ref, change.flag)
         for ref in change.rule.skip:
             if ref.split("/")[0] == flow:
                 _skip(fc, flow, ref)
@@ -295,7 +330,9 @@ def flows_changed(changes: Iterable[GiftChange]) -> list[str]:
     out = set()
     for change in changes:
         out |= {step.flow for step in change.steps}
-        out |= {ref.split("/")[0] for ref in (*change.rule.given, *change.rule.skip, *change.rule.writes)}
+        out |= {
+            ref.split("/")[0] for ref in (*change.rule.given, *change.rule.skip, *change.rule.writes, *change.rule.once)
+        }
     return sorted(out)
 
 
@@ -389,6 +426,28 @@ FREE_TIME_TRAVEL = "free_time_travel"  # the world setting that lifts the anchor
 ANCHORS = {"GC Darunias Joy": "the child's Goron Bracelet anchors the adult-return guarantee (D20)"}
 
 
+def shopkeeper_spec(spec: Mapping[str, Any]) -> dict[str, Any]:
+    """For Gift shuffle only, turn the existing data-sourced free-shield event into one placed reward."""
+    regions = []
+    locations = dict(spec["locations"])
+    for region in spec["regions"]:
+        if region["name"] == SHOPKEEPER_REGION and "Deku Shield" in region.get("events", {}):
+            events = dict(region["events"])
+            rule = events.pop("Deku Shield")
+            locations[SHOPKEEPER_CHECK] = {
+                "type": "NPC",
+                "vanilla": "Deku Shield",
+                "source": rule["source"],
+            }
+            region = {
+                **region,
+                "events": events,
+                "locations": {**region.get("locations", {}), SHOPKEEPER_CHECK: rule},
+            }
+        regions.append(region)
+    return {**spec, "regions": regions, "locations": locations}
+
+
 def seed_checks(
     world: World,
     gifts: Iterable[Gift],
@@ -412,7 +471,9 @@ def seed_checks(
             continue
         if name in ANCHORS and not free:
             continue
-        if {s.vanilla_item for s in steps[name]} != {actors.actors.get(loc.vanilla)}:
+        if {actors.aliases.get(s.vanilla_item, s.vanilla_item) for s in steps[name]} != {
+            actors.actors.get(loc.vanilla)
+        }:
             continue
         out.append(name)
     return out
@@ -442,11 +503,15 @@ def seed_step(
     files: Mapping[str, str],
 ) -> Callable[[Mapping[str, str]], dict[str, Callable[[bytes], bytes]]]:
     """The seed's patch step for gifts: placements (location -> logic item) in, the flow and GameDataList
-    transforms out, for every shuffled gift location whose item changed (``vanilla``: location -> its logic item)."""
+    transforms out, for moved gifts and once-gate normalization (``vanilla``: check -> its logic item)."""
     gifts, definitions = list(gifts), list(definitions)
 
     def step(placements: Mapping[str, str]) -> dict[str, Callable[[bytes], bytes]]:
-        moved = {name: actors.actor(placements[name]) for name in shuffled if placements[name] != vanilla[name]}
+        moved = {
+            name: actors.actor(placements[name])
+            for name in shuffled
+            if placements[name] != vanilla[name] or rules[name].once
+        }
         return file_changes(plan(moved, gifts, definitions, rules), files)
 
     return step
@@ -458,6 +523,8 @@ def seed_setup(
     """For ``--shuffle Gift``: the spec with the gifts that cannot move held vanilla, the settings shuffling the
     gift types in place of ``Gift`` and a placement policy from ``settings.songs`` plus the verified chest
     actor list in ``data/settings.toml``), and the patch step to pass to ``make_seed``."""
+    if SHUFFLE in settings.shuffle or "NPC" in settings.shuffle:
+        spec = shopkeeper_spec(spec)
     settings = replace(
         settings,
         shuffle=tuple(dict.fromkeys(t for s in settings.shuffle for t in (GIFT_TYPES if s == SHUFFLE else (s,)))),

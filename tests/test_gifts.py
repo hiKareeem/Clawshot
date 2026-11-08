@@ -255,7 +255,7 @@ def test_game_data_transform_keeps_the_byte_order():
 def test_every_linked_gift_check_has_a_rule():
     linked = {d.oot_randomizer_name for d in definitions.load() if isinstance(d.id, str) and d.oot_randomizer_name}
     rules = gifts.load()
-    assert set(rules) == linked
+    assert set(rules) == linked | {gifts.SHOPKEEPER_CHECK}
     for rule in rules.values():
         for ref in (*rule.given, *rule.skip):
             assert ref.split("/")[1].startswith("Event"), ref

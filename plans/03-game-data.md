@@ -1902,3 +1902,36 @@ as tokensanity. Four-gate and actual CLI/replay results are recorded in the roun
 place, no heart was added, and it did not come back (`dodongo-heart-hylian`). The native token with its pouch
 redirected to the Boomerang dropped as a token, was collected and counted as a token, and gave no Boomerang
 (`native-token-boomerang`): the pouch reference does not decide a token's grant. Tokens stay unshuffled.
+## 28. Round 7: shopkeeper gift, Treasure Chest Game and boss rewards (cs7d)
+
+Build `e0f3ccfa`, read-only dump. Research, commands, questions and controlled player artifacts:
+`plans/rounds/r7-gifts.md`; external scripts/data only under `E:/OOTRemake/work/r7-gifts/`.
+
+### Shopkeeper's shield as one gift check
+
+The round-6 trace corrects section 19's old once-only claim: `present_DekuSheld` Event45 excludes an
+equipped Deku Shield, while Event63's first-talk Bool selects Event117 (first) or Event116 (repeat).
+Both grant `Obj_Shield_Deku`; Event44 sets the Bool after the first grant. An active-flow scan found
+exactly those two original references to `HaveTalked_Npc_Kokiri_001_Shop_Child_PresentDekuShield`.
+It is already a saved Bool (Hash 3217462169, false/reset 8/save file 0). D22 therefore needs no new flag
+or GameDataList layout change.
+
+With Gift shuffled, `KF Shopkeeper Gift` is one remake-only NPC check with both stable flow/event IDs,
+not an invented OoTR check. The copied gift spec moves the existing `KF Kokiri Shop` free-shield
+event's rule/source to the placed location and removes its implicit shield grant. Access still requires
+the early child tree visit past Mido; it cannot bootstrap its own initial shield. Event45 becomes a
+saved-Bool query with the same offer/no-offer branches; both grant steps set completion immediately
+after handing over the placed actor. The equipped-shield dependency is gone only for this shuffled
+check. Even an unmoved shuffled shield gets the once-gate. Unshuffled logic and flow keep vanilla repeats.
+
+`Obj_Shield_Deku` and `TBox_Shield_Deku` have the same PouchActorInfo equipment/category fields
+(both ages `Weapon_Shield_Deku`); the former is a backwards actor alias for the existing Deku Shield
+logic item. Gift pool matching resolves existing aliases rather than mistaking the native gift for an
+unmapped upgrade. No new item or unrelated gift family is enabled.
+
+The synthetic and real-flow control-flow interpreter checks one grant with either equipment state,
+no grant on repeat/restored completion, and completion after either original branch; an exact inverse
+delta restores the entire original flow. This is file/control-flow proof, not an engine/game run.
+Controlled new-game output `ingame/shopkeeper-boomerang` supplies a shield in Mido's far-right chest
+and a once-only Boomerang from the shopkeeper. Its flow grows 50552 -> 51200 bytes; allocation
+50832 -> 51472. No GameDataList is written. Checklist/isolated release-only launcher are in the round file.
