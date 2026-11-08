@@ -303,7 +303,7 @@ no retry-count, destination-policy, price, saved-flag or logic changes.
 Synthetic regression: only one Scrub capacity destination, one native Shop and one unrestricted chest.
 Before the fix, seed 3 with one attempt failed with `['Capacity', 'Native']` unplaced; after, all twenty
 deterministic seed permutations preserve Capacity→Scrub, Native→Shop and Rupee→Chest, one attempt each.
-The complete pre-fix gate job was cancelled before editing code; a new full four-gate sequence runs on the fix.
+The complete pre-fix gate job was cancelled before editing code; the new full four-gate sequence completed below.
 The same actual combined CLI command then succeeded: **281 checks, 20 spheres, 123 resources**, full world,
 default gated-return guarantee. No seed/mode/guarantee was changed to make that smoke pass.
 
@@ -326,4 +326,23 @@ Token override smoke used that combined string plus `--shuffle Token`: exit **1*
 
 Both temporary diagnostic/verification scripts were removed after use. No player launcher, game or user folder
 was run or changed; these overlays are generation/read-back/search evidence only.
+
+### Completed post-rebase gates
+
+All four complete gates passed after `cdf2e9b`; no code changed afterward:
+
+| Command | Observed result |
+|---|---|
+| `uv run ruff format --check` | **169 files already formatted** |
+| `uv run ruff check` | **All checks passed** |
+| `uv run pytest` | **459 passed, 65 skipped**, 285.50 s |
+| `OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump` | **64 passed, 460 deselected**, 539.62 s |
+
+`PYTEST_ADDOPTS` uses external `E:/OOTRemake/work/r6-settings/pytest-rebased-fixed-{synthetic,dump}` temporary
+directories. The full 524-item tree includes merged MSBT/hints/Scrub/Token coverage and the new priority regression;
+the dump run selected every dump test, with no skips or omitted files.
+
+Post-rebase additions: `cdf2e9b` is the minimal fix/regression/architecture note; `d2ab104` records the authorized
+rebase, commit mapping and independent integration smoke evidence. This final documentation-only commit records
+the completed gates. New head is posted on `cs-r6` for immediate review/merge; no merge, push, or game launch here.
 
