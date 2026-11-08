@@ -9,6 +9,7 @@ from typing import TYPE_CHECKING
 
 from clawshot.census.scan import DEFAULT_CHEST_DROP
 from clawshot.formats import byml, rstb, zsdic
+from clawshot.patch.getitem import member_growth as getitem_member_growth
 from clawshot.patch.plan import DROP_KEY, EVENT_KEY, SUBSTITUTE_KEY, PatchError, Plan
 from clawshot.patch.shops import member_growth
 
@@ -117,7 +118,8 @@ def write(
             if transform := changes.get(path):
                 new_data = transform(new_data)
         if path.startswith("Pack/Actor/") and path.endswith(".pack.zs"):
-            for member, growth in member_growth(data, new_data).items():
+            growths = member_growth(data, new_data) | getitem_member_growth(data, new_data)
+            for member, growth in growths.items():
                 if member not in member_entries:
                     entry = table.get(member)
                     if entry is None:
