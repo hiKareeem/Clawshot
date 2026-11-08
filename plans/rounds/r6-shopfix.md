@@ -162,6 +162,7 @@ Base **a81faf9**, branch `r6/shopfix`; previous `65bbcf7`/`fcb265f` checkpoint a
 | `7e0e77c` | first rebased ledger and smoke cleanup |
 | `70696f5` | pre-D25 full integration gates and handoff |
 | `fa358ae` | isolated D25 `generate/fill.py` restriction plus synthetic/real-seed regressions |
+| `f3f4f66` | D25 documentation, final-base ledger and actual CLI replay proof |
 
 ## Cleanup
 
@@ -240,11 +241,22 @@ merchants. **Unchanged as requested.**
 
 ### Rebased D25 full gates
 
-The complete four-command chain is running on this rebased implementation, with temporary output outside the repo.
-Final results and final documentation head will be recorded below before the ready handoff.
+All four gates passed on the rebased D25 implementation, including the merged play findings:
+
+| Full command | Observed result |
+|---|---|
+| `uv run ruff format --check` | **173 files already formatted** |
+| `uv run ruff check` | **All checks passed** |
+| `uv run pytest --basetemp E:/OOTRemake/work/r6-shopfix/pytest-d25-full-synthetic` | **496 passed, 68 skipped**, 241.78 s |
+| `OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump --basetemp E:/OOTRemake/work/r6-shopfix/pytest-d25-full-dump` | **67 passed, 497 deselected**, 312.41 s |
+
+The full gate chain ran once after rebase; no selected/narrowed substitute or unchanged rerun.
+The dump gate includes both actual seed bag-free invariants and the embedded shop allocation regression.
+Source/tests head is `fa358ae`; documentation is `f3f4f66` plus this final gate-record commit.
+Ready for review; final head is posted to `cs-r6` and chat. No outstanding D25 check or product decision.
 
 After smoke proof, removed only the two session-created `d25-seed-*` overlays and the throwaway
 `smoke_d25.py` / `diagnose_d25_sources.py` scripts. The four targeted `pytest-d25-*` basetemps were never
 materialized (those selected tests do not request temporary paths). Retained both CLI transcripts and
 `d25-verification.json`; original seed7/7b, every requested bisect/user and all read-only audits remain untouched.
-The active full-gate temporary directory is retained until completion.
+Both session-created full-gate temporary directories were removed after success; retained the recorded proof.
