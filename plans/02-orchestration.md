@@ -15,17 +15,24 @@ skill). This file is the project's own version; where it differs from Overread, 
 
 1. **Spec.** Claude writes the round into `00-roadmap.md`: tracks, what each owns (directories, files), numbered
    items in merge order, the test that proves each. Producer items name their consumers.
-2. **Setup.** One worktree per track at `E:/OOTRemake/clawshot-r<N>/<track>` on branch `r<N>/<track>` (`herdr
-   worktree create`), one for a Hookshot track at `E:/OOTRemake/hookshot-r<N>/<track>`. Bermuda thread
-   `cs-r<N>` (`BERMUDA_THREAD_AGENT=claude ~/go/bin/bermuda thread new cs-r<N> --about "..."`).
-3. **Launch.** A fresh omp session per track in its worktree's pane, named `cs<N><letter>` (`cs1a`). Three
-   agents at once at most (Kareem's subscription). One background watcher per agent on its pane id, and one on
-   the thread (`thread_watch.sh`).
+2. **Setup.** One worktree per track at `E:/OOTRemake/clawshot-r<N>/<track>` on branch `r<N>/<track>` (made by
+   `E:/OOTRemake/tools/launch_hc.sh`), one for a Hookshot track at `E:/OOTRemake/hookshot-r<N>/<track>`. Bermuda
+   thread `cs-r<N>` (`BERMUDA_THREAD_AGENT=claude ~/go/bin/bermuda thread new cs-r<N> --about "..."`).
+3. **Launch.** From round 4, tracks run in herdr-core (`hc`), the Herdr desktop app's terminal core, not old herdr
+   panes: `bash E:/OOTRemake/tools/launch_hc.sh <N> cs<N>a:<track>[:<model>] ...` makes the worktree, starts omp
+   (in an app space when the window is open, else a plain `hc` terminal), sends the prompt
+   `E:/OOTRemake/work/rounds/r<N>/<agent>.txt` with `hc send` once omp is idle, and writes the terminal address to
+   `<agent>.term`. One watcher per agent (`bash E:/OOTRemake/tools/hc_watch.sh <address> <agent>` as a background
+   job) and one on the thread (`thread_watch.sh`). Steer with `hc send <address> "<text>"`. Claude tracks use the
+   default Claude model; one track per round may run on Kareem's OpenAI quota (`openai-codex/gpt-6.1-sol`).
+   Recipes and pitfalls: the `herdr` skill's `references/herdr-app-hc.md` and the overread-orchestration skill's
+   `references/herdr-core-move.md`.
 4. **During.** Claude answers thread posts and gaps in a spec by steering the agent (a queued note, no restart).
 5. **Review.** Per track: the handoff from its session file, its round file, the diff, the gates on the branch;
    then merge to `main`, gates again on `main`, decisions moved into `decisions.md` with who proposed them.
 6. **Kareem's checks.** One message with what to run, where, and what he should see, in order.
-7. **Cleanup.** Remove each merged worktree (`herdr worktree remove`), close its workspace.
+7. **Cleanup.** Close each merged track's terminal (`hc kill <address>; hc rm <address>`, or `herdr-app do
+   space.close` for an app space), then `git worktree remove` and delete the branch.
 
 ## Gates
 
@@ -63,6 +70,7 @@ OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump
 ## Rules carried over
 
 - If a first attempt fails, print the values instead of trying again (AGENTS.md rule 9).
-- Agents never message each other through herdr; cross-track requests go to the Bermuda thread as plain posts
-  without @-mentions.
+- Agents never message or read each other through herdr or herdr-core (no `herdr`, `hc` or `herdr-app`
+  command at all; hc's own agent skill stays out of omp); cross-track requests go to the Bermuda thread as plain
+  posts without @-mentions.
 - A report is not evidence: Claude reruns the checks on `main` before calling a track done.
