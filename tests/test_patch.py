@@ -178,11 +178,9 @@ def test_table_check(world):
         item_actors.loads('[items]\n"Nope" = { actor = "X" }\n').check(world.items)
 
 
-def test_event_file_needs_story_state_exactly_with_remove():
+def test_removing_an_event_requires_a_story_state_audit():
     with pytest.raises(chest_events.ChestEventError, match="story_state is required"):
         chest_events.loads('[event.A]\npatch = "remove"\n')
-    with pytest.raises(chest_events.ChestEventError, match="story_state is required"):
-        chest_events.loads('[event.A]\npatch = "keep"\nstory_state = "x"\n')
     with pytest.raises(chest_events.ChestEventError, match="patch must be"):
         chest_events.loads('[event.A]\npatch = "drop"\n')
 

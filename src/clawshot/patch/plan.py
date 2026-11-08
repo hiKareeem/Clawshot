@@ -42,6 +42,7 @@ class ChestChange:
     old_actor: str  # Drop__DropActor before
     new_actor: str  # Drop__DropActor after
     event: ChestEvent | None  # the GetEventName override this change removes
+    kept_event: ChestEvent | None = None
 
     def as_dict(self) -> dict:
         out = {
@@ -56,6 +57,10 @@ class ChestChange:
         if self.event is not None:
             out["removed_event"] = self.event.name
             out["story_state"] = self.event.story_state
+        if self.kept_event is not None:
+            out["kept_event"] = self.kept_event.name
+            if self.kept_event.story_state is not None:
+                out["story_state"] = self.kept_event.story_state
         return out
 
 
@@ -159,7 +164,7 @@ def make_plan(seed: Seed, links: Links, items: ItemActors, events: Mapping[str, 
             if chest.vanilla_item == actor:
                 unchanged.append((name, chest.id))
                 continue
-            event = None
+            event, kept_event = None, None
             if chest.event is not None:
                 event = events.get(chest.event)
                 if event is None:
@@ -168,6 +173,7 @@ def make_plan(seed: Seed, links: Links, items: ItemActors, events: Mapping[str, 
                         "not classify"
                     )
                 if event.patch != REMOVE:
+                    kept_event = event
                     event = None
             changes.append(
                 ChestChange(
@@ -180,6 +186,7 @@ def make_plan(seed: Seed, links: Links, items: ItemActors, events: Mapping[str, 
                     old_actor=chest.vanilla_item,
                     new_actor=actor,
                     event=event,
+                    kept_event=kept_event,
                 )
             )
     return Plan(changes, unchanged, list(links.vanilla_chests))

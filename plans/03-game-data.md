@@ -982,6 +982,30 @@ rewards; unresolved GF/GV grotto access; adult Field/Lake appearance triggers; L
 ZF upper ruins; Well room 11 fake-floor chest. Exact identifiers, sources and questions are in the extra
 files and round report. None is used by the oracle to supply an item.
 
+### Chest events and the embedded song check
+
+Reviewer-approved policy: remove **only** `Get_StoneOfForest_GetSword`. Its wrapper first grants the chest
+content, then `Dm_Kokiri_0063:C01` creates/equips `Weapon_Sword_Kokiri` independently of the pouch.
+`Get_StoneOfForest:GetSword` and that cut have no persistent flag or quest-step writes to restore.
+Mido's inventory requirement follows the sword item wherever it is placed.
+
+All other chest wrappers remain attached to the chest and grant its current `ContentName`. This keeps
+their quest state with the actual opened check instead of reconstructing it elsewhere. Extra Navi lines or
+cosmetic scenes may still refer to the vanilla item; those are not additional item grants.
+
+| Event wrapper | Persistent state kept by retaining it |
+|---|---|
+| `SubEvent_GetIceArrow:SubEvent_GetIceArrow_OpenTBox` | `Event0` advances `SubEvent_GetIceArrow` to `Complete` after the default chest grant |
+| `Defeat_Ganon:InsideGanonCastle_Dungeon_Get_Gauntlet_Gold` | `Event654` default chest grant, `Event655` cosmetic `Dm_InsideGanonCastle_0006`; its flow entries contain no extra grant/equipment creation or persistent flag/quest writes |
+| `SageOfSpirit:SageOfSpirit_NaboorIsTakenAway` | `Event1` Nabooru timeline; `Event190`/`Event322` clear `HavePlayedEvent.NaviTips_Gauntlet_01`/`_03`; `Event21` advances `SageOfSpirit` to `Step07` |
+| `SageOfWater:IceCavern_WaterSerenade` | `Event60` default chest grant; `Event281`/`Event283` plays the song event; `Event284`/`Event285` sets `SageOfWater_GetWaterSerenade`; `Event282`/`Event280` advances `Step04`/`Step05` |
+
+**The Serenade is a song check inside the chest event**, not another chest reward:
+`Dm_MelodyGet_Water:C15/Event29` calls `GetPouchContent:GetPouchContentByActorName` with
+`ActorName = Item_Melody_WaterSerenade`. `Dm_MelodyGet_Water:EntryPoint0/Event14` also calls the shared
+`Dm_SY_Ocarina:LearningOcarinaPlayAutoForSeek` (its Water case is `Event68`). The gift track owns both sides
+when that song is shuffled; the chest patch changes neither. The world check remains `Sheik in Ice Cavern`.
+
 ## 19. Round 5: what reads a gift's item, and how each gift check is changed (cs5d)
 
 How it was found (build `e0f3ccfa`; scratch in `E:/OOTRemake/work/r5-gifts/`, `readers.py` reproduces the reads and

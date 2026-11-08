@@ -47,3 +47,33 @@ Checks: `uv run pytest tests/test_patch.py tests/test_patch_chests.py tests/test
 The full seed-7 overlay smoke also wrote **52 files** to a session-created temporary folder, read the output
 back and checked every size-table entry against `rstb.required_size`; all fit. Six changed substitute branches
 in the written Banc files matched their primary placed actor. Temporary output removed.
+
+## Item 3: keep story state with the opened chest
+
+Reviewer approved retaining every wrapper except the unsafe Kokiri Sword wrapper. Chest `ContentName` still
+comes from the placed actor; four previously removed wrappers now keep their real state automatically:
+Ice Arrows quest `Complete`; Nabooru timeline/two Navi-tip clears/Spirit `Step07`; gold-gauntlet cosmetic scene;
+Water Serenade event, its learned flag and Water `Step04`/`Step05`. Exact flow/node identifiers are in section 18
+and `chest_events.toml`; the spoiler patch records kept wrappers and their state audit.
+
+The Water event's **song check** is `Dm_MelodyGet_Water:C15/Event29`, argument
+`ActorName = Item_Melody_WaterSerenade`; its shared play-along is `EntryPoint0/Event14` →
+`Dm_SY_Ocarina:LearningOcarinaPlayAutoForSeek`, Water case `Event68`. Chest patching does not shuffle that gift.
+The reviewer is coordinating it with cs5d. `Sheik in Ice Cavern` remains the song's world identity.
+
+The Kokiri wrapper and `Dm_Kokiri_0063:C01` write no persistent flag or quest step, so nothing needs restoring.
+Only the unsafe equipment creation is bypassed by the default chest event. Other Navi lines/cosmetic scenes
+may still name/show a vanilla item; they cannot replace the actual placed grant. **Kareem: when opening the
+four stateful chests, confirm their quest/cutscene/song continuation still runs and the inventory reward is
+the spoiler's placed item, not the vanilla chest item; record the overlay-open log line.**
+
+Verification: synthetic patch tests **20 passed**; scoped ruff lint/format **4 files clean**. Targeted dump
+regressions **7 passed**: each of the four retained wrappers remained on every written copy of its chest with
+a changed placed actor; only the Kokiri Sword wrapper was removed; no sword-wrapper story writes; Serenade's
+embedded gift step identified. Live full-seed overlay smoke likewise read all four retained wrappers and
+placed actors back, all 52 size entries sufficient. Temporary output removed.
+
+Probe failures were diagnosed from printed values, not retried blindly: EventSetting names are virtual
+`Work/...evfc` paths, normalized to basename; some rows omit EntryPointName and use EntryPoint0/cuts;
+Nabooru's row uses TimelineFileName rather than FlowchartFileName. The corrected probe explicitly handled
+flowchart entries and timeline clips. No game was started.

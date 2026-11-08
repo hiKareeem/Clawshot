@@ -18,10 +18,10 @@ class ChestEvent:
     name: str
     flow: str
     patch: str
-    """``remove`` (the override is tied to the vanilla item) or ``keep``."""
+    """``remove`` (unsafe vanilla equipment side effect) or ``keep`` (grant the chest's current ContentName)."""
     does: str
     story_state: str | None
-    """For a removed override: the state it leaves that the default event does not, and how a seed restores it."""
+    """Persistent state and how the patch preserves it; a removed override must state what needs restoring."""
 
 
 def loads(text: str) -> dict[str, ChestEvent]:
@@ -31,8 +31,8 @@ def loads(text: str) -> dict[str, ChestEvent]:
         if patch not in (REMOVE, KEEP):
             raise ChestEventError(f"chest_events.toml: {name}: patch must be {REMOVE!r} or {KEEP!r}, not {patch!r}")
         story = entry.get("story_state")
-        if (patch == REMOVE) != (story is not None):
-            raise ChestEventError(f"chest_events.toml: {name}: story_state is required with remove, and only there")
+        if patch == REMOVE and story is None:
+            raise ChestEventError(f"chest_events.toml: {name}: story_state is required with remove")
         out[name] = ChestEvent(name, str(entry.get("flow", "")), patch, str(entry.get("does", "")), story)
     return out
 
