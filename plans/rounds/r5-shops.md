@@ -198,3 +198,55 @@ Fresh output smoke printed **zero** remaining references for all five removed bo
 script was removed; permanent behavior regressions remain. The three controlled player experiments were
 unaffected (their old shield shelf has no quantity board).
 
+## Handoff commit ledger
+
+Branch `r5/shops`, rebased onto reviewer-authorized main `cd592e3`. No merge or push.
+Rebased IDs supersede the historical pre-rebase IDs mentioned above:
+
+| Commit | Scope |
+|---|---|
+| `b438680` | Item 1: all 128 shelf/seller/price definitions and dump oracle |
+| `b82b62a` | Item 2: native sale transforms and three external player experiments |
+| `b20875f` | Isolated `fill.py`: native-display-only Shop destinations |
+| `e57e053` | Isolated `fill.py`: all fill stages honor the policy; adult-shop tunic restriction |
+| `430b33f` | Item 3: sourced native pool, actual shield helpers, wallets and releases |
+| `5b6e92f` | Isolated `load.py` shop-data hook after the prerequisite rebase |
+| `17207fb` | Isolated native shop-to-chest item actor mappings |
+| `e68a414` | Clarify those mappings' pending in-game evidence |
+| `47ad849` | Item 4: automatic Shop PatchStep and CLI value; integrated dump regression |
+| `dc037c8` | Quantity-board group/link safety follow-up and whole-catalog regression |
+
+### Remaining checks and integration
+
+- **Kareem runs the three controlled experiments** in `E:/OOTRemake/work/r5-shops/README.md`; unrun launchers
+  use isolated new-game users and only `E:/Games/Hookshot/hookshot.exe`. Observe overlay log plus actual
+  model/menu/description/get/inventory/tutorial and stock after returning/reloading.
+- **Stand-in display feasibility remains unanswered** until experiment 3. Seed output never uses it.
+- **Confirm acquired-Blue-Fire slot gate and native shop pouch grants from chests** before treating every
+  refill family as in-game certified. No additional free bottle is assumed by the logic.
+- Claude integrates Track A's chronological model and Track C's whole-game chest coverage, then exercises
+  whole-game Chest+Shop output. This branch's two CLI smokes are explicitly the Kokiri/Lost Woods/Deku slice.
+- `pyproject.toml`, `uv.lock`, save backups and dump are unchanged by this track; no dependency or game data
+  was added to the repository. Generated/decoded resources stay under `E:/OOTRemake/work/r5-shops/`.
+
+## Final observed gate results
+
+| Command | Result |
+|---|---|
+| `uv run ruff format --check` | **102 files already formatted**, repeated after the board safety follow-up |
+| `uv run ruff check` | **All checks passed**, repeated after that follow-up |
+| `uv run pytest` | **330 passed, 30 skipped**, 153.96 s |
+| `OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump` | **29 passed, 331 deselected**, 380.78 s |
+
+The two complete test gates cover `47ad849`. The late board safety change `dc037c8` was then exercised by
+`uv run pytest tests/test_shops.py::test_shelf_swap_keeps_identity_and_removes_only_obsolete_quantity_boards -q`
+(**1 passed**) and
+`OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump tests/test_shops_dump.py -k removing_quantity -q`
+(**1 passed, 4 deselected**, all ordinary shop Banc files). Both actual CLI seeds were rebuilt after this change;
+the subsequent parsed-output smoke found zero dangling board references/links. No full dump loop was run.
+
+The complete synthetic gate includes vanilla-world beatability and 200 default chest seeds, all shop-logic
+regressions, and the native filler-domain invariant; the dump gate includes the new complete Shop seed writer
+regression. No test/game success was inferred from a source edit alone. No failing check remains.
+The final documentation-only handoff commit is reported in chat and on `cs-r5`.
+
