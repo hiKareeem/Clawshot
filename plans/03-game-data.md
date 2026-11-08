@@ -1125,3 +1125,21 @@ the mask shop's Mask of Truth (shops, track B), the Kokiri shopkeeper's free Dek
 once, `HaveTalked_Npc_Kokiri_001_Shop_Child_PresentDekuShield`, when Link holds no shield: `CheckIsGet
 (Weapon_Shield_Deku)`; track B's), the Market bottle (`Npc_Hylia_020_Shop_Child`), Dampé's digging heart piece and the
 frogs' bug game. None is changed.
+
+**In game (Kareem, 2026-11-08).** The five test folders of `plans/rounds/r5-gifts.md` item 3, each log showing
+`fs: OpenFile(...): from the overlay` for its changed files; the first four on a copy of the save backup
+`2026-11-07_llr-tower-before-pickup`, the fifth on a new game.
+
+- `talon-boomerang` (class 1): Talon's cucco game gave the Boomerang, with its model and get cutscene, and it equips.
+  Talking to him again only refills milk into an empty bottle. The save has `IsGet.Item_Boomerang` true and no milk
+  bottle.
+- `skullkid-bombbag` (class 1): the Skull Kid gave the Bomb Bag; nothing on a repeat.
+- `din-fairy-hookshot` (class 2, the new flag): the save made before the patch loaded; Din's fairy gave the Hookshot, no
+  magic gauge and no Din's Fire; a second visit, and another after quit and continue, only healed. The save has
+  `Clawshot.Gift.Dm_FairyFountain_Din.Event212` true. **A Bool added to `GameDataList` with the save layout grown in
+  `MetaData` is kept by the game, and an older save still loads.**
+- `malon-song-heartpiece` (class 2, the skipped play-along add): Malon gave the Piece of Heart and its text; Epona's
+  Song is not in the song list.
+- `chest-song-storms` (track C's chest, a song actor as `Drop__DropActor`): the chest showed a green rupee model with
+  the Song of Storms' pickup text, and the save has `IsGet.Item_Melody_StormSong` true. With no ocarina held, whether
+  the song plays is not known yet (a follow-up test on the ranch save, which has the Fairy Ocarina).
