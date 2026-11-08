@@ -190,7 +190,7 @@ then return/save/Continue and recheck; supply the overlay-open log and note any 
 
 Full gates: first sequence stopped at printed import ordering / imported fixture shadowing; corrected imports and
 made the new dump inventory audit self-contained. The next sequence was explicitly cancelled for this newly
-requested item 4, before changing code. All four complete gates will run again on the finished item-4 tree.
+requested item 4, before changing code. The completed four-gate results below supersede those interrupted runs.
 
 ## Cross-track requests
 
@@ -237,7 +237,47 @@ The external builders were already deleted, so no stale generator can recreate a
 | `ec3d8a3` | Derived forest logic and sourced legacy Mido rule note |
 | `737a91c` | Delete obsolete Mido-only generator assertions |
 | `2db0c13` | Import cleanup and independent dump graph context |
+| `8b2314a` | Section 21, complete track ledger and Hookshot v2.0.1 safety notes |
+| `2e9d88f` | Isolated world-format documentation for replay, forest and effective prices |
 
-Section 21 and final gate/handoff documentation commits follow this ledger; their IDs are posted on `cs-r6`
+The final gate/handoff documentation commit follows this ledger; its ID is posted on `cs-r6`
 and in the final handoff (a commit cannot include its own hash).
+
+
+## Completed full gates and handoff
+
+All four required commands completed on the finished code, after item 4 and the inventory redirect:
+
+| Command | Observed result |
+|---|---|
+| `uv run ruff format --check` | **151 files already formatted** |
+| `uv run ruff check` | **All checks passed** |
+| `uv run pytest` | **414 passed, 54 skipped**, 375.62 s |
+| `OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump` | **53 passed, 415 deselected**, 765.04 s |
+
+`PYTEST_ADDOPTS` directed each complete suite's temporary output to
+`E:/OOTRemake/work/r6-settings/pytest-{synthetic,dump}-final`, keeping decoded/generated data out of the repo.
+No failing test was skipped, weakened or hidden by retries. The old Mido-only mode assertions were deleted because
+the reviewer explicitly folded that mode into forest settings; new tests cover all three modes and compatibility.
+The complete suites include original seed/age-return sweeps, cross-interpreter determinism, every placement/EVFL
+round trip, census and the new settings, price, forest and inventory-leak dump oracles.
+
+Requested player artifacts/checklists are complete under `E:/OOTRemake/work/r6-settings/`:
+`chest-ocarina-minuet`, `shop-prices-10`, `forest-closed-deku`. Each launcher was statically checked after Claude's
+v2.0.1 correction; only the bin game executable, update check disabled, missing-exe refusal and isolated user.
+The full generated-seed smoke outputs and verification JSON/logs remain there as data/search evidence.
+Eight temporary scripts/cache and completed earlier targeted-test outputs were removed. Git Bash's removal of
+two pytest `*current` directory symlinks initially reported permission denied; metadata printed SymbolicLink
+attributes 1040 and their session-local targets. Removed the links and empty parents non-recursively instead,
+without traversing a link or touching another session's data.
+
+Left for Claude/Kareem, not unfinished code:
+- Review/merge the scoped commits (never pushed or merged here); order section 20 before 21 during integration.
+- Run the **three in-game checks above** with overlay logs. No game/launcher/window was started by this track.
+- Confirm the **provisional cheap-shield default**; forest's `closed` default is already decided by Kareem (D24).
+- Integrate other tracks' shared `spoiler`/play-note and Scrub hooks while preserving the posted settings/price/
+  forest APIs. This worktree was not rebased without authorization.
+
+No dependency or lockfile edits requested, no game data committed, no source-dump or save writes, and no write/read
+of Kareem's active `E:/OOTRemake/work/r5-seed/` output or users.
 
