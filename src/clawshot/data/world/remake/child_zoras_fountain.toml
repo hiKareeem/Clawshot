@@ -1,0 +1,23 @@
+# Zora's Fountain, child side, as the remake builds it (round 4, track A). Format: plans/04-world-format.md,
+# "Overrides". Evidence per entry; E:/OOTRemake/work/r4-logic-child/findings/zoras_fountain.md lists every rule
+# checked.
+#
+# Guides (Switch 2, 2026-11-05/07):
+#   Nintendo Life, Zora's River and Domain: https://www.nintendolife.com/guides/zelda-ocarina-of-time-zora-river-zora-domain-switch-2
+#   Nintendo Life, Gold Skulltulas: https://www.nintendolife.com/guides/zelda-ocarina-of-time-gold-skulltula-locations-rewards-switch-2
+#   Nintendo Life, Great Fairy Fountains: https://www.nintendolife.com/guides/zelda-ocarina-of-time-great-fairy-fountain-locations-all-switch-2
+#   games.gg, Great Fairies: https://games.gg/the-legend-of-zelda-ocarina-of-time-2026/guides/ocarina-of-time-remake-great-fairy-locations-rewards-and-costs
+#   Eurogamer, 17 changes: https://www.eurogamer.net/all-new-changes-zelda-ocarina-of-time-switch-2
+#   Gold Skulltula guides (Eurogamer, Polygon; local copies E:/OOTRemake/work/r3/gs-guide-*.txt)
+# Placement data: ZoraFountain_Child_Static/_Dynamic (E:/OOTRemake/work/r4-logic-child/actors.py), Banc coordinates
+# in metres, y up.
+
+[locations."ZF GS Above the Log"]
+rule = "can_use(Boomerang) and ((at_night and 'Time Flows') or gold_skulls_ignore_daytime)"
+was = "can_use(Boomerang) and (at_night or gold_skulls_ignore_daytime)"
+source = "Eurogamer, 17 changes: time does not flow until Link has met Zelda, so night needs the event 'Time Flows' (Main, round 4); data: Enemy_Skulltula_Gold 7152962033963346563 is Enemy_Skulltula_Gold_Nocturnal, at (14,108,23); Nintendo Life GS #55, Eurogamer and Polygon GS guides: child, night, Boomerang"
+
+[locations."ZF Great Fairy Reward"]
+rule = "can_play(Zeldas_Lullaby) and 'Great Fairy Met'"
+was = "can_play(Zeldas_Lullaby)"
+source = "games.gg Great Fairy guide (2026-11-06): the first Great Fairy visited must be Death Mountain Trail's or Hyrule Castle's, or Zelda's Lullaby does not summon the others; 'Great Fairy Met' is set at those two fountains (Main, round 4). The fee (rising with each fairy met, 100 Rupees here in the usual order) is not modelled"

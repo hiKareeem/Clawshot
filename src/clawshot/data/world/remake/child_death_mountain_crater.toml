@@ -1,0 +1,13 @@
+# Death Mountain Crater, child side, as the remake builds it (round 4, track A). Format: plans/04-world-format.md,
+# "Overrides". The adult side and DMC Wall Freestanding PoH are track B's. What was checked and left as OoT
+# Randomizer has it: E:/OOTRemake/work/r4-logic-child/findings/death_mountain_crater.md.
+#
+# Guides (Switch 2 remake): Eurogamer, https://www.eurogamer.net/zelda-ocarina-of-time-death-mountain-crater;
+# games.gg, https://games.gg/the-legend-of-zelda-ocarina-of-time-2026/guides/ocarina-of-time-remake-heart-pieces-all-36-locations/;
+# Game8, https://game8.co/games/Zelda-Ocarina-of-Time/archives/616225 (Switch 2 list).
+# Game data: DeathMountainCrater_Child_Static (E:/OOTRemake/work/r4-logic-child/actors.py); census
+# src/clawshot/data/locations.toml.
+
+[locations."DMC Deku Scrub"]
+vanilla = "Piece of Heart"
+source = "the crater's one Business Scrub sells a Piece of Heart for 100 rupees, to young Link: from the top entrance go left and drop to the ledge below (Eurogamer crater page; games.gg: new piece, the Ice Cavern one moved here; Game8 Switch 2 list #36). Data: Enemy_Scrub_Business 2518138296199711695 (-23,119,33), ScrubBusiness_ShopItemActorName0=Obj_Heart_Piece (census 'Death Mountain Crater Scrub (Obj_Heart_Piece)', the only scrub in DeathMountainCrater). Rule unchanged: the guides stun it with the Slingshot, a Deku Nut or a Deku Shield reflection (can_stun_deku)"

@@ -1,0 +1,19 @@
+# Zora's Domain, child side, as the remake builds it (round 4, track A). Format: plans/04-world-format.md,
+# "Overrides". Evidence per entry; E:/OOTRemake/work/r4-logic-child/findings/zoras_domain.md lists every rule checked.
+#
+# Guides (Switch 2, 2026-11-05/07):
+#   Nintendo Life, Zora's River and Domain: https://www.nintendolife.com/guides/zelda-ocarina-of-time-zora-river-zora-domain-switch-2
+#   Eurogamer, Zora's Domain: https://www.eurogamer.net/zelda-ocarina-of-time-zora-domain
+#   Eurogamer, 17 changes: https://www.eurogamer.net/all-new-changes-zelda-ocarina-of-time-switch-2
+# Placement data: ZoraDomain_Child_Static/_Dynamic (E:/OOTRemake/work/r4-logic-child/actors.py), Banc coordinates in
+# metres, y up.
+
+[exits."Zoras Domain"."ZD Storms Grotto"]
+rule = "can_play(Song_of_Storms)"
+was = "can_open_storm_grotto"
+source = "Eurogamer, 17 changes (https://www.eurogamer.net/all-new-changes-zelda-ocarina-of-time-switch-2): every grotto entrance is visible and shows whether it needs a bomb or the Song of Storms; the Stone of Agony is now the Echo Gem, which finds Gold Skulltulas (Main, round 4). Data: Land_Zora_HidingHoleCover_A_01 13590128656727522529 covers the hole at (17,100,-18)"
+
+[events."ZD Storms Grotto"."Fairy"]
+rule = "False"
+was = "has_bottle"
+source = "data: the room under the Song of Storms hole (17,100,-18), at y 60, holds six Obj_Rupee_Blue and no fairy; no ZoraDomain file places a fountain fairy (no Obj_Fairy_HidingHole_FairyFountain, as Zora's River's fairy grotto has)"

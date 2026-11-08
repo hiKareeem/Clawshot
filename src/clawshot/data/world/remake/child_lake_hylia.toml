@@ -1,0 +1,33 @@
+# Lake Hylia, child side, as the remake builds it (round 4, track A; the adult side is track B's). Format:
+# plans/04-world-format.md, "Overrides". Evidence per entry; E:/OOTRemake/work/r4-logic-child/findings/lake_hylia.md
+# lists every rule checked.
+#
+# Guides (Switch 2, 2026-11-05/07):
+#   Eurogamer, Lake Hylia: https://www.eurogamer.net/zelda-ocarina-of-time-lake-hylia
+#   Eurogamer, 17 changes: https://www.eurogamer.net/all-new-changes-zelda-ocarina-of-time-switch-2
+#   Nintendo Life, Gold Skulltulas: https://www.nintendolife.com/guides/zelda-ocarina-of-time-gold-skulltula-locations-rewards-switch-2
+#   Gold Skulltula guides (Eurogamer, Polygon; local copies E:/OOTRemake/work/r3/gs-guide-*.txt)
+# Placement data: the lake is part of Banc HyruleField (HyruleField_Child_Static/_Dynamic, read by
+# E:/OOTRemake/work/r4-logic-child/actors.py), Banc coordinates in metres, y up; lake surface y 131.
+
+[locations."LH GS Lab Wall"]
+rule = "is_child and ((at_night and 'Time Flows') or gold_skulls_ignore_daytime) and (Boomerang or (logic_lab_wall_gs and (Sticks or Kokiri_Sword)))"
+was = "is_child and (at_night or gold_skulls_ignore_daytime) and (Boomerang or (logic_lab_wall_gs and (Sticks or Kokiri_Sword)))"
+source = "Eurogamer, 17 changes: time does not flow until Link has met Zelda, so night needs the event 'Time Flows' (Main, round 4); data: Enemy_Skulltula_Gold 13944703896577680014 is Enemy_Skulltula_Gold_Nocturnal, on the lab wall at (-178,142,426); Nintendo Life GS #31, Eurogamer Lake Hylia guide, Polygon: child, night, Boomerang"
+
+[locations."LH GS Small Island"]
+rule = "is_child and can_child_attack and ((at_night and 'Time Flows') or gold_skulls_ignore_daytime)"
+was = "is_child and can_child_attack and (at_night or gold_skulls_ignore_daytime)"
+source = "Eurogamer, 17 changes: time does not flow until Link has met Zelda, so night needs the event 'Time Flows' (Main, round 4). In the remake this Gold Skulltula is at the end of a crawl tunnel in the lake's south-west corner (Eurogamer Lake Hylia guide, Nintendo Life GS #30, Polygon), data Enemy_Skulltula_Gold 8655370827943125875 at (-296,132,598). Night is kept from Eurogamer ('night only'), though the actor has no Enemy_Skulltula_Gold_Nocturnal and Nintendo Life and Polygon list no night: question in the findings"
+
+[locations."LH Deku Scrub Grotto Left"]
+n64_only = "the remake's Lake Hylia grotto (under the pushable Obj_Tombstone_A_03 on the island at (-205,138,455), room at y 98) holds one red-rupee chest (Obj_TBox_A_01_NoBake 6900843020594897860) and no scrub; HyruleField's three-scrub grotto (seeds, nuts, bombs) lies inside Lon Lon Ranch's fences, at (-36,151,291)"
+source = "placement data, HyruleField_Child_Static/_Dynamic"
+
+[locations."LH Deku Scrub Grotto Right"]
+n64_only = "the remake's Lake Hylia grotto (under the pushable Obj_Tombstone_A_03 on the island at (-205,138,455), room at y 98) holds one red-rupee chest (Obj_TBox_A_01_NoBake 6900843020594897860) and no scrub; HyruleField's three-scrub grotto (seeds, nuts, bombs) lies inside Lon Lon Ranch's fences, at (-36,151,291)"
+source = "placement data, HyruleField_Child_Static/_Dynamic"
+
+[locations."LH Deku Scrub Grotto Center"]
+n64_only = "the remake's Lake Hylia grotto (under the pushable Obj_Tombstone_A_03 on the island at (-205,138,455), room at y 98) holds one red-rupee chest (Obj_TBox_A_01_NoBake 6900843020594897860) and no scrub; HyruleField's three-scrub grotto (seeds, nuts, bombs) lies inside Lon Lon Ranch's fences, at (-36,151,291)"
+source = "placement data, HyruleField_Child_Static/_Dynamic"

@@ -1,0 +1,42 @@
+# Zora's River, child side, as the remake builds it (round 4, track A). Format: plans/04-world-format.md,
+# "Overrides". Evidence per entry; E:/OOTRemake/work/r4-logic-child/findings/zora_river.md lists every rule checked.
+#
+# Guides (Switch 2, 2026-11-05/07):
+#   Nintendo Life, Zora's River and Domain: https://www.nintendolife.com/guides/zelda-ocarina-of-time-zora-river-zora-domain-switch-2
+#   Nintendo Life, heart pieces: https://www.nintendolife.com/guides/zelda-ocarina-of-time-heart-piece-locations-switch-2
+#   Nintendo Life, Gold Skulltulas: https://www.nintendolife.com/guides/zelda-ocarina-of-time-gold-skulltula-locations-rewards-switch-2
+#   Eurogamer, heart pieces: https://www.eurogamer.net/all-heart-pieces-locations-zelda-ocarina-of-time
+#   Eurogamer, 17 changes: https://www.eurogamer.net/all-new-changes-zelda-ocarina-of-time-switch-2
+#   Gold Skulltula guides (Eurogamer, Polygon; local copies E:/OOTRemake/work/r3/gs-guide-*.txt)
+# Placement data: ZoraRiver_Child_Static/_Dynamic (E:/OOTRemake/work/r4-logic-child/actors.py), Banc coordinates in
+# metres, y up, +x east, +z south. The Hyrule Field entrance is at (-99,96,30), the entrance boulders
+# (Obj_BrokenRock_A_01) at (-78,98,6) and (-76,98,5), the bean seller (Npc_Hylia_047_Child) at (-53,101,-12).
+
+[locations."ZR GS Tree"]
+region = "Zora River"
+rule = "can_plant_bugs and can_child_attack"
+was = "is_child and can_child_attack and can_bonk"
+source = "03-game-data.md section 11: in the remake ZR GS Tree is the bean seller's soft soil; data: Enemy_Skulltula_Gold 12370559827741970774 (Enemy_Skulltula_Gold_IsMagicBeanSoil, AppearPopOut) at (-55,101,-12) on Obj_SmallFarm_A_02 (Gimmick_MagicBeanSoil_ZoraRiver02), beside the bean seller, past the entrance boulders; Eurogamer and Polygon GS guides and Nintendo Life GS #49: drop bugs into the soft soil by the bean seller. The rule is OoT Randomizer's for a soil Gold Skulltula (LH GS Bean Patch)"
+
+[locations."ZR GS Ladder"]
+rule = "is_child and ((at_night and 'Time Flows') or gold_skulls_ignore_daytime) and can_child_attack"
+was = "is_child and (at_night or gold_skulls_ignore_daytime) and can_child_attack"
+source = "Eurogamer, 17 changes: time does not flow until Link has met Zelda, so night needs the event 'Time Flows' (Main, round 4); data: Enemy_Skulltula_Gold 8695975724114049706 is Enemy_Skulltula_Gold_Nocturnal, at (113,112,-49) by the climbable ivy near the Domain waterfall; Eurogamer and Polygon GS guides: child, night"
+
+[exits."Zora River"."ZR Storms Grotto"]
+rule = "can_play(Song_of_Storms)"
+was = "can_open_storm_grotto"
+source = "Eurogamer, 17 changes (https://www.eurogamer.net/all-new-changes-zelda-ocarina-of-time-switch-2): every grotto entrance is visible and shows whether it needs a bomb or the Song of Storms; the Stone of Agony is now the Echo Gem, which finds Gold Skulltulas (Main, round 4). Data: Land_Kokiri_HidingHoleCover_A_01 5489068764052953067 covers the hole at (-78,99,-17)"
+
+[locations."ZR Deku Scrub Grotto Rear"]
+n64_only = "the remake's Song of Storms grotto (hole at (-78,99,-17), room at y 82) holds a gossip stone, butterflies that turn into a fairy and four pots, and no Enemy_Scrub_Business is placed anywhere in ZoraRiver (03-game-data.md section 5: no ZoraRiver scrub)"
+source = "placement data, ZoraRiver_Child/_Adult_Static and _Dynamic"
+
+[locations."ZR Deku Scrub Grotto Front"]
+n64_only = "the remake's Song of Storms grotto (hole at (-78,99,-17), room at y 82) holds a gossip stone, butterflies that turn into a fairy and four pots, and no Enemy_Scrub_Business is placed anywhere in ZoraRiver (03-game-data.md section 5: no ZoraRiver scrub)"
+source = "placement data, ZoraRiver_Child/_Adult_Static and _Dynamic"
+
+[events."ZR Open Grotto"."Fish"]
+rule = "False"
+was = "has_bottle"
+source = "data: the open grotto's room (hole at (-16,115,15), room at y 75) holds the chest, a gossip stone, grass, a shallow pool and a Cucco, and no ZoraRiver file places a catchable fish (no Animal_Fish actor)"

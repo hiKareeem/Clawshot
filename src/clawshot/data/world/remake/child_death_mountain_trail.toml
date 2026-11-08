@@ -1,0 +1,52 @@
+# Death Mountain Trail, child side, as the remake builds it (round 4, track A). Format: plans/04-world-format.md,
+# "Overrides". What was checked and left as OoT Randomizer has it: E:/OOTRemake/work/r4-logic-child/findings/
+# death_mountain_trail.md.
+#
+# Guides (Switch 2 remake, 2026-11-05/06): Nintendo Life walkthrough hub and Dodongo Cavern page,
+# https://www.nintendolife.com/guides/zelda-ocarina-of-time-walkthrough-switch-2-remake and
+# https://www.nintendolife.com/guides/zelda-ocarina-of-time-dodongo-cavern-walkthrough-switch-2; IGN,
+# https://www.ign.com/wikis/ocarina-of-time-remake/Spiritual_Stone_of_Fire_-_Goron_City_and_the_Lost_Woods_Walkthrough;
+# Eurogamer, https://www.eurogamer.net/zelda-ocarina-of-time-death-mountain-trail,
+# https://www.eurogamer.net/zelda-ocarina-of-time-kakariko-village and
+# https://www.eurogamer.net/all-new-changes-zelda-ocarina-of-time-switch-2; games.gg,
+# https://games.gg/the-legend-of-zelda-ocarina-of-time-2026/guides/ocarina-of-time-remake-great-fairy-locations-rewards-and-costs;
+# Polygon Gold Skulltula guide (local copy E:/OOTRemake/work/r3/gs-guide-polygon.txt).
+# Game data: DeathMountainTrail_Child_Static/_Dynamic (E:/OOTRemake/work/r4-logic-child/actors.py), Banc coordinates
+# in metres, y up; actor packs Pack/Actor/*.pack.zs; event flow Event/EventFlow/Npc_Kaepora_DeathMountainTrail.
+#
+# The boulder in front of Dodongo's Cavern is a scripted actor: only the bomb flower on the ledge above it (Goron's
+# Bracelet) breaks it, so the child's way in, and the soft soil behind it, need the bracelet; Bombs no longer do.
+
+[exits."Death Mountain"."Dodongos Cavern Beginning"]
+rule = "Progressive_Strength_Upgrade or is_adult"
+was = "has_explosives or Progressive_Strength_Upgrade or is_adult"
+source = "Nintendo Life (walkthrough hub, Dodongo Cavern page) and IGN: with the Goron's Bracelet, throw the bomb flower by the fence over the ledge onto the boulder at the cavern; IGN: without the bracelet the child cannot lift it. Data: the boulder Obj_DeathMtTrail_BrokenRock_A_01 9966036182374691433 (-48,109,-20) has no Life/DamageParameters component (Obj_BrokenRock_A_01 and WallCrack have CrackStoneObject), breaks with the scripted DemoBrokenRockBackWithoutCollision, and EventRequestActor Get_StoneOfFire_DodongoCavernOpne links it to Obj_BombFlower_Grass_For_Break_Obj_DeathMtTrail_BrokenRock_A_01 12145309744777105449 (-35,124,-13), whose fruit AI moves to the rock and runs BombFlowerFruitBreakDeathMtTrailBrokenRock. Child's own bombs: question in the findings. Adult part unchanged (no boulder in the adult files)"
+
+[locations."DMT GS Bean Patch"]
+rule = "can_plant_bugs and can_child_attack and (Progressive_Strength_Upgrade or (logic_dmt_soil_gs and can_use(Boomerang)))"
+was = "can_plant_bugs and can_child_attack and (has_explosives or Progressive_Strength_Upgrade or (logic_dmt_soil_gs and can_use(Boomerang)))"
+source = "the soil needs the boulder opened, which needs the Goron's Bracelet (exit Death Mountain -> Dodongos Cavern Beginning): Polygon lists Young Link, Goron Bracelet, Bug; IGN: the soil is just inside the tunnel the bomb flower opens. Data: Enemy_Skulltula_Gold 17425319789138387506 on Obj_SmallFarm_A_01 (-45,109,-20), beside the boulder (-48,109,-20)"
+
+[events."Death Mountain".Fairy]
+rule = "is_child and can_plant_bean and can_play(Song_of_Storms) and has_bottle and Progressive_Strength_Upgrade"
+was = "is_child and can_plant_bean and can_play(Song_of_Storms) and has_bottle and (has_explosives or Progressive_Strength_Upgrade)"
+source = "the same soft soil (Obj_SmallFarm_A_01 18350441421271687772, (-45,109,-20)) behind the Dodongo's Cavern boulder, which only the bracelet's bomb flower opens (see the exit Death Mountain -> Dodongos Cavern Beginning)"
+
+[exits."Death Mountain"."DMT Storms Grotto"]
+rule = "can_play(Song_of_Storms)"
+was = "can_open_storm_grotto"
+source = "Eurogamer, https://www.eurogamer.net/all-new-changes-zelda-ocarina-of-time-switch-2: grotto entrances are visible and the Stone of Agony became the Echo Gem (Gold Skulltula finder), so no Stone of Agony; IGN: in the alcove right of the Goron City entrance a curved-leaf plant and a Fairy Writing say strong weather spins the leaves. Data: Land_Kokiri_HidingHoleCover_A_01 10160504174807262319 (-2,120,-26) over the grotto entry (HidingHole_Entry_01 at (0,121,-28))"
+
+[locations."DMT Storms Grotto Chest"]
+n64_only = "the Song of Storms grotto holds no chest in the remake: Land_HidingHole_Base_I_03 1154915296159103350 (-2,71,-26) contains 5 Enemy_BabyDodongo, 3 Obj_BombFlower_A_03 and 6 placed rupees (y 58), no Obj_TBox; the trail's only chest is DMT Chest (census: 1 chest in DeathMountainTrail against OoT Randomizer's 2, plans/03-game-data.md section 9)"
+source = "placement data DeathMountainTrail_Child_Dynamic/_Static; census src/clawshot/data/locations.toml (DeathMountainTrail: chest 9809508929088891725 only)"
+
+[exits."Death Mountain Summit"."DMT Owl Flight"]
+rule = "is_child and Dins_Fire"
+was = "is_child"
+source = "event flow Npc_Kaepora_DeathMountainTrail, entry Talk: switch on GameData IsGet.Item_DinFire; only with it set does the owl reach the yes/no choice that plays Dm_DeathMtTrail_0030 and changes Banc to KakarikoVillage_Child (start FromMountainTrail); without it he only talks (hints at MountainTrail_FairyRockBreak). Eurogamer Kakariko page: the owl offers the flight after the Great Fairy atop Death Mountain (Din's Fire in the remake, remake.toml)"
+
+[events."DMT Great Fairy Fountain"."Great Fairy Met"]
+rule = "can_play(Zeldas_Lullaby)"
+new = true
+source = "games.gg, https://games.gg/the-legend-of-zelda-ocarina-of-time-2026/guides/ocarina-of-time-remake-great-fairy-locations-rewards-and-costs: the first Great Fairy must be Death Mountain Trail's or Hyrule Castle's, otherwise Zelda's Lullaby does not summon the others; this event marks the Death Mountain Trail one met (the fee, 25 rupees first, is not modelled)"
