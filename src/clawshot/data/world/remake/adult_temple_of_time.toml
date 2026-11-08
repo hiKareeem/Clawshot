@@ -1,0 +1,4 @@
+[locations."ToT Light Arrows Cutscene"]
+rule = "is_adult and Forest_Medallion and Fire_Medallion and Water_Medallion and Shadow_Medallion and Spirit_Medallion"
+was = "is_adult and can_trigger_lacs"
+source = "https://www.nintendolife.com/guides/zelda-ocarina-of-time-bow-arrow-fire-ice-light-arrows-switch-2 (Light Arrows): finish all five adult temples, then return to Temple of Time. N64 vanilla helper only tested Shadow and Spirit; it is not proof of the remake trigger. This uses the documented complete-sage route; reduced-medallion cutscene alternatives remain an in-game question."
