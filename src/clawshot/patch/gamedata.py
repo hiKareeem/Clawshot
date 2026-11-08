@@ -189,6 +189,16 @@ def apply_game_data(tree: dict, changes: list[GameDataChange]) -> None:
             entry["DefaultValue"] = type(old)(change.new)
 
 
+def patch_initial_values(data: bytes, chosen: list[FastStartSetting]) -> bytes:
+    """The initial-value edit as a composable decompressed transform (including seeds with gift flags)."""
+    document = byml.load(data)
+    apply_game_data(document.root, plan_game_data(document.root, chosen))
+    result = byml.dump(document)
+    if difference := byml.difference(document.root, byml.read(result)):
+        raise FastStartError(f"{GAME_DATA_LIST}: initial values failed read-back: {difference}")
+    return result
+
+
 # --- event settings -------------------------------------------------------------------------------------------------
 
 
