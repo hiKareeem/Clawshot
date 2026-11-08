@@ -191,6 +191,39 @@ def patch_goods(data: bytes, changes: tuple[tuple[Slot, Sale], ...]) -> bytes:
     return result
 
 
+def member_growth(before: bytes, after: bytes) -> dict[str, int]:
+    """Rounded raw growth of changed ShopParams whose parsed allocation cannot grow.
+
+    Seller edits only replace actors/prices or remove conditional discounts. Keep
+    the original per-member parsed overhead; this is not a generic bgyml formula.
+    """
+    original, changed = sarc.read(before), sarc.read(after)
+    growth = {}
+    editable = {"Actor", "PriceOffset", "ConditionalPriceOffsetList"}
+    for name, data in changed.items():
+        if not name.startswith("Component/ShopParam/") or original.get(name) == data:
+            continue
+        if name not in original:
+            raise PatchError(f"{name}: a new ShopParam has no original allocation")
+        old, new = byml.read(original[name]), byml.read(data)
+        old_goods, new_goods = old.get("GoodsList", []), new.get("GoodsList", [])
+        if len(old_goods) != len(new_goods) or not byml.same(
+            {k: v for k, v in old.items() if k != "GoodsList"},
+            {k: v for k, v in new.items() if k != "GoodsList"},
+        ):
+            raise PatchError(f"{name}: ShopParam structure needs a new allocation formula")
+        for left, right in zip(old_goods, new_goods, strict=True):
+            if not byml.same(
+                {k: v for k, v in left.items() if k not in editable},
+                {k: v for k, v in right.items() if k not in editable},
+            ) or len(right.get("ConditionalPriceOffsetList", [])) > len(left.get("ConditionalPriceOffsetList", [])):
+                raise PatchError(f"{name}: ShopParam structure needs a new allocation formula")
+        delta = ((len(data) + 31) // 32 - (len(original[name]) + 31) // 32) * 32
+        if delta > 0:
+            growth[name] = delta
+    return growth
+
+
 def changes(
     romfs: str | Path,
     sales: Mapping[str, str],

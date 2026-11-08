@@ -1568,3 +1568,36 @@ Chest+Scrub seed 7: 168 checks, 28 spheres, finished gated-return search won, 59
 branch matches its placed actor. Second CLI/hash-seed process: all 60 canonical files byte-identical.
 Data/search proof only; neither scrub nor token gameplay is claimed certified. Full gate results are in
 the round report.
+
+## 24. Round 6: Castle Town shop crash and refill/container audit (cs6e)
+
+Build `e0f3ccfa`; read-only dump. Full field audit, scratch paths, experiments and commands:
+`plans/rounds/r6-shopfix.md`. All twelve seller packs in the original `seed-shop-7` change only one embedded
+ShopParam each, only `GoodsList.Actor` and `PriceOffset`. ShopRef/member names and every other pack member
+remain intact. All sale actors have native packs. Removed quantity-board Hashes have no remaining actor links,
+AI/group memberships or empty groups; the round-5 group cleanup is not the observed missing reference.
+
+The writer previously raised only outer pack allocations, not the modified members' own resource entries.
+Market Potion's embedded `Npc_Hylia_020_Shop` component grows **1088 -> 1156** bytes, rounded **1088 -> 1184**,
+but its entry stayed **7984**. The supplied GeneralFormatAsync crash names `Component/ShopPa` in x6/x7 and has
+`[x19+0x080] = 000004a000000484`: **0x484 = 1156**, **0x4a0 = 1184**, identifying this component's sizes.
+**[INFERENCE]** Its stale allocation leaves the parser/allocation destination null; runtime confirmation still
+requires Kareem's overlay log and successful town/shop entry.
+
+All nine distinct original seller ShopParam resources were measured: rounded raw size + **6896** parsed overhead,
+with **80** more for Market Bazaar's one conditional-price element. `patch.shops.member_growth` preserves the
+original overhead for sale/price edits and discount removal; changes that grow parsed structure are refused.
+The common writer sizes final composed pack bytes, uses the maximum (not the sum) across copies sharing a member
+path, never lowers entries, and emits the table even for nested-only growth. No generic `.bgyml` formula is added.
+
+`E:/OOTRemake/work/r5-seed/seed-shop-7b/` is a **size-fix-only continuation**: its `spoiler.json` is byte-for-byte
+equal to 7's, all 228 placements and 26 search spheres unchanged. Every overlay resource except the size table
+is byte-identical; exactly three embedded entries rise: Bazaar **8352 -> 8416**, Potion **7984 -> 8080**, Zora
+**7856 -> 7952**. The original seed and user were not modified. Its unrun `Play shop seed 7b.bat` uses the game
+binary under `bin`, suppresses update checks and creates a separate user copy when Kareem runs it after quitting.
+New-seed refill restrictions below do not alter this continuation.
+
+Verification: real Potion writer regression fails before (**7984 != 8080**) and passes after. Nine focused
+synthetic checks pass; the actual 7b generator/writer/search smoke parses all 77 resources and proves the exact
+spoiler/resource equality above. Controlled short checks are under `E:/OOTRemake/work/r6-shopfix/`; try
+`Test - 07-market-allocations-fixed.bat` from the copied child ranch checkpoint first. No game/launcher was run.

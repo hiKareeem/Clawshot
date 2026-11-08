@@ -131,3 +131,48 @@ def test_removing_quantity_boards_leaves_no_banc_group_references(romfs):
         assert not [
             link for actor in after["Actors"] for link in actor.get("Links", []) if int(link["Dst"]) in removed
         ], path
+
+
+def test_shop_writer_sizes_embedded_components_not_only_the_seller_pack(romfs, tmp_path):
+    from clawshot.patch.plan import Plan
+    from clawshot.patch.write import write
+
+    targets = (
+        "Shop_BombBundle_01",
+        "Shop_MagicJar_Small",
+        "Shop_DekuStick",
+        "Shop_Weapon_Shield_Deku",
+        "Shop_Bottle_Fish",
+        "Shop_Bottle_Bug",
+        "Shop_Heart",
+        "Shop_ArrowBundle_01",
+    )
+    slots = tuple(slot for slot in shops.load() if slot.owner == "Npc_Hylia_020_Shop_Child")
+    changes = shops.changes(romfs, {slot.location: targets[slot.index] for slot in slots})
+    dictionaries = zsdic.Dictionaries.from_romfs(romfs)
+    original = rstb.read(dictionaries.decompress(rstb.TABLE_PATH, (romfs / rstb.TABLE_PATH).read_bytes()))
+    out = tmp_path / "potion"
+    write(Plan([], [], []), romfs, out, extra_changes=(changes,))
+    table = rstb.read(dictionaries.decompress(rstb.TABLE_PATH, (out / "romfs" / rstb.TABLE_PATH).read_bytes()))
+    slot = slots[0]
+    before_pack = sarc.read(dictionaries.decompress(slot.pack, (romfs / slot.pack).read_bytes()))
+    after_pack = sarc.read(dictionaries.decompress(slot.pack, (out / "romfs" / slot.pack).read_bytes()))
+    before, after = before_pack[slot.member], after_pack[slot.member]
+    growth = ((len(after) + 31) // 32 - (len(before) + 31) // 32) * 32
+    assert growth > 0, (len(before), len(after))
+    expected = original.get(slot.member) + growth
+    assert table.get(slot.member) == expected, {
+        "member": slot.member,
+        "old_bytes": len(before),
+        "new_bytes": len(after),
+        "old_entry": original.get(slot.member),
+        "written_entry": table.get(slot.member),
+        "required": expected,
+    }
+    original.set(slot.member, expected)
+    for info in (out / "romfs").rglob("*.zs"):
+        path = info.relative_to(out / "romfs").as_posix()
+        if path != rstb.TABLE_PATH:
+            size = len(dictionaries.decompress(path, info.read_bytes()))
+            original.set(path, max(original.get(path), rstb.required_size(path, size)))
+    assert table == original
