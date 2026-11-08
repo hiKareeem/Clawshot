@@ -72,10 +72,18 @@ def make_seed(
     table.check(world.items)
     chests = [name for name in shuffled_locations(world, settings) if world.locations[name].type == "Chest"]
     shop_locations = tuple(name for name in shuffled_locations(world, settings) if world.locations[name].type == "Shop")
-    if shop_locations:
-        extra_steps = (*extra_steps, shops.patch_step(romfs, shop_locations))
-    if len(chests) != len(shuffled_locations(world, settings)) and not extra_steps:
+    if len(chests) + len(shop_locations) != len(shuffled_locations(world, settings)) and not extra_steps:
         raise PatchError("non-chest shuffle needs a kind-specific extra patch step")
+    if shop_locations or settings.cheap_deku_shield:
+        extra_steps = (
+            *extra_steps,
+            shops.patch_step(
+                romfs,
+                shop_locations,
+                shop_prices=settings.shop_prices,
+                cheap_deku_shield=settings.cheap_deku_shield,
+            ),
+        )
     links = link(world, chests, census_definitions.load(), scan(romfs))
     out = generate(spec, seed, settings, vanilla=remake_vanilla(world, links, table))
     changes = tuple(step(out.placements) for step in extra_steps)
