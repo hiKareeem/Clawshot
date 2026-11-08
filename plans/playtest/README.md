@@ -56,5 +56,7 @@ for child cards. Kareem is already progressing to those milestones; no agent nee
 Nine checks already asked on 2026-11-08 are marked pending in [questions.md](questions.md) and omitted from every route.
 
 [questions.md](questions.md): technical targets, outcome implications, sources and deduplication.
+[excluded-chests.md](excluded-chests.md): all 20 Track C excluded chests, exact Hash/age and `extra_*.toml` unlock target.
+These are inserted into their area cards; the old Lost Woods/Valley duplicates are aliases, not repeated errands.
 [answers.md](answers.md): Claude's one-line-per-ID ledger (filled only after actual observation).
 [prepared-mods.md](prepared-mods.md): isolated overlay/launcher instructions and prerequisite limits.

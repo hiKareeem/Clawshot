@@ -28,6 +28,13 @@ No in-game result is claimed by this track.
 - **JJ03 — asked 2026-11-08, answer pending:** In the entrance mouth, try Bombs then Bombchus on the ceiling tonsil; do not use Slingshot. Does either open the door?
 - **FA02 — asked 2026-11-08, answer pending:** At the summit fountain with fewer than 25 rupees, ask for the gift, leave and play Lullaby again. Is it offered again for 25?
 
+## Track C excluded-chest followup
+
+[excluded-chests.md](excluded-chests.md) is part of this register: XC01–XC20 give all 20 exact Hashes, ages,
+route/appearance questions and `extra_*.toml` unlock entries from `r5/seeds`. Their area-card rows reuse existing
+visits. LW05 is an alias of XC19 and GE01 of XC04; do not ask either twice. LLR02 now covers only the tower token.
+Current totals: 197 ledger IDs = 186 routed checks, 9 already-asked pending checks, 2 aliases. None is an observed pass.
+
 ## Active checks
 
 ### DT01 — Deku Tree
@@ -102,13 +109,13 @@ No in-game result is claimed by this track.
 - Answer changes: Confirm or remove this source.
 - Source: `plans/rounds/r4-logic-child:225-238`.
 
-### LW05 — Lost Woods
+### LW05 — Alias: use XC19
 
-- Age/progress: child; After Zelda; no Bomb Bag needed for initial checks. Session 2.
-- Do/watch: Above the bridge scrub, find the purple chest. Describe the climb from the scrub, noting every item used.
-- Target: `remake/child_lost_woods.toml` — fact: chest 17479747339356189279 access.
-- Answer changes: Supplies the remake-only chest rule and stable census identity for Track C.
-- Source: `plans/rounds/r4-logic-child:225-238`.
+- Status: consolidated into XC19 in [excluded-chests.md](excluded-chests.md); not independently scheduled.
+- Age/progress: child after return; adult comparison only if required.
+- Do/watch and answer: record the XC19 climb/appearance observation once; copy its evidence here if needed.
+- Target: `r5/seeds:src/clawshot/data/world/remake/extra_lost_wood.toml` — `[locations."Lost Wood Chest (TBox_Rupee_Purple)"]`, Hash 17479747339356189279.
+- Source: `r4-logic-child:225-238` and Track C excluded checks.
 
 ### SFM01 — Sacred Forest Meadow
 
@@ -184,10 +191,10 @@ No in-game result is claimed by this track.
 
 ### LLR02 — Lon Lon Ranch
 
-- Age/progress: child; Current ranch backup; no explosives. Session 2.
-- Do/watch: In the ruined tower, find the high chest above the boxes. Note the exact climb and whether a tool is needed. Check the tower-vine token at night later with Boomerang.
-- Target: `remake/child_lon_lon_ranch.toml` — fact: tower chest 17445672702269453589; token 2730878115209290675.
-- Answer changes: Defines new chest access and checks the proposed night/ranged token route.
+- Age/progress: child after return; tower at night with Boomerang. Session 2.
+- Do/watch: Check tower-vine token's night/ranged route. High-chest climb is XC14; reuse that visit, not a second chest question.
+- Target: `remake/child_lon_lon_ranch.toml` — fact: token 2730878115209290675; chest conditions are in XC14.
+- Answer changes: verifies the new tower token's time/range route; XC14 separately supplies chest access.
 - Source: `plans/rounds/r4-logic-child:412-425`.
 
 ### MK01 — Market
@@ -472,11 +479,11 @@ No in-game result is claimed by this track.
 
 ### W03 — Bottom of the Well
 
-- Age/progress: child; Storms drain; Lullaby; Boomerang; Lens for control, but do not use it in W05. Session 6.
-- Do/watch: Inspect Like Like room for a chest; also find the ladder chest by rooms 6/7. Record vanilla item and access to each.
-- Target: `remake/child_bottom_of_the_well.toml` — translated bottom_of_the_well.toml locations Bottom of the Well Like Like Chest; fact Hash 12988877782812797760.
-- Answer changes: Exclude absent Like Like chest or pair a real one with correct rule.
-- Source: `plans/rounds/r4-logic-child:1276-1290`.
+- Age/progress: child after Storms drains Well; preserve state before internal Lullaby water change. Session 6.
+- Do/watch: Is east-corridor ladder chest Hash 12988877782812797760 submerged/collectible before Lullaby? Inspect old west pit and Like Like room for real chests; record actual reward/location.
+- Target: `r5/seeds:src/clawshot/data/world/remake/extra_bottom_of_the_well.toml` and translated `bottom_of_the_well.toml` — `Bottom of the Well Underwater Left Chest`; old west-pit/Like Like exclusions.
+- Answer changes: keep conservative Lullaby until water/route verified; confirm exclusions from an unclaimed control, not an empty previously collected room.
+- Source: `plans/rounds/r4-logic-child:1276-1290`; `r5/seeds:plans/rounds/r5-seeds.md`, Well clarification.
 
 ### W04 — Bottom of the Well
 
@@ -806,13 +813,13 @@ No in-game result is claimed by this track.
 - Answer changes: Add only actual bypassed requirements, not general Hover substitution.
 - Source: `plans/rounds/r4-logic-adult:95-100`.
 
-### GE01 — Gerudo Valley / Fortress
+### GE01 — Alias: use XC04
 
-- Age/progress: adult; Epona or Longshot bridge; membership later; no capture on main save for testing. Session 10.
-- Do/watch: At Valley underwater hole where the old silver rock stood, inspect the cover. Try normal dive/Boots/Scale before songs or explosives; record the actual entrance and chest reached.
-- Target: `remake/adult_gerudo_valley.toml` — gerudo_valley.toml underwater grotto exit; fact new chest identities.
-- Answer changes: Replaces obsolete rock prerequisite only after mapping actual entrance.
-- Source: `plans/rounds/r4-logic-adult:364-366; 509-515; r2-census:325-328`.
+- Status: consolidated into XC04 in [excluded-chests.md](excluded-chests.md); not independently scheduled.
+- Age/progress: adult first; child comparison after return travel.
+- Do/watch and answer: record XC04 underwater opener/path/Seed-chest collection once.
+- Target: `r5/seeds:src/clawshot/data/world/remake/extra_gerudo_valley.toml` — `[locations."Gerudo Valley Chest (Item_ScrubBusinessSeed)"]`, Hash 6463521162691873710.
+- Source: `r4-logic-adult:509-515` and Track C excluded checks.
 
 ### GE02 — Gerudo Valley / Fortress
 
@@ -1257,17 +1264,17 @@ No in-game result is claimed by this track.
 ### GROT01 — Remaining grotto identities
 
 - Age/progress: adult; Hammer access for Crater/Goron grotto. Session 7.
-- Do/watch: In Goron City and Crater hammer grottos inspect entire rooms, list chest positions/vanilla rewards and whether any scrub remains.
-- Target: `fact` — fact: GC/DMC absent scrub checks and remake-only chests.
-- Answer changes: Confirms exclusions and supplies distinct new chest rules; do not rename chest as a scrub.
+- Do/watch: In City/Crater grottos confirm scrub presence/absence and Crater chest identity. City's separate green/purple sign-puzzle observations are XC07/08; reuse one visit.
+- Target: `fact` — GC/DMC scrub exclusions and Crater chest identity; City's exact chest entries are in XC07/08.
+- Answer changes: confirms real scrub/resource sources; new City chest gates come only from their verified sign triggers.
 - Source: `plans/rounds/r2-census:329-330; r3-world:184-185; r4-logic-child:835-837,903-905`.
 
 ### GROT02 — Lake grotto identity
 
 - Age/progress: child; After child return; island grave. Session 5.
-- Do/watch: Push island grave and inspect Lake grotto. Is there only red-rupee chest and no Business Scrub? Record entrance method and item.
-- Target: `fact` — fact: LH grotto chest 6900843020594897860; absent scrub trio.
-- Answer changes: Confirms relocation/exclusion; ranch trio is checked separately by LLR01.
+- Do/watch: Push Lake island grave, record entrance and whether any Business Scrub exists. Chest appearance is not presumed free; timed-candle spawn is XC15 on this same visit.
+- Target: `fact` — Lake absent scrub trio and grotto entrance; Hash 6900843020594897860 spawn rule is XC15.
+- Answer changes: confirms scrub exclusion; XC15 separately establishes timed fire/magic/age requirements.
 - Source: `plans/rounds/r2-census:329-330; r3-world:184-185; r4-logic-child:1068-1099`.
 
 ### RES01 — Unverified resource sources
@@ -1368,11 +1375,11 @@ No in-game result is claimed by this track.
 
 ### FT08 — Forest default chest
 
-- Age/progress: adult; Forest basement; vanilla chest content not already shuffled. Session 1.
-- Do/watch: On vanilla copy open the plain basement chest with no specified drop. Does it give a green rupee? Record which physical chest.
-- Target: `fact` — fact: ForestTemple chest Hash 15117164073907033527 default drop.
-- Answer changes: Confirms default-green inference; a shuffled chest says nothing about actor default.
-- Source: `plans/rounds/r1-research:63-64; 03-game-data section 2`.
+- Age/progress: adult; falling-ceiling room, vanilla chest not already collected. Session 1.
+- Do/watch: Open Forest Temple Falling Ceiling Room Chest, Hash 15117164073907033527. Does it give green rupee (actor default) or Bombs as one guide says? This is not the basement chest.
+- Target: `forest_temple.toml` — `Forest Temple Falling Ceiling Room Chest`; branch census maps this exact Hash.
+- Answer changes: confirms default drop vs guide discrepancy; a shuffled chest cannot answer vanilla contents.
+- Source: `r1-research:63-64`; `03-game-data` section 2; `r5/seeds:plans/rounds/r5-seeds.md`, falling-ceiling clarification.
 
 ## Pending-answer rule targets
 

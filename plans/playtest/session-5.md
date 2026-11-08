@@ -12,7 +12,8 @@ IDs are for Claude to enter in [answers.md](answers.md); no need to read the tec
 - **JJ01** — Preserved pre-tentacle copy: can upper basement token be reached/collected before tentacles die?
 - **JJ05** — Map room before Stingers die: press water switch. Does water rise and chest become reachable?
 - **JJ04** — Before Big Octo: are upper switch-room's two crates reachable?
-- **GROT02** — Lake island grave/grotto: confirm red-rupee chest, opener and whether any scrub exists.
+- **GROT02** — Lake island grave/grotto: confirm entrance and whether any scrub exists. Chest's timed-candle spawn is XC15 below, not a free pickup.
+- **XC15** — Before lighting anything, is red chest present? Which timed-candle sequence/fire method spawns it? Record mandatory item/magic, age and repeat payout.
 - **LH01** — Southwest lake tunnel: inspect token by day as child. Adult access comparison can be on later return.
 - **MK02** — Only with reviewed no-Bomb-Bag/no-Bombchu post-Dodongo copy: ask to bowl and note loans/prizes. Unequipping is not this test.
 - **RES05** — Optional: note missing/different River/Domain/Jabu/Lake sources along route.

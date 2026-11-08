@@ -6,6 +6,7 @@ Use only an unmodified disposable user copy unless a step names a reviewed varia
 IDs are for Claude to enter in [answers.md](answers.md); no need to read the technical register at the game.
 
 - **EN01** — On preserved early-sage copies, visit Kakariko after each sage. Exact clear/medallion set for Nocturne?
+- **XC16** — Later alternative Kakariko village: can high windmill chest use same route, and is it already open after normal-state collection? Record actual story transition, not assumed Morpha.
 - **EN02** — Only if reviewed seed gets Shadow/Spirit early: visit Temple before remaining sages. Does Light Arrows scene trigger?
 - **GA05** — If pre-bridge copy with Gold Gauntlets can reach outside castle: what barrier blocks fairy path? Late visit cannot settle it.
 

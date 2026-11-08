@@ -26,10 +26,11 @@ IDs are for Claude to enter in [answers.md](answers.md); no need to read the tec
 ## Well — separate sitting
 
 - **W02** — Well B1: without bombs, try north-west fake-wall/front-centre chests. Note actual blockers/items.
-- **W03** — Like Like room and ladder by rooms 6/7: which has a chest, and what does it hold?
+- **W03** — Before Lullaby, is east-corridor ladder chest submerged/collectible? Then inspect old west pit and Like Like room for chests; record actual items.
 - **W01** — Coffin hall: pull far-west slab without fire. Can key/hearts be taken?
 - **W04** — West locked room: Boomerang token without burning coffin. Does fire block it?
 - **W05** — Lens OFF: can wall shading reliably guide you to east key, Compass and central rooms? Note falls/damage.
+- **XC01** — Past Lullaby crawlspace: Lens-mark room-11 floor hole. Can you walk round/jump it, open Seed chest and safely return? Record footing/tools.
 - **RES06** — Optional: note missing/different well/grotto resources; one empty random drop proves nothing.
 
 **Stop:** Stop after each area if desired; keep Well for its own sitting. No need to revisit collected sources.

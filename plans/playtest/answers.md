@@ -7,6 +7,9 @@ Then apply the register's rule/fact consequence in the owning track, recording K
 
 Nine rows are **asked 2026-11-08, answer pending**. They are deliberately absent from every session; do not ask again.
 A dash in Session means already asked, not forgotten. Mod checks require overlay log AND observed result.
+Track C followup adds XC01–XC20 in [excluded-chests.md](excluded-chests.md). 197 ID rows total; LW05→XC19 and
+GE01→XC04 are aliases with no separate errand. There are 186 routed checks and 9 already-asked pending checks.
+
 
 | ID | Session | Check | Status | Observed answer / evidence |
 |---|---|---|---|---|
@@ -32,14 +35,14 @@ A dash in Session means already asked, not forgotten. Mod checks require overlay
 | FT03 | [ 1 ](session-1.md) | At the east garden token ledge, try the upper falling-room route without summoning… | not yet played | — |
 | FT04 | [ 1 ](session-1.md) | At each iced eye (upper hall and rotating basement), try Din Fire without firing an arrow | not yet played | — |
 | FT05 | [ 1 ](session-1.md) | At the basement token, try walking/jumping to take it before grappling. | not yet played | — |
-| FT08 | [ 1 ](session-1.md) | On vanilla copy open the plain basement chest with no specified drop | not yet played | — |
+| FT08 | [1](session-1.md) | Forest falling-ceiling chest Hash 15117164073907033527: green rupee or Bombs? | not yet played | — |
 | FT06 | [ 1 ](session-1.md) | In Phantom Ganon phase one, hit the real rider with ordinary Hookshot instead of Bow | not yet played | — |
 | RES01 | [ 1 ](session-1.md) | Along first-adult forest/Kakariko/Market route, note claimed pots, crates, hearts and… | not yet played | — |
 | LLR01 | [ 2 ](session-2.md) | Step on the stone circle by the south fence without Bombs | not yet played | — |
-| LLR02 | [ 2 ](session-2.md) | In the ruined tower, find the high chest above the boxes | not yet played | — |
+| LLR02 | [2](session-2.md) | Tower-vine token night/range; high chest is XC14 | not yet played | — |
 | HF05 | [ 2 ](session-2.md) | By day, roll into the lone tree between the forest exit and ranch | not yet played | — |
 | LW03 | [ 2 ](session-2.md) | At the bridge Business Scrub, use sword, Slingshot and nuts separately, never a… | not yet played | — |
-| LW05 | [ 2 ](session-2.md) | Above the bridge scrub, find the purple chest | not yet played | — |
+| LW05 | — | Lost Woods elevated chest; same question as XC19 | alias → XC19; answer once | — |
 | LW02 | [ 2 ](session-2.md) | Drop through the Deku Theater hole | not yet played | — |
 | LW04 | [ 2 ](session-2.md) | Cut above-ground bushes in the woods; bottle any bug | not yet played | — |
 | GIFT02 | [ 2 ](session-2.md) | At Kokiri shop, speak before and after ordinary shield purchase without accepting a… | not yet played | — |
@@ -93,13 +96,13 @@ A dash in Session means already asked, not forgotten. Mod checks require overlay
 | ZR03 | [ 6 ](session-6.md) | Open the storms hole near the bean seller; inspect its whole room | not yet played | — |
 | GIFT03 | [ 6 ](session-6.md) | At River frogs, try Storms for first reward, then the bug-eating game after teaching… | not yet played | — |
 | W02 | [ 6 ](session-6.md) | Without explosives, inspect/open the north-west fake-wall and front-centre B1 chests | not yet played | — |
-| W03 | [ 6 ](session-6.md) | Inspect Like Like room for a chest; also find the ladder chest by rooms 6/7 | not yet played | — |
+| W03 | [6](session-6.md) | East ladder chest before Lullaby: submerged? Old west pit/Like Like room empty? | not yet played | — |
 | W01 | [ 6 ](session-6.md) | In coffin hall, pull the far-west slab without using sticks/Din Fire | not yet played | — |
 | W04 | [ 6 ](session-6.md) | Behind the west locked door, try collecting its token with Boomerang and no lit… | not yet played | — |
 | W05 | [ 6 ](session-6.md) | With Lens switched off throughout, find east key niche, Compass room and central rooms… | not yet played | — |
 | RES06 | [ 6 ](session-6.md) | On this route, note any old pot/crate/heart/wonderitem source that is absent or has a… | not yet played | — |
 | AO07 | [ 7 ](session-7.md) | In Goron City try stopping the rolling Goron using Bow alone before bombs/flowers; try… | not yet played | — |
-| GROT01 | [ 7 ](session-7.md) | In Goron City and Crater hammer grottos inspect entire rooms, list chest… | not yet played | — |
+| GROT01 | [7](session-7.md) | City/Crater scrub absence and Crater chest; City sign chests are XC07/08 | not yet played | — |
 | FI04 | [ 7 ](session-7.md) | In the crater from summit, test the short adult wall-heart visit without Tunic | not yet played | — |
 | FI05 | [ 7 ](session-7.md) | With adult Hover/Longshot, try summit/crater ledges and volcano Heart Piece without… | not yet played | — |
 | FI01 | [ 7 ](session-7.md) | Count acquired and spent keys at lava bridge (1), east/elevator pair (3 total), narrow… | not yet played | — |
@@ -128,7 +131,7 @@ A dash in Session means already asked, not forgotten. Mod checks require overlay
 | HF06 | [ 10 ](session-10.md) | Read the Fairy Note by the Gerudo-side heart-piece scrub as adult | not yet played | — |
 | PAIR01 | [ 10 ](session-10.md) | Buy Kokiri/Lost Woods stick/nut upgrade as child, then visit same scrub as adult;… | not yet played | — |
 | GE08 | [ 10 ](session-10.md) | Open Valley Lens chest before age change, then compare opposite-age chest; compare… | not yet played | — |
-| GE01 | [ 10 ](session-10.md) | At Valley underwater hole where the old silver rock stood, inspect the cover | not yet played | — |
+| GE01 | — | Valley underwater Seed chest; same question as XC04 | alias → XC04; answer once | — |
 | GE02 | [ 10 ](session-10.md) | Map Valley/fortress grottos: describe each chest position, vanilla content and opener;… | not yet played | — |
 | GE07 | [ 10 ](session-10.md) | Inspect Valley cow crate/waterfall wonderitems and fortress signs/crates; break each… | not yet played | — |
 | GE04 | [ 10 ](session-10.md) | On disposable copy, let a guard capture you once | not yet played | — |
@@ -187,3 +190,23 @@ A dash in Session means already asked, not forgotten. Mod checks require overlay
 | DT01 | [ 17 ](session-17.md) | Enter the Slingshot room without a Slingshot; after the platform falls, try returning | not yet played | — |
 | DT02 | [ 17 ](session-17.md) | At the lobby vines above the map chest, try Boomerang as child; on a later adult visit… | not yet played | — |
 | LW01 | [ 17 ](session-17.md) | After Gohma but before Zelda, follow the correct maze path to the meadow | not yet played | — |
+| XC01 | [6](session-6.md) | Well room-11 Seed chest: safe route round fake floor; Hash 6064359710907908886 | not yet played | — |
+| XC02 | [10](session-10.md) | Fortress underground red chest entrance/route; Hash 16619432200060282313 | not yet played | — |
+| XC03 | [10](session-10.md) | Valley adult invisible red chest entrance/appearance; Hash 18413589940135955604 | not yet played | — |
+| XC04 | [10](session-10.md) | Valley underwater Seed chest replacement opener; Hash 6463521162691873710 | not yet played | — |
+| XC05 | [10](session-10.md) | Valley green grotto chest independent appearance; Hash 17750686910716887133 | not yet played | — |
+| XC06 | [10](session-10.md) | Valley child invisible red copy, age/repeat state; Hash 6205043616869463865 | not yet played | — |
+| XC07 | [7](session-7.md) | City sign-puzzle green chest trigger/independence; Hash 9159710900681116662 | not yet played | — |
+| XC08 | [7](session-7.md) | City sign-puzzle purple chest trigger/order; Hash 10944569637726152230 | not yet played | — |
+| XC09 | [1](session-1.md) | Dampe red repeat chest time/previous rewards; Hash 234006393181394602 | not yet played | — |
+| XC10 | [1](session-1.md) | Dampe blue repeat chest time/previous rewards; Hash 4322670163630771947 | not yet played | — |
+| XC11 | [10](session-10.md) | Southern adult Field red chest spawn/route; Hash 1163740567397714729 | not yet played | — |
+| XC12 | [10](session-10.md) | Northern adult Field red chest spawn/route; Hash 9891111455604007674 | not yet played | — |
+| XC13 | [8](session-8.md) | Adult Lake red chest spawn/low-water route; Hash 17023457248274633121 | not yet played | — |
+| XC14 | [2](session-2.md) | Ranch tower upper chest climb/appearance; Hash 17445672702269453589 | not yet played | — |
+| XC15 | [5](session-5.md) | Lake grotto timed candles/red chest spawn; Hash 6900843020594897860 | not yet played | — |
+| XC16 | [15](session-15.md) | Alternative adult windmill chest route/state-copy; Hash 13080955777249750889 | not yet played | — |
+| XC17 | [1](session-1.md) | Normal adult windmill high chest route; Hash 11929552275106311978 | not yet played | — |
+| XC18 | [2](session-2.md) | Kokiri elevated purple chest climb/spawn; Hash 4349272251343787229 | not yet played | — |
+| XC19 | [2](session-2.md) | Lost Woods elevated purple chest climb/spawn; Hash 17479747339356189279 | not yet played | — |
+| XC20 | [8](session-8.md) | Fountain upper ruins purple chest route/spawn; Hash 15055117029957340138 | not yet played | — |

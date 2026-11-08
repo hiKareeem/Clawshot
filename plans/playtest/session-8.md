@@ -8,6 +8,7 @@ IDs are for Claude to enter in [answers.md](answers.md); no need to read the tec
 - **ZA08** — River adult: no-bomb boulder passage, short-vs-long grapple on high tokens, normal jump to Domain heart; note each separately.
 - **ZA02** — Frozen Domain by day: token present? Try ranged kill then hand collection without Hookshot.
 - **ZA01** — Try shop/direct lake shortcut after thawing King but BEFORE Morpha, then immediately AFTER Morpha. Record both states.
+- **XC20** — Fountain upper-ruins purple chest: exact climb/jump/ice/grapple route, required tools/story trigger and safe return; inspect before solving nearby puzzles.
 
 ## Ice Cavern
 
@@ -19,6 +20,7 @@ IDs are for Claude to enter in [answers.md](answers.md); no need to read the tec
 ## Lake before Morpha
 
 - **ZA07** — Lake pond: note age, fish length/lure, first/repeat prizes. Check lab child Golden-Scale prize on later child visit only.
+- **XC13** — West-shore red chest near lakeside Poe: present at low water before notes/ghost actions? Exact spawn/collection route; compare full lake only if blocked.
 - **ZA06** — Lab crate/token: Boots alone, then Hookshot. Note no-Tunic air/health and escape.
 - **ZA05** — Before Water entry, try Scale/Longshot without Boots if owned. Can full entry and return work?
 - **ZA04** — Low-water dawn: shoot sun, then try Pierre collection. Do Fire Arrows both spawn AND become collectible before Morpha?
