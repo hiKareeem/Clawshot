@@ -37,7 +37,14 @@ def world(goal="Hookshot and Bow"):
         "Lake Chest": chest("Rupees (5)"),
         **{name: {"type": "HintStone"} for name in STONES},
     }
-    items = {"Hookshot": {}, "Bow": {}, "Mask of Truth": {}, "Rupees (5)": {"class": "normal"}, "Buy Bombchu (8)": {}}
+    items = {
+        "Hookshot": {},
+        "Bow": {},
+        "Mask of Truth": {},
+        "Rupees (5)": {"class": "normal"},
+        "Buy Bombchu (8)": {},
+        "Buy Fish": {"type": "Shop", "class": "normal"},
+    }
     return build_world({"start": "Start", "goal": goal, "regions": regions, "locations": locations, "items": items})
 
 
@@ -110,6 +117,16 @@ def test_a_shop_refill_is_not_a_major_item():
             kinds.add((hint.kind, hint.area))
             assert not (hint.kind == "item" and hint.item == "Buy Bombchu (8)"), number
     assert ("barren", "LAKE_HYLIA") in kinds  # the refill does not keep the lake off the barren list
+
+
+@pytest.mark.parametrize("refill", ["Buy Fish", "Buy Bombchu (8)"])  # type Shop; a remake refill typed Item
+def test_a_random_hint_names_junk_but_never_a_shop_refill(refill):
+    # OoT Randomizer's get_random_location_hint (Hints.py:1088-1097 at 526b4c8d) skips Drop, Event and Shop items
+    # and nothing else, so a Red Rupee may be named.
+    placements = seed(0).placements | {"Hut Chest": refill, "Lake Chest": "Rupees (5)"}
+    named = {hint.item for n in range(40) for hint in hints.choose(seed(n, placements)) if hint.kind == "random"}
+    assert refill not in named
+    assert "Rupees (5)" in named
 
 
 def test_useless_gives_only_junk_and_unknown_choices_are_refused():

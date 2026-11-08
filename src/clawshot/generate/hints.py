@@ -23,6 +23,10 @@ The kinds, their weights and Clawshot's wording are data (``data/hints.toml``); 
 - **Areas** are a region's ``hint`` or ``dungeon``; a region with neither takes the area of the nearest region with
   one that has an exit into it, never through ``Root`` (OoT Randomizer's ``HintArea.at``; exits closed by a
   ``False`` rule are not followed).
+- **Location hints and junk items.** Random hints skip items of type ``Drop``, ``Event`` and ``Shop`` (a shop refill,
+  ``Buy ...``) as OoT Randomizer's ``get_random_location_hint`` does (``Hints.py:1088-1097``); otherwise they, like
+  sometimes hints (``get_specific_hint``, ``Hints.py:1127-1172``, no filter on the item), may name a junk item such
+  as a Red Rupee. Item hints name only major items (``get_good_item_hint``, ``Hints.py:882-891``).
 
 Only shuffled locations are hinted (vanilla ones are known). Every stone gets one hint (``copies`` 1). The choices
 use their own ``random.Random`` seeded from the seed number, so the fill's placements are not touched.
@@ -53,6 +57,10 @@ ROOT = "Root"
 NOT_MAJOR_TYPES = frozenset({"Shop", "Event", "Drop", "Token", "Map", "Compass"})
 # Shop refills ("Buy ...") are type Shop in OoT Randomizer; the remake's own refill sizes are added as plain items.
 NOT_MAJOR_PREFIXES = ("Buy ", "Bombchus", "Heart Container", "Piece of Heart")
+# Items a random hint never names: OoT Randomizer's get_random_location_hint (Hints.py:1091) skips these types; the
+# remake's own refill sizes ("Buy Bombchu (3)") are plain items here, so the "Buy " prefix counts as Shop too.
+RANDOM_SKIP_TYPES = frozenset({"Drop", "Event", "Shop"})
+SHOP_PREFIX = "Buy "
 
 
 class HintError(ValueError):
@@ -308,6 +316,12 @@ def choose(seed: "Seed", mode: str = "always", distribution: str = "balanced") -
     ]
     sometimes = [name for name in hintable if name in set(lists["sometimes"])]
     majors = [name for name in hintable if _major(seed, seed.placements[name])]
+    randoms = [
+        name
+        for name in hintable
+        if seed.world.items[seed.placements[name]].type not in RANDOM_SKIP_TYPES
+        and not seed.placements[name].startswith(SHOP_PREFIX)
+    ]
     junk_lines = len(data["wording"]["junk"])
     junk_order = list(range(junk_lines))
     rng.shuffle(junk_order)
@@ -326,7 +340,7 @@ def choose(seed: "Seed", mode: str = "always", distribution: str = "balanced") -
         "barren": barren,
         "item": lambda: location_hint("item", majors),
         "sometimes": lambda: location_hint("sometimes", sometimes),
-        "random": lambda: location_hint("random", hintable),
+        "random": lambda: location_hint("random", randoms),
         "junk": junk,
     }
     if plan.get("always", True):
