@@ -69,3 +69,23 @@ this early.
   leaves the ladder down (`Obj_InsideTheDekuTree_FallingLadder_A_01`) or the platform whole, for an in-game test.
 - **Kareem: can the Boomerang (child), or the Bow or Hookshot (adult), clear the Skullwalltulas on the lobby's vine
   wall to 3F?** Until then only the Slingshot opens 3F, so an adult never reaches 3F or the basement in logic.
+
+## Item 5: the three mini-seeds on the new logic
+
+`E:/OOTRemake/work/r4-seed/seed-{3,7,22}/` (`romfs/`, `spoiler.json`, `play-note.md`), the round 3 command
+(`python -m clawshot --romfs E:/Games/Hookshot/romfs --seed <n> --out ... --areas KokiriForest LostWood
+InsideTheDekuTree --goal "'Defeat Queen Gohma'"`) run from a `git archive` of 1d76316
+(`E:/OOTRemake/work/r4-logic-child/src-1d76316`), so the seeds see the committed logic and none of the area files
+still being written. Each spoiler's placements pass the beatability search on the slice world rebuilt from its
+settings, with the Slingshot never behind 3F (`E:/OOTRemake/work/r4-logic-child/verify_seeds.py`).
+
+| Seed | Kokiri Sword | Slingshot | Spheres | Size table |
+|---|---|---|---:|---|
+| 3 | Mido's bottom-right | Mido's top-left (round 3: the basement chest, unbeatable) | 3 | written (two KF Dynamic entries raised) |
+| 7 | Mido's bottom-left | Deku Tree map chest (2F, before 3F) | 4 | not needed |
+| 22 | Mido's top-right | KF Kokiri Sword chest | 3 | not needed |
+
+Same seed numbers as round 3. Seeds 7 and 22 keep their Kokiri Sword and Slingshot places; their other Deku
+Tree and Mido chests moved (the fill draws over a different reachable set now). Seed 3's round 3 placement is
+out of logic, and its Slingshot is now in Kokiri Forest. Each play note says where everything is, what to see, and asks the Slingshot room
+question.
