@@ -96,9 +96,50 @@ Checks actually exercised:
   allocation, inverse-field diff, unchanged-backup SHA256 and static launcher checks **passed**.
   This is data proof, not gameplay certification. Full four gates run before a ready/handoff post.
 
-## Remaining ordered items
+## Item 3: retain the native token and its callback
 
-3. Keep native token callback while changing grants, if supported by data.
+Item 2 committed as `1f99ee4`. The native token has a real grant indirection:
+`Component/PouchContentParam/Obj_Token_Gold...bgyml.PouchActor` ->
+`Work/Actor/Item_Token_Gold.engine__actor__ActorParam.gyml`.
+Changing it to `Item_Boomerang` keeps the actor **Obj_Token_Gold**, its native AI and
+`OneShotGoldTokenDeadAfter` byte-identical. The enemy's `GoldTokenGmdHash` overwrite is untouched.
+This supports a controlled grant experiment without replacing the pickup actor or copying an AI graph.
+
+`tokens.grant_experiment()` supplies this **global pack experiment only**, not a per-enemy patch.
+Every Gold Token using the pack is affected. `PouchActor` is component data, not an exposed instance
+blackboard parameter; no per-enemy reward selector was found. The enemy's instance `Drop__DropActor`
+selects the spawned actor, not that actor's pouch identity. Per-check tokensanity still needs either a
+reviewed per-instance grant channel, distinct validated actor definitions/packs with registration, or
+an upstream runtime hook. No new actor or hook is invented here.
+
+Native token `GetType=1027255402`, `SpecialDeal=2855325032`, `FixedMaxNum=100`, model, ActorName,
+physics/attachment rules and all other fields remain unchanged. **[INFERENCE]** PouchActor may redirect
+the actual grant while retaining the completion callback; the token-specific path could override it or
+increment tokens independently. This is exactly what Kareem must settle, not a claim of safe grants.
+
+Output: `E:/OOTRemake/work/r7-drops/ingame/native-token-boomerang/`; adjacent
+**`Test - native-token-boomerang.bat`** is copied from the approved save-copy template, never run.
+Its own user copies `2026-11-07_llr-tower-before-pickup`; all six saves have the ranch tree Hash
+`341792603838029977` unset and no Boomerang (manual slot 01 has 9 tokens).
+Pouch member **740 -> 736** bytes, original allocation **5984**. Outer pack **54636 -> 54628**,
+compressed **8995 -> 9030**, original/effective allocation **54968**. Neither nested nor outer allocation
+grows; no generic component-size formula or size-table patch is needed.
+
+**Kareem:** `ingame/native-token-checklist.md`: native-looking ranch token, uncollected recovery;
+collect, check Boomerang ownership/use versus token count/text/model, then Save/Continue and no respawn.
+Hypothesis: Boomerang, count unchanged at 9, saved enemy Hash set. Record actual behavior even if different.
+`check_native_token_save.py` reads only the isolated user's resulting saves. Token shuffle stays refused.
+
+Checks:
+- `uv run pytest tests/test_tokens.py -q`: **10 passed**.
+- Targeted `OOT_ROMFS=... uv run pytest -m dump tests/test_tokens_dump.py -k native -q -s
+  --basetemp E:/OOTRemake/work/r7-drops/pytest-native-token`: **1 passed, 1 deselected**.
+- Scoped format/lint passed; `build_native_token.py` exercised the real writer, byte-identical callback/
+  other pack members, exact inverse component diff, non-growth allocation and backup SHA256/static launcher
+  checks: **passed**. No game/launcher execution or token gameplay acceptance.
+
+## Remaining ordered item
+
 4. Default-off BossHeart seed integration for reviewed native pickups.
 
 Section 27 will be appended after sections 25/26 on an authorized integrated base; this file holds its source

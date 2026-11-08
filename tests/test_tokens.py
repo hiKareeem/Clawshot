@@ -1,7 +1,7 @@
 import pytest
 
 from clawshot.census.scan import Location
-from clawshot.formats import byml
+from clawshot.formats import byml, sarc
 from clawshot.formats.byml import U64
 from clawshot.patch import tokens
 from clawshot.patch.plan import PatchError
@@ -77,3 +77,40 @@ def test_unverified_token_mode_refuses_before_reading_dump_or_writing_seed(tmp_p
     with pytest.raises(PatchError):
         make_seed(tmp_path / "no-dump", 7, Settings(shuffle=("Token",)))
     assert not list(tmp_path.iterdir())
+
+
+def native_token_pack():
+    return {
+        tokens.POUCH_MEMBER: byml.write({"PouchActor": tokens.NATIVE_GRANT, "FixedMaxNum": 100, "SpecialDeal": 77}),
+        tokens.AI_INFO_MEMBER: byml.write({"RootAIRef": "Work/AI/Root/Item_Token_Gold.root.ain"}),
+        tokens.TOKEN_AI_MEMBER: b"synthetic opaque native callback graph",
+        "Actor/Token.bgyml": byml.write({"Model": "NativeToken", "Blackboard": "GoldTokenGmdHash"}),
+    }
+
+
+def test_native_grant_experiment_keeps_callback_and_all_other_pack_members():
+    before = native_token_pack()
+    transform = tokens.grant_experiment()[tokens.PACK_PATH]
+    after = sarc.read(transform(sarc.write(before)))
+    pouch = byml.read(after[tokens.POUCH_MEMBER])
+    assert pouch.pop("PouchActor") == tokens.EXPERIMENT_GRANT
+    original = byml.read(before[tokens.POUCH_MEMBER])
+    original.pop("PouchActor")
+    assert byml.same(pouch, original)
+    assert len(after[tokens.POUCH_MEMBER]) <= len(before[tokens.POUCH_MEMBER])
+    assert {k: v for k, v in after.items() if k != tokens.POUCH_MEMBER} == {
+        k: v for k, v in before.items() if k != tokens.POUCH_MEMBER
+    }
+
+
+@pytest.mark.parametrize("change", ["missing_callback", "wrong_ai", "wrong_grant"])
+def test_native_grant_experiment_refuses_a_stale_callback_or_pouch(change):
+    pack = native_token_pack()
+    if change == "missing_callback":
+        del pack[tokens.TOKEN_AI_MEMBER]
+    elif change == "wrong_ai":
+        pack[tokens.AI_INFO_MEMBER] = byml.write({"RootAIRef": "Work/AI/Root/DropItem.root.ain"})
+    else:
+        pack[tokens.POUCH_MEMBER] = byml.write({"PouchActor": "Other"})
+    with pytest.raises(PatchError):
+        tokens.grant_experiment()[tokens.PACK_PATH](sarc.write(pack))

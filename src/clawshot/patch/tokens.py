@@ -9,7 +9,7 @@ whether a replacement still retires the enemy. Do not use experiments as seed ch
 from collections.abc import Mapping, Sequence
 
 from clawshot.census.scan import GOLD_SKULLTULA, Location
-from clawshot.formats import byml
+from clawshot.formats import byml, sarc
 from clawshot.patch.plan import PatchError
 from clawshot.patch.write import FileChanges
 
@@ -57,3 +57,44 @@ def _transform(path: str, targets: Mapping[int, str]):
         return out
 
     return transform
+
+
+PACK_PATH = f"Pack/Actor/{TOKEN}.pack.zs"
+POUCH_MEMBER = "Component/PouchContentParam/Obj_Token_Gold.game__component__PouchContentParam.bgyml"
+AI_INFO_MEMBER = "AI/AIInfo/Item_Token_Gold.engine__actor__AIInfo.bgyml"
+TOKEN_AI_MEMBER = "AI/Item_Token_Gold.root.ainb"
+NATIVE_GRANT = "Work/Actor/Item_Token_Gold.engine__actor__ActorParam.gyml"
+EXPERIMENT_GRANT = "Work/Actor/Item_Boomerang.engine__actor__ActorParam.gyml"
+
+
+def grant_experiment() -> FileChanges:
+    """Global native-token -> Boomerang grant experiment, NEVER a seed patch.
+
+    Every token using this pack is affected. Retain its AI/callback, enemy hash
+    overwrite, model and pickup rules. GetType/SpecialDeal stay token-native:
+    whether they override PouchActor or increment tokens needs the game check.
+    The component must not grow; no generic nested allocation formula is assumed.
+    """
+
+    def transform(data: bytes) -> bytes:
+        pack = sarc.read(data)
+        if any(member not in pack for member in (POUCH_MEMBER, AI_INFO_MEMBER, TOKEN_AI_MEMBER)):
+            raise PatchError("native token experiment: missing pouch or callback AI")
+        if byml.read(pack[AI_INFO_MEMBER]).get("RootAIRef") != "Work/AI/Root/Item_Token_Gold.root.ain":
+            raise PatchError("native token experiment: stale native AI root")
+        document = byml.load(pack[POUCH_MEMBER])
+        if document.root.get("PouchActor") != NATIVE_GRANT:
+            raise PatchError(f"native token experiment: stale pouch identity {document.root!r}")
+        document.root["PouchActor"] = EXPERIMENT_GRANT
+        changed = byml.dump(document)
+        if len(changed) > len(pack[POUCH_MEMBER]):
+            raise PatchError("native token experiment: pouch component grew without a size formula")
+        if byml.difference(document.root, byml.read(changed)) is not None:
+            raise PatchError("native token experiment: pouch does not read back")
+        pack[POUCH_MEMBER] = changed
+        out = sarc.write(pack)
+        if sarc.read(out) != pack:
+            raise PatchError("native token experiment: pack does not read back")
+        return out
+
+    return {PACK_PATH: transform}
