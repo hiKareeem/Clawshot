@@ -1,0 +1,43 @@
+# Bottom of the Well, as the remake builds it (round 4, track A). Format: plans/04-world-format.md, "Overrides".
+# Evidence per entry; the round file (plans/rounds/r4-logic-child.md) lists what was checked and left as OoT
+# Randomizer has it.
+#
+# The remake keeps N64's two locked doors into the central rooms (Gold Skulltulas East and West Inner Room) but not
+# the third: the Fire Keese room and the Like Like room behind it are reached through the fake walls without a key.
+# The basement holds no bomb flowers, so the Map Chest needs explosives. The small-key cap (3 -> 2) is in
+# remake.toml's [key_counts].
+#
+# Guides (Switch 2, 2026-11-05 on): ZeldaCentral, "Bottom of the Well Walkthrough",
+# https://zeldacentral.com/games/ocarina-of-time-remake/walkthrough/bottom-of-the-well/ ; VGC, "All Bottom of the
+# Well Gold Skulltula locations",
+# https://www.videogameschronicle.com/guide/all-bottom-of-the-well-gold-skulltula-locations-in-zelda-ocarina-of-time-switch-2/ ;
+# the Eurogamer and Polygon Gold Skulltula guides (round 3 local copies, E:/OOTRemake/work/r3/).
+# Placement data: BottomOfTheWell_Static/_Dynamic (read by E:/OOTRemake/work/r4-logic-child/actors.py), Banc
+# coordinates in metres, y up, +x east, +z south; room = DefaultDungeonRoomIndex.
+
+# The Fire Keese room (room 6) and the Like Like room (room 7). Data: the four Obj_DoorChainLock_A_01 sit on two doors
+# only, (11,100,-22) into room 4 (Keese, Gold Skulltula East Inner Room) and (-10,100,-23) into room 5 (Deku Baba,
+# Gold Skulltula West Inner Room); the doors into rooms 6 and 7 (Obj_Well_SwitchShutter_A_01 at (21,100,-37) and
+# (24,100,-22)) have none. The Lens stays asked for: these locations move to the fake-wall region (Lens of Truth or
+# logic_lens_botw), and the guides use the Lens for the room's hidden holes.
+
+[locations."Bottom of the Well Fire Keese Chest"]
+region = "Bottom of the Well Behind Fake Walls"
+source = "data: Obj_TBox_A_06 874970148260328653 (TBox_Shield_Deku, bombs if the shield is held), room 6, behind a door without chain lock; ZeldaCentral: the chest in the Lens-only room gave five bombs before either small key was used (key count 2 at the Like Like room); Eurogamer GS guide: the room is reached by a crawlspace and a door, Lens for the hidden holes"
+
+[locations."Bottom of the Well Fire Keese Pot"]
+region = "Bottom of the Well Behind Fake Walls"
+source = "data: Obj_Pot_A_08 7569958918344529585, room 6 (the Fire Keese room), behind a door without chain lock; same room as the Fire Keese Chest"
+
+[locations."Bottom of the Well GS Like Like Cage"]
+region = "Bottom of the Well Behind Fake Walls"
+source = "data: Enemy_Skulltula_Gold 3889761319471426870, room 7 with Enemy_LikeLike, behind doors without chain lock; Eurogamer GS guide: 'Through Crawlspace Door' needs the Lens of Truth and the Boomerang (no small key, unlike the two central rooms); ZeldaCentral: token #76 taken with the Boomerang before either key was used; VGC: east Like Like room found with the Lens"
+
+# The basement (room 9): eight Obj_BrokenRock_A_01 boulders and no Obj_BombFlower anywhere in the dungeon's data
+# (Dodongo's Cavern has 36). OoT Randomizer's second way to the chest uses the Goron's Bracelet on the basement's bomb
+# flowers (its trick logic_botw_basement: "strength ... to access the bomb flowers").
+
+[locations."Bottom of the Well Map Chest"]
+rule = "has_explosives"
+was = "has_explosives or (Progressive_Strength_Upgrade and (at('Bottom of the Well Behind Locked Doors', True) or can_use(Dins_Fire) or (logic_botw_basement and Sticks)))"
+source = "data: Obj_TBox_A_02 9466613428674883506 (map), room 9 at (18,87,1), boulders Obj_BrokenRock_A_01 at (7,87,1), (6,87,3), (22,88,-12), (24,88,-11) around its corner, no bomb flower in BottomOfTheWell; ZeldaCentral: the boulders on B2 need an explosion, carry bombs"

@@ -1,0 +1,36 @@
+# Ice Cavern, as the remake builds it (round 4, track A; the dungeon is adult-only, Zora's Fountain is frozen only
+# for adult Link, but the whole dungeon is this track's). Format: plans/04-world-format.md, "Overrides". Evidence per
+# entry; the round file (plans/rounds/r4-logic-child.md) lists what was checked and left as OoT Randomizer has it.
+#
+# Guides (Switch 2, 2026-11-05 on): Nintendo Life, "Ice Cavern walkthrough",
+# https://www.nintendolife.com/guides/zelda-ocarina-of-time-ice-cavern-walkthrough-switch-2 ; Nintendo Life, "All
+# Heart Piece locations", https://www.nintendolife.com/guides/zelda-ocarina-of-time-heart-piece-locations-switch-2 ;
+# ZeldaCentral, "Ice Cavern Walkthrough", https://zeldacentral.com/games/ocarina-of-time-remake/walkthrough/ice-cavern/
+# Placement data: IceCavern_Static/_Dynamic and ZoraFountain_Adult_* (read by
+# E:/OOTRemake/work/r4-logic-child/actors.py), Banc coordinates in metres, y up; room = DefaultDungeonRoomIndex.
+
+[locations."Ice Cavern Freestanding PoH"]
+n64_only = "no heart piece in the remake's Ice Cavern: no Obj_Heart_Piece (or other heart-piece actor) in IceCavern_Static/_Dynamic and none in the census; the compass room (room 6) holds the compass chest, the Gold Skulltula, a Blue Fire font and two rupee pots frozen in red ice (Obj_RedIce_A_06 5982607659326270053) with a Sun's Song fairy; the remake's 36 heart pieces put none in a dungeon"
+source = "data (IceCavern placement files, census); Nintendo Life Ice Cavern walkthrough (compass room: compass, Gold Skulltula, Blue Fire, rupee jars and a fairy behind red ice) and Heart Piece guide (36 pieces, none in the dungeons; Zora's Fountain's two are the iceberg and the lake bottom)"
+
+# The push-block room (room 8): the N64 ledge's three red rupees are one remake-only chest (census
+# 4128092231168513176, TBox_Rupee_Red, no OoT Randomizer location), reached over three Obj_SongOfTimeBlock_A_01.
+
+[locations."Ice Cavern Push Block Room Red Rupee 1"]
+n64_only = "no freestanding rupee in the remake's Ice Cavern (no Obj_Rupee_Green/Blue/Red actor in IceCavern_Static/_Dynamic, only the ten silver rupees); the push-block room's ledge holds one small chest with a red rupee (4128092231168513176), reached over Song of Time blocks"
+source = "data; Nintendo Life Ice Cavern walkthrough and ZeldaCentral Ice Cavern walkthrough: a small chest with a Red Rupee on the ledge, reached by a Song of Time block bridge"
+
+[locations."Ice Cavern Push Block Room Red Rupee 2"]
+n64_only = "no freestanding rupee in the remake's Ice Cavern (no Obj_Rupee_Green/Blue/Red actor in IceCavern_Static/_Dynamic, only the ten silver rupees); the push-block room's ledge holds one small chest with a red rupee (4128092231168513176), reached over Song of Time blocks"
+source = "data; Nintendo Life Ice Cavern walkthrough and ZeldaCentral Ice Cavern walkthrough: a small chest with a Red Rupee on the ledge, reached by a Song of Time block bridge"
+
+[locations."Ice Cavern Push Block Room Red Rupee 3"]
+n64_only = "no freestanding rupee in the remake's Ice Cavern (no Obj_Rupee_Green/Blue/Red actor in IceCavern_Static/_Dynamic, only the ten silver rupees); the push-block room's ledge holds one small chest with a red rupee (4128092231168513176), reached over Song of Time blocks"
+source = "data; Nintendo Life Ice Cavern walkthrough and ZeldaCentral Ice Cavern walkthrough: a small chest with a Red Rupee on the ledge, reached by a Song of Time block bridge"
+
+# The way out past the Iron Boots room: a pool behind the White Wolfos arena drops into Zora's Fountain's lake.
+
+[exits."Ice Cavern End"."Zoras Fountain"]
+rule = "can_use(Iron_Boots)"
+new = true
+source = "Nintendo Life Ice Cavern walkthrough: with the Iron Boots, sink into the small opening after the Iron Boots room for a shortcut back to Zora's Fountain; data: FieldAndDungeonEntranceEventRequestActor 10544815606216485062 at (-47,106,83), below the Obj_WaterPlane_A_01 surface (y 108) past the Wolfos room, goes to ZoraFountain start ZoraFountain_FromIceCavern_Backdoor (42,88,-54), under the fountain's water. Diving down without the boots is not checked"
