@@ -44,3 +44,15 @@ source = "data: no fish (Animal_Fish_*, FishAnchor) anywhere in the KokiriForest
 rule = "is_child and can_child_attack and ((at_night and 'Time Flows') or gold_skulls_ignore_daytime) and (had_night_start or can_leave_forest or can_play(Suns_Song) or gold_skulls_ignore_daytime)"
 was = "is_child and can_child_attack and (at_night or gold_skulls_ignore_daytime) and (had_night_start or can_leave_forest or can_play(Suns_Song) or gold_skulls_ignore_daytime)"
 source = "Eurogamer, 17 changes: time does not flow until Link has met Zelda, so night needs 'Time Flows'; data: Enemy_Skulltula_Gold 17067594426901953848 with Enemy_Skulltula_Gold_Nocturnal=True at (-84,118,-18), Child_Static only; Nintendo Life GS #3 (night, no item) and Zelda Central GS #16 (night, on the big trunk by the Know-It-All house)"
+
+# This is obtainable access, not a shuffled check or a new pool item. Visit the shop after advancing the
+# Deku Tree meeting quest and before completing Gohma/the castle visit; that ordering is possible once the
+# child reaches the tree side of Mido. Even with the Mido skip, talking to the tree advances the meeting quest.
+# The equipment query only requires not *wearing* a Deku Shield, so an owned shield can be unequipped.
+# Do not encode absence of inventory or later completion events: this monotone event records an earlier
+# obtainable shield, not a promise that the merchant still offers it after the early-story window closes.
+
+[events."KF Kokiri Shop"."Deku Shield"]
+rule = "is_child and at('KF Outside Deku Tree', is_child)"
+new = true
+source = "Kareem in game via Claude, 2026-11-08, seed-shop-7 (build e0f3ccfa, Hookshot 2.0.1): child with Kokiri Sword/Hylian Shield received a free Deku Shield after Mido. Data: Npc_Kokiri_001_Shop_Child Talk Event23/Event21 require castle/forest-stone quests incomplete; Event1 requires Meet_DekuTree_IsAfter_Step02_Exp. Reaching the tree as child permits that quest advance (Dm_Kokiri_0075 Event39 sets Complete), including with Mido skipped. present_DekuSheld Event45 requires Deku Shield not equipped; both Event63 flag branches grant Obj_Shield_Deku (Event116/117). No purchase/rupee gate. Take this event before Gohma/castle completion; not a once-only shuffle check"

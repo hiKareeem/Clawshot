@@ -63,3 +63,43 @@ def test_shallow_moat_needs_stones_but_no_scale(name):
     assert not search.holds("Progressive Scale")
     adult = starting_at("Hyrule Field", ADULT)
     assert not Search(adult, ["Kokiri Emerald", "Goron Ruby", "Zora Sapphire"]).can_access(adult.locations[name], ADULT)
+
+
+@pytest.mark.parametrize(
+    "items",
+    [[], ["Kokiri Sword"], ["Hylian Shield"], ["Kokiri Sword", "Boomerang"]],
+)
+def test_free_shield_cannot_bootstrap_kept_mido(items):
+    world = build_world(load_spec())
+    search = Search(world, items)
+    assert not search.holds("Deku Shield")
+    assert not search.can_reach("KF Outside Deku Tree", CHILD)
+    assert not search.can_reach("Deku Tree Slingshot Room", CHILD)
+
+
+def test_post_mido_free_shield_opens_the_scrub_without_buying_a_deku_shield():
+    world = build_world(load_spec())
+    search = Search(world, ["Kokiri Sword", "Hylian Shield"])
+    assert search.can_reach("KF Outside Deku Tree", CHILD)
+    assert search.holds("Deku Shield")
+    assert not search.holds("Buy Deku Shield")
+    assert search.can_reach("Deku Tree Slingshot Room", CHILD)
+    assert not search.holds("Defeat Queen Gohma")
+    assert not search.can_reach("LW Bridge From Forest", CHILD)
+
+
+def test_mido_skip_still_allows_meeting_the_tree_then_getting_the_free_shield():
+    spec = load_spec()
+    spec["settings"]["skip_mido"] = True
+    world = build_world(spec)
+    search = Search(world)
+    assert search.holds("Deku Shield")
+    assert not search.holds("Kokiri Sword")
+    assert search.can_reach("Deku Tree Slingshot Room", CHILD)
+    assert not search.can_reach("LW Bridge From Forest", CHILD)
+
+
+def test_adult_cannot_claim_the_child_shopkeepers_free_shield():
+    world = starting_at("KF Kokiri Shop", ADULT)
+    search = Search(world, ["Kokiri Sword", "Hylian Shield"])
+    assert not search.holds("Deku Shield")

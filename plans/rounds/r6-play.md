@@ -52,3 +52,52 @@ work with three stones and no scale, not two stones, and not as adult. First ful
 opened the forest exit: printed child frontier ended in Kokiri/Lost Woods. Supplying the actual
 `Defeat Queen Gohma` event opened the path and both moat checks became reachable with scale false.
 Ruff printed one required assertion-line join; applied that exact formatting correction.
+
+## Item 3: free post-Mido Deku Shield — trace correction
+
+`probe.py` and compact `shield_trace.py` read the original flow with `clawshot.formats.evfl`:
+
+1. `Talk` reaches Event23: `Goto_HyruleCastle_IsCompleted_Exp` false → Event21.
+2. Event21: `Get_StoneOfForest_IsCompleted_Exp` false → Event1.
+3. Event1: `Meet_DekuTree_IsAfter_Step02_Exp` true → Event83 → `present_DekuSheld`.
+4. Event45: equipped `Weapon_Shield_Deku` (slot 4) → return, no grant; not equipped → Event63.
+5. Event63's first-talk flag false → Event46 → Event117 gives `Obj_Shield_Deku` → Event61 →
+   Event44 sets `HaveTalked_Npc_Kokiri_001_Shop_Child_PresentDekuShield` true.
+6. **The same flag true does not stop a grant:** Event64 → Event116 gives `Obj_Shield_Deku` → Event66.
+
+Thus the flag selects first/repeat dialogue, not once-only eligibility. No sword, Hylian Shield, ownership
+history, shelf contents, purchase or rupee test occurs in `present_DekuSheld`. Unequipping the Deku Shield
+satisfies the equipped test. GameDataList confirms the first-talk Bool is saved (reset type 8/file 0,
+default false); the quest predicates are BoolExp, not saved independent flags.
+
+This corrects section 19's historical “given once” characterization and section 17's unresolved replacement
+question; no change to gift patching/census is made here. Repeatability and the equipped-item test mean it
+is **not a safe shuffle check as-is**. Shuffling later needs a true once-only gate on both grant branches
+and removal of the old equipped-item dependency, subject to owner approval. No new pool reward is added.
+
+Source: Kareem in game via Claude, 2026-11-08, `seed-shop-7`: child, Kokiri Sword/Hylian Shield, post-Mido,
+no Deku Shield; shopkeeper gave one free while the shelf still sold one at 40. The supplied observation
+supports the first grant; repeat grants and the late-story cutoff are data findings, not new play results.
+
+### Applied model and checks
+
+`child_kokiri_forest.toml` adds event `Deku Shield` in `KF Kokiri Shop`, requiring a child route to
+`KF Outside Deku Tree`. That route lets the child advance the meeting quest by talking to the tree, then
+return for the gift **before** completing Gohma/castle quests. It is a monotone record of that obtainable
+early shield, not a claim the offer remains open after those quests. The Deku Tree talk advances the quest
+even with Mido skipped; merely being in the shop before Mido cannot bootstrap the event. No invented
+inventory-absence requirement: the equipped test is satisfiable by unequipping; already having the shield
+also already satisfies the capability. No fixed/shuffled location, item pool or gift patch contract changes.
+
+`uv run pytest tests/test_world_remake_play.py tests/test_world_remake.py -q`: **41 passed**.
+Regressions: sword alone, Hylian alone and sword/Boomerang cannot bootstrap kept Mido; sword/Hylian
+permits the free shield and the Deku Scrub route without buying a Deku Shield or beating Gohma; Mido-skip
+permits visiting the tree then the gift without a sword; adult cannot claim it. The independent forest exit
+stays shut. Live full-world Search smoke printed `(free shield, outside tree) = (False, False)` with sword
+alone; after collecting Hylian: free Deku true, bought Deku false, Slingshot-room route true, forest exit false.
+Scoped format/lint passed (1 file).
+
+Posted the exact repeat-branch correction on `cs-r6` as cs6f; no other track's file changed.
+**Kareem via Claude: on a disposable early post-Mido save, unequip the first free Deku Shield and talk
+again; does the repeat branch give another shield notice? After Gohma, does the free offer disappear?**
+These corroborate the data, not prerequisites for accepting the supplied first-grant observation.
