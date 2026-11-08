@@ -349,3 +349,21 @@ the authorized main plus the completed integration:
 | `4e60f7e` | Historical blocked handoff |
 | `115ebb1` | Shared `patch/scrubs.py` only: native price metadata export |
 | `1c21dd9` | Canonical price consumer, purchase regressions and integration evidence |
+
+### Full integrated gates (code through `1c21dd9`)
+
+| Command | Observed result |
+|---|---|
+| `uv run ruff format --check` | 176 files already formatted |
+| `uv run ruff check` | All checks passed |
+| `uv run pytest --basetemp=E:/OOTRemake/work/r6-names/pytest-integrated-synthetic` | 469 passed, 66 skipped; 534.24 s |
+| `OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump --basetemp=E:/OOTRemake/work/r6-names/pytest-integrated-dump` | 65 passed, 470 deselected; 1144.59 s |
+
+All four full integrated gates passed. Neither pytest run was filtered beyond the prescribed `-m dump`
+selection; no unchanged rerun or retry was used. Both exact session-created basetemps were removed after
+their respective process completed; no game/user/save/dump path was deleted.
+
+**Ready for review on `r6/names`: all three Track A items and reviewer extensions are complete.**
+The canonical-price/base-move blocker is resolved. No remaining code blocker, compatibility shim,
+dependency change, merge, push or stash. Outstanding in-game/identity observations are the explicitly
+documented research limits above, not enabled checks or claims of game certification.
