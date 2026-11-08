@@ -15,6 +15,7 @@ from collections.abc import Mapping
 from dataclasses import dataclass, field, replace
 from typing import Any
 
+from clawshot.generate import hints as hint_choices
 from clawshot.settings import CATALOG, DEFAULTS
 from clawshot.world.model import World
 from clawshot.world.rules import ADULT, CHILD
@@ -41,7 +42,10 @@ class Settings:
     ``item_location_types`` holds a logic item to the location types it may go to (songs to song locations, an
     item whose actor is not known to work in a chest to the gift locations); a location type in
     ``exclusive_location_types`` takes only items held to it there (OoT Randomizer's ``shuffle_song_items =
-    'song'``)."""
+    'song'``).
+
+    ``hints``: ``always`` (Gossip Stones speak without the Mask of Truth, the flow patched) or ``mask`` (vanilla:
+    child Link wearing it); ``hint_distribution`` names a distribution of ``data/hints.toml``."""
 
     shuffle: tuple[str, ...] = tuple(DEFAULTS["shuffle"])
     dungeon_items: str = DEFAULTS["dungeon_items"]
@@ -55,6 +59,8 @@ class Settings:
     shop_prices: str = DEFAULTS["shop_prices"]
     cheap_deku_shield: bool = DEFAULTS["cheap_deku_shield"]
     forest: str = DEFAULTS["forest"]
+    hints: str = DEFAULTS["hints"]
+    hint_distribution: str = DEFAULTS["hint_distribution"]
 
     def __post_init__(self) -> None:
         for name in ("shuffle", "areas", "fast_start", "exclusive_location_types"):
@@ -92,6 +98,10 @@ class Settings:
             raise ValueError("cheap_deku_shield must be a boolean")
         if not isinstance(self.forest, str) or self.forest not in CATALOG["forest"]:
             raise ValueError("forest must be 'closed', 'closed_deku' or 'open'")
+        if self.hints not in hint_choices.MODES:
+            raise ValueError(f"hints must be one of {hint_choices.MODES}")
+        if self.hint_distribution not in hint_choices.distributions():
+            raise ValueError(f"hint_distribution must be one of {hint_choices.distributions()}")
         legacy = set(self.fast_start) & {"mido", "forest_exit"}
         if legacy:
             mode = "open" if "mido" in legacy else "closed_deku"
@@ -110,6 +120,8 @@ class Settings:
             "shop_prices": self.shop_prices,
             "cheap_deku_shield": self.cheap_deku_shield,
             "forest": self.forest,
+            "hints": self.hints,
+            "hint_distribution": self.hint_distribution,
         }
         if self.areas:
             out["areas"] = list(self.areas)

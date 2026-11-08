@@ -8,7 +8,8 @@ scripts and decoded data: `E:/OOTRemake/work/r7-hints/` (outside the repo).
 |---|---|---|
 | 1 Gossip Stones in the world (shared world files) | `world/translate.py`, translated region files, `world/model.py`, `world/load.py`, `04-world-format.md` | abbce51 |
 | 1 the 40 stones, one label each | `data/world/remake/hint_stones.toml`, `census/hints.py` (`REMAKE_STONES`, `stone_labels`), `tests/test_hints_world.py` | 7fe1e63 |
-| 2 hint selection | `data/hints.toml`, `generate/hints.py`, `tests/test_hints_select.py` | (item 2 commit) |
+| 2 hint selection | `data/hints.toml`, `generate/hints.py`, `tests/test_hints_select.py` | a567b05 |
+| 3 hint settings (shared files) | `generate/fill.py` (`Settings`), `data/settings.toml`, `__main__.py`, `tests/test_hints_settings.py` | (item 3 commit) |
 
 ## Item 1: Gossip Stones as hint locations
 
@@ -78,6 +79,22 @@ Checks:
 |---|---|
 | `uv run pytest tests/test_hints_select.py -q` | 8 passed: a region's area from where it is entered (a `False` exit not followed); the required locations are the two the goal needs; over 30 seeds and two distributions, one hint per stone and a hint naming the Hookshot's chest never on the stone behind the Hookshot, barren only for the area without a required item, Way of the Hero only for the two areas with one (a coverage print showed every kind on every stone that may hold it); same seed same hints; with `mask` and no Mask of Truth only junk, with the mask in a chest that chest is never named; `useless` only junk; unknown mode or distribution refused; the wording fills in names |
 | `uv run python E:/OOTRemake/work/r7-hints/try_hints.py` (seed 7, chests, the real world, no dump) | 11 required locations (1.1 s); 40 hints per mode (about 1.1 s each): `always` 12 item, 10 random, 7 sometimes, 5 Way of the Hero, 3 barren, 3 junk; `mask` 4 Way of the Hero, 4 barren, 5 junk (the Song of Time clearing stone is adult-only, so unreadable with the mask) |
+
+## Item 3: settings
+
+`Settings.hints` (`always` or `mask`) and `Settings.hint_distribution` (`balanced`, `strong`, `useless`: the names of
+`data/hints.toml`), defaults in `data/settings.toml` (`always`, `balanced`), carried by the settings string like
+every field (`as_dict`, so a default seed's string stays `CS1` and old strings decode to the defaults), and CLI
+`--hints` / `--hint-distribution`, which override a `--settings` string. Shared files, one commit.
+
+**Kareem: should Gossip Stones speak without the Mask of Truth (`always`, provisional default, OoT Randomizer's
+default) or only to child Link wearing it (`mask`, vanilla)?** With `mask`, a hint goes only on a stone child Link
+can reach holding the mask (no flow change is written), so the adult-only Sacred Forest Meadow clearing stone and
+any stone behind adult items carry junk.
+
+| Command | Result |
+|---|---|
+| `uv run pytest tests/test_hints_settings.py tests/test_settings.py tests/test_settings_songs.py tests/test_settings_forest.py -q` | 25 passed: default string still `CS1`; `mask`/`strong` round-trip through the string; an unknown mode or distribution refused; `--hints always` overrides a `--settings` string's `mask` and keeps its distribution |
 
 ## Cross-track posts (thread `cs-r7`)
 
