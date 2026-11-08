@@ -143,3 +143,23 @@ Logic conclusions:
 `uv run python -u E:/OOTRemake/work/r6-shopfix/smoke_integrated.py`: two real CLI processes, default forest/cheap-shield/settings-string behavior from **65bbcf7**, new refill policy and nested sizing. Both exit **0**, **228 checks /25 spheres**. Replaying the emitted settings string with a different hash seed gives **81/81 byte-identical canonical files**. **59 Buy refills**, all at Shop; **12 changed packed ShopParam copies** checked against original member allocation plus rounded growth. No launches.
 
 The same smoke rechecked existing 7b: spoiler equal to old7, same resource paths, **only the size table differs**. It never rewrites 7b or the old seed/user. Report `integrated-verification.json` and CLI transcripts stay outside the repository. Full four-gate chain is running on this integrated code; final results follow.
+
+## Rebased commit ledger
+
+Base **65bbcf7**, branch `r6/shopfix`; earlier hashes in tool/thread checkpoints are superseded by rebase.
+
+| Commit | Scope |
+|---|---|
+| `810f1e0` | item1 field/reference/allocation diagnosis |
+| `f863c52` | item2 eight isolated bisects and save/launcher evidence |
+| `6ede288` | item3 shop-owned sizing helper, regressions, section24 and exact 7b proof |
+| `c86325d` | isolated `patch/write.py` embedded-size transaction hook |
+| `bbd77d6` | isolated effective `Settings.item_location_types` Buy-to-Shop hook |
+| `e487f2b` | isolated fill capacity reservation, retaining main's held priority |
+| `2cbfc1a` | item4(a) failing-before/passing-after boundary tests and confirmed game result |
+| `71ed737` | item4(b/c) ammo table, proposed rule only, unchanged 7b contract |
+| `d97ba2c` | native refusal table, purchase observations and logic audit |
+
+## Cleanup
+
+Removed only this session's completed three future-seed/replay smoke folders, two targeted pytest basetemps and throwaway generation/diagnostic builders after recording their evidence. Requested eight bisect overlays and all their users remain, including Kareem's played07 user; 7b and its launcher remain. Read-only audit reproducers, decoded local audit reports, CLI transcripts and verification JSON remain outside the repository. No source dump, backup, original seed/user, junction, other track file or dependency was removed or changed. Full-gate basetemps remain until that run finishes.
