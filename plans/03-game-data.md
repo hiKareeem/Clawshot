@@ -1902,6 +1902,7 @@ as tokensanity. Four-gate and actual CLI/replay results are recorded in the roun
 place, no heart was added, and it did not come back (`dodongo-heart-hylian`). The native token with its pouch
 redirected to the Boomerang dropped as a token, was collected and counted as a token, and gave no Boomerang
 (`native-token-boomerang`): the pouch reference does not decide a token's grant. Tokens stay unshuffled.
+
 ## 28. Round 7: shopkeeper gift, Treasure Chest Game and boss rewards (cs7d)
 
 Build `e0f3ccfa`, read-only dump. Research, commands, questions and controlled player artifacts:
@@ -1956,12 +1957,14 @@ Fire-key capacity. Claude subsequently authorized the generator follow-up below.
 The reviewer-authorized ordinary fill order is own-dungeon items, type-held items (songs and Shop
 refills, regardless of class), D25 bag-gated ammo, remaining progression, then filler. The type-held
 pool takes sparse allowed capacities before general refills, preserving Blue Fire's gated sale slots.
+Type-held native ammo still waits for the dedicated D25 stage: its bag requirement and D27's
+non-BossHeart type restriction are both enforced. Shop-held Buy refills remain in the type-held stage.
 Constrained/progression stages assume all not-yet-placed items; the D20 return-kit prerequisite is
 unchanged. Unrestricted junk retains fast fill, so otherwise-beatable slices may contain unreachable
 junk. No retry bound, native rule, item eligibility or gift story window is relaxed.
 
-Two synthetic one-attempt regressions cover ammo consuming the only entrance-key slot and the
-type-held song/bag dependency cycle. Both failed before their aimed fixes and pass after. Actual
+Three synthetic regressions cover ammo consuming the only entrance-key slot, the type-held song/bag
+dependency cycle and type-held ammo bypassing D25. They fail before their aimed fixes and pass after. Actual
 whole-world seed7 mode/attempt/sphere evidence and final gates are in `plans/rounds/r7-gifts.md`;
 these do not claim a Hookshot play run.
 

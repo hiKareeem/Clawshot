@@ -178,25 +178,30 @@ shield output's three planned size entries change. Both actual batch texts use o
 suppress update checks, stop if missing and name distinct isolated users. At this initial pre-play audit,
 neither user folder existed. Retained external evidence: `ingame/artifact-proof.json`.
 
-## Branch handoff ledger (rebased onto approved main `dfe923a`)
+## Branch handoff ledger (rebased onto approved main `9b4735c`)
 
 | Commit | Scope |
 |---|---|
-| `5802aba` | Isolated shared gift-rule data/schema contract |
-| `ebbbfed` | Isolated shared player-name row and copy-identity coverage |
-| `d187892` | Isolated shared native gift/chest shield actor equivalence |
-| `54bf25f` | Item1: both-branch saved once-gate, copied-spec event-to-check cutover and tests |
-| `1bfe7d6` | Item2: first-prize contents/preview experiment and save-copy checklist |
-| `e1d3615` | Item3: all-nine reward/blue-warp/quest-gate research, no patch |
-| `f7a39e7` | Initial gates, CLI/replay and artifact audit; earlier posted hashes are historical |
-| `313a01e` | Item4: own-dungeon items before D25 ammo, early-key regression |
-| `266f219` | Item4: captured type-held dependency cycle and second regression |
-| `708cedb` | Item4: explicit type-held stage before ammo; replaces the intermediate sort workaround |
-| `9a1ac61` | Item4: sparse type-held capacities before general refills |
-| `c543679` | Shared synthetic purchase fixture: first Blue Fire sets its owned-content state |
+| `3121856` | Isolated shared gift-rule data/schema contract |
+| `628bd62` | Isolated shared player-name row and copy-identity coverage |
+| `e76be66` | Isolated shared native gift/chest shield actor equivalence |
+| `623b868` | Item1: both-branch saved once-gate, copied-spec event-to-check cutover and tests |
+| `8b2528f` | Item2: first-prize contents/preview experiment and save-copy checklist |
+| `4318fc7` | Item3: all-nine reward/blue-warp/quest-gate research, no patch |
+| `cc0d061` | Initial gates, CLI/replay and artifact audit; earlier posted hashes are historical |
+| `097a8e2` | Item4: own-dungeon items before D25 ammo, early-key regression |
+| `78d81c5` | Item4: type-held dependency cycle and second regression |
+| `ab129ed` | Item4: explicit type-held stage before ammo; replaces the intermediate sort workaround |
+| `855bb21` | Item4: sparse type-held capacities before general refills |
+| `a30abd7` | Shared synthetic purchase fixture: owned Blue Fire after purchase |
+| `85484ba` | Shared `allowed()` missable/progression rejection |
+| `7ba13ef` | Owned missable shopkeeper type, caller migration and generated-placement regression |
+| `b1dbe25` | Policy/human-result and generator evidence checkpoint |
+| `8e683f2` | Shared fill/owned regression: type-held ammo retains D25 bag gating |
 
 Final documentation evidence and its own head are reported after the post-fix gates, rather than
-self-referenced here. The approved rebase was conflict-free; the clean final rebase was up to date.
+self-referenced here. The `dfe923a` rebase was conflict-free; the `9b4735c` rebase resolved only the
+additive appendix conflict, preserving sections26/27 before28. Section25 is not fabricated as a placeholder.
 No merge, push, stash, dependency change, other-worktree edit or unauthorized rebase.
 
 ### Left for review and play
@@ -302,8 +307,8 @@ was removed only after its passing run; no active test directory was removed.
 ## Approved missable-check policy follow-up
 
 Kareem's equipped-shield Boomerang/repeat-talk confirmation and option1 are recorded above.
-Shared commit `8001e9a` rejects any `world.items[item].progression` at a `Missable` location in
-`allowed()`. Owned `bcad046` assigns that type only to the shuffled merchant check, expands/replays
+Shared commit `85484ba` rejects any `world.items[item].progression` at a `Missable` location in
+`allowed()`. Owned `7ba13ef` assigns that type only to the shuffled merchant check, expands/replays
 it through Gift settings, and leaves the unshuffled native free-shield event and story window intact.
 No flow grant/gate bytes change in this policy follow-up.
 
@@ -314,7 +319,65 @@ shield elsewhere. The former literal held-type tuple test was replaced with real
 on Chest/Gift/Song/Missable destinations; no obsolete tuple snapshot is re-pinned. All **78** focused
 gift/shop/generator/return-kit tests pass before the newly authorized main rebase.
 
-Claude then advanced main to `9b4735c` (merged B/C, D27/D28). This clean checkpoint precedes that
-rebase; section28 is retained after27, with section25's integration remaining before26. Fresh policy
-CLI matrix (including expanded Gift CS1 replay and goal-without-missable proof), four gates and
-rewritten head follow on the approved new base; pre-policy results above are not reused.
+Claude advanced main to `9b4735c` (merged B/C, D27/D28); the approved rebase is complete. Both
+decisions were read. The sole conflict was additive appendices: preserve all of26/27, then28, with
+section25 to be integrated before26 by its owner. No code conflict or section placeholder.
+
+### D25/D27 constraint composition
+
+The merged BossHeart palette applies type holds to non-native ammo too. A new three-check regression
+failed before at seed3: Bombs in `Open A`, bag in `Open B`, rupee in `Bag Required`. Simply placing
+type-held ammo in the early type-held stage bypassed D25. `8e683f2` reserves both native ammo families
+for the dedicated bag-gated stage, still intersecting their type restrictions; Buy refills remain in the
+type-held stage. All **81** focused gift/shop/generator/return-kit/native-palette tests pass on the new base.
+
+### Reader-safe output policy
+
+Read main's new `02-orchestration.md` output rule after Claude's steer. Existing player outputs and
+user folders remain untouched. New runtime output is `E:/OOTRemake/work/r7-gifts/item4-policy-matrix-next/`,
+created only if absent; no automatic output deletion or rewriting. It is retained for Claude to swap
+after Kareem quits. New gate basetemps also use fresh `-next` paths; no prior directory is reused.
+
+### Integrated policy CLI proof on main `9b4735c` plus `8e683f2`
+
+The four requested real CLI modes and two additional caller/composition checks all passed with
+seed7 and the unchanged ten-attempt bound. Every collection sphere was printed. The same pass-through
+counter observed fill calls without altering arguments, RNG or errors; independent Search matched
+the written spoiler and reached the goal.
+
+| Mode | Attempts / 10 | Shuffled checks | Collection spheres | Output files |
+|---|---|---|---|---|
+| Chest | 1 | 164 | 24 | 64 |
+| Chest+Shop | 3 | 228 | 24 | 82 |
+| Chest+Shop+Gift | 1 | 278 | 22 | 119 |
+| `--settings CS1` default | 1 | 164 | 24 | 64 |
+| Gift expanded-CS1 replay | 1 | 278 | 22 | 119 |
+| Chest+Shop+Gift+Scrub+BossHeart, songs anywhere | 7 | 290 | 20 | 122 |
+
+Gift seed7 gives **Deku Nuts (5)** at the missable merchant; the composed mode gives **Rupees (20)**.
+Both are non-progression. Removing the merchant check entirely still reaches the goal in each mode.
+The effective Gift CS1 replays the new `Missable` type and produces **119/119 byte-identical files**;
+explicit Chest/default CS1 remain **64/64 byte-identical**. All six native ammo pickups retain D25
+bag necessity, all59 shuffled Buy refills stay Shop-only, all63 own-dungeon items remain in-dungeon,
+and the eight composed boss hearts contain only D27's native palette.
+
+The two failed Shop attempts and six failed composed attempts are recorded, not hidden or replaced
+by a seed/settings reroll. No increased bound. Evidence outside the repo: `item4-policy-matrix-proof.json`,
+`item4-policy-matrix-spheres.log`, the six `item4-policy-*-cli.log` files and both replay hash inventories.
+All six generated output folders remain under `item4-policy-matrix-next/`; no generated output is
+deleted or rewritten. Existing controlled player outputs/user folders are unchanged.
+
+### Fresh integrated final gates
+
+| Command | Observed result |
+|---|---|
+| `uv run ruff format --check` | 193 files already formatted |
+| `uv run ruff check` | All checks passed |
+| `uv run pytest --basetemp E:/OOTRemake/work/r7-gifts/gate-9b4735c-policy-synthetic-2ott6mu4-next` | 561 passed, 75 skipped; 307.60 s |
+| `OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump --basetemp E:/OOTRemake/work/r7-gifts/gate-9b4735c-policy-dump-fnw8b20g-next` | 74 passed, 562 deselected; 472.54 s |
+
+All four fresh full commands passed on the integrated policy source. No repository source/test edits
+followed their start. All generated `-next` output folders and basetemps are retained; existing player
+outputs/user folders, dump and save backups remain unchanged. Only the completed external counter
+harness code was removed, not any output directory or resource. The final documentation-only head
+is posted after this record is committed; no merge, push, game launch or hot output swap by the agent.
