@@ -225,7 +225,43 @@ Commit ledger so far:
 | `a3168ac` | Isolated shared writer nested-size hook |
 | `0cd8feb` | Isolated settings evidence: already-observed Minuet only |
 | `5b0dd43` | Item 3 full actor-gap inventory and six-chest artifact evidence |
+| `ee8af43` | Owned section 26, deterministic overlay replay and integration evidence |
 
 No seed pipeline/CLI/fill behavior, existing player output, live user, save backup, dependency or
 other track's file was changed. Presentation corrections remain explicit until visual review.
-The full four-command gate chain is running; completed results and the handoff-post outcome follow.
+The complete four-command chain passed once; no full gate was filtered, rerun or interrupted.
+
+### Full gates on the completed code
+
+Both pytest commands used only `PYTEST_ADDOPTS=--basetemp=E:/OOTRemake/work/r7-getitem/gate-<kind>`
+to keep dump-derived temporary resources outside the repository.
+
+| Full command | Observed result |
+|---|---|
+| `uv run ruff format --check` | **183 files already formatted** |
+| `uv run ruff check` | **All checks passed** |
+| `uv run pytest` | **529 passed, 71 skipped**, 722.41 seconds |
+| `OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump` | **70 passed, 530 deselected**, 1089.57 seconds |
+
+The dump gate includes every native model/ActorInfo inverse diff, the new original ActorInfo allocation
+oracle, existing whole-dump formats/census tests and actual CLI opening/seed checks. No error remains
+in the implemented patch or tests. Gameplay success is not inferred from these checks.
+
+Removed only this session's completed all-model smoke overlay/driver, deterministic replay overlay/driver,
+two targeted pytest basetemps and both full-gate basetemps. Retained the requested nine-resource player
+experiment, its statically verified launcher/checklist/read-only checker, research reproducers and JSON
+evidence outside the repository. No game/launcher/dry-run/window, backup/live-user write or dependency edit.
+
+### Handoff boundary
+
+- Items 1–3 and owned section 26 are committed; small shared settings/writer/formats edits are isolated
+  in the ledger above. The final documentation-only gate/handoff commit follows.
+- **Kareem:** the single new-game checklist is still required for model visibility, actual new gift grants,
+  usable ocarinas/spell/capacity and Save/Continue. The grotto appearance prerequisite is conditional.
+  No unobserved actor was admitted to chest fill; native presentation changes remain explicit experiments.
+- **Claude:** review/merge and insert A's section 25 before the existing owned 26. No rebase authorization
+  was received; no merge, push or stash performed.
+- **Bermuda blocker:** the required plain post cannot be delivered while `cs-r7` is absent (two attempted
+  posts returned that exact error; read-only thread metadata corroborated it). The final handoff post
+  is attempted once with the final commit and complete gate results; its outcome is reported in chat.
+  No unauthorized thread creation, alternative recipient or other agent terminal access.
