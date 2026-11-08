@@ -55,6 +55,11 @@ def make_seed(
     extra_steps: Sequence[PatchStep] = (),
 ) -> SeedOutput:
     """Fill a seed; kind-specific steps turn placements into decompressed file transforms."""
+    if "Token" in settings.shuffle:
+        raise PatchError(
+            "Token shuffle is not enabled: replacement pickups have not proved the GoldTokenGmdHash "
+            "collection callback or persistence. Run the r6-tokens ranch control/rupee/shield experiments first."
+        )
     spec = load_spec() if spec is None else spec
     if scrubs.SHUFFLE in settings.shuffle:
         spec, settings, step = scrubs.seed_setup(spec, settings)
