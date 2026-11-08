@@ -22,6 +22,7 @@ def test_seed_shop_7_spoiler_buys_deku_shield_before_deku_tree(romfs):
     assert steps[deku]["oot_randomizer_name"] == "KF Shop Item 6"
     assert {item["item"] for item in steps[deku]["requires"]} == {"Kokiri Sword", "Hylian Shield"}
     assert "Showed Mido Sword & Shield" in steps[deku]["release_rule"]
+    assert steps[deku]["price"] == 10  # Default cheap-shield policy follows the moved shield, not KF7.
     assert any(step["location"] == "KF Shop Item 8" and step["item"] == "Hylian Shield" for step in steps[:deku])
     for index, step in enumerate(steps):
         prior = {earlier["location"] for earlier in steps[:index] if earlier["kind"] == "collect"}

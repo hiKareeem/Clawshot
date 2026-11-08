@@ -131,7 +131,8 @@ def spoiler(seed: Seed) -> dict[str, Any]:
         for sphere in seed.spheres
     ]
     catalog = location_names.load()
-    shops = location_names.shops()
+    shops = location_names.shops(seed)
+    scrub_prices = seed.world.settings.get("scrub_sale_prices", {})
 
     def describe(name: str) -> dict[str, Any]:
         description = catalog.get(name)
@@ -143,6 +144,8 @@ def spoiler(seed: Seed) -> dict[str, Any]:
         )
         if name in shops:
             result.update(shops[name])
+        elif name in scrub_prices:
+            result.update(price=scrub_prices[name], opens="Native scrub puzzle and once-sale gate")
         return result
 
     locations = {name: describe(name) for name in seed.shuffled}

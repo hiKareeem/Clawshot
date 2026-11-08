@@ -1325,6 +1325,12 @@ child Slingshot-room scrub's nuts. The old prose omitted the later Deku Shield p
 Sword (Mido second-left), Hylian Shield (KF8), Deku Shield (KF6, after Mido), THEN Tree entry and the
 Slingshot-room upper chest. Synthetic route boundaries and the real-spoiler/note regression pass.
 
+Presentation prices use `clawshot.settings.shop_price` with the **placed** native display, physical slot
+price, shuffled membership and effective seed settings. A moved Kokiri Deku Shield is discounted; the old
+shield slot holding another item is not. Affordable affects shuffled Shop sales only, not Scrub fees.
+The Scrub producer exports its existing `SALES` prices through internal world metadata: required Scrub
+rewards render as Buy/price rather than free collection. No gameplay gate or pricing policy is duplicated.
+
 ## 21. Round 6: settings, prices and forest modes (cs6b)
 
 Build `e0f3ccfa`, read-only dump. Implementation, command evidence and the complete inventory-write audit:

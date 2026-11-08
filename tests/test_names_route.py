@@ -2,7 +2,7 @@
 
 import pytest
 
-from clawshot.generate import Settings, generate
+from clawshot.generate import Settings, generate, play_note, spoiler
 from clawshot.generate.route import opening
 
 
@@ -69,3 +69,21 @@ def test_adult_find_cannot_fake_a_child_opening_purchase():
     seed = generate(opening_world(child_shield=False), 7, Settings(shuffle=()))
     with pytest.raises(ValueError):
         opening(seed)
+
+
+def test_required_scrub_reward_is_a_priced_purchase_before_dungeon_entry():
+    spec = opening_world()
+    spec["locations"]["Later Shelf"]["type"] = "Scrub"
+    spec["settings"] = {"scrub_sale_prices": {"Later Shelf": 40}}
+    seed = generate(spec, 7, Settings(shuffle=()))
+    log = spoiler(seed)
+    steps = log["opening_route"]["steps"]
+    purchase = next(step for step in steps if step["location"] == "Later Shelf")
+    entry = next(step for step in steps if step["kind"] == "enter")
+    assert purchase["price"] == 40
+    assert {row["item"] for row in purchase["requires"]} == {"Sword", "Hylian Shield"}
+    assert steps.index(purchase) < steps.index(entry)
+    rows = play_note(seed, log).splitlines()
+    purchase_row = next(row for row in rows if "| Later Shelf —" in row)
+    assert "| Buy |" in purchase_row
+    assert "| 40 rupees;" in purchase_row

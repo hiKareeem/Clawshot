@@ -254,7 +254,7 @@ than a free Collect. Planned isolated producer-file metadata handoff into world 
 `SALES` values directly; generate will not import the patch layer or duplicate the native-price table.
 This cutover, together with canonical Shop pricing, is waiting on the authorized main rebase.
 
-## Baseline handoff / integration blocker
+## Baseline handoff / historical integration blocker (cleared below)
 
 All reachable work on the authorized pre-settings base is committed and passes the four full gates.
 The original three items and the played seed-shop-7 opening regression are implemented. Final integrated
@@ -276,3 +276,42 @@ After Claude says the settings producer is on main and authorizes this worktree'
 
 The coordinator was notified on `cs-r6`; no information question for Kareem is blocking code.
 Unresolved location observations stay documented above and do not silently enable checks.
+
+## Authorized settings integration (2026-11-08)
+
+Claude authorized `main` at `65bbcf7`; `git rebase main` completed. Only three additive section conflicts
+needed resolution: retain Track A's section 20/audit/presentation before existing sections 21, 22 and 23.
+The automatic code merge retained `settings_string`, price/forest preparation, composed GameData writing,
+Scrub setup/Token refusal and the held-item fill priority fix. The former base-move blocker is cleared.
+
+The presenter now calls **the canonical `clawshot.settings.shop_price`**, with each placed item's native
+display (including display aliases), slot price, actual shuffled membership and effective seed settings.
+It does not substitute the placed item's base price or discount the old shield slot. Native prices for
+the four Scrub families come directly from `patch.scrubs.SALES` through `spec.settings.scrub_sale_prices`;
+`generate` never imports `patch` and contains no duplicated native-price table. Stock, puzzles, saved
+flags, pool/rules and gameplay resource transforms are unchanged.
+
+New behavioral checks cover moved versus old-slot Shield pricing, the same Shield outside Kokiri,
+vanilla/unshuffled versus affordable/shuffled, cheap shield disabled, and a required Scrub purchase
+before dungeon entry. The real seed-shop-7 regression also asserts the moved Shield's new default price.
+Targeted results: **9 synthetic passed**, **1 dump passed**; the first dump invocation without `OOT_ROMFS`
+skipped, then the environment was corrected for the actual passing run (no unchanged retry).
+
+### Actual combined CLI surface
+
+Command: `uv run python -m clawshot --romfs E:/Games/Hookshot/romfs --seed 7 --shuffle Chest Shop Gift Scrub
+--songs anywhere --shop-prices affordable --forest closed --out E:/OOTRemake/work/r6-names/integrated-affordable`.
+It completed with **281 shuffled checks, 25 spheres, 126 romfs resources**, plus `spoiler.json` and
+`play-note.md`. The real rendered opening collects the Training Area Sword and Mido far-right Slingshot,
+buys the KF7 Deku Shield for 10, then enters/completes the Tree. Each predecessor refers to its actual
+source step; every shuffled check has its readable description. The spoiler retains its effective CS1.
+
+The actual output records all 64 Shop sales at 10. Scrub fees remain native:
+
+| Family | Rupees |
+|---|---:|
+| HF grotto, DMC | 100 |
+| LW bridge, LW grotto front | 40 |
+
+This is generated-resource/search/presentation proof, not an in-game certification or cash-earnings proof.
+No game/launcher was started and no active seed/user/save folder was read or changed.
