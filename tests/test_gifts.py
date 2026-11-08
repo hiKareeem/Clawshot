@@ -332,3 +332,19 @@ def test_seed_step_changes_only_moved_gifts():
     data = evfl.write(EventFlowFile(FLOW, flowchart=flowchart()))
     fc = evfl.read(out["flow.bfevfl"](data)).flowchart
     assert fc.events[1].params["ActorName"] == fc.events[4].params["ActorName"] == "Item_New"
+
+
+class _Item:
+    def __init__(self, type="Item"):
+        self.type = type
+
+
+def test_held_items_keep_songs_to_songs_and_chestless_actors_to_gifts():
+    world = _World({})
+    world.items = {"Lullaby": _Item("Song"), "Letter": _Item(), "Heart": _Item()}
+    actors = item_actors.loads(
+        '[items]\nLullaby = { actor = "Item_Melody_Z" }\nLetter = { actor = "Item_Letter" }\n'
+        'Heart = { actor = "Obj_Heart_Piece" }\n'
+    )
+    held = gifts.held_items(world, ["Letter", "Lullaby", "Heart", "Letter"], actors, {"Obj_Heart_Piece"})
+    assert held == {"Letter": ("NPC", "Cutscene", "Boss"), "Lullaby": ("Song",)}

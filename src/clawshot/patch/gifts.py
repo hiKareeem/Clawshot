@@ -25,7 +25,7 @@ from typing import Any
 from clawshot.census import definitions as census_definitions
 from clawshot.census.definitions import Definition
 from clawshot.census.gifts import FLOW_VERSIONS, Gift, flow_files, scan_gifts
-from clawshot.census.scan import read_romfs_byml
+from clawshot.census.scan import CHEST, read_romfs_byml, scan
 from clawshot.formats import byml, evfl, zsdic
 from clawshot.formats.byml import I32, U32
 from clawshot.generate import Settings, prepare
@@ -357,6 +357,7 @@ def file_changes(changes: Sequence[GiftChange], files: Mapping[str, str]) -> dic
 
 GIFT_TYPES = ("NPC", "Song", "Cutscene", "Boss")  # the world's location types of event gifts (OoT Randomizer's)
 SHUFFLE = "Gift"  # the --shuffle value
+SONG_TYPE = "Song"
 
 
 def seed_checks(
@@ -425,7 +426,9 @@ def seed_setup(
     romfs: str | Path, spec: Mapping[str, Any], settings: Settings, new_flags: bool = False
 ) -> tuple[dict[str, Any], Settings, Callable[[Mapping[str, str]], dict[str, Callable[[bytes], bytes]]]]:
     """For ``--shuffle Gift``: the spec with the gifts that cannot move held vanilla, the settings shuffling the
-    gift types in place of ``Gift``, and the patch step to pass to ``make_seed``."""
+    gift types in place of ``Gift`` (songs held to song locations and song locations to songs, and every other gift
+    item whose actor no chest in the game gives held to the gift locations: :func:`held_items`), and the patch step
+    to pass to ``make_seed``."""
     settings = replace(
         settings,
         shuffle=tuple(dict.fromkeys(t for s in settings.shuffle for t in (GIFT_TYPES if s == SHUFFLE else (s,)))),
@@ -434,9 +437,32 @@ def seed_setup(
     rules, actors = load(), item_actors.load()
     _, world = prepare(spec, settings)
     shuffled = seed_checks(world, census, definitions, rules, actors, new_flags)
+    vanilla = {name: world.locations[name].vanilla for name in shuffled}
+    chest_actors = {loc.vanilla_item for loc in scan(romfs) if loc.kind == CHEST}
+    held = held_items(world, vanilla.values(), actors, chest_actors)
+    songs = (SONG_TYPE,) if any(types == (SONG_TYPE,) for types in held.values()) else ()
+    settings = replace(
+        settings,
+        item_location_types={**settings.item_location_types, **held},
+        exclusive_location_types=tuple(dict.fromkeys([*settings.exclusive_location_types, *songs])),
+    )
     dicts = zsdic.Dictionaries.from_romfs(Path(romfs))
     versions = {str(k): str(v) for k, v in read_romfs_byml(Path(romfs), dicts, FLOW_VERSIONS)["Versions"].items()}
     files = flow_files(Path(romfs), versions)
-    vanilla = {name: world.locations[name].vanilla for name in shuffled}
     step = seed_step(shuffled, census, definitions, rules, actors, vanilla, files)
     return restrict_spec(spec, shuffled), settings, step
+
+
+def held_items(
+    world: World, items: Iterable[str], actors: ItemActors, chest_actors: set[str]
+) -> dict[str, tuple[str, ...]]:
+    """The gift items that may not go just anywhere: songs only to song locations (OoT Randomizer's
+    ``shuffle_song_items = 'song'``), and an item whose actor no chest in the game gives only to the other gift
+    locations, until such an actor is seen working in a chest."""
+    out = {}
+    for item in items:
+        if world.items[item].type == SONG_TYPE:
+            out[item] = (SONG_TYPE,)
+        elif actors.actor(item) not in chest_actors:
+            out[item] = tuple(t for t in GIFT_TYPES if t != SONG_TYPE)
+    return dict(sorted(out.items()))
