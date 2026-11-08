@@ -81,7 +81,7 @@ def load_spec(directory: Path = DATA_DIR) -> dict[str, Any]:
 _LOCATION_FIELDS = frozenset(
     {"rule", "was", "new", "type", "vanilla", "vanilla_fixed", "n64_only", "area", "keep_vanilla", "region"}
 )
-_REGION_FIELDS = frozenset({"area", "dungeon", "scene", "hint", "time_passes", "provides_time"})
+_REGION_FIELDS = frozenset({"area", "dungeon", "scene", "hint", "time_passes", "provides_time", "new"})
 _RULE_FIELDS = frozenset({"rule", "was", "new"})
 _TABLES = ("regions", "locations", "exits", "events", "key_counts", "items")
 
@@ -125,6 +125,11 @@ def apply_overrides(spec: dict[str, Any], files: Sequence[tuple[str, Mapping[str
         for name, fields in overrides.get("regions", {}).items():
             where = f"{label}: region {name!r}"
             _check_fields(fields, _REGION_FIELDS, where)
+            if fields.get("new") is False:
+                if name not in regions:
+                    raise WorldError(f"{where}: metadata override needs an existing region")
+                regions[name].update({key: value for key, value in fields.items() if key not in ("new", "source")})
+                continue
             if name in regions:
                 raise WorldError(f"{where} is already in the world")
             region = {"name": name, **fields, "events": {}, "locations": {}, "exits": {}}

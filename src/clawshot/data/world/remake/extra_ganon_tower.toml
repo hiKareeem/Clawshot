@@ -1,0 +1,4 @@
+[regions."Ganons Castle Tower"]
+new = false
+dungeon = "Ganons Castle"
+source = "OoT Randomizer 526b4c8d Region.py:112-140 restricts GanonBossKey by HintArea.at; Hints.py:475-507 inherits the castle hint through tower entrances (Bosses.json:214-229). Remake Banc/InsideGanonCastle holds the tower chest. Explicit dungeon metadata preserves that own-dungeon behavior."

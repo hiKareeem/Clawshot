@@ -111,6 +111,8 @@ Remake-only checks use `[locations."<census definition name>"]` with `new = true
 `rule` and `source` (no `was`). The name must not already exist. They live in `remake/extra_<area>.toml`; a check
 whose route is unresolved carries `keep_vanilla` with the specific reason rather than an invented access rule.
 The chest patch linker uses a definition's readable name when it has no OoT Randomizer name.
+Existing region metadata can be set with `[regions."<name>"]`, `new = false` and `source`; exits, events and
+locations stay intact. The tower explicitly belongs to `Ganons Castle` for dungeon-item placement.
 
 **Key counts.** The census finds fewer small keys in three dungeons (Bottom of the Well 2 of 3, Water Temple 4 of
 6, Ganon's Castle 1 of 2), and the remake's locked doors (`Obj_DoorChainLock_A_01`, one on each side of a door)
