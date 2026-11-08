@@ -120,3 +120,26 @@ Reviewer correction followed: **7b's spoiler is byte-for-byte equal to 7's**. It
 Rebase onto **65bbcf7** completed. `prepare` keeps both the canonical price transformation and the new Buy-held map, plus cs6b's forest/settings behavior. The fill keeps main's held-priority sort and the exact remaining-refill reserve; no duplicate competing policy path. Sections already present remain in numeric order (19,21,22,23,24; track A's section20 has not been merged here). No merge/push/stash or other-track worktree edit.
 
 Post-rebase scoped proof: `uv run python .../check_shop_logic.py` and `uv run pytest tests/test_shop_logic.py tests/test_shop_allocations.py -q`: **26 live capability checks; 32 tests passed**. The capability diagnostic initially expected Buy Bombchu + Bomb Bag to satisfy `has_bombchus` under defaults; printed `free_bombchu_drops=True` and helper source show that mode needs an actual Bombchu item. Corrected only the diagnostic: bought access supplies `can_refill_bombchus`; with free drops off, Bomb Bag + bought access supplies `has_bombchus`. Default mode under-credits Buy-only first acquisition conservatively. No helper/rule was changed to make the assertion pass.
+
+## Item 5: purchase refusals and logic check
+
+Section 24 now lists every native sale family: condition, explicit flow query/flag and refusal message ID, with paraphrases only (no copied game text). External traces: `shop_conditions.py`, `availability_trace.py`, `DisplayShop-conditions.txt`, `refusal_messages.py`, `refusal-messages.json`; the latter decodes only the selected local US-English messages outside the repository.
+
+Evidence: `DisplayShop:SelectItem_CheckAvailable` Event318 branches to bullet bag IsGet (Event299), quiver IsGet (Event320), Fire stone quest completed (Event327), or empty bottle (Event325), then native buy/hold checks. The hesitant price preambles are `NotAvailableTalk` merchant `Shop_01_02_1/2/3`; the observed Potion line is `_3`. Capacity/duplicate/age/stock follow-ups are named in the table. Pouch metadata supplies heart/MP recovery, ammo counts/capacity and equipment identity, not an invented engine query implementation.
+
+Kareem's successful Bazaar Bombchus and later Deku Stick/heart purchases settle the suspected malfunction: he needed stock/health room, not a rewritten purchase flow. **Extra buyable test cancelled by reviewer; no new overlay or launcher for it.**
+
+Logic conclusions:
+
+- Actual shield ownership satisfies the capability; inability to buy an already-held shield/tunic is not a missing progression item.
+- Tunic destinations retain adult-accessible catalog restrictions; `can_use` classifies both as adult items. Canonical effective prices/wallet rules survive the rebase.
+- Bottle-refill helpers require a usable bottle; first Ruto's Letter is excluded, a milk bottle can be emptied. Empty/currently full consumable stock is deliberately not a permanent progression flag.
+- Bombchu purchase succeeds without a new invented Bomb Bag gate. Existing default free-drop logic conservatively under-credits Buy-only first acquisition; off-mode requires Bomb Bag plus refill access. These are reported, not silently broadened.
+
+**Claude/Kareem: selected Blue Fire at either Potion merchant runs an acquired-Blue-Fire gate (Event108), but current catalog rules attach that condition only to the original two slot-5 checks. If Blue Fire moves to another Potion slot, this item-following condition is missing from the static logic. Proposed conservative correction: restrict Buy Blue Fire to already-gated destinations, or add an item-dependent purchase rule; do not remove the native flag query.** Other merchant types bypass the Potion-specific dialogue branch. Posted on cs-r6; kept this pre-existing audit finding explicit, without unrequested logic policy changes.
+
+### Integrated runtime smoke after rebase
+
+`uv run python -u E:/OOTRemake/work/r6-shopfix/smoke_integrated.py`: two real CLI processes, default forest/cheap-shield/settings-string behavior from **65bbcf7**, new refill policy and nested sizing. Both exit **0**, **228 checks /25 spheres**. Replaying the emitted settings string with a different hash seed gives **81/81 byte-identical canonical files**. **59 Buy refills**, all at Shop; **12 changed packed ShopParam copies** checked against original member allocation plus rounded growth. No launches.
+
+The same smoke rechecked existing 7b: spoiler equal to old7, same resource paths, **only the size table differs**. It never rewrites 7b or the old seed/user. Report `integrated-verification.json` and CLI transcripts stay outside the repository. Full four-gate chain is running on this integrated code; final results follow.

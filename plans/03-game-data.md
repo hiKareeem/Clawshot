@@ -1650,3 +1650,56 @@ as the logical `Bomb Bag` as well as the ammo; alternatively restrict them to ch
 already obtained independently, never let the ammo satisfy its own prerequisite. Merely leaving an uncounted
 early bag grant can alter the earliest-pull assumptions behind D20. Quiver/bullet bag capacity must not be
 misrepresented as Bow/Slingshot ownership. No ammo actor mapping, alias, chest rule or unrelated logic was changed.
+
+### Purchase conditions and native refusals (reviewer follow-up)
+
+`DisplayShop:SelectItem_CheckAvailable` starts at **Event318** (index284). Its explicit category gates are
+**Event299** (BulletBag IsGet), **Event320** (Quiver IsGet), **Event327** (Fire stone quest complete) and
+**Event325** (any empty bottle). **Event310/Event240** ask the native seller `EventQueryCheckBuyResult`;
+**Event303/Event77** ask `EventQueryCanAddToPorchByGameData(Shop_SelectItemName)`. These native queries own
+capacity/payment checks; their engine implementation was not read. No refusal or capacity query is patched.
+
+Refusal IDs below are labels, not copied game text. The generic preamble is `NotAvailableTalk`:
+merchant `Shop_01_02_1`, `_2`, `_3` (Potion's observed hesitant price line is `_3`), with adult variants.
+`ChangeMstxtForActor` selects a matching merchant override. Unqualified specific labels below name the flow's
+shared `EventFlowMsg/Npc_Kokiri_001_Shop_Child` message file; named Bazaar/Goron/Zora/Potion rows identify
+their own message files. More specific follow-up messages:
+
+| Item(s) | Purchase condition / explicit evidence | Refusal label(s), paraphrased |
+|---|---|---|
+| `Shop_Heart` | Life below maximum; recover4 quarter-hearts, native hold check | `Shop_05`: health already full |
+| `Shop_MagicJar_Small` | Magic gauge exists and MP has room; MPRecover60 metadata, native hold check | Generic preamble/recovery refusal; no new magic is granted by buying |
+| `Shop_DekuNutBundle_01/02`, `Shop_DekuStick`, `Shop_DekuStickBundle_Medium` | Stock below capacity; nut/stick rows permit creating the small bag | Generic preamble, then `Shop_03`: carrying capacity full |
+| `Shop_DekuSeedBundle_01/02` | `IsGet.Item_BulletBag_Small` (Event299), plus stock room | Generic preamble; `Shop_03` for full stock |
+| `Shop_ArrowBundle_01/02/03` | `IsGet.Item_Quiver_Small` (Event320), plus arrow stock room; actual flow tests quiver, not literal Bow | Bazaar/Zora `Shop_09_04/05`: missing bow/container explanation; `Shop_41`: full arrows |
+| `Shop_BombBundle_01/02/03/04` | `Get_StoneOfFire_IsCompleted_Exp` (Event327), then native stock/hold/payment result; no separate literal Bomb Bag query in this branch | Bazaar/Goron `Shop_10/12`: stock unavailable before Dodongo; generic/`Shop_03` for native hold refusal |
+| `Shop_BombchuBundle_01..08` | Native stock/hold/payment result; no explicit Bomb Bag or Dodongo gate in this item branch | Generic preamble/`Shop_03`; **07 purchase succeeded**, including the reported initial no-Bomb-Bag state |
+| `Shop_Weapon_Shield_Deku` | Must not already carry the shield; stock max is one | Kokiri `Shop_31/32`: already owned; adult-specific preamble is `Shop_01_Shield_Adult_02_*` |
+| `Shop_Weapon_Shield_Hylian` | Must not already carry it; stock max is one | Bazaar `Shop_31/32`: already owned |
+| `Shop_Armor_Goron`, `Shop_Armor_Zora` | Adult-use restriction; must not already carry the tunic; native price/wallet | Goron/Zora `Shop_19/20`: child; `Shop_31/32`: already owned |
+| `Shop_Bottle_RedPotion`, `_GreenPotion`, `_HalfMilk`, `_Poe`, `_Bug`, `_Fish`, `_Fairy` | **An empty usable bottle**, Event325; they refill a bottle, never grant one | Generic preamble; missing empty bottle cannot be distinguished from all other native rejection reasons by that preamble alone |
+| `Shop_Bottle_BlueFire` | Same empty-bottle condition; at Potion merchants also existing `IsGet.Item_Bottle_BlueFire` through `Outofstock_SelectBottle_BlueFire` Event108 | Potion `Shop_101/102`: Blue Fire unavailable; otherwise generic preamble |
+
+All rows also retain their slot's original release/stock fields and require the quoted rupee price;
+`EventQueryCheckBuyResult`/the later buy/pay actions own this, not a new randomizer bypass.
+
+**In game (Kareem via Claude, 2026-11-08, 07):** Bazaar Bombchus were bought; Deku Stick and heart purchases
+worked once stock/health had room. His initial full10 sticks, owned Deku Shield, unknown bottle contents,
+no Bomb Bag/Bow and full hearts explain native refusals. Reviewer cancelled the proposed extra buyable test;
+none was created or run.
+
+**Logic check:** actual shields satisfy the existing helpers; an already-held shield/tunic is already the
+capability, so refusal to buy a second one does not block progression. Tunics stay at adult-accessible destinations,
+`can_use` classifies tunics as adult items, and wallet rules use canonical effective prices. Bottle-refill helpers require
+`has_bottle`; one Ruto's Letter does not qualify, whereas a drinkable milk bottle can be emptied and reused.
+Current stock/full health are consumable state, not monotone progression gates; use/empty/take damage restores room.
+Default `free_bombchu_drops=true` conservatively needs an actual Bombchu item for `has_bombchus`;
+buy access supplies `can_refill_bombchus`. With free drops off, Bomb Bag plus buy access supplies usable Bombchus.
+No new Bomb-Bag requirement is invented for the observed successful purchase.
+
+**Remaining audit finding:** catalog rules retain the two original Potion Blue-Fire slots' acquired-Blue-Fire gate,
+even when they sell something else. The flow additionally tests the **selected Blue Fire item** at either Potion
+merchant; moving it to another Potion slot therefore needs the same gate, which current static slot rules do not
+follow. Other merchants bypass that Potion-only dialogue gate. A conservative fix is limiting Buy Blue Fire to
+already-gated destinations (or adding an item-dependent purchase requirement), not suppressing the flow check.
+This pre-existing gap is reported for review; no unrelated placement/logic policy is silently changed by the audit.
