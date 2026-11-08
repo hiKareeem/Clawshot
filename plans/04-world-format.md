@@ -107,6 +107,11 @@ source = "PouchActorInfo Item_DinFire: ExpansionAvility MPMaxUP, MPMax 24"
 | `[key_counts]` | the remake's number of a dungeon's small keys, where it has fewer than N64: a rule asking for more asks for that many |
 | `[items."<name>"]` | `alias = ["<item>", count]`: collecting the item also adds that many of another (an item without an alias of its own); the search counts both |
 
+Remake-only checks use `[locations."<census definition name>"]` with `new = true`, `region`, `type`, `vanilla`,
+`rule` and `source` (no `was`). The name must not already exist. They live in `remake/extra_<area>.toml`; a check
+whose route is unresolved carries `keep_vanilla` with the specific reason rather than an invented access rule.
+The chest patch linker uses a definition's readable name when it has no OoT Randomizer name.
+
 **Key counts.** The census finds fewer small keys in three dungeons (Bottom of the Well 2 of 3, Water Temple 4 of
 6, Ganon's Castle 1 of 2), and the remake's locked doors (`Obj_DoorChainLock_A_01`, one on each side of a door)
 match those counts. Which N64 doors are gone is not known, so a rule's count is capped at the remake's: as long as

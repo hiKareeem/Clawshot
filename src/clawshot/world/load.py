@@ -75,7 +75,7 @@ def load_spec(directory: Path = DATA_DIR) -> dict[str, Any]:
 
 # Fields an override may set, besides ``source``. A location's ``rule`` needs ``was``; ``region`` moves it.
 _LOCATION_FIELDS = frozenset(
-    {"rule", "was", "type", "vanilla", "vanilla_fixed", "n64_only", "area", "keep_vanilla", "region"}
+    {"rule", "was", "new", "type", "vanilla", "vanilla_fixed", "n64_only", "area", "keep_vanilla", "region"}
 )
 _REGION_FIELDS = frozenset({"area", "dungeon", "scene", "hint", "time_passes", "provides_time"})
 _RULE_FIELDS = frozenset({"rule", "was", "new"})
@@ -152,9 +152,21 @@ def apply_overrides(spec: dict[str, Any], files: Sequence[tuple[str, Mapping[str
     for label, overrides in files:
         for name, fields in overrides.get("locations", {}).items():
             where = f"{label}: location {name!r}"
+            _check_fields(fields, _LOCATION_FIELDS, where)
+            if fields.get("new"):
+                if name in spec["locations"] or name in holder:
+                    raise WorldError(f"{where}: new, but the world has it already")
+                if "was" in fields or any(key not in fields for key in ("rule", "region", "type", "vanilla")):
+                    raise WorldError(f"{where}: new needs rule, region, type and vanilla, without was")
+                target = regions.get(fields["region"])
+                if target is None:
+                    raise WorldError(f"{where}: region {fields['region']!r} is not in the world")
+                target.setdefault("locations", {})[name] = fields["rule"]
+                holder[name] = target
+                spec["locations"][name] = {k: v for k, v in fields.items() if k not in ("new", "region", "rule")}
+                continue
             if name not in spec["locations"] or name not in holder:
                 raise WorldError(f"{where} is not in the world")
-            _check_fields(fields, _LOCATION_FIELDS, where)
             if ("rule" in fields) != ("was" in fields):
                 raise WorldError(f"{where}: rule and was go together")
             rules = holder[name]["locations"]
@@ -168,7 +180,7 @@ def apply_overrides(spec: dict[str, Any], files: Sequence[tuple[str, Mapping[str
                 target.setdefault("locations", {})[name] = rules.pop(name)
                 holder[name] = target
             info = dict(spec["locations"][name])
-            info.update({k: v for k, v in fields.items() if k not in ("rule", "was", "region", "source")})
+            info.update({k: v for k, v in fields.items() if k not in ("rule", "was", "new", "region", "source")})
             info["override"] = fields["source"]
             spec["locations"][name] = info
 
