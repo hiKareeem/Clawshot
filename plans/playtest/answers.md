@@ -1,19 +1,19 @@
 # Answers — Claude fills after play
 
-One row per question ID in [questions.md](questions.md). No row is an observed pass yet.
+One row per question ID in [questions.md](questions.md), plus direct-play observations identified below.
 Replace `—` with age, inventory/story stage, exact result, room/standing point and save/log reference where relevant.
 Use `confirmed`, `inconclusive`, `already collected`, or `needs preserved copy/tool`; never turn one failed attempt into impossibility.
 Then apply the register's rule/fact consequence in the owning track, recording Kareem/build/date. Product calls still need owner approval.
 
-Nine rows are **asked 2026-11-08, answer pending**. They are deliberately absent from every session; do not ask again.
-A dash in Session means already asked, not forgotten. Mod checks require overlay log AND observed result.
-Track C followup adds XC01–XC20 in [excluded-chests.md](excluded-chests.md). 197 ID rows total; LW05→XC19 and
-GE01→XC04 are aliases with no separate errand. There are 186 routed checks and 9 already-asked pending checks.
+Rows still marked **asked 2026-11-08, answer pending** are absent from every session; do not ask again.
+A dash in Session means already asked or supplied directly, not forgotten. Mod checks require overlay log AND observed result.
+Track C followup adds XC01–XC20 in [excluded-chests.md](excluded-chests.md); LW05→XC19 and GE01→XC04 are aliases.
+Round 6 adds direct observation R6F-GOHMA (not a scheduled register question). Partial answers retain their untested parts.
 
 
 | ID | Session | Check | Status | Observed answer / evidence |
 |---|---|---|---|---|
-| HF01 | — | After Zelda throws the Ocarina into the moat, try collecting it with no Silver/Golden… | asked 2026-11-08, answer pending | — |
+| HF01 | — | After Zelda throws the Ocarina into the moat, collect it without a Scale | confirmed | Kareem in game via Claude, 2026-11-08: the moat is shallow and needs no Silver Scale. Both HF moat checks keep `is_child and has_all_stones`; no scale gate. Section 12 and `r6-play.md` item 2; no new agent game run or invented log evidence. |
 | FA01 | — | Before obtaining Din Fire, play Lullaby at the Hyrule Castle fountain | asked 2026-11-08, answer pending | — |
 | TT01 | — | With only Fairy Ocarina, three stones and Song of Time, play at the altar | asked 2026-11-08, answer pending | — |
 | TT02 | — | Immediately after the first sword pull, try putting it back | asked 2026-11-08, answer pending | — |
@@ -45,7 +45,7 @@ GE01→XC04 are aliases with no separate errand. There are 186 routed checks and
 | LW05 | — | Lost Woods elevated chest; same question as XC19 | alias → XC19; answer once | — |
 | LW02 | [ 2 ](session-2.md) | Drop through the Deku Theater hole | not yet played | — |
 | LW04 | [ 2 ](session-2.md) | Cut above-ground bushes in the woods; bottle any bug | not yet played | — |
-| GIFT02 | [ 2 ](session-2.md) | At Kokiri shop, speak before and after ordinary shield purchase without accepting a… | not yet played | — |
+| GIFT02 | [ 2 ](session-2.md) | Does the Kokiri shopkeeper give a free shield? | confirmed | Kareem via Claude, 2026-11-08, `seed-shop-7`, Hookshot 2.0.1: child with Kokiri Sword/Hylian Shield, no Deku Shield, after Mido; free Deku Shield, while shelf still sold one at 40. Data: early quest window and not-equipped Deku test; both first/repeat dialogue paths grant. New child-shop event models early access, not a shuffled check. Repeat/cutoff play confirmation remains open (`r6-play.md` item 3, section 12). |
 | GIFT01 | [ 2 ](session-2.md) | At Market potion/bug shop, ask about the bottle tutorial and catch its bug if prompted | not yet played | — |
 | MK01 | [ 2 ](session-2.md) | By day, find Richard and lead him to his owner | not yet played | — |
 | MK03 | [ 2 ](session-2.md) | Check the Bombchu Shop door between 18:00 and 21:00, then just after 21:00 | not yet played | — |
@@ -187,8 +187,8 @@ GE01→XC04 are aliases with no separate errand. There are 186 routed checks and
 | MOD06 | [ 16 ](session-16.md) | On existing intro-removed test, start empty test user | not yet played | — |
 | MOD07 | [ 16 ](session-16.md) | Use Track B reviewed Kokiri shop-slot variant; buy substitute, inspect… | not yet played | — |
 | MOD08 | [ 16 ](session-16.md) | Use Track D reviewed Talon/NPC/fairy/song variants separately | not yet played | — |
-| DT01 | [ 17 ](session-17.md) | Enter the Slingshot room without a Slingshot; after the platform falls, try returning | not yet played | — |
-| DT02 | [ 17 ](session-17.md) | At the lobby vines above the map chest, try Boomerang as child; on a later adult visit… | not yet played | — |
+| DT01 | [ 17 ](session-17.md) | Leave the Slingshot room without Slingshot; separately test unarmed save/game-over recovery | confirmed (Boomerang); recovery pending | Kareem via Claude, 2026-11-08, `seed-shop-7`, Hookshot 2.0.1: Boomerang hits the exit switch. Rule adds Boomerang; room 2 eye Hash 9080063866993537303 / ladder 2096903280161003875 agree. This does not answer save/quit or game-over recovery without either ranged weapon. |
+| DT02 | [ 17 ](session-17.md) | Clear the lobby vine wall with child Boomerang; later compare adult Bow/Hookshot | confirmed (child); adult pending | Kareem via Claude, 2026-11-08, `seed-shop-7`, Hookshot 2.0.1: Boomerang permits reaching 3F. `child_deku_tree.toml` accepts Slingshot or Boomerang; room 0 Skullwalltulas verified in both Banc files. Adult Bow/Hookshot not established by this observation. |
 | LW01 | [ 17 ](session-17.md) | After Gohma but before Zelda, follow the correct maze path to the meadow | not yet played | — |
 | XC01 | [6](session-6.md) | Well room-11 Seed chest: safe route round fake floor; Hash 6064359710907908886 | not yet played | — |
 | XC02 | [10](session-10.md) | Fortress underground red chest entrance/route; Hash 16619432200060282313 | not yet played | — |
@@ -210,4 +210,5 @@ GE01→XC04 are aliases with no separate errand. There are 186 routed checks and
 | XC18 | [2](session-2.md) | Kokiri elevated purple chest climb/spawn; Hash 4349272251343787229 | not yet played | — |
 | XC19 | [2](session-2.md) | Lost Woods elevated purple chest climb/spawn; Hash 17479747339356189279 | not yet played | — |
 | XC20 | [8](session-8.md) | Fountain upper ruins purple chest route/spawn; Hash 15055117029957340138 | not yet played | — |
-| SHOP01 | later | With the Deku Shield in no shop: burn it (fire Keese or a torch), then talk to the Kokiri shopkeeper after Mido: does he give a replacement (`present_DekuSheld`)? | not yet played | — |
+| SHOP01 | later | With the Deku Shield in no shop, burn it then ask the shopkeeper after Mido | needs preserved copy/tool | GIFT02 confirms a first free grant without purchase, not a burned-shield replacement. Flow Event63's true branch still grants (Event116); equipped Deku Shield suppresses either grant. Repeat-after-burning and post-Gohma cutoff remain unplayed; do not mark those confirmed. |
+| R6F-GOHMA | — | Does Boomerang stun Gohma? | confirmed | Kareem via Claude, 2026-11-08, `seed-shop-7`, Hookshot 2.0.1: yes. `Defeat Queen Gohma` adds Boomerang to stuns; retains jumpslash damage. Static boss Hash 15302759724049838417. Direct Round 6 Track F observation, not a new player errand. |

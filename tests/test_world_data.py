@@ -101,7 +101,7 @@ def test_forest_start(world):
 def test_deku_tree_needs_what_ootr_says(world):
     base = ["Kokiri Sword", "Buy Deku Shield"]
     gohma = world.locations["Deku Tree Queen Gohma Heart"]
-    # Child reaches the boss only through the basement back room, which needs the Slingshot (or an adult's Bow);
+    # Child reaches the boss through the basement eye (Slingshot or verified Boomerang);
     # sticks for the torches come from the Deku Babas the Kokiri Sword kills ('Deku Stick Drop').
     assert not reachable(world, base).can_access(gohma)
     search = reachable(world, [*base, "Slingshot"])

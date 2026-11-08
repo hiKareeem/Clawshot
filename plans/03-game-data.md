@@ -421,13 +421,13 @@ files (actors listed by `E:/OOTRemake/work/r4-logic-child/actors.py`; room = `De
 Banc `y`).
 
 **Inside the Deku Tree.** The lobby's 2F-to-3F vine wall carries three `Enemy_Skullwalltula` (y 113-116, above the
-map chest on 2F at y 108) that the Slingshot clears; the basement opens only by dropping from 3F into the 1F web
-(`Obj_InsideTheDekuTree_SpiderWeb_A_01`, y 100). So 3F, the compass room (room 3) and everything below 1F need the
-Slingshot; OoT Randomizer's single "Lobby" region (floors 1-3) let the basement open without it, which made round
-3's seed 3 unbeatable in game. The Slingshot room (room 2) has a breaking floating platform
-(`Obj_InsideTheDekuTree_FallingFloor_A_01/02/03`) at its entrance and an eye switch (`Obj_EyeSwitch_A_02`, y 114)
-with a falling ladder (`Obj_InsideTheDekuTree_FallingLadder_A_01`, y 116) above it: once in, Link leaves by shooting
-the eye. Nintendo Life's Deku Tree walkthrough (Switch 2) agrees on each point.
+map chest on 2F at y 108) that the Slingshot or Boomerang clears (Kareem via Claude, 2026-11-08); the basement
+opens only by dropping from 3F into the 1F web (`Obj_InsideTheDekuTree_SpiderWeb_A_01`, y 100).
+So 3F, the compass room (room 3) and everything below 1F need either weapon. OoT Randomizer's single
+"Lobby" region (floors 1–3) allowed neither, which made round 3's seed 3 unbeatable in game.
+The Slingshot room (room 2) has a breaking platform (`Obj_InsideTheDekuTree_FallingFloor_A_01/02/03`),
+an eye switch (`Obj_EyeSwitch_A_02`, y 114) and falling ladder (`Obj_InsideTheDekuTree_FallingLadder_A_01`,
+y 116). Slingshot or Boomerang activates that exit; Nintendo Life documented the Slingshot route.
 
 **Rules that cross areas** (each as overrides in the area files; sources in them):
 
@@ -508,6 +508,37 @@ So OoT Randomizer's `here(has_shield)` (a child needs the Deku Shield) holds in 
 it (the Deku Shield at KF Shop Item 6, after Mido), but its play note named only the Hylian Shield. Whether the
 Slingshot or Boomerang beat the scrub is untested (Kareem expects they do; both are inside that seed's Slingshot
 room).
+
+### Round 6 play findings (cs6f, Kareem via Claude, 2026-11-08)
+
+`seed-shop-7`, dump build `e0f3ccfa`, Hookshot 2.0.1. No agent game run. Exact data trace and checks:
+`plans/rounds/r6-play.md`; regressions: `tests/test_world_remake_play.py` and `test_world_remake.py`.
+
+- **Deku Tree:** Boomerang activates the Slingshot-room exit switch, clears the vine-wall climb and stuns
+  Gohma. Static room 2 eye Hash 9080063866993537303 drives ladder 2096903280161003875 through
+  `InsideTheDekuTree_Level_Room_C_Prefab_efa7`. The basement room 5 eye 10433048972954508847 is the same
+  `Obj_EyeSwitch_A_02`, without a weapon override, so its rule also accepts Boomerang; this shared-actor
+  deduction is data evidence, not a separate observed basement test. Gohma's rule adds Boomerang as a
+  stun, **not damage**: jumpslash stays required. Fire and Deku Shield scrub gates stay. Adult vine-wall
+  alternatives and save/game-over recovery with neither ranged weapon remain unanswered (DT01/DT02).
+- **Castle moat (HF01):** shallow; no Silver Scale needed for the Ocarina. Both moat checks already use
+  `is_child and has_all_stones`; retained, tested with no scale. Child Static places
+  `Obj_Ocarina_Time_A_01` Hash 2802436684568022035 at (16,145,43). No scale gate was removed elsewhere.
+- **Free Kokiri Deku Shield (GIFT02):** child with Kokiri Sword/Hylian Shield, no Deku Shield, received one
+  after Mido without buying it; the shelf still sold one at 40. `Npc_Kokiri_001_Shop_Child:Talk`
+  Event23/21 take this branch only while `Goto_HyruleCastle` and `Get_StoneOfForest` are incomplete;
+  Event1 requires `Meet_DekuTree_IsAfter_Step02_Exp`. `present_DekuSheld` Event45 checks Deku Shield
+  **equipped**, not ownership or Hylian Shield. There is no rupee, sword or shelf-content check.
+  Event63's first-talk flag false reaches grant Event117 then sets the flag (Event44); true reaches
+  grant Event116. **It is not once-only:** the flag changes dialogue, correcting section 19's old
+  characterization. Repeat grants/late cutoff are traced in the data, not yet corroborated in game.
+  Logic adds the `Deku Shield` event at `KF Kokiri Shop` after a child can reach the tree beyond Mido:
+  talk to the tree (advances the meeting quest even with Mido skipped), return to the shop before Gohma.
+  This monotone event records an earlier obtainable shield; it does not assert the offer survives the
+  early-story window. It cannot supply a shield to pass kept Mido with no initial shield.
+  **Not a shuffle check as-is:** both grant branches and the equipped test need a real once-gate rewrite
+  before a randomized reward is safe. No pool item or gift patch changed.
+
 
 ## 13. Round 4: adult remake logic (cs4b)
 

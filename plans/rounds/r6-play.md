@@ -101,3 +101,23 @@ Posted the exact repeat-branch correction on `cs-r6` as cs6f; no other track's f
 **Kareem via Claude: on a disposable early post-Mido save, unequip the first free Deku Shield and talk
 again; does the repeat branch give another shield notice? After Gohma, does the free offer disappear?**
 These corroborate the data, not prerequisites for accepting the supplied first-grant observation.
+
+## Item 4: answers and section 12
+
+Updated HF01/GIFT02 and the answered parts of DT01/DT02. Left unarmed recovery and adult vine weapons
+pending; SHOP01's burned/repeat scenario is not mislabeled as played. Added direct observation
+`R6F-GOHMA` rather than pretending a new question had been scheduled. Removed stale ledger claims that
+no answer was observed/all nine already-asked rows remain pending. Section 12 records all three findings,
+corrects its Slingshot-only summary and explicitly distinguishes shared-actor/repeat-branch deductions
+from Kareem's actual observations. Historical sections 17/19 remain untouched; section 12 names the correction.
+Updated one stale Slingshot-only comment in the existing whole-world test; its assertions are unchanged.
+
+Saved-document smoke: **199 unique ledger IDs, 188 local Markdown links resolved**; all supplied findings
+are in section 12, before section 13. No guide text, decoded data, generated overlay or save bytes were added.
+
+## Commit checkpoints
+
+- `cb5fee3`: item 1, sourced Deku Tree Boomerang routes and regressions.
+- `dc1ed26`: item 2, no-scale moat confirmation and boundary regressions (existing rules correct).
+- `f81146f`: item 3, free-shield event, exact merchant branch trace and non-bootstrap regressions.
+- Item 4 is the next commit; full required gates are running before readiness/handoff is posted.
