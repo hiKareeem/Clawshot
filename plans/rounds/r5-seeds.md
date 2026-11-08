@@ -160,3 +160,22 @@ integration and replace these provisional notes. No chronological/in-game succes
 
 Parent generation/determinism helper scripts were removed after recording this proof; no game-derived output
 is in the repository. No merge or push.
+
+## Authorized shops integration (`ccd1963`)
+
+Claude authorized the rebase onto reviewed main `ccd1963`. Rebase completed; additive conflicts preserve
+section 17 before section 18 and both appended native-shop/chest-filler actor blocks before `[aliases]`.
+The CLI docstring now describes shops and fast start together; both implementations remain.
+
+Added a two-case permanent regression in `test_generate_fast_start.py`: a real Deku/Hylian Shield collected
+from Mido's top-left chest, with only Kokiri Sword initially, satisfies its corresponding
+`Deku_Shield`/`Hylian_Shield` goal and the kept-Mido path. No bought-item proxy is supplied. The independent
+forest-exit gate remains closed. Live runtime smoke printed both cases: helper/Mido `(False, False)` before,
+`(True, True)` after, forest exit `False`, exactly that chest collected. Shop normalization needed no change.
+
+The first combined gate stopped at Ruff's printed `I001`: auto-merged `gamedata`/`shops` imports needed
+grouping. Grouped those imports exactly as diagnosed; the restarted gate targets that cause, not an unchanged
+retry. No source behavior changed by that import cleanup.
+
+The earlier age/shops authorization request is partially answered: shops is integrated; final seed regeneration
+still waits for Claude's next authorization after track A merges. Existing three outputs stay provisional.
