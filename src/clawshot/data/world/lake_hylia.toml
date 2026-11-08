@@ -32,6 +32,9 @@ Bugs = "is_child and can_cut_shrubs and has_bottle"  # Overworld.json:546
 "LH GS Lab Wall" = "is_child and (at_night or gold_skulls_ignore_daytime) and (Boomerang or (logic_lab_wall_gs and (Sticks or Kokiri_Sword)))"  # Overworld.json:535
 "LH GS Small Island" = "is_child and can_child_attack and (at_night or gold_skulls_ignore_daytime)"  # Overworld.json:538
 "LH GS Tree" = "can_use(Longshot) and (at_night or gold_skulls_ignore_daytime)"  # Overworld.json:539
+"LH Lab Gossip Stone" = "True"  # Overworld.json:540
+"LH Gossip Stone (Southeast)" = "True"  # Overworld.json:541
+"LH Gossip Stone (Southwest)" = "True"  # Overworld.json:542
 
 [region.exits]
 "Hyrule Field" = "True"  # Overworld.json:549
@@ -124,6 +127,9 @@ source = "Overworld.json:3252"
 "LH GS Lab Wall" = { type = "GS Token", vanilla = "Gold Skulltula Token", source = "LocationList.py:828" }
 "LH GS Small Island" = { type = "GS Token", vanilla = "Gold Skulltula Token", source = "LocationList.py:829" }
 "LH GS Tree" = { type = "GS Token", vanilla = "Gold Skulltula Token", source = "LocationList.py:831" }
+"LH Lab Gossip Stone" = { type = "HintStone", source = "LocationList.py:2577" }
+"LH Gossip Stone (Southeast)" = { type = "HintStone", source = "LocationList.py:2578" }
+"LH Gossip Stone (Southwest)" = { type = "HintStone", source = "LocationList.py:2579" }
 "LH Trade Eyeball Frog" = { type = "NPC", vanilla = "Eyedrops", source = "LocationList.py:821" }
 "LH Lab Dive" = { type = "NPC", vanilla = "Piece of Heart", source = "LocationList.py:820" }
 "LH Lab Dive Red Rupee 1" = { type = "Freestanding", vanilla = "Rupees (20)", source = "LocationList.py:836" }

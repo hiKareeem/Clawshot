@@ -37,6 +37,9 @@ Fairy = "can_summon_gossip_fairy_without_suns and has_bottle"  # Overworld.json:
 "SFM Maze Wonderitem 4" = "True"  # Overworld.json:440
 "SFM Maze Wonderitem 5" = "True"  # Overworld.json:441
 "SFM GS" = "can_use(Hookshot) and (at_night or gold_skulls_ignore_daytime)"  # Overworld.json:442
+"SFM Maze Gossip Stone (Lower)" = "True"  # Overworld.json:443
+"SFM Maze Gossip Stone (Upper)" = "True"  # Overworld.json:444
+"SFM Saria Gossip Stone" = "True"  # Overworld.json:445
 
 [region.exits]
 "SFM Entryway" = "True"  # Overworld.json:449
@@ -104,6 +107,9 @@ source = "Overworld.json:2951"
 "SFM Maze Wonderitem 4" = { type = "Wonderitem", vanilla = "Rupees (5)", source = "LocationList.py:218" }
 "SFM Maze Wonderitem 5" = { type = "Wonderitem", vanilla = "Rupees (5)", source = "LocationList.py:220" }
 "SFM GS" = { type = "GS Token", vanilla = "Gold Skulltula Token", source = "LocationList.py:205" }
+"SFM Maze Gossip Stone (Lower)" = { type = "HintStone", source = "LocationList.py:2581" }
+"SFM Maze Gossip Stone (Upper)" = { type = "HintStone", source = "LocationList.py:2582" }
+"SFM Saria Gossip Stone" = { type = "HintStone", source = "LocationList.py:2583" }
 "SFM Deku Scrub Grotto Rear" = { type = "GrottoScrub", vanilla = "Buy Red Potion for 30 Rupees", source = "LocationList.py:204" }
 "SFM Deku Scrub Grotto Front" = { type = "GrottoScrub", vanilla = "Buy Green Potion", source = "LocationList.py:203" }
 "SFM Storms Grotto Beehive" = { type = "Beehive", vanilla = "Rupees (20)", source = "LocationList.py:207" }

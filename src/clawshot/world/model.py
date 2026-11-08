@@ -7,6 +7,8 @@ from clawshot.world.rules import Rule
 
 # OoT Randomizer item types whose items belong to one dungeon ("Small Key (Forest Temple)").
 DUNGEON_ITEM_TYPES = frozenset({"SmallKey", "SmallKeyRing", "BossKey", "GanonBossKey", "Map", "Compass", "SilverRupee"})
+# The location type of a Gossip Stone: a place to read a hint, not a check (``World.hint_stones``).
+HINT_STONE = "HintStone"
 
 
 @dataclass(frozen=True)
@@ -99,6 +101,9 @@ class World:
     """Events a rule names that no region defines: never held."""
     missing_regions: list[str] = field(default_factory=list)
     """Regions an ``at()`` names that are not in this world."""
+    hint_stones: dict[str, Location] = field(default_factory=dict)
+    """Gossip Stones (OoT Randomizer type ``HintStone``): where a hint can be read, with the rule to reach it. Not
+    checks: they hold no item, so they are kept out of ``locations`` and the fill never sees them."""
 
     @property
     def age_return(self) -> tuple[str, str] | None:

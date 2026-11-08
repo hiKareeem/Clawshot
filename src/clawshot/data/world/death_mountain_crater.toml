@@ -28,6 +28,7 @@ Fairy = "has_explosives and can_summon_gossip_fairy_without_suns and has_bottle"
 [region.locations]
 "DMC Wall Freestanding PoH" = "True"  # Overworld.json:2342
 "DMC GS Crate" = "is_child and can_child_attack and can_break_heated_crate"  # Overworld.json:2343
+"DMC Gossip Stone" = "has_explosives"  # Overworld.json:2344
 
 [region.exits]
 "DMC Upper Nearby" = "True"  # Overworld.json:2349
@@ -183,6 +184,7 @@ Fish = "has_bottle"  # Overworld.json:3193
 "DMC Upper Grotto Chest" = "True"  # Overworld.json:3186
 "DMC Upper Grotto Beehive 1" = "can_break_lower_beehive"  # Overworld.json:3187
 "DMC Upper Grotto Beehive 2" = "can_break_lower_beehive"  # Overworld.json:3188
+"DMC Upper Grotto Gossip Stone" = "True"  # Overworld.json:3189
 
 [region.exits]
 "DMC Upper Local" = "True"  # Overworld.json:3196
@@ -205,6 +207,7 @@ source = "Overworld.json:3200"
 [locations]
 "DMC Wall Freestanding PoH" = { type = "Collectable", vanilla = "Piece of Heart", source = "LocationList.py:659" }
 "DMC GS Crate" = { type = "GS Token", vanilla = "Gold Skulltula Token", source = "LocationList.py:666" }
+"DMC Gossip Stone" = { type = "HintStone", source = "LocationList.py:2562" }
 "DMC Adult Green Rupee 1" = { type = "RupeeTower", vanilla = "Rupee (1)", source = "LocationList.py:669" }
 "DMC Adult Green Rupee 2" = { type = "RupeeTower", vanilla = "Rupee (1)", source = "LocationList.py:670" }
 "DMC Adult Green Rupee 3" = { type = "RupeeTower", vanilla = "Rupee (1)", source = "LocationList.py:671" }
@@ -232,6 +235,7 @@ source = "Overworld.json:3200"
 "DMC Upper Grotto Chest" = { type = "Chest", vanilla = "Bombs (20)", source = "LocationList.py:660" }
 "DMC Upper Grotto Beehive 1" = { type = "Beehive", vanilla = "Rupees (5)", source = "LocationList.py:690" }
 "DMC Upper Grotto Beehive 2" = { type = "Beehive", vanilla = "Rupees (20)", source = "LocationList.py:691" }
+"DMC Upper Grotto Gossip Stone" = { type = "HintStone", source = "LocationList.py:2602" }
 "DMC Deku Scrub Grotto Left" = { type = "GrottoScrub", vanilla = "Buy Deku Nut (5)", source = "LocationList.py:663" }
 "DMC Deku Scrub Grotto Right" = { type = "GrottoScrub", vanilla = "Buy Bombs (5) for 35 Rupees", source = "LocationList.py:665" }
 "DMC Deku Scrub Grotto Center" = { type = "GrottoScrub", vanilla = "Buy Arrows (30)", source = "LocationList.py:664" }

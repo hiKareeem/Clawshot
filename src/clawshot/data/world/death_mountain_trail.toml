@@ -50,6 +50,7 @@ Bugs = "is_child and has_bottle"  # Overworld.json:2168
 "DMT Trade Broken Sword" = "'Prescription Access'"  # Overworld.json:2161
 "DMT Trade Eyedrops" = "is_adult and (guarantee_trade_path or adult_trade_shuffle) and (('Eyedrops Access' and not adult_trade_shuffle) or (Eyedrops and disable_trade_revert))"  # Overworld.json:2162
 "DMT GS Falling Rocks Path" = "is_adult and (at_night or gold_skulls_ignore_daytime) and (Megaton_Hammer or logic_trail_gs_upper)"  # Overworld.json:2165
+"DMT Gossip Stone" = "True"  # Overworld.json:2166
 
 [region.exits]
 "Death Mountain" = "True"  # Overworld.json:2171
@@ -123,6 +124,7 @@ Fish = "has_bottle"  # Overworld.json:3163
 "DMT Storms Grotto Chest" = "True"  # Overworld.json:3156
 "DMT Storms Grotto Beehive 1" = "can_break_lower_beehive"  # Overworld.json:3157
 "DMT Storms Grotto Beehive 2" = "can_break_lower_beehive"  # Overworld.json:3158
+"DMT Storms Grotto Gossip Stone" = "True"  # Overworld.json:3159
 
 [region.exits]
 "Death Mountain" = "True"  # Overworld.json:3166
@@ -139,6 +141,7 @@ Fish = "has_bottle"  # Overworld.json:3163
 "DMT Trade Broken Sword" = { type = "NPC", vanilla = "Prescription", source = "LocationList.py:587" }
 "DMT Trade Eyedrops" = { type = "NPC", vanilla = "Claim Check", source = "LocationList.py:588" }
 "DMT GS Falling Rocks Path" = { type = "GS Token", vanilla = "Gold Skulltula Token", source = "LocationList.py:593" }
+"DMT Gossip Stone" = { type = "HintStone", source = "LocationList.py:2563" }
 "DMT Great Fairy Reward" = { type = "Cutscene", vanilla = "Magic Meter", source = "LocationList.py:585" }
 "DMT Cow Grotto Cow" = { type = "NPC", vanilla = "Milk", source = "LocationList.py:589" }
 "DMT Cow Grotto Green Rupee 1" = { type = "RupeeTower", vanilla = "Rupee (1)", source = "LocationList.py:597" }
@@ -156,3 +159,4 @@ Fish = "has_bottle"  # Overworld.json:3163
 "DMT Storms Grotto Chest" = { type = "Chest", vanilla = "Rupees (200)", source = "LocationList.py:584" }
 "DMT Storms Grotto Beehive 1" = { type = "Beehive", vanilla = "Rupees (5)", source = "LocationList.py:610" }
 "DMT Storms Grotto Beehive 2" = { type = "Beehive", vanilla = "Rupees (20)", source = "LocationList.py:611" }
+"DMT Storms Grotto Gossip Stone" = { type = "HintStone", source = "LocationList.py:2601" }

@@ -22,7 +22,7 @@ from collections.abc import Mapping, Sequence
 from pathlib import Path
 from typing import Any
 
-from clawshot.world.model import DUNGEON_ITEM_TYPES, Event, Exit, Item, Location, Region, World
+from clawshot.world.model import DUNGEON_ITEM_TYPES, HINT_STONE, Event, Exit, Item, Location, Region, World
 from clawshot.world.rules import ALL_TIMES, DAY, NIGHT, Compiler, ItemFacts, RuleError
 from clawshot.world.shops import apply_shop_data
 
@@ -165,8 +165,15 @@ def apply_overrides(spec: dict[str, Any], files: Sequence[tuple[str, Mapping[str
             if fields.get("new"):
                 if name in spec["locations"] or name in holder:
                     raise WorldError(f"{where}: new, but the world has it already")
-                if "was" in fields or any(key not in fields for key in ("rule", "region", "type", "vanilla")):
-                    raise WorldError(f"{where}: new needs rule, region, type and vanilla, without was")
+                needed = (
+                    ("rule", "region", "type")
+                    if fields.get("type") == HINT_STONE
+                    else ("rule", "region", "type", "vanilla")
+                )
+                if "was" in fields or any(key not in fields for key in needed):
+                    raise WorldError(
+                        f"{where}: new needs rule, region, type and vanilla (not a {HINT_STONE}), without was"
+                    )
                 target = regions.get(fields["region"])
                 if target is None:
                     raise WorldError(f"{where}: region {fields['region']!r} is not in the world")
@@ -347,6 +354,7 @@ def build_world(spec: Mapping[str, Any], logic: Mapping[str, Any] | None = None)
 
     regions: dict[str, Region] = {}
     locations: dict[str, Location] = {}
+    hint_stones: dict[str, Location] = {}
     events: list[Event] = []
     try:
         for data in spec["regions"]:
@@ -377,8 +385,9 @@ def build_world(spec: Mapping[str, Any], logic: Mapping[str, Any] | None = None)
                 where = f"region {name!r}, location {location_name!r}"
                 text, extra = _rule_entry(value, where)
                 info = {**location_info.get(location_name, {}), **extra}
-                if location_name in locations:
-                    raise WorldError(f"{where}: location already defined in {locations[location_name].region!r}")
+                if location_name in locations or location_name in hint_stones:
+                    holder_region = (locations | hint_stones)[location_name].region
+                    raise WorldError(f"{where}: location already defined in {holder_region!r}")
                 if "type" not in info:
                     raise WorldError(f"{where}: no type (add it under [locations])")
                 vanilla = info.get("vanilla")
@@ -398,6 +407,11 @@ def build_world(spec: Mapping[str, Any], logic: Mapping[str, Any] | None = None)
                     keep_vanilla=info.get("keep_vanilla"),
                     override=info.get("override"),
                 )
+                if location.type == HINT_STONE:
+                    if vanilla is not None:
+                        raise WorldError(f"{where}: a {HINT_STONE} holds no item, but names {vanilla!r}")
+                    hint_stones[location_name] = location
+                    continue
                 region.locations.append(location)
                 locations[location_name] = location
             for target, value in data.get("exits", {}).items():
@@ -420,7 +434,7 @@ def build_world(spec: Mapping[str, Any], logic: Mapping[str, Any] | None = None)
     start = spec["start"]
     if start not in regions:
         raise WorldError(f"start region {start!r} is not defined")
-    unknown = sorted(set(location_info) - set(locations))
+    unknown = sorted(set(location_info) - set(locations) - set(hint_stones))
     if unknown:
         raise WorldError(f"[locations] describes locations no region has: {unknown}")
     defined = {e.name for e in events} | set(items)
@@ -437,6 +451,7 @@ def build_world(spec: Mapping[str, Any], logic: Mapping[str, Any] | None = None)
         dangling_exits=[(r.name, e.target) for r in regions.values() for e in r.exits if e.target not in regions],
         undefined_events=sorted(compiler.events_named - defined),
         missing_regions=sorted({e.region for e in events if e.region not in regions}),
+        hint_stones=hint_stones,
     )
 
 

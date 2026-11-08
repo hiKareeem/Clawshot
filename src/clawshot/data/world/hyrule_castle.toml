@@ -44,6 +44,8 @@ Bugs = "has_bottle"  # Overworld.json:1375
 "HC Castle Moat Wonderitem 9" = "True"  # Overworld.json:1368
 "HC Castle Moat Wonderitem 10" = "True"  # Overworld.json:1369
 "HC GS Tree" = "can_child_attack and can_bonk"  # Overworld.json:1370
+"HC Malon Gossip Stone" = "True"  # Overworld.json:1371
+"HC Rock Wall Gossip Stone" = "True"  # Overworld.json:1372
 
 [region.exits]
 "Castle Grounds" = "True"  # Overworld.json:1378
@@ -108,6 +110,7 @@ Bugs = "can_blast_or_smash and has_bottle"  # Overworld.json:3096
 "HC Storms Grotto Pot 2" = "can_blast_or_smash"  # Overworld.json:3091
 "HC Storms Grotto Pot 3" = "can_blast_or_smash"  # Overworld.json:3092
 "HC Storms Grotto Pot 4" = "can_blast_or_smash"  # Overworld.json:3093
+"HC Storms Grotto Gossip Stone" = "can_blast_or_smash"  # Overworld.json:3094
 
 [region.exits]
 "Castle Grounds" = "True"  # Overworld.json:3100
@@ -127,6 +130,8 @@ Bugs = "can_blast_or_smash and has_bottle"  # Overworld.json:3096
 "HC Castle Moat Wonderitem 9" = { type = "Wonderitem", vanilla = "Rupee (1)", source = "LocationList.py:412" }
 "HC Castle Moat Wonderitem 10" = { type = "Wonderitem", vanilla = "Rupee (1)", source = "LocationList.py:413" }
 "HC GS Tree" = { type = "GS Token", vanilla = "Gold Skulltula Token", source = "LocationList.py:394" }
+"HC Malon Gossip Stone" = { type = "HintStone", source = "LocationList.py:2570" }
+"HC Rock Wall Gossip Stone" = { type = "HintStone", source = "LocationList.py:2571" }
 "HC Zeldas Courtyard Mario Wonderitem" = { type = "Wonderitem", vanilla = "Rupees (20)", source = "LocationList.py:414" }
 "HC Zeldas Letter" = { type = "NPC", vanilla = "Zeldas Letter", source = "LocationList.py:392" }
 "Song from Impa" = { type = "Song", vanilla = "Zeldas Lullaby", source = "LocationList.py:80" }
@@ -136,3 +141,4 @@ Bugs = "can_blast_or_smash and has_bottle"  # Overworld.json:3096
 "HC Storms Grotto Pot 2" = { type = "Pot", vanilla = "Bombs (5)", source = "LocationList.py:397" }
 "HC Storms Grotto Pot 3" = { type = "Pot", vanilla = "Arrows (5)", source = "LocationList.py:398" }
 "HC Storms Grotto Pot 4" = { type = "Pot", vanilla = "Deku Nuts (5)", source = "LocationList.py:399" }
+"HC Storms Grotto Gossip Stone" = { type = "HintStone", source = "LocationList.py:2572" }

@@ -36,6 +36,8 @@ Bugs = "(can_blast_or_smash or can_use(Silver_Gauntlets)) and has_bottle"  # Ove
 "GC Boulder Maze Crate" = "(can_blast_or_smash or can_use(Silver_Gauntlets)) and can_break_crate"  # Overworld.json:2219
 "GC GS Boulder Maze" = "is_child and has_explosives"  # Overworld.json:2220
 "GC GS Center Platform" = "is_adult"  # Overworld.json:2221
+"GC Maze Gossip Stone" = "can_blast_or_smash or can_use(Silver_Gauntlets)"  # Overworld.json:2222
+"GC Medigoron Gossip Stone" = "can_blast_or_smash or Progressive_Strength_Upgrade"  # Overworld.json:2223
 
 [region.exits]
 "Death Mountain" = "True"  # Overworld.json:2231
@@ -157,6 +159,8 @@ source = "Overworld.json:3170"
 "GC Boulder Maze Crate" = { type = "Crate", vanilla = "Rupee (1)", source = "LocationList.py:653" }
 "GC GS Boulder Maze" = { type = "GS Token", vanilla = "Gold Skulltula Token", source = "LocationList.py:626" }
 "GC GS Center Platform" = { type = "GS Token", vanilla = "Gold Skulltula Token", source = "LocationList.py:625" }
+"GC Maze Gossip Stone" = { type = "HintStone", source = "LocationList.py:2567" }
+"GC Medigoron Gossip Stone" = { type = "HintStone", source = "LocationList.py:2568" }
 "GC Darunias Joy" = { type = "NPC", vanilla = "Progressive Strength Upgrade", source = "LocationList.py:614" }
 "GC Darunia Pot 1" = { type = "Pot", vanilla = "Deku Stick (1)", source = "LocationList.py:644" }
 "GC Darunia Pot 2" = { type = "Pot", vanilla = "Rupee (1)", source = "LocationList.py:645" }

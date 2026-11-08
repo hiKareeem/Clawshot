@@ -44,6 +44,7 @@ Fairy = "(can_summon_gossip_fairy and has_bottle) or (is_child and can_plant_bea
 "GV GS Bean Patch" = "can_plant_bugs and can_child_attack"  # Overworld.json:644
 "GV Cow" = "is_child and can_play(Eponas_Song)"  # Overworld.json:645
 "GV Crate Near Cow" = "is_child and can_break_crate"  # Overworld.json:646
+"GV Gossip Stone" = "True"  # Overworld.json:647
 
 [region.exits]
 "GV Lower Stream" = "True"  # Overworld.json:652
@@ -162,6 +163,7 @@ source = "Overworld.json:3294"
 "GV GS Bean Patch" = { type = "GS Token", vanilla = "Gold Skulltula Token", source = "LocationList.py:851" }
 "GV Cow" = { type = "NPC", vanilla = "Milk", source = "LocationList.py:849" }
 "GV Crate Near Cow" = { type = "Crate", vanilla = "Rupee (1)", source = "LocationList.py:864" }
+"GV Gossip Stone" = { type = "HintStone", source = "LocationList.py:2566" }
 "GV Crate Freestanding PoH" = { type = "Collectable", vanilla = "Piece of Heart", source = "LocationList.py:843" }
 "GV Freestanding PoH Crate" = { type = "Crate", vanilla = "Rupee (1)", source = "LocationList.py:865" }
 "GV Chest" = { type = "Chest", vanilla = "Rupees (50)", source = "LocationList.py:845" }

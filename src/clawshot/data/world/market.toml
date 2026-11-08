@@ -74,6 +74,12 @@ source = "Overworld.json:1285"
 # OoT Randomizer location 'Gossip Stone Fairy' (Drop)
 Fairy = "(can_summon_gossip_fairy_without_suns or (is_adult and can_play(Suns_Song))) and has_bottle"  # Overworld.json:1293
 
+[region.locations]
+"ToT Gossip Stone (Left)" = "True"  # Overworld.json:1289
+"ToT Gossip Stone (Left-Center)" = "True"  # Overworld.json:1290
+"ToT Gossip Stone (Right)" = "True"  # Overworld.json:1291
+"ToT Gossip Stone (Right-Center)" = "True"  # Overworld.json:1292
+
 [region.exits]
 Market = "True"  # Overworld.json:1298
 "Temple of Time" = "True"  # Overworld.json:1299
@@ -340,6 +346,10 @@ source = "Overworld.json:1691"
 "Market Daytime Balcony Wonderitem 5" = { type = "Wonderitem", vanilla = "Rupees (5)", source = "LocationList.py:385" }
 "Market Night Balcony Wonderitem 1" = { type = "Wonderitem", vanilla = "Rupees (5)", source = "LocationList.py:386" }
 "Market Night Balcony Wonderitem 2" = { type = "Wonderitem", vanilla = "Rupees (5)", source = "LocationList.py:387" }
+"ToT Gossip Stone (Left)" = { type = "HintStone", source = "LocationList.py:2584" }
+"ToT Gossip Stone (Left-Center)" = { type = "HintStone", source = "LocationList.py:2585" }
+"ToT Gossip Stone (Right)" = { type = "HintStone", source = "LocationList.py:2586" }
+"ToT Gossip Stone (Right-Center)" = { type = "HintStone", source = "LocationList.py:2587" }
 "Market 10 Big Poes" = { type = "NPC", vanilla = "Bottle", source = "LocationList.py:269" }
 "Market Guard House Child Crate 1" = { type = "Crate", vanilla = "Nothing", source = "LocationList.py:316" }
 "Market Guard House Child Crate 2" = { type = "Crate", vanilla = "Nothing", source = "LocationList.py:317" }

@@ -36,6 +36,7 @@ Bugs = "is_child and can_cut_shrubs and has_bottle"  # Overworld.json:345
 "LW Near Ocarina Game Wonderitem 2" = "is_child"  # Overworld.json:339
 "LW Near Ocarina Game Wonderitem 3" = "is_child"  # Overworld.json:340
 "LW GS Bean Patch Near Bridge" = "can_plant_bugs and can_child_attack"  # Overworld.json:341
+"LW Gossip Stone" = "True"  # Overworld.json:342
 
 [region.exits]
 "LW Forest Exit" = "True"  # Overworld.json:348
@@ -151,6 +152,7 @@ Fish = "has_bottle"  # Overworld.json:2897
 "LW Near Shortcuts Grotto Chest" = "True"  # Overworld.json:2890
 "LW Near Shortcuts Grotto Beehive 1" = "can_break_lower_beehive"  # Overworld.json:2891
 "LW Near Shortcuts Grotto Beehive 2" = "can_break_lower_beehive"  # Overworld.json:2892
+"LW Near Shortcuts Grotto Gossip Stone" = "True"  # Overworld.json:2893
 
 [region.exits]
 "Lost Woods" = "True"  # Overworld.json:2900
@@ -200,6 +202,7 @@ source = "Overworld.json:2917"
 "LW Near Ocarina Game Wonderitem 2" = { type = "Wonderitem", vanilla = "Rupees (5)", source = "LocationList.py:198" }
 "LW Near Ocarina Game Wonderitem 3" = { type = "Wonderitem", vanilla = "Rupees (5)", source = "LocationList.py:199" }
 "LW GS Bean Patch Near Bridge" = { type = "GS Token", vanilla = "Gold Skulltula Token", source = "LocationList.py:179" }
+"LW Gossip Stone" = { type = "HintStone", source = "LocationList.py:2580" }
 "LW Deku Scrub Near Deku Theater Right" = { type = "Scrub", vanilla = "Buy Deku Nut (5)", source = "LocationList.py:176" }
 "LW Deku Scrub Near Deku Theater Left" = { type = "Scrub", vanilla = "Buy Deku Stick (1)", source = "LocationList.py:175" }
 "LW Under Boulder Blue Rupee" = { type = "Freestanding", vanilla = "Rupees (5)", source = "LocationList.py:183" }
@@ -210,6 +213,7 @@ source = "Overworld.json:2917"
 "LW Near Shortcuts Grotto Chest" = { type = "Chest", vanilla = "Rupees (5)", source = "LocationList.py:168" }
 "LW Near Shortcuts Grotto Beehive 1" = { type = "Beehive", vanilla = "Rupees (5)", source = "LocationList.py:193" }
 "LW Near Shortcuts Grotto Beehive 2" = { type = "Beehive", vanilla = "Rupees (20)", source = "LocationList.py:194" }
+"LW Near Shortcuts Grotto Gossip Stone" = { type = "HintStone", source = "LocationList.py:2600" }
 "Deku Theater Skull Mask" = { type = "NPC", vanilla = "Deku Stick Capacity", source = "LocationList.py:171" }
 "Deku Theater Mask of Truth" = { type = "NPC", vanilla = "Deku Nut Capacity", source = "LocationList.py:172" }
 "LW Deku Scrub Grotto Rear" = { type = "GrottoScrub", vanilla = "Buy Deku Seeds (30)", source = "LocationList.py:178" }

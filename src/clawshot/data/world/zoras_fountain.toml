@@ -22,6 +22,8 @@ Fairy = "(can_summon_gossip_fairy_without_suns and has_bottle) or (can_use(Stick
 "ZF Near Jabu Pot 4" = "is_child"  # Overworld.json:2685
 "ZF GS Tree" = "is_child and can_bonk"  # Overworld.json:2686
 "ZF GS Above the Log" = "can_use(Boomerang) and (at_night or gold_skulls_ignore_daytime)"  # Overworld.json:2687
+"ZF Fairy Gossip Stone" = "True"  # Overworld.json:2688
+"ZF Jabu Gossip Stone" = "True"  # Overworld.json:2689
 
 [region.exits]
 "ZD Behind King Zora" = "True"  # Overworld.json:2694
@@ -103,6 +105,8 @@ source = "Overworld.json:2766"
 "ZF Near Jabu Pot 4" = { type = "Pot", vanilla = "Recovery Heart", source = "LocationList.py:813" }
 "ZF GS Tree" = { type = "GS Token", vanilla = "Gold Skulltula Token", source = "LocationList.py:785" }
 "ZF GS Above the Log" = { type = "GS Token", vanilla = "Gold Skulltula Token", source = "LocationList.py:784" }
+"ZF Fairy Gossip Stone" = { type = "HintStone", source = "LocationList.py:2589" }
+"ZF Jabu Gossip Stone" = { type = "HintStone", source = "LocationList.py:2590" }
 "ZF Bottom Freestanding PoH" = { type = "Collectable", vanilla = "Piece of Heart", source = "LocationList.py:783" }
 "ZF Bottom Green Rupee 1" = { type = "Freestanding", vanilla = "Rupee (1)", source = "LocationList.py:788" }
 "ZF Bottom Green Rupee 2" = { type = "Freestanding", vanilla = "Rupee (1)", source = "LocationList.py:789" }

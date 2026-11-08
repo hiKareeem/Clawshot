@@ -27,6 +27,7 @@ Bugs = "has_bottle"  # Overworld.json:1174
 "Colossus GS Bean Patch" = "can_plant_bugs and can_child_attack"  # Overworld.json:1166
 "Colossus GS Tree" = "can_use(Hookshot) and (at_night or gold_skulls_ignore_daytime)"  # Overworld.json:1167
 "Colossus GS Hill" = "is_adult and (at_night or gold_skulls_ignore_daytime) and (here(can_plant_bean) or Longshot or (logic_colossus_gs and Hookshot))"  # Overworld.json:1168
+"Colossus Gossip Stone" = "True"  # Overworld.json:1171
 
 [region.exits]
 "Colossus Great Fairy Fountain" = "has_explosives"  # Overworld.json:1177
@@ -93,6 +94,7 @@ source = "Overworld.json:3265"
 "Colossus GS Bean Patch" = { type = "GS Token", vanilla = "Gold Skulltula Token", source = "LocationList.py:977" }
 "Colossus GS Tree" = { type = "GS Token", vanilla = "Gold Skulltula Token", source = "LocationList.py:978" }
 "Colossus GS Hill" = { type = "GS Token", vanilla = "Gold Skulltula Token", source = "LocationList.py:979" }
+"Colossus Gossip Stone" = { type = "HintStone", source = "LocationList.py:2564" }
 "Sheik at Colossus" = { type = "Song", vanilla = "Requiem of Spirit", source = "LocationList.py:89" }
 "Colossus Great Fairy Reward" = { type = "Cutscene", vanilla = "Nayrus Love", source = "LocationList.py:973" }
 "Colossus Deku Scrub Grotto Rear" = { type = "GrottoScrub", vanilla = "Buy Red Potion for 30 Rupees", source = "LocationList.py:976" }

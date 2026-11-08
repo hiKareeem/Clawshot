@@ -140,6 +140,9 @@ source = "Overworld.json:2090"
 # OoT Randomizer location 'Gossip Stone Fairy' (Drop)
 Fairy = "can_summon_gossip_fairy_without_suns and has_bottle"  # Overworld.json:2095
 
+[region.locations]
+"Graveyard Gossip Stone" = "True"  # Overworld.json:2094
+
 [region.exits]
 Graveyard = "True"  # Overworld.json:2098
 "Shadow Temple Entryway" = "can_use(Dins_Fire) or (logic_shadow_fire_arrow_entry and can_use(Fire_Arrows))"  # Overworld.json:2099
@@ -185,3 +188,4 @@ Graveyard = "True"  # Overworld.json:2098
 "Graveyard Dampe Race Wonderitem 13" = { type = "Wonderitem", vanilla = "Rupees (5)", source = "LocationList.py:577" }
 "Graveyard Dampe Race Wonderitem 14" = { type = "Wonderitem", vanilla = "Rupees (5)", source = "LocationList.py:578" }
 "Graveyard Dampe Race Wonderitem 15" = { type = "Wonderitem", vanilla = "Rupees (5)", source = "LocationList.py:579" }
+"Graveyard Gossip Stone" = { type = "HintStone", source = "LocationList.py:2569" }

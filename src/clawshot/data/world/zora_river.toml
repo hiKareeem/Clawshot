@@ -82,6 +82,8 @@ Bugs = "(is_child or here(can_plant_bean) or Hover_Boots or logic_zora_river_low
 "ZR GS Ladder" = "is_child and (at_night or gold_skulls_ignore_daytime) and can_child_attack"  # Overworld.json:2561
 "ZR GS Near Raised Grottos" = "can_use(Hookshot) and (at_night or gold_skulls_ignore_daytime)"  # Overworld.json:2562
 "ZR GS Above Bridge" = "can_use(Hookshot) and (at_night or gold_skulls_ignore_daytime)"  # Overworld.json:2563
+"ZR Near Grottos Gossip Stone" = "True"  # Overworld.json:2564
+"ZR Near Domain Gossip Stone" = "True"  # Overworld.json:2565
 
 [region.exits]
 "ZR Front" = "True"  # Overworld.json:2575
@@ -131,6 +133,7 @@ Fish = "has_bottle"  # Overworld.json:3223
 "ZR Open Grotto Chest" = "True"  # Overworld.json:3216
 "ZR Open Grotto Beehive 1" = "can_break_lower_beehive"  # Overworld.json:3217
 "ZR Open Grotto Beehive 2" = "can_break_lower_beehive"  # Overworld.json:3218
+"ZR Open Grotto Gossip Stone" = "True"  # Overworld.json:3219
 
 [region.exits]
 "Zora River" = "True"  # Overworld.json:3226
@@ -212,9 +215,12 @@ source = "Overworld.json:3240"
 "ZR GS Ladder" = { type = "GS Token", vanilla = "Gold Skulltula Token", source = "LocationList.py:709" }
 "ZR GS Near Raised Grottos" = { type = "GS Token", vanilla = "Gold Skulltula Token", source = "LocationList.py:710" }
 "ZR GS Above Bridge" = { type = "GS Token", vanilla = "Gold Skulltula Token", source = "LocationList.py:711" }
+"ZR Near Grottos Gossip Stone" = { type = "HintStone", source = "LocationList.py:2591" }
+"ZR Near Domain Gossip Stone" = { type = "HintStone", source = "LocationList.py:2592" }
 "ZR Open Grotto Chest" = { type = "Chest", vanilla = "Rupees (20)", source = "LocationList.py:696" }
 "ZR Open Grotto Beehive 1" = { type = "Beehive", vanilla = "Rupees (5)", source = "LocationList.py:718" }
 "ZR Open Grotto Beehive 2" = { type = "Beehive", vanilla = "Rupees (20)", source = "LocationList.py:719" }
+"ZR Open Grotto Gossip Stone" = { type = "HintStone", source = "LocationList.py:2598" }
 "ZR Deku Scrub Grotto Rear" = { type = "GrottoScrub", vanilla = "Buy Red Potion for 30 Rupees", source = "LocationList.py:707" }
 "ZR Deku Scrub Grotto Front" = { type = "GrottoScrub", vanilla = "Buy Green Potion", source = "LocationList.py:706" }
 "ZR Storms Grotto Beehive" = { type = "Beehive", vanilla = "Rupees (20)", source = "LocationList.py:720" }

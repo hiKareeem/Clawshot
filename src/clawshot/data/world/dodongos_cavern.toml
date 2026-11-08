@@ -26,6 +26,7 @@ Fairy = "(can_blast_or_smash or Progressive_Strength_Upgrade) and can_summon_gos
 [region.locations]
 "Dodongos Cavern Map Chest" = "can_blast_or_smash or Progressive_Strength_Upgrade"  # Dodongos Cavern.json:17
 "Dodongos Cavern Deku Scrub Lobby" = "can_stun_deku or Progressive_Strength_Upgrade"  # Dodongos Cavern.json:18
+"Dodongos Cavern Gossip Stone" = "here(can_blast_or_smash or Progressive_Strength_Upgrade)"  # Dodongos Cavern.json:19
 
 [region.exits]
 "Dodongos Cavern Lower Right Side" = "has_explosives or Progressive_Strength_Upgrade"  # Dodongos Cavern.json:25
@@ -216,6 +217,7 @@ source = "Bosses.json:50"
 [locations]
 "Dodongos Cavern Map Chest" = { type = "Chest", vanilla = "Map (Dodongos Cavern)", source = "LocationList.py:1049" }
 "Dodongos Cavern Deku Scrub Lobby" = { type = "Scrub", vanilla = "Buy Deku Shield", source = "LocationList.py:1055" }
+"Dodongos Cavern Gossip Stone" = { type = "HintStone", source = "LocationList.py:2565" }
 "Dodongos Cavern Lower Lizalfos Hidden Recovery Heart" = { type = "Freestanding", vanilla = "Recovery Heart", source = "LocationList.py:1177" }
 "Dodongos Cavern Right Side Pot 1" = { type = "Pot", vanilla = "Rupee (1)", source = "LocationList.py:1068" }
 "Dodongos Cavern Right Side Pot 2" = { type = "Pot", vanilla = "Rupees (5)", source = "LocationList.py:1069" }

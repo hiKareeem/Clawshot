@@ -58,6 +58,7 @@ Fish = "has_bottle"  # Overworld.json:2985
 "HF Southeast Grotto Chest" = "True"  # Overworld.json:2978
 "HF Southeast Grotto Beehive 1" = "can_break_lower_beehive"  # Overworld.json:2979
 "HF Southeast Grotto Beehive 2" = "can_break_lower_beehive"  # Overworld.json:2980
+"HF Southeast Grotto Gossip Stone" = "True"  # Overworld.json:2981
 
 [region.exits]
 "Hyrule Field" = "True"  # Overworld.json:2988
@@ -81,6 +82,7 @@ Fish = "has_bottle"  # Overworld.json:3002
 "HF Open Grotto Chest" = "True"  # Overworld.json:2995
 "HF Open Grotto Beehive 1" = "can_break_lower_beehive"  # Overworld.json:2996
 "HF Open Grotto Beehive 2" = "can_break_lower_beehive"  # Overworld.json:2997
+"HF Open Grotto Gossip Stone" = "True"  # Overworld.json:2998
 
 [region.exits]
 "Hyrule Field" = "True"  # Overworld.json:3005
@@ -117,6 +119,7 @@ Bugs = "has_fire_source and can_cut_shrubs and has_bottle"  # Overworld.json:302
 "HF Cow Grotto Cow" = "has_fire_source and can_play(Eponas_Song)"  # Overworld.json:3024
 "HF Cow Grotto Pot 1" = "has_fire_source"  # Overworld.json:3025
 "HF Cow Grotto Pot 2" = "has_fire_source"  # Overworld.json:3026
+"HF Cow Grotto Gossip Stone" = "has_fire_source"  # Overworld.json:3027
 
 [region.exits]
 "Hyrule Field" = "True"  # Overworld.json:3033
@@ -140,6 +143,7 @@ Fish = "has_bottle"  # Overworld.json:3047
 "HF Near Market Grotto Chest" = "True"  # Overworld.json:3040
 "HF Near Market Grotto Beehive 1" = "can_break_lower_beehive"  # Overworld.json:3041
 "HF Near Market Grotto Beehive 2" = "can_break_lower_beehive"  # Overworld.json:3042
+"HF Near Market Grotto Gossip Stone" = "True"  # Overworld.json:3043
 
 [region.exits]
 "Hyrule Field" = "True"  # Overworld.json:3050
@@ -190,17 +194,21 @@ source = "Overworld.json:3074"
 "HF Southeast Grotto Chest" = { type = "Chest", vanilla = "Rupees (20)", source = "LocationList.py:228" }
 "HF Southeast Grotto Beehive 1" = { type = "Beehive", vanilla = "Rupees (5)", source = "LocationList.py:242" }
 "HF Southeast Grotto Beehive 2" = { type = "Beehive", vanilla = "Rupees (20)", source = "LocationList.py:243" }
+"HF Southeast Grotto Gossip Stone" = { type = "HintStone", source = "LocationList.py:2595" }
 "HF Open Grotto Chest" = { type = "Chest", vanilla = "Rupees (5)", source = "LocationList.py:229" }
 "HF Open Grotto Beehive 1" = { type = "Beehive", vanilla = "Rupees (5)", source = "LocationList.py:240" }
 "HF Open Grotto Beehive 2" = { type = "Beehive", vanilla = "Rupees (20)", source = "LocationList.py:241" }
+"HF Open Grotto Gossip Stone" = { type = "HintStone", source = "LocationList.py:2596" }
 "HF Deku Scrub Grotto" = { type = "GrottoScrub", vanilla = "Piece of Heart", source = "LocationList.py:230" }
 "HF Inside Fence Grotto Beehive" = { type = "Beehive", vanilla = "Rupees (20)", source = "LocationList.py:244" }
 "HF GS Cow Grotto" = { type = "GS Token", vanilla = "Gold Skulltula Token", source = "LocationList.py:232" }
 "HF Cow Grotto Cow" = { type = "NPC", vanilla = "Milk", source = "LocationList.py:231" }
 "HF Cow Grotto Pot 1" = { type = "Pot", vanilla = "Deku Nuts (5)", source = "LocationList.py:235" }
 "HF Cow Grotto Pot 2" = { type = "Pot", vanilla = "Rupees (5)", source = "LocationList.py:236" }
+"HF Cow Grotto Gossip Stone" = { type = "HintStone", source = "LocationList.py:2573" }
 "HF Near Market Grotto Chest" = { type = "Chest", vanilla = "Rupees (5)", source = "LocationList.py:226" }
 "HF Near Market Grotto Beehive 1" = { type = "Beehive", vanilla = "Rupees (5)", source = "LocationList.py:238" }
 "HF Near Market Grotto Beehive 2" = { type = "Beehive", vanilla = "Rupees (20)", source = "LocationList.py:239" }
+"HF Near Market Grotto Gossip Stone" = { type = "HintStone", source = "LocationList.py:2594" }
 "HF GS Near Kak Grotto" = { type = "GS Token", vanilla = "Gold Skulltula Token", source = "LocationList.py:233" }
 "HF Tektite Grotto Freestanding PoH" = { type = "Collectable", vanilla = "Piece of Heart", source = "LocationList.py:227" }

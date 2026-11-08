@@ -46,6 +46,7 @@ Fairy = "(can_summon_gossip_fairy_without_suns and has_bottle) or (is_child and 
 "KF GS Know It All House" = "is_child and can_child_attack and (at_night or gold_skulls_ignore_daytime) and (had_night_start or can_leave_forest or can_play(Suns_Song) or gold_skulls_ignore_daytime)"  # Overworld.json:188
 "KF GS Bean Patch" = "can_plant_bugs and can_child_attack"  # Overworld.json:191
 "KF GS House of Twins" = "is_adult and (at_night or gold_skulls_ignore_daytime) and (Hookshot or (logic_adult_kokiri_gs_hovers and Hover_Boots) or logic_adult_kokiri_gs_nothing)"  # Overworld.json:193
+"KF Gossip Stone" = "True"  # Overworld.json:196
 
 [region.exits]
 "KF Links House" = "True"  # Overworld.json:201
@@ -76,6 +77,10 @@ source = "Overworld.json:214"
 "Deku Stick Drop" = "(is_adult and not entrance_shuffle) or can_use(Kokiri_Sword) or can_use(Boomerang)"  # Overworld.json:225
 # OoT Randomizer location 'Deku Baba Nuts' (Drop)
 "Deku Nut Drop" = "is_adult and not entrance_shuffle"  # Overworld.json:226
+
+[region.locations]
+"KF Deku Tree Gossip Stone (Left)" = "True"  # Overworld.json:227
+"KF Deku Tree Gossip Stone (Right)" = "True"  # Overworld.json:228
 
 [region.exits]
 "Deku Tree Lobby" = "is_child or (shuffle_dungeon_entrances and (open_forest == 'open' or 'Showed Mido Sword & Shield'))"  # Overworld.json:231
@@ -189,6 +194,7 @@ Fish = "has_bottle"  # Overworld.json:2880
 "KF Storms Grotto Chest" = "True"  # Overworld.json:2873
 "KF Storms Grotto Beehive 1" = "can_break_lower_beehive"  # Overworld.json:2874
 "KF Storms Grotto Beehive 2" = "can_break_lower_beehive"  # Overworld.json:2875
+"KF Storms Grotto Gossip Stone" = "True"  # Overworld.json:2876
 
 [region.exits]
 "Kokiri Forest" = "True"  # Overworld.json:2883
@@ -224,6 +230,9 @@ Fish = "has_bottle"  # Overworld.json:2880
 "KF GS Know It All House" = { type = "GS Token", vanilla = "Gold Skulltula Token", source = "LocationList.py:102" }
 "KF GS Bean Patch" = { type = "GS Token", vanilla = "Gold Skulltula Token", source = "LocationList.py:103" }
 "KF GS House of Twins" = { type = "GS Token", vanilla = "Gold Skulltula Token", source = "LocationList.py:104" }
+"KF Gossip Stone" = { type = "HintStone", source = "LocationList.py:2576" }
+"KF Deku Tree Gossip Stone (Left)" = { type = "HintStone", source = "LocationList.py:2574" }
+"KF Deku Tree Gossip Stone (Right)" = { type = "HintStone", source = "LocationList.py:2575" }
 "KF Links House Cow" = { type = "NPC", vanilla = "Milk", source = "LocationList.py:101" }
 "KF Links House Pot" = { type = "Pot", vanilla = "Recovery Heart", source = "LocationList.py:144" }
 "KF Midos Top Left Chest" = { type = "Chest", vanilla = "Rupees (5)", source = "LocationList.py:95" }
@@ -250,3 +259,4 @@ Fish = "has_bottle"  # Overworld.json:2880
 "KF Storms Grotto Chest" = { type = "Chest", vanilla = "Rupees (20)", source = "LocationList.py:100" }
 "KF Storms Grotto Beehive 1" = { type = "Beehive", vanilla = "Rupees (5)", source = "LocationList.py:150" }
 "KF Storms Grotto Beehive 2" = { type = "Beehive", vanilla = "Rupees (20)", source = "LocationList.py:151" }
+"KF Storms Grotto Gossip Stone" = { type = "HintStone", source = "LocationList.py:2599" }

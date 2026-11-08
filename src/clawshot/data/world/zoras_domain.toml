@@ -34,6 +34,7 @@ Fish = "is_child and has_bottle"  # Overworld.json:2631
 "ZD In Front of King Zora Beehive 2" = "is_child and can_break_upper_beehive"  # Overworld.json:2624
 "ZD Trade Prescription" = "'Eyeball Frog Access'"  # Overworld.json:2625
 "ZD GS Frozen Waterfall" = "is_adult and (at_night or gold_skulls_ignore_daytime) and (Hookshot or Bow or Magic_Meter or logic_domain_gs)"  # Overworld.json:2626
+"ZD Gossip Stone" = "True"  # Overworld.json:2629
 
 [region.exits]
 "ZR Behind Waterfall" = "True"  # Overworld.json:2636
@@ -123,6 +124,7 @@ Fairy = "has_bottle"  # Overworld.json:2863
 "ZD In Front of King Zora Beehive 2" = { type = "Beehive", vanilla = "Rupees (20)", source = "LocationList.py:777" }
 "ZD Trade Prescription" = { type = "NPC", vanilla = "Eyeball Frog", source = "LocationList.py:759" }
 "ZD GS Frozen Waterfall" = { type = "GS Token", vanilla = "Gold Skulltula Token", source = "LocationList.py:760" }
+"ZD Gossip Stone" = { type = "HintStone", source = "LocationList.py:2588" }
 "ZD Behind King Zora Beehive" = { type = "Beehive", vanilla = "Rupees (20)", source = "LocationList.py:778" }
 "ZD Shop Item 1" = { type = "Shop", vanilla = "Buy Zora Tunic", source = "LocationList.py:761" }
 "ZD Shop Item 2" = { type = "Shop", vanilla = "Buy Arrows (10)", source = "LocationList.py:762" }

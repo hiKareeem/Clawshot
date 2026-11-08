@@ -110,6 +110,9 @@ source = "PouchActorInfo Item_DinFire: ExpansionAvility MPMaxUP, MPMax 24"
 Remake-only checks use `[locations."<census definition name>"]` with `new = true`, `region`, `type`, `vanilla`,
 `rule` and `source` (no `was`). The name must not already exist. They live in `remake/extra_<area>.toml`; a check
 whose route is unresolved carries `keep_vanilla` with the specific reason rather than an invented access rule.
+Gossip Stones are `[locations."<name>"]` too: an OoT Randomizer stone the remake lacks gets `n64_only`, a remake-only
+stone `new = true` with `region`, `type = "HintStone"`, `rule` and `source` and no `vanilla`
+(`remake/hint_stones.toml`). `census.hints.stone_labels()` ties each live stone to the message label it speaks.
 The chest patch linker uses a definition's readable name when it has no OoT Randomizer name.
 Existing region metadata can be set with `[regions."<name>"]`, `new = false` and `source`; exits, events and
 locations stay intact. The tower explicitly belongs to `Ganons Castle` for dungeon-item placement.
@@ -313,7 +316,9 @@ Reads `port.toml`, checks the checkout is at its `ootr_commit`, and rewrites the
   field stops it.
 - Locations of type `Drop` and `Event` (Deku Baba sticks, gossip stone fairies, the Master Sword Pedestal's
   `Time Travel`) become events named after the item they give; two in one region merge as `(a) or (b)`.
-- `Hint` and `HintStone` locations hold nothing and are left out.
+- `HintStone` locations (Gossip Stones) hold nothing: they are written with their rule and type `HintStone`, no
+  vanilla item, and the loader builds them into `World.hint_stones` (a place to read a hint), not `World.locations`,
+  so the fill and the beatability search never see them. `Hint` locations (the altar, Ganondorf) are left out.
 - `settings.toml` gets every name the written rules (and all helpers) test that OoT Randomizer resolves to a world
   attribute, a setting or a trick, at OoT Randomizer's defaults, plus the few the engine always reads.
 - `[flags]` values that OoT Randomizer's `World` draws at random are fixed (above).

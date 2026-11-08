@@ -17,7 +17,9 @@ OoT Randomizer is MIT (its GPL folders, under ``bin/`` and ``Notes/``, are not r
 nothing from it is copied into Clawshot but the logic data written here, credited in ``NOTICE``.
 
 Location kinds: OoT Randomizer lists drops (``Drop``) and fixed events (``Event``) as locations holding a fixed
-item; they become events named after that item. Hints (``Hint``, ``HintStone``) hold nothing and are left out.
+item; they become events named after that item. Gossip Stones (``HintStone``) hold no item and are kept as locations
+of that type, without a vanilla item: the world builds them as hint locations (``World.hint_stones``), not checks.
+Its other hint spots (``Hint``: the Temple of Time altar, Ganondorf, ...) are left out.
 """
 
 import argparse
@@ -36,7 +38,7 @@ from typing import Any
 from clawshot.world.load import DATA_DIR
 
 EVENT_TYPES = frozenset({"Event", "Drop"})
-SKIPPED_TYPES = frozenset({"Hint", "HintStone"})
+SKIPPED_TYPES = frozenset({"Hint"})
 REGION_KEYS = frozenset(
     {"region_name", "scene", "hint", "dungeon", "time_passes", "provides_time", "events", "locations", "exits"}
 )

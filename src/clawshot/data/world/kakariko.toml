@@ -328,6 +328,7 @@ Fish = "has_bottle"  # Overworld.json:3124
 
 [region.locations]
 "Kak Open Grotto Chest" = "True"  # Overworld.json:3117
+"Kak Open Grotto Gossip Stone" = "True"  # Overworld.json:3118
 "Kak Open Grotto Beehive 1" = "can_break_lower_beehive"  # Overworld.json:3119
 "Kak Open Grotto Beehive 2" = "can_break_lower_beehive"  # Overworld.json:3120
 
@@ -408,5 +409,6 @@ Fish = "has_bottle"  # Overworld.json:3124
 "Kak Granny Buy Blue Potion" = { type = "NPC", vanilla = "Blue Potion", source = "LocationList.py:461" }
 "Kak Redead Grotto Chest" = { type = "Chest", vanilla = "Rupees (200)", source = "LocationList.py:466" }
 "Kak Open Grotto Chest" = { type = "Chest", vanilla = "Rupees (20)", source = "LocationList.py:465" }
+"Kak Open Grotto Gossip Stone" = { type = "HintStone", source = "LocationList.py:2597" }
 "Kak Open Grotto Beehive 1" = { type = "Beehive", vanilla = "Rupees (5)", source = "LocationList.py:530" }
 "Kak Open Grotto Beehive 2" = { type = "Beehive", vanilla = "Rupees (20)", source = "LocationList.py:531" }
