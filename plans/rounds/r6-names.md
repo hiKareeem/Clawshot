@@ -315,3 +315,37 @@ The actual output records all 64 Shop sales at 10. Scrub fees remain native:
 
 This is generated-resource/search/presentation proof, not an in-game certification or cash-earnings proof.
 No game/launcher was started and no active seed/user/save folder was read or changed.
+
+### Replay and played-seed price proof
+
+An independent CLI interpreter with `PYTHONHASHSEED=271828` consumed the actual combined spoiler's CS1:
+**all 128 canonical output files were byte-identical**, including resources, `spoiler.json` and
+`play-note.md`. Explicit native-price readback confirms 64 affordable Shop sales and the four untouched
+Scrub fees above.
+
+A separate actual CLI invocation with `--shuffle Chest Shop --no-cheap-deku-shield --shop-prices vanilla
+--forest closed` recreated the played seed's legacy pricing outside its protected folder:
+**228 checks, 26 spheres, 77 resources**. Its third opening row is Buy KF6 Deku Shield for **40 rupees**,
+with Sword (Mido second-left) and Hylian Shield (KF8) predecessors and the post-Mido shelf release; it is
+before Tree entry. Thus old played pricing and new default/affordable pricing are not conflated.
+
+The one-off smoke driver and its three session-owned generated output folders are removed after proof;
+no launcher/user folder was created. Reusable read-only research remains outside the repository.
+
+### Rebased branch checkpoints
+
+Earlier baseline hashes above record the historical handoff; these are their rebased equivalents on
+the authorized main plus the completed integration:
+
+| Commit | Scope |
+|---|---|
+| `9487475` | Item 1 catalog and section 20 |
+| `d576349` | Item 2 pairing/item/rule audit |
+| `603df83` | Shared `world/search.py` only: child-only proof API |
+| `61b5daa` | Item 3 readable spoiler/opening route and regressions |
+| `df45d1c` | Shared `patch/__init__.py` only: note writer |
+| `9a37ebf` | `tests/test_seed_dump.py` only: output-folder artifact contract |
+| `d7eb602` | Baseline gate evidence |
+| `4e60f7e` | Historical blocked handoff |
+| `115ebb1` | Shared `patch/scrubs.py` only: native price metadata export |
+| `1c21dd9` | Canonical price consumer, purchase regressions and integration evidence |
