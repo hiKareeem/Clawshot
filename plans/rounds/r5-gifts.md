@@ -10,7 +10,11 @@ repo).
 | 1 readers of each gift's item, flags to use, classes | `plans/03-game-data.md` section 19, this file | e47caf5 |
 | 2 `patch/gifts.py`: item swap, flag rewrites, skips | `src/clawshot/patch/gifts.py`, `src/clawshot/patch/gift_rules.toml`, `tests/test_gifts.py`, `tests/test_gifts_dump.py`; section 19 revised (reviewer, 08:40) | acde59a |
 | (needed by 2) a size formula for `GameDataList` | `src/clawshot/formats/rstb.py`, `tests/test_rstb_dump.py` (no owner this round; posted) | 0cf3725 |
-| 3 in-game test folders | `E:/OOTRemake/work/r5-gifts/ingame/`, this file | this file's third commit |
+| 3 in-game test folders | `E:/OOTRemake/work/r5-gifts/ingame/`, this file | dc576d3 |
+| (needed by 4) item actors for the gift items | `src/clawshot/data/item_actors.toml` (track C's; posted) | 6d754f6 |
+| 4 `--shuffle Gift` through `make_seed`'s extra steps | `src/clawshot/patch/gifts.py`, `src/clawshot/__main__.py`, tests | a537bd5 |
+| (reviewer) songs to song locations, chestless gift items to gifts | `src/clawshot/generate/fill.py`, `tests/test_generate.py` (track C's; alone, posted) | 6e0a7f8 |
+| (reviewer) the gift shuffle uses it; a song-in-a-chest test output | `src/clawshot/patch/gifts.py`, tests; `E:/OOTRemake/work/r5-gifts/ingame/chest-song-storms` | b44bb4e |
 
 ## Item 1: what reads each gift's item, and the classes
 
@@ -123,6 +127,45 @@ prints its flags from the test user's newest save.
 4. `malon-song-heartpiece`: at Lon Lon Ranch in the day, talk to Malon with the ocarina: the play-along runs as usual;
    at the end **a Piece of Heart** instead of Epona's Song. **Epona's Song is not in the ocarina's song list**, and
    talking to her again does not teach it again (or say if she does).
+5. `chest-song-storms` (added at the reviewer's request; a NEW GAME in an empty test user, launcher like cs5b's
+   corrected one): Mido's house, top left chest (`KF Midos Top Left Chest`, Hash 9725242744547055868) holds
+   `Item_Melody_StormSong`; its open event `KokiriForest_TreasureBox_NaviChatOff` is kept. Open it: **does Link get the
+   Song of Storms (get window, then in the song list and playable), or something else, or nothing, or does it
+   crash?** Until this works, the gift shuffle keeps songs and other chestless gift items out of chests (item 4).
+
+## Item 4: `--shuffle Gift`
+
+`python -m clawshot ... --shuffle Chest Gift` (or `Gift` alone). `__main__` calls `gifts.seed_setup(romfs, load_spec(),
+settings)` when `Gift` is asked for and passes its step to `make_seed(..., extra_steps=[step])`; nothing else in
+`make_seed` changed. `seed_setup`:
+
+- replaces `Gift` in `Settings.shuffle` with OoT Randomizer's gift location types (`NPC`, `Song`, `Cutscene`, `Boss`);
+- picks the gift checks that may move (`seed_checks`, 48 of the world's 79 linked checks): class `swap` or `rewrite`;
+  not needing a new `GameDataList` flag (the reviewer: the six fairies wait for `din-fairy-hookshot`; `new_flags=True`
+  takes four of them, the other two are upgrades); and whose world vanilla item has, in `item_actors.toml`, the actor
+  every step of the check gives, so the pool item a check adds is what it gave. That leaves out 10 upgrade checks (both
+  shooting galleries, Horseback Archery 1500, the Deku scrub target, both Deku Theater masks, the child Rolling Goron,
+  Bombchu Bowling's first prize and bombchus, the 40-token reward: bags, quivers, capacities, bombchu packs), which need
+  fixed-tier logic items first (`04-world-format.md`, "Not carried over yet");
+- holds every other gift-type location vanilla (`restrict_spec`: `keep_vanilla` on a copy of the spec);
+- holds songs to song locations and song locations to songs, and every other pool gift item whose actor no census
+  chest holds to the `NPC`/`Cutscene`/`Boss` locations (`held_items`, through `Settings.item_location_types` and
+  `exclusive_location_types`, the reviewer's request, in `generate/fill.py` as its own commit 6e0a7f8);
+- returns the patch step: placements in, `file_changes` for every moved gift out (its item through `item_actors`).
+
+Checks:
+
+| Command | Result |
+|---|---|
+| `uv run pytest tests/test_gifts.py tests/test_generate.py` | 17 + 11 passed: `seed_checks` takes `swap`/`rewrite` checks whose pool item's actor is what they give, leaves out `more`, new-flag checks (unless asked), held and non-gift locations; `restrict_spec` holds the others vanilla on a copy; `seed_step` changes only moved gifts; `held_items`; in the fill, a song goes only to the song location, the song location takes only the song, and a held letter goes to one of two gift locations and never to a chest, over 40 seeds |
+| `OOT_ROMFS=... uv run pytest -m dump tests/test_gifts_dump.py -k slice -s` | passed: the Kokiri Forest / Lost Woods / Deku Tree slice with `Chest Gift`, seed 7: no `more` or new-flag check shuffled, every held item where it is held, each moved gift's steps written with the placed item's actor (moved: LW Skull Kid -> Deku Nuts (5), LW Trade Odd Potion -> Rupee (1), LW Ocarina Memory Game -> Poachers Saw) |
+| `python -m clawshot --romfs E:/Games/Hookshot/romfs --seed 7 --out E:/OOTRemake/work/r5-gifts/slice-7 --shuffle Chest Gift --areas KokiriForest LostWood InsideTheDekuTree --goal "'Defeat Queen Gohma'"` | 16 locations shuffled, 3 spheres; wrote the six placement files, `Npc_Kokiri_Fado_Adult`, `Npc_SkullKid_Child`, `Npc_SkullKid_Child_02` and the size table |
+
+Whole-game seeds could not be smoked on this base (main `cd592e3`): `--shuffle Chest Gift` stops at chests with no
+census definition (track C's item 2), and `--shuffle Gift` alone fails every fill (seeds 1-5, 11) because two gift
+locations are unreachable with every item held: `ToT Light Arrows Cutscene` and `Kak 100 Gold Skulltula Reward` lie
+behind dungeons whose vanilla key layouts OoT Randomizer's worst-order key counts cannot prove (`04-world-format.md`,
+"Key logic and the vanilla placement"); with chests shuffled, keys are placed by the fill.
 
 ## Provisional choices (for review)
 
@@ -143,12 +186,16 @@ prints its flags from the test user's newest save.
 
 ## Questions for Kareem
 
-1. **The four in-game tests above, above all `din-fairy-hookshot`**: does the old save load, does the fairy give the
+1. **The five in-game tests above, above all `din-fairy-hookshot`**: does the old save load, does the fairy give the
    Hookshot once and only heal afterwards, also after a reload, and does a magic gauge appear?
 2. **`malon-song-heartpiece`**: after the play-along, is Epona's Song absent from the song list (the play-along's own
    add is skipped)?
+3. **`chest-song-storms`**: does a chest give a song?
 
 ## Cross-track posts (thread `cs-r5`)
 
 - 08:22: item 1 (e47caf5), the classes, the Serenade inside the Ice Cavern chest's event, GameDataList heads-up.
 - 08:36: item 2 (acde59a), the `GameDataList` size formula commit (0cf3725) outside my files.
+- 08:38: item 3 ready.
+- 08:41: item actors for the gift items (6d754f6) in track C's `item_actors.toml`.
+- 08:50: item 4 (a537bd5), the `allowed()` commit in track C's `fill.py` (6e0a7f8), its use (b44bb4e).
