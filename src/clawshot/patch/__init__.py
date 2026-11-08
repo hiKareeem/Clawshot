@@ -9,7 +9,7 @@ catalog. The fill and beatability search are ``clawshot.generate``'s.
 
 import json
 from collections.abc import Callable, Mapping, Sequence
-from dataclasses import dataclass, replace
+from dataclasses import dataclass, field, replace
 from functools import partial
 from pathlib import Path
 from typing import Any
@@ -17,8 +17,10 @@ from typing import Any
 from clawshot.census import definitions as census_definitions
 from clawshot.census.scan import scan
 from clawshot.generate import Seed, Settings, generate, play_note, prepare, spoiler
+from clawshot.generate import hints as stone_hints
+from clawshot.generate import names as location_names
 from clawshot.generate.fill import shuffled_locations
-from clawshot.patch import drops, gamedata, scrubs, shops
+from clawshot.patch import drops, gamedata, scrubs, shops, text
 from clawshot.patch import events as chest_events
 from clawshot.patch import items as item_actors
 from clawshot.patch.plan import Links, PatchError, Plan, link, make_plan, remake_vanilla
@@ -40,9 +42,11 @@ class SeedOutput:
     plan: Plan
     extra_changes: tuple[FileChanges, ...] = ()
     fast_start_files: tuple[gamedata.BuiltFile, ...] = ()
+    item_names: dict[str, str] = field(default_factory=dict)
+    """The game's (English) names of the items the hints name, as the stones say them."""
 
     def spoiler(self) -> dict[str, Any]:
-        return spoiler(self.seed) | {"patch": self.plan.as_dict()}
+        return spoiler(self.seed, self.item_names) | {"patch": self.plan.as_dict()}
 
     def spoiler_json(self) -> str:
         return json.dumps(self.spoiler(), indent=2, ensure_ascii=False) + "\n"
@@ -101,10 +105,33 @@ def make_seed(
         from clawshot.patch.age import changes as age_changes
 
         changes += (age_changes(out.placements, free_time_travel=True),)
+    item_names: dict[str, str] = {}
+    if out.hints:
+        item_names, hint_changes = hint_step(romfs, out, table)
+        changes += (hint_changes,)
     # GameData defaults compose before gift flag additions; only cutscene component files are prebuilt.
     event_settings = {s.name: replace(s, game_data={}) for s in chosen if s.skippable}
     fast_files = tuple(gamedata.build(romfs, list(event_settings), event_settings)) if event_settings else ()
-    return SeedOutput(out, links, make_plan(out, links, table, chest_events.load()), changes, fast_files)
+    plan = make_plan(out, links, table, chest_events.load())
+    return SeedOutput(out, links, plan, changes, fast_files, item_names)
+
+
+def hint_step(romfs: str | Path, seed: Seed, table: item_actors.ItemActors) -> tuple[dict[str, str], FileChanges]:
+    """The seed's hints as text changes: every language archive's stone lines (English, provisional) and, with
+    ``hints = "always"``, the flow that lets stones speak without the Mask of Truth. Returns the item names used."""
+    names = text.item_names(romfs, [hint.item for hint in seed.hints if hint.item], table)
+    catalog = location_names.load()
+    lines = {
+        hint.label: stone_hints.text(
+            hint,
+            lambda item: names.get(item, item),
+            lambda name: catalog[name].name if name in catalog else name,
+            marked=True,
+        )
+        for hint in seed.hints
+    }
+    changes = text.hint_changes(romfs, lines, text.languages(romfs), without_mask=seed.settings.hints == "always")
+    return names, changes
 
 
 def write_seed(output: SeedOutput, romfs: str | Path, out: str | Path) -> list[WrittenFile]:

@@ -14,6 +14,7 @@ from dataclasses import asdict, dataclass, replace
 from importlib.metadata import version
 from typing import Any
 
+from clawshot.generate import hints as stone_hints
 from clawshot.generate import names as location_names
 from clawshot.generate.fill import FillError, Settings, check_beatable, fill, shuffled_locations
 from clawshot.generate.route import opening
@@ -37,6 +38,8 @@ class Seed:
     """The locations whose items were shuffled, in world order."""
     spheres: list[list[str]]
     """The beatability search's spheres: location names collected in each."""
+    hints: tuple[stone_hints.Hint, ...] = ()
+    """One hint per Gossip Stone (``clawshot.generate.hints``), in world order; none for a world without stones."""
 
 
 def world_spec(spec: Mapping[str, Any], settings: Settings) -> Mapping[str, Any]:
@@ -116,7 +119,8 @@ def generate(
     else:
         raise FillError(f"no beatable fill in {attempts} attempts; last: {errors[-1]}")
     spheres = check_beatable(world, placements)
-    return Seed(world, seed, settings, placements, shuffled_locations(world, settings), spheres)
+    out = Seed(world, seed, settings, placements, shuffled_locations(world, settings), spheres)
+    return replace(out, hints=stone_hints.choose(out, settings.hints, settings.hint_distribution))
 
 
 def _required_items(seed: Seed, sources: tuple[str, ...], visits: Mapping[str, dict]) -> list[dict[str, Any]]:
@@ -127,8 +131,11 @@ def _required_items(seed: Seed, sources: tuple[str, ...], visits: Mapping[str, d
     return [{"item": item, "count": len(names), "sources": names} for item, names in by_item.items()]
 
 
-def spoiler(seed: Seed) -> dict[str, Any]:
-    """Keep world-keyed placements/spheres and add physical descriptions plus a replayed opening witness."""
+def spoiler(seed: Seed, item_names: Mapping[str, str] | None = None) -> dict[str, Any]:
+    """Keep world-keyed placements/spheres and add physical descriptions, a replayed opening witness and the hints.
+
+    ``item_names`` (logic item -> the game's name) words the hints as the stones say them; without it they use the
+    logic's names."""
     items = seed.world.items
     spheres = [
         {name: seed.placements[name] for name in sphere if items[seed.placements[name]].progression}
@@ -182,6 +189,24 @@ def spoiler(seed: Seed) -> dict[str, Any]:
             "region": route.region,
             "steps": [describe_step(step) for step in route.steps],
         }
+    names = item_names or {}
+
+    def location_name(name: str) -> str:
+        return catalog[name].name if name in catalog else name
+
+    hint_log = [
+        {
+            "stone": hint.stone,
+            "where": stone_hints.stone_place(hint.stone),
+            "label": hint.label,
+            "kind": hint.kind,
+            "text": stone_hints.text(hint, lambda item: names.get(item, item), location_name),
+            "area": stone_hints.area_name(hint.area) if hint.area else None,
+            "location": hint.location,
+            "item": hint.item,
+        }
+        for hint in seed.hints
+    ]
     return {
         "generator": f"clawshot {version('clawshot')}",
         "seed": seed.seed,
@@ -191,11 +216,12 @@ def spoiler(seed: Seed) -> dict[str, Any]:
         "locations": locations,
         "opening_route": opening_log,
         "spheres": [sphere for sphere in spheres if sphere],
+        "hints": hint_log,
     }
 
 
-def spoiler_json(seed: Seed) -> str:
-    return json.dumps(spoiler(seed), indent=2, ensure_ascii=False) + "\n"
+def spoiler_json(seed: Seed, item_names: Mapping[str, str] | None = None) -> str:
+    return json.dumps(spoiler(seed, item_names), indent=2, ensure_ascii=False) + "\n"
 
 
 def _markdown_cell(text: str) -> str:
@@ -275,4 +301,24 @@ def play_note(seed: Seed, log: Mapping[str, Any] | None = None) -> str:
             seed.placements[name],
         )
         lines.append("| " + " | ".join(_markdown_cell(cell) for cell in cells) + " |")
+    if log.get("hints"):
+        mode = log["settings"].get("hints", "always")
+        lines.extend(
+            [
+                "",
+                "## Gossip Stones",
+                "",
+                "Every stone speaks without the Mask of Truth."
+                if mode == "always"
+                else "Stones speak only to child Link wearing the Mask of Truth.",
+                "Which stone of a pair or row carries which label is not settled where its place says so.",
+                "",
+                "| Stone | Where | Says | Kind | Points at |",
+                "|---|---|---|---|---|",
+            ]
+        )
+        for hint in log["hints"]:
+            target = " — ".join(part for part in (hint["location"], hint["item"]) if part) or "—"
+            cells = (hint["stone"], hint["where"], hint["text"], hint["kind"], target)
+            lines.append("| " + " | ".join(_markdown_cell(cell) for cell in cells) + " |")
     return "\n".join(lines) + "\n"
