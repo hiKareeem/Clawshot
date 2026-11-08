@@ -1242,3 +1242,62 @@ frogs' bug game. None is changed.
   chest is `4555665598794293658` (census and OoT Randomizer name "KF Midos Top Right Chest") and the far-right one
   `9725242744547055868` ("KF Midos Top Left Chest"): the remake's row of four is mirrored against the N64 names, so a
   spoiler's left and right for these chests are the player's right and left (the two middle chests are unchecked).
+
+## 23. Round 6: one-time scrubs and Gold Skulltula drop experiments (cs6d)
+
+Build `e0f3ccfa`, dump/save backups read-only. Full 21-actor ledger, flow/event/Hash evidence,
+commands, provisional choices and player instructions: `plans/rounds/r6-tokens.md`.
+Research and seven controlled overlays: `E:/OOTRemake/work/r6-tokens/`; no game/launcher run.
+
+**Scrubs:** 21 actor Hashes are 12 repeat/rotating vendors and nine physical actors implementing four
+saved one-time reward families. Their placement Bool64bitKey reset type 280 is not permanent pickup type
+24; the once-only proof comes from separate saved Bools. Both HF ages share
+`HyruleField_Enemy_Scrub_Business_HeartPiece_01` (100 rupees); DMC has
+`DeathMountain_Enemy_Scrub_Business_HeartPiece_01` (100); four KF/LW stick sellers share
+`LostWood_Enemy_Scrub_Business_DekuStickPouch_01` (40); two LW nut sellers share
+`Lostwood_Enemy_Scrub_Business_DekuNutsPouch_01` (40, capitalization intentional).
+All four Bools default false, reset type 8, save file 0.
+
+Banc offer fields are selectors into `Enemy_Scrub_Business_Common`'s fixed item-name dispatcher, not
+arbitrary grants. Unknown item names fall through to a Magic Jar sale. Keep those selectors and rewrite
+the common flow's one-time purchase calls instead: HF Event645 plus selection Event653; DMC Event293
+plus Event144; stick Event317/322/555; nut Event318/326. Every grant/tier/copy of one family gets one item.
+The generic purchase path checks acceptance and rupees before its get wrapper; only successful return
+sets `ScrubBusiness_BuySuccess` and then the saved family flag. Cancellation, shortfall, native prices,
+HF's adult-note/child-password puzzle and all other vendor paths remain intact.
+
+`--shuffle Scrub` (off by default) admits exactly `HF Deku Scrub Grotto`, `DMC Deku Scrub`,
+`LW Deku Scrub Near Bridge`, `LW Deku Scrub Grotto Front`. Repeat vendors stay vanilla (reviewer,
+2026-11-08). Shared KF/LW copies are one check, never separate pool rewards. Fixed Medium capacity
+actors represent existing normal-class `Deku Stick Capacity` (20 sticks) / `Deku Nut Capacity` (30 nuts)
+under D16; capacity items remain at Scrub destinations until chest-grant evidence exists. Both native
+tier branches normalize even for an unmoved capacity placement. Native wallet 200 covers every fee.
+
+**Tokens:** 100 permanent enemy Hashes, 114 placement copies. Enemy drop table creates one
+`Obj_Token_Gold`; its pouch identity is `Item_Token_Gold`, max 100. Enemy utility graph nodes 0–2
+construct a drop override carrying its no-respawn Hash in `GoldTokenGmdHash`. The token's own AI
+calls `OneShotGoldTokenDeadAfter` only on pickup death reason 10. [INFERENCE] This callback marks
+collection against the enemy's Hash; ordinary pickups lack it. A per-enemy `Drop__DropActor` override
+is expressible, but neither preserving the enemy Hash nor a matching file diff proves replacement
+persistence. No token location enters the fill yet; `--shuffle Token` explicitly refuses before generation
+or output, naming the missing callback/persistence evidence. No fake flag/no-op shuffle is shipped.
+
+`patch/tokens.py` provides explicit experiments with actual pickup actors, not inventory-only `Item_*`.
+Ranch tree Hash `341792603838029977` is unset in all six ranch-backup slots; control/token, red-rupee
+and Hylian-Shield overlays change only its drop on both age copies, through the common writer and size
+table. **Kareem: check native control, uncollected-drop recovery, replacement pickup/count, saved enemy
+Hash, and no respawn after leaving/reloading.** Exact checklist and release-only isolated-save launchers:
+`E:/OOTRemake/work/r6-tokens/ingame/checklist.md`. All remain unrun by the agent.
+
+**House rewards already are Gift checks:** `GatheringTokenGold` Event398 (10/wallet), Event75
+(20/Echo Gem), Event194 (30/large wallet), Event200 (40/Bombchu bundle), Event219 (50/heart),
+Event215 (100/gold rupee). Existing gift rules preserve per-threshold saved gates (100: quest complete).
+Unlinked Event471 is a repeat gold rupee, not a new once check. The 40-token gift remains vanilla because
+its bundle actor/count lacks an exact fixed pool mapping (round 5), not because Token owns House gifts.
+
+Verification: exact inverse-flow diffs cover all four scrub families/nine actors and preserve native gates,
+prices and every other event; token field-diff oracle covers 100 enemies/114 copies. Real whole-world
+Chest+Scrub seed 7: 168 checks, 28 spheres, finished gated-return search won, 59 resources; every scrub
+branch matches its placed actor. Second CLI/hash-seed process: all 60 canonical files byte-identical.
+Data/search proof only; neither scrub nor token gameplay is claimed certified. Full gate results are in
+the round report.
