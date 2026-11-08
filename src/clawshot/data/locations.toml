@@ -934,7 +934,7 @@ kind = "chest"
 area = "GerudoTrainingGround"
 name = "Gerudo Training Ground Room 8 Chest (Item_Dungeon_SmallKey) #1"
 vanilla_item = "Item_Dungeon_SmallKey"
-oot_randomizer_name = ""
+oot_randomizer_name = "Gerudo Training Ground Freestanding Key"
 
 [[location]]
 id = "196331300747102419"
