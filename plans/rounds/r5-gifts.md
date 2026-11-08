@@ -21,7 +21,7 @@ decoded data: `E:/OOTRemake/work/r5-gifts/` (outside the repo).
 | `Gift` among the `--shuffle` choices (track B made it a choice list) | `src/clawshot/__main__.py` | 409c40b |
 | (reviewer) Kareem's five results in section 19, "In game" | `plans/03-game-data.md` | 3cee2c7 |
 | (reviewer) the Great Fairies join the gift shuffle through their new flags | `src/clawshot/patch/gifts.py`, `tests/test_gifts.py`, `tests/test_gifts_dump.py` | 2c4a427 |
-| (reviewer) `chest-song-storms-kak` test output; results and the new test in this file | `E:/OOTRemake/work/r5-gifts/ingame/`, this file | (this file's commit) |
+| (reviewer) `chest-song-storms-kak` test output; results and the new test in this file | `E:/OOTRemake/work/r5-gifts/ingame/`, this file | d5480e5 |
 
 ## Item 1: what reads each gift's item, and the classes
 
@@ -248,11 +248,11 @@ entries kept; the child file's chest reads `Drop__DropActor: Item_Melody_StormSo
 - 08:50: item 4, the `allowed()` commit in track C's `fill.py`, its use (pre-rebase hashes a537bd5, 6e0a7f8, b44bb4e; now eab6195, 52d0342, d385896).
 - handoff: below.
 
-## Gates (on 409c40b, rebased on main `ccd1963`, before the handoff)
+## Gates (on d5480e5, rebased on main `ccd1963`)
 
 ```
 uv run ruff format --check                                  129 files already formatted
 uv run ruff check                                           All checks passed!
-uv run pytest                                               349 passed, 36 skipped
-OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump      35 passed, 350 deselected
+uv run pytest                                               349 passed, 37 skipped
+OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump      36 passed, 350 deselected
 ```
