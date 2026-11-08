@@ -146,24 +146,26 @@ The same smoke rechecked existing 7b: spoiler equal to old7, same resource paths
 
 ## Rebased commit ledger
 
-Base **a81faf9**, branch `r6/shopfix`; previous `65bbcf7`/`fcb265f` checkpoint and earlier hashes are superseded by the requested second rebase. Section12 play findings remain before section24; D25 is present in `plans/decisions.md`.
+Base **0afcca5**, branch `r6/shopfix`; prior a81faf9/c70a7d0 hashes and the pre-rebase Blue Fire hash8e002b7 are superseded by the requested names-track rebase. Sections1–24 are in increasing order, section24 last; D25 remains in `plans/decisions.md`.
 
 | Commit | Scope |
 |---|---|
-| `ed6ce49` | item1 field/reference/allocation diagnosis |
-| `da417a8` | item2 eight isolated bisects and save/launcher evidence |
-| `021ac67` | item3 shop-owned sizing helper, regressions, section24 and exact 7b proof |
-| `ed73737` | isolated `patch/write.py` embedded-size transaction hook |
-| `c502854` | isolated effective `Settings.item_location_types` Buy-to-Shop hook |
-| `d341f33` | isolated fill capacity reservation, retaining main's held priority |
-| `9f19b10` | item4(a) failing-before/passing-after boundary tests and confirmed game result |
-| `c53ecbc` | initial item4(b/c) ammo audit and proposed rule, unchanged 7b contract |
-| `ba6bb35` | native refusal table, purchase observations and logic audit |
-| `7e0e77c` | first rebased ledger and smoke cleanup |
-| `70696f5` | pre-D25 full integration gates and handoff |
-| `fa358ae` | isolated D25 `generate/fill.py` restriction plus synthetic/real-seed regressions |
-| `f3f4f66` | D25 documentation, final-base ledger and actual CLI replay proof |
-| `c70a7d0` | complete D25 full gates and handoff, before the Blue Fire follow-up |
+| `4e55aaa` | item1 field/reference/allocation diagnosis |
+| `9c3a4e2` | item2 eight isolated bisects and save/launcher evidence |
+| `9597f25` | item3 shop-owned sizing helper, regressions, section24 and exact 7b proof |
+| `93e71f8` | isolated `patch/write.py` embedded-size transaction hook |
+| `776a587` | isolated effective `Settings.item_location_types` Buy-to-Shop hook |
+| `da2d645` | isolated fill capacity reservation, retaining main's held priority |
+| `7698177` | item4(a) failing-before/passing-after boundary tests and confirmed game result |
+| `68aaf6b` | initial item4(b/c) ammo audit and proposed rule, unchanged 7b contract |
+| `601f5dd` | native refusal table, purchase observations and logic audit |
+| `e9b2d71` | first rebased ledger and smoke cleanup |
+| `0c78773` | pre-D25 full integration gates and handoff |
+| `0285738` | isolated D25 `generate/fill.py` restriction/tests (reviewed as fa358ae) |
+| `e860754` | D25 documentation, preceding-base ledger and actual CLI replay proof |
+| `bea30a8` | complete D25 full gates and handoff, before the Blue Fire follow-up |
+| `ffba2fb` | isolated Blue Fire data restriction, failing-before regressions and pre-rebase proof |
+| `911cf25` | authorized test-only cutover: controlled ordering checks plus real CLI opening replay |
 
 ## Cleanup
 
@@ -311,3 +313,78 @@ Reviewer then requested **0afcca5** (r6/names merged, section20). The pre-rebase
 when cancellation was attempted; it was not stopped or failed. Its two session-created basetemps were removed.
 Commit this isolated Blue Fire change first, then rebase and run all four full gates on the new base before
 posting the ready head. Updated output-contract CLI proof and post-rebase results follow below.
+
+### Final names-track integration
+
+Committed Blue Fire as8e002b7, then rebased cleanly onto **0afcca5**; the isolated fix is now **ffba2fb**.
+No shared API/flow/price implementation changed. Verified numbered sections1–24 in order, section24 last.
+
+After rebase, ran `uv run python -u E:/OOTRemake/work/r6-shopfix/smoke_bluefire_names.py`: two real CLI
+processes, same seed7/effective settings string, hash seeds83/84. Both exit0; **79/79 files byte-identical**,
+including `spoiler.json` and the newly required `play-note.md`. Raw placement keys remain stable.
+Blue Fire is still at **Kak Bazaar Item5** and **GC Shop Item6**; both pass the destination boundary and
+render as **Kakariko Bazaar Top Inner-Right Shelf** / **Goron Shop Top Far-Right Shelf** in the actual note.
+Read its opening and both Blue Fire rows: physical directions, world IDs and items are present.
+The note shows the Sword/Slingshot/Hylian Shield route and the free Deku Shield visit before Tree entry.
+D25's six native ammo pickups remain outside bag-free reach, beatability passes, and **all78 hashes of 7b**
+match before/after this final-base run.
+
+Retained `bluefire-names-cli-0.txt`, `bluefire-names-cli-1.txt`, `bluefire-names-verification.json` locally.
+The first final-base four-command chain finished; its sole stale names-test failure and ownership request follow.
+
+After observing the actual note and recording proof, removed only this session's two `bluefire-names-*`
+smoke overlays and `smoke_bluefire_names.py`. Retained the three proof files above. Both completed final-base
+full-gate basetemps were removed after recording the failure payload; no active gate process remains.
+
+### Final-base integration failure: obsolete names golden
+
+First complete post-names chain: format **180 files**, lint clean; synthetic **511 passed, 69 skipped**;
+dump **67 passed, 1 failed, 512 deselected**. Only failure is the names-track golden
+`test_seed_shop_7_opening_prefers_free_shield_visit_with_paid_alternative`: it requires a paid shield at
+`KF Shop Item6`, then also pins Hylian Shield at `KF Shop Item8`.
+
+Printed the current entire opening/alternatives and shield placements instead of rerunning unchanged.
+`KF Shop Item6` now holds **Buy Fish**; there is **no Kokiri paid Deku Shield**, so `alternatives=[]` is correct.
+The route gets Hylian Shield from Mido's middle-right chest and explicitly visits the free shield source before
+Tree entry. Independent controlled tests in `test_names_route.py` already cover the free visit, paid alternative,
+predecessor sources, adult exclusion, and initial shield not being replaceable by a later free gift.
+
+**Reviewer approved:** names track is merged/closed; these tests are authorized integration scope.
+Implemented as isolated **911cf25**, with only three test paths:
+
+- Moved paid-alternative prerequisite/source ordering and Markdown visit-before-alternative-before-entry
+  assertions into `test_free_event_is_an_explicit_required_visit_not_a_pool_check_or_purchase`.
+  That fixture has fixed placements (`shuffle=()`), not a shuffled-seed golden.
+- Deleted `tests/test_names_dump.py`; no old slot, price or shield-location expectation was repinned.
+- Added `test_seed_7_cli_writes_a_play_note_with_a_child_opening_to_gohma` to `tests/test_seed_dump.py`.
+  It launches the real seed7 Chest+Shop CLI into an external temp folder, parses the written note/spoiler,
+  and independently replays each listed pickup/visit with `Search.child_only` against canonical world predicates.
+  Explicit visited gifts are removed from implicit events so they cannot supply inventory before their listed visit.
+  Entry must be child-reachable, the final step must actually hold **Defeat Queen Gohma**, and the written
+  note must render Enter before that Complete row. **No randomized slot pins.**
+
+Targeted after cutover: route suite **5 passed**, 0.28 s; real CLI dump check **1 passed, 6 deselected**,
+18.41 s. This also observes the actual CLI/writer path, not just a mocked serializer. Its session-created
+`pytest-approved-cli` output was removed after proof. Production Blue Fire/D25 code and 7b remain unchanged.
+
+### Final authorized four gates and handoff
+
+All four full gates passed on **0afcca5 + ffba2fb + 911cf25**:
+
+| Full command | Observed result |
+|---|---|
+| `uv run ruff format --check` | **179 files already formatted** |
+| `uv run ruff check` | **All checks passed** |
+| `uv run pytest --basetemp E:/OOTRemake/work/r6-shopfix/pytest-approved-full-synthetic` | **511 passed, 69 skipped**, 243.84 s |
+| `OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump --basetemp E:/OOTRemake/work/r6-shopfix/pytest-approved-full-dump` | **68 passed, 512 deselected**, 289.11 s |
+
+The test-contract change was aimed at the printed stale-golden cause and authorized by reviewer; no unchanged
+rerun, marker narrowing, slot re-pin, retry increase or production workaround. **580 total tests / 68 dump
+selections**, unchanged from the first names-base run; the real CLI replay replaces the obsolete dump golden.
+Both successful final basetemps were removed after proof; retained the CLI transcripts and verification reports.
+
+**Ready for review/merge by Claude:** Blue Fire fix **ffba2fb**, isolated test-only cleanup **911cf25**.
+These two modified documents (`plans/03-game-data.md`, this round file) are committed together separately from
+the tests; final documentation/head hash is posted in `cs-r6` and chat. Section24 remains last, all numbered
+sections ordered. All78 files of 7b remain unchanged; no launcher/game/user/save write, merge or push.
+No outstanding acceptance criterion, scope clearance or product question.

@@ -1717,7 +1717,11 @@ Other bottle refills are unchanged; both vanilla/affordable price modes retain t
 
 Before the fix, both price modes allowed Market Potion slot1, and synthetic seed3 placed its required first
 Blue Fire there. All30 shop-logic tests now pass, including that 20-seed bootstrap regression. Actual seed7 CLI
-and settings/hash replay produce **78 identical files**; Blue Fire sells at **Kak Bazaar Item5** and **GC Shop Item6**.
+and settings/hash replay on **0afcca5** produce **79 identical files**, including readable `play-note.md`;
+Blue Fire sells at **Kak Bazaar Item5** and **GC Shop Item6**.
 Written shelves/seller components were parsed and original release fields preserved; D25's six native ammo
 placements and beatability still pass. **All78 files of 7b are hash-identical before/after**; no continuation reroll.
+The names-track randomized-slot golden was removed with reviewer approval: its meaningful ordering checks
+now live in the fixed-placement free-shield fixture. A dump-level real seed7 CLI check independently
+replays the written opening as child to Gohma and checks the note's Enter/Complete order, with no slot pins.
 Full gate results and final commit: `plans/rounds/r6-shopfix.md`.
