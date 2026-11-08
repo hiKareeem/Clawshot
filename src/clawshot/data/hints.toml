@@ -163,8 +163,8 @@ junk = [
 ]
 
 # Where each stone stands, for the spoiler and the play note (census.hints.STONE_LINKS evidence; round 6 found which
-# Kokiri Forest stone is which in game). Within the Deku Tree pair, the Sacred Forest Meadow maze pair, the three Lake
-# Hylia stones and the four Temple of Time stones, which name is which stone is not settled.
+# Kokiri Forest stone is which in game, round 7's seed-shop-7c the four Temple of Time stones). Within the Deku Tree
+# pair, the Sacred Forest Meadow maze pair and the three Lake Hylia stones, which name is which stone is not settled.
 [stones]
 "KF Gossip Stone" = "Kokiri Forest: by the Lost Woods entrance tunnel, near Mido's house"
 "KF Deku Tree Gossip Stone (Left)" = "Kokiri Forest: one of the two stones before the Deku Tree (left, unsettled)"
@@ -180,10 +180,10 @@ junk = [
 "LH Gossip Stone (Southeast)" = "Lake Hylia: one of the three shore stones (southeast, unsettled)"
 "LH Gossip Stone (Southwest)" = "Lake Hylia: one of the three shore stones (southwest, unsettled)"
 "LH Lab Gossip Stone" = "Lake Hylia: one of the three shore stones (by the laboratory, unsettled)"
-"ToT Gossip Stone (Left)" = "Temple of Time courtyard: the four stones in a row (far left, unsettled)"
-"ToT Gossip Stone (Left-Center)" = "Temple of Time courtyard: the four stones in a row (left of centre, unsettled)"
-"ToT Gossip Stone (Right-Center)" = "Temple of Time courtyard: the four stones in a row (right of centre, unsettled)"
-"ToT Gossip Stone (Right)" = "Temple of Time courtyard: the four stones in a row (far right, unsettled)"
+"ToT Gossip Stone (Left)" = "Temple of Time courtyard: the four stones in a row, first from the left facing the temple"
+"ToT Gossip Stone (Left-Center)" = "Temple of Time courtyard: the four stones in a row, second from the left facing the temple"
+"ToT Gossip Stone (Right-Center)" = "Temple of Time courtyard: the four stones in a row, third from the left facing the temple"
+"ToT Gossip Stone (Right)" = "Temple of Time courtyard: the four stones in a row, fourth from the left facing the temple"
 "HC Malon Gossip Stone" = "Hyrule Castle grounds: beside Malon and Talon (child)"
 "HC Rock Wall Gossip Stone" = "Hyrule Castle grounds: by the rock wall, near a Gold Skulltula"
 "HC Storms Grotto Gossip Stone" = "Hyrule Castle grounds: the Song of Storms grotto, behind a cracked wall"

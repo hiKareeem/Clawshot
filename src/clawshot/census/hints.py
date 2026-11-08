@@ -271,19 +271,19 @@ STONE_LINKS: dict[tuple[str, str], tuple[str | None, str]] = {
     ("LostWood", "GOSSIP_LOST_WOOD_02"): ("LW Gossip Stone", "open air by the bridge scrub (r2, r4)"),
     ("Market", "GOSSIP_HYRULE_MARKET_01"): (
         "ToT Gossip Stone (Left)",
-        "set of four in a row outside the Temple of Time",
+        "first from the left facing the Temple of Time, of four in a row (in game: seed-shop-7c, Kareem)",
     ),
     ("Market", "GOSSIP_HYRULE_MARKET_02"): (
         "ToT Gossip Stone (Left-Center)",
-        "set of four in a row outside the Temple of Time",
+        "second from the left facing the Temple of Time, of four in a row (in game: seed-shop-7c, Kareem)",
     ),
     ("Market", "GOSSIP_HYRULE_MARKET_03"): (
         "ToT Gossip Stone (Right-Center)",
-        "set of four in a row outside the Temple of Time",
+        "third from the left facing the Temple of Time, of four in a row (in game: seed-shop-7c, Kareem)",
     ),
     ("Market", "GOSSIP_HYRULE_MARKET_04"): (
         "ToT Gossip Stone (Right)",
-        "set of four in a row outside the Temple of Time",
+        "fourth from the left facing the Temple of Time, of four in a row (in game: seed-shop-7c, Kareem)",
     ),
     ("SacredForestMeadow", "GOSSIP_KOKIRI_FOREST_02"): (
         None,
