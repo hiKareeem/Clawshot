@@ -568,4 +568,42 @@ Owns `src/clawshot/patch/scrubs.py` and `src/clawshot/patch/tokens.py` (new), `t
 3. Both as locations the fill can use behind `--shuffle Scrub` and `--shuffle Token` (off), only for what passed
    review; their in-game tests decide the defaults later.
 
+### Track E: the Castle Town shop crash (`r6/shopfix`, added 2026-11-08)
+
+Owns `src/clawshot/patch/shops.py` (except the price code, track B's), `tests/test_shop*.py`,
+`plans/rounds/r6-shopfix.md`, a section 24.
+
+Kareem's `seed-shop-7` crashed on entering Castle Town as child (Hookshot v2.0.1, log
+`E:/OOTRemake/work/r5-seed/user-seed-shop-7/hookshot_log.txt`, line ~24488): thread `GeneralFormatAsync_`, write to
+guest `0x10`, x6/x7 holding the ASCII `Component/ShopPa`; just before, the overlay served `Market_Child_Static` and
+the seller packs `Npc_Hylia_021_Shop_Child`, `_018_` and `_020_`. The Kokiri shop's changed packs worked in the
+same run and in the round 5 tests.
+
+1. Find the cause from the data, without the game: diff the seed's three Market packs (and the Kakariko and other
+   shops' packs it writes) against the dump's, field by field; check every reference a changed `ShopParam`
+   (`GoodsList`, boards, group memberships removed by round 5's `dc037c8`) makes against what the pack and the
+   placement still provide. Name the change that leaves a null.
+2. Bisect outputs for Kareem in `E:/OOTRemake/work/r6-shopfix/` (new game is too slow: use a copy of a save that
+   is a child near Castle Town, from `E:/OOTRemake/work/save-backups/`): each Market pack alone, and the suspected
+   change reverted, each with what he should see.
+3. Fix the patch, with a dump test that reproduces the bad reference, and regenerate the seed as
+   `E:/OOTRemake/work/r5-seed/seed-shop-7b/` (same seed and settings) with a launcher; never touch `seed-shop-7`
+   or `user-seed-shop-7`.
+
+### Track F: findings from play (`r6/play`, added 2026-11-08)
+
+Owns the round 4 logic files `src/clawshot/data/world/remake/child_*.toml` (no other track this round), their
+tests, `plans/playtest/answers.md`, `plans/rounds/r6-play.md`.
+
+Kareem's `seed-shop-7` run (2026-11-08), each to settle against the data and apply with `source` and a test:
+1. The Deku Tree: the Boomerang hits the switch that opens the Slingshot room's exit and reaches the top floor, as
+   the Slingshot does (round 4's rules ask for the Slingshot only); the Boomerang stuns Gohma. Check each against
+   the placement data (the switch and target actors) and change the rules to `Slingshot or Boomerang` where the
+   data agrees.
+2. The castle moat is shallow: the Ocarina of Time needs no Silver Scale (playtest question; check the HF rules).
+3. The Kokiri shopkeeper gave a free Deku Shield after Mido (Kareem held the Kokiri Sword and a Hylian Shield; the
+   slot also sold one at 40): round 5's `present_DekuSheld` route. Find its exact conditions and model it (a free
+   Deku Shield event after Mido, under those conditions), and say whether it is a check to shuffle later.
+4. Record each in `plans/playtest/answers.md` and section 12.
+
 ### After round 6
