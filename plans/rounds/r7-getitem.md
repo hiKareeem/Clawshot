@@ -55,8 +55,9 @@ supply their missing native get-demo event performer. Visual placement still nee
 - Two plain `thread post --thread cs-r7 --as cs7b` attempts failed with **no thread cs-r7**;
   the allowed `thread log --thread cs-r7` printed empty despite that. No thread creation/other command
   used. **Claude: create/restore cs-r7 so the required shared-file/handoff posts can be delivered.**
-- Section 26 is held here until section 25 exists on an authorized base, preserving numeric append order;
-  no placeholder section or other track's prose is inserted.
+- Section 26 is now appended after the last section on this base (24), keeping all present sections in
+  increasing order. No placeholder section 25 or other track's prose is invented; review inserts A's
+  section 25 before 26 when it merges. No base movement/rebase was authorized or performed.
 
 Item 1 check: live read-only traces above completed, model assets/RSDB/component references and native
 bind dispatch inspected. Investigation only: no tests/docs beyond this required research report.
@@ -198,3 +199,33 @@ correct overlay/log and no backup or main-user access. No batch/dry-run executio
 Small diagnosed edit failure: the save-checker footer patch named a nonexistent line; the tool refused
 atomically. Re-read the exact footer, removed the unverified wallet-data lookup and kept wallet capacity
 as a UI observation. No source save was opened or fabricated to validate a guessed key.
+
+## Integration and final verification
+
+The owned section 26 is appended to `plans/03-game-data.md` after this base's section 24. All
+present sections remain in numeric order; section 25 is A's merge content, not a placeholder to invent.
+The external `section26.md` is only the insertion source; the repository now contains the findings.
+
+Independent actual-writer replay (`PYTHONHASHSEED=741`, reversed actor input order) rebuilt the same
+six-chest plan in another interpreter: **all nine overlay resources byte-identical** to the requested
+player output. `determinism-verification.json` records their hashes outside the repo. No launcher
+was written/run for that throwaway replay.
+
+The saved post-play checker was exercised before any game run: it exits **1** with the exact isolated
+user's missing-save path; it does not search or copy another user/backup. Its syntax and the saved
+builder's syntax compile. This expected missing-player-save refusal is not claimed as a gameplay check.
+
+Commit ledger so far:
+
+| Commit | Scope |
+|---|---|
+| `c09c00a` | Item 1 trace/native model proposal |
+| `dc54dbb` | Isolated ActorInfo size formula and dump oracle |
+| `4535983` | Item 2 explicit model/performer transforms and regressions |
+| `a3168ac` | Isolated shared writer nested-size hook |
+| `0cd8feb` | Isolated settings evidence: already-observed Minuet only |
+| `5b0dd43` | Item 3 full actor-gap inventory and six-chest artifact evidence |
+
+No seed pipeline/CLI/fill behavior, existing player output, live user, save backup, dependency or
+other track's file was changed. Presentation corrections remain explicit until visual review.
+The full four-command gate chain is running; completed results and the handoff-post outcome follow.

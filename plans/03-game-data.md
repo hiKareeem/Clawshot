@@ -1733,3 +1733,46 @@ The names-track randomized-slot golden was removed with reviewer approval: its m
 now live in the fixed-placement free-shield fixture. A dump-level real seed7 CLI check independently
 replays the written opening as child to Gohma and checks the note's Enter/Complete order, with no slot pins.
 Full gate results and final commit: `plans/rounds/r6-shopfix.md`.
+
+## 26. Round 7: chest get-models and gift actor evidence (cs7b)
+
+Build `e0f3ccfa`, read-only dump. Full exact-action trace, all 76 unobserved exact gift-actor
+identities, commands, provisional choices and player checklist: `plans/rounds/r7-getitem.md`.
+External reproducers/resources: `E:/OOTRemake/work/r7-getitem/`. No agent game/launcher run.
+
+Chest display uses the content actor's `Components.ModelInfoRef` -> `FmdbName` and
+`ModelProjectName`, mirrored in `RSDB/ActorInfo`. The twelve ordinary songs resolve to
+`Obj_Rupee`, explaining the Storms/Minuet green-rupee observations. The two ocarinas already
+have their correct model assets, but `Components.EventPerformerRef` selects `Common.event.root`,
+not `PouchContent.event.root`. Common lacks the chest's `EventTriggerModelBindForItemGetDemo`;
+PouchContent root151 -> bind146 computes the child/adult get-demo offset and binds to Player.
+Small chest Event10 and big chest Event66 call that missing action. **[INFERENCE]** This
+presentation-dispatch mismatch explains the Fairy Ocarina's invisible model; runtime proof is pending.
+
+No standalone musical-note/song model found in the native actor/model inventory. Provisional
+stand-ins: Fairy Ocarina for ordinary songs, Ocarina of Time for warp songs. `patch/getitem.py`
+provides explicit `changes(romfs, actors)` transforms: song ModelInfo identity, ocarina native
+PouchContent performer copied from Boomerang, matching ActorInfo model/bounds and conservative
+non-shrinking native display heap reservations. Every pouch identity, OcarinaParam, text, grant
+and saved flag stays unchanged. No new assets, edited AI graphs or automatic seed default.
+
+Common writer accounts for same-shape embedded string growth without lowering original overhead.
+ActorInfo's existing own-file allocation is raw1,934,492 -> rounded1,934,496 +3,064 =1,937,560;
+changed table retains its size. The explicit full-family dump oracle checks inverse diffs on all
+14 packs/all8,363 ActorInfo rows, native assets and every output allocation. Public writer smoke
+built16 resources successfully. Gameplay/binding/ocarina use still needs Kareem, not a parse-only claim.
+
+One new-game launcher: `E:/OOTRemake/work/r7-getitem/ingame/Test - chest-gift-models.bat`, its own
+empty user and nine-resource overlay. Mido doorway view: middle-left Fairy Ocarina; far-left
+Storms; middle-right Din's Fire; far-right Adult Wallet. Training-area chest: Ocarina of Time,
+unsafe sword wrapper removed. Storms-grotto chest: Echo Gem, conditional native puzzle check.
+Six original saved Hashes; no chest moved/new flag. Upper bridge-ledge chest stays untouched.
+Checklist covers model/text AND usable item/capacity, Save/Continue and overlay-open logs;
+no Kokiri Sword is supplied, so this is not a playable seed. Executable only the bin game,
+update checks disabled, missing-exe stop; no launcher/dry-run executed by the agent.
+
+The shared chest allowlist grows only by Minuet's **already observed round-6 warp**. Ten other
+songs remain family-inferred in opt-in anywhere mode; no new gift experiment actor is released.
+**Kareem: confirm the three native presentation paths and four new gift grants, including
+Time replacing Fairy without losing Storms; report the grotto's actual appearance prerequisite.**
+
