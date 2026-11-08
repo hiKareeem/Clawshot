@@ -9,7 +9,11 @@ scripts and decoded data: `E:/OOTRemake/work/r7-hints/` (outside the repo).
 | 1 Gossip Stones in the world (shared world files) | `world/translate.py`, translated region files, `world/model.py`, `world/load.py`, `04-world-format.md` | abbce51 |
 | 1 the 40 stones, one label each | `data/world/remake/hint_stones.toml`, `census/hints.py` (`REMAKE_STONES`, `stone_labels`), `tests/test_hints_world.py` | 7fe1e63 |
 | 2 hint selection | `data/hints.toml`, `generate/hints.py`, `tests/test_hints_select.py` | a567b05 |
-| 3 hint settings (shared files) | `generate/fill.py` (`Settings`), `data/settings.toml`, `__main__.py`, `tests/test_hints_settings.py` | (item 3 commit) |
+| 3 hint settings (shared files) | `generate/fill.py` (`Settings`), `data/settings.toml`, `__main__.py`, `tests/test_hints_settings.py` | 2cb1e98 |
+| 4 the stones' lines | `patch/text.py` (hint step), `tests/test_hints_lines.py`, item hints once per item | dded73e |
+| 4 seed step, spoiler, play note (shared files) | `generate/__init__.py` (`Seed.hints`, `spoiler`, `play_note`), `patch/__init__.py` (`hint_step`), `tests/test_hints_seed_dump.py` | 7fe2e97 |
+| 4 fix: shop refills are not major items | `generate/hints.py`, `tests/test_hints_select.py` | 93dde8c |
+| 4 section 25, this file | `plans/03-game-data.md`, `plans/rounds/r7-hints.md` | (round-file commit) |
 
 ## Item 1: Gossip Stones as hint locations
 
@@ -87,17 +91,105 @@ Checks:
 every field (`as_dict`, so a default seed's string stays `CS1` and old strings decode to the defaults), and CLI
 `--hints` / `--hint-distribution`, which override a `--settings` string. Shared files, one commit.
 
-**Kareem: should Gossip Stones speak without the Mask of Truth (`always`, provisional default, OoT Randomizer's
-default) or only to child Link wearing it (`mask`, vanilla)?** With `mask`, a hint goes only on a stone child Link
-can reach holding the mask (no flow change is written), so the adult-only Sacred Forest Meadow clearing stone and
-any stone behind adult items carry junk.
+**Decided (D26, Kareem via the reviewer):** `always` is the default. For `mask` he added that a stone can be read only
+once the mask is held, so a hint must stay useful from then on. Modelled (item 4 fix commit): under `mask` a stone is
+readable only in a search state holding the Mask of Truth (as child: the remake asks for it worn), and
+`hints.mask_prerequisites` lists the shuffled locations whose item the mask cannot be reached without (the mask's own
+location too); none of them is named by any hint, and Way of the Hero starts from the mask (prerequisites left out
+of the required list). Barren needs no change: an area holding a prerequisite holds a required item, so it is never
+called barren. No flow change is written with `mask`.
 
 | Command | Result |
 |---|---|
 | `uv run pytest tests/test_hints_settings.py tests/test_settings.py tests/test_settings_songs.py tests/test_settings_forest.py -q` | 25 passed: default string still `CS1`; `mask`/`strong` round-trip through the string; an unknown mode or distribution refused; `--hints always` overrides a `--settings` string's `mask` and keeps its distribution |
 
+## Item 4: the seed step, the spoiler, the play note and the test output
+
+**In a seed.** `generate()` chooses the hints after the fill (`Seed.hints`, the hint generator separate from the
+fill's, so placements are what they were). `make_seed` adds `hint_step`: the game's English names of the hinted
+items (`patch.text.item_names`, `USen` `<key>_Name` without grammar tags; an item with no actor keeps its logic name),
+each stone's line (`patch.text.stone_line`: the stone's own opening tags, rows of at most 60 characters, two rows a
+page, a page break reopening size and colour, names in colour `0000` and back to the stone's colour), written into
+every language archive of the dump, and with `hints = always` the `GossipStone` flow edit of round 6. `spoiler.json`
+gains `hints` (stone, where it stands, label, kind, the line as the stone says it, area, location, item), and
+`play-note.md` a "Gossip Stones" table. A world without stones (a slice) gets no hints and no text files.
+
+Size: with the English lines, every Western and the Japanese archive shrinks; `CNzh` (+1,024 bytes), `KRko` (+512)
+and `TWzh` (+992) outgrow their size-table entries, which the writer raises like any file (so a seed with hints
+writes the size table). **Decided (D26, Kareem): English hint text in every language archive.**
+
+Checks:
+
+| Command | Result |
+|---|---|
+| `uv run pytest tests/test_hints_lines.py tests/test_hints_text.py -q` | 12 passed: a short hint keeps the stone's colour, size and voice and colours the two names, back to the stone's colour after each; 40 six-letter words at width 30 make rows of four words, a page break every second row reopening size and colour (not the voice), no word split, nothing lost; the archive transform changes only the hinted stone and no other file; a label the archive lacks is refused |
+| `OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump tests/test_hints_seed_dump.py -s -q` | 4 passed (52 s): seed 7, Chest+Shop, `always` and `mask`: 40 hints on the 40 labels in world order; every hint naming a location names its placed item at a shuffled location, and a fresh search with that item withheld reaches the stone (with `mask`, as child holding the mask); Way of the Hero, item and junk hints present (`always`: 5 woth, 2 barren, 9 item, 9 sometimes, 11 random, 4 junk; `mask`: 4, 3, 12, 10, 9, 2); all 16 archives change, the flow only with `always`; every archive's stone line reads, page breaks as spaces, exactly the spoiler's text |
+| `uv run pytest tests/test_hints_select.py -q` | 9 passed, adding: a shop refill (`Buy Bombchu (8)`, a progression item in the world) gets no item hint and leaves its area barren. It failed before the fix (printed seed 2 naming the refill), found in 7c's first build, which hinted "Eight Bombchus" and "Five Deku Sticks" |
+| `uv run python -m clawshot --romfs E:/Games/Hookshot/romfs --seed 7 --out E:/OOTRemake/work/r7-hints/smoke-7` | exit 0, 79 files (the 16 archives, the flow, the size table for the three growing archives); spoiler `hints` 40 lines, `play-note.md` has the Gossip Stones table |
+
+### The test output `seed-shop-7c` (`E:/OOTRemake/work/r7-hints/`)
+
+Built by `E:/OOTRemake/work/r7-hints/make_7c.py` (throwaway, outside the repo): 7b's 228 shuffled placements from its
+`spoiler.json`, every other check at the remake's vanilla item (census links, as `make_seed` does), under the current
+logic with 7b's settings (Chest+Shop, own-dungeon items, the intro skip, forest closed, no cheap Deku Shield, which 7b
+predates). The beatability search passes (25 spheres; every 7b placement and item exists in the current world). The
+hints are `choose(seed, "always", "balanced")`; the text goes through `patch.text` and the writer.
+
+- `seed-shop-7c/romfs`: 7b's 77 files copied and checked byte-identical by SHA-256
+  (`E:/OOTRemake/work/r7-hints/seed-shop-7c-files.json`), plus `Event/EventFlow/GossipStone.bfevfl.zs` (no mask) and
+  13 language archives. **`CNzh`, `KRko` and `TWzh` are left out of 7c**: their English text outgrows the size-table
+  entry, and raising it would change 7b's size table (a non-text file); Kareem's game is `en-US` (`oe: language
+  en-US (language.txt)` in his 7b log). No entry changed for the written files.
+- `seed-shop-7c/spoiler.json` (7b's `patch` plan kept, `based_on` 7b) and `play-note.md` with the Gossip Stones table.
+- `Play shop seed 7c.bat`: copied from round 5's save-copy launcher (`Test - talon-boomerang.bat`) and 7b's: starts
+  `E:\Games\Hookshot\bin\hookshot.exe` only, `HOOKSHOT_NO_UPDATE_CHECK=1`, stops if the exe is missing; on its first
+  run it copies the save from `E:\OOTRemake\work\r5-seed\user-seed-shop-7b\save\5a3c9e1f0b7d24680000000000000001`
+  (read only; stops if `slot_01\progress.sav` is missing) into its own `user-seed-shop-7c`, overlay
+  `seed-shop-7c\romfs`, log `seed-shop-7c\hookshot_log.txt`. Not run by me (checked by reading it).
+- `uv run python E:/OOTRemake/work/r7-hints/readback_7c.py` read the written `USen` archive and flow back from the
+  output folder: the lines below with their tags, and no Mask of Truth question left in the flow.
+
+**What Kareem should do and see** (quit 7b first; 7c continues a copy of the 7b save, so nothing in 7b changes):
+
+1. Run `E:\OOTRemake\work\r7-hints\Play shop seed 7c.bat` and continue the save. The game plays exactly as 7b (same
+   chests and shelves).
+2. In the Temple of Time courtyard (the Market's north exit) the four Gossip Stones stand in a row. Talk to each,
+   **without the Mask of Truth**. Each speaks (the stone, not Navi): an opener, then one of these four lines, with the
+   names in a highlight colour, then a closing line:
+   - `GOSSIP_HYRULE_MARKET_01`: "They say Gerudo Training Ground Torch Slug Room Chest holds / the Red Rupee."
+   - `GOSSIP_HYRULE_MARKET_02`: "They say Haunted Wasteland: Ruins Cellar Torch Chest holds / the Poe."
+   - `GOSSIP_HYRULE_MARKET_03`: "They say searching the Shadow Temple would only waste the / hero's time."
+   - `GOSSIP_HYRULE_MARKET_04`: "They say searching Zora's Domain would only waste the hero's / time."
+   (`/` is where the row breaks.) **Report, left to right as you face the temple, which line each stone says**: that
+   settles round 6's open question of which label is the far left.
+3. Optional, on the way: Hyrule Castle's stone beside Malon and Talon (child) says "They say Goron City hides the
+   Hylian Shield."; the Kokiri Forest stone by the Lost Woods entrance says "They say Kokiri Forest hides the Kokiri
+   Sword." (both true in 7b: GC shop shelf 6, Mido's middle-left chest).
+4. The log `E:\OOTRemake\work\r7-hints\seed-shop-7c\hookshot_log.txt` should show `fs: OpenFile(...GossipStone.bfevfl.zs):
+   from the overlay` and the same for `Mals/USen.Product.110.sarc.zs`.
+5. **Report:** do the stones speak without the mask, are the lines as written (wrapping, the highlight colour, no
+   broken box or crash), and is anything hard to read? Every stone's line is in `seed-shop-7c\play-note.md`, "Gossip
+   Stones", if you meet others.
+
+## Questions for Kareem
+
+1. **`seed-shop-7c`** (item 4): do the Temple of Time stones speak the hints without the mask, which line is far
+   left, and do wrapping and the highlight colour look right?
+2. Answered (D26): `always` by default; `mask` hints start from the mask (modelled, above). English in every archive.
+3. **Distribution:** `balanced` (OoT Randomizer's default) as the default, with `strong` and `useless` as options?
+
+## Left for later
+
+- Other hint givers (Skulltula House rewards, Dampé's diary, Sheik) and dual, goal and entrance hints.
+- The Temple of Time pair/row labels and the Deku Tree, maze and Lake Hylia sets: which name is which stone (7c's
+  answer settles the Temple of Time row).
+- The HF cow grotto stone's `has_fire_source` and the adult Zora's Domain stone copy are OoT Randomizer's rules,
+  not checked in the remake.
+
 ## Cross-track posts (thread `cs-r7`)
 
-- abbce51 changes shared world files (translator, regenerated region files, `model.py`, `load.py`). The post failed:
-  `bermuda thread post --thread cs-r7 ...` printed `bermuda: no thread cs-r7: create it with bermuda thread new
-  cs-r7` (exit 1); I may not create threads. **Claude: the thread `cs-r7` does not exist; the posts below wait for it.**
+- The thread did not exist at first (`bermuda: no thread cs-r7`, exit 1; the reviewer created it). Posted at 16:23,
+  in order: abbce51 (world: stones as hint locations; translator, 18 regenerated region files, `model.py`,
+  `load.py`), 2cb1e98 (settings: `hints`, `hint_distribution`, CLI), 7fe2e97 (seed: `Seed.hints`, `spoiler`,
+  `play_note`, `make_seed` hint step; hint seeds now write the size table for `CNzh`/`KRko`/`TWzh`) with e4c9d43
+  (D26 mask rule). Handoff post below.

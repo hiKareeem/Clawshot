@@ -1734,6 +1734,39 @@ now live in the fixed-placement free-shield fixture. A dump-level real seed7 CLI
 replays the written opening as child to Gohma and checks the note's Enter/Complete order, with no slot pins.
 Full gate results and final commit: `plans/rounds/r6-shopfix.md`.
 
+## 25. Round 7: hints on Gossip Stones (cs7a)
+
+Build `e0f3ccfa`, read-only dump. Commands, provisional choices and the in-game test: `plans/rounds/r7-hints.md`.
+Scratch scripts: `E:/OOTRemake/work/r7-hints/`. No game text is quoted here.
+
+**Stones in the world.** OoT Randomizer's 40 `HintStone` locations (region and rule) are translated with the rest of
+its world and built into `World.hint_stones`, apart from the checks. The remake lacks four of them (`n64_only`) and has
+four of its own, given regions and rules by hand (`data/world/remake/hint_stones.toml`): the Sacred Forest Meadow
+clearing behind the Song of Time blocks (the clearing chest's rule), Kakariko's bomb grotto, the Zora's River storms
+grotto and the Death Mountain Trail cow grotto. `census.hints.stone_labels()` ties the 40 live stones to the 40 message
+labels (section 22's `STONE_LINKS` plus the four remake-only names).
+
+**Choosing.** `generate.hints.choose` (OoT Randomizer's method, `Hints.py` at `526b4c8d`): always-hint locations
+first, then kinds drawn by weight (Way of the Hero, barren areas, item, sometimes and random location hints, junk);
+areas are a region's `hint` or `dungeon`, or that of the region it is entered from. A hint naming a location goes only
+on a stone readable with every other placed item collected, so a stone never needs what it points at. With
+`hints = mask` a stone counts as readable only for child Link holding the Mask of Truth (section 22: the flow asks for
+it held and worn; only child wears masks), and no hint names a location whose item the mask cannot be reached
+without (D26, Kareem: a hint must stay useful from when the mask is held). Lists, weights, area names and wording:
+`data/hints.toml`. Defaults (D26): `always`, English text in every language archive.
+
+**Writing.** Each hint replaces its stone's message (`EventFlowMsg/GossipStone.msbt`, label = the stone's `Name`)
+with Clawshot's English line: the stone's opening tags kept (size, colour, voice), rows of at most 60 characters
+(the game's own stone rows reach 65), two rows a page, a page break (group 0 type 4) reopening the size and colour, and
+the filled-in names in colour `0000` (group 0 type 3, the colour other lines use to stress a word), then the stone's
+own colour again. Item names are the game's English (`USen` `ActorMsg/PouchContent.msbt` `<key>_Name`, grammar tags
+dropped). Every language archive gets the English lines (provisional). Seed 7 (chests): each Western and Japanese
+archive shrinks (`USen` 2,373,416 -> 2,373,192 bytes, `JPja` -2,416, `EUru` -2,496), while `CNzh` (+1,024), `KRko`
+(+512) and `TWzh` (+992) grow past their size-table entries, which the writer raises (the size table is then written).
+The `GossipStone` flow edit (section 22) is written with `hints = always`; with `mask` the flow stays vanilla.
+
+**In game:** not yet: `E:/OOTRemake/work/r7-hints/seed-shop-7c` (`plans/rounds/r7-hints.md`, item 4).
+
 ## 26. Round 7: chest get-models and gift actor evidence (cs7b)
 
 Build `e0f3ccfa`, read-only dump. Full exact-action trace, all 76 unobserved exact gift-actor
