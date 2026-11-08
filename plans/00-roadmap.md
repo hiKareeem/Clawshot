@@ -626,9 +626,11 @@ Kareem's `seed-shop-7` run (2026-11-08), each to settle against the data and app
   shopkeeper's free Deku Shield (repeats while none is equipped) is a logic event, not a check; the moat needs no
   scale.
 
-Waiting on Kareem in game: `seed-shop-7b`; the Minuet, closed-Deku and Gossip Stone tests; `free_time_travel` after
-his first Master Sword pull; the logic-session route cards.
+Waiting on Kareem in game: `seed-shop-7b`; `free_time_travel` after his first Master Sword pull; the logic-session
+route cards. The Minuet, closed-Deku, price and Gossip Stone tests passed (2026-11-08; the Fairy Ocarina from a
+chest shows no model).
 
 For round 7 (to agree with Kareem): hints on Gossip Stones (track C's design note); gift items in chests as each is
-tested; a once-only gate for the shopkeeper's shield so it can be a check; boss Heart Containers as checks; token
+tested, and get-item models for gift items from chests (songs show a green rupee, the Fairy Ocarina
+none); a once-only gate for the shopkeeper's shield so it can be a check; boss Heart Containers as checks; token
 persistence; the advanced options (bomb pickups as bags, open Deku) as Kareem asks for them.

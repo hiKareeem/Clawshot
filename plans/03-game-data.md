@@ -1404,6 +1404,12 @@ Live full CLI smoke with Chest+Shop+Gift, songs anywhere, affordable, closed_dek
 277 checks, 20 spheres, 118 resources; independent read-back preserved the exit default and all four new fairy
 save flags/layout growth. This is generation/data proof, not an in-game completion claim.
 
+**In game (Kareem via Claude, 2026-11-08, Hookshot 2.0.1):** the Minuet of Forest from a chest is learned and warps to Sacred Forest Meadow (green rupee
+model, correct text); the Fairy Ocarina from a chest shows no model but the correct text. `closed_deku`: the
+bridge Kokiri is gone, Saria's Fairy Ocarina cutscene plays on the bridge before Gohma (the world's `LW Gift from
+Saria` = True behind the bridge exit agrees), Mido still blocks. Prices: the Deku Shield and Deku Nuts sell for 10,
+and stay 10 after a restock. Songs anywhere and the forest modes are game-confirmed.
+
 ## 22. Round 6: message text, Gossip Stones, item-get text (cs6c)
 
 How each was found and the scratch scripts (`E:/OOTRemake/work/r6-hints/`, read only on the dump; their decoded text
@@ -1509,6 +1515,8 @@ Many NPCs also have `Mask_NN` lines for when Link wears a mask (the Mask of Trut
 **In game:** not yet. The test `E:/OOTRemake/work/r6-hints/ingame/gossip-kf-line` (a new game: every stone speaks
 without the mask, the Kokiri Forest stone by the Lost Woods entrance says a custom line naming the Boomerang through
 `item_name`) and what Kareem should see are in `plans/rounds/r6-hints.md`, item 4.
+
+**In game (Kareem via Claude, 2026-11-08, Hookshot 2.0.1):** the `gossip-kf-line` stone said the custom line without the Mask of Truth.
 
 ## 23. Round 6: one-time scrubs and Gold Skulltula drop experiments (cs6d)
 
