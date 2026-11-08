@@ -1645,11 +1645,22 @@ Only the reported Shop Bombs(10) chest case is gameplay-certified here.
 
 Kareem's Basement Chest finding: old seed 7 placed **Buy Bombs (10)** / `Shop_BombBundle_02`; with no Bomb Bag,
 the chest gave a Bomb Bag and 20 bombs, and the save has `IsGet.Item_BombBag_Small` (Kareem via Claude).
-**Proposal, not implemented:** once the native chest bomb/Bombchu variants are confirmed, count their bag grant
-as the logical `Bomb Bag` as well as the ammo; alternatively restrict them to checks reachable with a Bomb Bag
-already obtained independently, never let the ammo satisfy its own prerequisite. Merely leaving an uncounted
-early bag grant can alter the earliest-pull assumptions behind D20. Quiver/bullet bag capacity must not be
-misrepresented as Bow/Slingshot ownership. No ammo actor mapping, alias, chest rule or unrelated logic was changed.
+**D25 chosen by Kareem (2026-11-08): require the bag, do not count ammo as extra bags.** The fill pre-places
+`Bombs (N)` / `Bombchus (N)` only at destinations a maximal search cannot reach without any logical Bomb Bag
+source or bomb/Bombchu pack. The search holds all other pool/fixed items with their counts, excludes bag aliases
+and Buy pack variants, and filters excluded starting items. Thus a Hammer/other-item bypass is not mistaken for
+a mandatory bag gate; packs cannot mutually stand in for the independent bag. Existing assumed fill then checks
+actual reachability and dungeon/display restrictions before normal filler can consume those constrained slots.
+Buy refills remain Shop-only; sale rules, ammo actor mappings and aliases are unchanged.
+
+Regression evidence: an otherwise-open synthetic seed placed Bombs in its early Hammer chest before the fix.
+Eight synthetic cases now cover all six ammo counts/classes, aliases, pack alternatives and impossible destinations;
+real seed7 passes with Chest-only and Chest+Shop shuffle. After rebasing onto `a81faf9`, two actual CLI processes
+(different hash seeds; the second replays the settings string) produced **78 byte-identical files**. All **six**
+native ammo pickups (three each of bombs/Bombchus) were outside bag-free reach; **59 Buy refills** stayed in Shop,
+and the written placement passed beatability. Reports and full gate results: `plans/rounds/r6-shopfix.md`.
+The advanced extra-bag counting option remains unimplemented. This new-seed restriction does not rebuild or
+change the size-only 7b continuation. Quiver/bullet bag capacity still does not mean Bow/Slingshot ownership.
 
 ### Purchase conditions and native refusals (reviewer follow-up)
 

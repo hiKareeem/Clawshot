@@ -146,26 +146,28 @@ The same smoke rechecked existing 7b: spoiler equal to old7, same resource paths
 
 ## Rebased commit ledger
 
-Base **65bbcf7**, branch `r6/shopfix`; earlier hashes in tool/thread checkpoints are superseded by rebase.
+Base **a81faf9**, branch `r6/shopfix`; previous `65bbcf7`/`fcb265f` checkpoint and earlier hashes are superseded by the requested second rebase. Section12 play findings remain before section24; D25 is present in `plans/decisions.md`.
 
 | Commit | Scope |
 |---|---|
-| `810f1e0` | item1 field/reference/allocation diagnosis |
-| `f863c52` | item2 eight isolated bisects and save/launcher evidence |
-| `6ede288` | item3 shop-owned sizing helper, regressions, section24 and exact 7b proof |
-| `c86325d` | isolated `patch/write.py` embedded-size transaction hook |
-| `bbd77d6` | isolated effective `Settings.item_location_types` Buy-to-Shop hook |
-| `e487f2b` | isolated fill capacity reservation, retaining main's held priority |
-| `2cbfc1a` | item4(a) failing-before/passing-after boundary tests and confirmed game result |
-| `71ed737` | item4(b/c) ammo table, proposed rule only, unchanged 7b contract |
-| `d97ba2c` | native refusal table, purchase observations and logic audit |
-| `8ad7753` | rebased ledger and completed smoke cleanup |
+| `ed6ce49` | item1 field/reference/allocation diagnosis |
+| `da417a8` | item2 eight isolated bisects and save/launcher evidence |
+| `021ac67` | item3 shop-owned sizing helper, regressions, section24 and exact 7b proof |
+| `ed73737` | isolated `patch/write.py` embedded-size transaction hook |
+| `c502854` | isolated effective `Settings.item_location_types` Buy-to-Shop hook |
+| `d341f33` | isolated fill capacity reservation, retaining main's held priority |
+| `9f19b10` | item4(a) failing-before/passing-after boundary tests and confirmed game result |
+| `c53ecbc` | initial item4(b/c) ammo audit and proposed rule, unchanged 7b contract |
+| `ba6bb35` | native refusal table, purchase observations and logic audit |
+| `7e0e77c` | first rebased ledger and smoke cleanup |
+| `70696f5` | pre-D25 full integration gates and handoff |
+| `fa358ae` | isolated D25 `generate/fill.py` restriction plus synthetic/real-seed regressions |
 
 ## Cleanup
 
 Removed only this session's completed three future-seed/replay smoke folders, both targeted and both full-gate pytest basetemps, and throwaway generation/diagnostic builders after recording their evidence. Requested eight bisect overlays and all their users remain, including Kareem's played07 user; 7b and its launcher remain. Read-only audit reproducers, decoded local audit reports, CLI transcripts and verification JSON remain outside the repository. No source dump, backup, original seed/user, junction, other track file or dependency was removed or changed.
 
-## Full integration gates
+## Pre-D25 full integration gates
 
 Run once on the integrated code after rebase, with pytest temporary output explicitly outside the repository:
 
@@ -178,12 +180,71 @@ Run once on the integrated code after rebase, with pytest temporary output expli
 
 All four full gates passed on the integrated code; no gate was narrowed or rerun unchanged. The synthetic gate covers all new Shop destination/capacity tests and inherited settings/age/gift/scrub tests; the dump gate includes the real failing-before/passing-after embedded Potion allocation oracle. No failing check remains.
 
-## Final handoff
+## Pre-D25 handoff
 
 - **Crash fixed and confirmed in game:** 07 loads town, randomized shelves/prices/descriptions and successful Bombchu/stick/heart purchases; overlay log observed by Kareem.
 - **Continuation:** `E:/OOTRemake/work/r5-seed/seed-shop-7b/`, launcher `E:/OOTRemake/work/r5-seed/Play shop seed 7b.bat`. Quit before first launch; the human-run launcher makes its separate save copy once. **7b spoiler equals 7 byte-for-byte; only the size table differs among resources.** It does not include new refill placement rules, price defaults or forest defaults.
 - **New seeds:** every Buy refill stays at Shop; exact slot reservation prevents both refill and chest-only-filler starvation. Integrated string replay: 81 identical canonical files; 59 Buy refills, none in chests.
 - **Reports:** section24 has ammo/container and purchase-condition/refusal-ID tables; this file has scoped commit ledger, failure payloads, smoke proof and all four complete gate results.
-- **Left for review/owners, not silently implemented:** native chest bomb/Bombchu container grants need the proposed logical bag-count/pre-owned-bag decision and any desired family checks; the pre-existing selected-Blue-Fire/Potion-slot gate mismatch is explicitly reported above. Extra buyable test was cancelled by reviewer, not left unfinished.
+- **Review follow-up:** the ammo-container decision below is now D25 (require the bag), not an open product choice. The Blue Fire/Potion gate correction remains explicitly deferred by reviewer; extra buyable test remains cancelled.
 
 No game/launcher/window started by the agent; no merge, push, stash, dependency edit, or write under the game dump/backups/original seed/user. Final documentation commit hash is posted in the handoff thread and chat.
+
+## D25 follow-up: require the Bomb Bag
+
+Reviewer relayed Kareem's selected default, then requested rebase onto **a81faf9** (r6/play merged plus D25).
+Committed source/tests before rebasing at the clean point; rebase completed without conflict. Shared-file change was
+posted before editing. **`fa358ae` changes only `generate/fill.py`, `tests/test_generate.py`, `tests/test_shops_dump.py`.**
+
+### Restriction
+
+`_fill_bomb_ammo` runs after the existing adult-return kit stage, before dungeon/progression/filler stages.
+For every native `Bombs (N)` / `Bombchus (N)` in the actual pool, it computes eligible destinations once from a
+maximal search holding all other actual pool/fixed items, including their duplicate counts. It excludes every
+logical Bomb Bag source (canonical and aliases), every native/Buy bomb or Bombchu pack, and excluded starting items.
+A destination is eligible only if this inventory cannot access it. Existing assumed fill then places the constrained
+ammo there, preserving actual reachability and existing restrictions; unconstrained filler cannot steal its slots.
+No advanced bag-counting alias or sale/price/Blue Fire rule changed; Buy refills remain held to Shop.
+
+### Failure payloads and targeted checks
+
+- Before fix, the synthetic seed1 put `Bombs (5)` at open `Early Hammer`, with `Hammer` behind `Bag Required`.
+  The maximal no-bag inventory could reach that pickup. The Hammer-bypass alternative is intentionally not safe.
+- The first dump test's incidental count guess was wrong: printed counts showed **three**, not one, native Bombchu
+  packs. Removed that unrelated count assertion rather than repinning an incidental value.
+- Before fix, real Chest seed7's early placements included bombs at **KF Kokiri Sword Chest** and
+  **Graveyard Shield Grave Chest**; all six native ammo rows were printed in the failing payload.
+- After fix, the first dump oracle still held unmapped N64-derived counts: diagnostic output showed
+  **five `Bombs (10)` and three `Bombchus (10)`**. These reopened routes despite a nominal pack-free inventory.
+  Corrected the oracle to exclude all six named ammo counts plus the unmapped Buy variant, not merely mapped actors.
+  The actor-derived set independently identifies all actual native/Shop bag-granting packs.
+- Synthetic: `uv run pytest tests/test_generate.py -k 'ammo or bag_requirement' -q`:
+  **8 passed, 11 deselected**. Six ammo/count/class combinations over20 seeds each; alias/pack-alternative world
+  over20 seeds, starting-source exclusion, and rejection when every candidate has a Hammer bypass.
+- Real dump: `OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest tests/test_shops_dump.py -k real_seed_ammo -q
+  --basetemp E:/OOTRemake/work/r6-shopfix/pytest-d25-complete-sources`:
+  **2 passed, 6 deselected**, 18.76 s (Chest-only and Chest+Shop).
+
+### Actual CLI smoke on a81faf9 + fa358ae
+
+`uv run python -u E:/OOTRemake/work/r6-shopfix/smoke_d25.py` ran two actual CLI processes successfully:
+first seed7 Chest+Shop, then its complete `CS1` string; `PYTHONHASHSEED`51 versus52. **78/78 files byte-identical**.
+All **six** native packs (three `Item_BombBundle_Small`, three `Item_BombchuBundle_Small`) were inaccessible
+to the maximal no-bag/no-pack search. **59 Buy refills, zero outside Shop**. Independent reconstruction of the
+written placement passed beatability. Local transcripts: `d25-cli-0.txt`, `d25-cli-1.txt`; result:
+`E:/OOTRemake/work/r6-shopfix/d25-verification.json`. No game or launcher started; 7b was not regenerated.
+
+**Blue Fire gap, proposed fix only:** selected Blue Fire at either Potion merchant requires prior acquired Blue Fire,
+but the logic gates only its original slots; restrict `Buy Blue Fire` to already-gated Potion slots or non-Potion
+merchants. **Unchanged as requested.**
+
+### Rebased D25 full gates
+
+The complete four-command chain is running on this rebased implementation, with temporary output outside the repo.
+Final results and final documentation head will be recorded below before the ready handoff.
+
+After smoke proof, removed only the two session-created `d25-seed-*` overlays and the throwaway
+`smoke_d25.py` / `diagnose_d25_sources.py` scripts. The four targeted `pytest-d25-*` basetemps were never
+materialized (those selected tests do not request temporary paths). Retained both CLI transcripts and
+`d25-verification.json`; original seed7/7b, every requested bisect/user and all read-only audits remain untouched.
+The active full-gate temporary directory is retained until completion.
