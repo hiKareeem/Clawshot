@@ -265,6 +265,10 @@ skip = ["Dm_SY_Ocarina/Event71"]
 class = "rewrite"
 gate = "the cutscene plays once"
 skip = ["Dm_SY_Ocarina/Event67"]
+# C21/Event131 reaches terminal Event1 independently of the pouch grant.
+# Redirect to the event's existing saved completion flag; never clear an already learned Bolero.
+writes = ["Dm_MelodyGet_Fire/Event1"]
+flag = "HavePlayedEvent.Dm_MelodyGet_Fire"
 
 [check."Sheik in Forest"]
 class = "rewrite"

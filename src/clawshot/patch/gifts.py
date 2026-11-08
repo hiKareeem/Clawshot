@@ -41,7 +41,7 @@ RULES_TOML = Path(__file__).with_name("gift_rules.toml")
 SWAP, REWRITE, MORE = "swap", "rewrite", "more"
 CLASSES = (SWAP, REWRITE, MORE)
 FLAG_PREFIX = "Clawshot.Gift."
-FIELDS = {"class", "gate", "given", "flag", "skip", "reason"}
+FIELDS = {"class", "gate", "given", "flag", "skip", "reason", "writes"}
 
 GAME_DATA_ACTOR = "GameDataActor"
 READ_QUERY = "EventQueryIsGameDataBool"
@@ -70,6 +70,7 @@ class Rule:
     flag: str | None = None  # an existing flag the game sets once the check is given
     skip: tuple[str, ...] = ()  # "<flow>/<event>" steps taken out
     reason: str = ""
+    writes: tuple[str, ...] = ()  # vanilla IsGet writes redirected to an existing check-completion flag
 
 
 def _ref(check: str, value: object) -> str:
@@ -95,13 +96,16 @@ def loads(text: str) -> dict[str, Rule]:
             entry.get("flag"),
             tuple(_ref(check, r) for r in entry.get("skip", [])),
             entry.get("reason", ""),
+            tuple(_ref(check, r) for r in entry.get("writes", [])),
         )
-        if (rule.given or rule.skip or rule.flag) and cls != REWRITE:
-            raise GiftPatchError(f"{check}: given, flag and skip belong to class {REWRITE!r}, not {cls!r}")
-        if cls == REWRITE and not (rule.given or rule.skip):
+        if (rule.given or rule.skip or rule.flag or rule.writes) and cls != REWRITE:
+            raise GiftPatchError(f"{check}: given, flag, skip and writes belong to class {REWRITE!r}, not {cls!r}")
+        if cls == REWRITE and not (rule.given or rule.skip or rule.writes):
             raise GiftPatchError(f"{check}: class {REWRITE!r} with nothing to rewrite")
-        if rule.flag is not None and not rule.given:
-            raise GiftPatchError(f"{check}: a flag without reads to rewrite")
+        if rule.flag is not None and not (rule.given or rule.writes):
+            raise GiftPatchError(f"{check}: a flag without reads or writes to rewrite")
+        if rule.writes and (not isinstance(rule.flag, str) or not rule.flag.startswith("HavePlayedEvent.")):
+            raise GiftPatchError(f"{check}: writes need an existing per-check event completion flag")
         if cls == MORE and not rule.reason:
             raise GiftPatchError(f"{check}: class {MORE!r} needs a reason")
         rules[check] = rule
@@ -125,7 +129,7 @@ class GiftChange:
     @property
     def flag(self) -> str | None:
         """The flag the check's "given" reads read, or None when it has none."""
-        if not self.rule.given:
+        if not (self.rule.given or self.rule.writes):
             return None
         return self.rule.flag or FLAG_PREFIX + self.steps[0].id.replace("/", ".")
 
@@ -227,6 +231,22 @@ def _read_flag(fc: evfl.Flowchart, flow: str, ref: str, vanilla: set[str], flag:
     event.params["GameDataName"] = flag
 
 
+def _redirect_write(fc: evfl.Flowchart, flow: str, ref: str, vanilla: set[str], flag: str) -> None:
+    event = fc.events[_index(fc, flow, ref.split("/")[1])]
+    params = getattr(event, "params", None) or {}
+    if not isinstance(event, evfl.ActionEvent):
+        raise GiftPatchError(f"{ref}: not an inventory Bool write")
+    actor = fc.actors[event.actor]
+    if (
+        actor.name != GAME_DATA_ACTOR
+        or actor.actions[event.action] != SET_ACTION
+        or params.get("GameDataName") not in {"IsGet." + item for item in vanilla}
+        or params.get("Value") is not True
+    ):
+        raise GiftPatchError(f"{ref}: not a true write of the vanilla item's IsGet: {params}")
+    params["GameDataName"] = flag
+
+
 def _skip(fc: evfl.Flowchart, flow: str, ref: str) -> None:
     i = _index(fc, flow, ref.split("/")[1])
     event = fc.events[i]
@@ -263,6 +283,9 @@ def patch_flowchart(fc: evfl.Flowchart, flow: str, changes: Sequence[GiftChange]
         for ref in change.rule.given:
             if ref.split("/")[0] == flow:
                 _read_flag(fc, flow, ref, vanilla, change.flag)
+        for ref in change.rule.writes:
+            if ref.split("/")[0] == flow:
+                _redirect_write(fc, flow, ref, vanilla, change.flag)
         for ref in change.rule.skip:
             if ref.split("/")[0] == flow:
                 _skip(fc, flow, ref)
@@ -272,7 +295,7 @@ def flows_changed(changes: Iterable[GiftChange]) -> list[str]:
     out = set()
     for change in changes:
         out |= {step.flow for step in change.steps}
-        out |= {ref.split("/")[0] for ref in (*change.rule.given, *change.rule.skip)}
+        out |= {ref.split("/")[0] for ref in (*change.rule.given, *change.rule.skip, *change.rule.writes)}
     return sorted(out)
 
 

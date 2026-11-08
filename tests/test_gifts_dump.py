@@ -31,7 +31,7 @@ def _intended(fc: evfl.Flowchart, flow: str, changes) -> set[int]:
     out = set()
     for change in changes:
         out |= {index[s.event] for s in change.steps if s.flow == flow}
-        out |= {index[r.split("/")[1]] for r in change.rule.given if r.split("/")[0] == flow}
+        out |= {index[r.split("/")[1]] for r in (*change.rule.given, *change.rule.writes) if r.split("/")[0] == flow}
         for ref in change.rule.skip:
             if ref.split("/")[0] == flow:
                 i = index[ref.split("/")[1]]
@@ -95,6 +95,13 @@ def test_dump_every_step_gives_the_new_item_and_given_reads_read_the_flag(romfs,
             flow, name = ref.split("/")
             event = next(e for e in trees[flow].events if e.name == name)
             assert event.params["GameDataName"] == change.flag, ref
+        for ref in change.rule.writes:
+            flow, name = ref.split("/")
+            event = next(e for e in trees[flow].events if e.name == name)
+            original = evfl.read(dicts.decompress(files[flow], (romfs / files[flow]).read_bytes())).flowchart
+            expected = next(e for e in original.events if e.name == name)
+            expected.params["GameDataName"] = change.flag
+            assert event == expected  # Value stays true; a song acquired elsewhere is never cleared.
         for ref in change.rule.skip:
             flow, name = ref.split("/")
             i = next(i for i, e in enumerate(trees[flow].events) if e.name == name)
