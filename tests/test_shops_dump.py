@@ -60,6 +60,7 @@ def test_seed_shop_copies_share_the_placement_and_keep_slot_prices(romfs, tmp_pa
         shuffle=("Chest", "Shop"),
         areas=("KokiriForest", "LostWood", "InsideTheDekuTree"),
         goal="'Defeat Queen Gohma'",
+        cheap_deku_shield=False,  # preserve-vanilla-price contract; default discount has its own field-diff oracle
     )
     output = make_seed(romfs, 22, settings)
     out = tmp_path / "shop-seed"

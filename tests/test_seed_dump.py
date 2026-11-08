@@ -19,7 +19,11 @@ from clawshot.patch.plan import DROP_KEY, EVENT_KEY, Plan
 pytestmark = pytest.mark.dump
 
 # Round 3's playtest slice, as tests/test_seed.py has it.
-SLICE = Settings(areas=("KokiriForest", "LostWood", "InsideTheDekuTree"), goal="'Defeat Queen Gohma'")
+SLICE = Settings(
+    areas=("KokiriForest", "LostWood", "InsideTheDekuTree"),
+    goal="'Defeat Queen Gohma'",
+    cheap_deku_shield=False,  # this oracle isolates chest/intro edits, not the independent price policy
+)
 
 REMOVED = "<removed>"
 INTRO = "Event/EventSetting/EventSettingComponentList/Dm_Kokiri_0000.engine__event__EventSettingComponentList.bgyml"
@@ -94,7 +98,7 @@ def test_same_seed_same_folder_in_two_processes(romfs, tmp_path):
         out = tmp_path / f"run{hash_seed}"
         env = {**os.environ, "PYTHONHASHSEED": hash_seed}
         argv = [sys.executable, "-m", "clawshot", "--romfs", str(romfs), "--seed", "4242", "--out", str(out)]
-        argv += ["--areas", *SLICE.areas, "--goal", SLICE.goal]
+        argv += ["--areas", *SLICE.areas, "--goal", SLICE.goal, "--no-cheap-deku-shield"]
         result = subprocess.run(argv, capture_output=True, text=True, env=env)
         assert result.returncode == 0, result.stderr
         folders.append({p.relative_to(out).as_posix(): p.read_bytes() for p in sorted(out.rglob("*")) if p.is_file()})
