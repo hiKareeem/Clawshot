@@ -67,6 +67,10 @@ def make_seed(
     links = link(world, chests, census_definitions.load(), scan(romfs))
     out = generate(spec, seed, settings, vanilla=remake_vanilla(world, links, table))
     changes = tuple(step(out.placements) for step in extra_steps)
+    if world.settings.get("free_time_travel", False):
+        from clawshot.patch.age import changes as age_changes
+
+        changes += (age_changes(out.placements, free_time_travel=True),)
     return SeedOutput(out, links, make_plan(out, links, table, chest_events.load()), changes)
 
 
