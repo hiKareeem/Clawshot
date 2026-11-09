@@ -842,7 +842,9 @@ section 36.
 
 Round 9 candidate from play: `free_time_travel` also needs Sheik moved: as adult before the Forest Temple, Sheik
 stands at the pedestal with a Talk prompt in the way (Kareem, 2026-11-09). Trace Sheik's Temple of Time placement
-and its gate, and patch both before the pedestal test.
+and its gate, and patch both before the pedestal test. Speedrunners (via Kareem, 2026-11-09): Sheik leaves once the Forest
+Medallion is held, not after the Minuet; trace whether that reads the medallion item or the sage flag, which matters once
+rewards are shuffled.
 Also from play: Sheik's second line there sends the player to Kakariko for the Hookshot (its vanilla place). In a seed
 it should name where the Hookshot is (a static hint through `patch/text`, like Dampé's diary) or say nothing about it.
 
