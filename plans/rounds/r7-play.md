@@ -179,3 +179,30 @@ No game was launched here; no in-game acceptance result is claimed.
 
 Checks: `uv run python E:/OOTRemake/work/r7-play-cs7f/bomb_gate.py` and `old_seed.py` produced the
 metadata/save/route results above. Native address probes are recorded by the helpers in that directory.
+
+## Item 3: owned Hylian Shield selects the grave's explicit red-rupee substitute
+
+Both Child and Adult Dynamic files configure chest Hash 16912540161937823130, `Obj_TBox_A_06`, with
+`Drop__CheckActor=TBox_Shield_Hylian`, `Drop__DropActor=TBox_Shield_Hylian`,
+`Drop__DropActor_Substitute=TBox_Rupee_Red`. Its native Drop_TreasureBox_A_06 blackboard defaults
+`Drop__CheckCondition=true`; neither placement overrides it.
+
+Decoded native A_06 root graph: node16 queries pouch count of CheckActorName; node30 evaluates 0<count;
+node29 XORs that with CheckCondition. Nodes24/25 select main content when true and substitute when false.
+Consequently stock0 gives shield; stock1 gives the configured substitute. PouchActorInfo defines
+TBox_Rupee_Red as 20 of Obj_Rupee_Green. This exactly explains Kareem's reported **20 rupees while vanilla
+graveyard files were loaded**, without inventing a different grave or a shuffled reward.
+The substitution is this instance's data, **not a universal "every duplicate chest item gives 20" rule**.
+Owning the shield and having opened this chest are different state.
+
+The randomizer already handles this: `patch/write.py:patch_tree` sets both primary and substitute to
+the shuffled actor whenever a substitute or CheckActor exists. It retains the check actor but either
+branch now gives the intended shuffled item. No implementation change is needed.
+
+`uv run python E:/OOTRemake/work/r7-play-cs7f/shield_probe.py` reads both real placement files,
+evaluates the decoded condition for pouch counts0/1, and invokes the actual `patch_tree` in memory:
+both ages choose shield/red rupee before patch, and Item_Boomerang/Item_Boomerang after patch.
+It asserts both shuffled branches and prints the red-rupee count20. No output under the dump was written.
+This is a data/patch-path smoke, not an invented in-game play result; Kareem's vanilla observation is
+the gameplay evidence. Existing `test_owned_item_substitute_cannot_replace_a_shuffled_reward` covers
+the synthetic writer regression and will run in the full gates.
