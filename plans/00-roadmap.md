@@ -774,3 +774,71 @@ Bombchus; the Treasure Chest Game swap; `free_time_travel` after his first Maste
 For round 8 (to agree with Kareem): fill robustness (Chest+Shop+Gift seed 7 needed all 10 attempts); the Fairy
 Ocarina's get model; a fresh full seed with every proven setting for a real playthrough; extending the shopkeeper's
 window (D28); token shuffle by another route; the boss rewards; run and sprint speeds from the animations (optional).
+
+## Round 8 (M2 dependable seeds; M3 more checks: gifts, freestanding, shops)
+
+Kareem agreed, 2026-11-09 ("let's go on please"); he plays `seed-shop-7c` and his main save meanwhile. Five tracks,
+Bermuda thread `cs-r8`, herdr-core. New sections of `plans/03-game-data.md`: 32 (A) to 36 (E), in number order. The
+round 5 to 7 rules on shared files carry over (`generate/fill.py` belongs to track A this round; other tracks post
+small isolated commits to it). No Hookshot build. Track A runs on the default Claude model, the others on
+`openai-codex/gpt-6.1-sol`. Kareem showed Ship of Harkinian's shuffle settings for reference; its options that need
+engine code (shuffling swim, grab, climb, crawl, ocarina buttons, Roc's Feather, skeleton key) are out of reach for
+RomFS-only mods (D14).
+
+### Track A: dependable fill (`r8/fill`, Claude)
+
+Owns `src/clawshot/generate/fill.py`, `tests/test_generate*.py`, `tests/test_fill*.py`, `plans/rounds/r8-fill.md`,
+section 32.
+1. Measure: fill attempts for 200 seeds in each mode (Chest; Chest+Shop; Chest+Shop+Gift; with Scrub and BossHeart;
+   the default string), printing the item, the allowed locations left and the frontier at every failed attempt.
+   Round 7's Chest+Shop+Gift seed 7 needed all 10 attempts.
+2. Fix the causes the measurements show, the way OoT Randomizer's fill handles them (`Fill.py`: order, restrictive
+   fill, its swap and retry rules at 526b4c8d), with a failing-before test for each; no relaxed rules or added
+   attempts. Target: every mode's first attempt succeeds for at least 95% of the 200 seeds and none needs more than 3.
+
+### Track B: get-item models (`r8/getitem`)
+
+Owns `src/clawshot/patch/getitem.py`, the chest-allowed list in `src/clawshot/data/settings.toml`,
+`tests/test_getitem*.py`, `plans/rounds/r8-getitem.md`, section 33.
+1. The Fairy Ocarina from a chest shows no model (round 7, game-confirmed after the bind change). Find why from the
+   data (the ocarina's ModelInfo, the get window's bind actions, how a gift's own presentation differs) and fix it.
+2. One new-game test output with the Fairy Ocarina and the gift items not yet seen in a chest (Zelda's Letter, the
+   Weird Egg, the Gerudo Membership Card, Epona's Song, the Ocarina of Time, the masks a seed could place), each with
+   what Kareem should see. The allowed list grows only with his results.
+
+### Track C: shops (`r8/shops`)
+
+Owns `src/clawshot/patch/shops.py`, the Kokiri shopkeeper's gift patch in `src/clawshot/patch/gifts.py` (posted
+small commits; track D owns the rest of the file this round), `tests/test_shop*.py`, `plans/rounds/r8-shops.md`,
+section 34.
+1. The Kokiri shopkeeper's gift window (D28): keep a shuffled gift available until collected, past Gohma and the
+   castle visit, through the merchant's flow (an existing flag first, else a new saved Bool, D22); unshuffled stays
+   vanilla. A new-game test output that skips him until after Gohma. D28's restriction lifts only after Kareem's
+   result.
+2. Settings like Ship of Harkinian's: `shop_slots` (0 to 8 shuffled shelves per shop, the rest vanilla; default all
+   eight) and `scrub_prices` (`vanilla` or `fixed` with a price), through the settings string, with tests.
+
+### Track D: more gift checks (`r8/gifts`)
+
+Owns `src/clawshot/patch/gifts.py` (except track C's part), `src/clawshot/patch/gift_rules.toml`,
+`src/clawshot/census/gifts.py`, `tests/test_gift*.py`, `plans/rounds/r8-gifts.md`, section 35.
+From Ship of Harkinian's list, the checks the remake's flows can give: the 14 cows (milk with Epona's Song), the
+Skulltula House rewards (10 to 50 tokens; 100 if the flow allows), the frogs (the song prizes and the two rewards),
+and the merchants (Medigoron's Giant's Knife, the carpet salesman's Bombchus, Granny's potion). For each: the census
+(flow, event, saved flag, repeat behaviour), the swap through the existing gift machinery (D22 once-gates), logic
+rules, and a test output on a fitting save copy or new game. Each joins `--shuffle Gift` only after Kareem's result.
+
+### Track E: freestanding items with native pick-ups (`r8/freestanding`)
+
+Owns `src/clawshot/patch/freestanding.py` (new), `tests/test_freestanding*.py`, `plans/rounds/r8-freestanding.md`,
+section 36.
+1. The freestanding locations (the 36 heart-piece anchors first, then other placed pick-ups): actor, saved flag,
+   respawn behaviour, and whether a native floor pick-up from D27's palette (Heart Container, Piece of Heart, Deku
+   Shield, Hylian Shield, red rupee) can stand in, as the King Dodongo test showed.
+2. `--shuffle Freestanding` (off) restricted to that palette, logic and tests; one test output (an early heart piece
+   swapped for a shield), with what Kareem should see, including after Save and Continue.
+
+### After round 8
+
+Claude builds a fresh full seed with every game-confirmed setting (Chest, Shop, Gift, Scrub, BossHeart as proven;
+hints; forest closed; cheap Deku Shield) for Kareem's first full playthrough.
