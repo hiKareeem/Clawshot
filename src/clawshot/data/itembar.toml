@@ -1,0 +1,42 @@
+# Presentation warnings only: no rule, item permission, placement or pouch mutation.
+# Source: build e0f3ccfa UI/Pouch/PouchTable/PouchTable.game__ui__PouchTable.bgyml,
+# ActorShort + IsUsableChild/IsUsableAdult; plans/03-game-data.md section 37.
+# Values identify native UI actors, not necessarily the grant actor (e.g. the Bow).
+
+[child]
+"Slingshot" = "Weapon_Range_SlingShot"
+"Boomerang" = "Item_Boomerang"
+"Deku Stick (1)" = "Item_DekuStick"
+"Buy Deku Stick (1)" = "Item_DekuStick"
+"Buy Deku Stick (5)" = "Item_DekuStick"
+"Magic Bean" = "Item_MagicBean"
+"Magic Bean Pack" = "Item_MagicBean"
+"Weird Egg" = "Item_WeirdEgg"
+"Chicken" = "Item_AlarmCucco"
+"Zeldas Letter" = "Item_ZeldaLetter"
+# Separate ocarina shortcut; conservatively include its native age restriction.
+"Fairy Ocarina" = "Item_Ocarina_Fairy"
+
+[adult]
+"Bow" = "Weapon_Range_Bow"
+"Fire Arrows" = "Item_Arrow_Fire"
+"Ice Arrows" = "Item_Arrow_Ice"
+"Light Arrows" = "Item_Arrow_Light"
+"Megaton Hammer" = "Item_Hammer"
+"Hookshot" = "Item_Hookshot"
+"Longshot" = "Item_Longshot"
+"Progressive Hookshot" = "Item_Hookshot"
+"Pocket Egg" = "Item_PocketEgg"
+"Pocket Cucco" = "Item_PocketCucco"
+"Cojiro" = "Item_CojiroCucco"
+"Odd Mushroom" = "Item_OddMushroom"
+"Odd Potion" = "Item_OddPowder"
+"Poachers Saw" = "Item_PoacherSaw"
+"Broken Sword" = "Item_BrokenSword"
+"Prescription" = "Item_Prescription"
+"Eyeball Frog" = "Item_EyeballFrog"
+"Eyedrops" = "Item_EyeDrop"
+"Claim Check" = "Item_ClaimCheck"
+# Boot shortcuts are not ZR items; include them as precautionary equipment warnings.
+"Iron Boots" = "Armor_Adult_HeavyBoot"
+"Hover Boots" = "Armor_Adult_HoverBoot"
