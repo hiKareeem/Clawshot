@@ -267,16 +267,26 @@ resources under `<dir>/romfs/` plus `<dir>/spoiler.json`:
    `Settings.shuffle` (default `Chest`, M2's chest shuffle), that have a vanilla item and are neither `n64_only` nor
    `keep_vanilla` are shuffled, every other location keeps its vanilla item. The pool is the vanilla items of the
    shuffled locations.
-2. With the return guarantee on and free travel off, first forward-place `age_return_fill_families` at
-   adult-reachable checks from `age_return_fill_inventory` plus adult pickups. Sources in
-   `age_return_bypass_families` additionally need strictly adult-only destinations: strength tiers otherwise
-   bypass the child's Saria/bracelet dependency and strand adult at Mido. Small keys bootstrap first, boss keys
-   last. The independent first-pull oracle checks the finished placements, not just this construction.
-   Then OoT Randomizer's assumed fill, with `random.Random(seed)`: restricted items first (a dungeon's keys, maps and
-   compasses, when `dungeon_items = "own_dungeon"`; boss keys, then small keys, then the rest), then progression
-   items, each to a location reachable while assuming every item not yet placed; then priority items (restriction
-   only); then the rest, anywhere. With Shop enabled, filler also uses restriction checks: type-held items precede
-   flexible filler within the native-display ordering, so rupees cannot consume Scrub-only capacity destinations.
+2. The fill (`generate/fill.py`, OoT Randomizer's assumed fill with `random.Random(seed)`), stage by stage. Each
+   stage puts an item only where it can be reached holding the items a later stage places by reachability (never
+   junk, which the fast fill puts anywhere, and never the bomb and Bombchu packs before their own stage):
+   1. Own-dungeon items (`dungeon_items = "own_dungeon"`) of every dungeon the return kit does not draw from:
+      small keys first, then boss keys, then maps and compasses (the remake's Fire Temple needs small keys in its
+      three first chests; OoT Randomizer takes boss keys first).
+   2. With the return guarantee on and free travel off, the return kit: `age_return_fill_families` forward-placed
+      at adult-reachable checks from `age_return_fill_inventory` plus adult pickups. Sources in
+      `age_return_bypass_families` additionally need strictly adult-only destinations: strength tiers otherwise
+      bypass the child's Saria/bracelet dependency and strand adult at Mido. Small keys bootstrap first, boss keys
+      last. The independent first-pull oracle checks the finished placements, not just this construction. Then the
+      own-dungeon items of the kit's dungeons (the Forest Temple's map and compass).
+   3. Location types of `Settings.location_type_items` (D27's native floor pick-ups: BossHeart), each filled from
+      the first pool items it may take, as OoT Randomizer fills shops first.
+   4. Type-held items (`item_location_types`: songs, shop refills, gift items), most constrained first, as one
+      stage retried on its own up to 15 times (OoT Randomizer's `fill_ownworld_restrictive` for songs and shops).
+   5. D25's bomb and Bombchu packs, only where the Bomb Bag is needed.
+   6. Progression, native-display items first (with Shop, so the second shield finds a way past Mido).
+   7. Priority items (restriction only), then the rest anywhere; with Shop, all filler uses restriction checks,
+      native-display items last.
    A failed fill is retried with the same generator, up to 10 times.
 3. The beatability search on the result: collect sphere by sphere from the start; the goal must hold. A seed that
    fails is never returned.
