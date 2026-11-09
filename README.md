@@ -65,6 +65,12 @@ until Gohma. Advanced opt-ins: `closed_deku` opens only the bridge exit; `open` 
 Legacy `--skip mido` remains accepted as an alias for `--forest open`; it no longer selects a separate Mido-only
 generator mode. Explicit conflicting forest options are refused. Forest flags compose with shuffled gift save flags.
 
+**Wrong-age pickups:** if Link receives an item his current age cannot use, **Save and Continue**
+before using other items. Child Bow pickup has jammed the ZR item bar; changing areas did not fix it.
+`play-note.md` lists this seed's shuffled age-locked rewards reachable by the wrong age at their first
+search frontier (ties included). Other item families are precautionary warnings, not individually
+confirmed failures. Optional later pickups can differ from the search order; no data-only fix is enabled.
+
 ## Stack
 
 Python 3.12+ with uv. Reasons and alternatives: `plans/decisions.md`.

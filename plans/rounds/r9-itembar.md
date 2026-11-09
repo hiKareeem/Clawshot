@@ -111,3 +111,54 @@ This is a pending reverse-direction gameplay check, not an agent-run reproductio
 Item2 checkpoint: no `patch/itembar.py`, dependency, saved layout, age permission, setting or experimental
 default is introduced. No speculative patched player overlay/launcher is produced. The conditional outcome
 is explicit rather than calling an unobserved refresh a fix. Item1 source checkpoint: `486f832`.
+
+## Item 3: specified fallback and owner choices
+
+Implemented a sourced `data/itembar.toml` age catalogue and `generate/itembar.py` warning analysis.
+It replays **complete existing sphere prefixes**, including fixed rewards, through the existing Search.
+Before collecting each next sphere it checks both ages at every pending shuffled age-locked destination.
+An opposite-age first frontier is warned; ties also warn conditionally. Correct-age-first and unshuffled
+destinations do not get rows. Pre-return child inventory never borrows adult finds; no area-name inference,
+assumed future inventory, new RNG or second reachability engine.
+
+The spoiler gets `age_locked_pickups` (world identity, item, usable age, first reachable ages, sphere).
+The play note consumes that same snapshot before the opening route, with real catalogue directions.
+It says to Save and Continue after an unusable-age pickup, distinguishes the observed child Bow lock from
+precautions for the other families, and warns that optional later pickups can differ from oracle order.
+Separate native ocarina/boot restrictions are precautionary rows too, not newly claimed ZR failures.
+No native permission, fill, setting string, placement or RomFS resource changes.
+
+### Proposals only — not built
+
+| Option | Proposal | Cost / boundary |
+|---|---|---|
+| Get text | Append an original line to relevant item-get notices: “If Link cannot use this item at his current age, Save and Continue before using other items.” | Requires traced per-item MSBT labels and all16 language archives (D26), pagination checks and a player text check. Without an age-conditional flow, correct-age pickups see the conditional warning too. It informs, not repairs, and would also affect native grants of that item. |
+| Fill setting | Optional `age_locked_items = matching_age_only`; leave current unrestricted placements as the default until approved. Restrict the actual fixed button item to checks physically unavailable to the other age, not just earlier in one oracle witness. | Far fewer eligible checks and less variety; dual-age chests would be excluded for either one-age family. Own-dungeon/return-kit/type-held capacities may become impossible; reject rather than relax rules/retries. Needs audited physical age gates, all alternate-route tests, CS1/CLI integration and bounded fill measurements. A first-sphere-only filter is not safe: players may defer a shared chest until the other age. |
+
+**Kareem/co-owner: keep note-only recovery, add the conditional get-text warning, or approve the strict
+matching-age fill option?** Neither proposed feature is implemented or made a hidden default.
+
+### Focused checks and diagnoses
+
+Initial synthetic run printed `WorldError: ... no type`: the fixture omitted `[locations]` metadata.
+Added actual Chest/vanilla declarations, not weaker production validation. Cause-aimed run:14 passed,
+one parser failure, which printed trailing `Field |`; corrected the test's Markdown boundary stripping
+to the existing presentation-test convention. Targeted corrected renderer case:1 passed/14 deselected.
+Scoped ruff format unchanged; scoped ruff check passed. Full gates and actual CLI evidence follow.
+
+### Actual seed8 surface / unchanged game resources
+
+`uv run python -u E:/OOTRemake/work/r9-itembar-cs9a/smoke.py` invoked the real public CLI with
+the **played seed8's exact CS1**, writing only fresh `seed8-warning-next` under this track's scratch.
+Exit0: **287 shuffled locations,24 spheres**. Independently hashed both actual RomFS folders:
+**129/129 resources byte-identical**, exact287-placement equality, original resource hash map
+unchanged after the run. Only spoiler/note gain warning presentation. No new launcher/user folder.
+Evidence retained: `seed8-cli.log`, `seed8-smoke-proof.json`, generated fresh note/spoiler/resources.
+
+Read the actual written note:10 warning rows, starting with **Mido's house middle-left Bow**,
+child-first/sphere1, matching Kareem's reported source. Other child-first rows: Hammer at the
+memory game, Iron Boots in the shield grave, Claim Check at30 tokens, Odd Potion at Skull Kid,
+Longshot in Dodongo's west alcove, Pocket Egg at the moat. Adult-first precautions: two Kakariko
+potion shelves' sticks and the Ganon Light Trial sticks. No new gameplay result is inferred.
+Removed only the completed session-created throwaway smoke driver after this proof; research
+reproducers and the fresh review output remain external. Existing player folders were not rebuilt.

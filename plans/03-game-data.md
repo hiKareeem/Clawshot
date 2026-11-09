@@ -2544,3 +2544,13 @@ Facts-only lead: [sloperina docs/FINDINGS.md](https://github.com/PracticeROM/slo
 sections1/2/5.6 (enum hashes, PouchTable, separate wheel state); independently checked against
 the player's data. No GPL code/file copied. Adult Slingshot/Boomerang recovery remains
 Kareem's reverse-direction check; only the child Bow failure/recovery is game-confirmed.
+
+Round9 takes the specified fallback: `data/itembar.toml` sources warning ages from the native
+table; `generate.itembar` replays complete chronological sphere prefixes through Search,
+including fixed finds and the isolated child pre-return view. The spoiler/note list opposite-age
+first-frontier pickups, including ties; optional later wrong-age pickups remain possible.
+The note says Save and Continue, not just move between zones. No item permission/placement is
+changed. Actual seed8 CLI replay:287 placements and all129 RomFS resources byte-identical to
+the played seed, with10 warning rows (including Mido middle-left Bow, child-first, sphere1).
+The precise get-text and strict physical matching-age fill alternatives/costs are proposals
+only in the round file, awaiting Kareem/co-owner.
