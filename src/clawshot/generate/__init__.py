@@ -20,7 +20,7 @@ from clawshot.generate.fill import FillError, Settings, check_beatable, fill, sh
 from clawshot.generate.route import opening
 from clawshot.world.load import build_world
 from clawshot.world.model import World
-from clawshot.world.shops import with_shop_prices
+from clawshot.world.shops import with_shop_prices, with_shop_slots
 
 __all__ = ["FillError", "Seed", "Settings", "generate", "play_note", "prepare", "spoiler", "spoiler_json", "world_spec"]
 
@@ -77,6 +77,8 @@ def prepare(spec: Mapping[str, Any], settings: Settings) -> tuple[Settings, Worl
             raise FillError("dungeon_items = 'anywhere' needs the logic setting keysanity = true")
         logic["keysanity"] = True
     settings = replace(settings, logic=logic)
+    if "Shop" in settings.shuffle:
+        spec = with_shop_slots(spec, settings.shop_slots)
     spec = with_shop_prices(spec, settings.shuffle, settings.shop_prices, settings.cheap_deku_shield)
     if "Shop" in settings.shuffle:
         held = {name: ("Shop",) for name in spec.get("items", {}) if name.startswith("Buy ")}
