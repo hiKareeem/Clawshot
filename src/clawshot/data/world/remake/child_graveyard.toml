@@ -9,9 +9,11 @@
 #   Nintendo Life, Sun's Song https://www.nintendolife.com/guides/zelda-ocarina-of-time-suns-song-switch-2
 #   Eurogamer, 17 changes https://www.eurogamer.net/all-new-changes-zelda-ocarina-of-time-switch-2
 # Placement data: Graveyard_Child/Adult_Static/_Dynamic (read by E:/OOTRemake/work/r4-logic-child/actors.py),
-# coordinates in metres, y up. The graves: three holes (LookAttentionActor_HidingHoleEntrance) at (4,101,6) (flowers
-# and butterflies; below it the bombable WallCrack (4,84,27) to a fairy pool), (21,103,11) (the Hylian Shield chest and
-# a ReDead) and (21,103,23) (the heart-piece chest).
+# coordinates in metres, y up. From the Royal Family's Tomb entrance, face out over the graveyard:
+# the nearest seven-grave row holds the ReDead/shield chest at fourth from the right (21,103,11),
+# and the heart-piece chest at its left end (21,103,23). In the lower five-grave row, second from the
+# right is the flower/butterfly grave (4,101,6): its cracked wall opens a pool of eight fairies, not a check.
+# Round 7 placement/AI audit: plans/rounds/r7-play.md and 03-game-data.md section 30.
 #
 # Time: the remake's time of day starts flowing only after Link has met Zelda (Eurogamer, 17 changes); the event
 # 'Time Flows' (child_hyrule_castle.toml) stands for that. A child pulls graves at night only (IGN: by day the
@@ -53,8 +55,10 @@ source = "data: Enemy_ReDead 17994273783244561622 at (37,86,11), one metre from 
 [locations."Graveyard Heart Piece Grave Chest"]
 rule = "True"
 was = "can_play(Suns_Song)"
-source = "Nintendo Life heart pieces (#8): the original needed the Sun's Song, the remake does not; IGN heart pieces (#4): no enemies, a large chest holds the heart piece. Data: Obj_TBox_A_02 9622128545943056087 (21,86,39) placed in Graveyard_Child_Static and Adult_Static with only Drop__DropActor=Obj_Heart_Piece (no NoBake/pedestal/appear event, unlike the chests that appear)"
+source = "Nintendo Life heart pieces (#8): no Sun's Song in the remake; IGN heart pieces (#4): no enemies. Round 7 read-only audit (cs7f, build e0f3ccfa): Obj_TBox_A_02 9622128545943056087 (21,86,39), both age Static files, Dynamic only Drop__DropActor=Obj_Heart_Piece; no Presence, SpawnType override, actor link or AiGroup reference to the chest in either age's Static/Dynamic files. Native SpawnType defaults to 0; no song, wall or enemy-clear trigger binds this chest. True is inside the grave only: its night/time-flow entrance gate remains."
 
+# OoT Randomizer folds the third (fairy-only) grave into Shield Grave's Fairy event. Both graves have
+# the same pull-back access rule; retain that equivalent capability model, not a new shuffled location.
 # The Royal Family's Tomb: Keese room, ReDead room, Sun's Song tablet. No torches and no chest.
 
 [locations."Graveyard Royal Familys Tomb Chest"]

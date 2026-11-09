@@ -112,3 +112,24 @@ def test_jabu_tonsil_switch_needs_a_projectile_not_bombs(weapon):
     assert not search.can_reach("Jabu Jabus Belly Main", CHILD)
     search.collect(weapon)
     assert search.can_reach("Jabu Jabus Belly Main", CHILD)
+
+
+def test_child_heart_piece_grave_needs_night_access_but_no_song_bombs_or_weapon():
+    world = starting_at("Graveyard")
+    chest = world.locations["Graveyard Heart Piece Grave Chest"]
+    search = Search(world)
+    assert not search.can_access(chest, CHILD)
+    search.collect("Time Flows")
+    assert search.can_access(chest, CHILD)
+    assert not search.holds("Suns Song")
+    assert not search.holds("Bomb Bag")
+    assert not search.holds("Kokiri Sword")
+    assert not search.can_access(world.locations["Graveyard Shield Grave Chest"], CHILD)
+
+
+def test_adult_heart_piece_grave_needs_no_child_time_event_or_song():
+    world = starting_at("Graveyard", ADULT)
+    search = Search(world)
+    assert search.can_access(world.locations["Graveyard Heart Piece Grave Chest"], ADULT)
+    assert not search.holds("Time Flows")
+    assert not search.holds("Suns Song")

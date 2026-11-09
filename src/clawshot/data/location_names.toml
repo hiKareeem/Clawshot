@@ -766,9 +766,9 @@ ids = ["10944569637726152230"]
 [[location]]
 location = "Graveyard Shield Grave Chest"
 name = "Graveyard: ReDead Grave Chest"
-where = "Kakariko Graveyard: in the row of graves just below the steps to the Royal Family's Tomb, pull back the second grave on the right of the path and drop in; defeat the ReDead guarding the chest."
+where = "At the Royal Family's Tomb entrance, turn to face out over the graveyard. In the nearest row of seven ordinary graves, pull the fourth from your right (unmarked) and drop in; defeat the ReDead guarding the chest. Child Link needs night after meeting Zelda."
 oot_randomizer_name = "Graveyard Shield Grave Chest"
-source = "https://www.ign.com/wikis/ocarina-of-time-remake/Spiritual_Stone_of_Fire_-_Kakariko_Village_Walkthrough (ReDead guards the Hylian Shield chest); evidence: Hash 16912540161937823130 in Banc/Graveyard/Graveyard_Adult_Dynamic.bcett.byml.zs, Banc/Graveyard/Graveyard_Child_Dynamic.bcett.byml.zs; neighbours E:/OOTRemake/work/r6-names/cs6a_probe.json; Enemy_ReDead 1.8 m away, hole; child_graveyard.toml"
+source = "Kareem via Claude, 2026-11-08: fourth from the right when looking out from the Royal Family's Tomb, unmarked, ReDead and chest; cs7f placement audit (build e0f3ccfa): row x21.5, z -6.3/-2.3/7.2/11.2/15.2/19.2/23.2, shield hole z11.2, chest Hash 16912540161937823130 in both age Dynamic files, ReDead nearby; plans/rounds/r7-play.md; child_graveyard.toml. https://www.ign.com/wikis/ocarina-of-time-remake/Spiritual_Stone_of_Fire_-_Kakariko_Village_Walkthrough"
 ids = ["16912540161937823130"]
 
 [[location]]
@@ -805,10 +805,10 @@ ids = ["16041366920820397198"]
 
 [[location]]
 location = "Graveyard Heart Piece Grave Chest"
-name = "Graveyard: Top-Right Grave Chest"
-where = "Kakariko Graveyard: looking in from the entrance, pull back the grave at the very top right (next to the right-hand wall, in the row below the Royal Family's Tomb) and drop into the tomb; no enemies."
+name = "Graveyard: Left-End Grave Chest (from Royal Tomb)"
+where = "At the Royal Family's Tomb entrance, turn to face out over the graveyard. In the nearest row of seven ordinary graves, pull the leftmost (seventh from your right) and drop in; the large chest is at the back, with no enemy or Sun's Song puzzle. Child Link needs night after meeting Zelda. Do not confuse it with the flower-and-butterfly grave in the lower row: that one hides a cracked wall and fairies, not a chest."
 oot_randomizer_name = "Graveyard Heart Piece Grave Chest"
-source = "https://www.nintendolife.com/guides/zelda-ocarina-of-time-heart-piece-locations-switch-2 (#8); https://www.eurogamer.net/all-heart-pieces-locations-zelda-ocarina-of-time (unmarked grave next to the right-hand wall); https://www.ign.com/wikis/ocarina-of-time-remake/Spiritual_Stone_of_Fire_-_Kakariko_Village_Walkthrough; evidence: Hash 9622128545943056087 in Banc/Graveyard/Graveyard_Adult_Static.bcett.byml.zs, Banc/Graveyard/Graveyard_Child_Static.bcett.byml.zs; neighbours E:/OOTRemake/work/r6-names/cs6a_probe.json; hole; child_graveyard.toml"
+source = "cs7f read-only placement/AI audit, build e0f3ccfa: tomb entrance x48.4/z2.6; upper seven-grave row x21.5 ends at z23.2, hole 14989078271173641200 above chest 9622128545943056087 (both age Static files); no chest AiGroup/song/spawn override. Lower five-grave row x4, second from right z5.7: marked fairy hole 11636637601453373828, WallCrack 9366825990748670811 and eight fairies, no check. Handedness calibrated by Kareem's fourth-from-right shield grave (2026-11-08); other ordinals are placement-inferred, not separately played. plans/rounds/r7-play.md; child_graveyard.toml; https://www.nintendolife.com/guides/zelda-ocarina-of-time-heart-piece-locations-switch-2 (#8)"
 ids = ["9622128545943056087"]
 
 [[location]]
