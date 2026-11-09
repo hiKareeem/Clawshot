@@ -4,7 +4,8 @@ Branch `r9/seedpack`, base `4a0a2f3`. Required AGENTS, README, plans00–04, dec
 round7/8 records and r6-names read; Round9 opening/shared-file rules apply. No dependency change,
 fill/CLI edit, merge, push, stash, game/launcher/batch execution, window or terminal-control command.
 Dump, seed8 active output and all save backups are read-only. Scratch: `E:/OOTRemake/work/r9-seedpack-cs9c/`.
-One serial worker throughout; initial tasklist reported no matching hookshot.exe.
+Commands were launched serially; the pre-steer full suite still contained an internal8-worker pool.
+That earlier safety gap and its effective cap are corrected below. Initial tasklist found no Hookshot.
 
 ## Item 1: private source-only packs
 
@@ -44,7 +45,9 @@ No batch, Play, executable or window started; only setup.ps1 `-Action make`.
 All five new safety regressions pass: wrong-version pre-generation refusal, complete-tree digest changes,
 existing seed non-overwrite, changed-seed launch refusal, missing-bin no-fallback and game-folder isolation.
 All four complete gates passed serially before the floor source/data cutover; no Python/TOML/test mutation
-during that chain. Basetemps: external `item1-synthetic-next`, `item1-dump-next`. No pools or filtered tests.
+during that chain. Basetemps: external `item1-synthetic-next`, `item1-dump-next`. No test was filtered.
+**Correction:** this was one pytest invocation, not one worker: the inherited world-data test internally
+selected up to8 workers. These passes remain functional evidence, not proof of resource-rule compliance.
 
 | Full command | Observed result |
 |---|---|
@@ -129,7 +132,7 @@ Volvagia pickup1F. Only spoiler/note,16 Mals hint archives and the common size t
 r8-full. No Banc, flow, GameData or item placement delta. Retained `floors-output-proof.json`,
 `floors-cli.log`, `floor-facts.json` and reusable `floors.py` outside the repo.
 
-All four complete gates will run again on this final floor cutover before readiness/handoff.
+All four complete gates passed again on this final floor cutover with the effective single-worker cap (below).
 
 ## Coordination
 
@@ -152,3 +155,101 @@ Current Make still asks for a valid Hookshot folder; the emulator instructions r
 
 Removed only the completed session-created smoke_pack.py driver after its successful proof;
 reference zip, extracted output, proof JSON, player checklist and reusable floor researcher are retained.
+
+## Reviewer CPU-safety steer and effective local cap
+
+Kareem's two crashes at100% CPU and overlapping gate runs are accepted ground truth (not rerun).
+Immediately cancelled own active `bg_6` gate chain and exported `CLAWSHOT_WORKERS=1` persistently.
+Cancellation output reached shop_logic, before world_data; it is **not a completed gate pass**.
+No rebase or seed-sweep retry. Prior “no pools/one worker throughout” wording above is retracted:
+launching one pytest process did not limit its inherited internal seed pool.
+
+Printed this branch's exact cause: `_failures` unconditionally used `min(os.cpu_count() or1,8)`
+and **did not read CLAWSHOT_WORKERS**. Prefix alone therefore could not cap this old branch.
+Read main `c9e2e2b`'s actual test-only diff and ported its exact selector as isolated `33ec1e7`,
+without rebasing, changing seed ranges/logic/oracles, or waiting for another track. Actual native
+helper smoke printed `CLAWSHOT_WORKERS='1', selected_pool_workers=1`. Posted the effective fix.
+Every remaining pytest command explicitly prefixes `CLAWSHOT_WORKERS=1`, even after this port;
+scripts and seed sweeps remain one process. Fresh full-gate basetemps will be separately named.
+
+Before the cancelled pytest started, the additional actual Make guard smoke completed successfully:
+existing Make exit0 verified the historical digest and left **all131 files' contents/mtimes unchanged**;
+synthetic wrong-RomFS Make exit1 printed fingerprint
+`419f15a59889f04f9deac50060c071f7bdb1a7f0da9c75a252db370f1038048c`
+versus expected `fc09c4af707a0ca092188cf014f6fdf3d40514def773f097b798f52f9f28bc93`,
+before uv environment/output creation. Retained `pack-guards-proof.json`; no Play/batch/game run.
+Format230/lint passed in that cancelled chain; **all four full commands were restarted and completed**
+under the now-effective cap (below). No incomplete/cancelled pytest is presented as a pass.
+
+## Commit ledger and handoff boundary
+
+| Commit | Scope |
+|---|---|
+| `9370057` |Item1 source-only builder, Make/Play, digest/version guards, synthetic tests, guide/section39 |
+| `92aec67` |Isolated shared README/Discord private-pack instructions |
+| `cc7047a` |Reviewer-requested confirmed Lichii path, untested alternatives, save backups/New Game warning |
+| `0c7cd7b` |Historical branch-local replay and first full gates; later CPU wording corrected above |
+| `502799d` |Isolated shared names reader: structured floor and common label rendering |
+| `2d2f8ca` |Item2 native floor facts, boss pickup descriptions, native map oracle, coverage/docs |
+| `33ec1e7` |Exact upstream c9e2e2b test-only worker cap, no rebase |
+| `bbc27b4` |Runtime/version reporting and each runtime's own log, not a nonexistent emulator Hookshot log |
+
+After successful smoke proof removed only session-created driver/staging files:
+smoke_pack.py, smoke_floors.py, smoke_guards.py, the two applied patch artifacts and the external
+duplicate test staging copy. Reusable floors.py, JSON/log evidence, new CLI outputs/private zip,
+and the player checklist remain outside the repository. No output/user/save/game folder was deleted.
+
+The final gate chain uses **CLAWSHOT_WORKERS=1 on both full pytest commands**, with external
+`capped-synthetic-next` and `capped-dump-next` basetemps. Source/data/tests are frozen since33ec1e7;
+only report/log-guide Markdown was edited during that chain. Its completed results are below.
+
+### Left for review / player acceptance
+
+- Claude reviews/merges this branch, preserves section39 after37/38, and rebuilds a **new** private
+  pack from merged source (including Sheik/item-bar changes); no stored r8-full digest is reused.
+- **Kareem:** after review, follow external `seed-8-check.md` for Make/isolated new-game Play,
+  expected starting items, overlay-open log and per-pack Save/Continue. No agent Game/Play run is claimed.
+- **Kareem:** compare Fire's timed trio5F / shortcut cell2F with the fresh note. This branch's seed8
+  placements are unchanged, so comparison does not require rewriting the active seed or swapping a live overlay.
+  GTG/castle pause-floor UI remains the explicit question above; metadata labels are not in-game certification.
+- Lichii loading is Kareem's reported acceptance, not an agent rerun; emulator New Game must follow a full
+  save backup. Ryujinx/Atmosphere compatibility is still untested, not silently inferred.
+
+## Final complete gates — effective cap, all green
+
+Every selected test ran, with no narrowed seed range, retry increase, skip addition or oracle weakening.
+813 tests collected. No source/data/test mutation after the cap commit. Both pytest commands explicitly
+used `CLAWSHOT_WORKERS=1`; the actual helper smoke had already selected exactly1 worker.
+
+| Complete command | Observed result |
+|---|---|
+| `uv run ruff format --check` |230 files already formatted |
+| `uv run ruff check` |All checks passed |
+| `CLAWSHOT_WORKERS=1 uv run pytest` |726 passed,87 skipped;1628.43s |
+| `CLAWSHOT_WORKERS=1 OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump` |86 passed,727 deselected;787.21s |
+
+Full chain completed exit0 in2417.59s. External basetemps are `capped-synthetic-next` /
+`capped-dump-next`. All86 selected dump tests pass, including the new complete native map-floor
+oracle and the existing format/census, seed, gifts, shops, hints and pickup deltas. No dump skip.
+The unchanged full200-seed/default plus20-progressive-seed oracle now executes through the capped pool.
+Earlier uncapped functional passes and the explicitly cancelled chain are superseded for final readiness.
+
+## First-setup Make acceptance and final readiness
+
+After the capped full gates completed, exercised the **real first-setup path** in another fresh
+extraction of the historical source-only zip (`seed-8-first-setup-capped-next`). Supplied both folder
+answers through stdin to setup.ps1 `-Action make`; no pre-created folders.json, no mocked generator.
+First Make exit0 saved the two correct paths and generated all131 reference-identical files.
+Second Make, **with no input**, exited0, verified the same digest and changed no seed-file mtimes.
+`first-setup-proof.json` records both exits, the digest,131 paths, and no game user/log creation.
+Console capture is `first-setup-make.log`. No batch, Play, window or game was started.
+
+Tasklist showed Kareem's Hookshot already running for this last smoke; no test or second seed process
+overlapped it. CLAWSHOT_WORKERS remained1; the Make/generator chain used one worker. Removed only the
+completed smoke_first_setup.py driver afterward; the new extraction/output and proof/log are retained.
+
+**Track C ready for code review/merge on r9/seedpack.** Both numbered items and both emulator-documentation
+requests are complete, all four final gates pass under the effective cap, and actual builder/Make/name
+surfaces were exercised. No merge, push, stash, dependency edit, live-output rewrite or agent game run.
+The player checks and merged-source pack rebuild above remain explicit external acceptance, not claimed done.
+
