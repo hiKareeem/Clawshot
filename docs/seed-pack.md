@@ -11,14 +11,17 @@ is distributed; the zip records only the reference seed's SHA256 digest.
    Python and locked dependencies on the first build.
 3. Extract the zip into its **own new folder outside RomFS and Hookshot**, e.g. `C:\Clawshot\seed-8`.
    Extract every pack separately: each has its own `user` save folder. Do not extract over an old pack.
-4. Run `Make seed.bat`. It asks once for the RomFS folder and Hookshot folder (the folder containing `bin`).
-   Enter paths without enclosing quotes. It stores them in this pack's `folders.json`.
+4. Run `Make seed.bat`. It asks once for RomFS and an **optional** Hookshot folder (the folder containing `bin`).
+   Leave Hookshot **empty for emulator loading**; Make needs no Hookshot installation or executable.
+   Enter paths without enclosing quotes. It stores your answers in this pack's `folders.json`.
    It fingerprints the supported RomFS before running uv or generating anything, then uses frozen dependencies
    and the included source/settings/seed. The complete output, including spoiler and play note, must match
    the reference digest. An existing seed is verified, **never regenerated or overwritten**.
 5. Only after **Verified seed** appears, run `Play seed.bat`. It checks the digest again, then starts
    `<Hookshot>\bin\hookshot.exe` with `HOOKSHOT_NO_UPDATE_CHECK=1`, the pack's overlay and `--user <pack>\user`.
-   Missing bin executable is a hard stop: the folder-root launcher ignores save isolation and is never used.
+   Only Play requires the bin executable. If no Hookshot folder was saved, Play stops and points to the
+   emulator steps below. A missing bin executable is a hard stop: the folder-root launcher ignores save
+   isolation and is never used.
    Start a **new game**; later plays continue this pack's saves. No main save is copied or reset.
 6. Read `seed/play-note.md`. `seed/spoiler.json` reveals all placements. Reports should attach
    `<pack>/hookshot_log.txt` and `pack.json` (not saves, the overlay or your dump).
@@ -39,8 +42,9 @@ not unrelated installed mods. The pack does not update Hookshot or touch your ga
 
 **Confirmed by Kareem:** seed8 loads and plays on Lichii (Eden/yuzu family), 2026-11-09;
 reviewer record `plans/playtest/answers.md`, R9-LICHII, main `d3e5c08`.
-Generate with **Make seed as above** and wait for Verified seed. Current Make still asks for both
-RomFS and Hookshot folders; emulator loading replaces the Play step only. Do not run Play for this route.
+Install uv and extract the pack as above, then run **Make seed**, give your RomFS path and **leave the
+optional Hookshot answer empty**. No Hookshot installation is needed. Wait for Verified seed, then follow
+the steps below instead of Play. Do not run Play for this route.
 
 1. **Back up this game's entire emulator save folder first.** Start a **New Game** for the seed:
    it takes over the emulator's save slots for this game. The pack's isolated Hookshot `user` folder

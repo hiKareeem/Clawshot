@@ -253,3 +253,60 @@ requests are complete, all four final gates pass under the effective cap, and ac
 surfaces were exercised. No merge, push, stash, dependency edit, live-output rewrite or agent game run.
 The player checks and merged-source pack rebuild above remain explicit external acceptance, not claimed done.
 
+## Reviewer correction: emulator-only Make after 6fb5569
+
+Claude identified a real route blocker: both setup.ps1 and runtime.configuration required Hookshot's
+bin executable even for Make. Reproduced before the fix with the new omitted-Hookshot regression:
+Make CLI returned 1, stderr `error: 'hookshot'`, rather than verifying the valid local seed.
+
+Changed only setup.ps1, runtime.py, test_pack.py, both tester guides and this round note:
+
+- First Make asks for RomFS and **optional** Hookshot; blank means emulator and is saved as blank.
+  Supplied Hookshot paths are still normalized and saved. Make never requires a Hookshot executable.
+- Both preflights validate the RomFS version **before** optional Hookshot normalization/overlap checks.
+  All supplied folders remain protected against overlap; blank Hookshot is not resolved to cwd.
+- Only Play requires Hookshot and `bin/hookshot.exe`. With no Hookshot folder it stops before any
+  launch/profile/log and points to `docs/seed-pack.md (Emulator / console loading)`.
+  Missing bin still refuses the root launcher. Make's success text now names both loading routes.
+- Both guides explain leaving Hookshot empty and requiring no installation for emulator Make.
+  Emulator save-backup/New Game warnings remain unchanged.
+
+### Scoped verification requested by Claude
+
+All pytest invocations explicitly used `CLAWSHOT_WORKERS=1`, sequentially; no pool/sweep or overlapping
+generation/test process. No core generator, floor data, CLI, dependency or shared-plan change.
+Per the reviewer's scope instruction, did not repeat the full gates already recorded for 6fb5569.
+
+| Command / scenario | Observed result |
+|---|---|
+| New targeted tests, `-k "make_without_hookshot or emulator_only_play or version_failure_precedes_optional"` | 8 passed, 5 deselected, 0.20s |
+| `CLAWSHOT_WORKERS=1 uv run pytest tests/test_pack.py` | 13 passed, 0.21s |
+| `uv run ruff format --check src/clawshot/pack/runtime.py tests/test_pack.py` | 2 files already formatted |
+| `uv run ruff check src/clawshot/pack/runtime.py tests/test_pack.py` | All checks passed |
+
+Permanent coverage includes omitted/empty Hookshot and a supplied non-installed path for Make,
+omitted/empty Hookshot Play refusal, version failure preceding optional-folder checks, both RomFS
+overlap directions with no Hookshot, and the existing supplied-Hookshot overlap/root-launcher guards.
+The digest-refusal test now supplies a synthetic bin file so it reaches the digest check in Play;
+that file is never executed.
+
+Actual surface smoke, fresh external source snapshot `emulator-only-source-next`, real PowerShell
+setup and real generator, no mock generation:
+
+- Deliberately wrong manifest fingerprint stopped before folders.json, .venv or seed existed.
+  Actual fingerprint `fc09c4af707a0ca092188cf014f6fdf3d40514def773f097b798f52f9f28bc93`;
+  expected all zeroes. No config/output was written by the rejected preflight.
+- First Make consumed the real RomFS answer plus **blank Hookshot**, exited 0, saved the blank answer,
+  and generated all 131 files identical to the already-proven floor-aware `floors-seed8-next`.
+  This smoke reuses that branch-local oracle, not the historical r8 digest or a new published zip.
+- Second Make with **no input** exited 0; all seed-file mtimes and bytes remained unchanged.
+- setup.ps1's no-Hookshot Play guard exited 1 with the emulator-guide message before uv/launch.
+  This was only a negative guard check: no batch or game executable was run.
+- Make with a supplied overlapping Hookshot folder exited 1 with the overlap error, preserving output.
+  No game user directory/log was created. Complete serial smoke took 52.90s.
+
+Output/reference SHA256: `85d2490f2aa2a856bd3f120ffca174b84201420fc7f1cdc17146157edd7611da`.
+Retained `emulator-only-proof.json` and `emulator-{wrong-version,first-make,second-make,no-hookshot-play,given-folder-overlap}.log`
+under `E:/OOTRemake/work/r9-seedpack-cs9c`. Removed only this session's completed smoke driver.
+No in-game acceptance is claimed. Claude still rebuilds the private pack from merged source after review.
+

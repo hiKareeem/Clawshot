@@ -58,7 +58,7 @@ needing Goron's Bracelet, Sheik leaving the pedestal with the Forest Medallion).
 
 You need:
 - your own legally dumped copy of the game, at the same version Clawshot is built against (the pack checks this);
-- Hookshot set up and working with that dump;
+- Hookshot set up for Play, **or** an emulator for the loading steps below; Hookshot is not needed for Make;
 - about ten minutes for the first setup.
 
 Steps:
@@ -66,12 +66,14 @@ Steps:
    `powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"`
 2. Download the private seed pack and unzip it into its own new folder **outside** RomFS and Hookshot.
    Never extract over an older pack; each folder has its own saves.
-3. Run `Make seed.bat`. It asks once for both your romfs folder and Hookshot folder (the one containing `bin`).
+3. Run `Make seed.bat`. It asks once for romfs and an **optional** Hookshot folder (the one containing `bin`).
+   **Leave Hookshot empty for an emulator.** Make does not require its executable; your answers are saved.
    Before uv or generation, it fingerprints the supported game dump. It builds `seed` from the included
    source/settings, then checks every output byte against the pack's reference digest. Existing seeds are
    verified, never overwritten. Nothing is written to your game folder.
 4. After **Verified seed**, run `Play seed.bat`. It verifies again and starts only `bin\\hookshot.exe`,
-   with update checks disabled and this pack's `user` folder. A missing bin exe stops; no launcher fallback.
+   with update checks disabled and this pack's `user` folder. Only Play needs that executable; a missing
+   bin exe stops with no launcher fallback. With no Hookshot folder, Play points to the emulator guide.
    Start a new game the first time; later plays continue this pack's saves, never your normal game.
 5. `seed/play-note.md` explains the opening; `seed/spoiler.json` reveals all placements.
    Ask in #help for one location if you want less of a spoiler. Attach `hookshot_log.txt` from the pack root
@@ -83,8 +85,9 @@ Code is included for inspection; neither the repository nor packs are public yet
 
 ### Playing in Lichii instead of Hookshot
 
-Kareem confirmed seed8 loads and plays on **Lichii (Eden/yuzu family)**. Run **Make seed as usual** first;
-the current setup still asks for RomFS and Hookshot folders. For this route, do not run Play.
+Kareem confirmed seed8 loads and plays on **Lichii (Eden/yuzu family)**. Install uv, extract the pack and
+run **Make seed** as above, providing your RomFS and **leaving the optional Hookshot answer empty**.
+No Hookshot installation is needed. Wait for Verified seed, then follow these steps; do not run Play.
 
 1. **Back up the emulator's saves for this game before starting.** A **New Game** for the seed takes over
    this game's emulator save slots; the pack's Hookshot `user` folder does not isolate emulator saves.

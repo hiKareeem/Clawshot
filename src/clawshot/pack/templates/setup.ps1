@@ -9,14 +9,13 @@ try {
     } elseif ($Action -eq 'make') {
         $config = [pscustomobject]@{
             romfs = (Read-Host 'Your game romfs folder (no quotes)').Trim()
-            hookshot = (Read-Host 'Your Hookshot folder containing bin (no quotes)').Trim()
+            hookshot = (Read-Host 'Optional Hookshot folder containing bin (no quotes; empty = emulator)').Trim()
         }
     } else {
         throw 'Run Make seed.bat first.'
     }
     # RomFS-only build signature. No uv/Python install, generation or config write before this check.
     $config.romfs = [IO.Path]::GetFullPath($config.romfs)
-    $config.hookshot = [IO.Path]::GetFullPath($config.hookshot)
     $files = @(
         'Pack/ZsDic.pack.zs',
         'GameData/GameDataList.Product.110.byml.zs',
@@ -38,15 +37,24 @@ try {
     if ($actual -ne $manifest.romfs_sha256) {
         throw "RomFS does not match build $($manifest.build). Fingerprint $actual; expected $($manifest.romfs_sha256). Stop and report in help."
     }
+    if ($config.hookshot) {
+        $config.hookshot = [IO.Path]::GetFullPath($config.hookshot)
+    }
     foreach ($folder in @($config.romfs, $config.hookshot)) {
+        if (-not $folder) { continue }
         $full = [IO.Path]::GetFullPath($folder).TrimEnd('\', '/')
         if ($root -eq $full -or $root.StartsWith($full + '\', [StringComparison]::OrdinalIgnoreCase) -or $full.StartsWith($root + '\', [StringComparison]::OrdinalIgnoreCase)) {
             throw 'Extract the pack outside your RomFS and Hookshot folders.'
         }
     }
-    $exe = Join-Path $config.hookshot 'bin/hookshot.exe'
-    if (-not (Test-Path -LiteralPath $exe -PathType Leaf)) {
-        throw "Missing $exe. Never use the folder-root launcher."
+    if ($Action -eq 'play') {
+        if (-not $config.hookshot) {
+            throw 'No Hookshot folder configured. For emulator loading, follow docs/seed-pack.md (Emulator / console loading); do not run Play.'
+        }
+        $exe = Join-Path $config.hookshot 'bin/hookshot.exe'
+        if (-not (Test-Path -LiteralPath $exe -PathType Leaf)) {
+            throw "Missing $exe. Never use the folder-root launcher."
+        }
     }
     if (-not (Test-Path -LiteralPath $configPath)) {
         $config | ConvertTo-Json | Set-Content -LiteralPath $configPath -Encoding UTF8

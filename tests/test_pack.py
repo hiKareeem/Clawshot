@@ -50,6 +50,9 @@ def test_existing_seed_is_verified_not_rebuilt_and_mismatch_stops_play(tmp_path,
     manifest = {"seed": 8, "output_sha256": tree_digest(seed)}
     # Only substitute input discovery; exercise real output reuse and digest refusal.
     monkeypatch.setattr(runtime, "configuration", lambda _: (manifest, tmp_path / "romfs", tmp_path / "game"))
+    exe = tmp_path / "game/bin/hookshot.exe"
+    exe.parent.mkdir(parents=True)
+    exe.write_bytes(b"must never be run")
     runtime.make(root)
     file.write_bytes(b"changed while playing")
     with pytest.raises(PackError, match="digest mismatch"):
@@ -84,3 +87,73 @@ def test_pack_inside_game_directory_is_rejected(tmp_path, monkeypatch):
     monkeypatch.setattr(runtime, "check_version", lambda _: None)
     with pytest.raises(PackError, match="outside your game folders"):
         runtime.configuration(root.resolve())
+
+
+@pytest.fixture
+def configured_pack(tmp_path, monkeypatch):
+    romfs = tmp_path / "romfs"
+    for index, name in enumerate(VERSION_FILES):
+        path = romfs / name
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(f"synthetic version {index}".encode())
+    monkeypatch.setattr("clawshot.pack.ROMFS_SHA256", version_digest(romfs))
+    root = tmp_path / "pack"
+    seed = root / "seed"
+    seed.mkdir(parents=True)
+    (seed / "note.md").write_bytes(b"verified local seed")
+    (root / "pack.json").write_text(json.dumps({"format": 1, "seed": 8, "output_sha256": tree_digest(seed)}))
+    (root / "folders.json").write_text(json.dumps({"romfs": str(romfs)}))
+    return root, romfs
+
+
+@pytest.mark.parametrize("hookshot", [None, "", "not-installed"])
+def test_make_without_hookshot_installation(configured_pack, hookshot):
+    root, _ = configured_pack
+    if hookshot is not None:
+        config = json.loads((root / "folders.json").read_text())
+        config["hookshot"] = str(root.parent / hookshot) if hookshot else ""
+        (root / "folders.json").write_text(json.dumps(config))
+    seed = root / "seed" / "note.md"
+    before = seed.stat().st_mtime_ns
+    assert runtime.main(["make", "--root", str(root)]) == 0
+    assert seed.read_bytes() == b"verified local seed"
+    assert seed.stat().st_mtime_ns == before
+    assert not (root / "user").exists()
+    assert not (root / "hookshot_log.txt").exists()
+
+
+@pytest.mark.parametrize("hookshot", [None, ""])
+def test_emulator_only_play_points_to_loading_guide(configured_pack, hookshot):
+    root, _ = configured_pack
+    if hookshot is not None:
+        config = json.loads((root / "folders.json").read_text())
+        config["hookshot"] = hookshot
+        (root / "folders.json").write_text(json.dumps(config))
+    with pytest.raises(PackError, match="docs/seed-pack.md"):
+        runtime.play(root)
+    assert not (root / "user").exists()
+    assert not (root / "hookshot_log.txt").exists()
+
+
+def test_version_failure_precedes_optional_hookshot_checks(configured_pack):
+    root, romfs = configured_pack
+    (romfs / VERSION_FILES[0]).write_bytes(b"different update")
+    actual = version_digest(romfs)
+    with pytest.raises(PackError, match=actual):
+        runtime.play(root)
+    assert not (root / "user").exists()
+    assert not (root / "hookshot_log.txt").exists()
+
+
+@pytest.mark.parametrize("nested_romfs", [False, True])
+def test_make_without_hookshot_still_rejects_romfs_overlap(configured_pack, nested_romfs):
+    root, original_romfs = configured_pack
+    romfs = root / "romfs" if nested_romfs else root.parent
+    for name in VERSION_FILES:
+        path = romfs / name
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes((original_romfs / name).read_bytes())
+    (root / "folders.json").write_text(json.dumps({"romfs": str(romfs)}))
+    with pytest.raises(PackError, match="outside your game folders"):
+        runtime.make(root)
+    assert (root / "seed" / "note.md").read_bytes() == b"verified local seed"

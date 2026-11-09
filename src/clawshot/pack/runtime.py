@@ -10,16 +10,17 @@ from pathlib import Path
 from clawshot.pack import PackError, check_version, generate, tree_digest
 
 
-def configuration(root: Path) -> tuple[dict, Path, Path]:
+def configuration(root: Path) -> tuple[dict, Path, Path | None]:
     manifest = json.loads((root / "pack.json").read_text(encoding="utf-8-sig"))
     config = json.loads((root / "folders.json").read_text(encoding="utf-8-sig"))
-    romfs, hookshot = Path(config["romfs"]).resolve(), Path(config["hookshot"]).resolve()
+    romfs = Path(config["romfs"]).resolve()
     check_version(romfs)
+    hookshot = Path(config["hookshot"]).resolve() if config.get("hookshot") else None
     for protected in (romfs, hookshot):
+        if protected is None:
+            continue
         if root.is_relative_to(protected) or protected.is_relative_to(root):
             raise PackError(f"extract the pack outside your game folders: {protected}")
-    if not (hookshot / "bin/hookshot.exe").is_file():
-        raise PackError(f"missing {hookshot / 'bin/hookshot.exe'}; never use the folder-root launcher")
     if manifest["format"] != 1:
         raise PackError(f"unsupported pack format: {manifest['format']}")
     return manifest, romfs, hookshot
@@ -40,11 +41,18 @@ def make(root: Path) -> None:
         generate(root, romfs, manifest["seed"], manifest["settings"], output)
     # Never rewrite an existing seed; it may be in use. A partial/modified one is a hard error.
     print(f"Verified seed {manifest['seed']}: {verify(root, manifest)}")
-    print("Read seed/play-note.md; then run Play seed.bat. Normal saves are not used.")
+    print("Read seed/play-note.md. Hookshot: Play seed.bat. Emulator: docs/seed-pack.md (Emulator / console loading).")
 
 
 def play(root: Path) -> int:
     manifest, _, hookshot = configuration(root)
+    if hookshot is None:
+        raise PackError(
+            "no Hookshot folder configured; for emulator loading, follow docs/seed-pack.md "
+            "(Emulator / console loading); do not run Play"
+        )
+    if not (hookshot / "bin/hookshot.exe").is_file():
+        raise PackError(f"missing {hookshot / 'bin/hookshot.exe'}; never use the folder-root launcher")
     verify(root, manifest)
     user = root / "user"
     if user.resolve() != user or (root / "seed").resolve() != root / "seed":
