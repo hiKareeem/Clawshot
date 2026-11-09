@@ -80,3 +80,102 @@ This fixes the test's scope, not a production gate. Cause-aimed rerun:
 `uv run pytest tests/test_world_remake_play.py -k grave -q`: **6 passed, 21 deselected**;
 scoped ruff format/lint passed. Full-world runtime smoke was already exercised above; the new source's
 explosive/bottle and Hammer-negative behavior is exercised by these searches.
+
+## Item 2: bombs cancel because lifting strength is missing
+
+Read-only samples: newest 7c `user-seed-shop-7c/save/5a3c9e1f0b7d24680000000000000001/slot_00/progress.sav`;
+main backup `E:/OOTRemake/work/save-backups/2026-11-08_2140-main-jabu`, newest slot selected by mtime.
+`bombs.py` records exact paths and SHA-256s in `bomb-save-comparison.json` outside the repo.
+`bomb_gate.py` re-read these samples: main digest unchanged; live 7c digest changed during play, but every
+diagnostic field below retained its reported value. No claim that the live save stayed byte-identical.
+
+| GameDataList name | Type | 7c | main |
+|---|---|---|---|
+| `IsGet.Item_Bomb` | Bool | true | true |
+| `IsGet.Item_BombBag_Small` | Bool | true | true |
+| `PouchData.Item_BombBag_Small.StockNum` | Int | 1 | 1 |
+| `PouchContentMaxNum.Bomb` | Int | 20 | 20 |
+| `PouchData.Item_Bomb.StockNum` | Int | 20 | 8 |
+| `HavePlayedGetEvent.Item_BombBag_Small` | Bool | false | true |
+| `IsGet.Armor_Child_Gauntlet_Goron` | Bool | false | true |
+| `PouchData.Armor_Child_Gauntlet_Goron.StockNum` | Int | 0 | 1 |
+| `PlayerStatus.LiftGrade` | Enum | `None` (3069107721) | `Low` (3655598229) |
+
+Names are validated against GameDataList, not guessed from arbitrary save bytes. `PlayerStatus` Struct
+hash `0x060890b0` maps field `LiftGrade` (`0x377c9cdd`) to Enum `PlayerStatus.LiftGrade` (`0x59979321`);
+its declared order is None, Low, Middle, High. `save.TYPES` resolves the Enum section.
+An early diagnostic used `Item_Gauntlet` / `Armor_Child_Goron`: neither is the actual saved armor name;
+their absent values were not interpreted as false. Exact armor name and actual grade resolve the gate.
+
+### Native action, not the get-animation flag
+
+Read only the game's own guest `E:/Games/Hookshot/.hookshot_exefs/main`, build e0f3ccfa; no NX2navi
+code/docs or port implementation. External `nso.py`/`locate.py` use permissively licensed Capstone to
+disassemble its uncompressed AArch64 text. `Player.action.prelift.module` uses `SelectorPlayerPreLift`.
+Its native action initializes the selected item, then `0x027e2c50` calls `0x02e50760`; that calls
+`0x02e50570`. At `0x02e50694` the object-required lift grade is obtained; virtual slot +0x100 obtains
+the player's maximum. `0x02e506ac..b0` returns required <= available. Player override `0x02e878d0`
+reads precisely the PlayerStatus/LiftGrade struct field and maps None/Low/Middle/High to 0/1/2/3,
+capped by the actor's maximum. Failure marks the pre-lift action finished at `0x027e2d94`.
+
+`Pack/Actor/Item_Bomb.pack.zs`, `Component/LiftableParam/Item_Bomb.game__component__LiftableParam.bgyml`:
+required grade Low. **7c's None cannot hold the spawned bomb; main's Low can.** Equipping and briefly
+raising a bomb therefore does not prove it is usable. The different `HavePlayedGetEvent` is presentation
+history, not evidence of an additional bomb-use gate; do not "repair" it.
+
+`Item_BombBag_Small` expands Item_Bomb and Item_Bombchu capacity to 20; its expansion resource has no
+LiftGrade grant. The native Bracelet rows `Item_Gauntlet_Goron` / `Armor_Child_Gauntlet_Goron` instead
+declare `ExpansionAvility=LiftGradeUP`, `LiftableGrade=Low`, special deal GoronGauntlet.
+**[INFERENCE] Getting the real KF Storms Grotto Bomb Bag alone will NOT fix this cancellation while
+strength remains None. Getting Goron's Bracelet should.** The save is not shown corrupted or permanently
+without bombs; it lacks a vanilla ability. This expectation still needs Kareem's in-game confirmation.
+
+### Pre-D25 7b/7c: keep playing via Bombchus, not a forced restart
+
+Reviewer-supplied gameplay fact: Kareem used Bombchus on main without owning a Bomb Bag.
+Independent metadata: Item_Bombchu's own LiftableParam requires **None**, unlike Item_Bomb's Low.
+Its SmallBagActor points to the small Bomb Bag, but that is a container link, not a prerequisite to hold it.
+
+Read back 7b's **written** Goron shop pack, not just the spoiler: GC Shop Item 8 replaces vanilla
+Shop_BombBundle_04 with **Shop_BombchuBundle_05**, PriceOffset35, StockNum -1 (repeatable native sale).
+PouchActorInfo identifies the actor as five Item_Bombchu. It uses the normal ShopItem purchase path,
+not a chest get or synthetic grant; section 24 records no explicit bag/Dodongo check for this branch.
+7c and 7b's 228 placements compare exactly equal. No active output was rebuilt or edited.
+
+`old_seed.py` replays those exact 228 shuffled placements with current remake rules and data-derived fixed
+vanilla items (Chest/Shop only, no new fill). Baseline **won=True**, 25 spheres, 1307 collected.
+GC8 Bombchus arrive at sphere 4; Windmill/Storms at 9; KF Storms Grotto Bomb Bag at 10.
+Removing GC8 only: **won=False**, no Time Travel, no logical bag, 334 collected, 8 spheres; removing
+all bomb/Bombchu ammo likewise stalls. This confirms the hint's pre-bag dependency **in this logic**,
+not a claim that every possible in-game route needs GC8. Buy refills alone do not grant the default
+free-drop logical Bombchu capability. Old native pack bag grants can supply extra in-game routes.
+The child-only proof gets vanilla Saria's Song at sphere 3, vanilla Darunia's Goron Bracelet and GC8
+at sphere 4, reaches the pull, and does not reach the Storms bag. No adult find supplied that prefix.
+
+**Continuation:** buy the five-Bombchu offer at Goron City's shop and use those for early explosives.
+Also learn Saria's Song and play it for Darunia to get the unshuffled Bracelet: this seed shuffles only
+chests/shops. Then try the already-equipped bombs again; do not wait for Storms to fix strength.
+Repeat purchases allow replenishment, subject to native rupees/capacity. The fixed route replay plus
+Kareem's no-bag Bombchu observation supports continuing 7b/7c, not discarding these saves.
+
+Diagnostic correction: the first replay printed `Search.holds("Bomb Bag")=False` even after collecting
+bags; `holds` queries events only. Printed actual bag spheres exposed it; corrected diagnostic reads
+the item count (baseline 3, stalled scenarios 0). Distinct scenario filenames now preserve both reports.
+No search or production gate was changed to obtain this result.
+
+### Proposed follow-up, not an unauthorized save/game patch
+
+Conservative future-logic fix: ordinary usable bombs must require the real bag **and** the appropriate
+lifting strength; keep Bombchus separate. The shared bomb helper is outside this track's owned files:
+request posted to reviewer rather than silently changing it. Alternative: deliberately lower only the
+spawned ordinary Item_Bomb's requirement to None, without weakening bomb flowers; that changes gameplay
+and needs an owner decision and a separate isolated test. Neither a history-flag edit nor granting a
+Bracelet with an ammo pack is justified. D25 bag-placement policy remains unchanged.
+
+**Kareem: on 7c, buy/use GC8 Bombchus before any real bag; then obtain Darunia's Bracelet and retry
+the same equipped bombs. Expected: Bombchus work immediately; bombs stop canceling after Bracelet.
+Please also report whether the real bag was acquired before that comparison.**
+No game was launched here; no in-game acceptance result is claimed.
+
+Checks: `uv run python E:/OOTRemake/work/r7-play-cs7f/bomb_gate.py` and `old_seed.py` produced the
+metadata/save/route results above. Native address probes are recorded by the helpers in that directory.
