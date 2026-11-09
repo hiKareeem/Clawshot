@@ -37,5 +37,11 @@ source = "Kareem, 2026-11-08, chest-ocarina-storms: Song of Storms learned from 
 [chest_verified.Item_Melody_ForestMinuet]
 source = "Kareem via Claude, 2026-11-08, chest-ocarina-minuet: learned from Mido chest, warped child Link to Sacred Forest Meadow; plans/03-game-data.md section 21"
 
+[chest_verified.Item_DinFire]
+source = "Kareem via Claude, 2026-11-08, chest-gift-models: Din's Fire from Mido chest gave the magic meter and the spell worked; plans/03-game-data.md section 26"
+
+[chest_verified.Item_Wallet_Medium]
+source = "Kareem via Claude, 2026-11-08, chest-gift-models: Adult's Wallet from Mido chest held 500 rupees; plans/03-game-data.md section 26"
+
 [songs_anywhere]
 source = "Claude, Round 6 review, 2026-11-08: all twelve Item_Melody_* share the pouch/IsGet grant path. Storms played and Minuet warped from a chest; the other ten are inferred, not individually verified. Opt-in only."
