@@ -868,6 +868,11 @@ it should name where the Hookshot is (a static hint through `patch/text`, like D
 Claude builds a fresh full seed with every game-confirmed setting (Chest, Shop, Gift, Scrub, BossHeart as proven;
 hints; forest closed; cheap Deku Shield) for Kareem's first full playthrough.
 
+Round 9 candidate (Kareem, 2026-11-09): label dungeon checks in `location_names.toml` with the pause map's floor
+(1F to 5F), so play notes match what the player sees. Kareem's Fire Temple floor maps (a guide's, facts only) show
+16 chests and 5 Gold Skulltulas, as the census has, the two remake chests being the timed 5F trio's extra pair.
+Derive floors from game data (room index to map floor) [inference: the map data holds it; not traced].
+
 ### Settings backlog (Ship of Harkinian's lists, shown by Kareem 2026-11-09)
 
 Reference for later rounds and presets; feasibility marked [inference] is unverified. RomFS-only (D14) rules out
