@@ -2,7 +2,7 @@
 
 import pytest
 
-from clawshot.generate import Seed, Settings
+from clawshot.generate import Seed, Settings, play_note, spoiler
 from clawshot.generate.itembar import age_locked_pickups
 from clawshot.world import Search, build_world
 
@@ -91,3 +91,20 @@ def test_adult_finds_cannot_fake_child_first_access_before_the_return_gate():
     )
     [warning] = age_locked_pickups(returned)
     assert set(warning.first_ages) == {"child", "adult"}
+
+
+def test_spoiler_and_rendered_note_expose_the_warning_at_the_actual_destination():
+    seed = seed_with({"Crate | chest": "Bow"}, {"Crate | chest": "True"})
+    log = spoiler(seed)
+    [warning] = log["age_locked_pickups"]
+    assert warning["item"] == "Bow" and warning["location"] == "Crate | chest"
+    note = play_note(seed, log)
+    # Parse the warning's table rather than pin prose or a randomized placement.
+    rows = [
+        line.removeprefix("| ").removesuffix(" |").split(" | ")
+        for line in note.splitlines()
+        if line.startswith("| Bow | adult | child |")
+    ]
+    assert len(rows) == 1
+    assert rows[0][3:] == [r"Crate \| chest", r"Crate \| chest", "Field"]
+    assert "Save and Continue" in note

@@ -17,6 +17,7 @@ from typing import Any
 from clawshot.generate import hints as stone_hints
 from clawshot.generate import names as location_names
 from clawshot.generate.fill import FillError, Settings, check_beatable, fill, shuffled_locations
+from clawshot.generate.itembar import age_locked_pickups
 from clawshot.generate.route import opening
 from clawshot.world.load import build_world
 from clawshot.world.model import World
@@ -217,6 +218,7 @@ def spoiler(seed: Seed, item_names: Mapping[str, str] | None = None) -> dict[str
         "placements": {name: seed.placements[name] for name in seed.shuffled},
         "locations": locations,
         "opening_route": opening_log,
+        "age_locked_pickups": [asdict(pickup) for pickup in age_locked_pickups(seed)],
         "spheres": [sphere for sphere in spheres if sphere],
         "hints": hint_log,
     }
@@ -236,6 +238,41 @@ def play_note(seed: Seed, log: Mapping[str, Any] | None = None) -> str:
     descriptions = log["locations"]
     collected = {name: index for index, sphere in enumerate(seed.spheres, 1) for name in sphere}
     lines = [f"# Clawshot seed {seed.seed}", ""]
+    lines.extend(
+        [
+            "## Age-locked items: Save and Continue",
+            "",
+            "After obtaining an item Link's current age cannot use, Save and Continue before using other items.",
+            "Child Bow pickup has jammed the ZR item bar; changing areas did not fix it, but Save and Continue did.",
+            "Other age-locked items below are precautions, not individually confirmed failures.",
+            "",
+        ]
+    )
+    if log.get("age_locked_pickups"):
+        lines.extend(
+            [
+                "These shuffled rewards are reachable by the wrong age at their first search frontier.",
+                "Both ages in a row means a tie, not that the item is usable by both.",
+                "This is not a required play order; reload only if you take the item at an unusable age.",
+                "",
+                "| Item | Usable age | First reachable as | Location | World / OoTR check | Where |",
+                "|---|---|---|---|---|---|",
+            ]
+        )
+        for pickup in log["age_locked_pickups"]:
+            description = descriptions[pickup["location"]]
+            cells = (
+                pickup["item"],
+                pickup["usable_age"],
+                " / ".join(pickup["first_ages"]),
+                description["name"],
+                pickup["location"],
+                description["where"],
+            )
+            lines.append("| " + " | ".join(_markdown_cell(cell) for cell in cells) + " |")
+    else:
+        lines.append("No shuffled age-locked reward is reachable by the wrong age at its first search frontier.")
+    lines.extend(["", "Optional later wrong-age pickups still need the same Save and Continue precaution.", ""])
     route = log["opening_route"]
     if route is not None:
         lines.extend(
