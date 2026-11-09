@@ -149,3 +149,50 @@ The completed matrix, rule-audit and timing-sweep throwaway drivers were removed
 results were recorded; JSON evidence and CLI transcripts remain. `lift_audit.py` is retained
 as the read-only native-metadata reproducer. The four fresh CLI outputs remain staged under
 `seed7-matrix-next/`; no launcher/user folder was created and no played output was deleted.
+
+## Commit ledger and review boundary
+
+| Commit | Scope |
+|---|---|
+| `12f413a` | Shared loader only: guarded helper overrides |
+| `6e5e179` | Item1: sourced bomb logic, native grades and section31 |
+| `3179407` | Shared world-format documentation only |
+| `5c9c96c` | Shared test fixtures only: usable-bomb preconditions and transition checks |
+| `fbf8b59` | Item2: bomb regressions, real CLI matrix and exact 7b acceptance evidence |
+| `39205e6` | Item3: matched-placement timing and no-newly-impossible-rule evidence |
+
+No production generator/fill, retry bound, item pool, settings default, shop/Bombchu policy,
+actor parameter, saved flag or played seed was changed. `decisions.md` remains reviewer's.
+The final report-only commit follows this ledger; its hash is posted with the handoff.
+
+**Left for Kareem:** the existing 7c same-bombs-before/after-Darunia-Bracelet comparison in
+item1. This is still unplayed here; no game success is inferred from metadata or search.
+**Left for Claude:** review/merge these scoped commits; Gift seed7's attempt10 result is
+explicit headroom risk, not a hidden increased retry budget or a request to change policy.
+
+## Final four gates and handoff
+
+All four complete commands passed on the final source/test tree (report-only edits afterwards):
+
+| Command | Result |
+|---|---|
+| `uv run ruff format --check` | 205 files already formatted |
+| `uv run ruff check` | All checks passed |
+| `uv run pytest` | 619 passed, 79 skipped; 292.48s |
+| `OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump` | 78 passed, 620 deselected; 762.32s |
+
+The two pytest invocations used only `PYTEST_ADDOPTS=--basetemp=...` to put temporary data at
+`E:/OOTRemake/work/r7-bombs-cs7g/gate-fixed-{synthetic,dump}-next`. No test filtering beyond
+the prescribed dump marker; the unchanged 200-default/progressive/determinism and new bomb
+regressions all passed. The only full-chain retry followed the printed nine stale fixture
+causes and their targeted fix; no production requirement, seed, bound or assertion was weakened.
+
+After success, removed exactly the three session-created gate basetemps (the failed first
+synthetic run and both corrected runs) with Python's junction-safe `shutil.rmtree`, checking
+that each root was an existing non-symlink. No active gate process or temporary driver remains.
+Retained the native read-only lift reproducer, three JSON evidence files and four CLI logs,
+plus the four new CLI outputs staged for review. No played output or user/save was touched.
+
+**Track G items1–3 complete and ready for Claude's review on `r7/bombs`.** No merge, push,
+rebase or dependency change. Gameplay confirmation remains explicitly Kareem's check above;
+metadata/search success is not an invented in-game result.
