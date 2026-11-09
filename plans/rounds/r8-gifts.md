@@ -471,3 +471,58 @@ launcher or save was modified/run. Existing player experiments are not regenerat
 
 Still wait for cs8a's merge before the next rebase and four complete gates, as directed.
 This policy commit is not a final readiness claim and does not weaken the failing seed7 test.
+
+## Authorized integration onto37a1b2f
+
+Claude's latest direction supersedes the prior wait-for-fill gate order: rebase onto the
+merged C shop changes now, then run all four gates. Rebase completed at a clean point.
+Two conflicts only: additive sections34/35 retained in33/34/35/36 order, and the generic
+gift inverse oracle retained **both** C's shopkeeper Event24 dispatch allowance and D's
+Medigoron Event6/Event19 ownership-gate allowances. No assertion was dropped or weakened.
+C's removal of the old appended-name-prefix assertion remains intact. Source gifts.py
+auto-merged; C's NPC shopkeeper window and settings/selection/fee integration are retained.
+
+Superseding branch commits on37a1b2f:
+
+| Commit | Scope |
+|---|---|
+| 2afa733 | Cow research; D11 stands |
+| 387cbec | Native40-token quantity metadata |
+| 2d183f4 | House previews and controlled rewards |
+| b2426e8 | Frog identities / metadata |
+| d8c14c5 | Per-song specialization and retry rewards |
+| 9554047 | Merchant metadata |
+| 3caf155 | Success-only merchant transactions / section35 |
+| d4cff30 | Terminal switch traversal correction |
+| e3b1e80 | Exact pool delta / dependency evidence |
+| 587cc1e | Child trade cell / OoTR research |
+| 78e46f7 | Approved D31 native holds / both regressions |
+
+Fresh four-command chain uses sequential plain pytest, no pool/xdist and no other sweep.
+Basetemps are outside the repository: `gate-synthetic-shops37a` / `gate-dump-shops37a`.
+No readiness claim from earlier passes; completed results follow below.
+
+### Complete gates on37a1b2f plus the11 Track D commits
+
+| Full command | Observed result |
+|---|---|
+| `uv run ruff format --check` |220 files already formatted |
+| `uv run ruff check` |All checks passed |
+| `uv run pytest` |712 passed,86 skipped;363.31s |
+| `OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump` |84 passed,1 failed,713 deselected;756.66s |
+
+No gate was filtered/interrupted. Every gift dump oracle passes, including House previews,
+all intended native edits, Granny's now-correct terminal traversal, and C's shopkeeper
+window/progression/selection/fee tests. Both D31 regressions pass in the full synthetic suite.
+
+The sole failure remains unchanged:
+`tests/test_drops_seed_dump.py::test_boss_heart_seed_writes_native_pickups_without_changing_spawn_or_flags`,
+actual `make_seed(romfs,7,Settings(shuffle=("Chest","BossHeart")))`, ten attempts exhausted;
+last **Small Key(Fire Temple),8 allowed of125 left;20 other items**. This is the exact case
+cs8a reproduced and solved with their pending fill+palette changes (09:50 thread post).
+No fresh rerun of that failure, filler edit, seed change, retry increase or weakened assertion.
+
+**Final readiness remains blocked on cs8a's reviewed merge target, then another authorized
+rebase and all four gates.** The latest requested37a1b2f integration and four full commands
+are complete; they are not represented as all-green. Native player experiments/checklists,
+source read-only guarantees and gameplay acceptance boundaries remain unchanged.
