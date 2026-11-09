@@ -2224,3 +2224,33 @@ audit over **2,405** exit/event/location/stone rules finds zero newly impossible
 disabled/N64-only rules are not claimed satisfiable. Exact method, output paths, full diagnostics
 and verification commands are in the round report; generated output and game data stay outside
 the repository. These are search/data proofs, not an agent game run.
+
+## 33. Round 8: chest ocarina presentation without equipment mutation (cs8b)
+
+Build e0f3ccfa; external read-only reproducers and detailed acceptance boundary:
+`plans/rounds/r8-getitem.md`, `E:/OOTRemake/work/r8-getitem/`. Kareem's post-bind Fairy Ocarina
+invisibility is confirmed input, not retested by the agent.
+
+The ocarina mesh is correct and also visible on the song stand-in. Correction to section26:
+`PouchContentGuestPerformer` uses its own `EquipmentCommon.event.root` exceptional binding,
+already including the get-demo bind. Instrument EventPerformer substitution alone did not
+establish a repair of that path. Native ocarinas are Accessory equipment, not generic get
+objects. Saria's flow explicitly participates/binds the instrument to Player `Weapon_L`;
+native cutscenes also use separate `Dm_Item_Ocarina_{Fairy,Time}` props, without Accessory.
+**[INFERENCE]** Generic chest equipment presentation is the mismatch; an exact engine
+visibility predicate has not been proved.
+
+The explicit `getitem.changes` experiment now stages those existing native props only for
+ocarina contents, using native hand binding, then offstages them at chest cleanup. Normal
+contents retain the original guest chain. It changes only the two chest flows and their
+allocations, not any playable ocarina/prop pack, inventory table, grant helper or gift flow.
+The prior ineffective instrument-pack/heap mutations are removed. Song mesh changes remain.
+The existing UI message-target String64 selects the prop; no new saved flag or layout edit.
+Grant/text still use the original ContentName, not the prop. This is a handheld model,
+not a promised floating/rotating get model or a newly certified chest grant.
+
+Synthetic lifecycle/normal-path/inverse regressions and actual common-writer smoke pass.
+Small flow74808 ->79616/allocation79888; big38848 ->43680/allocation43952. Native big
+Rotate/NoHit/Bind order differs from small NoHit/Bind/Rotate and is guarded independently.
+**Kareem: visibility, position, disappearance, actual instrument use and Time upgrade/song
+retention still need the single isolated new-game experiment; no agent game run.**

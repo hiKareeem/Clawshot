@@ -1,8 +1,8 @@
 """Explicit native get-display experiments; no inventory or chest-admission policy changes.
 
-Ocarinas lack the PouchContent event performer used by chest display actions. Songs
-have that performer but use a rupee mesh. These transforms borrow native resources
-from the player's dump. They are not enabled automatically before visual review.
+Songs borrow native ocarina meshes. Ocarina chests stage native cutscene props,
+without changing the playable Accessory actors. Neither correction is automatic
+before visual review.
 """
 
 import copy
@@ -10,7 +10,8 @@ from collections.abc import Iterable
 from functools import partial
 from pathlib import Path
 
-from clawshot.formats import byml, sarc, zsdic
+from clawshot.census.hints import flow_path, read_flow
+from clawshot.formats import byml, evfl, sarc
 from clawshot.patch.plan import PatchError
 from clawshot.patch.shops import actor_path, member_path, resolve_member
 
@@ -33,7 +34,8 @@ SONG_MODELS = {
 }
 OCARINAS = (FAIRY, TIME)
 PERFORMER = "Component/EventPerformerParam/PouchContent.engine__component__EventPerformerParam.bgyml"
-COMMON = "?Component/EventPerformerParam/Common.engine__component__EventPerformerParam.bgyml"
+CHEST_FLOWS = ("Dm_SY_TreasureboxSmall", "Dm_SY_Treasurebox")
+MESSAGE_TARGET = "UI_MessageTargetActorName"
 MODEL_FIELDS = ("FmdbName", "ModelProjectName", "ModelAabbMin", "ModelAabbMax")
 
 
@@ -48,34 +50,21 @@ def _dump(document: byml.Document) -> bytes:
     return result
 
 
-def patch_pack(data: bytes, *, actor: str, performer: bytes) -> bytes:
-    """Change only a song's model identity or an ocarina's event-performer reference."""
-    if actor not in SONG_MODELS and actor not in OCARINAS:
-        raise PatchError(f"no get-display correction for {actor}")
+def patch_pack(data: bytes, *, actor: str) -> bytes:
+    """Change a song's mesh without changing its grant identity."""
+    if actor not in SONG_MODELS:
+        raise PatchError(f"no song get-display correction for {actor}")
     pack = sarc.read(data)
-    root_member = member_path(actor_path(actor))
-    document = byml.load(pack[root_member])
     components = resolve_member(pack, actor_path(actor))["Components"]
     model_member = member_path(components["ModelInfoRef"])
     model = byml.load(pack[model_member])
-    expected = "Obj_Rupee" if actor in SONG_MODELS else actor
-    if (model.root.get("FmdbName"), model.root.get("ModelProjectName")) != (expected, expected):
+    if (model.root.get("FmdbName"), model.root.get("ModelProjectName")) != ("Obj_Rupee", "Obj_Rupee"):
         raise PatchError(f"{actor}: stale native model: {model.root}")
-    if actor in SONG_MODELS:
-        if components.get("EventPerformerRef") != "?" + PERFORMER:
-            raise PatchError(f"{actor}: song no longer uses the pouch performer")
-        for field in ("FmdbName", "ModelProjectName"):
-            model.root[field] = SONG_MODELS[actor]
-        pack[model_member] = _dump(model)
-    else:
-        if components.get("EventPerformerRef") != COMMON:
-            raise PatchError(f"{actor}: ocarina no longer uses the common performer")
-        native = byml.read(performer)
-        if native != {"EventUniqueAin": "Work/AI/Root/Event/PouchContent.event.root.ain", "UseEventUniqueAin": True}:
-            raise PatchError(f"unexpected native pouch performer: {native}")
-        document.root["Components"]["EventPerformerRef"] = "?" + PERFORMER
-        pack[root_member] = _dump(document)
-        pack[PERFORMER] = performer
+    if components.get("EventPerformerRef") != "?" + PERFORMER:
+        raise PatchError(f"{actor}: song no longer uses the pouch performer")
+    for field in ("FmdbName", "ModelProjectName"):
+        model.root[field] = SONG_MODELS[actor]
+    pack[model_member] = _dump(model)
     result = sarc.write(pack)
     if sarc.read(result) != pack:
         raise PatchError(f"{actor}: get-display pack failed read-back")
@@ -92,27 +81,160 @@ def patch_actor_info(data: bytes, *, actors: tuple[str, ...]) -> bytes:
     document = byml.load(data)
     rows = {row["__RowId"]: row for row in document.root}
     for actor in actors:
-        if actor not in SONG_MODELS and actor not in OCARINAS:
-            raise PatchError(f"no get-display correction for {actor}")
+        if actor not in SONG_MODELS:
+            raise PatchError(f"no song get-display correction for {actor}")
         row = rows[actor]
-        expected = "Obj_Rupee" if actor in SONG_MODELS else actor
-        if (row.get("FmdbName"), row.get("ModelProjectName")) != (expected, expected):
+        if (row.get("FmdbName"), row.get("ModelProjectName")) != ("Obj_Rupee", "Obj_Rupee"):
             raise PatchError(f"{actor}: stale ActorInfo model: {row}")
-    # Capture unmodified donors before changing either ocarina's reservation.
-    donors = {name: copy.deepcopy(rows[name]) for name in (*OCARINAS, "Item_Boomerang")}
+    # Donors remain native; never alter the playable ocarina rows.
+    donors = {name: copy.deepcopy(rows[name]) for name in OCARINAS}
     for actor in actors:
         row = rows[actor]
-        donor = donors[SONG_MODELS.get(actor, "Item_Boomerang")]
-        if actor in SONG_MODELS:
-            if (donor.get("FmdbName"), donor.get("ModelProjectName")) != (SONG_MODELS[actor],) * 2:
-                raise PatchError(f"{actor}: native model donor changed: {donor}")
-            for field in MODEL_FIELDS:
-                row[field] = copy.deepcopy(donor[field])
-            field = "PreActorRenderInfoHeapSize"
-            row[field] = type(row[field])(max(row[field], donor[field]))
+        donor = donors[SONG_MODELS[actor]]
+        if (donor.get("FmdbName"), donor.get("ModelProjectName")) != (SONG_MODELS[actor],) * 2:
+            raise PatchError(f"{actor}: native model donor changed: {donor}")
+        for field in MODEL_FIELDS:
+            row[field] = copy.deepcopy(donor[field])
+        field = "PreActorRenderInfoHeapSize"
+        row[field] = type(row[field])(max(row[field], donor[field]))
         field = "InstanceHeapSize"
         row[field] = type(row[field])(int(row[field]) + int(donor[field]))
     return _dump(document)
+
+
+def patch_chest_flow(data: bytes, *, prop_template: evfl.Actor) -> bytes:
+    """Stage native props for ocarinas, keeping the actual equipment actors native.
+
+    The native gift binds to Player's Weapon_L, not the generic chest guest.
+    UI_MessageTargetActorName is the existing item-name UI scratch String64; the
+    normal get window subsequently sets it to the very same ContentName.
+    """
+    document = evfl.read(data)
+    fc = document.flowchart
+    if fc is None or fc.name not in CHEST_FLOWS:
+        raise PatchError("not a native chest flow")
+    if any(e.name.startswith("Clawshot_Ocarina") for e in fc.events):
+        raise PatchError(f"{fc.name}: ocarina presentation already patched")
+    original = list(fc.events)
+
+    def action_name(event):
+        if isinstance(event, evfl.ActionEvent):
+            return fc.actors[event.actor].name, fc.actors[event.actor].actions[event.action]
+        return None
+
+    def unique(actor, action):
+        found = [i for i, e in enumerate(original) if action_name(e) == (actor, action)]
+        if len(found) != 1:
+            raise PatchError(f"{fc.name}: expected one {actor}.{action}, found {found}")
+        return found[0]
+
+    guest = "PouchContentGuestPerformer"
+    actions = ["EventTriggerPlayerNoHit", "EventTriggerModelBindForItemGetDemo", "EventPlayAS"]
+    if fc.name == "Dm_SY_Treasurebox":
+        actions = [actions[2], actions[0], actions[1]]
+    chain = [unique(guest, action) for action in actions]
+    if any(original[a].next != b for a, b in zip(chain, chain[1:], strict=False)):
+        raise PatchError(f"{fc.name}: native get-demo chain changed: {[original[i] for i in chain]}")
+    start = chain[0]
+    continuation = original[chain[-1]].next
+    sleep = unique("TreasureBox_EventStarter", "EventTriggerTBoxRequestSleepActorHolderData")
+    game_data = next(i for i, a in enumerate(fc.actors) if a.name == "GameDataActor")
+    gd = fc.actors[game_data]
+    for collection, name in (
+        (gd.actions, "EventTriggerSetGameDataString64"),
+        (gd.queries, "EventQueryIsGameDataString64"),
+    ):
+        if name not in collection:
+            collection.append(name)
+    props = []
+    for actor in OCARINAS:
+        prop = copy.deepcopy(prop_template)
+        prop.name = "Dm_" + actor
+        prop.secondary_name = ""
+        prop.entry_point = evfl.NONE
+        prop.actions = ["EventTriggerParticipateEvent", "EventTriggerModelBind", "EventGoOffstageForUser"]
+        props.append(len(fc.actors))
+        fc.actors.append(prop)
+
+    def append(event):
+        index = len(fc.events)
+        event.name = f"Clawshot_Ocarina_{index}"
+        fc.events.append(event)
+        return index
+
+    def gate(targets, otherwise):
+        current = otherwise
+        for actor, target in reversed(list(zip(OCARINAS, targets, strict=True))):
+            current = append(
+                evfl.SwitchEvent(
+                    "",
+                    game_data,
+                    gd.queries.index("EventQueryIsGameDataString64"),
+                    [(0, target), (1, current)],
+                    {"GameDataName": MESSAGE_TARGET, "Index": -1, "Value": actor},
+                )
+            )
+        return append(
+            evfl.ActionEvent(
+                "",
+                game_data,
+                gd.actions.index("EventTriggerSetGameDataString64"),
+                current,
+                {"GameDataName": MESSAGE_TARGET, "Index": -1, "Value": evfl.Argument("ContentName")},
+            )
+        )
+
+    show, hide = [], []
+    for prop in props:
+        attach = append(
+            evfl.ActionEvent(
+                "",
+                prop,
+                1,
+                continuation,
+                {
+                    "ActorName": "Player_Event",
+                    "InstanceName": "",
+                    "BoneName": "Weapon_L",
+                    "TransOffset": evfl.FloatArray((0.0, 0.0, 0.0)),
+                    "RotOffset": evfl.FloatArray((0.0, 0.0, 0.0)),
+                },
+            )
+        )
+        show.append(append(evfl.ActionEvent("", prop, 0, attach)))
+        hide.append(
+            append(
+                evfl.ActionEvent(
+                    "",
+                    prop,
+                    2,
+                    original[sleep].next,
+                    {
+                        "IsWaitEnd": True,
+                        "IsSleepXLink": True,
+                        "ExecuteSetSpeedZeroEveryFrame": False,
+                        "IsRidingTargetGoOffstage": False,
+                    },
+                )
+            )
+        )
+    show_gate = gate(show, start)
+    # Redirect existing incoming edges; the fallback still runs the native chain.
+    for event in original:
+        if getattr(event, "next", None) == start:
+            event.next = show_gate
+        if isinstance(event, evfl.ForkEvent):
+            event.forks = [show_gate if i == start else i for i in event.forks]
+        if isinstance(event, (evfl.SwitchEvent, evfl.SubFlowSwitchEvent)):
+            event.cases = [(value, show_gate if i == start else i) for value, i in event.cases]
+    for entry in fc.entry_points:
+        if entry.main_event == start:
+            entry.main_event = show_gate
+    original[sleep].next = gate(hide, original[sleep].next)
+    written = evfl.write(document)
+    if evfl.read(written) != document:
+        raise PatchError(f"{fc.name}: ocarina presentation failed read-back")
+    return written
 
 
 def changes(romfs: str | Path, actors: Iterable[str]) -> dict:
@@ -128,52 +250,44 @@ def changes(romfs: str | Path, actors: Iterable[str]) -> dict:
     if unknown:
         raise PatchError(f"no get-display correction for {sorted(unknown)}")
     romfs = Path(romfs)
-    dictionaries = zsdic.Dictionaries.from_romfs(romfs)
-    donor = sarc.read(
-        dictionaries.decompress(pack_path("Item_Boomerang"), (romfs / pack_path("Item_Boomerang")).read_bytes())
-    )
     for model in {SONG_MODELS.get(actor, actor) for actor in actors}:
         if not (romfs / f"Model/{model}.{model}.bfres.zs").is_file():
             raise PatchError(f"missing native model {model}")
-    return {
-        **{pack_path(actor): partial(patch_pack, actor=actor, performer=donor[PERFORMER]) for actor in actors},
-        ACTOR_INFO: partial(patch_actor_info, actors=actors),
-    }
+    songs = tuple(actor for actor in actors if actor in SONG_MODELS)
+    out = {pack_path(actor): partial(patch_pack, actor=actor) for actor in songs}
+    if songs:
+        out[ACTOR_INFO] = partial(patch_actor_info, actors=songs)
+    if any(actor in OCARINAS for actor in actors):
+        # Copy native lifecycle metadata, not a guessed event actor creation policy.
+        template = next(a for a in read_flow(romfs, "Dm_MelodyGet_Time").actors if a.name == "Dm_" + TIME)
+        if (template.params or {}).get("EventMemberCreateMethod") != 1:
+            raise PatchError(f"native ocarina prop creation changed: {template}")
+        for flow in CHEST_FLOWS:
+            out[flow_path(romfs, flow)] = partial(patch_chest_flow, prop_template=template)
+    return out
 
 
 def member_growth(before: bytes, after: bytes) -> dict[str, int]:
-    """Retain original parsed overhead for same-shape model/ref string substitutions.
-
-    New embedded PouchContent components are byte-identical native resources with
-    their own existing allocation, not new resource identities or expanded trees.
-    """
+    """Retain original parsed overhead for same-shape song model substitutions."""
     original, changed = sarc.read(before), sarc.read(after)
     growth = {}
-    for actor in (*OCARINAS, *SONG_MODELS):
+    for actor in SONG_MODELS:
         member = member_path(actor_path(actor))
         if member not in original:
             continue
         components = resolve_member(original, actor_path(actor))["Components"]
         model_member = member_path(components["ModelInfoRef"])
-        editable = (member,) if actor in OCARINAS else (model_member,)
+        editable = (model_member,)
         for name in editable:
             if changed.get(name) == original[name]:
                 continue
             if name not in changed:
                 raise PatchError(f"{name}: missing get-display member")
             old, new = byml.read(original[name]), byml.read(changed[name])
-            if actor in OCARINAS:
-                if (
-                    old["Components"].get("EventPerformerRef") != COMMON
-                    or new["Components"].get("EventPerformerRef") != "?" + PERFORMER
-                ):
-                    raise PatchError(f"{name}: unsupported performer substitution")
-                new["Components"]["EventPerformerRef"] = old["Components"]["EventPerformerRef"]
-            else:
-                for field in ("FmdbName", "ModelProjectName"):
-                    if old.get(field) != "Obj_Rupee" or new.get(field) != SONG_MODELS[actor]:
-                        raise PatchError(f"{name}: unsupported model substitution")
-                    new[field] = old[field]
+            for field in ("FmdbName", "ModelProjectName"):
+                if old.get(field) != "Obj_Rupee" or new.get(field) != SONG_MODELS[actor]:
+                    raise PatchError(f"{name}: unsupported model substitution")
+                new[field] = old[field]
             if not byml.same(old, new):
                 raise PatchError(f"{name}: structural growth needs a measured allocation")
             delta = ((len(changed[name]) + 31) // 32 - (len(original[name]) + 31) // 32) * 32
