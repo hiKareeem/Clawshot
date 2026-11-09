@@ -2558,3 +2558,37 @@ changed. Actual seed8 CLI replay:287 placements and all129 RomFS resources byte-
 the played seed, with10 warning rows (including Mido middle-left Bow, child-first, sphere1).
 The precise get-text and strict physical matching-age fill alternatives/costs are proposals
 only in the round file, awaiting Kareem/co-owner.
+
+## 38. Round 9: Temple Sheik and free time travel (cs9b)
+
+Build e0f3ccfa; read-only native placement/flows/GameData and twelve supplied save snapshots.
+Reproducer and full evidence: `plans/rounds/r9-sheik.md`, external
+`E:/OOTRemake/work/r9-sheik-cs9b/probe.py` and `probe.log`. No agent game run.
+
+Temple Sheik is adult Market Static actor **2669233513522124871**, group
+**6012439728933042438** (`Market_Adult_Prefab_7f43`). Its NPC Logic_Delete reads
+saved Bool **Market_Adult_GetLightPrelude**, not the medal or Minuet. Prelude's separate
+area/request group **17364055337479607892** (`Market_Adult_Prefab_edc2`) ANDs player
+contact with **SageOfForest_IsCompleted_Exp**; the area is present until that Bool is set.
+The expression compares **Step_SageOfForest** with **Complete**, NOT medal inventory.
+
+Request `Market_Adult_Field_GetLightPrelude` maps to that entry in **AllSage**. Its
+Event169/170 -> Event73 -> Event39 -> Event37 transitions to **Dm_MelodyGet_Shine**,
+whose Event53 grants **Item_Melody_LightPrelude** and Event46 sets the completion Bool,
+removing Sheik and the trigger. AllSage Event34 rolls its quest to Step01_01 afterwards.
+The Forest blue-warp chain separately sets Forest Complete in Event199 (section16).
+Shuffled medals would not change those native quest gates; no reward-policy change here.
+
+The adult-first backup's manual01/autosave04 are adult/ForestStep01, no medal or Prelude.
+The after-forest backup spans Step06_2(01/02), Step09(03), Complete with medal but no
+Prelude/completion(04/05), then Complete with medal/Prelude/completion(00). Thus medal
+ownership precedes the scene that actually deletes Sheik, corroborating Kareem's room-entry
+observation. The remaining adult-first slots are older child/Ready saves.
+
+The existing free-travel patch opens only the pedestal (section16), leaving that blocking
+NPC alive. The isolated extension gates only this placed NPC's Presence on the same Forest
+completion expression: absent before Forest, present for the original scene afterwards;
+native deletion remains. Native Market uses BoolExp Presence on distant cloud actors already.
+No global NPC removal, relocation, premature song, quest-completion or saved-default edit.
+**Kareem: test the isolated pre-Forest return/second pull and post-Forest Prelude checklist
+in the round file; runtime success is not established by these native-data observations.**
