@@ -172,7 +172,7 @@ the harness had already shown attempt 1 for seed 7 in every mode.
 The outputs stay under `E:/OOTRemake/work/r8-fill/cli-final/` (new `-next` folders, never a played folder); no
 launcher, game or test user folder was made: this track changes no game file format, only which item goes where.
 
-## Gates (final head, rebased onto `37a1b2f`)
+## Gates (final source, on `37a1b2f`; the later rebase onto `f0362c0` brought docs and plans only)
 
 | Command | Result |
 |---|---|
@@ -203,27 +203,27 @@ None for Kareem: nothing here changes what a seed contains beyond which item goe
 (D21, D25, D27, D28, own-dungeon items, type holds, the return guarantee) is still enforced by `allowed()` and the
 oracles.
 
-## Commits (on `r8/fill`, after `37a1b2f`)
+## Commits (on `r8/fill`, after main `f0362c0`)
 
 | Commit | What |
 |---|---|
-| `abb2612` | `FillError` names stage, item, allowed locations and frontier (item 1) |
-| `5152887` | Small keys before boss keys; other dungeons before the return kit (fix 1) |
-| `9d6c34c` | No bag-gated ammo assumed before its stage (fix 2) |
-| `f414f94` | Type-held stage retried on its own (fix 3) |
-| `386e022` | Native-display progression first (fix 4) |
-| `6b33b76` | `Settings.location_type_items` and the palette stage (fix 5) |
-| `63207e9` | Shared, isolated: `drops.seed_setup` uses the palette |
-| `ad8c7be` | No stage assumes junk (fix 6; replaces fix 2's helper) |
-| `7d5efce` | `04-world-format.md`: the stages |
-| `358f509` | This round file, first part |
-| `865327a` | Palette stage takes items that may go nowhere else first |
-| `33307e2` | Shared, isolated: `freestanding.seed_setup` uses the palette |
-| `8e67b2f` | Fill docstrings |
-| `7d2c2c2` | `03-game-data.md` section 32 |
-| `aab0568` | Archipelago's safe swap, credited in `NOTICE` and `README.md` (fix 7) |
-| `79415da` | `04-world-format.md`: the swap |
-| `a0eaec7` and the final commit | This round file |
+| `fcae289` | `FillError` names stage, item, allowed locations and frontier (item 1) |
+| `3378fa3` | Small keys before boss keys; other dungeons before the return kit (fix 1) |
+| `8181a60` | No bag-gated ammo assumed before its stage (fix 2) |
+| `aeb8c58` | Type-held stage retried on its own (fix 3) |
+| `4e0ed2c` | Native-display progression first (fix 4) |
+| `a494ed8` | `Settings.location_type_items` and the palette stage (fix 5) |
+| `1804080` | Shared, isolated: `drops.seed_setup` uses the palette |
+| `095da5a` | No stage assumes junk (fix 6; replaces fix 2's helper) |
+| `5345072` | `04-world-format.md`: the stages |
+| `a401398` | This round file, first part |
+| `26ea0c8` | Palette stage takes items that may go nowhere else first |
+| `d55d1ca` | Shared, isolated: `freestanding.seed_setup` uses the palette |
+| `1e6a9b0` | Fill docstrings |
+| `22d624e` | `03-game-data.md` section 32 |
+| `a253fb8` | Archipelago's safe swap, credited in `NOTICE` and `README.md` (fix 7) |
+| `aeb947c` | `04-world-format.md`: the swap |
+| `0d703e7`, `8ba46b2` and this commit | This round file |
 
 ## Handoff
 
