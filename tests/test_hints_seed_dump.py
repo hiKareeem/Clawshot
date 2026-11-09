@@ -7,7 +7,7 @@ from clawshot.census import hints as census
 from clawshot.formats import msbt, sarc, zsdic
 from clawshot.generate import Settings
 from clawshot.generate import hints as stone_hints
-from clawshot.patch import make_seed, text
+from clawshot.patch import make_seed, text, write_seed
 from clawshot.world.search import Search
 
 
@@ -42,18 +42,28 @@ def test_dump_every_hint_names_a_placed_item_at_a_stone_readable_without_it(outp
 
 
 @pytest.mark.dump
-def test_dump_the_stones_say_the_spoiler_hints(output, romfs):
+def test_dump_the_stones_say_the_spoiler_hints(output, romfs, tmp_path):
     dicts = zsdic.Dictionaries.from_romfs(romfs)
-    changes = {path: transform for step in output.extra_changes for path, transform in step.items()}
+    out = tmp_path / "seed"
+    write_seed(output, romfs, out)
     archives = [text.archive_path(language) for language in text.languages(romfs)]
-    assert set(archives) <= set(changes)
+    assert all((out / "romfs" / path).is_file() for path in archives)
     flow = census.flow_path(romfs, census.GOSSIP_FLOW)
-    assert (flow in changes) == (output.seed.settings.hints == "always")
-    spoken = {hint["label"]: hint["text"] for hint in output.spoiler()["hints"]}
+    assert (out / "romfs" / flow).is_file() == (output.seed.settings.hints == "always")
+    log = output.spoiler()
+    spoken = {hint["label"]: hint["text"] for hint in log["hints"]}
+    hookshot_locations = [
+        log["locations"][name]["name"] for name in output.seed.shuffled if output.seed.placements[name] == "Hookshot"
+    ]
+    assert hookshot_locations
     for path in archives:
-        data = dicts.decompress(path, (romfs / path).read_bytes())
-        written = changes[path](data)
-        lines = msbt.read(sarc.read(written)[census.GOSSIP_MESSAGES]).messages
+        written = dicts.decompress(path, (out / "romfs" / path).read_bytes())
+        archive = sarc.read(written)
+        lines = msbt.read(archive[census.GOSSIP_MESSAGES]).messages
         for label, said in spoken.items():
             shown = "".join(p if isinstance(p, str) else " " if p == text.PAGE_BREAK else "" for p in lines[label])
             assert " ".join(shown.split()) == said, (path, label)
+        sheik = msbt.read(archive[text.SHEIK_MESSAGES]).messages
+        for label in text.SHEIK_TOOL_LABELS:
+            said = " ".join(msbt.plain(sheik[label]).split())
+            assert any(location in said for location in hookshot_locations), (path, label, said)
