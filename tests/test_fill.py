@@ -158,3 +158,36 @@ def test_either_shield_is_placed_while_the_other_can_still_open_the_way():
     for number in range(20):
         seed = generate(spec, number, Settings(shuffle=("Chest", "Shop")), attempts=1)
         assert seed.placements["Early Chest"] in ("Deku Shield", "Hylian Shield"), (number, seed.placements)
+
+
+def _pickup_spec() -> dict:
+    return {
+        "start": "Start",
+        "goal": "Key",
+        "items": {"Key": {}, "Rupee": {"class": "normal"}, "Heart": {"class": "normal"}},
+        "regions": [
+            {
+                "name": "Start",
+                "locations": {"Early": {"rule": "True", "type": "Chest", "vanilla": "Rupee"}},
+                "exits": {"Village": "Key"},
+            },
+            {
+                "name": "Village",
+                "locations": {
+                    "Village A": {"rule": "True", "type": "Chest", "vanilla": "Key"},
+                    "Village B": {"rule": "True", "type": "Chest", "vanilla": "Rupee"},
+                    "Floor": {"rule": "True", "type": "BossHeart", "vanilla": "Heart"},
+                },
+            },
+        ],
+    }
+
+
+def test_native_pickup_destinations_take_their_palette_and_leave_junk_to_the_fast_fill():
+    # Holding every other item away from BossHeart/Freestanding sent junk through the reachability stage with the
+    # progression, where it took the only early chest (cs8e's Chest+Freestanding seed 7: Boomerang, none reachable).
+    settings = Settings(shuffle=("Chest", "BossHeart"), location_type_items={"BossHeart": ("Heart",)})
+    for number in range(20):
+        seed = generate(_pickup_spec(), number, settings, attempts=1)
+        assert seed.placements["Early"] == "Key", (number, seed.placements)
+        assert seed.placements["Floor"] == "Heart"

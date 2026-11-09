@@ -64,7 +64,8 @@ class Settings:
     ``item_location_types`` holds a logic item to the location types it may go to (songs to song locations, an
     item whose actor is not known to work in a chest to the gift locations); a location type in
     ``exclusive_location_types`` takes only items held to it there (OoT Randomizer's ``shuffle_song_items =
-    'song'``).
+    'song'``). ``location_type_items`` holds a location type to the only items it may take (D27: a boss heart or
+    freestanding pick-up shows only a native floor pick-up).
 
     ``hints``: ``always`` (Gossip Stones speak without the Mask of Truth, the flow patched) or ``mask`` (vanilla:
     child Link wearing it); ``hint_distribution`` names a distribution of ``data/hints.toml``."""
@@ -76,6 +77,7 @@ class Settings:
     goal: str | None = None
     item_location_types: dict[str, tuple[str, ...]] = field(default_factory=dict)
     exclusive_location_types: tuple[str, ...] = ()
+    location_type_items: dict[str, tuple[str, ...]] = field(default_factory=dict)
     fast_start: tuple[str, ...] = tuple(DEFAULTS["fast_start"])
     songs: str = DEFAULTS["songs"]
     shop_prices: str = DEFAULTS["shop_prices"]
@@ -97,16 +99,18 @@ class Settings:
             raise ValueError("logic must be a table of setting names to JSON values")
         if self.goal is not None and not isinstance(self.goal, str):
             raise ValueError("goal must be a rule string")
-        if not isinstance(self.item_location_types, dict):
-            raise ValueError("item_location_types must be a table")
-        held = {}
-        for item, types in self.item_location_types.items():
-            if not isinstance(item, str) or not isinstance(types, (tuple, list)):
-                raise ValueError("item_location_types must map item names to lists of location types")
-            if not all(isinstance(value, str) for value in types):
-                raise ValueError("item_location_types must contain location type names")
-            held[item] = tuple(sorted(set(types)))
-        object.__setattr__(self, "item_location_types", held)
+        for name, what in (("item_location_types", "location types"), ("location_type_items", "items")):
+            table = getattr(self, name)
+            if not isinstance(table, dict):
+                raise ValueError(f"{name} must be a table")
+            held = {}
+            for key, values in table.items():
+                if not isinstance(key, str) or not isinstance(values, (tuple, list)):
+                    raise ValueError(f"{name} must map names to lists of {what}")
+                if not all(isinstance(value, str) for value in values):
+                    raise ValueError(f"{name} must contain {what} names")
+                held[key] = tuple(sorted(set(values)))
+            object.__setattr__(self, name, held)
         try:
             json.dumps(self.logic, allow_nan=False)
         except (ValueError, TypeError) as error:
@@ -166,6 +170,10 @@ class Settings:
             }
         if self.exclusive_location_types:
             out["exclusive_location_types"] = list(self.exclusive_location_types)
+        if self.location_type_items:
+            out["location_type_items"] = {
+                k: list(self.location_type_items[k]) for k in sorted(self.location_type_items)
+            }
         return out
 
     def to_string(self) -> str:
@@ -213,6 +221,9 @@ def allowed(world: World, settings: Settings, location: str, item: str) -> bool:
             return False
     location_type = world.locations[location].type
     if location_type == "Missable" and world.items[item].progression:
+        return False
+    palette = settings.location_type_items.get(location_type)
+    if palette is not None and item not in palette:
         return False
     types = settings.item_location_types.get(item)
     if types is not None and location_type not in types:
@@ -493,6 +504,41 @@ def _fill_type_held(
         return refills
 
 
+def _fill_palettes(
+    world: World,
+    settings: Settings,
+    rng: random.Random,
+    placements: dict[str, str],
+    locations: list[str],
+    pool: list[str],
+    shop_refills: int,
+) -> int:
+    """Fill each location type of ``settings.location_type_items`` from its items before anything else can need it,
+    as OoT Randomizer fills its shop locations first (``distribute_items_restrictive``, 526b4c8d).
+
+    The items are the first of the shuffled pool that the type may take, as many as it has locations. Holding every
+    other item away from these locations instead sent the junk through the reachability stages with the progression,
+    where it took the early chests (Chest+Freestanding seed 7: no reachable location for the Boomerang)."""
+    for location_type in sorted(settings.location_type_items):
+        destinations = [name for name in locations if world.locations[name].type == location_type]
+        if not destinations:
+            continue
+        items = [item for item in pool if any(allowed(world, settings, name, item) for name in destinations)]
+        items = items[: len(destinations)]
+        if len(items) < len(destinations):
+            raise FillError(
+                f"{location_type}: {len(destinations)} locations but {len(items)} items they may take",
+                stage=location_type,
+            )
+        for item in items:
+            pool.remove(item)
+        shop_refills = _fill_restrictive(
+            world, settings, rng, placements, destinations, items, _before_ammo(pool), shop_refills, location_type
+        )
+        locations[:] = [name for name in locations if name not in placements]
+    return shop_refills
+
+
 def fill(
     world: World, settings: Settings, rng: random.Random, vanilla: Mapping[str, str] | None = None
 ) -> dict[str, str]:
@@ -527,6 +573,7 @@ def fill(
     )
     _fill_age_return(world, settings, rng, placements, locations, pool)
     shop_refills = _fill_dungeon_items(world, settings, rng, placements, locations, pool, shop_refills)
+    shop_refills = _fill_palettes(world, settings, rng, placements, locations, pool, shop_refills)
     unrestricted = pool
     # Type-held ammo still needs the stronger D25 bag gate in its dedicated stage.
     type_held = [item for item in unrestricted if item in held and not item.startswith(_BOMB_AMMO_PREFIXES)]
