@@ -2225,6 +2225,32 @@ disabled/N64-only rules are not claimed satisfiable. Exact method, output paths,
 and verification commands are in the round report; generated output and game data stay outside
 the repository. These are search/data proofs, not an agent game run.
 
+## 32. Round 8: what the remake's world asks of the fill (cs8a)
+
+Build e0f3ccfa. Measurement method, tables and every failure payload: `plans/rounds/r8-fill.md`; scripts and
+JSONL under `E:/OOTRemake/work/r8-fill/` (outside the repository). Facts about the world, as the fill sees it:
+
+- **The Fire Temple has no spare chest for its keys.** With every other item held, its 16 shuffled chests need
+  0 (Near Boss), 1, 1 (both Big Lava Room chests), 3, 3, 4 x6, 5, 7, 7, 8, 8 of its eight small keys
+  (`remake/adult_fire_temple.toml`: real keys, no N64 freebie, the lower locked door needs all eight). So the
+  key-free chest and both Big Lava Room chests must hold small keys in every seed; no Fire chest needs its boss key.
+  The Forest Temple likewise needs a small key in its First Room Chest (its only key-free chest); its items are
+  placed by the return kit (D20). The other dungeons have slack: Water 4 key-free chests for 4 keys, Shadow 4,
+  Spirit 4 for 5 keys, Gerudo Training Ground 17 for 9.
+- **Song checks equal songs.** With Gift and `songs = song` the twelve song checks take exactly the twelve songs;
+  several song checks need a song (the Royal Family's Tomb needs Zelda's Lullaby, Sheik at Colossus needs
+  Requiem), so songs are placed as their own stage and retried there, as OoT Randomizer does.
+- **Before Mido there are five chests.** With the forest closed (D24), a child without the Kokiri Sword and a
+  shield reaches only Mido's four chests, the Kokiri Sword Chest, the Kokiri shop and the Lost Woods checks that
+  need nothing (Saria's gift was out of reach in the failure printed, Gift seed 66). The last progression items an
+  assumed fill places need one of those five chests.
+- **The logic reads three normal items.** `shops.toml`'s `Nuts` and `Sticks` helpers read the physical
+  `Deku Nuts (5)`, `Deku Nuts (10)` and `Deku Stick (1)` packs; no other rule reads a non-progression item. They
+  stay normal (D29: hints never name them), so the fill never assumes them.
+- **Bombchu packs are the only part of `has_explosives` that needs no Bomb Bag** (`free_bombchu_drops`; D30: bombs
+  also need the Bracelet), and D25 puts every pack behind a Bomb Bag, so nothing placed before the packs may rely
+  on one.
+
 ## 33. Round 8: chest ocarina presentation without equipment mutation (cs8b)
 
 Build e0f3ccfa; external read-only reproducers and detailed acceptance boundary:
