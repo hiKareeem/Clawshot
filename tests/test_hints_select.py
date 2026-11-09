@@ -119,16 +119,6 @@ def test_a_shop_refill_is_not_a_major_item():
     assert ("barren", "LAKE_HYLIA") in kinds  # the refill does not keep the lake off the barren list
 
 
-@pytest.mark.parametrize("refill", ["Buy Fish", "Buy Bombchu (8)"])  # type Shop; a remake refill typed Item
-def test_a_random_hint_names_junk_but_never_a_shop_refill(refill):
-    # OoT Randomizer's get_random_location_hint (Hints.py:1088-1097 at 526b4c8d) skips Drop, Event and Shop items
-    # and nothing else, so a Red Rupee may be named.
-    placements = seed(0).placements | {"Hut Chest": refill, "Lake Chest": "Rupees (5)"}
-    named = {hint.item for n in range(40) for hint in hints.choose(seed(n, placements)) if hint.kind == "random"}
-    assert refill not in named
-    assert "Rupees (5)" in named
-
-
 def test_useless_gives_only_junk_and_unknown_choices_are_refused():
     assert {hint.kind for hint in hints.choose(seed(1), "always", "useless")} == {"junk"}
     with pytest.raises(hints.HintError, match="distribution"):

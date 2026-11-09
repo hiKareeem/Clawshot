@@ -23,10 +23,10 @@ The kinds, their weights and Clawshot's wording are data (``data/hints.toml``); 
 - **Areas** are a region's ``hint`` or ``dungeon``; a region with neither takes the area of the nearest region with
   one that has an exit into it, never through ``Root`` (OoT Randomizer's ``HintArea.at``; exits closed by a
   ``False`` rule are not followed).
-- **Location hints and junk items.** Random hints skip items of type ``Drop``, ``Event`` and ``Shop`` (a shop refill,
-  ``Buy ...``) as OoT Randomizer's ``get_random_location_hint`` does (``Hints.py:1088-1097``); otherwise they, like
-  sometimes hints (``get_specific_hint``, ``Hints.py:1127-1172``, no filter on the item), may name a junk item such
-  as a Red Rupee. Item hints name only major items (``get_good_item_hint``, ``Hints.py:882-891``).
+- **Location hints (D29).** Item, always, sometimes and random hints name only progression, hearts and permanent
+  upgrades, never ammo, refills, Buy items or bottle contents, even when those are progression in the logic.
+  This deliberately differs from OoT Randomizer's random/sometimes hints. Barren and Way of the Hero keep their
+  separate required/major-item definition; a heart or capacity upgrade does not make an area non-barren.
 
 Only shuffled locations are hinted (vanilla ones are known). Every stone gets one hint (``copies`` 1). The choices
 use their own ``random.Random`` seeded from the seed number, so the fill's placements are not touched.
@@ -57,10 +57,22 @@ ROOT = "Root"
 NOT_MAJOR_TYPES = frozenset({"Shop", "Event", "Drop", "Token", "Map", "Compass"})
 # Shop refills ("Buy ...") are type Shop in OoT Randomizer; the remake's own refill sizes are added as plain items.
 NOT_MAJOR_PREFIXES = ("Buy ", "Bombchus", "Heart Container", "Piece of Heart")
-# Items a random hint never names: OoT Randomizer's get_random_location_hint (Hints.py:1091) skips these types; the
-# remake's own refill sizes ("Buy Bombchu (3)") are plain items here, so the "Buy " prefix counts as Shop too.
-RANDOM_SKIP_TYPES = frozenset({"Drop", "Event", "Shop"})
-SHOP_PREFIX = "Buy "
+# D29's non-progression permanent upgrades in the world's item data. Fixed wallet/strength/etc. tiers inherit
+# progression from their parent; these three do not. Hearts are recognized separately, including their variants.
+NAMED_UPGRADES = frozenset({"Deku Nut Capacity", "Deku Stick Capacity", "Bullet Bag (40)"})
+UNNAMED_TYPES = frozenset({"Drop", "Event", "Shop", "Refill"})
+UNNAMED_PREFIXES = (
+    "Buy ",
+    "Rupee",
+    "Bomb (",
+    "Bombs (",
+    "Bombchus",
+    "Arrows (",
+    "Deku Nuts (",
+    "Deku Seeds (",
+    "Deku Stick (",
+    "Bottle with ",
+)
 
 
 class HintError(ValueError):
@@ -172,6 +184,14 @@ def _major(seed: "Seed", item: str) -> bool:
         and not item.startswith(NOT_MAJOR_PREFIXES)
         and not _restricted(seed, item)
     )
+
+
+def _worth_naming(world: World, item: str) -> bool:
+    """D29's location-hint class, independent of whether an item keeps its area off the barren list."""
+    info = world.items[item]
+    if info.type in UNNAMED_TYPES or item.startswith(UNNAMED_PREFIXES) or item == "Blue Potion":
+        return False
+    return info.progression or item.startswith(("Piece of Heart", "Heart Container")) or item in NAMED_UPGRADES
 
 
 def required_locations(seed: "Seed", searches: _Searches | None = None) -> list[str]:
@@ -310,18 +330,10 @@ def choose(seed: "Seed", mode: str = "always", distribution: str = "balanced") -
         return True
 
     lists = data["lists"]
-    always = [name for name in seed.shuffled if name in set(lists["always"]) and name not in before_mask]
-    hintable = [
-        name for name in seed.shuffled if not _restricted(seed, seed.placements[name]) and name not in before_mask
-    ]
+    named = [name for name in seed.shuffled if _worth_naming(world, seed.placements[name]) and name not in before_mask]
+    always = [name for name in named if name in set(lists["always"])]
+    hintable = [name for name in named if not _restricted(seed, seed.placements[name])]
     sometimes = [name for name in hintable if name in set(lists["sometimes"])]
-    majors = [name for name in hintable if _major(seed, seed.placements[name])]
-    randoms = [
-        name
-        for name in hintable
-        if seed.world.items[seed.placements[name]].type not in RANDOM_SKIP_TYPES
-        and not seed.placements[name].startswith(SHOP_PREFIX)
-    ]
     junk_lines = len(data["wording"]["junk"])
     junk_order = list(range(junk_lines))
     rng.shuffle(junk_order)
@@ -338,9 +350,9 @@ def choose(seed: "Seed", mode: str = "always", distribution: str = "balanced") -
     makers: dict[str, Callable[[], bool]] = {
         "woth": woth,
         "barren": barren,
-        "item": lambda: location_hint("item", majors),
+        "item": lambda: location_hint("item", hintable),
         "sometimes": lambda: location_hint("sometimes", sometimes),
-        "random": lambda: location_hint("random", randoms),
+        "random": lambda: location_hint("random", hintable),
         "junk": junk,
     }
     if plan.get("always", True):

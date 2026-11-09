@@ -2065,3 +2065,17 @@ What a future reward shuffle needs, **not implemented here**:
 actually found, or remain tied to physical dungeon/awakening quest completion? Which gates, beyond
 the Door of Time, should change?** Proposed separation: reward ownership for chosen reward gates,
 physical completion for world restoration/return travel; no product choice is silently applied.
+
+## 29. Round 7: location hints never name junk (cs7e)
+
+D29 (Kareem) supersedes section 25's original OoT Randomizer random/sometimes item policy.
+`generate.hints._worth_naming` defines one candidate class for item, always, sometimes and random hints,
+using the world's resolved item metadata: progression, hearts and permanent non-progression upgrades.
+Explicit consumable exclusions take precedence over progression (Bombchus, Blue Potion, Buy refills
+and bottle-content variants included). Empty Bottle and Ruto's Letter remain progression; Odd Potion
+is a trade item. The three normal-class capacity upgrades in the world are included explicitly.
+
+Barren/Way-of-the-Hero eligibility and the required-item oracle are unchanged: heart/capacity finds
+may be named without making their area non-barren. Candidate filtering changes RNG draws, so exact
+stone assignments need not match older builds. Tests, continuation output and verification evidence:
+`plans/rounds/r7-hintfix.md`. No game data or item-pool/settings change.
