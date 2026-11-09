@@ -72,8 +72,9 @@
   `closed_deku` and `open` as options for advanced players; not all at once. Quality-of-life settings that remove
   grind without changing the route (the intro skip, the cheap Deku Shield) may stay on.
 - **D25 Bomb and Bombchu pickups from chests only where the Bomb Bag is already guaranteed** (Kareem, 2026-11-08,
-  Claude's recommendation). Ammo packs grant their missing container (round 6, section 24; game-confirmed for a
-  shop bomb bundle in a chest, which gave the Bomb Bag with 20 bombs). Default: a `Bombs (N)`/`Bombchus (N)` item
+  Claude's recommendation). Ammo packs grant their missing container (round 6, section 24). In game, a shop bomb
+  bundle in a chest gave a Bomb Bag and 20 bombs in the menu, but the bombs cannot be used (Link raises one and
+  the action cancels; Kareem, 2026-11-08, round 7). Default: a `Bombs (N)`/`Bombchus (N)` item
   goes only to a location the logic cannot reach without the Bomb Bag, so a pickup never hands out an early bag.
   Counting such pickups as extra Bomb Bags is a later advanced option. Shop refills stay in shops.
 - **D26 Hints: stones speak without the Mask of Truth by default; English hint text in every language archive**
@@ -87,6 +88,10 @@
 - **D28 The Kokiri shopkeeper's gift holds only items no seed needs while it can be missed** (Kareem accepted
   Claude's recommendation, 2026-11-08). The gift is once-only (round 7, game-confirmed) but its vanilla window ends
   at Gohma or the castle visit; extending the window is later work.
+- **D29 Location hints never name junk** (Kareem, 2026-11-08, Claude's recommendation). Item, `always`,
+  `sometimes` and random hints name only items worth having (progression, heart pieces and containers, upgrades);
+  never rupees, ammo, refills or shop items. Barren ("foolish") hints still mark empty areas. This departs from OoT
+  Randomizer, whose random and `sometimes` hints can name junk.
 
 ## Open (only Kareem and his co-owner decide)
 

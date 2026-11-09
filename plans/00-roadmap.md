@@ -704,4 +704,36 @@ Owns `src/clawshot/patch/gifts.py`, `tests/test_gift*.py`, `plans/rounds/r7-gift
    flags, the Temple of Time's checks of quest steps rather than items, section 19), and what shuffling them would
    need. No patch.
 
+### Track E: hints never name junk (`r7/hintfix`, added 2026-11-08)
+
+Owns `src/clawshot/generate/hints.py`, `tests/test_hints*.py`, `plans/rounds/r7-hintfix.md`, section 29.
+1. D29: item, `always`, `sometimes` and random hints name only items worth having (progression items, Pieces of Heart
+   and Heart Containers, non-progression upgrades such as wallets and capacity upgrades); never rupees, ammo, refills,
+   `Buy` items, recovery hearts or bottle contents. Define the class once from the world's item data, with a test
+   that no location hint names junk over many seeds and that barren hints are unchanged.
+2. Rebuild Kareem's test output as `E:/OOTRemake/work/r7-hints/seed-shop-7c-next/` (7b's placements, only text files
+   differ from 7b; never write to `seed-shop-7c`, which he plays; Claude swaps it in). List the 40 lines.
+
+### Track F: graveyard and bombs from play (`r7/play`, added 2026-11-08)
+
+Owns `src/clawshot/data/world/remake/child_graveyard.toml`, the graveyard rows of
+`src/clawshot/data/location_names.toml`, `tests/test_world_remake_play.py`, `plans/playtest/answers.md`,
+`plans/rounds/r7-play.md`, section 30.
+1. The child graveyard's three pull-back graves (`Land_Graveyard_HidingHoleJoint_A_01` at x 4.0 z 5.7, x 21.5 z 11.2,
+   x 21.4 z 23.2 in `Graveyard_Child_Dynamic`). Kareem, from the Royal Family's Tomb: the fourth grave from the right
+   (unmarked) holds a ReDead and a chest (the shield grave, `Obj_TBox_A_06` 16912540161937823130); another (marked)
+   grave holds a cracked wall (`WallCrack` 9366825990748670811 at (3.9, 83.9, 27.0) in `Graveyard_Child_Static`).
+   What is behind the cracked wall, and is any of it a check? Rewrite the three graves' "where" so a player standing
+   at the tomb entrance finds each, and check the heart-piece grave's rule (`True`) against the data.
+2. Bombs from a chest pack: in Kareem's `seed-shop-7c` save (read only:
+   `E:/OOTRemake/work/r7-hints/user-seed-shop-7c`, newest slot) a shop bomb bundle from a chest gave
+   `IsGet.Item_BombBag_Small` and 20 bombs; bombs equip, but Link raises one for a few frames and the action cancels.
+   His main save, where bombs work, is copied at `E:/OOTRemake/work/save-backups/2026-11-08_2140-main-jabu`. Find
+   what makes bombs usable (compare the two saves' bomb and pouch entries by GameDataList name; trace the player's
+   bomb action condition), and say whether the real Bomb Bag (KF Storms Grotto chest in 7b/7c) will make bombs work
+   on his 7c save or leave him without bombs. No save edits; if a fix is needed, propose it in the round file.
+3. What a vanilla chest gives when its item is already owned (the shield grave's `TBox_Shield_Hylian` with the
+   Hylian Shield held; Kareem got 20 rupees from that grave while the graveyard had loaded vanilla files).
+4. Record each in `plans/playtest/answers.md`, the catalogue and section 30.
+
 ### After round 7
