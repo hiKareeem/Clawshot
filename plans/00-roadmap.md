@@ -973,3 +973,20 @@ Owns a new `src/clawshot/pack/`, `docs/seed-pack.md`, `plans/rounds/r9-seedpack.
    play notes match what the player sees; facts from guides only to cross-check (Kareem's Fire Temple maps: 16 chests,
    5 Gold Skulltulas).
 
+### Round 9 result (2026-11-09)
+
+All three tracks merged; main `90ef730`, gates 761 passed / 89 skipped, dump 88.
+- A item bar: the save keeps the selected bar item and the load-time rebuild filters by age; no data action rebuilds
+  it at a pickup, so seeds ship the fallback: `play-note.md` tells the player to Save and Continue and lists the
+  seed's age-locked items the wrong age reaches first (seed 8: 10). Kareem reproduced the lock on Lichii (game
+  behaviour). A get-text line and a fill setting are proposed in `plans/rounds/r9-itembar.md` for Kareem.
+- B Sheik: Temple Sheik follows Forest quest completion (`SageOfForest_IsCompleted_Exp`), not the medallion; "Sheik
+  at Temple" now needs `'Defeat Phantom Ganon'`. `free_time_travel` (default off) opens the pedestal and hides Temple
+  Sheik until Forest completion; Kareem's test pending (`work/r9-sheik-cs9b/ingame`). Every seed's Sheik names the
+  seed's Hookshot location in all 16 languages.
+- C seed packs and floors: `python -m clawshot.pack` builds a private source-only zip with `Make seed.bat` (version
+  check first, Hookshot optional) and `Play seed.bat`; a pack replayed seed 8 byte for byte. Emulator steps in
+  `docs/seed-pack.md` (Lichii confirmed). Dungeon directions name the pause-map floor (134 chests, from MapParam).
+- From play: the guard house crashes are Hookshot#1112 (commented with Kareem's OK); test pools now cap their workers
+  (`c9e2e2b`).
+

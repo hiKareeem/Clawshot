@@ -62,7 +62,10 @@ OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump
   is missing.
 - **Kareem's PC is shared with his play.** A parallel pool (seed sweeps, `multiprocessing`) uses at most 3
   workers, 1 while `hookshot.exe` runs, and one sweep at a time (round 8: a 7-worker sweep beside other tracks'
-  gates held the CPU at 99%).
+  gates held the CPU at 99%). Test pools follow the same cap (`tests/test_world_data.py` `_workers()`: 3, 1 while
+  `hookshot.exe` runs, `CLAWSHOT_WORKERS` overrides); set `CLAWSHOT_WORKERS=1` on every gate run while he plays and
+  never overlap two gate runs then (round 9: two overlapping 8-worker runs held the CPU at 100% and the game crashed
+  twice, Hookshot#1112).
 - **Never delete or rewrite an output folder a game may be reading.** The overlay is read file by file as Kareem
   moves; a file missing for a moment loads the vanilla one (round 7: a rebuild wiped `seed-shop-7c` for four minutes
   while he played it). A changed output goes to a new folder (`<name>-next`); Claude swaps it in after he quits.
