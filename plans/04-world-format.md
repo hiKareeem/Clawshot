@@ -287,6 +287,9 @@ resources under `<dir>/romfs/` plus `<dir>/spoiler.json`:
    6. Progression, native-display items first (with Shop, so the second shield finds a way past Mido).
    7. Priority items (restriction only), then the rest anywhere; with Shop, all filler uses restriction checks,
       native-display items last.
+   In every stage but the return kit's forward placement and the filler, an item with no reachable location left
+   takes one its stage filled earlier, if that location is reachable without the item there, which is placed again
+   under the same rules (Archipelago's safe swap, `Fill.py` at `1041167c`; each item name displaced at most twice).
    A failed fill is retried with the same generator, up to 10 times.
 3. The beatability search on the result: collect sphere by sphere from the start; the goal must hold. A seed that
    fails is never returned.
