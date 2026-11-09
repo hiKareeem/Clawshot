@@ -1,4 +1,4 @@
-"""Free-travel overlay changes only the adult pedestal's module and its two input Ids."""
+"""Free travel changes only the adult pedestal binding and the placed Temple Sheik's Presence."""
 
 from copy import deepcopy
 
@@ -10,7 +10,7 @@ from clawshot.patch import age
 pytestmark = pytest.mark.dump
 
 
-def test_free_travel_changes_only_the_pedestal_binding(romfs, tmp_path):
+def test_free_travel_preserves_prelude_and_changes_only_pedestal_and_sheik(romfs, tmp_path):
     dictionaries = zsdic.Dictionaries.from_romfs(romfs)
     original = (romfs / age.PLACEMENT).read_bytes()
     old_data = dictionaries.decompress(age.PLACEMENT, original)
@@ -20,6 +20,12 @@ def test_free_travel_changes_only_the_pedestal_binding(romfs, tmp_path):
     group["Logic"] = age.UNGATED_LOGIC
     for ref in group["References"]:
         ref["Id"] = age.BINDINGS[ref["Id"]][2]
+    [sheik] = [actor for actor in expected["Actors"] if actor["Hash"] == age.SHEIK_HASH]
+    sheik["Presence"] = {
+        "FlagName": "SageOfForest_IsCompleted_Exp",
+        "IsCheckLazy": False,
+        "IsNegation": False,
+    }
 
     out = tmp_path / "overlay"
     written = age.write(romfs, out, free_time_travel=True)

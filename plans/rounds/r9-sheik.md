@@ -69,3 +69,50 @@ removed it. Next printed timeline-only0050 (`holds no flowchart`); inspect it as
 The request name is not a flow-map key; printed EventSetting row resolves AllSage.evfc,
 then normalized that explicit Work path to its filename stem. Each cause was printed before
 its targeted correction; final probe exit0. No game bytes written or unchanged failed retry.
+
+## Item 2: implemented isolated free travel
+
+`age.patch_tree` validates the pedestal AND Sheik actor/group identities before mutation.
+It retains the round5 ungated binding and adds only the sourced Forest BoolExp Presence
+to Temple Sheik. Stale/missing/duplicate NPC, module/reference or pre-existing Presence
+refuses atomically. Every other actor/anchor/group/trigger remains native.
+
+Native/code discrepancy discovered: the unoverridden translated Prelude rule still read
+`Forest_Medallion and is_adult`, unlike the observed quest trigger. Stopped using that
+premise; posted the evidence and correction. Isolated shared checkpoint **47f25da** adds
+`remake/sheik.toml`: adult plus `Defeat Phantom Ganon`, the existing Forest-completion
+abstraction used by `age_return_event`. No medal-shuffle policy or fill algorithm changed.
+Free travel bypasses neither this check nor the actual scene trigger.
+
+Failing-before `pytest tests/test_age_patch.py`: **7 failed,3 passed**, printing missing
+Presence and every stale Sheik contract accepted. After the aimed fix:
+- `uv run pytest tests/test_age_patch.py tests/test_age_travel.py -q --tb=short`:
+  **24 passed** (including free-return chronology and skipped guarantee).
+- `OOT_ROMFS=... uv run pytest tests/test_age_dump.py -m dump -q -s --basetemp
+  E:/OOTRemake/work/r9-sheik-cs9b/age-focused-next`: **1 passed**; full native tree
+  differs only by the original pedestal changes plus Temple Sheik Presence.
+- `uv run pytest tests/test_sheik_logic.py -q --tb=short`: **2 passed**; both setting
+  values refuse medal/Minuet/Prelude without clear, accept clear without medal only as adult.
+
+Actual public `python -m clawshot.patch.age --romfs ... --out
+E:/OOTRemake/work/r9-sheik-cs9b/ingame/free-time-travel-next --free-time-travel`:
+**2 resources**, native adult Banc **30540 ->30664**, allocation **30824 ->30952**,
+size table length unchanged. Real-output `smoke_age.py` passes inverse tree, allocation,
+twelve save/native-gate scenarios and static launcher isolation checks (`age-proof.json`).
+This is data proof, not game compatibility certification.
+
+Approved save-copy template adapted into two unrun launchers under `ingame/`:
+**Test - free-time-travel-next.bat** (adult-first manual01), and independent
+**Test - prelude-after-forest-next.bat** (after-forest04/05, not already-played00).
+Both use bin executable only, update suppression, missing-exe/backup stop, distinct absent
+user folders and outward-only backup copies. No save was copied by the agent.
+
+**Kareem: follow `E:/OOTRemake/work/r9-sheik-cs9b/ingame/checklist.md`: absent pre-Forest
+Sheik, usable pedestal/child return/second pull/Save-Continue, no early reward; later normal
+Forest sage and Prelude once. The independent post-Forest copy shortens the Prelude check.**
+Require overlay logs plus gameplay. First adult-arrival scene with pre-Forest NPC absent
+is an explicit risk to check, not declared safe by the tree oracle. Default remains off.
+
+One fixture edit initially inserted a statement after `return {`; tool printed syntax
+location, re-read and moved only the return before running tests. No failed syntax run.
+Four full gates run on the completed item3 tree before any readiness post.
