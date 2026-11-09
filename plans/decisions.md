@@ -88,6 +88,8 @@
 - **D28 The Kokiri shopkeeper's gift holds only items no seed needs while it can be missed** (Kareem accepted
   Claude's recommendation, 2026-11-08). The gift is once-only (round 7, game-confirmed) but its vanilla window ends
   at Gohma or the castle visit; extending the window is later work.
+  **Lifted 2026-11-09:** round 8's window patch keeps a shuffled gift available after Gohma and the castle
+  (Kareem's late test on a copy of his ranch save); the gift may then hold any item.
 - **D29 Location hints never name junk** (Kareem, 2026-11-08, Claude's recommendation). Item, `always`,
   `sometimes` and random hints name only items worth having (progression, heart pieces and containers, upgrades);
   never rupees, ammo, refills or shop items. Barren ("foolish") hints still mark empty areas. This departs from OoT

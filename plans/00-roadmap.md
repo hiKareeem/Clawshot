@@ -840,6 +840,10 @@ section 36.
 
 ### After round 8
 
+Round 9 candidate from play: `free_time_travel` also needs Sheik moved: as adult before the Forest Temple, Sheik
+stands at the pedestal with a Talk prompt in the way (Kareem, 2026-11-09). Trace Sheik's Temple of Time placement
+and its gate, and patch both before the pedestal test.
+
 Claude builds a fresh full seed with every game-confirmed setting (Chest, Shop, Gift, Scrub, BossHeart as proven;
 hints; forest closed; cheap Deku Shield) for Kareem's first full playthrough.
 
