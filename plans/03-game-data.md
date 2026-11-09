@@ -2291,6 +2291,27 @@ Exact inverse deltas recover the original flow and both chest files. **Kareem mu
 late grant, equipped-shield interaction, normal shopping and no repeat after Save/Continue,
 with overlay log.** No game was run here. D28's Missable/non-progression policy remains until that result.
 
+### Partial shelves and fixed scrub fees
+
+Settings `shop_slots=0..8` (default8) selects the first N native indices in each of the eight ordinary
+shops; mask loans stay vanilla. Selection is logical-check metadata before pool construction, so all
+age/Alternative/short-stock copies share it and excluded contents never enter the pool. Unselected
+`keep_vanilla` reasons survive. Affordable prices and wallet rules cover selected shelves only;
+independent cheap-Deku-Shield pricing still applies even with zero selected shelves.
+
+`scrub_prices=vanilla|fixed`, `scrub_price=0..1000` (default10 when fixed) covers the four supported
+shuffled once-sale families, not repeat vendors or unshuffled scrubs. Every tier's original call to
+`SimpleShopSub_Scrub_Business_OneTime` changes only `ActorName` and `Price`; the same argument
+already supplies native quote/rupee-check/payment handling. The selected-item string follows the
+reward as before. Cancel/shortfall and success-only saved Bools/control flow stay unchanged.
+Native prices remain40/100 by default. Wallet predicates read the existing shops.toml tiers
+(200/500/1000); the original stun/age/puzzle rule stays conjunctive. Spoiler/opening-note prices
+come from the same effective fees. All three fields serialize through CS1 and have explicit CLI overrides.
+
+Provisional implementation choices by cs8c (2026-11-09): deterministic first-N indices rather
+than a second random shelf-selection algorithm; fixed-price default10; scope restricted to supported
+shuffled families. Questions and exercised full-output/price boundaries: `plans/rounds/r8-shops.md`.
+
 ## 36. Round 8: freestanding native pick-ups (cs8e)
 
 Build `e0f3ccfa`, dump/save backups read-only. Complete 36-anchor ledger, native actor-pack survey,

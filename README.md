@@ -52,6 +52,14 @@ exactly 10 rupees. `--cheap-deku-shield` (provisionally on) prices a Deku Shield
 without Shop shuffle; `--no-cheap-deku-shield` disables it. Exact prices replace conditional discounts.
 The logic uses the patched wallet requirement, preserving stock releases, refill gates and adult-only offers.
 
+`--shop-slots 0..8` selects that many shelves in each ordinary shop (default 8), in native slot-index order;
+remaining stock stays vanilla. Affordable pricing affects selected shelves only; the independent cheap-shield
+option still applies. Mask loans stay vanilla.
+
+`--shuffle Scrub --scrub-prices fixed --scrub-price 10` sets an exact fee for the four supported once-sales
+(0–1000 rupees); default `vanilla` retains their 40/100 fees. Repeat vendors stay vanilla. Logic and purchase
+notes use the chosen fee and native 200/500/1000 wallets. Both settings replay through `CS1`.
+
 `--forest closed` is the vanilla-like default (D24): Mido guards the Deku Tree and the bridge exit stays closed
 until Gohma. Advanced opt-ins: `closed_deku` opens only the bridge exit; `open` also bypasses Mido.
 Legacy `--skip mido` remains accepted as an alias for `--forest open`; it no longer selects a separate Mido-only
