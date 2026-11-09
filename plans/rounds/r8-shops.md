@@ -67,7 +67,7 @@ Reviewer-authorized rebase onto plans-only main `e3745f5` completed without conf
 
 Retained `settings-cli-proof.json`, both replay/zero CLI logs, the original partial CLI log, every fresh output folder, and `ingame/late-gift-proof.json`. Removed only the two completed session-created builder/smoke driver files, never an output/user/backup/game path. Original reusable trace reports remain external. The copied new-game launcher was read back from disk: bin executable only, update checks disabled, missing-exe hard stop, unique user/overlay/log; no batch executed.
 
-### Current commit ledger on e3745f5
+### Historical commit ledger on e3745f5
 
 | Commit | Scope |
 |---|---|
@@ -85,7 +85,7 @@ Retained `settings-cli-proof.json`, both replay/zero CLI logs, the original part
 | `9cf5659` | native dynamic quote audit across all16 languages |
 | `c1d60bb` | isolated full gift-delta oracle update |
 
-Production behavior is through `90ad1b3`; `c1d60bb` updates only the pre-existing generic gift oracle as documented below. Other later commits are documentation. Shared hashes were posted to `cs-r8` as cs8c. Section34 follows existing31; reviewer inserts32/33 before34 when those tracks merge, without placeholders or other-track edits.
+At this historical checkpoint, production behavior was through `90ad1b3` and the generic oracle update was `c1d60bb`. Those hashes are superseded by the 15d4c70 ledger below. Section34 then followed31; the later integration preserves33/34/36 in numeric order.
 
 Additional read-only quote audit (`scrub-quote-trace.txt`, `scrub-quote-tokens.txt`, `scrub-price-languages.txt`): Event289 uses `SellerMessageId`; all seven native calls' four distinct seller labels carry group2/type12 `SimpleShop_Price` in **all16 language archives**. Fixed fees therefore reuse the native dynamic price quote, rupee query and payment variable without writing language archives. Original item-flavour wording remains unchanged; no game text is copied into the repo.
 
@@ -112,12 +112,54 @@ Fresh four-command chain on production through `90ad1b3` plus shared test-only `
 
 Both pytest commands used only `PYTEST_ADDOPTS=--basetemp=E:/OOTRemake/work/r8-shops-cs8c/gate-corrected-{synthetic,dump}-next` to keep generated/decoded temporary data outside the repo. All743 tests were collected; no dump test skipped or test filtered except the prescribed marker. The generic whole-gift oracle, both merchant control-flow/inverse oracles, partial-shop field oracle, existing format/census/seed/hint/chronological/200-default-seed tests all pass. The single full-gate retry followed the printed missing-Event24 oracle cause and targeted passing correction; no unchanged failed rerun, widened retries or relaxed gameplay rule.
 
-**Pre-integration checkpoint only:** these passes cover authorized `e3745f5`, not the subsequently requested `536b4a5` integration. All requested implementation, native-output smoke and CS1 replay work is complete; the new rebase and four fresh full gates remain mandatory before readiness. No merge, push, stash, dependency edit, game/batch/window/build or played-output rewrite.
+**Pre-integration checkpoint only:** these passes cover authorized `e3745f5`, not the subsequently requested B/E integration (corrected target `15d4c70`). All requested implementation, native-output smoke and CS1 replay work is complete; the new rebase and four fresh full gates remain mandatory before readiness. No merge, push, stash, dependency edit, game/batch/window/build or played-output rewrite.
 
 ### Left for Claude / Kareem
 
 - **Kareem:** run `E:/OOTRemake/work/r8-shops-cs8c/ingame/Test - shopkeeper-after-gohma-next.bat` after quitting the current game; follow adjacent `late-gift-check.md`. Skip the merchant until after Gohma (optionally also Zelda before first talk), receive Boomerang with the shield equipped, test normal shopping and repeat/Save-Continue, and supply overlay log. No game acceptance is invented; **D28's non-progression restriction remains**.
-- **Claude:** review the isolated shared-file commits and integrate section34 after32/33 when available. Questions about first-N versus seeded shelf membership and pricing beyond the four supported shuffled scrub families remain provisional product choices above, not expanded policy.
+- **Claude:** review the isolated shared-file commits. Section34 is integrated between33/36 below; future32/35 remain their tracks' content. Questions about first-N versus seeded shelf membership and pricing beyond the four supported shuffled scrub families remain provisional product choices above, not expanded policy.
 - Controlled player output, isolated unrun launcher/checklist, three CLI outputs, read-only native trace reports and JSON/log proofs remain outside the repository. Only the two completed temporary driver scripts were removed; no game, save backup, existing user/seed/output folder or other agent's file was deleted.
 
-Reviewer subsequently advanced main to `536b4a5` (B get-item/section33 and E Freestanding/section36) and requested a clean rebase plus four fresh gates. Commit this evidence first, then rebase, preserve section34 between33/36, and record the integrated results separately. The pre-integration results above are historical, not final acceptance for that new base.
+Reviewer initially supplied `536b4a5` for the B/E merge, then corrected it to **`15d4c70`**. The first rebase contained only the new CPU rule (B/E reports were absent); no B/E acceptance was inferred. The corrected exact-target rebase is documented below; pre-integration results remain historical.
+
+## Corrected B/E integration onto 15d4c70
+
+The reviewer-authorized `git rebase 15d4c70` is complete. Only conflicts were additive `03-game-data.md` appendices: keep B's entire33, insert C's entire34 (including partial-price and dynamic-quote subsections), then keep E's entire36. Numeric order is **31,33,34,36** with no invented32/35. README, settings defaults, CLI and source hooks auto-merged; no producer code was discarded. Read B/E reports, the new Freestanding pipeline/CLI contract and the merged CPU rule.
+
+### Current branch commits
+
+| Commit | Scope |
+|---|---|
+| `54fa4b8` | shared gifts.py merchant dispatch only |
+| `10ce0f8` | existing merchant inverse oracle |
+| `79cfc4f` | item1 owned tests/report/section34 |
+| `c4529a0` | shared settings defaults only |
+| `20fb16c` | Settings fields only, no fill-algorithm change |
+| `ea2f1c6`, `c78d87e` | shared CLI only |
+| `02ddae1` | world.shops logical shelf selection |
+| `15bff35` | prepare hook before effective pricing |
+| `27e18ae` | scrub fees/wallets/presentation metadata |
+| `25906ca` | item2 owned regressions, README and section34 |
+| `841df27` | prior CLI replay/ledger evidence |
+| `2e41913` | all-language native quote evidence |
+| `a725a51` | shared generic gift-oracle correction |
+| `2383e5f` | completed pre-integration gates and new integration instruction |
+
+Fresh real CLI smoke used seed7 with Chest+Shop+Scrub,3 shelves/affordable and fixed201 fees, into absent `seed15d-partial-next`, chained **serially** before all four complete gates. Freestanding remains available in the CLI/pipeline but was not silently enabled in this unchanged Track C scenario. No extra worker, sweep, new launcher or player-output rewrite.
+
+### Completed integrated acceptance
+
+Actual CLI: **exit0, 192 shuffled checks, 23 spheres, 92 resources** plus spoiler/note. Read the written settings and all four Scrub descriptions:3 slots, fixed201, exactly the requested shuffled kinds. Independent whole-folder SHA256 comparison: **all94 integrated files equal the pre-integration partial seed byte-for-byte** (`integrated-15d-proof.json`). The earlier separate-interpreter CS1 replay and zero-slot/free-scrub proof remain recorded above; no changed scope/seed/settings or reroll was used for this fresh integration.
+
+| Complete command on 15d4c70 integration | Observed result |
+|---|---|
+| `uv run ruff format --check` | **216 files already formatted** |
+| `uv run ruff check` | **All checks passed** |
+| `uv run pytest` | **703 passed, 84 skipped**, 311.38s |
+| `OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump` | **83 passed, 704 deselected**, 707.42s |
+
+Both pytest invocations used only external `PYTEST_ADDOPTS=--basetemp=E:/OOTRemake/work/r8-shops-cs8c/gate15d-{synthetic,dump}-next`. **787 tests collected**, all selected dump tests passed, no dump skip, no filter beyond the required marker. Includes incoming B get-item flow and E floor/palette oracles, current Gift/Shop/Scrub integration and the new late-window/partial-price tests. The entire serial smoke-plus-gates chain completed successfully in1051.46s; no source/test edit occurred after its start, no failed integration rerun.
+
+**Track C ready for review on `r8/shops`, rebased onto corrected target `15d4c70`.** Both numbered items and all reachable acceptance work are complete. This final commit changes the round report only; its actual head is posted with the full handoff. Commit-by-commit current ledger is above; no merge, push, stash or dependency change.
+
+Remaining human acceptance is unchanged: **Kareem runs the isolated late-gift new-game checklist, observes the overlay log, late Boomerang/normal shopping and repeat/Save-Continue behavior. D28 stays non-progression until that result.** First-N shelf selection and the fixed-fee scope/default remain the explicitly recorded provisional product choices for reviewer/owners. No game/launcher/window was started and no existing player seed/user/backup/output was rewritten or deleted.
