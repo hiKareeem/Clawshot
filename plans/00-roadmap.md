@@ -883,6 +883,11 @@ greyed out for child, and the reload removed it from the bar. Test the reverse t
 Boomerang). Fallbacks if no data fix: the play note and get text tell the player to Save and Continue, or a setting
 keeps age-locked button items out of locations the other age reaches first.
 
+Round 10 candidate (seed 8 play, Kareem 2026-11-09): the Market Potion Shop's child bottle (owner gives an empty
+bottle, Link catches a bug in the shop, the owner fills it with Red Potion) is a remake-only check missing from the
+census. Trace `Npc_Hylia_046_BottleShop_Child`, add it as a gift check and to the logic as an early bottle source
+(its conditions: child, day, no bottle yet?), and an in-game test. Also: what opens Bombchu Bowling in the remake.
+
 Later-round candidate (Kareem, 2026-11-09, seed 8: "we need a check/item tracker"): a check and item tracker. The
 save already records opened checks (the Bool64bitKey list of actor Hashes, `src/clawshot/save.py`) and owned items,
 so a local page can read the seed's spoiler and the newest autosave and show collected checks by area, items owned,
