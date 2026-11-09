@@ -1,7 +1,7 @@
 # Clawshot Discord kit (drafts for Kareem to post)
 
-Drafts only. Edit freely; nothing here has been posted. The tester guide describes the seed pack Claude is about to
-build; post it once the first pack exists.
+Drafts only; nothing here has been posted. The repository and source-containing packs remain private
+to invited testers. The implemented pack format is documented in `docs/seed-pack.md`.
 
 ---
 
@@ -64,15 +64,22 @@ You need:
 Steps:
 1. Install uv (it runs Clawshot's Python code). In PowerShell:
    `powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"`
-2. Download the seed pack and unzip it anywhere.
-3. Run `Make seed.bat`. It asks for your game's romfs folder, checks the game version, and builds the seed from your
-   files into the pack's `seed` folder. Nothing is written to your game folder.
-4. Run `Play seed.bat`. It starts Hookshot's game directly with the seed and its own save folder, so your normal saves
-   are never touched. Start a new game.
-5. `play-note.md` in the seed folder explains how the seed opens. The spoiler is in `spoiler.json` if you get stuck.
-   Asking in #help for one location is less of a spoiler than opening the whole file.
+2. Download the private seed pack and unzip it into its own new folder **outside** RomFS and Hookshot.
+   Never extract over an older pack; each folder has its own saves.
+3. Run `Make seed.bat`. It asks once for both your romfs folder and Hookshot folder (the one containing `bin`).
+   Before uv or generation, it fingerprints the supported game dump. It builds `seed` from the included
+   source/settings, then checks every output byte against the pack's reference digest. Existing seeds are
+   verified, never overwritten. Nothing is written to your game folder.
+4. After **Verified seed**, run `Play seed.bat`. It verifies again and starts only `bin\\hookshot.exe`,
+   with update checks disabled and this pack's `user` folder. A missing bin exe stops; no launcher fallback.
+   Start a new game the first time; later plays continue this pack's saves, never your normal game.
+5. `seed/play-note.md` explains the opening; `seed/spoiler.json` reveals all placements.
+   Ask in #help for one location if you want less of a spoiler. Attach `hookshot_log.txt` from the pack root
+   and `pack.json` to reports; never share your dump, generated overlay or saves.
 
-If `Make seed.bat` says your version doesn't match, stop there and post in #help.
+Version/digest mismatch: stop and post the actual/expected fingerprints in #help. Do not bypass it.
+Partial/modified build: extract into a new folder, keeping the old folder and its saves.
+Code is included for inspection; neither the repository nor packs are public yet. Do not repost.
 
 ---
 

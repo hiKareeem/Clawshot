@@ -19,6 +19,13 @@ Day-1 spike done (see `plans/00-roadmap.md`, M0): the game's placement files dec
 same engine as Tears of the Kingdom), and chest contents are a single actor-name parameter. Writing files back and
 a swapped chest in game are next.
 
+## Private tester packs
+
+Clawshot and seed packs remain private to invited testers. Packs include the generator's source/data,
+not game files or generated overlays. `python -m clawshot.pack --settings <CS1> --seed <n> --out <new.zip>`
+uses the publisher's `OOT_ROMFS` (or `--romfs`) to record a reference digest. Testers run Make locally against
+their own supported dump, then Play with an isolated save folder. See [seed-pack instructions](docs/seed-pack.md).
+
 ## Settings strings
 
 ```sh
