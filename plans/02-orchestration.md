@@ -38,6 +38,8 @@ skill). This file is the project's own version; where it differs from Overread, 
    branch's commits after the head you reviewed (`git log <reviewed head>..<branch>`): an agent may commit after the
    review snapshot (a steer it answered). `git cherry` alone can't tell those from commits whose patch changed when
    a conflict was resolved during the merge.
+   Merge from the review worktree's commit first and check `main` moved before removing anything; a failed
+   `worktree remove` (a locked folder) must stop the cleanup, not leave the branch deleted and the merge undone.
 
 ## Gates
 
