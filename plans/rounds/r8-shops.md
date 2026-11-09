@@ -81,7 +81,43 @@ Retained `settings-cli-proof.json`, both replay/zero CLI logs, the original part
 | `995438d` | prepare hook before pricing |
 | `d0b61d2` | scrub fee/logic/metadata integration |
 | `90ad1b3` | item2 owned synthetic/dump regressions, README and research |
+| `ffea4bf` | rebased ledger and completed CLI replay evidence |
+| `9cf5659` | native dynamic quote audit across all16 languages |
+| `c1d60bb` | isolated full gift-delta oracle update |
 
-Full gates run on this rebased source; later commits change documentation only. Shared hashes were posted to `cs-r8` as cs8c. Section34 follows existing31; reviewer inserts32/33 before34 when those tracks merge, without placeholders or other-track edits.
+Production behavior is through `90ad1b3`; `c1d60bb` updates only the pre-existing generic gift oracle as documented below. Other later commits are documentation. Shared hashes were posted to `cs-r8` as cs8c. Section34 follows existing31; reviewer inserts32/33 before34 when those tracks merge, without placeholders or other-track edits.
 
 Additional read-only quote audit (`scrub-quote-trace.txt`, `scrub-quote-tokens.txt`, `scrub-price-languages.txt`): Event289 uses `SellerMessageId`; all seven native calls' four distinct seller labels carry group2/type12 `SimpleShop_Price` in **all16 language archives**. Fixed fees therefore reuse the native dynamic price quote, rupee query and payment variable without writing language archives. Original item-flavour wording remains unchanged; no game text is copied into the repo.
+
+## Full-gate integration correction
+
+The first full chain completed: format **210 files**, lint clean, synthetic **662 passed/81 skipped** (582.10s), dump **79 passed/1 failed/663 deselected** (1401.08s). The sole failure printed `Npc_Kokiri_001_Shop_Child` changed indices `{16,57,109,110}` against the old generic intended set `{57,109,110}`: index16 is Event24, the deliberately extended initialized dispatch. It was not a runtime failure or a failing merchant semantic/inverse oracle.
+
+Shared test-only `c1d60bb` permits Event24 only for the merchant's normalized once-gate. Removed the incidental assertion that every appended event name starts with `ClawshotGift`; no name golden/whitelist was substituted. Actual once-gate/late-dispatch semantics and complete inverse deltas remain independently covered.
+
+Cause-aimed check: `OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump tests/test_gifts_dump.py -k each_changed_flow -q --tb=short --basetemp E:/OOTRemake/work/r8-shops-cs8c/gift-oracle-after-next`: **1 passed/4 deselected**, 8.91s. This is not a substitute for the fresh full four-command chain, which runs on the corrected test tree with `gate-corrected-{synthetic,dump}-next` basetemps. No production source change or relaxed oracle/goal/retry bound was made.
+
+Reviewer CPU-safety steer acknowledged (2026-11-09): read main's updated `02-orchestration.md`. Track C's running gate chain is one serial pytest process, no multiprocessing/xdist pool or concurrent sweep; no additional smoke is running. Retain one worker regardless of game presence (the new maximum while Hookshot runs). No game or build was started.
+
+## Pre-integration complete gates and handoff checkpoint
+
+Fresh four-command chain on production through `90ad1b3` plus shared test-only `c1d60bb`:
+
+| Full command | Observed result |
+|---|---|
+| `uv run ruff format --check` | **210 files already formatted** |
+| `uv run ruff check` | **All checks passed** |
+| `uv run pytest` | **662 passed, 81 skipped**, 381.64s |
+| `OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump` | **80 passed, 663 deselected**, 1110.38s |
+
+Both pytest commands used only `PYTEST_ADDOPTS=--basetemp=E:/OOTRemake/work/r8-shops-cs8c/gate-corrected-{synthetic,dump}-next` to keep generated/decoded temporary data outside the repo. All743 tests were collected; no dump test skipped or test filtered except the prescribed marker. The generic whole-gift oracle, both merchant control-flow/inverse oracles, partial-shop field oracle, existing format/census/seed/hint/chronological/200-default-seed tests all pass. The single full-gate retry followed the printed missing-Event24 oracle cause and targeted passing correction; no unchanged failed rerun, widened retries or relaxed gameplay rule.
+
+**Pre-integration checkpoint only:** these passes cover authorized `e3745f5`, not the subsequently requested `536b4a5` integration. All requested implementation, native-output smoke and CS1 replay work is complete; the new rebase and four fresh full gates remain mandatory before readiness. No merge, push, stash, dependency edit, game/batch/window/build or played-output rewrite.
+
+### Left for Claude / Kareem
+
+- **Kareem:** run `E:/OOTRemake/work/r8-shops-cs8c/ingame/Test - shopkeeper-after-gohma-next.bat` after quitting the current game; follow adjacent `late-gift-check.md`. Skip the merchant until after Gohma (optionally also Zelda before first talk), receive Boomerang with the shield equipped, test normal shopping and repeat/Save-Continue, and supply overlay log. No game acceptance is invented; **D28's non-progression restriction remains**.
+- **Claude:** review the isolated shared-file commits and integrate section34 after32/33 when available. Questions about first-N versus seeded shelf membership and pricing beyond the four supported shuffled scrub families remain provisional product choices above, not expanded policy.
+- Controlled player output, isolated unrun launcher/checklist, three CLI outputs, read-only native trace reports and JSON/log proofs remain outside the repository. Only the two completed temporary driver scripts were removed; no game, save backup, existing user/seed/output folder or other agent's file was deleted.
+
+Reviewer subsequently advanced main to `536b4a5` (B get-item/section33 and E Freestanding/section36) and requested a clean rebase plus four fresh gates. Commit this evidence first, then rebase, preserve section34 between33/36, and record the integrated results separately. The pre-integration results above are historical, not final acceptance for that new base.
