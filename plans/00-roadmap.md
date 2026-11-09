@@ -895,6 +895,12 @@ Round 10 candidates (seed 8 play, Kareem 2026-11-09):
   gives First Prize, the second win Second Prize, later wins the filler prizes; an in-game test. Same question for
   the shooting galleries' normal and expert prizes (Kareem: an expert tier exists).
 
+- Door of Time setting (Kareem, 2026-11-09: he expected door and pedestal open from the start, as Ship of Harkinian
+  offers; free time travel alone still leaves the three Spiritual Stones, the Ocarina of Time and the Song of Time
+  between child and adult). `door_of_time` = closed (vanilla) | song_only | open, through the `DoorOfTime` flow and
+  its gates; logic for each; the default is Kareem's call (asked 2026-11-09). With it, decide whether
+  `free_time_travel` becomes default on (after the first-pull boundary test).
+
 Later-round candidate (Kareem, 2026-11-09, seed 8: "we need a check/item tracker"): a check and item tracker. The
 save already records opened checks (the Bool64bitKey list of actor Hashes, `src/clawshot/save.py`) and owned items,
 so a local page can read the seed's spoiler and the newest autosave and show collected checks by area, items owned,
