@@ -2351,6 +2351,78 @@ flavour still names the vanilla item, as with the existing reward swaps.
 Provisional implementation choices by cs8c (2026-11-09): deterministic first-N indices rather
 than a second random shelf-selection algorithm; fixed-price default10; scope restricted to supported
 shuffled families. Questions and exercised full-output/price boundaries: `plans/rounds/r8-shops.md`.
+## 35. Round 8: gift checks, native identities and success-only merchant sales (cs8d)
+
+Build e0f3ccfa; full command/result ledger and player checklists: `plans/rounds/r8-gifts.md`.
+No agent game run. New/corrected families remain held vanilla until Kareem's results.
+
+### Cows: placements are not independent checks
+
+Fourteen Hashes are eight physical cows, counting age/Alternative copies: DMT1, field grotto1,
+ranch2, Impa's1, Link's1, GV1, GF1. No placement has Dynamic parameters selecting a milk
+event or flag. Shared `Animal_Cow` GiveMilk/PushToBottleMilk fills an empty bottle with bottle10;
+`Cow_IsGetMilkFromCow` and shared talk history are not per-cow completion. Actor variants use
+fixed schedules/replacement events. The active flow query inventory has no demonstrated instance
+identity predicate. A new Bool alone would make one global milk reward, not cowsanity.
+Reviewer narrowed this item to research: no cow patch this round; **D11 stands**.
+
+### Skulltula House
+
+GatheringTokenGold gives10/Event398 Wallet_Medium,20/Event75 AgonyStone,30/Event194 Wallet_Large,
+40/Event200 **BombchuBundle_Large =20**,50/Event219 Heart_Piece,100/Event215 first Gold Rupee.
+Native10–50 saved GetReward Bools gate their checks;100 uses the quest's completion. Event471
+is the father's native repeat200 rupees and remains untouched. The corrected40 pool item stays
+held pending acceptance; no new flag or token-count/quest change is needed.
+
+The Gift seed step composes assigned10–50 item previews into `Npc_SkullDad` Talk_28/Talk_23–26,
+using native English item names, existing wrapping/highlighting and all16 language archives (D26).
+Existing Gossip Stone text survives composition. First100 has no added preview/repeat slot.
+
+### Frogs
+
+Five stable TeachNewMusic callers: Event172 Lullaby,220 Epona,221 Saria,222 Sun,223 Time.
+Each passes its own saved completion Bool. The native escalating rupees are **5/10/15/20/30 by
+prior song count**, not50 each and not a literal pouch actor. Census rows therefore have empty
+item/parameter fields; no arbitrary pool item is assigned to this order-dependent native reward.
+
+Storms' heart is **Event384** (previously mislinked as the bug game), saving StormSong at112.
+The bug game's first heart uses **Event161 or Event75** for initial/retry wins; InsectRepellent
+is set after success. Native repeat Event162/Event76 Blue Rupees and failed rounds stay native.
+SongClear means all six songs, not winning the bug game. All seven completion Bools already
+exist, defaultfalse/reset8/save0; no new GameDataList flag is needed.
+
+For changed ordinary songs, clone only the reachable TeachNewMusic graph for that caller.
+Replace the rupee-UI subtree with the ordinary gift wrapper; preserve flag, first-song count,
+growth and native repeat routing. Remap graph edges and subcall indices, retain original entries
+and all untouched callers; refuse entry-local actor bindings rather than guessing. Corrected
+heart identities and all five song prizes stay vanilla until gameplay acceptance; the fixed
+song-pool item policy is a question for Kareem/co-owner, not an inferred five50-rupee pool.
+
+### Three merchants: flag only the successful grant
+
+| Check | Stable grant call | Native price / persistence |
+|---|---|---|
+| Medigoron | Npc_Goron_Medigoron_Adult/Event11 -> SimpleShopRoot_Npc_Goron_Medigoron_Adult | 200; sword ownership is not check completion |
+| Carpet | Npc_Hylia_044_Adult/Event3 -> SimpleShopRoot | 90; Npc_Hylia_044_Buy is unsaved reset1/save-1 |
+| Granny Blue Potion sale | Npc_Hylia_053_Adult/Event12 -> GetInEventInBottle_BlueBottleShop | 100 and empty bottle; no saved purchase-completion Bool |
+
+Granny's bottle wrapper does not reach the pouch-add census fixed point. The dedicated literal
+sale is now censused separately from her unchanged Odd Mushroom/Odd Powder trade (Event167).
+Her quest unlock, bottle check and price remain. This corrects the older “no literal sale” census
+assumption using the active flow itself, not a shelf item or N64 assumption.
+
+Each controlled merchant swap adds its own D22 saved Bool (reset8/save0). Medigoron/carpet get
+private SimpleShop entries; original events/entries, beans and other consumers are unchanged.
+Flags are set inside successful grants, never after an outer call that also returns on refusal.
+Choice, funds, capacity and fees remain native. Medigoron's own two sword-ownership reads become
+check reads; his private generic grant does not consume a broken knife. Granny uses the ordinary
+gift wrapper plus the original100-rupee charge on its success edge, without filling a bottle.
+Revisits bypass the transaction; cancellation/poverty/full capacity do not consume the check.
+
+Data-sourced rules retain existing adult/trade/room/approach predicates; Granny adds her bottle
+requirement and carpet drops the unsupported upgraded-wallet/Bombchu prerequisites (price90).
+Every merchant stays held vanilla pending Kareem. Graph/state, serialization, allocation and
+saved-Bool proofs do not establish engine presentation, actual grants/use or Save/Continue.
 
 ## 36. Round 8: freestanding native pick-ups (cs8e)
 

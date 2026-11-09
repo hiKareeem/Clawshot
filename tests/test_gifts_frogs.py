@@ -11,7 +11,9 @@ FLOW = "MiniGame_FrogTenors"
 
 def song_chart():
     events = [
-        evfl.SwitchEvent("Event167", 0, 0, [(0, 4), (1, 1)], {"GameDataName": evfl.Argument("GameDataName"), "Index": -1}),
+        evfl.SwitchEvent(
+            "Event167", 0, 0, [(0, 4), (1, 1)], {"GameDataName": evfl.Argument("GameDataName"), "Index": -1}
+        ),
         evfl.ActionEvent("Event380", 1, 0, 2),
         evfl.ActionEvent("NativeRupees", 2, 0, 3, {"Value": 5}),
         evfl.ActionEvent("Event392", 0, 1, 4, {"GameDataName": "SongCount", "Value": 1}),
@@ -25,7 +27,11 @@ def song_chart():
     return evfl.Flowchart(
         FLOW,
         [
-            evfl.Actor("GameDataActor", actions=["EventTriggerSetGameDataBool", "EventTriggerAddOrSubGameDataInt"], queries=[gifts.READ_QUERY]),
+            evfl.Actor(
+                "GameDataActor",
+                actions=["EventTriggerSetGameDataBool", "EventTriggerAddOrSubGameDataInt"],
+                queries=[gifts.READ_QUERY],
+            ),
             evfl.Actor("UISystemActor", actions=["EventTriggerOpenRupeeDisplay"]),
             evfl.Actor("PouchSystemActor", actions=["EventTriggerIncreaseRupee"]),
         ],
@@ -39,7 +45,10 @@ def run(chart, entry, state, rewards, args=None):
     index = chart.entry_point(entry).main_event
     while index != evfl.NONE:
         event = chart.events[index]
-        params = {key: args[str(value)] if isinstance(value, evfl.Argument) else value for key, value in (event.params or {}).items()}
+        params = {
+            key: args[str(value)] if isinstance(value, evfl.Argument) else value
+            for key, value in (event.params or {}).items()
+        }
         if isinstance(event, evfl.SwitchEvent):
             index = dict(event.cases)[0 if state.get(params["GameDataName"], False) else 1]
         elif isinstance(event, evfl.SubFlowEvent):

@@ -12,6 +12,7 @@
 #   skip    events ("<flow>/<event>") whose predecessors are pointed at their `next`
 #   gate    what stops the check giving twice in the game (evidence; not used by the patch)
 #   once    equipped-Deku-Shield queries replaced with the check's saved Bool; set after every grant branch
+#   purchase specialize the native merchant sale; add/set a saved Bool only after the successful grant
 
 [check."KF Shopkeeper Gift"]
 class = "rewrite"
@@ -70,9 +71,9 @@ class = "swap"
 gate = "the cutscene plays once"
 
 [check."GC Medigoron"]
-class = "more"
-gate = "none: IsExistInPouch(Weapon_Sword_Giant)"
-reason = "a sale inside SimpleShop (the call returns without giving on cancel or too few rupees): a once flag must be set inside the shared purchase path; OoT Randomizer shuffles it only with shuffle_expensive_merchants/shuffle_beans"
+class = "rewrite"
+gate = "Round 8: saved check Bool inside a caller-specific SimpleShop success path; native 200-rupee sale"
+purchase = true
 
 [check."GC Rolling Goron as Adult"]
 class = "swap"
@@ -154,6 +155,11 @@ gate = "MiniGame_CatchCucco_IsCompleted"
 [check."Kak Granny Trade Odd Mushroom"]
 class = "swap"
 gate = "hand-in takes Item_OddMushroom"
+
+[check."Kak Granny Buy Blue Potion"]
+class = "rewrite"
+gate = "Round 8: native Buy_BluePotion unlock/bottle/100-rupee checks; saved Bool after successful replacement"
+purchase = true
 
 [check."Kak Man on Roof"]
 class = "swap"
@@ -344,9 +350,9 @@ gate = "the cutscene plays once"
 reason = "no flow reads the reward; the game's story gates read the dungeon's quest step instead (DoorOfTime asks Get_StoneOfFire_IsCompleted_Exp, ...), so a moved reward breaks them both ways"
 
 [check."Wasteland Bombchu Salesman"]
-class = "more"
-gate = "Npc_Hylia_044_Buy (not saved)"
-reason = "a sale inside SimpleShop (the call returns without giving on cancel or too few rupees): a once flag must be set inside the shared purchase path; OoT Randomizer shuffles it only with shuffle_expensive_merchants/shuffle_beans"
+class = "rewrite"
+gate = "Round 8: Npc_Hylia_044_Buy is unsaved; new saved check Bool inside a private successful 90-rupee sale"
+purchase = true
 
 [check."ZD Diving Minigame"]
 class = "swap"

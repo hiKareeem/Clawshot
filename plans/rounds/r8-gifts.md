@@ -171,7 +171,67 @@ replaced it with a real terminal branch, matching native graph shape. Cause-aime
 The native oracle covers every changed gift and allows only the new caller-local entries,
 verifying first-grant identity and absence of a reachable duplicate rupee action.
 
+## Item 4: three native merchant transactions
 
+| Check | Stable caller | Native transaction |
+|---|---|---|
+| Medigoron | Npc_Goron_Medigoron_Adult/Event11 | SimpleShopRoot_Npc_Goron_Medigoron_Adult;200 rupees; no saved purchase flag |
+| Carpet | Npc_Hylia_044_Adult/Event3 | SimpleShopRoot;90 rupees; Npc_Hylia_044_Buy is reset1/save-1, not persistent |
+| Granny Blue Potion | Npc_Hylia_053_Adult/Event12 | GetInEventInBottle_BlueBottleShop;100 rupees plus an empty bottle; separate from trade Event167 |
+
+The older census and the research helper's initial “Granny sale absent” conclusion were wrong:
+the active053 flow has a literal ActorName and bottle2, but its bottle wrapper never reaches
+the pouch-add fixed point. Read the actual Event12, Event11 funds, Event15 bottle and wrapper's
+native charge; added exactly that sale to the census. Odd Mushroom/Odd Powder trade, quest
+unlock and all other bottle gifts stay unchanged.
+
+Shared metadata-only `f9cc8e8` adds its stable definition/catalogue, holds all three merchants
+vanilla, records native fee90 (carpet needs no upgraded wallet/Bombchu prerequisite), and adds
+Granny's empty-bottle requirement with guarded/source overrides. Medigoron's existing adult,
+wallet and room rule stays; existing trade/approach predicates are not claimed newly game-proven.
+
+`purchase=true` in gift rules uses the existing D22 saved-Bool allocator, one new flag per check.
+Medigoron/carpet specialize only their reachable SimpleShop roots/tails; all115 original common
+events and all7 original entries are unchanged, including beans/untouched merchants. Flags are
+set immediately after successful grants, not after wrappers which also return on cancellation.
+Native choice/funds/capacity/price behavior stays. Medigoron's two ownership gates read completion,
+his presentation uses the generic gift wrapper and no longer takes a broken knife for an unrelated
+reward. Granny keeps her unlock/bottle gate, replaces only the bottle-grant wrapper and restores
+its native100-rupee charge on success. No gate is set on cancellation, poverty or full capacity.
+
+Controlled output `ingame/merchants-three-play-next/`, copied release-only launcher
+`Test - merchants-three-play-next.bat`, checklist `merchant-check.md`. Medigoron gives Hammer,
+carpet Longshot, Granny Hookshot. Own user copies the main-Jabu backup's nested save/user contents;
+slot01 owns none of these three. **No available backup is already adult** (all six slots of both
+before-adult and main-Jabu checkpoints lack Master Sword and these rewards), so the checklist
+explicitly requires normal child-to-adult progression and Granny's trade, not immediate claims.
+Do Granny before carpet for a clean Hookshot-before-Longshot upgrade check.
+
+Real common writer produced **six resources** (four flows, GameDataList and size table), all
+parsed/sized. Added Bools are defaultfalse/reset8/save0; backup SHA256 values unchanged.
+`uv run python E:/OOTRemake/work/r8-gifts/build_merchants.py` passed; launcher checked only as
+text and never executed. `smoke_merchants.py` interpreted the actual serialized native transaction
+graphs: all three cancel/poor/full-or-no-bottle paths gave/charged nothing, each successful path
+gave its distinct item and charged exactly200/100/90, saved-state revisit gave/charged nothing.
+It also loaded the real world and verified all three remain held vanilla.
+
+Smoke diagnostic: the first reload equality assertion printed an extra native
+`UI_IsPlayingShopEvent=false`, not an extra reward/charge. Printed before/after/diff, initialized
+that transient UI flag as the real idle baseline, then one cause-aimed run passed all scenarios.
+This changes no production behavior. Synthetic persisted-state regressions:
+`uv run pytest tests/test_gifts_merchants.py tests/test_gifts.py tests/test_gifts_frogs.py -q`:
+**22 passed**. Targeted full native inverse/given/flag oracle:
+`OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest tests/test_gifts_dump.py
+-k "round_trips or every_step or game_data_list" -m dump -q -s
+--basetemp E:/OOTRemake/work/r8-gifts/pytest-merchants-native-next`: **3 passed,2 deselected**.
+
+**Kareem: follow `merchant-check.md`: refusal, insufficient funds, capacity/bottle refusal,
+actual grant/use and exact fee, revisit and Save/Continue, independent merchants and untouched
+Odd Mushroom trade. Require overlay-open log plus result.** Native sales dialogue may still
+name original merchandise; report presentation differences. No new merchant is seed-enabled.
+
+Owned section35 is appended after existing31, keeping present sections in numeric order.
+Reviewer inserts32–34 ahead of35 when integrating their tracks; no placeholders added.
 
 ## Decisions / questions
 
@@ -188,4 +248,4 @@ on this Windows shell. Printed HOME/USERPROFILE and `command -v bermuda`: actual
 
 ## Verification
 
-Pending implementation and the four complete gates. No readiness claim.
+All four complete gates run after the authorized plans-only rebase; results recorded below.

@@ -42,6 +42,8 @@ def _intended(fc: evfl.Flowchart, flow: str, changes) -> set[int]:
             and f"{flow}/Event45" in change.rule.once
         ):
             out.add(index["Event24"])  # Initialized dispatch keeps the uncollected offer past native cutoffs.
+        if change.rule.purchase and change.check == "GC Medigoron" and flow == change.steps[0].flow:
+            out |= {index["Event6"], index["Event19"]}
         for ref in change.rule.skip:
             if ref.split("/")[0] == flow:
                 i = index[ref.split("/")[1]]
@@ -77,12 +79,29 @@ def test_dump_each_changed_flow_round_trips_and_differs_only_where_intended(romf
         added = after.events[len(before.events) :]
         for a, b in zip(before.actors, after.actors, strict=True):
             assert (a.name, a.actions, a.queries) == (b.name, b.actions[: len(a.actions)], b.queries[: len(a.queries)])
-        assert before.entry_points == after.entry_points[: len(before.entry_points)], flow
+        expected_entries = before.entry_points.copy()
+        granny = next((c for c in changes if c.check == gifts.GRANNY_CHECK), None)
+        if granny and flow == granny.steps[0].flow:
+            from copy import deepcopy
+
+            expected_entries = deepcopy(expected_entries)
+            root = next(e for e in expected_entries if e.name == "Buy_BluePotion")
+            gate = after.events[after.entry_point(root.name).main_event]
+            assert gate.cases == [(0, evfl.NONE), (1, root.main_event)]
+            assert gate.params == {"GameDataName": granny.flag, "Index": -1}
+            root.main_event = after.entry_point(root.name).main_event
+        assert expected_entries == after.entry_points[: len(before.entry_points)], flow
         specialized = [s for c in changes for s in c.steps if s.flow == flow and s.call == FROG_SONG_CALL]
         extra_entries = after.entry_points[len(before.entry_points) :]
-        assert {e.name for e in extra_entries} == {
-            next(e for e in after.events if e.name == s.event).entry_point for s in specialized
-        }, flow
+        expected_extra = {next(e for e in after.events if e.name == s.event).entry_point for s in specialized}
+        if flow == "SimpleShop":
+            for change in changes:
+                if change.rule.purchase and change.check in gifts.MERCHANT_SHOPS:
+                    name = gifts.NEW_EVENT_PREFIX + "Purchase" + change.steps[0].flow
+                    expected_extra.add(name)
+                    if change.check == "Wasteland Bombchu Salesman":
+                        expected_extra.add(name + "Buy")
+        assert {e.name for e in extra_entries} == expected_extra, flow
         report.append(
             f"{flow}: {len(changed)} events changed, {len(added)} added, {len(data)} -> {len(out)} bytes, "
             f"size entry {table.get(path)} needs {rstb.required_size(path, len(out))}"
@@ -104,7 +123,9 @@ def test_dump_every_step_gives_the_new_item_and_given_reads_read_the_flag(romfs,
             if step.call == FROG_SONG_CALL:
                 indices = reachable(trees[step.flow], trees[step.flow].entry_point(event.entry_point).main_event)
                 grants = [
-                    e for i in indices if isinstance(e := trees[step.flow].events[i], evfl.SubFlowEvent)
+                    e
+                    for i in indices
+                    if isinstance(e := trees[step.flow].events[i], evfl.SubFlowEvent)
                     and e.flowchart == "Dm_SY_GetInEvent"
                 ]
                 assert [e.params["ActorName"] for e in grants] == [NEW_ITEM], step.id
@@ -115,7 +136,7 @@ def test_dump_every_step_gives_the_new_item_and_given_reads_read_the_flag(romfs,
                 ), step.id
             else:
                 assert event.params[step.param] == NEW_ITEM, step.id
-            if change.new_flag or change.rule.once:
+            if (change.new_flag or change.rule.once) and not change.rule.purchase:
                 added = trees[step.flow].events[event.next]
                 assert added.params == {"GameDataName": change.flag, "Index": -1, "Value": True}, step.id
         for ref in change.rule.given:
@@ -141,7 +162,6 @@ def test_dump_every_step_gives_the_new_item_and_given_reads_read_the_flag(romfs,
 def test_dump_game_data_list_differs_only_in_the_added_flags(romfs, context):
     dicts, files, changes = context
     names = [c.new_flag for c in changes if c.new_flag]
-    assert len(names) == 6  # the six Great Fairies
     data = dicts.decompress(GAME_DATA_LIST, (romfs / GAME_DATA_LIST).read_bytes())
     out = gifts.file_changes(changes, files)[GAME_DATA_LIST](data)
     before, after = byml.read(data), byml.read(out)

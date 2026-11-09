@@ -28,7 +28,14 @@ from typing import Any
 from clawshot.census import definitions as census_definitions
 from clawshot.census.definitions import Definition
 from clawshot.census.gifts import (
-    FLOW_VERSIONS, FROG_SONG_CALL, FROG_SONG_FLAGS, Gift, _successors, flow_files, reachable, scan_gifts,
+    FLOW_VERSIONS,
+    FROG_SONG_CALL,
+    FROG_SONG_FLAGS,
+    Gift,
+    _successors,
+    flow_files,
+    reachable,
+    scan_gifts,
 )
 from clawshot.census.scan import CHEST, read_romfs_byml, scan
 from clawshot.formats import byml, evfl, zsdic
@@ -46,7 +53,7 @@ RULES_TOML = Path(__file__).with_name("gift_rules.toml")
 SWAP, REWRITE, MORE = "swap", "rewrite", "more"
 CLASSES = (SWAP, REWRITE, MORE)
 FLAG_PREFIX = "Clawshot.Gift."
-FIELDS = {"class", "gate", "given", "flag", "skip", "reason", "writes", "once"}
+FIELDS = {"class", "gate", "given", "flag", "skip", "reason", "writes", "once", "purchase"}
 
 GAME_DATA_ACTOR = "GameDataActor"
 READ_QUERY = "EventQueryIsGameDataBool"
@@ -58,6 +65,13 @@ SHOPKEEPER_CHECK = "KF Shopkeeper Gift"
 SHOPKEEPER_FLOW = "Npc_Kokiri_001_Shop_Child"
 SHOPKEEPER_STEPS = tuple(f"{SHOPKEEPER_FLOW}/{event}" for event in ("Event116", "Event117"))
 SHOPKEEPER_REGION = "KF Kokiri Shop"
+
+# Sale calls need their flag inside the success branch, not after a wrapper that can refuse.
+MERCHANT_SHOPS = {
+    "GC Medigoron": ("SimpleShopRoot_Npc_Goron_Medigoron_Adult", "Event119"),
+    "Wasteland Bombchu Salesman": ("SimpleShopRoot", "Event150"),
+}
+GRANNY_CHECK = "Kak Granny Buy Blue Potion"
 
 # GameDataList: a saved story flag as the game's own (9338 of its Bools), and the save layout it implies.
 FLAG_RESET_TYPE = 8
@@ -83,6 +97,7 @@ class Rule:
     reason: str = ""
     writes: tuple[str, ...] = ()  # vanilla IsGet writes redirected to an existing check-completion flag
     once: tuple[str, ...] = ()  # equipped-shield queries replaced by saved check-completion queries
+    purchase: bool = False  # specialize a native sale and save completion only after its grant
 
 
 def _ref(check: str, value: object) -> str:
@@ -110,15 +125,18 @@ def loads(text: str) -> dict[str, Rule]:
             entry.get("reason", ""),
             tuple(_ref(check, r) for r in entry.get("writes", [])),
             tuple(_ref(check, r) for r in entry.get("once", [])),
+            entry.get("purchase", False),
         )
-        if (rule.given or rule.skip or rule.flag or rule.writes or rule.once) and cls != REWRITE:
-            raise GiftPatchError(
-                f"{check}: given, flag, skip, writes and once belong to class {REWRITE!r}, not {cls!r}"
-            )
-        if cls == REWRITE and not (rule.given or rule.skip or rule.writes or rule.once):
+        if type(rule.purchase) is not bool:
+            raise GiftPatchError(f"{check}: purchase must be a Bool")
+        if (rule.given or rule.skip or rule.flag or rule.writes or rule.once or rule.purchase) and cls != REWRITE:
+            raise GiftPatchError(f"{check}: rewrite fields belong to class {REWRITE!r}, not {cls!r}")
+        if cls == REWRITE and not (rule.given or rule.skip or rule.writes or rule.once or rule.purchase):
             raise GiftPatchError(f"{check}: class {REWRITE!r} with nothing to rewrite")
-        if rule.flag is not None and not (rule.given or rule.writes or rule.once):
+        if rule.flag is not None and not (rule.given or rule.writes or rule.once or rule.purchase):
             raise GiftPatchError(f"{check}: a flag without reads or writes to rewrite")
+        if rule.purchase and check not in (*MERCHANT_SHOPS, GRANNY_CHECK):
+            raise GiftPatchError(f"{check}: no native purchase specialization")
         if rule.writes and (not isinstance(rule.flag, str) or not rule.flag.startswith("HavePlayedEvent.")):
             raise GiftPatchError(f"{check}: writes need an existing per-check event completion flag")
         if cls == MORE and not rule.reason:
@@ -144,14 +162,16 @@ class GiftChange:
     @property
     def flag(self) -> str | None:
         """The flag the check's "given" reads read, or None when it has none."""
-        if not (self.rule.given or self.rule.writes or self.rule.once):
+        if not (self.rule.given or self.rule.writes or self.rule.once or self.rule.purchase):
             return None
         return self.rule.flag or FLAG_PREFIX + self.steps[0].id.replace("/", ".")
 
     @property
     def new_flag(self) -> str | None:
         """The flag the patch adds to GameDataList and sets after each step, or None."""
-        return self.flag if (self.rule.given or self.rule.once) and self.rule.flag is None else None
+        return (
+            self.flag if (self.rule.given or self.rule.once or self.rule.purchase) and self.rule.flag is None else None
+        )
 
 
 def check_steps(gifts: Iterable[Gift], definitions: Iterable[Definition]) -> dict[str, tuple[Gift, ...]]:
@@ -210,8 +230,9 @@ def _game_data_actor(fc: evfl.Flowchart, flow: str) -> int:
         raise GiftPatchError(f"{flow}: {len(found)} {GAME_DATA_ACTOR} actors, expected one")
     return found[0]
 
+
 def _clone_entry(
-    fc: evfl.Flowchart, entry: str, replacements: Mapping[str, evfl.Event]
+    fc: evfl.Flowchart, entry: str, replacements: Mapping[str, evfl.Event], *, name: str | None = None
 ) -> str:
     """Specialize one call without changing shared callees or unrelated callers; retain native branches.
 
@@ -233,7 +254,7 @@ def _clone_entry(
     if any(fc.actors[i].entry_point != evfl.NONE for i in actors):
         raise GiftPatchError(f"{fc.name}:{entry}: entry-local actor needs an explicit binding")
     prefix = f"{NEW_EVENT_PREFIX}{len(fc.events)}_"
-    name = prefix + entry
+    name = name or prefix + entry
     if any(e.name == name for e in fc.entry_points):
         raise GiftPatchError(f"{fc.name}: duplicate specialized entry {name}")
     mapping = {index: len(fc.events) + n for n, index in enumerate(sorted(seen))}
@@ -251,7 +272,8 @@ def _clone_entry(
             event.join = mapping[event.join]
         fc.events.append(event)
     calls = [
-        mapping[i] for i in sorted(seen)
+        mapping[i]
+        for i in sorted(seen)
         if isinstance(fc.events[mapping[i]], evfl.SubFlowEvent | evfl.SubFlowSwitchEvent)
     ]
     fc.entry_points.append(evfl.EntryPoint(name, mapping[source.main_event], calls, deepcopy(source.variables)))
@@ -280,12 +302,14 @@ def _frog_song(fc: evfl.Flowchart, step: Gift, item: str) -> None:
         raise GiftPatchError(f"{step.id}: native frog first/repeat reward graph changed")
     # The native first-song counter/flag/growth still runs; the escalating rupee-only UI does not.
     grant = evfl.SubFlowEvent(
-        start.name, "Dm_SY_GetInEvent", "GetInEvent_NotTurn_NotNpc", counter,
-        {"ActorName": item, "IsNpcEventStarter": False}
+        start.name,
+        "Dm_SY_GetInEvent",
+        "GetInEvent_NotTurn_NotNpc",
+        counter,
+        {"ActorName": item, "IsNpcEventStarter": False},
     )
     call.flowchart = ""
     call.entry_point = _clone_entry(fc, "TeachNewMusic", {start.name: grant})
-
 
 
 def _set_item(fc: evfl.Flowchart, step: Gift, item: str) -> None:
@@ -430,6 +454,104 @@ def _skip(fc: evfl.Flowchart, flow: str, ref: str) -> None:
         raise GiftPatchError(f"{ref}: nothing leads to it")
 
 
+def _completion_gate(fc: evfl.Flowchart, entry: str, flag: str, done: int) -> None:
+    root = fc.entry_point(entry)
+    actor = _game_data_actor(fc, fc.name)
+    fc.events.append(
+        evfl.SwitchEvent(
+            f"{NEW_EVENT_PREFIX}{len(fc.events)}",
+            actor,
+            _slot(fc.actors[actor].queries, READ_QUERY),
+            [(0, done), (1, root.main_event)],
+            {"GameDataName": flag, "Index": -1},
+        )
+    )
+    root.main_event = len(fc.events) - 1
+
+
+def _purchase(fc: evfl.Flowchart, flow: str, change: GiftChange) -> None:
+    (step,) = change.steps
+    if change.check == GRANNY_CHECK:
+        if flow != step.flow:
+            return
+        grant = fc.events[_index(fc, flow, step.event)]
+        if not isinstance(grant, evfl.SubFlowEvent) or grant.entry_point != "GetInEventInBottle_BlueBottleShop":
+            raise GiftPatchError(f"{step.id}: not Granny's native bottle sale")
+        # This wrapper normally fills a bottle AND charges. The ordinary gift wrapper does neither charge
+        # nor touch bottles, so restore only the native charge on the successful grant edge.
+        grant.entry_point = "GetInEvent_NotTurn_NotNpc"
+        grant.params = {"ActorName": change.item, "IsNpcEventStarter": False}
+        _set_flag_after(fc, step, change.flag)
+        pouch = next(i for i, a in enumerate(fc.actors) if a.name == "PouchSystemActor")
+        fc.events.append(
+            evfl.ActionEvent(
+                f"{NEW_EVENT_PREFIX}{len(fc.events)}",
+                pouch,
+                _slot(fc.actors[pouch].actions, "EventTriggerAddGameDataIntToRupee"),
+                grant.next,
+                {"IsSignInverse": True, "GameDataName": "SimpleShop_Price"},
+            )
+        )
+        grant.next = len(fc.events) - 1
+        _completion_gate(fc, "Buy_BluePotion", change.flag, evfl.NONE)
+        return
+
+    entry, success = MERCHANT_SHOPS[change.check]
+    specialized = NEW_EVENT_PREFIX + "Purchase" + step.flow
+    if flow == step.flow:
+        call = fc.events[_index(fc, flow, step.event)]
+        if not isinstance(call, evfl.SubFlowEvent) or (call.flowchart, call.entry_point) != ("SimpleShop", entry):
+            raise GiftPatchError(f"{step.id}: not the native merchant sale")
+        call.entry_point = specialized
+        if change.check == "GC Medigoron":
+            # Sword ownership (including Biggoron's Sword) must not consume an independent reward.
+            for name, item in (("Event6", "Weapon_Sword_Giant"), ("Event19", "Weapon_Sword_Biggoron")):
+                event = fc.events[_index(fc, flow, name)]
+                if (
+                    not isinstance(event, evfl.SwitchEvent)
+                    or fc.actors[event.actor].queries[event.query] != "EventQueryIsExistInPouch"
+                    or event.params != {"Num": 1, "Actor": item}
+                ):
+                    raise GiftPatchError(f"{flow}/{name}: native sword ownership gate changed")
+                event.actor = _game_data_actor(fc, flow)
+                event.query = _slot(fc.actors[event.actor].queries, READ_QUERY)
+                event.params = {"GameDataName": change.flag, "Index": -1}
+        return
+    if flow != "SimpleShop":
+        return
+
+    replacements = {}
+    if change.check == "Wasteland Bombchu Salesman":
+        prefix = f"{NEW_EVENT_PREFIX}{len(fc.events)}_"
+        buy = _clone_entry(fc, "Sub_SimpleShop_Buy", {}, name=specialized + "Buy")
+        _set_flag_after(fc, replace(step, flow=flow, event=prefix + success), change.flag)
+        call = deepcopy(fc.events[_index(fc, flow, "Event124")])
+        call.entry_point = buy
+        replacements[call.name] = call
+        cancel = "Event26"
+    else:
+        native = fc.events[_index(fc, flow, success)]
+        if not isinstance(native, evfl.SubFlowEvent) or native.entry_point != "GetInEventItemSwordMedigoron":
+            raise GiftPatchError(f"{flow}/{success}: native sword grant changed")
+        replacements[success] = evfl.SubFlowEvent(
+            success,
+            "Dm_SY_GetInEvent",
+            "GetInEvent_NotTurn_NotNpc",
+            native.next,
+            {"ActorName": evfl.Argument("ActorName"), "IsNpcEventStarter": False},
+        )
+        # A shuffled reward is not a knife repair: never take the player's broken sword.
+        autosave = deepcopy(fc.events[_index(fc, flow, "Event62")])
+        autosave.name = "Event25"
+        replacements[autosave.name] = autosave
+        cancel = "Event116"
+    prefix = f"{NEW_EVENT_PREFIX}{len(fc.events)}_"
+    _clone_entry(fc, entry, replacements, name=specialized)
+    if change.check == "GC Medigoron":
+        _set_flag_after(fc, replace(step, flow=flow, event=prefix + success), change.flag)
+    _completion_gate(fc, specialized, change.flag, _index(fc, flow, prefix + cancel))
+
+
 def patch_flowchart(fc: evfl.Flowchart, flow: str, changes: Sequence[GiftChange]) -> None:
     """Apply ``changes``' edits that fall in ``flow`` to its flowchart, in place."""
     for change in changes:
@@ -437,7 +559,7 @@ def patch_flowchart(fc: evfl.Flowchart, flow: str, changes: Sequence[GiftChange]
         for step in change.steps:
             if step.flow == flow:
                 _set_item(fc, step, change.item)
-                if change.new_flag or change.rule.once:
+                if (change.new_flag or change.rule.once) and not change.rule.purchase:
                     _set_flag_after(fc, step, change.flag)
         for ref in change.rule.given:
             if ref.split("/")[0] == flow:
@@ -451,6 +573,8 @@ def patch_flowchart(fc: evfl.Flowchart, flow: str, changes: Sequence[GiftChange]
         for ref in change.rule.skip:
             if ref.split("/")[0] == flow:
                 _skip(fc, flow, ref)
+        if change.rule.purchase:
+            _purchase(fc, flow, change)
 
 
 def flows_changed(changes: Iterable[GiftChange]) -> list[str]:
@@ -460,6 +584,8 @@ def flows_changed(changes: Iterable[GiftChange]) -> list[str]:
         out |= {
             ref.split("/")[0] for ref in (*change.rule.given, *change.rule.skip, *change.rule.writes, *change.rule.once)
         }
+        if change.rule.purchase and change.check in MERCHANT_SHOPS:
+            out.add("SimpleShop")
     return sorted(out)
 
 
@@ -548,9 +674,7 @@ SKULLTULA_HINTS = {
 }
 
 
-def skulltula_hint_changes(
-    romfs: str | Path, placements: Mapping[str, str]
-) -> dict[str, Callable[[bytes], bytes]]:
+def skulltula_hint_changes(romfs: str | Path, placements: Mapping[str, str]) -> dict[str, Callable[[bytes], bytes]]:
     """Name the actual actor at each shuffled 10–50 reward, in the native preview lines.
 
     English in every language archive follows D26. The repeat 100-token rupee is not a new check.

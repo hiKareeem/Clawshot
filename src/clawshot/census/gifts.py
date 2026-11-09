@@ -187,6 +187,10 @@ def find_gifts(
             callee = _callee(flow, event)
             if callee is not None:
                 found += [(f"{callee[0]}:{callee[1]}", param) for param in sorted(gives.get(callee, ()))]
+            # Bottle fills do not pass through the pouch-add wrapper fixed point. This dedicated
+            # Granny sale still has one literal item identity; its price/bottle checks stay in her flow.
+            if flow == "Npc_Hylia_053_Adult" and callee == ("Dm_SY_GetInEvent", "GetInEventInBottle_BlueBottleShop"):
+                found.append((f"{callee[0]}:{callee[1]}", "ActorName"))
             for call, param in found:
                 item = (event.params or {}).get(param)
                 if not isinstance(item, str) or isinstance(item, evfl.Argument):
@@ -211,8 +215,16 @@ def find_gifts(
                     raise GiftError(f"{flow}/{event.name}: unexpected frog song completion flag {flag!r}")
                 out.append(
                     Gift(
-                        f"{flow}/{event.name}", NPC_GIFT, flow, files[flow],
-                        tuple(sorted(entries_of.get(i, ()))), event.name, FROG_SONG_CALL, "", "", areas.get(flow, "")
+                        f"{flow}/{event.name}",
+                        NPC_GIFT,
+                        flow,
+                        files[flow],
+                        tuple(sorted(entries_of.get(i, ()))),
+                        event.name,
+                        FROG_SONG_CALL,
+                        "",
+                        "",
+                        areas.get(flow, ""),
                     )
                 )
     ids = [g.id for g in out]
