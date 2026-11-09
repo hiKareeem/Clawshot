@@ -12,6 +12,7 @@ playtest: ``--areas KokiriForest LostWood InsideTheDekuTree --goal "'Defeat Quee
 moves the event gifts that can be changed (``clawshot.patch.gifts``); the others keep their items.
 ``--shuffle Scrub`` adds the four saved one-time scrub families; repeat vendors stay vanilla.
 ``--shuffle BossHeart`` adds native-only boss-heart pickups (off; in-game acceptance pending).
+``--shuffle Freestanding`` adds the fourteen saved heart-piece floor checks (native palette only; off).
 ``Token`` is reserved and refused until replacement-pickup persistence is verified.
 """
 
@@ -49,11 +50,11 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--shuffle",
         nargs="+",
-        choices=("Chest", "Shop", gifts.SHUFFLE, "Scrub", "BossHeart", "Token"),
+        choices=("Chest", "Shop", gifts.SHUFFLE, "Scrub", "BossHeart", "Freestanding", "Token"),
         default=None,
         help=(
             "types; Shop: native displays; Gift: supported; Scrub: once sales; "
-            "BossHeart: native pickups; Token: disabled"
+            "BossHeart/Freestanding: native pickups; Token: disabled"
         ),
     )
     parser.add_argument("--dungeon-items", choices=DUNGEON_ITEM_CHOICES)
