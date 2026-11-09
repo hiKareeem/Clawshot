@@ -41,11 +41,96 @@ Checks:
   reruns only; no production behavior changed for these fixture errors.
 
 ## Item 2: continuation output
+Completed after item 1 (`6fdf7e1`). Built the new
+`E:/OOTRemake/work/r7-hints/seed-shop-7c-next/` without deleting or replacing an existing folder.
+The session-owned builder copied `make_7c.py`'s existing reconstruction/patch path, changing its unsafe
+OUT/STAGE deletion to fail-if-existing guards and using a session-unique stage/report path.
+The original builder and played folder, user folders and running launcher were not changed.
 
-Pending after the item-1 commit. `seed-shop-7c-next` was absent at initial inspection, so a new folder
-can be built without deleting another session's output. Never run the original builder unchanged:
-it removes existing OUT and STAGE folders. Use a session-owned copy with fail-if-exists guards and a
-unique session stage; never touch the played `seed-shop-7c`, any user or the running launcher.
+Commands (from this worktree):
+- `uv run python -u E:/OOTRemake/work/r7-hintfix-cs7e/build_7c_next.py`: **228 original placements,
+  beatable in 25 spheres, 40 hints, all 77 original resources SHA-256 identical**.
+- `uv run python -u E:/OOTRemake/work/r7-hintfix-cs7e/verify_7c_next.py`: independent read-back passed:
+  exact placement/patch-plan equality; 40 unique stone labels; every named check has its actual placed item;
+  all 13 written archives change only the 40 GossipStone messages, every other message/member unchanged;
+  all lines agree with the spoiler and every highlight closes with `ffff`; no mask gate remains.
+  Every added resource fits **7b's unchanged size table**.
+
+Added text resources: `Event/EventFlow/GossipStone.bfevfl.zs` and 13 `Mals` archives
+(`EUde`, `EUen`, `EUes`, `EUfr`, `EUit`, `EUnl`, `EUpl`, `EUru`, `JPja`, `USen`, `USes`, `USfr`, `USpt`).
+As with A's original continuation, `CNzh`, `KRko`, `TWzh` are omitted: they would require size-table
+growth, breaking the non-text-byte-identity contract. New ordinary seeds still write all languages.
+The no-mask flow is part of the existing text feature, not a gameplay-placement change.
+Kinds: 12 random, 11 item, 6 Way of the Hero, 5 barren, 3 sometimes, 3 junk.
+
+### The 40 lines
+
+| Stone | Kind | Line |
+|---|---|---|
+| KF Gossip Stone | random | They say Mido's house — middle left holds the Kokiri Sword. |
+| KF Deku Tree Gossip Stone (Left) | random | They say Ganon's Castle Light Trial Center Pad Chest holds the Piece of Heart. |
+| KF Deku Tree Gossip Stone (Right) | barren | They say searching Death Mountain Trail would only waste the hero's time. |
+| LW Gossip Stone | item | They say Kokiri Forest hides the Hylian Shield. |
+| SFM Maze Gossip Stone (Lower) | random | They say Ganon's Castle Forest Trial Wolfos Chest holds the Piece of Heart. |
+| SFM Maze Gossip Stone (Upper) | barren | They say searching Zora's Domain would only waste the hero's time. |
+| SFM Saria Gossip Stone | random | They say Market Potion Shop Bottom Inner-Left Shelf holds the Deku Shield. |
+| SFM Song of Time Clearing Gossip Stone | item | They say Death Mountain Crater hides the Ice Arrow. |
+| HF Southeast Grotto Gossip Stone | woth | They say Gerudo Valley holds something the hero cannot do without. |
+| HF Open Grotto Gossip Stone | barren | They say searching Hyrule Field would only waste the hero's time. |
+| HF Cow Grotto Gossip Stone | random | They say Goron Shop Top Far-Right Shelf holds the Hylian Shield. |
+| LH Lab Gossip Stone | item | They say Goron City hides the Golden Gauntlets. |
+| LH Gossip Stone (Southeast) | sometimes | They say Goron City: Boulder Maze Dark-Rock Corner Chest holds the Longshot. |
+| LH Gossip Stone (Southwest) | junk | They say a hero who reads every stone has read too many stones. |
+| GV Gossip Stone | random | They say Deku Tree: Falling-Platform Room Upper Chest holds the Fairy Slingshot. |
+| Colossus Gossip Stone | sometimes | They say Ganon's Castle Shadow Trial Invisible Path Chest holds the Piece of Heart. |
+| ToT Gossip Stone (Left) | item | They say Gerudo Valley hides the Fairy Bow. |
+| ToT Gossip Stone (Left-Center) | random | They say Kokiri Forest: Deku Scrub Trio Grotto Chest holds the Bomb Bag. |
+| ToT Gossip Stone (Right) | woth | They say Goron City holds something the hero cannot do without. |
+| ToT Gossip Stone (Right-Center) | random | They say Kokiri Shop Bottom Far-Left Shelf holds the Goron Tunic. |
+| HC Malon Gossip Stone | barren | They say searching Zora's River would only waste the hero's time. |
+| HC Rock Wall Gossip Stone | woth | They say Kokiri Forest holds something the hero cannot do without. |
+| HC Storms Grotto Gossip Stone | item | They say the Graveyard hides the Silver Gauntlets. |
+| Kak Bomb Grotto Gossip Stone | item | They say the Bottom of the Well hides the Megaton Hammer. |
+| Kak Open Grotto Gossip Stone | item | They say Goron City hides the Zora Tunic. |
+| Graveyard Gossip Stone | random | They say Bottom of the Well: Invisible Alcove Chest holds the Hover Boots. |
+| DMT Gossip Stone | item | They say Kokiri Forest hides the Deku Shield. |
+| DMT Cow Grotto Gossip Stone | woth | They say the Deku Tree holds something the hero cannot do without. |
+| GC Maze Gossip Stone | junk | They say Song of Time blocks are patient. Very, very patient. |
+| GC Medigoron Gossip Stone | random | They say Deku Tree: Falling-Platform Room Chest holds the Boomerang. |
+| DMC Gossip Stone | random | They say Graveyard: Dampé Race Finish Chest (under one minute) holds the Iron Boots. |
+| DMC Upper Grotto Gossip Stone | item | They say the Forest Temple hides the Lenses of Truth. |
+| ZR Near Grottos Gossip Stone | sometimes | They say Gerudo Training Ground Sunken Pool Room Chest holds the Piece of Heart. |
+| ZR Near Domain Gossip Stone | junk | They say this stone has nothing to tell you today. |
+| ZR Open Grotto Gossip Stone | item | They say Kakariko Village hides the Piece of Heart. |
+| ZR Storms Grotto Gossip Stone | random | They say Spirit Temple Top Floor Sun Switch Chest holds the Piece of Heart. |
+| ZD Gossip Stone | item | They say the Sacred Forest Meadow hides the Hookshot. |
+| ZF Fairy Gossip Stone | woth | They say the Bottom of the Well holds something the hero cannot do without. |
+| ZF Jabu Gossip Stone | woth | They say the Graveyard holds something the hero cannot do without. |
+| Dodongos Cavern Gossip Stone | barren | They say searching the Spirit Temple would only waste the hero's time. |
+
+### Human acceptance
+
+**Claude: swap the staged overlay only after Kareem quits; never replace it while the game reads it.**
+Reuse the existing isolated `Play shop seed 7c.bat` and `user-seed-shop-7c` continuation, unchanged by this
+track. No new launcher/user or copied backup is needed for a text-only update of this same seed.
+
+**Kareem: after Claude swaps it, continue through that launcher and talk to the four Temple of Time
+stones without the mask. Facing the temple, left-to-right: Fairy Bow in Gerudo Valley; Bomb Bag in the
+Kokiri trio grotto; Goron Tunic on Kokiri's bottom far-left shelf; Goron City Way of the Hero.**
+Names should be highlighted, following words back to ordinary colour, with no rupee/ammo/refill named.
+Check `fs: OpenFile(...): from the overlay` for `GossipStone.bfevfl.zs` and `Mals/USen.Product.110.sarc.zs`
+in the existing launcher log. File/readback proof is complete; no in-game result is claimed.
+
+### Shared-file integration
+
+Only section 29 is appended to `plans/03-game-data.md`; cs7d's section 28 is not on this branch's base.
+Insert that producer's full section before 29 at review, without placeholders. No shared settings,
+fill, CLI, actor-table, pyproject or lockfile edit.
+
+The saved-document check matched all 40 table rows exactly to the written spoiler's stone/kind/text.
+After successful smoke/readback, removed only the two session-created throwaway scripts and their own
+completed stage (the builder removes its stage); retained the requested output and JSON manifests
+under `E:/OOTRemake/work/r7-hintfix-cs7e/`. The original `make_7c.py` remains untouched.
 
 ## Readiness
 
