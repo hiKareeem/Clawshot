@@ -167,8 +167,11 @@ placeholder sections or other track's text are invented.
 | `f199780` | Item3 both tool lines, synthetic/all-language inverse tests, section38 |
 | `806b1c7` | Isolated automatic seed text composition |
 | `a287d1e` | Isolated README feature/acceptance description |
+| `29e53fc` | Isolated real-writer stone/Sheik composition oracle |
+| `d43b939` | Failure diagnosis and deterministic true-source regression cleanup |
+| `3be6821` | Reviewer-supplied main test-only pool cap, copied without rebase |
 
-The report-only final evidence commit follows these implementation checkpoints. No rebase,
+The final evidence commit follows these implementation checkpoints. No rebase,
 merge, push, stash, dependency edit, game/window/launcher execution or played-output rewrite.
 Removed only the two completed session-created smoke drivers after retaining their JSON proofs;
 the read-only research reproducer, fresh requested outputs and unrun launchers/checklist remain.
@@ -190,7 +193,7 @@ or existing pack/output is changed here.
 
 ## First complete gates: stale archive oracle diagnosed
 
-The full unfiltered chain completed on a287d1e plus report-only edits:
+The full unfiltered chain completed on the implementation working tree through a287d1e:
 
 | Full command | Observed result |
 |---|---|
@@ -212,4 +215,75 @@ Sheik lines in every written archive to identify an actual shuffled Hookshot sou
 No production transform, composition, goal, fill bound or hint policy changed.
 Also removed the incidental exact A-chest preference assertion from the multiple-source
 test; it now requires deterministic bytes AND a true source, not a particular correct source.
-Cause-aimed native check and fresh full gates follow; no unchanged failed command rerun.
+Cause-aimed native check: **2 passed,2 deselected** in65.89s, both always/mask written
+outputs. Fresh full gates run on the corrected tree with external
+`gate-corrected-synthetic-next` / `gate-corrected-dump-next` basetemps. No functional
+production edit after the smoke or during either gate chain; no unchanged failed rerun.
+
+## Reviewer CPU-safety interruption
+
+Claude reported Kareem's two game crashes at100% CPU: the existing world-data test pool
+still spawned up to8 workers alongside another gate run. Accepted as ground truth, never
+reproduced. My corrected gate chain was cancelled immediately; no completed result from
+that interrupted chain is claimed. Exported `CLAWSHOT_WORKERS=1` in the persistent shell.
+
+Printed this branch's actual `_failures`: hardcoded min(cpu_count,8), no environment read.
+The prefix alone would therefore do nothing. Copied main c9e2e2b's exact test-only
+`_workers` helper into the owned working tree, isolated **3be6821**, without rebasing.
+Actual one-process runtime with the override prints **1**. No seed count, search, test
+assertion, production code or acceptance policy changes. One process snapshot after
+cancellation showed no remaining Sheik pytest/pool children; no unrelated process was killed.
+
+Both pytest commands in the replacement full chain explicitly prefix `CLAWSHOT_WORKERS=1`,
+even though the shell also exports it. Only one serial chain; no script/sweep beside it.
+New external basetemps `gate-one-worker-synthetic-next` and `gate-one-worker-dump-next`
+avoid reusing or deleting any interrupted run's output. No mid-gate rebase.
+
+## Final single-worker gates and handoff
+
+The replacement complete chain passed on the final source/test working tree through
+3be6821; no source/test edits during it. Both pytest processes explicitly used
+`CLAWSHOT_WORKERS=1` and the external one-worker basetemps above. No parallel sweep
+or extra script ran alongside this chain. The earlier interrupted chain is not counted.
+
+| Complete command | Observed result |
+|---|---|
+| `uv run ruff format --check` | **227 files already formatted** |
+| `uv run ruff check` | **All checks passed** |
+| `CLAWSHOT_WORKERS=1 uv run pytest` | **733 passed,87 skipped**,1634.30s |
+| `CLAWSHOT_WORKERS=1 OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump` | **86 passed,734 deselected**,851.87s |
+
+All820 tests collected; no dump skip, no filter beyond the prescribed marker. The full
+default200-seed/progressive/determinism/chronological tests pass. Native pedestal/Sheik,
+all-language inverse text, actual composed stone/Sheik output in both modes, formats,
+census, gifts, shops and seed-output oracles all pass. No weakened goal, seed reroll,
+raised retry bound or suppressed failure.
+
+Actual runtime/data proof, independently of tests: standalone age CLI built the two-resource
+controlled overlay; full-world Chest+Gift/free-travel seed7 built212 checks/24 spheres/
+124 resources, with both truthful tool lines in all16 archives, all40 stone texts retained,
+and native Prelude completion write preserved. Proof JSONs remain external. This is NOT
+an in-game result.
+
+**Ready for Claude's code review on r9/sheik; items1–3 and all reachable acceptance work
+complete. Not certified in game.** The final commit records these results and includes any
+formatter-only output already present throughout verification. Its hash is posted in the
+thread/chat rather than self-referenced here. CLAWSHOT_WORKERS remains exported as1.
+
+### Left for Claude / Kareem
+
+- **Kareem:** after quitting the played game, use the two isolated launchers and
+  `E:/OOTRemake/work/r9-sheik-cs9b/ingame/checklist.md`. Adult-first manual01 checks
+  return/second pull/persistence; after-forest04/05 checks native Prelude once. The older
+  child slots cover the separate first adult-arrival scene before their test copies get
+  autosaved over. Require overlay logs plus actual game observations; no save edits.
+- **Kareem:** with free travel OFF in a future seed, repeated pre-Forest Sheik tool lines
+  should name the seed's actual Hookshot check with readable wrapping/highlight reset.
+  The free-travel controlled overlay deliberately has no pre-Forest Sheik.
+- **Claude:** review small shared commits, integrate sections37/38/39 in numeric order,
+  retain the main-equivalent pool cap, and recompute Track C's final integrated pack
+  digest. Never rebuild or replace Kareem's played r8 seed. Keep free travel default-off
+  until the runtime checks above pass; decisions.md remains the reviewer's file.
+
+No merge, rebase, push, stash, dependency edit, game/launcher/window execution, backup or
+game-folder mutation, unrelated deletion or played-output rewrite by this track.

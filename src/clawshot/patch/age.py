@@ -102,7 +102,9 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--romfs", type=Path, required=True, help="game dump (read-only)")
     parser.add_argument("--out", type=Path, required=True, help="empty or absent output directory")
-    parser.add_argument("--free-time-travel", action="store_true", help="enable the default-off pedestal and Sheik patch")
+    parser.add_argument(
+        "--free-time-travel", action="store_true", help="enable the default-off pedestal and Sheik patch"
+    )
     args = parser.parse_args(argv)
     try:
         files = write(args.romfs, args.out, free_time_travel=args.free_time_travel)
