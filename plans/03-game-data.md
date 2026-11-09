@@ -2075,6 +2075,11 @@ Explicit consumable exclusions take precedence over progression (Bombchus, Blue 
 and bottle-content variants included). Empty Bottle and Ruto's Letter remain progression; Odd Potion
 is a trade item. The three normal-class capacity upgrades in the world are included explicitly.
 
+Reviewer correction (Claude, after `6fdf7e1`): new seeds' **item** hints additionally intersect that
+class with the existing major-item set (`get_good_item_hint`, OoT Randomizer `Hints.py:882-891`).
+They never name hearts or normal capacity upgrades; always/sometimes/random can still name them.
+The already-swapped 7c continuation is not rebuilt or changed by this correction.
+
 Barren/Way-of-the-Hero eligibility and the required-item oracle are unchanged: heart/capacity finds
 may be named without making their area non-barren. Candidate filtering changes RNG draws, so exact
 stone assignments need not match older builds. Tests, continuation output and verification evidence:

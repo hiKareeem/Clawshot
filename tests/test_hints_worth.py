@@ -85,7 +85,7 @@ def make_seed(item_data, number, items=WORTH + JUNK):
     return Seed(world, number, Settings(), placements, list(placements), [list(placements)])
 
 
-@pytest.mark.parametrize("kind", ["item", "always", "sometimes", "random"])
+@pytest.mark.parametrize("kind", ["always", "sometimes", "random"])
 @pytest.mark.parametrize("mode", ["always", "mask"])
 def test_location_hints_never_name_junk_and_keep_hearts_and_upgrades(item_data, monkeypatch, kind, mode):
     data = hints.load()
@@ -108,6 +108,36 @@ def test_location_hints_never_name_junk_and_keep_hearts_and_upgrades(item_data, 
                 assert seed.placements[hint.location] == hint.item
                 named.add(hint.item)
     assert named == set(WORTH)
+
+
+@pytest.mark.parametrize("mode", ["always", "mask"])
+def test_item_hints_name_only_good_items_that_are_worth_naming(item_data, monkeypatch, mode):
+    data = hints.load()
+    monkeypatch.setattr(
+        hints,
+        "load",
+        lambda: (
+            data
+            | {
+                "distributions": data["distributions"] | {"only": {"weights": {"item": 1}, "always": False}},
+            }
+        ),
+    )
+    # Hearts and normal capacity upgrades are worth naming, but are not OoTR good-item hints.
+    excluded = {
+        "Piece of Heart",
+        "Heart Container",
+        "Piece of Heart (Out of Logic)",
+        "Deku Nut Capacity",
+        "Deku Stick Capacity",
+        "Bullet Bag (40)",
+    }
+    expected = set(WORTH) - excluded
+    for number in range(50):
+        seed = make_seed(item_data, number)
+        chosen = hints.choose(seed, mode, "only")
+        named = {hint.item for hint in chosen if hint.kind == "item"}
+        assert named == expected, (number, named)
 
 
 @pytest.mark.parametrize(

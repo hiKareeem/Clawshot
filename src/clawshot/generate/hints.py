@@ -25,8 +25,9 @@ The kinds, their weights and Clawshot's wording are data (``data/hints.toml``); 
   ``False`` rule are not followed).
 - **Location hints (D29).** Item, always, sometimes and random hints name only progression, hearts and permanent
   upgrades, never ammo, refills, Buy items or bottle contents, even when those are progression in the logic.
-  This deliberately differs from OoT Randomizer's random/sometimes hints. Barren and Way of the Hero keep their
-  separate required/major-item definition; a heart or capacity upgrade does not make an area non-barren.
+  This deliberately differs from OoT Randomizer's random/sometimes hints. Item hints additionally require its
+  major-item set (``get_good_item_hint``, ``Hints.py:882-891``), so never name hearts or normal capacity upgrades.
+  Barren and Way of the Hero keep their separate required/major-item definition.
 
 Only shuffled locations are hinted (vanilla ones are known). Every stone gets one hint (``copies`` 1). The choices
 use their own ``random.Random`` seeded from the seed number, so the fill's placements are not touched.
@@ -334,6 +335,7 @@ def choose(seed: "Seed", mode: str = "always", distribution: str = "balanced") -
     always = [name for name in named if name in set(lists["always"])]
     hintable = [name for name in named if not _restricted(seed, seed.placements[name])]
     sometimes = [name for name in hintable if name in set(lists["sometimes"])]
+    majors = [name for name in hintable if _major(seed, seed.placements[name])]
     junk_lines = len(data["wording"]["junk"])
     junk_order = list(range(junk_lines))
     rng.shuffle(junk_order)
@@ -350,7 +352,7 @@ def choose(seed: "Seed", mode: str = "always", distribution: str = "balanced") -
     makers: dict[str, Callable[[], bool]] = {
         "woth": woth,
         "barren": barren,
-        "item": lambda: location_hint("item", hintable),
+        "item": lambda: location_hint("item", majors),
         "sometimes": lambda: location_hint("sometimes", sometimes),
         "random": lambda: location_hint("random", hintable),
         "junk": junk,

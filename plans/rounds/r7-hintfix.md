@@ -167,3 +167,42 @@ Removed only the two completed session-owned gate basetemps after their successf
 Requested `seed-shop-7c-next`, its spoiler/note and the external JSON proof remain. Played seed/user,
 save backups, dump, original builder and launcher untouched. Ready for Claude's branch review and
 safe output swap; section 28 belongs before this track's section 29 when integrated.
+
+## Reviewer correction: item hints retain OoT Randomizer's good-item set
+
+Claude reviewed `6fdf7e1` and requested this narrower item-only policy before merge:
+`item` candidates are `_major` intersected with `_worth_naming`; `always`, `sometimes` and `random`
+retain the broader D29 class. This preserves OoT Randomizer's `get_good_item_hint`
+(`Hints.py:882-891`) while excluding junk that progression metadata alone admits.
+No barren/WotH change, settings change or placement change.
+
+The focused item regression runs both mask modes over 50 synthetic placement permutations each:
+all ten useful majors are named, but none of the six heart/capacity examples or 25 junk examples.
+The existing broader-kind regression still checks all 16 worth-naming examples for each of
+always/sometimes/random. It is a category boundary test, not a randomized real-seed golden.
+`uv run pytest tests/test_hints_select.py tests/test_hints_worth.py -q --tb=short`: **23 passed**.
+
+Actual public `generate(load_spec(), 7, Settings())` smoke: **164 shuffled checks, 40 hints, goal won**.
+Its five item hints name Hookshot, Bomb Bag, Golden Gauntlets, Deku Shield and Ice Arrows;
+no hearts/capacities. Nothing was written to an output folder.
+
+**7c is already swapped in for Kareem (reviewer); do not rebuild it.** This follow-up has not read,
+written, rebuilt or removed any player seed, user, launcher or output folder, including 7c-next.
+The 40-line table above remains the earlier continuation's historical record, not the new-seed policy.
+Only fresh session-owned external pytest basetemps are used for the requested four gates.
+
+### Reviewer-follow-up full gates
+
+All four commands completed once on the corrected source; no failure/retry or source change during gates:
+
+| Full command | Observed result |
+|---|---|
+| `uv run ruff format --check` | **198 files already formatted** |
+| `uv run ruff check` | **All checks passed** |
+| `uv run pytest` | **586 passed, 78 skipped**, 263.40 s |
+| `OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump` | **77 passed, 587 deselected**, 492.75 s |
+
+`PYTEST_ADDOPTS` set only `--basetemp` to this follow-up's external
+`review-good-items-synthetic` and `review-good-items-dump` directories. Removed only those completed
+session-created temporary directories after success. Every player output remains untouched.
+This reviewer correction is one scoped commit after `3ac0bcd`; its head is posted on `cs-r7`.
