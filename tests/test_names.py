@@ -16,13 +16,17 @@ def catalog():
     return tomllib.loads(CATALOG.read_text(encoding="utf-8"))["location"]
 
 
-def test_every_chest_shop_and_linked_gift_has_directions_for_all_copies():
+def test_every_supported_placement_and_linked_gift_has_directions_for_all_copies():
     expected = defaultdict(set)
     ootr = {}
     definitions = load_definitions()
     for definition in definitions:
         if definition.kind not in {"chest", "shop_slot"} and not (
-            definition.kind in GIFT_KINDS and definition.oot_randomizer_name
+            (definition.kind in GIFT_KINDS and definition.oot_randomizer_name)
+            or (
+                definition.kind == "freestanding"
+                and definition.vanilla_item in {"Obj_Heart_Piece", "Obj_GerudoValley_Heart_Piece"}
+            )
         ):
             continue
         key = definition.oot_randomizer_name or definition.name

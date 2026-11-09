@@ -2746,3 +2746,117 @@ where = "Lost Woods, two-Business-Scrub grotto: the front seller, nearest the en
 oot_randomizer_name = "LW Deku Scrub Grotto Front"
 source = "cs6d, cs-r6 integration contract 2026-11-08; plans/rounds/r6-tokens.md; census Hashes 4328741615941752705, 5764461665617243979. Four reviewed once-sale families only; repeated vendors remain vanilla."
 ids = ["4328741615941752705", "5764461665617243979"]
+
+# Round 8: anchored saved floor checks; other pickups remain in the audit ledger.
+
+[[location]]
+location = "DMC Volcano Freestanding PoH"
+name = "Death Mountain Crater Central Spire Pickup"
+where = "Death Mountain Crater: the high central volcanic spire, reached on the adult bean route."
+oot_randomizer_name = "DMC Volcano Freestanding PoH"
+source = "Round 8 anchor/placement audit: DeathMountainCrater Hash 744856631664786545; plans/rounds/r8-freestanding.md. Existing DMC Central Nearby access retained; https://www.eurogamer.net/zelda-ocarina-of-time-death-mountain-crater. Physical identity is placement-derived, not new gameplay certification."
+ids = ["744856631664786545"]
+
+[[location]]
+location = "DMC Wall Freestanding PoH"
+name = "Death Mountain Crater Wall Alcove Pickup"
+where = "Death Mountain Crater: climb down the wall below the Death Mountain summit entrance to the alcove; watch the heat timer."
+oot_randomizer_name = "DMC Wall Freestanding PoH"
+source = "Round 8 anchor/placement audit: DeathMountainCrater Hash 10331043360028932045; adult_death_mountain_crater.toml; https://www.eurogamer.net/zelda-ocarina-of-time-death-mountain-crater (wall route). Physical identity is placement-derived."
+ids = ["10331043360028932045"]
+
+[[location]]
+location = "DMT Freestanding PoH"
+name = "Death Mountain Trail Cavern Roof Pickup"
+where = "Death Mountain Trail: the ledge above Dodongo's Cavern entrance, reached from the Bomb Flower ledge or the adult bean route."
+oot_randomizer_name = "DMT Freestanding PoH"
+source = "Round 8 anchor/placement audit: DeathMountainTrail Hash 715147239509454487; existing Death Mountain access retained; https://www.nintendolife.com/guides/zelda-ocarina-of-time-heart-piece-locations-switch-2. Placement-derived, not a newly played alternate route."
+ids = ["715147239509454487"]
+
+[[location]]
+location = "Colossus Freestanding PoH"
+name = "Desert Colossus Stone Arch Pickup"
+where = "Desert Colossus: the top of the stone arch on the adult bean ride."
+oot_randomizer_name = "Colossus Freestanding PoH"
+source = "Round 8 anchor/placement audit: DesertColossus Hash 10592092054086534681; existing Colossus rule retained; https://www.nintendolife.com/guides/zelda-ocarina-of-time-heart-piece-locations-switch-2. Placement-derived identity."
+ids = ["10592092054086534681"]
+
+[[location]]
+location = "GV Waterfall Freestanding PoH"
+name = "Gerudo Valley Waterfall Recess Pickup"
+where = "Gerudo Valley: the recess behind the waterfall at the north end of the gorge, below the bridge."
+oot_randomizer_name = "GV Waterfall Freestanding PoH"
+source = "Round 8 anchor/placement audit: GerudoValley Hash 16129198288828948135; existing GV Lower Stream rule retained; https://www.eurogamer.net/zelda-ocarina-of-time-gerudo-valley. The gorge ledge's other heart is already a chest, not this pickup."
+ids = ["16129198288828948135"]
+
+[[location]]
+location = "Graveyard Freestanding PoH"
+name = "Graveyard Upper Ledge Pickup"
+where = "Kakariko Graveyard: the upper ledge above the graves, reached by the adult bean ride or supported grapple route."
+oot_randomizer_name = "Graveyard Freestanding PoH"
+source = "Round 8 anchor/placement audit: Graveyard Hash 2157466067026784951; existing Graveyard rule retained; https://www.nintendolife.com/guides/zelda-ocarina-of-time-heart-piece-locations-switch-2. Distinct from both grave and race chests."
+ids = ["2157466067026784951"]
+
+[[location]]
+location = "LH Freestanding PoH"
+name = "Lake Hylia Laboratory Roof Pickup"
+where = "Lake Hylia (adult): the laboratory roof, at the top of its ladder."
+oot_randomizer_name = "LH Freestanding PoH"
+source = "Round 8 anchor/placement audit: HyruleField Hash 13469300937852836203; existing Lake Hylia rule retained; https://www.nintendolife.com/guides/zelda-ocarina-of-time-heart-piece-locations-switch-2. Distinct from the scientist's dive gift."
+ids = ["13469300937852836203"]
+
+[[location]]
+location = "LLR Freestanding PoH"
+name = "Lon Lon Ranch Tower Pickup"
+where = "Lon Lon Ranch (child): enter the stone tower at the far end of the corral and move the milk crates to crawl into the back recess."
+oot_randomizer_name = "LLR Freestanding PoH"
+source = "Round 8 anchor/placement audit: HyruleField Hash 9814903750835309225; plans/03-game-data.md section 11 (Kareem's native pickup tests); existing LLR Tower rule retained. Save-copy test starts before this pickup."
+ids = ["9814903750835309225"]
+
+[[location]]
+location = "Kak Windmill Freestanding PoH"
+name = "Kakariko Windmill Platform Pickup"
+where = "Kakariko windmill: the raised platform beside the rotating mechanism, not the musician."
+oot_randomizer_name = "Kak Windmill Freestanding PoH"
+source = "Round 8 anchor/placement audit: KakarikoVillage Hash 13389209437182306002, including Adult Alternative copy; existing Kak Windmill rule retained; https://www.nintendolife.com/guides/zelda-ocarina-of-time-heart-piece-locations-switch-2."
+ids = ["13389209437182306002"]
+
+[[location]]
+location = "Kak Impas House Freestanding PoH"
+name = "Kakariko Cow-Shed Roof Pickup"
+where = "Kakariko: the cow shed behind Impa's house, reached by dropping from Impa's roof; this is not the rooftop man's gift."
+oot_randomizer_name = "Kak Impas House Freestanding PoH"
+source = "Round 8 anchor/placement audit: KakarikoVillage Hash 17926402522258180222, all three age/Alternative copies; child_kakariko.toml and plans/03-game-data.md section 11; https://www.eurogamer.net/zelda-ocarina-of-time-kakariko-village. Shed roof replaces N64's indoor pen."
+ids = ["17926402522258180222"]
+
+[[location]]
+location = "ZF Bottom Freestanding PoH"
+name = "Zora Fountain Deep-Water Pickup"
+where = "Zora's Fountain (adult): on the bottom of the deep pool, reached with Iron Boots."
+oot_randomizer_name = "ZF Bottom Freestanding PoH"
+source = "Round 8 anchor/placement audit: ZoraFountain Hash 8030885465575590602; existing ZF Underwater rule retained; https://www.nintendolife.com/guides/zelda-ocarina-of-time-heart-piece-locations-switch-2. Replacement underwater collection is not certified by the boss-floor test."
+ids = ["8030885465575590602"]
+
+[[location]]
+location = "ZF Iceberg Freestanding PoH"
+name = "Zora Fountain Iceberg Pickup"
+where = "Zora's Fountain (adult): on the floating iceberg among the ice platforms."
+oot_randomizer_name = "ZF Iceberg Freestanding PoH"
+source = "Round 8 anchor/placement audit: ZoraFountain Hash 12406896586250888098; existing Zoras Fountain rule retained; https://www.nintendolife.com/guides/zelda-ocarina-of-time-heart-piece-locations-switch-2. Placement-derived identity."
+ids = ["12406896586250888098"]
+
+[[location]]
+location = "ZR Near Domain Freestanding PoH"
+name = "Zora River Waterfall Ledge Pickup"
+where = "Zora's River: the high ledge near the waterfall entrance to Zora's Domain."
+oot_randomizer_name = "ZR Near Domain Freestanding PoH"
+source = "Round 8 anchor/placement audit: ZoraRiver Hash 4189391771527808272; existing Zora River rule retained; https://www.nintendolife.com/guides/zelda-ocarina-of-time-heart-piece-locations-switch-2. Placement-derived identity."
+ids = ["4189391771527808272"]
+
+[[location]]
+location = "ZR Near Open Grotto Freestanding PoH"
+name = "Zora River Open-Grotto Ledge Pickup"
+where = "Zora's River: the raised ledge near the open grotto, reached by the supported Cucco or grapple route."
+oot_randomizer_name = "ZR Near Open Grotto Freestanding PoH"
+source = "Round 8 anchor/placement audit: ZoraRiver Hash 11455676800795329345; existing Zora River rule retained; https://www.nintendolife.com/guides/zelda-ocarina-of-time-heart-piece-locations-switch-2. Placement-derived identity, not a new traversal guarantee."
+ids = ["11455676800795329345"]
