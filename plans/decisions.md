@@ -97,6 +97,11 @@
   require none (round 7, section 30; Kareem used Bombchus without a bag). The logic follows the game; no patch.
   Patching bombs to need no strength (N64 behaviour) is a possible later option. Game-confirmed: on Kareem's 7c save the
   same bombs failed before Darunia's Bracelet and worked after it (2026-11-09).
+- **D31 The Weird Egg and Zelda's Letter stay at their vanilla checks** (Claude, 2026-11-09, provisional; Kareem
+  told). The remake keeps the Letter, the Chicken and the Weird Egg as variants of one inventory cell (round 8,
+  section 35; Kareem's chest test lost the Egg when he took the Letter). OoT Randomizer keeps both in a seed only
+  through code patches (separate owned bits, menu cycling), which RomFS-only mods (D14) cannot do. Neither item
+  enters the pool or a chest; Malon and Zelda give them as in vanilla.
 
 ## Open (only Kareem and his co-owner decide)
 
