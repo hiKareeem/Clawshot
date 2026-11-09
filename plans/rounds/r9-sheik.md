@@ -116,3 +116,42 @@ is an explicit risk to check, not declared safe by the tree oracle. Default rema
 One fixture edit initially inserted a statement after `return {`; tool printed syntax
 location, re-read and moved only the return before running tests. No failed syntax run.
 Four full gates run on the completed item3 tree before any readiness post.
+
+## Item 3: truthful static Hookshot directions
+
+`text.sheik_hint_changes` rewrites both **Talk_01/Talk_03**, never just one random branch.
+All16 language archives get the same English seed location; opening style, existing wrap/
+page/highlight/reset helpers remain. Every other message/member and NPC talk/Prelude flow
+is preserved. `make_seed` registers it independently of stone hints/free travel and composes
+after earlier archive transforms, so it cannot erase Gossip Stone or House hints.
+
+It selects the lexicographically first readable location holding an actual Hookshot (not
+Longshot); multiple copies still name a real source deterministically. Slices without one
+omit the tool entirely in an original neutral line, as the spec permits. No fake Kakariko
+fallback, extra setting, item/flow/placement change or hint-distribution change.
+
+- Scoped ruff format/lint: **passed**.
+- `uv run pytest tests/test_sheik_text.py tests/test_hints_lines.py -q --tb=short`:
+  **8 passed**; both labels, no-source slice, deterministic multi-source, missing-label
+  refusal, untouched messages/members and highlight/wrapping behavior.
+- `OOT_ROMFS=... uv run pytest tests/test_sheik_text_dump.py -m dump -q --tb=short
+  --basetemp E:/OOTRemake/work/r9-sheik-cs9b/text-focused-next`: **1 passed**;
+  all16 archives, both native labels, exact inverse message diff, composed stone preserved.
+- Public CLI seed7, `--shuffle Chest Gift --logic free_time_travel=true --out
+  E:/OOTRemake/work/r9-sheik-cs9b/seed7-gift-free-next`: **exit0,212 shuffled
+  checks,24 spheres,124 resources**; full world, unchanged goal/fill bounds, no reroll.
+- Independent actual-output `verify_seed.py`: both lines/all16 archives name the real
+  **Ganon's Castle Light Trial Triforce Tile Chest** Hookshot; all40 stone lines agree
+  with the spoiler; paired pedestal/Sheik transform present; Prelude Event46 completion
+  write unchanged in the normally shuffled gift flow; all changed archive/Banc allocations
+  fit. Retained external `seed-proof.json`. No game was launched.
+
+**Kareem: in a future seed with free travel OFF, talk to pre-Forest Sheik repeatedly before
+finding Hookshot; both tool-direction variants should name the seed's actual Hookshot check,
+not send you to vanilla Kakariko. Check wrapping/highlight reset and the language-archive
+overlay log. Free travel ON deliberately hides that optional pre-Forest speaker.**
+
+Shared-file changes are isolated: sourced logic/settings checkpoint47f25da and documentation
+e05c49a; the seed-pipeline hook/README follow as their own commits. Section38 follows the
+present36 on this base; reviewer inserts Track A's37 before it and C's39 afterwards. No
+placeholder sections or other track's text are invented.

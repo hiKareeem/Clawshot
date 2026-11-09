@@ -43,6 +43,8 @@ HIGHLIGHT = b"\x00\x00"  # the colour other lines give a name they stress
 # stayed highlighted to the end of the line).
 RESET = b"\xff\xff"
 PAGE_BREAK = Tag(0, 4, b"")
+SHEIK_MESSAGES = "EventFlowMsg/Npc_Hylia_Sheik_Adult.msbt"
+SHEIK_TOOL_LABELS = ("Talk_01", "Talk_03")
 
 
 def archive_path(language: str) -> str:
@@ -243,3 +245,29 @@ def hint_changes(
     if without_mask:
         changes[hints.flow_path(romfs, hints.GOSSIP_FLOW)] = gossip_flow_transform
     return changes
+
+
+def sheik_hint_changes(romfs: str | Path, hookshot_locations: Sequence[str]) -> FileChanges:
+    """Replace both vanilla tool directions with a true seed location (or omit the tool for a slice).
+
+    English in all language archives follows D26, independently of Gossip Stone mode or free travel.
+    Only the placed NPC's two tool messages change; his dialogue flow and the Prelude scene stay native.
+    """
+    if hookshot_locations:
+        location = min(hookshot_locations)
+        line = f"Seek the Hookshot at {FIELD_START}{location}{FIELD_END}."
+    else:
+        line = "There are many paths ahead. Choose your next destination with care."
+
+    def transform(data: bytes) -> bytes:
+        archive = sarc.read(data)
+        if SHEIK_MESSAGES not in archive:
+            raise PatchError(f"no message file {SHEIK_MESSAGES} in the archive")
+        messages = msbt.read(archive[SHEIK_MESSAGES]).messages
+        missing = sorted(set(SHEIK_TOOL_LABELS) - messages.keys())
+        if missing:
+            raise PatchError(f"{SHEIK_MESSAGES}: no message labelled {missing}")
+        edits = {label: stone_line(messages[label], line) for label in SHEIK_TOOL_LABELS}
+        return edit_messages({SHEIK_MESSAGES: edits})(data)
+
+    return {archive_path(language): transform for language in languages(romfs)}

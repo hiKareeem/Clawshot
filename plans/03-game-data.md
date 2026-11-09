@@ -2592,3 +2592,29 @@ native deletion remains. Native Market uses BoolExp Presence on distant cloud ac
 No global NPC removal, relocation, premature song, quest-completion or saved-default edit.
 **Kareem: test the isolated pre-Forest return/second pull and post-Forest Prelude checklist
 in the round file; runtime success is not established by these native-data observations.**
+
+`patch/age.py` now validates both groups before mutation and emits that Presence plus the
+original ungated pedestal binding. The native adult Banc is **30540 ->30664** bytes;
+allocation **30824 ->30952**. Independent inverse-tree and saved-gate checks pass; the
+two unrun isolated save-copy launchers and checklist are under the external `ingame/` folder.
+The sourced `remake/sheik.toml` corrects the translated Prelude medal rule to adult Forest
+completion (`Defeat Phantom Ganon`, the age-return abstraction), regardless of free travel.
+No scene trigger or gift-grant behavior is replaced.
+
+### Seed-specific Hookshot directions
+
+The native NPC talk flow selects **Talk_01** and **Talk_03** before Hookshot ownership
+(`IsGet.Item_Hookshot`); both previously directed the player to its vanilla area. Every seed
+now replaces both through `patch/text`, independently of Gossip Stone mode and free travel.
+It names an actual Hookshot placement using the player-facing catalogue; with multiple copies,
+the lexicographically first readable location is deterministic. A slice without Hookshot uses
+a Clawshot-authored neutral line with no tool/location claim. English in all16 archives (D26),
+existing opening style, two-row/page wrapping and native highlight/reset helpers. All other
+NPC messages and the original talk flow remain unchanged; transforms compose with stone/House
+hints rather than overwriting their archives.
+
+Actual seed7 Chest+Gift/free-travel CLI: **212 shuffled checks,24 spheres,124 resources**.
+Readback found both lines in all16 archives name its real **Ganon's Castle Light Trial
+Triforce Tile Chest** Hookshot. All40 stone texts survive; Prelude's native completion
+write is unchanged despite its normal shuffled gift. Synthetic boundaries and all-language
+inverse archive oracle pass. Full-gate evidence and remaining human acceptance are in the round file.
