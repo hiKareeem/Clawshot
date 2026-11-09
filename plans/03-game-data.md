@@ -2287,9 +2287,19 @@ and pre-meeting refusal. The common writer built the requested new-game Boomeran
 `ingame/shopkeeper-after-gohma-next/`, own empty user and copied release-only launcher.
 Mido far-right chest supplies Deku Shield so the merchant can be skipped until after Gohma
 (optionally also Zelda). Flow50552 ->51736, allocation50832 ->52016; no GameDataList.
-Exact inverse deltas recover the original flow and both chest files. **Kareem must confirm the
-late grant, equipped-shield interaction, normal shopping and no repeat after Save/Continue,
-with overlay log.** No game was run here. D28's Missable/non-progression policy remains until that result.
+Exact inverse deltas recover the original flow and both chest files. **Kareem, 2026-11-09,
+via Claude:** on a copy of his ranch save with Forest stone, Zelda's Lullaby and Deku Shield,
+having never talked to the merchant, `shopkeeper-after-gohma-next` gave Boomerang and did
+not offer it again. This confirms the extended window after both story milestones; no additional
+overlay-log, normal-shopping or Save/Continue result is inferred from this report.
+
+**D28 lifted for the shuffled shopkeeper gift (Kareem, 2026-11-09).** `KF Shopkeeper Gift`
+is now an ordinary progression-eligible `NPC` check, not `Missable`. Its data-sourced rule remains
+`is_child and at('KF Outside Deku Tree', is_child)` with no Gohma/castle cutoff; it still cannot
+bootstrap Mido or be collected as adult. Gift expansion and effective-CS1/NPC replay both apply
+the same world conversion and existing window/once patch. A required-progression fill and
+late-story reachability regressions cover this policy. Unshuffled native flow, equipment query,
+early free-shield event and rule are unchanged. The prior section28/D28 restriction is historical.
 
 ### Partial shelves and fixed scrub fees
 

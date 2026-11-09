@@ -164,23 +164,24 @@ def test_placed_reward_removes_implicit_shield_and_cannot_bootstrap_mido():
     assert not Search(opened).can_access(opened.locations[gifts.SHOPKEEPER_CHECK], "adult")
 
 
-def test_missable_shopkeeper_never_holds_progression_in_generated_seeds():
+def test_shopkeeper_can_hold_required_progression_in_a_generated_seed():
     spec = {
         "start": gifts.SHOPKEEPER_REGION,
-        "goal": "Deku_Shield",
-        "items": {"Deku Shield": {}, "Rupee": {"class": "normal"}},
-        "locations": {"Independent Chest": {"type": "Chest", "vanilla": "Rupee"}},
+        "goal": "Deku_Shield and Boomerang",
+        "items": {"Deku Shield": {}, "Boomerang": {}},
+        "locations": {"Locked Chest": {"type": "Chest", "vanilla": "Boomerang"}},
         "regions": [
             {
                 "name": gifts.SHOPKEEPER_REGION,
                 "events": {"Deku Shield": {"rule": "True", "source": "synthetic native gift"}},
-                "locations": {"Independent Chest": "True"},
+                "locations": {"Locked Chest": "Boomerang"},
             }
         ],
     }
     converted = gifts.shopkeeper_spec(spec)
-    settings = Settings(shuffle=("Chest", converted["locations"][gifts.SHOPKEEPER_CHECK]["type"]), fast_start=())
-    for number in range(20):
-        seed = generate(converted, number, settings, attempts=1)
-        reward = seed.placements[gifts.SHOPKEEPER_CHECK]
-        assert not seed.world.items[reward].progression, (number, seed.placements)
+    settings = Settings(shuffle=("Chest", "NPC"), fast_start=())
+    seed = generate(converted, 0, settings, attempts=1)
+    assert seed.placements[gifts.SHOPKEEPER_CHECK] == "Boomerang", seed.placements
+    assert seed.world.items["Boomerang"].progression
+    assert seed.placements["Locked Chest"] == "Deku Shield"
+    assert seed.spheres == [[gifts.SHOPKEEPER_CHECK], ["Locked Chest"]]

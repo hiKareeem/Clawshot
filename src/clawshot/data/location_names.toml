@@ -20,9 +20,9 @@ source = "Kareem in game via Claude, 2026-11-08, seed-shop-7; plans/03-game-data
 [[location]]
 location = "KF Shopkeeper Gift"
 name = "Kokiri Shopkeeper Gift"
-where = "Kokiri Forest, Kokiri Shop: pass Mido, talk to the Great Deku Tree, then return to the child shopkeeper at the counter before beating Gohma or completing the castle-visit quest."
+where = "Kokiri Forest, Kokiri Shop: pass Mido, talk to the Great Deku Tree, then return to the child shopkeeper at the counter. When shuffled, the uncollected gift remains available after Gohma and the castle visit."
 oot_randomizer_name = ""
-source = "plans/03-game-data.md section 28; r6-play present_DekuSheld trace. Gift shuffle gates both Event116 and Event117 with the existing saved first-talk Bool; unshuffled keeps the free-shield event."
+source = "plans/03-game-data.md sections 28 and 34; Kareem via Claude, 2026-11-09, shopkeeper-after-gohma-next on a ranch-save copy after Forest stone and Zelda's Lullaby: Boomerang granted with Deku Shield owned, no repeat. Gift/NPC shuffle uses the saved first-talk Bool for both Event116/117 and extends the window; unshuffled keeps the native early free-shield event. D28 lifted for the shuffled check."
 ids = ["Npc_Kokiri_001_Shop_Child/Event116", "Npc_Kokiri_001_Shop_Child/Event117"]
 # Directions identify checks, not a guarantee of access: exclusions/rules remain in world data.
 # All four Mido doorway labels are settled in game by Kareem, 2026-11-08 (section 20).

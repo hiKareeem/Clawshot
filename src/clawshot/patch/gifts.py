@@ -460,8 +460,8 @@ def file_changes(changes: Sequence[GiftChange], files: Mapping[str, str]) -> dic
 
 # --- seeds --------------------------------------------------------------------------------------------------------
 
-# World event-gift types; Missable is a remake-only non-progression check.
-GIFT_TYPES = ("NPC", "Song", "Cutscene", "Boss", "Missable")
+# World event-gift types; the persistent shopkeeper reward is an ordinary NPC check (section 34).
+GIFT_TYPES = ("NPC", "Song", "Cutscene", "Boss")
 SHUFFLE = "Gift"  # the --shuffle value
 SONG_TYPE = "Song"
 FREE_TIME_TRAVEL = "free_time_travel"  # the world setting that lifts the anchors
@@ -472,7 +472,7 @@ ANCHORS = {"GC Darunias Joy": "the child's Goron Bracelet anchors the adult-retu
 
 
 def shopkeeper_spec(spec: Mapping[str, Any]) -> dict[str, Any]:
-    """For Gift shuffle only, turn the existing data-sourced free-shield event into one placed reward."""
+    """For Gift/NPC shuffle, turn the data-sourced free-shield event into a persistent placed reward."""
     regions = []
     locations = dict(spec["locations"])
     for region in spec["regions"]:
@@ -480,7 +480,7 @@ def shopkeeper_spec(spec: Mapping[str, Any]) -> dict[str, Any]:
             events = dict(region["events"])
             rule = events.pop("Deku Shield")
             locations[SHOPKEEPER_CHECK] = {
-                "type": "Missable",
+                "type": "NPC",
                 "vanilla": "Deku Shield",
                 "source": rule["source"],
             }
@@ -568,7 +568,7 @@ def seed_setup(
     """For ``--shuffle Gift``: the spec with the gifts that cannot move held vanilla, the settings shuffling the
     gift types in place of ``Gift`` and a placement policy from ``settings.songs`` plus the verified chest
     actor list in ``data/settings.toml``), and the patch step to pass to ``make_seed``."""
-    if SHUFFLE in settings.shuffle or "Missable" in settings.shuffle:
+    if SHUFFLE in settings.shuffle or "NPC" in settings.shuffle:
         spec = shopkeeper_spec(spec)
     settings = replace(
         settings,

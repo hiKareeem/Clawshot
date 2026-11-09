@@ -6,7 +6,10 @@ import pytest
 from test_gifts_shopkeeper import offer_chart, offer_steps, run_offer
 
 from clawshot.formats import evfl
+from clawshot.generate import Settings, prepare
 from clawshot.patch import gifts
+from clawshot.world.load import load_spec
+from clawshot.world.search import Search
 
 FLOW = gifts.SHOPKEEPER_FLOW
 FLAG = "HaveTalked_Npc_Kokiri_001_Shop_Child_PresentDekuShield"
@@ -89,3 +92,16 @@ def test_stale_story_dispatch_is_refused():
     rule = gifts.Rule(gifts.SHOPKEEPER_CHECK, "rewrite", flag=FLAG, once=(FLOW + "/Event45",))
     with pytest.raises(gifts.GiftPatchError, match="dispatch"):
         gifts.patch_flowchart(chart, FLOW, [gifts.GiftChange(rule, offer_steps(), "Item_Boomerang")])
+
+
+@pytest.mark.parametrize("castle", [False, True])
+def test_shuffled_shopkeeper_logic_remains_reachable_after_story_completion(castle):
+    _, world = prepare(gifts.shopkeeper_spec(load_spec()), Settings())
+    inventory = ["Kokiri Sword", "Deku Shield", "Slingshot"]
+    if castle:
+        inventory.append("Weird Egg")
+    search = Search.child_only(world, inventory)
+    assert search.holds("Defeat Queen Gohma")
+    # Time Flows is actually earned by reaching the remake's castle/Zelda garden.
+    assert search.holds("Time Flows") is castle
+    assert search.can_access(world.locations[gifts.SHOPKEEPER_CHECK], "child")
