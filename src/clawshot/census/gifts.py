@@ -88,7 +88,7 @@ class Gift:
 
 
 def _successors(event) -> list[int]:
-    out = [i for _, i in getattr(event, "cases", ())]
+    out = [i for _, i in getattr(event, "cases", ()) if i != evfl.NONE]
     nxt = getattr(event, "next", evfl.NONE)
     if nxt != evfl.NONE:
         out.append(nxt)

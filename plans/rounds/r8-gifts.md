@@ -202,9 +202,9 @@ its native100-rupee charge on success. No gate is set on cancellation, poverty o
 Controlled output `ingame/merchants-three-play-next/`, copied release-only launcher
 `Test - merchants-three-play-next.bat`, checklist `merchant-check.md`. Medigoron gives Hammer,
 carpet Longshot, Granny Hookshot. Own user copies the main-Jabu backup's nested save/user contents;
-slot01 owns none of these three. **No available backup is already adult** (all six slots of both
-before-adult and main-Jabu checkpoints lack Master Sword and these rewards), so the checklist
-explicitly requires normal child-to-adult progression and Granny's trade, not immediate claims.
+slot01 owns none of these three. All six inspected slots of both candidate before-adult and
+main-Jabu backups lack Master Sword and these rewards. The chosen checkpoint is child; the
+checklist requires normal child-to-adult progression and Granny's trade, not immediate claims.
 Do Granny before carpet for a clean Hookshot-before-Longshot upgrade check.
 
 Real common writer produced **six resources** (four flows, GameDataList and size table), all
@@ -246,6 +246,61 @@ Initial prescribed `~/go/bin/bermuda` invocation failed (127): executable resolu
 on this Windows shell. Printed HOME/USERPROFILE and `command -v bermuda`: actual executable is
 `C:/Users/hi/go/bin/bermuda.exe`. The corrected explicit executable is used for subsequent posts.
 
+Reviewer-authorized rebase onto the plans-only main move completed conflict-free at a clean
+worktree. Superseding commit IDs, in order:
+
+| Original | Rebased | Scope |
+|---|---|---|
+| 07ec6f4 | 86da76e | Cow research; D11 stands |
+| f0b4451 | b061ebe | Native40-token quantity, shared metadata only |
+| 55a2d23 | cffec46 | House previews and controlled rewards |
+| ae3099f | 24a40e5 | Corrected frog identities, shared metadata only |
+| bfa10b0 | 66bf25f | Per-song specialization and first-win retry preservation |
+| f9cc8e8 | da55183 | Merchant definitions/rules/catalogue, shared metadata only |
+| d9ed925 | b854f57 | Success-only merchant transactions, tests and section35 |
+
+
 ## Verification
 
 All four complete gates run after the authorized plans-only rebase; results recorded below.
+
+Independent post-rebase actual-writer replay used `PYTHONHASHSEED=947` and reversed placement
+input order in a separate interpreter: **all17 House,2 frog and6 merchant compressed resources
+byte-identical** to the three retained player outputs. `replay-verification.json` retains the
+SHA256 ledger outside the repo. The chosen source's actual `Sequence_IsChildhood` flag is
+**true**, read-only. No existing output/launcher/user was written. Removed only this session's
+completed replay folder/driver and the throwaway native-graph smoke driver after observing the
+proof; the retained builders, research probes, three requested final overlays and checklists remain.
+
+Reviewer concurrency update read from main `02-orchestration.md:61–63`: parallel pools at most3,
+one worker while Hookshot runs, one sweep at a time. This track's gates are sequential plain
+pytest with no pool/xdist; no seed sweep is active. No additional pool/sweep will be started.
+
+### First complete gates and diagnosed failures
+
+| Command | Observed result before the terminal-edge correction |
+|---|---|
+| `uv run ruff format --check` |209 files already formatted |
+| `uv run ruff check` |All checks passed |
+| `uv run pytest` |623 passed,80 skipped;371.24s |
+| `OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump` |77 passed,2 failed,624 deselected;1048.56s |
+
+Both suites used only outside-repository `PYTEST_ADDOPTS=--basetemp=...` directories
+`gate-synthetic-rebased` / `gate-dump-rebased`; no failure was filtered or interrupted.
+
+1. Existing BossHeart seed7 oracle exhausted unchanged10 attempts: last Small Key(Fire Temple),
+   **8 allowed of125 left;20 other items**. Posted exact test/API/payload to Track A. No filler
+   change, retry increase, seed reroll or test substitution here.
+2. Gift-inventory graph oracle reached Granny's new collected-return switch and raised IndexError.
+   Printed actual serialized values: **156 events, root155, cases0->65535(NONE),1->113**.
+   The earlier “event list153” interpretation in the checkpoint post was wrong: the parser/flow
+   is valid; `_successors` included a terminal switch target as if it were an event index.
+   Filter exactly the EVFL NONE sentinel from switch successors, not exceptions or valid nodes.
+   Added a synthetic terminal-switch/census-reachability regression. Cause-aimed checks:
+   `uv run pytest tests/test_census_gifts.py tests/test_gifts_merchants.py -q`: **9 passed**;
+   full affected `OOT_ROMFS=... uv run pytest tests/test_settings_gift_inventory_dump.py
+   -m dump -q -s --basetemp E:/OOTRemake/work/r8-gifts/pytest-inventory-terminal-fixed`:
+   **1 passed**. No overlay bytes changed; the fix is traversal only.
+
+Reviewer corrected the rebase target to **15d4c70** (B/E merged; the earlier536b4a5 hash was
+incorrect), followed by all four gates again. Preserve section order33/35/36.

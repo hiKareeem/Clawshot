@@ -81,6 +81,23 @@ def test_gifts_are_literal_items_passed_to_a_giver_or_the_action():
     ]
 
 
+def test_terminal_switch_branch_does_not_become_a_gift_event_index():
+    flow = Flowchart(
+        "Npc_Terminal",
+        [POUCH, Actor("GameDataActor", queries=["EventQueryIsGameDataBool"])],
+        [
+            SwitchEvent("Collected", actor=1, query=0, cases=[(0, 0xFFFF), (1, 1)]),
+            give("Reward", "Item_Test"),
+        ],
+        [EntryPoint("Talk", 0)],
+    )
+    assert gifts.reachable(flow, 0) == {0, 1}
+    found = gifts.find_gifts({flow.name: flow}, files({flow.name: flow}))
+    assert [(gift.id, gift.entries, gift.vanilla_item) for gift in found] == [
+        ("Npc_Terminal/Reward", ("Talk",), "Item_Test"),
+    ]
+
+
 def test_a_step_giving_two_items_has_no_single_id():
     fcs = flows()
     two = Flowchart("Two", [POUCH], [give("Event0", Argument("A"))], [EntryPoint("Both", 0)])
