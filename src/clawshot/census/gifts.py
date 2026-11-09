@@ -17,6 +17,11 @@ the business scrubs' sale flows (each scrub is a census ``scrub``, its offers in
 
 The game loads some flows in a newer version, ``<flow>.<version>.bfevfl.zs``, as
 ``Event/EventFlow/EventFlowFileEntry.Product.110.byml.zs`` lists (13 flows, version 110); the census reads those.
+
+The five frog-song call sites are variable rupee prizes, not pouch actors. They are censused at
+their stable ``TeachNewMusic`` calls with empty ``param`` and ``vanilla_item``; the native
+first-song sequence pays 5/10/15/20/30 by prior song count. They remain excluded from seed pools
+until a fixed-item policy and in-game acceptance exist (section 35).
 """
 
 from collections.abc import Iterable, Mapping
@@ -44,6 +49,14 @@ GIFT_KINDS = (NPC_GIFT, SONG, EVENT_GIFT)
 
 SONG_PREFIX = "Item_Melody_"
 CUTSCENE_PREFIX = "Dm_"
+FROG_SONG_CALL = "MiniGame_FrogTenors:TeachNewMusic"
+FROG_SONG_FLAGS = {
+    "Event172": "MiniGame_FrogTenors_ZeldaLullaby",
+    "Event220": "MiniGame_FrogTenors_EponaSong",
+    "Event221": "MiniGame_FrogTenors_SariaSong",
+    "Event222": "MiniGame_FrogTenors_SunSong",
+    "Event223": "MiniGame_FrogTenors_TimeSong",
+}
 
 # Flows left out (see the module docstring): business scrub sales, and the DreamWorld boss rush.
 EXCLUDED_FLOWS = frozenset(
@@ -69,8 +82,8 @@ class Gift:
     entries: tuple[str, ...]  # entry points of the flow from which the step is reached, sorted
     event: str  # the step
     call: str  # DIRECT, or "<flow>:<entry>" of the wrapper the step calls
-    param: str  # the step's parameter that names the item
-    vanilla_item: str  # actor name
+    param: str  # item parameter; empty for the frogs' variable-rupee call sites
+    vanilla_item: str  # actor name; empty when the native prize is variable rupees, not an actor
     area: str  # the Banc folder that starts the flow, "" when the placements name none or several
 
 
@@ -190,6 +203,16 @@ def find_gifts(
                         param=param,
                         vanilla_item=item,
                         area=areas.get(flow, ""),
+                    )
+                )
+            if callee == ("MiniGame_FrogTenors", "TeachNewMusic") and flow == "MiniGame_FrogTenors":
+                flag = (event.params or {}).get("GameDataName")
+                if flag != FROG_SONG_FLAGS.get(event.name) or isinstance(flag, evfl.Argument):
+                    raise GiftError(f"{flow}/{event.name}: unexpected frog song completion flag {flag!r}")
+                out.append(
+                    Gift(
+                        f"{flow}/{event.name}", NPC_GIFT, flow, files[flow],
+                        tuple(sorted(entries_of.get(i, ()))), event.name, FROG_SONG_CALL, "", "", areas.get(flow, "")
                     )
                 )
     ids = [g.id for g in out]

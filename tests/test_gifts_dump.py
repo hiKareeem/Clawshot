@@ -4,7 +4,7 @@ from the game's only in the intended events, and a GameDataList that differs onl
 import pytest
 
 from clawshot.census import definitions
-from clawshot.census.gifts import FLOW_VERSIONS, flow_files, scan_gifts
+from clawshot.census.gifts import FLOW_VERSIONS, FROG_SONG_CALL, flow_files, reachable, scan_gifts
 from clawshot.census.scan import read_romfs_byml
 from clawshot.formats import byml, evfl, rstb, zsdic
 from clawshot.patch import gifts
@@ -77,7 +77,12 @@ def test_dump_each_changed_flow_round_trips_and_differs_only_where_intended(romf
         added = after.events[len(before.events) :]
         for a, b in zip(before.actors, after.actors, strict=True):
             assert (a.name, a.actions, a.queries) == (b.name, b.actions[: len(a.actions)], b.queries[: len(a.queries)])
-        assert before.entry_points == after.entry_points, flow
+        assert before.entry_points == after.entry_points[: len(before.entry_points)], flow
+        specialized = [s for c in changes for s in c.steps if s.flow == flow and s.call == FROG_SONG_CALL]
+        extra_entries = after.entry_points[len(before.entry_points) :]
+        assert {e.name for e in extra_entries} == {
+            next(e for e in after.events if e.name == s.event).entry_point for s in specialized
+        }, flow
         report.append(
             f"{flow}: {len(changed)} events changed, {len(added)} added, {len(data)} -> {len(out)} bytes, "
             f"size entry {table.get(path)} needs {rstb.required_size(path, len(out))}"
@@ -96,7 +101,20 @@ def test_dump_every_step_gives_the_new_item_and_given_reads_read_the_flag(romfs,
     for change in changes:
         for step in change.steps:
             event = next(e for e in trees[step.flow].events if e.name == step.event)
-            assert event.params[step.param] == NEW_ITEM, step.id
+            if step.call == FROG_SONG_CALL:
+                indices = reachable(trees[step.flow], trees[step.flow].entry_point(event.entry_point).main_event)
+                grants = [
+                    e for i in indices if isinstance(e := trees[step.flow].events[i], evfl.SubFlowEvent)
+                    and e.flowchart == "Dm_SY_GetInEvent"
+                ]
+                assert [e.params["ActorName"] for e in grants] == [NEW_ITEM], step.id
+                assert not any(
+                    isinstance(e := trees[step.flow].events[i], evfl.ActionEvent)
+                    and trees[step.flow].actors[e.actor].actions[e.action] == "EventTriggerIncreaseRupee"
+                    for i in indices
+                ), step.id
+            else:
+                assert event.params[step.param] == NEW_ITEM, step.id
             if change.new_flag or change.rule.once:
                 added = trees[step.flow].events[event.next]
                 assert added.params == {"GameDataName": change.flag, "Index": -1, "Value": True}, step.id

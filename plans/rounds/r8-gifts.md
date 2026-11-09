@@ -109,10 +109,76 @@ This regression verifies actual assigned names and preservation of already-patch
 Two unused prototype overlays are superseded, not overwritten; the final play-next test
 uses an unowned10 reward after printing the backup's actual ownership.
 
+## Item 3: frogs — five songs and two distinct heart rewards
+
+Native `MiniGame_FrogTenors` census:
+
+| Check | Flow event(s) | Native completion Bool |
+|---|---|---|
+| Zelda's Lullaby | Event172 -> TeachNewMusic | MiniGame_FrogTenors_ZeldaLullaby |
+| Epona's Song | Event220 -> TeachNewMusic | MiniGame_FrogTenors_EponaSong |
+| Saria's Song | Event221 -> TeachNewMusic | MiniGame_FrogTenors_SariaSong |
+| Sun's Song | Event222 -> TeachNewMusic | MiniGame_FrogTenors_SunSong |
+| Song of Time | Event223 -> TeachNewMusic | MiniGame_FrogTenors_TimeSong |
+| Song of Storms / Rain heart | Event384 | MiniGame_FrogTenors_StormSong, written Event112 |
+| Butterfly game first heart | Event161 initial, Event75 retry | MiniGame_FrogTenors_InsectRepellent, written Event151 after success |
+
+All seven completion Bools exist, default false, reset8/save0. Native SongClear requires all
+six song flags and only unlocks the bug game; it does **not** mean the bug-game prize was won.
+The old census incorrectly called Event384 `ZR Frogs Ocarina Game`. Shared `ae3099f` corrects
+that to Rain and links both first-win/retry calls to the actual Ocarina Game. Repeat bug rewards
+Event162/Event76 remain Blue Rupees; a failed round grants nothing.
+
+The five ordinary songs use `EventTriggerIncreaseRupee`, not a pouch actor. Event378 selects
+5/10/15/20/30 by saved `MiniGame_FrogTenors_GetCount`; Event392 increments it. The census
+records their stable song call IDs with empty `param`/`vanilla_item`: no fake item actor or
+fixed50 payout is invented. Those entries intentionally cannot match a seed-pool actor yet.
+
+Implementation: specialize the native `TeachNewMusic` entry **per changed caller**. Append
+only its reachable graph after replacing Event380's rupee-UI subtree with the existing ordinary
+GetInEvent wrapper and one literal item. Remap every edge/case/fork/join/subcall index; retain
+native variables, original entries and all other callers. First-song counter, saved flag and
+frog growth remain; repeat song routes give no second item or extra rupees. Entry-local actor
+bindings and graph-index overflow refuse explicitly, rather than silently misbinding actors.
+D22 reuses the native flags: no new Bool/save-layout change for any frog check.
+
+Logic: the existing sourced child/playable-song predicates agree with native melody0–5 dispatch;
+the bug game asks all six. `remake/gifts.toml` records native provenance and holds all seven
+vanilla until Kareem's result. This intentionally retires the old incorrectly linked shuffled
+Rain-as-all-songs check instead of enabling the newly corrected families without acceptance.
+
+Controlled final output: `ingame/frog-seven-play-next/` under the round's external folder.
+Own copied launcher/user; first launch copies the read-only main-jabu backup's save/user directory.
+Slot01 was checked: child, Bomb Bag plus Bracelet (river entrance reachable), ocarina and
+Lullaby/Saria/Sun, no Epona/Time/Storms; all seven completion Bools false.
+Three song checks supply missing Epona/Time/Storms; Epona gives Hammer, Time gives Lens,
+Storms gives Longshot, first bug win (initial or retry) gives Hookshot.
+Common writer: flow **150328 -> 225104**, entry **150608 -> 225392**; only the flow and
+resource size table emitted. All five specialized roots and both first-bug branches read back
+as assigned; repeat Blue Rupees unchanged. No launcher/game/save mutation.
+
+**Kareem: `ingame/frog-check.md` gives the exact order. Verify new songs actually learn,
+growth remains, first song/retry/failed round behavior, both heart replacements, native repeat
+rupees and Save/Continue; require frog-flow/size-table overlay log lines.**
+
+Checks: `uv run pytest tests/test_gifts_frogs.py tests/test_gifts.py tests/test_names.py -q`:
+**21 passed**. Synthetic persisted-state replay proves each song grants once, no extra rupees,
+counter remains5, untouched native caller still pays normally, stale completion flag refuses.
+The initial synthetic fixture put65535 in a switch target (printed IndexError at that target);
+replaced it with a real terminal branch, matching native graph shape. Cause-aimed rerun passed.
+`OOT_ROMFS=... uv run pytest -m dump tests/test_gifts_dump.py -k "round_trips or every_step"
+--basetemp E:/OOTRemake/work/r8-gifts/pytest-frog-native-next -q`: **2 passed,3 deselected**.
+The native oracle covers every changed gift and allows only the new caller-local entries,
+verifying first-grant identity and absence of a reachable duplicate rupee action.
+
+
 
 ## Decisions / questions
 
 - Cow policy resolved by the reviewer above: D11 stands; no cow patch in Round 8.
+- **Kareem/co-owner: after the frog experiment passes, what fixed rupee item should each of
+  the five order-dependent song prizes add to a shuffled pool?** Native payouts are5/10/15/20/30
+  by collection order, not five50-rupee items. No pool/product choice is made here.
 
 ## Coordination
 

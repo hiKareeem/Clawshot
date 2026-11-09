@@ -368,7 +368,31 @@ given = ["Dm_FairyFountain_Frore/Event11", "TriForcePoint/Event138", "Dm_FairyFo
 
 [check."ZR Frogs Ocarina Game"]
 class = "swap"
-gate = "MiniGame_FrogTenors_SongClear"
+gate = "MiniGame_FrogTenors_InsectRepellent (first win through Event161 or Event75; SongClear only unlocks the game)"
+
+[check."ZR Frogs in the Rain"]
+class = "swap"
+gate = "MiniGame_FrogTenors_StormSong, set at Event112 after Event384"
+
+[check."ZR Frogs Zeldas Lullaby"]
+class = "swap"
+gate = "MiniGame_FrogTenors_ZeldaLullaby; first-only TeachNewMusic path; variable native rupees"
+
+[check."ZR Frogs Eponas Song"]
+class = "swap"
+gate = "MiniGame_FrogTenors_EponaSong; first-only TeachNewMusic path; variable native rupees"
+
+[check."ZR Frogs Sarias Song"]
+class = "swap"
+gate = "MiniGame_FrogTenors_SariaSong; first-only TeachNewMusic path; variable native rupees"
+
+[check."ZR Frogs Suns Song"]
+class = "swap"
+gate = "MiniGame_FrogTenors_SunSong; first-only TeachNewMusic path; variable native rupees"
+
+[check."ZR Frogs Song of Time"]
+class = "swap"
+gate = "MiniGame_FrogTenors_TimeSong; first-only TeachNewMusic path; variable native rupees"
 
 [check."ZR Magic Bean Salesman"]
 class = "more"

@@ -20,13 +20,16 @@ the file it writes reads back as the changed tree. New events are appended, so e
 
 import tomllib
 from collections.abc import Callable, Iterable, Mapping, Sequence
+from copy import deepcopy
 from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import Any
 
 from clawshot.census import definitions as census_definitions
 from clawshot.census.definitions import Definition
-from clawshot.census.gifts import FLOW_VERSIONS, Gift, flow_files, scan_gifts
+from clawshot.census.gifts import (
+    FLOW_VERSIONS, FROG_SONG_CALL, FROG_SONG_FLAGS, Gift, _successors, flow_files, reachable, scan_gifts,
+)
 from clawshot.census.scan import CHEST, read_romfs_byml, scan
 from clawshot.formats import byml, evfl, zsdic
 from clawshot.formats.byml import I32, U32
@@ -207,8 +210,88 @@ def _game_data_actor(fc: evfl.Flowchart, flow: str) -> int:
         raise GiftPatchError(f"{flow}: {len(found)} {GAME_DATA_ACTOR} actors, expected one")
     return found[0]
 
+def _clone_entry(
+    fc: evfl.Flowchart, entry: str, replacements: Mapping[str, evfl.Event]
+) -> str:
+    """Specialize one call without changing shared callees or unrelated callers; retain native branches.
+
+    Replacement edges use original indices. Only their reachable graph is copied, so replaced grant
+    machinery does not leave dead copies. Native entry-local actors are not supported implicitly.
+    """
+    source = fc.entry_point(entry)
+    original = reachable(fc, source.main_event)
+    indices = {_index(fc, fc.name, name): event for name, event in replacements.items()}
+    if not indices.keys() <= original:
+        raise GiftPatchError(f"{fc.name}:{entry}: replacement is outside the native entry")
+    seen, stack = set(), [source.main_event]
+    while stack:
+        index = stack.pop()
+        if index != evfl.NONE and index not in seen:
+            seen.add(index)
+            stack.extend(_successors(indices.get(index, fc.events[index])))
+    actors = {fc.events[i].actor for i in seen if isinstance(fc.events[i], evfl.ActionEvent | evfl.SwitchEvent)}
+    if any(fc.actors[i].entry_point != evfl.NONE for i in actors):
+        raise GiftPatchError(f"{fc.name}:{entry}: entry-local actor needs an explicit binding")
+    prefix = f"{NEW_EVENT_PREFIX}{len(fc.events)}_"
+    name = prefix + entry
+    if any(e.name == name for e in fc.entry_points):
+        raise GiftPatchError(f"{fc.name}: duplicate specialized entry {name}")
+    mapping = {index: len(fc.events) + n for n, index in enumerate(sorted(seen))}
+    if len(fc.events) + len(mapping) >= evfl.NONE:
+        raise GiftPatchError(f"{fc.name}: specialized graph exceeds the event-index limit")
+    for index in sorted(seen):
+        event = deepcopy(indices.get(index, fc.events[index]))
+        event.name = prefix + fc.events[index].name
+        if hasattr(event, "next") and event.next != evfl.NONE:
+            event.next = mapping[event.next]
+        if hasattr(event, "cases"):
+            event.cases = [(case, mapping[target] if target != evfl.NONE else target) for case, target in event.cases]
+        if isinstance(event, evfl.ForkEvent):
+            event.forks = [mapping[target] for target in event.forks]
+            event.join = mapping[event.join]
+        fc.events.append(event)
+    calls = [
+        mapping[i] for i in sorted(seen)
+        if isinstance(fc.events[mapping[i]], evfl.SubFlowEvent | evfl.SubFlowSwitchEvent)
+    ]
+    fc.entry_points.append(evfl.EntryPoint(name, mapping[source.main_event], calls, deepcopy(source.variables)))
+    return name
+
+
+def _frog_song(fc: evfl.Flowchart, step: Gift, item: str) -> None:
+    call = fc.events[_index(fc, step.flow, step.event)]
+    if (
+        not isinstance(call, evfl.SubFlowEvent)
+        or (call.flowchart or fc.name, call.entry_point) != ("MiniGame_FrogTenors", "TeachNewMusic")
+        or (call.params or {}).get("GameDataName") != FROG_SONG_FLAGS.get(step.event)
+        or isinstance((call.params or {}).get("GameDataName"), evfl.Argument)
+    ):
+        raise GiftPatchError(f"{step.id}: not a native frog-song call: {call}")
+    gate = fc.events[_index(fc, fc.name, "Event167")]
+    start = fc.events[_index(fc, fc.name, "Event380")]
+    counter = _index(fc, fc.name, "Event392")
+    if (
+        not isinstance(gate, evfl.SwitchEvent)
+        or fc.actors[gate.actor].queries[gate.query] != READ_QUERY
+        or gate.params != {"GameDataName": evfl.Argument("GameDataName"), "Index": -1}
+        or not isinstance(start, evfl.ActionEvent)
+        or fc.actors[start.actor].actions[start.action] != "EventTriggerOpenRupeeDisplay"
+    ):
+        raise GiftPatchError(f"{step.id}: native frog first/repeat reward graph changed")
+    # The native first-song counter/flag/growth still runs; the escalating rupee-only UI does not.
+    grant = evfl.SubFlowEvent(
+        start.name, "Dm_SY_GetInEvent", "GetInEvent_NotTurn_NotNpc", counter,
+        {"ActorName": item, "IsNpcEventStarter": False}
+    )
+    call.flowchart = ""
+    call.entry_point = _clone_entry(fc, "TeachNewMusic", {start.name: grant})
+
+
 
 def _set_item(fc: evfl.Flowchart, step: Gift, item: str) -> None:
+    if step.call == FROG_SONG_CALL:
+        _frog_song(fc, step, item)
+        return
     event = fc.events[_index(fc, step.flow, step.event)]
     params = getattr(event, "params", None) or {}
     if params.get(step.param) != step.vanilla_item or isinstance(params.get(step.param), evfl.Argument):
