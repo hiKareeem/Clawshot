@@ -21,7 +21,7 @@ def test_every_supported_placement_and_linked_gift_has_directions_for_all_copies
     ootr = {}
     definitions = load_definitions()
     for definition in definitions:
-        if definition.kind not in {"chest", "shop_slot"} and not (
+        if definition.kind not in {"chest", "shop_slot", "heart_container"} and not (
             (definition.kind in GIFT_KINDS and definition.oot_randomizer_name)
             or (
                 definition.kind == "freestanding"

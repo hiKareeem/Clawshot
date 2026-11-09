@@ -2640,3 +2640,39 @@ independent reference digest. Only the signature and output digest are distribut
 Play uses only `<Hookshot>/bin/hookshot.exe`, `HOOKSHOT_NO_UPDATE_CHECK=1`, the verified overlay
 and a per-pack `--user` folder. Missing bin or wrong digest stops before launching. Existing seed
 folders are never rebuilt in place. The agent does not run Play, a batch or the game.
+
+
+### Dungeon floors
+
+The source is `Banc/BancBasedResource/MapParam.byml.zs`, not a height estimate or an N64 room label.
+For each dungeon, `Room[Dynamic.DefaultDungeonRoomIndex].Floor` contains signed logical floors:
+0 is1F,1 is2F,-1 isB1. The global `Floor` array starts at `MinFloor`; its `TBox.InstanceID` values
+identify each chest's exact floor. Prefer that exact Hash join when a room spans multiple floors.
+An icon-matched chest need not have an explicit room override (Forest Boss Key is one).
+
+`location_names.toml` now has `floor` metadata on **143 checks**:134 chests,8 native boss pickups,
+and the Ice Cavern Sheik lesson sharing the Iron Boots chest room. The complete catalogue has369
+descriptions.126 chest floors come from exact map icons;8 Ganon trial checks absent from those lists
+use their single-valued physical room floor. Boss pickups use `BossRoomId` and its room floor;
+Volvagia's native pickup lacks a Dynamic override, so no fake room0 default is introduced.
+The reader exposes `floor`, renders it in the same name used by spoiler, play note and location hints,
+and retains world keys, physical identities, rules and exclusions. Three redundant hard-coded Deku
+name prefixes were removed so the structured floor is not displayed twice in a check's label.
+
+Fire Temple has16 chest icons and5 Skulltula/CollectSign icons, matching Kareem's guide-map count.
+Chest floors are1F five,2F one,3F six,4F none,5F four. The timed trio (both extra red-rupee chests
+included) and Hammer are5F; the cracked-floor shortcut cell is2F. Map texture filenames independently
+agree with the signed labels (Deku B2..3F, Well B2/B1, Jabu B1..2F, Fire1F..5F).
+GTG and the castle interior retain stored floor metadata but lack a corresponding dungeon-floor
+texture set; their labels are not a claim of a newly observed pause-menu floor view.
+
+The native dump oracle checks every floor-bearing description against map icons/physical rooms,
+including basement offsets and tall-room distinctions. Actual seed8 CLI output has142 shuffled
+floor labels (the held Well check stays held), unchanged placements and chronological spheres,
+and the same131 output paths. Only spoiler/note,16 language hint archives and the common size table
+change. Proof/check commands and remaining player comparison are in `r9-seedpack.md`; no game was run.
+
+The earlier exact-r8-full pack proof is branch-local. Each future pack computes a fresh digest from
+its own shipped source; merged Sheik text/floor labels legitimately change that digest. Claude rebuilds
+the private pack after merges. Kareem's reported Lichii LayeredFS result is documented in the tester
+guides with save-slot backup/New Game warnings; Ryujinx and Atmosphere layouts remain untested.

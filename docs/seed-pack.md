@@ -23,6 +23,11 @@ is distributed; the zip records only the reference seed's SHA256 digest.
 6. Read `seed/play-note.md`. `seed/spoiler.json` reveals all placements. Reports should attach
    `<pack>/hookshot_log.txt` and `pack.json` (not saves, the overlay or your dump).
 
+Dungeon check labels include their map floor (`1F`, `2F`, `B1`, ...), from the game's map metadata,
+not the old N64 room name or an estimated height. Some rooms span floors; each chest uses its own
+map icon's floor. GTG and Ganon's Castle have stored floor metadata but no corresponding dungeon-floor
+texture set; their labels are data-derived, not a newly verified pause-menu view.
+
 Version/digest failure: stop and report the actual/expected fingerprints in help. Do not bypass the check.
 To change stored paths, close the game, remove only this pack's `folders.json`, and run Make again.
 A partial or altered `seed` folder is not repaired in place: extract the original zip into a **new** folder.

@@ -16,6 +16,9 @@ source = "Kareem in game via Claude, 2026-11-08, seed-shop-7; plans/03-game-data
 
 # Readable check labels, directions and provenance; no game resources.
 # World/OoTR keys and physical Hash/flow identities are unchanged.
+# floor: map-floor label from Banc/BancBasedResource/MapParam.byml.zs, build e0f3ccfa.
+# Match chest TBox.InstanceID before singleton Room.Floor; 0=1F, -1=B1.
+# Floor is presentation only; identities, exclusions and logic are unchanged. See section39.
 
 [[location]]
 location = "KF Shopkeeper Gift"
@@ -37,6 +40,7 @@ ids = ["Npc_Kokiri_001_Shop_Child/Event116", "Npc_Kokiri_001_Shop_Child/Event117
 
 [[location]]
 location = "Bottom of the Well Center Skulltula Chest"
+floor = "B1" # MapParam BottomOfTheWell: TBox 631709185320708287
 name = "Bottom of the Well: Hidden Right Cell Skulltula Chest"
 where = "Bottom of the Well, main floor: in the hidden central area, the cell right of centre as you walk in, beside a Skulltula, on the entrance side of the chain-locked Keese-room door."
 oot_randomizer_name = "Bottom of the Well Center Skulltula Chest"
@@ -45,6 +49,7 @@ ids = ["631709185320708287"]
 
 [[location]]
 location = "Bottom of the Well Underwater Front Chest"
+floor = "B1" # MapParam BottomOfTheWell: TBox 5429815628949128345
 name = "Bottom of the Well: Entrance Pool Chest"
 where = "Bottom of the Well, main floor: at the bottom of the pool just inside the entrance; play Zelda's Lullaby at the Triforce to drain it, then drop in."
 oot_randomizer_name = "Bottom of the Well Underwater Front Chest"
@@ -53,6 +58,7 @@ ids = ["5429815628949128345"]
 
 [[location]]
 location = "Bottom of the Well Right Bottom Fake Wall Chest"
+floor = "B1" # MapParam BottomOfTheWell: TBox 8397646530660039355
 name = "Bottom of the Well: Right Corridor Fake-Wall Niche"
 where = "Bottom of the Well, main floor: corridor on the right near the entrance; walk through a fake wall on its inner side (Lens of Truth shows it) into a small candle-lit niche."
 oot_randomizer_name = "Bottom of the Well Right Bottom Fake Wall Chest"
@@ -61,6 +67,7 @@ ids = ["8397646530660039355"]
 
 [[location]]
 location = "Bottom of the Well Front Left Fake Wall Chest"
+floor = "B1" # MapParam BottomOfTheWell: TBox 8975637636514249074
 name = "Bottom of the Well: Front Corridor Left Fake-Wall Niche"
 where = "Bottom of the Well, main floor: front corridor, left of the entrance pool; walk through a fake wall into a small niche (mirror image of the right-hand key niche)."
 oot_randomizer_name = "Bottom of the Well Front Left Fake Wall Chest"
@@ -69,6 +76,7 @@ ids = ["8975637636514249074"]
 
 [[location]]
 location = "Bottom of the Well Back Left Bombable Chest"
+floor = "B1" # MapParam BottomOfTheWell: TBox 10905582354954996284
 name = "Bottom of the Well: Far-Left Corner Chest"
 where = "Bottom of the Well, main floor: the far-left corner beyond the central area, behind two fake walls (Lens of Truth)."
 oot_randomizer_name = "Bottom of the Well Back Left Bombable Chest"
@@ -77,6 +85,7 @@ ids = ["10905582354954996284"]
 
 [[location]]
 location = "Bottom of the Well Underwater Left Chest"
+floor = "B1" # MapParam BottomOfTheWell: TBox 12988877782812797760
 name = "Bottom of the Well: Right Corridor Ladder Pit Chest"
 where = "Bottom of the Well, main floor: right-hand corridor, down a short ladder into a pit just outside the doors to the Like Like and Fire Keese rooms (whether it is under water before the Lullaby is unconfirmed)."
 oot_randomizer_name = "Bottom of the Well Underwater Left Chest"
@@ -85,6 +94,7 @@ ids = ["12988877782812797760"]
 
 [[location]]
 location = "Bottom of the Well Compass Chest"
+floor = "B1" # MapParam BottomOfTheWell: TBox 14911602953212243797
 name = "Bottom of the Well: Hidden Left Cell Chest"
 where = "Bottom of the Well, main floor: in the hidden central area behind fake walls (Lens of Truth), the cell left of centre as you walk in from the entrance; chest on a pedestal."
 oot_randomizer_name = "Bottom of the Well Compass Chest"
@@ -93,6 +103,7 @@ ids = ["14911602953212243797"]
 
 [[location]]
 location = "Bottom of the Well Invisible Chest"
+floor = "B1" # MapParam BottomOfTheWell: TBox 11718708984125260282
 name = "Bottom of the Well: Invisible Alcove Chest"
 where = "Bottom of the Well: through the crawlspace behind the Triforce (opened by Zelda's Lullaby), in the hall beyond climb the ladder to a small alcove; the chest is invisible without the Lens of Truth."
 oot_randomizer_name = "Bottom of the Well Invisible Chest"
@@ -101,6 +112,7 @@ ids = ["11718708984125260282"]
 
 [[location]]
 location = "Bottom of the Well Fire Keese Chest"
+floor = "B1" # MapParam BottomOfTheWell: TBox 874970148260328653
 name = "Bottom of the Well: Beamos and Fire Keese Room Chest"
 where = "Bottom of the Well, right side of the main floor: through the door without a chain lock into the room with a Beamos and Fire Keese (found with the Lens of Truth); the chest is inside."
 oot_randomizer_name = "Bottom of the Well Fire Keese Chest"
@@ -109,6 +121,7 @@ ids = ["874970148260328653"]
 
 [[location]]
 location = "Bottom of the Well Lens of Truth Chest"
+floor = "B2" # MapParam BottomOfTheWell: TBox 16654774376625985726
 name = "Bottom of the Well: Dead Hand's Chest"
 where = "Bottom of the Well: in Dead Hand's chamber; the chest appears once Dead Hand is defeated."
 oot_randomizer_name = "Bottom of the Well Lens of Truth Chest"
@@ -117,6 +130,7 @@ ids = ["16654774376625985726"]
 
 [[location]]
 location = "Bottom of the Well Map Chest"
+floor = "B2" # MapParam BottomOfTheWell: TBox 9466613428674883506
 name = "Bottom of the Well: Basement Boulder Corner Chest"
 where = "Bottom of the Well, B2 basement with the ReDeads and silver rupees: chest in a corner closed off by boulders; blast them (there are no Bomb Flowers in the well)."
 oot_randomizer_name = "Bottom of the Well Map Chest"
@@ -125,6 +139,7 @@ ids = ["9466613428674883506"]
 
 [[location]]
 location = "Bottom Of The Well Room 11 Chest (Item_ScrubBusinessSeed)"
+floor = "B1" # MapParam BottomOfTheWell: TBox 6064359710907908886
 name = "Bottom of the Well: Chest Past the Fake-Floor Hole"
 where = "Bottom of the Well: past the Lullaby crawlspace, through the far door into the small hall above Dead Hand's chamber; the chest sits beyond a hidden hole in the floor that drops to Dead Hand. No verified way to reach and open it (excluded from shuffling)."
 oot_randomizer_name = ""
@@ -181,6 +196,7 @@ ids = ["10012167258643363548"]
 
 [[location]]
 location = "Dodongos Cavern End of Bridge Chest"
+floor = "2F" # MapParam DodongoCavern: TBox 7524527082521156886
 name = "Dodongo's Cavern: Skull Bridge Far-Wall Chest"
 where = "Dodongo's Cavern, upper level of the skull hall: cross the bridge over the giant skull and blast the cracked wall at its far end."
 oot_randomizer_name = "Dodongos Cavern End of Bridge Chest"
@@ -189,6 +205,7 @@ ids = ["7524527082521156886"]
 
 [[location]]
 location = "Dodongos Cavern Map Chest"
+floor = "1F" # MapParam DodongoCavern: TBox 8291119063305855945
 name = "Dodongo's Cavern: West Alcove Large Chest"
 where = "Dodongo's Cavern, main hall with the giant skull, west side by the sealed central door: blast the northern of the two rock-sealed alcoves (Bomb Flowers nearby)."
 oot_randomizer_name = "Dodongos Cavern Map Chest"
@@ -197,6 +214,7 @@ ids = ["8291119063305855945"]
 
 [[location]]
 location = "Dodongo Cavern Room 1 Chest (TBox_Rupee_Blue)"
+floor = "1F" # MapParam DodongoCavern: TBox 8607798771661947511
 name = "Dodongo's Cavern: West Alcove Small Chest"
 where = "Dodongo's Cavern, main hall with the giant skull, west side by the sealed central door: blast the southern of the two rock-sealed alcoves."
 oot_randomizer_name = ""
@@ -205,6 +223,7 @@ ids = ["8607798771661947511"]
 
 [[location]]
 location = "Dodongo Cavern Room 5 Chest (TBox_Rupee_Red)"
+floor = "1F" # MapParam DodongoCavern: TBox 7764016096998075927
 name = "Dodongo's Cavern: First Lizalfos Arena Chest"
 where = "Dodongo's Cavern, east side: past the Baby Dodongo hall and the statue-on-switch door into the lava arena with platforms; beat both Lizalfos and the chest appears."
 oot_randomizer_name = ""
@@ -213,6 +232,7 @@ ids = ["7764016096998075927"]
 
 [[location]]
 location = "Dodongo Cavern Room 10 Chest (Item_ScrubBusinessSeed)"
+floor = "2F" # MapParam DodongoCavern: TBox 12253889300578348965
 name = "Dodongo's Cavern: Staircase-Top Cracked Wall Chest"
 where = "Dodongo's Cavern, big staircase room on the west side: once the staircase is lowered, climb the ladder at its top; the chest is behind the cracked wall there, which has no Bomb Flower nearby (bring Bombs)."
 oot_randomizer_name = ""
@@ -221,6 +241,7 @@ ids = ["12253889300578348965"]
 
 [[location]]
 location = "Dodongos Cavern Compass Chest"
+floor = "1F" # MapParam DodongoCavern: TBox 17531994809974271603
 name = "Dodongo's Cavern: Armos Statue Room Chest"
 where = "Dodongo's Cavern, west side: in the big staircase room take the cracked wall on the south side into the room with three statues (one is an Armos), then climb the far ladder."
 oot_randomizer_name = "Dodongos Cavern Compass Chest"
@@ -229,6 +250,7 @@ ids = ["17531994809974271603"]
 
 [[location]]
 location = "Dodongos Cavern Bomb Flower Platform Chest"
+floor = "2F" # MapParam DodongoCavern: TBox 11582649900854566065
 name = "Dodongo's Cavern: Spike-Trap Room Bomb Flower Platform"
 where = "Dodongo's Cavern, room of raised platforms with roving spike traps (across the broken skull bridge): on the east side climb the ladder under the cracked high ledge and hop onto the raised platforms, where a chest stands by a Bomb Flower."
 oot_randomizer_name = "Dodongos Cavern Bomb Flower Platform Chest"
@@ -237,6 +259,7 @@ ids = ["11582649900854566065"]
 
 [[location]]
 location = "Dodongos Cavern Bomb Bag Chest"
+floor = "2F" # MapParam DodongoCavern: TBox 12161709650443144121
 name = "Dodongo's Cavern: Spike-Trap Room Large Chest"
 where = "Dodongo's Cavern, end of the upper route (two fire platforms doused by eye switches): you come back into the spike-trap platform room in front of the large chest; the cracked wall behind it leads to the skull hall."
 oot_randomizer_name = "Dodongos Cavern Bomb Bag Chest"
@@ -245,6 +268,7 @@ ids = ["12161709650443144121"]
 
 [[location]]
 location = "Dodongo Cavern Room 16 Chest (Item_ScrubBusinessSeed)"
+floor = "2F" # MapParam DodongoCavern: TBox 850464708089653824
 name = "Dodongo's Cavern: Path Above the First Lizalfos Arena"
 where = "Dodongo's Cavern, upper route: after the second pair of Lizalfos a small chest appears on a narrow path to the north, high above the first Lizalfos arena."
 oot_randomizer_name = ""
@@ -253,6 +277,7 @@ ids = ["850464708089653824"]
 
 [[location]]
 location = "Fire Temple Big Lava Room Lower Open Door Chest"
+floor = "1F" # MapParam FireTemple: TBox 3949488292768750868
 name = "Fire Temple Lava Room North Goron Cell Chest"
 where = "Fire Temple, the big lava room with the rope bridge (locked east door of the entrance hall): go left (north) across the lava platforms, some of which sink, to the door at the north end; step on the switch to free the Goron and open the chest in his cell"
 oot_randomizer_name = "Fire Temple Big Lava Room Lower Open Door Chest"
@@ -261,6 +286,7 @@ ids = ["3949488292768750868"]
 
 [[location]]
 location = "Fire Temple Near Boss Chest"
+floor = "1F" # MapParam FireTemple: TBox 5634724236470386190
 name = "Fire Temple Boss Door Room Goron Cell Chest"
 where = "Fire Temple, the boss-door room (up the entrance stairs, west door, where Darunia goes in): take the lava platforms on the left (south) to the far ledge, step on the switch to free the Goron and open the chest in his cell"
 oot_randomizer_name = "Fire Temple Near Boss Chest"
@@ -269,6 +295,7 @@ ids = ["5634724236470386190"]
 
 [[location]]
 location = "Fire Temple Flare Dancer Chest"
+floor = "1F" # MapParam FireTemple: TBox 8757492004108970488
 name = "Fire Temple Second Flare Dancer Chest"
 where = "Fire Temple, entrance hall lower floor: Hammer the stone blocks guarding the east-side locked door, pass the Torch Slug room and the flying-tiles Like Like room, then defeat the Flare Dancer; the chest appears in its arena"
 oot_randomizer_name = "Fire Temple Flare Dancer Chest"
@@ -277,6 +304,7 @@ ids = ["8757492004108970488"]
 
 [[location]]
 location = "Fire Temple Boulder Maze Shortcut Chest"
+floor = "2F" # MapParam FireTemple: TBox 16785682308850448108
 name = "Fire Temple Cracked Floor Pit Cell Chest"
 where = "Fire Temple, boulder maze: from the high platforms above the maze jump to the middle and bomb the cracked floor, drop into the pit and climb down the mesh wall to the cell seen earlier from the floor-2 switch room; step on the switch to free the Goron and open his chest"
 oot_randomizer_name = "Fire Temple Boulder Maze Shortcut Chest"
@@ -285,6 +313,7 @@ ids = ["16785682308850448108"]
 
 [[location]]
 location = "Fire Temple Map Chest"
+floor = "3F" # MapParam FireTemple: TBox 3688520809244472975
 name = "Fire Temple Boulder Maze South Alcove Chest"
 where = "Fire Temple, boulder maze (floor 3, reached by riding the fire pillar up from floor 2): dodge the rolling boulders to the south side; the large chest is at the end of the alcove there"
 oot_randomizer_name = "Fire Temple Map Chest"
@@ -293,6 +322,7 @@ ids = ["3688520809244472975"]
 
 [[location]]
 location = "Fire Temple Boulder Maze Upper Chest"
+floor = "3F" # MapParam FireTemple: TBox 9634924691849556346
 name = "Fire Temple Boulder Maze High South Cell Chest"
 where = "Fire Temple, the high platforms above the boulder maze (reached through the flame-chase walkway room by pushing its block down): step on the switch in the south-west corner and open the chest in the freed Goron's cell at the south end"
 oot_randomizer_name = "Fire Temple Boulder Maze Upper Chest"
@@ -301,6 +331,7 @@ ids = ["9634924691849556346"]
 
 [[location]]
 location = "Fire Temple Boulder Maze Lower Chest"
+floor = "3F" # MapParam FireTemple: TBox 12567412825200613393
 name = "Fire Temple Boulder Maze North Cell Chest"
 where = "Fire Temple, boulder maze floor: keep to the north walls past the rolling boulders to the cell in the north-west alcove; step on the switch to free the Goron and open his chest"
 oot_randomizer_name = "Fire Temple Boulder Maze Lower Chest"
@@ -309,6 +340,7 @@ ids = ["12567412825200613393"]
 
 [[location]]
 location = "Fire Temple Scarecrow Chest"
+floor = "5F" # MapParam FireTemple: TBox 862385681502746018
 name = "Fire Temple Scarecrow Top Room North-West Chest"
 where = "Fire Temple, the top room above the boulder maze (play Scarecrow's Song at the maze's upper door, Hookshot to Pierre and the rising platform, climb the mesh walls): hit the switch and race along the two Hookshot posts to the three small chests on the high platform; this is the north-west one of the three"
 oot_randomizer_name = "Fire Temple Scarecrow Chest"
@@ -317,6 +349,7 @@ ids = ["862385681502746018"]
 
 [[location]]
 location = "Fire Temple Room 8 Chest (TBox_Rupee_Red) #1"
+floor = "5F" # MapParam FireTemple: TBox 15073195886628236505
 name = "Fire Temple Scarecrow Top Room South-West Chest"
 where = "Fire Temple, the top room above the boulder maze (Scarecrow's Song at the maze's upper door, Pierre, mesh walls): hit the switch and race along the two Hookshot posts to the three small chests on the high platform; this is the south-west one of the three"
 oot_randomizer_name = ""
@@ -325,6 +358,7 @@ ids = ["15073195886628236505"]
 
 [[location]]
 location = "Fire Temple Room 8 Chest (TBox_Rupee_Red) #2"
+floor = "5F" # MapParam FireTemple: TBox 17001858340376096722
 name = "Fire Temple Scarecrow Top Room East Chest"
 where = "Fire Temple, the top room above the boulder maze (Scarecrow's Song at the maze's upper door, Pierre, mesh walls): hit the switch and race along the two Hookshot posts to the three small chests on the high platform; this is the east one of the three"
 oot_randomizer_name = ""
@@ -333,6 +367,7 @@ ids = ["17001858340376096722"]
 
 [[location]]
 location = "Fire Temple Boulder Maze Side Room Chest"
+floor = "3F" # MapParam FireTemple: TBox 12945617941305968586
 name = "Fire Temple Flame Maze North Cell Chest"
 where = "Fire Temple, the maze of invisible flame walls and fake doors (west locked door of the walkway room): hug the outer walls to the side room on the north side, step on the switch to free the Goron and open the chest in his cell"
 oot_randomizer_name = "Fire Temple Boulder Maze Side Room Chest"
@@ -341,6 +376,7 @@ ids = ["12945617941305968586"]
 
 [[location]]
 location = "Fire Temple Highest Goron Chest"
+floor = "3F" # MapParam FireTemple: TBox 10521366928524045067
 name = "Fire Temple Time Block Pit Cell Chest"
 where = "Fire Temple, flame-wall maze after the top floor: smash the rock wall into the room with a Time Block, play the Song of Time and drop down, then Hammer the rusted switch and open the chest in the freed Goron's cell opposite"
 oot_randomizer_name = "Fire Temple Highest Goron Chest"
@@ -349,6 +385,7 @@ ids = ["10521366928524045067"]
 
 [[location]]
 location = "Fire Temple Megaton Hammer Chest"
+floor = "5F" # MapParam FireTemple: TBox 12083259659219538030
 name = "Fire Temple Top Floor Flame Ring Chest"
 where = "Fire Temple, the round room at the very top (after the first Flare Dancer, the lift and the floor-4 Bomb Flower switches): hit the small switch up the ledge to lower the flames, then race up the narrow raised path to the large chest before they return"
 oot_randomizer_name = "Fire Temple Megaton Hammer Chest"
@@ -357,6 +394,7 @@ ids = ["12083259659219538030"]
 
 [[location]]
 location = "Fire Temple Compass Chest"
+floor = "3F" # MapParam FireTemple: TBox 16713240760352215634
 name = "Fire Temple Walkway Room Eye Target Chest"
 where = "Fire Temple, the walkway room over the lava (locked door in the middle of the boulder maze's west wall): shoot the eye target on the wall with the Bow to unseal the door beneath it; the large chest is in the small overlook room behind"
 oot_randomizer_name = "Fire Temple Compass Chest"
@@ -365,6 +403,7 @@ ids = ["16713240760352215634"]
 
 [[location]]
 location = "Fire Temple Boss Key Chest"
+floor = "1F" # MapParam FireTemple: TBox 14060099092170010696
 name = "Fire Temple Last Goron Cell Chest"
 where = "Fire Temple, past the second Flare Dancer's arena (entrance hall lower floor, Hammer-blocked east door): through the door its defeat opens, Hammer the switch to free the last Goron; the large chest is in his cell"
 oot_randomizer_name = "Fire Temple Boss Key Chest"
@@ -373,6 +412,7 @@ ids = ["14060099092170010696"]
 
 [[location]]
 location = "Fire Temple Big Lava Room Blocked Door Chest"
+floor = "1F" # MapParam FireTemple: TBox 1705064956286753527
 name = "Fire Temple Lava Room South Bombable Cell Chest"
 where = "Fire Temple, the big lava room with the rope bridge: cross the platforms to the very south end, bomb the cracked wall, then step on the switch to free the Goron and open the chest in his cell"
 oot_randomizer_name = "Fire Temple Big Lava Room Blocked Door Chest"
@@ -381,6 +421,7 @@ ids = ["1705064956286753527"]
 
 [[location]]
 location = "Forest Temple Boss Key Chest"
+floor = "3F" # MapParam ForestTemple: TBox 5306318520835485827
 name = "Forest Temple Twisted Corridor End Chest"
 where = "Forest Temple, west (red) wing: from the top of the block-pushing room, shoot the eye switch above the twisted corridor's entrance to straighten it, walk through, and the large chest stands beside the hole in the floor of the room at the end"
 oot_randomizer_name = "Forest Temple Boss Key Chest"
@@ -389,6 +430,7 @@ ids = ["5306318520835485827"]
 
 [[location]]
 location = "Forest Temple First Room Chest"
+floor = "2F" # MapParam ForestTemple: TBox 1171460703078800858
 name = "Forest Temple Entrance Tree Branch Chest"
 where = "Forest Temple, entrance courtyard in front of the temple door (Wolfos): climb the vines on the east side and run along the high tree branches to the chest on the west side, or Hookshot straight up to it"
 oot_randomizer_name = "Forest Temple First Room Chest"
@@ -397,6 +439,7 @@ ids = ["1171460703078800858"]
 
 [[location]]
 location = "Forest Temple First Stalfos Chest"
+floor = "1F" # MapParam ForestTemple: TBox 14776684749746592758
 name = "Forest Temple Two Stalfos Room Chest"
 where = "Forest Temple, north of the main hall (door under the green window): past the corridor with the Blue Bubble into a room that seals shut; defeat the two Stalfos and the chest appears on the raised platform at the north end"
 oot_randomizer_name = "Forest Temple First Stalfos Chest"
@@ -405,6 +448,7 @@ ids = ["14776684749746592758"]
 
 [[location]]
 location = "Forest Temple Eye Switch Chest"
+floor = "2F" # MapParam ForestTemple: TBox 15920957434854338961
 name = "Forest Temple Block Room Eye Switch Chest"
 where = "Forest Temple, west (red) wing, the multi-storey block-pushing room: once the blocks are pushed and you are on the upper level, shoot the gold eye switch behind the metal grating with the Bow or Slingshot; the chest drops onto a small corner balcony"
 oot_randomizer_name = "Forest Temple Eye Switch Chest"
@@ -413,6 +457,7 @@ ids = ["15920957434854338961"]
 
 [[location]]
 location = "Forest Temple Map Chest"
+floor = "1F" # MapParam ForestTemple: TBox 3174893090599461927
 name = "Forest Temple East Garden Ledge Chest"
 where = "Forest Temple, east garden (outdoor courtyard with a moat, Octoroks and Deku Babas): the large chest on the high ledge across the water; Hookshot the circular target beside it"
 oot_randomizer_name = "Forest Temple Map Chest"
@@ -421,6 +466,7 @@ ids = ["3174893090599461927"]
 
 [[location]]
 location = "Forest Temple Well Chest"
+floor = "B1" # MapParam ForestTemple: TBox 6449977980406424425
 name = "Forest Temple Well Passage Chest"
 where = "Forest Temple, under the west garden: lower the well's water with the switch on the high balcony, drop into the well and follow the underground passage; the chest is at its far end, by the ladder up into the east garden"
 oot_randomizer_name = "Forest Temple Well Chest"
@@ -429,6 +475,7 @@ ids = ["6449977980406424425"]
 
 [[location]]
 location = "Forest Temple Red Poe Chest"
+floor = "2F" # MapParam ForestTemple: TBox 3433400840978782007
 name = "Forest Temple Red Poe Stairwell Chest"
 where = "Forest Temple, west (red) wing: in the portrait stairwell beyond the twisted corridor, shoot Jo's three paintings and defeat the red Poe; the chest appears beside the red-flame torch at the bottom of the stairs, next to the door of the green-pit Stalfos room"
 oot_randomizer_name = "Forest Temple Red Poe Chest"
@@ -437,6 +484,7 @@ ids = ["3433400840978782007"]
 
 [[location]]
 location = "Forest Temple Bow Chest"
+floor = "2F" # MapParam ForestTemple: TBox 11082303891540711688
 name = "Forest Temple Green Pit Stalfos Chest"
 where = "Forest Temple, upper floor between the red and blue Poe stairwells: in the room with the bubbling green pit, defeat the Stalfos (one, then two more) and the large chest appears on the raised platform at the north end"
 oot_randomizer_name = "Forest Temple Bow Chest"
@@ -445,6 +493,7 @@ ids = ["11082303891540711688"]
 
 [[location]]
 location = "Forest Temple Blue Poe Chest"
+floor = "2F" # MapParam ForestTemple: TBox 6948525240950728236
 name = "Forest Temple Blue Poe Stairwell Chest"
 where = "Forest Temple, east (blue) wing: from the green-pit Stalfos room take the opposite door into Beth's portrait stairwell, shoot her paintings on the landings and defeat the blue Poe; the chest appears beside the blue-flame torch at the foot of the stairs"
 oot_randomizer_name = "Forest Temple Blue Poe Chest"
@@ -453,6 +502,7 @@ ids = ["6948525240950728236"]
 
 [[location]]
 location = "Forest Temple Floormaster Chest"
+floor = "1F" # MapParam ForestTemple: TBox 7535137041266964235
 name = "Forest Temple Floormaster Room Chest"
 where = "Forest Temple, at the west end of the upper outdoor ledge (drop through the hole in the twisted-corridor room, leave the Blue Bubble pool and go out onto the ledge): in the small room that seals shut, defeat the Floormaster and the three pieces it splits into; the chest appears on the raised platform"
 oot_randomizer_name = "Forest Temple Floormaster Chest"
@@ -461,6 +511,7 @@ ids = ["7535137041266964235"]
 
 [[location]]
 location = "Forest Temple Falling Ceiling Room Chest"
+floor = "1F" # MapParam ForestTemple: TBox 15117164073907033527
 name = "Forest Temple Falling Ceiling Corridor Chest"
 where = "Forest Temple, east (blue) wing: after the twisted blue corridor drops you down a hole, cross the chequered corridor where a spiked ceiling slab keeps falling; the chest is toward the far end with a safe lit square in front of it"
 oot_randomizer_name = "Forest Temple Falling Ceiling Room Chest"
@@ -469,6 +520,7 @@ ids = ["15117164073907033527"]
 
 [[location]]
 location = "Forest Temple Basement Chest"
+floor = "B2" # MapParam ForestTemple: TBox 9038700938965170329
 name = "Forest Temple Rotating Basement Alcove Chest"
 where = "Forest Temple basement (ride the main hall's lift down once all four Poes are beaten): turn the rotating wall twice with its handholds to bring the alcove in the south-west corner round; the chest is inside"
 oot_randomizer_name = "Forest Temple Basement Chest"
@@ -493,6 +545,7 @@ ids = ["16619432200060282313"]
 
 [[location]]
 location = "Gerudo Training Ground Maze Path Third Chest"
+floor = "1F" # MapParam GerudoTrainingGround: TBox 10743352138513225188
 name = "Gerudo Training Ground Central Maze Third Chest"
 where = "Gerudo Training Ground, central maze: from the second maze chest go through the next locked door, then forward and to the left to this chest"
 oot_randomizer_name = "Gerudo Training Ground Maze Path Third Chest"
@@ -501,6 +554,7 @@ ids = ["10743352138513225188"]
 
 [[location]]
 location = "Gerudo Training Ground Lobby Right Chest"
+floor = "1F" # MapParam GerudoTrainingGround: TBox 11182647876438515984
 name = "Gerudo Training Ground Entrance Invisible Chest"
 where = "Gerudo Training Ground, entrance hall: at the far (north) end, west of the sign (on your left as you walk in), an invisible chest the Lens of Truth shows, opposite the eye-switch chest"
 oot_randomizer_name = "Gerudo Training Ground Lobby Right Chest"
@@ -509,6 +563,7 @@ ids = ["11182647876438515984"]
 
 [[location]]
 location = "Gerudo Training Ground Lobby Left Chest"
+floor = "1F" # MapParam GerudoTrainingGround: TBox 2436665354602612279
 name = "Gerudo Training Ground Entrance Eye Switch Chest"
 where = "Gerudo Training Ground, entrance hall: shoot the eye switch above the entrance door with the Bow; the chest drops at the far (north) end of the hall, east of the sign (on your right as you walk in)"
 oot_randomizer_name = "Gerudo Training Ground Lobby Left Chest"
@@ -517,6 +572,7 @@ ids = ["2436665354602612279"]
 
 [[location]]
 location = "Gerudo Training Ground Stalfos Chest"
+floor = "1F" # MapParam GerudoTrainingGround: TBox 13501407288943710656
 name = "Gerudo Training Ground Sandy Stalfos Room Chest"
 where = "Gerudo Training Ground, left (west) door from the entrance hall: in the sandy room that locks you in, defeat the Stalfos and the chest appears"
 oot_randomizer_name = "Gerudo Training Ground Stalfos Chest"
@@ -525,6 +581,7 @@ ids = ["13501407288943710656"]
 
 [[location]]
 location = "Gerudo Training Ground Before Heavy Block Chest"
+floor = "1F" # MapParam GerudoTrainingGround: TBox 4519534997122863169
 name = "Gerudo Training Ground Wolfos Room Chest"
 where = "Gerudo Training Ground, left (west) wing: past the sandy Stalfos room and the rolling-boulder room with flame traps (its five silver diamonds open the door), defeat the Wolfos and open the chest"
 oot_randomizer_name = "Gerudo Training Ground Before Heavy Block Chest"
@@ -533,6 +590,7 @@ ids = ["4519534997122863169"]
 
 [[location]]
 location = "Gerudo Training Ground Eye Statue Chest"
+floor = "1F" # MapParam GerudoTrainingGround: TBox 11563468890171962383
 name = "Gerudo Training Ground Lava Pool Statue Chest"
 where = "Gerudo Training Ground, right (east) wing: through the gate the Torch Slug room's eye switch opens into the second lava room; shoot the eye switch above the door, then each eye on the stone statue in the lava pool, and the lava drains to reveal the chest"
 oot_randomizer_name = "Gerudo Training Ground Eye Statue Chest"
@@ -541,6 +599,7 @@ ids = ["11563468890171962383"]
 
 [[location]]
 location = "Gerudo Training Ground Hammer Room Switch Chest"
+floor = "1F" # MapParam GerudoTrainingGround: TBox 4372363658229299619
 name = "Gerudo Training Ground Hammer Faces Flame Chest"
 where = "Gerudo Training Ground, right (east) wing, the Fire Keese and Torch Slug room: smash the large stone faces with the Megaton Hammer to uncover a switch; standing on it puts out the flames over this chest"
 oot_randomizer_name = "Gerudo Training Ground Hammer Room Switch Chest"
@@ -549,6 +608,7 @@ ids = ["4372363658229299619"]
 
 [[location]]
 location = "Gerudo Training Ground Hammer Room Clear Chest"
+floor = "1F" # MapParam GerudoTrainingGround: TBox 4961588221597286817
 name = "Gerudo Training Ground Torch Slug Room Chest"
 where = "Gerudo Training Ground, right (east) wing: from the big lava room take the door under the grapple point into a room that locks; defeat the Fire Keese and Torch Slugs and the chest appears (the eye switch just above it opens the gate onward)"
 oot_randomizer_name = "Gerudo Training Ground Hammer Room Clear Chest"
@@ -557,6 +617,7 @@ ids = ["4961588221597286817"]
 
 [[location]]
 location = "Gerudo Training Ground Beamos Chest"
+floor = "1F" # MapParam GerudoTrainingGround: TBox 4709724720801091788
 name = "Gerudo Training Ground Beamos and Lizalfos Chest"
 where = "Gerudo Training Ground, right (east) door from the entrance hall: in the room that locks you in with a Beamos and two lizard warriors, defeat them and the chest appears"
 oot_randomizer_name = "Gerudo Training Ground Beamos Chest"
@@ -565,6 +626,7 @@ ids = ["4709724720801091788"]
 
 [[location]]
 location = "Gerudo Training Ground Freestanding Key"
+floor = "1F" # MapParam GerudoTrainingGround: TBox 1883068192328530224
 name = "Gerudo Training Ground Maze East Door Near Chest"
 where = "Gerudo Training Ground, central maze, east side: climb the stacked Song of Time blocks in the big lava room to the door above; of the two chests in front of you, this is the first, nearer the door"
 oot_randomizer_name = "Gerudo Training Ground Freestanding Key"
@@ -573,6 +635,7 @@ ids = ["1883068192328530224"]
 
 [[location]]
 location = "Gerudo Training Ground Maze Right Central Chest"
+floor = "1F" # MapParam GerudoTrainingGround: TBox 196331300747102419
 name = "Gerudo Training Ground Maze East Door Far Chest"
 where = "Gerudo Training Ground, central maze, east side: climb the stacked Song of Time blocks in the big lava room to the door above; of the two chests in front of you, this is the second, further in from the door"
 oot_randomizer_name = "Gerudo Training Ground Maze Right Central Chest"
@@ -581,6 +644,7 @@ ids = ["196331300747102419"]
 
 [[location]]
 location = "Gerudo Training Ground Maze Path Final Chest"
+floor = "1F" # MapParam GerudoTrainingGround: TBox 1941083939696166170
 name = "Gerudo Training Ground Central Maze Centre Chest"
 where = "Gerudo Training Ground, central maze: from the third maze chest through two more locked doors to the large chest at the very centre of the maze (the floor switch behind it opens the way out)"
 oot_randomizer_name = "Gerudo Training Ground Maze Path Final Chest"
@@ -589,6 +653,7 @@ ids = ["1941083939696166170"]
 
 [[location]]
 location = "Gerudo Training Ground Hidden Ceiling Chest"
+floor = "2F" # MapParam GerudoTrainingGround: TBox 4320448574091221496
 name = "Gerudo Training Ground Maze Ceiling Climb Chest"
 where = "Gerudo Training Ground, central maze: through the door opposite the entrance into the small room with locked doors on both sides, take the left one, then look left with the Lens of Truth for a climbable wall up into the ceiling; the chest is at the top"
 oot_randomizer_name = "Gerudo Training Ground Hidden Ceiling Chest"
@@ -597,6 +662,7 @@ ids = ["4320448574091221496"]
 
 [[location]]
 location = "Gerudo Training Ground Maze Path Second Chest"
+floor = "1F" # MapParam GerudoTrainingGround: TBox 8186301369655588602
 name = "Gerudo Training Ground Central Maze Second Chest"
 where = "Gerudo Training Ground, central maze: from the first maze chest follow the path right through the next locked door, then left through one more locked door to this chest"
 oot_randomizer_name = "Gerudo Training Ground Maze Path Second Chest"
@@ -605,6 +671,7 @@ ids = ["8186301369655588602"]
 
 [[location]]
 location = "Gerudo Training Ground Near Scarecrow Chest"
+floor = "2F" # MapParam GerudoTrainingGround: TBox 9911316961118170383
 name = "Gerudo Training Ground Behind Pierre Chest"
 where = "Gerudo Training Ground, Pierre's high ledge in the second lava room (Scarecrow's Song there, or Hookshot through the Lens-revealed gap from the Wolfos room): go through the door behind Pierre to the chest in the room above the centre of the maze"
 oot_randomizer_name = "Gerudo Training Ground Near Scarecrow Chest"
@@ -613,6 +680,7 @@ ids = ["9911316961118170383"]
 
 [[location]]
 location = "Gerudo Training Ground Maze Path First Chest"
+floor = "1F" # MapParam GerudoTrainingGround: TBox 10696620323243142689
 name = "Gerudo Training Ground Central Maze First Chest"
 where = "Gerudo Training Ground, central maze: after the left locked door of the small room behind the entrance (ceiling-climb chest), go through the next locked door; the chest is just beyond"
 oot_randomizer_name = "Gerudo Training Ground Maze Path First Chest"
@@ -621,6 +689,7 @@ ids = ["10696620323243142689"]
 
 [[location]]
 location = "Gerudo Training Ground Maze Right Side Chest"
+floor = "1F" # MapParam GerudoTrainingGround: TBox 11683433230229591151
 name = "Gerudo Training Ground Maze East Side Path Chest"
 where = "Gerudo Training Ground, central maze, east side (through the big lava room's upper door): past the two chests by the door, follow the path round to the right (north) to the next chest"
 oot_randomizer_name = "Gerudo Training Ground Maze Right Side Chest"
@@ -629,6 +698,7 @@ ids = ["11683433230229591151"]
 
 [[location]]
 location = "Gerudo Training Ground Underwater Silver Rupee Chest"
+floor = "1F" # MapParam GerudoTrainingGround: TBox 3717705376223508790
 name = "Gerudo Training Ground Sunken Pool Room Chest"
 where = "Gerudo Training Ground, right (east) wing: once the big lava room's five silver diamonds open its door, play the Song of Time in the smaller room to remove the four blocks, dive with Iron Boots for the silver diamonds among Shell Blades and blade traps, then climb back up to the chest"
 oot_randomizer_name = "Gerudo Training Ground Underwater Silver Rupee Chest"
@@ -637,6 +707,7 @@ ids = ["3717705376223508790"]
 
 [[location]]
 location = "Gerudo Training Ground Heavy Block Second Chest"
+floor = "1F" # MapParam GerudoTrainingGround: TBox 3750231902048775592
 name = "Gerudo Training Ground Like Like Hall Bomb Wall Chest"
 where = "Gerudo Training Ground, Like Like hall (left wing, beyond the huge block): bomb the cracked wall on the east side, just past the room-clear chest, and open the chest behind it"
 oot_randomizer_name = "Gerudo Training Ground Heavy Block Second Chest"
@@ -645,6 +716,7 @@ ids = ["3750231902048775592"]
 
 [[location]]
 location = "Gerudo Training Ground Heavy Block Third Chest"
+floor = "1F" # MapParam GerudoTrainingGround: TBox 5329807728555596183
 name = "Gerudo Training Ground Like Like Hall Invisible Chest"
 where = "Gerudo Training Ground, Like Like hall (left wing, beyond the huge block): toward the far (north) end on the east side, opposite the chest at the very end, wear the Lens of Truth to see the invisible chest"
 oot_randomizer_name = "Gerudo Training Ground Heavy Block Third Chest"
@@ -653,6 +725,7 @@ ids = ["5329807728555596183"]
 
 [[location]]
 location = "Gerudo Training Ground Heavy Block First Chest"
+floor = "1F" # MapParam GerudoTrainingGround: TBox 6897789835137994741
 name = "Gerudo Training Ground Like Like Hall Clear Chest"
 where = "Gerudo Training Ground, left (west) wing: push the huge block in the Wolfos room down the hole, shoot the Lens-revealed eye above the door, and in the Like Like hall defeat the Like Likes; the chest that spawns is near the entrance on the east side"
 oot_randomizer_name = "Gerudo Training Ground Heavy Block First Chest"
@@ -661,6 +734,7 @@ ids = ["6897789835137994741"]
 
 [[location]]
 location = "Gerudo Training Ground Room 10 Chest (Item_ScrubBusinessSeed)"
+floor = "1F" # MapParam GerudoTrainingGround: TBox 11754783663699171680
 name = "Gerudo Training Ground Like Like Hall Eye Switch Chest"
 where = "Gerudo Training Ground, Like Like hall (left wing, beyond the huge block): shoot the eye switch high on the west wall with the Bow and the chest appears beneath it"
 oot_randomizer_name = ""
@@ -877,6 +951,7 @@ ids = ["6900843020594897860"]
 
 [[location]]
 location = "Ice Cavern Map Chest"
+floor = "1F" # MapParam IceCavern: TBox 11498802739257120175
 name = "Ice Cavern: Red Ice Chest (North Room)"
 where = "Ice Cavern, the north room with Freezards and Ice Keese: the chest is frozen inside red ice; melt it with Blue Fire from the font in the same room."
 oot_randomizer_name = "Ice Cavern Map Chest"
@@ -885,6 +960,7 @@ ids = ["11498802739257120175"]
 
 [[location]]
 location = "Ice Cavern Compass Chest"
+floor = "1F" # MapParam IceCavern: TBox 13542013937093159888
 name = "Ice Cavern: East Room Chest"
 where = "Ice Cavern, east room behind the red ice at its door: chest in the room with a Blue Fire font and a wall Gold Skulltula."
 oot_randomizer_name = "Ice Cavern Compass Chest"
@@ -893,6 +969,7 @@ ids = ["13542013937093159888"]
 
 [[location]]
 location = "Ice Cavern Room 8 Chest (TBox_Rupee_Red)"
+floor = "1F" # MapParam IceCavern: TBox 4128092231168513176
 name = "Ice Cavern: Push-Block Room Ledge Chest"
 where = "Ice Cavern, west push-block room with the silver rupees: small chest on a ledge reached over a bridge of three Song of Time blocks."
 oot_randomizer_name = ""
@@ -901,6 +978,7 @@ ids = ["4128092231168513176"]
 
 [[location]]
 location = "Ice Cavern Iron Boots Chest"
+floor = "1F" # MapParam IceCavern: TBox 6859289214373847284
 name = "Ice Cavern: White Wolfos Arena Chest"
 where = "Ice Cavern, the last room: beat the White Wolfos and open the large chest in the arena (Sheik appears once it is opened)."
 oot_randomizer_name = "Ice Cavern Iron Boots Chest"
@@ -909,6 +987,7 @@ ids = ["6859289214373847284"]
 
 [[location]]
 location = "Ganons Castle Forest Trial Chest"
+floor = "1F" # MapParam InsideGanonCastle: Room[2].Floor; Hash 16913531450403950487
 name = "Ganon's Castle Forest Trial Wolfos Chest"
 where = "Inside Ganon's Castle, Forest trial (green barrier door off the central hall): in the first, overgrown room ringed by statues, defeat the two Wolfos and the chest rises on a glowing pad in an alcove"
 oot_randomizer_name = "Ganons Castle Forest Trial Chest"
@@ -917,6 +996,7 @@ ids = ["16913531450403950487"]
 
 [[location]]
 location = "Ganons Castle Water Trial Right Chest"
+floor = "1F" # MapParam InsideGanonCastle: Room[5].Floor; Hash 14404733996390762670
 name = "Ganon's Castle Water Trial Ice Cave Chest"
 where = "Inside Ganon's Castle, Water trial (blue barrier door off the central hall): in the first icy cave with the Freezards, the real chest is on the right (south) side as you enter, near the red ice and the blue-fire pedestal; the chest opposite is a trap"
 oot_randomizer_name = "Ganons Castle Water Trial Right Chest"
@@ -925,6 +1005,7 @@ ids = ["14404733996390762670"]
 
 [[location]]
 location = "Ganons Castle Shadow Trial Front Chest"
+floor = "1F" # MapParam InsideGanonCastle: TBox 18277713685010400796
 name = "Ganon's Castle Shadow Trial Entrance Ledge Chest"
 where = "Inside Ganon's Castle, Shadow trial: the chest on your left (west) just after entering the dark hall, on the ledge across the first gap; light the far torch to raise the stone steps across"
 oot_randomizer_name = "Ganons Castle Shadow Trial Front Chest"
@@ -933,6 +1014,7 @@ ids = ["18277713685010400796"]
 
 [[location]]
 location = "Ganons Castle Shadow Trial Golden Gauntlets Chest"
+floor = "1F" # MapParam InsideGanonCastle: TBox 17657623307936361670
 name = "Ganon's Castle Shadow Trial Invisible Path Chest"
 where = "Inside Ganon's Castle, Shadow trial: past the first gap and the Like Like platform, follow the walkway the Lens of Truth reveals over the second gap and step on the floor switch; the large chest appears on a platform toward the far north-east end of the hall"
 oot_randomizer_name = "Ganons Castle Shadow Trial Golden Gauntlets Chest"
@@ -941,6 +1023,7 @@ ids = ["17657623307936361670"]
 
 [[location]]
 location = "Ganons Castle Light Trial First Left Chest"
+floor = "1F" # MapParam InsideGanonCastle: Room[12].Floor; Hash 1029712040059298120
 name = "Ganon's Castle Light Trial South Row Near Chest"
 where = "Inside Ganon's Castle, Light trial first room (dark hall lined with chests, invisible Skulltula and Keese): in the row along the left (south) wall as you come in from the central hall, the chest nearest the door; the far one of that row is also real, the middle one a trap"
 oot_randomizer_name = "Ganons Castle Light Trial First Left Chest"
@@ -949,6 +1032,7 @@ ids = ["1029712040059298120"]
 
 [[location]]
 location = "Ganons Castle Light Trial Third Left Chest"
+floor = "1F" # MapParam InsideGanonCastle: Room[12].Floor; Hash 7461796063704896255
 name = "Ganon's Castle Light Trial South Row Far Chest"
 where = "Inside Ganon's Castle, Light trial first room (dark hall lined with chests): in the row along the left (south) wall as you come in from the central hall, the chest at the far (west) end, past the trap chest in the middle"
 oot_randomizer_name = "Ganons Castle Light Trial Third Left Chest"
@@ -957,6 +1041,7 @@ ids = ["7461796063704896255"]
 
 [[location]]
 location = "Ganons Castle Light Trial Second Right Chest"
+floor = "1F" # MapParam InsideGanonCastle: Room[12].Floor; Hash 14046623154429024571
 name = "Ganon's Castle Light Trial North Row Middle Chest"
 where = "Inside Ganon's Castle, Light trial first room (dark hall lined with chests): in the row along the right (north) wall as you come in from the central hall, the middle chest between two trap chests"
 oot_randomizer_name = "Ganons Castle Light Trial Second Right Chest"
@@ -965,6 +1050,7 @@ ids = ["14046623154429024571"]
 
 [[location]]
 location = "Inside Ganon Castle Room 12 Chest (TBox_Rupee_Red)"
+floor = "1F" # MapParam InsideGanonCastle: Room[12].Floor; Hash 14962432460641118089
 name = "Ganon's Castle Light Trial Center Pad Chest"
 where = "Inside Ganon's Castle, Light trial first room: with the Lens of Truth on, defeat the invisible Skulltula (Bow for the one near the ceiling) and Keese; a chest rises on the glowing pad in the middle of the room between the two rows"
 oot_randomizer_name = ""
@@ -973,6 +1059,7 @@ ids = ["14962432460641118089"]
 
 [[location]]
 location = "Ganons Castle Light Trial Invisible Enemies Chest"
+floor = "1F" # MapParam InsideGanonCastle: Room[13].Floor; Hash 15320975652699461295
 name = "Ganon's Castle Light Trial Invisible Chest"
 where = "Inside Ganon's Castle, Light trial: the checkered-floor second room beyond the chest hall, BEFORE the single locked boulder-room door; wear the Lens of Truth to see the chest on your left (south), opposite the Triforce tile."
 oot_randomizer_name = "Ganons Castle Light Trial Invisible Enemies Chest"
@@ -981,6 +1068,7 @@ ids = ["15320975652699461295"]
 
 [[location]]
 location = "Ganons Castle Light Trial Lullaby Chest"
+floor = "1F" # MapParam InsideGanonCastle: Room[13].Floor; Hash 4733634471038136588
 name = "Ganon's Castle Light Trial Triforce Tile Chest"
 where = "Inside Ganon's Castle, Light trial: in the checkered-floor second room beyond the chest hall, BEFORE the single locked door to the boulder room; play Zelda's Lullaby on the Triforce tile to the right (north) to raise the chest."
 oot_randomizer_name = "Ganons Castle Light Trial Lullaby Chest"
@@ -989,6 +1077,7 @@ ids = ["4733634471038136588"]
 
 [[location]]
 location = "Ganons Castle Spirit Trial Crystal Switch Chest"
+floor = "1F" # MapParam InsideGanonCastle: TBox 7899179288432849355
 name = "Ganon's Castle Spirit Trial Torch Slug Chest"
 where = "Inside Ganon's Castle, Spirit trial: in the room with the Torch Slugs and the crystal switch behind a grate (after the first room), defeat the Torch Slugs and the chest rises on a glowing pad on the floor"
 oot_randomizer_name = "Ganons Castle Spirit Trial Crystal Switch Chest"
@@ -997,6 +1086,7 @@ ids = ["7899179288432849355"]
 
 [[location]]
 location = "Ganons Tower Boss Key Chest"
+floor = "5F" # MapParam InsideGanonCastle: TBox 17092385671602176550
 name = "Ganon's Tower Iron Knuckle Arena Chest"
 where = "Ganon's Tower: climb past the Dinolfos and Stalfos arenas to the red Iron Knuckle arena near the top; defeat both Iron Knuckles and the chest appears in the arena"
 oot_randomizer_name = "Ganons Tower Boss Key Chest"
@@ -1005,6 +1095,7 @@ ids = ["17092385671602176550"]
 
 [[location]]
 location = "Jabu Jabus Belly Boomerang Chest"
+floor = "1F" # MapParam InsideJabuJabuBelly: TBox 5527401621172639818
 name = "Jabu-Jabu's Belly: Stinger Room Chest"
 where = "Inside Jabu-Jabu's Belly, room with four Stingers: defeat them to reveal the chest, then set Ruto on the floor switch so it can be opened."
 oot_randomizer_name = "Jabu Jabus Belly Boomerang Chest"
@@ -1013,6 +1104,7 @@ ids = ["5527401621172639818"]
 
 [[location]]
 location = "Jabu Jabus Belly Compass Chest"
+floor = "1F" # MapParam InsideJabuJabuBelly: TBox 3510516276638146208
 name = "Jabu-Jabu's Belly: Shabom Bubble Room Chest"
 where = "Inside Jabu-Jabu's Belly, deeper rooms past the tentacles: pop every Shabom bubble (the Boomerang works) and the chest appears."
 oot_randomizer_name = "Jabu Jabus Belly Compass Chest"
@@ -1021,6 +1113,7 @@ ids = ["3510516276638146208"]
 
 [[location]]
 location = "Inside Jabu Jabu Belly Room 13 Chest (TBox_Rupee_Red)"
+floor = "B1" # MapParam InsideJabuJabuBelly: TBox 3609242017501283521
 name = "Jabu-Jabu's Belly: Swaying-Floor Room Chest"
 where = "Inside Jabu-Jabu's Belly, basement room with the swaying floor and Octoroks (south-west on the map axes): freeze the floor with the Boomerang and cross to the small chest."
 oot_randomizer_name = ""
@@ -1029,6 +1122,7 @@ ids = ["3609242017501283521"]
 
 [[location]]
 location = "Jabu Jabus Belly Map Chest"
+floor = "B1" # MapParam InsideJabuJabuBelly: TBox 14933854942830098290
 name = "Jabu-Jabu's Belly: Water-Switch Room Chest"
 where = "Inside Jabu-Jabu's Belly, basement room where you throw Ruto across and step on the switch that raises the water: the chest is in the alcove on the east side."
 oot_randomizer_name = "Jabu Jabus Belly Map Chest"
@@ -1037,7 +1131,8 @@ ids = ["14933854942830098290"]
 
 [[location]]
 location = "Deku Tree Map Chest"
-name = "Deku Tree: 2F Vine Wall Chest"
+floor = "2F" # MapParam InsideTheDekuTree: TBox 8579518566955184384
+name = "Deku Tree: Vine Wall Chest"
 where = "Inside the Deku Tree, 2F: part-way up the spiral path round the hollow trunk, right beside the tall vine wall crawling with Skulltulas."
 oot_randomizer_name = "Deku Tree Map Chest"
 source = "https://www.nintendolife.com/guides/zelda-ocarina-of-time-great-deku-tree-walkthrough-switch-2 (Dungeon Map chest next to the vine wall with Skulltulas); evidence: Hash 8579518566955184384 in Banc/InsideTheDekuTree/InsideTheDekuTree_Static.bcett.byml.zs; neighbours E:/OOTRemake/work/r6-names/cs6a_probe.json; climbable ivy and three Enemy_Skullwalltula within 6 m; plans/03-game-data.md section 12"
@@ -1045,6 +1140,7 @@ ids = ["8579518566955184384"]
 
 [[location]]
 location = "Deku Tree Slingshot Chest"
+floor = "2F" # MapParam InsideTheDekuTree: TBox 821372075822700622
 name = "Deku Tree: Falling-Platform Room Chest"
 where = "Inside the Deku Tree, 2F: through the door at the end of the spiral path (past the Deku Scrub), into the room whose floating platform breaks; from the floor climb the vine walls to the chest."
 oot_randomizer_name = "Deku Tree Slingshot Chest"
@@ -1053,6 +1149,7 @@ ids = ["821372075822700622"]
 
 [[location]]
 location = "Deku Tree Slingshot Room Side Chest"
+floor = "2F" # MapParam InsideTheDekuTree: TBox 13027331340815880287
 name = "Deku Tree: Falling-Platform Room Upper Chest"
 where = "Inside the Deku Tree, 2F falling-platform room: climb the vine wall next to the large chest to a small chest higher up."
 oot_randomizer_name = "Deku Tree Slingshot Room Side Chest"
@@ -1061,7 +1158,8 @@ ids = ["13027331340815880287"]
 
 [[location]]
 location = "Deku Tree Compass Room Side Chest"
-name = "Deku Tree: 3F Crawlspace Chest"
+floor = "3F" # MapParam InsideTheDekuTree: TBox 11368028582977069031
+name = "Deku Tree: Crawlspace Chest"
 where = "Inside the Deku Tree, 3F raised-platform room: crawl through the vent behind the far chest to a small chest beyond it."
 oot_randomizer_name = "Deku Tree Compass Room Side Chest"
 source = "https://www.nintendolife.com/guides/zelda-ocarina-of-time-great-deku-tree-walkthrough-switch-2 (vent behind the Compass chest); evidence: Hash 11368028582977069031 in Banc/InsideTheDekuTree/InsideTheDekuTree_Dynamic.bcett.byml.zs; neighbours E:/OOTRemake/work/r6-names/cs6a_probe.json; CrawlAnchor/CrawlHole between the two chests"
@@ -1069,7 +1167,8 @@ ids = ["11368028582977069031"]
 
 [[location]]
 location = "Deku Tree Compass Chest"
-name = "Deku Tree: 3F Raised-Platform Room Chest"
+floor = "3F" # MapParam InsideTheDekuTree: TBox 9284193025315608699
+name = "Deku Tree: Raised-Platform Room Chest"
 where = "Inside the Deku Tree, 3F: west door guarded by a Skulltula; step on the floor switch by the door to raise three platforms and cross to the chest at the far end."
 oot_randomizer_name = "Deku Tree Compass Chest"
 source = "https://www.nintendolife.com/guides/zelda-ocarina-of-time-great-deku-tree-walkthrough-switch-2 (Compass room); evidence: Hash 9284193025315608699 in Banc/InsideTheDekuTree/InsideTheDekuTree_Static.bcett.byml.zs; neighbours E:/OOTRemake/work/r6-names/cs6a_probe.json; child_deku_tree.toml source"
@@ -1077,6 +1176,7 @@ ids = ["9284193025315608699"]
 
 [[location]]
 location = "Deku Tree Basement Chest"
+floor = "B1" # MapParam InsideTheDekuTree: TBox 12889104996486369065
 name = "Deku Tree: Basement Cobweb Chest"
 where = "Deku Tree basement B1 (reached by dropping from 3F through the web in the 1F floor): climb onto the ledge and press the floor switch to light the torch and burn the cobweb in front of the chest."
 oot_randomizer_name = "Deku Tree Basement Chest"
@@ -1189,6 +1289,7 @@ ids = ["7995233962349162969"]
 
 [[location]]
 location = "Shadow Temple Map Chest"
+floor = "B1" # MapParam ShadowTemple: TBox 13528903653876646082
 name = "Shadow Temple Hidden Door ReDead Chest"
 where = "Shadow Temple, first floor past the entrance: in the hall with skulls set into the walls, take the Lens-hidden door beneath the talking skull into a skull-lined room that locks; defeat the ReDead (Sun's Song freezes it) and the Keese, and the chest appears"
 oot_randomizer_name = "Shadow Temple Map Chest"
@@ -1197,6 +1298,7 @@ ids = ["13528903653876646082"]
 
 [[location]]
 location = "Shadow Temple Hover Boots Chest"
+floor = "B1" # MapParam ShadowTemple: TBox 14535080241831873137
 name = "Shadow Temple Dead Hand Chest"
 where = "Shadow Temple, first floor past the entrance: follow the Lens-revealed openings and the dark hallway whose floor drops away (climb back up) into the room where the Dead Hand lurks; let a hand grab you, defeat the Dead Hand and open the large chest"
 oot_randomizer_name = "Shadow Temple Hover Boots Chest"
@@ -1205,6 +1307,7 @@ ids = ["14535080241831873137"]
 
 [[location]]
 location = "Shadow Temple Early Silver Rupee Chest"
+floor = "B2" # MapParam ShadowTemple: TBox 1111717451118505545
 name = "Shadow Temple Spinning Scythe Room Chest"
 where = "Shadow Temple, through the mouth gate opposite the big bird statue: from the Beamos room take the fake wall opposite the two-Gibdo room into the room where a huge blade slowly sweeps the floor; put on the Lens of Truth to see the silver diamonds and collect all five, and the gate on the east side opens on the chest"
 oot_randomizer_name = "Shadow Temple Early Silver Rupee Chest"
@@ -1213,6 +1316,7 @@ ids = ["1111717451118505545"]
 
 [[location]]
 location = "Shadow Temple Compass Chest"
+floor = "B2" # MapParam ShadowTemple: TBox 1733372171176975157
 name = "Shadow Temple Beamos Corridor Side Room Chest"
 where = "Shadow Temple, through the mouth gate opposite the big bird statue (turn the lever behind the statue to the Lens-glowing skull, Hover Boots across): in the Beamos room, take the Lens-revealed fake wall on the south side into a room that locks; defeat the two Gibdos and the chest appears"
 oot_randomizer_name = "Shadow Temple Compass Chest"
@@ -1221,6 +1325,7 @@ ids = ["1733372171176975157"]
 
 [[location]]
 location = "Shadow Temple Falling Spikes Lower Chest"
+floor = "B3" # MapParam ShadowTemple: TBox 8858270325665149688
 name = "Shadow Temple Falling Spikes Cell Chest"
 where = "Shadow Temple, falling-spikes room (through the door the silver diamonds on the Beamos platform open): on the south side, slip through the small gap in the wall beside the bars into the cell and open the chest; the block hidden in the right-hand wall can be wedged under both falling ceilings to stop them"
 oot_randomizer_name = "Shadow Temple Falling Spikes Lower Chest"
@@ -1229,6 +1334,7 @@ ids = ["8858270325665149688"]
 
 [[location]]
 location = "Shadow Temple Falling Spikes Switch Chest"
+floor = "B3" # MapParam ShadowTemple: TBox 5781953901224064730
 name = "Shadow Temple Falling Spikes Ledge Chest"
 where = "Shadow Temple, falling-spikes room: use the hidden block to climb to the upper ledge, ride the tops of the falling spike ceilings across to the far (west) side and go right; the chest is on that ledge"
 oot_randomizer_name = "Shadow Temple Falling Spikes Switch Chest"
@@ -1237,6 +1343,7 @@ ids = ["5781953901224064730"]
 
 [[location]]
 location = "Shadow Temple Wind Hint Chest"
+floor = "B3" # MapParam ShadowTemple: TBox 12345747231768877602
 name = "Shadow Temple Wind Sign Room Invisible Chest"
 where = "Shadow Temple, at the end of the fan corridor (Iron Boots against the wind, Hookshot over the pit): in the room that locks with two ReDeads, face the sign on the wall and look right with the Lens of Truth; the invisible chest is tucked in the corner"
 oot_randomizer_name = "Shadow Temple Wind Hint Chest"
@@ -1245,6 +1352,7 @@ ids = ["12345747231768877602"]
 
 [[location]]
 location = "Shadow Temple After Wind Hidden Chest"
+floor = "B3" # MapParam ShadowTemple: TBox 169081039115821925
 name = "Shadow Temple Bombable Wall Invisible Chest"
 where = "Shadow Temple, past the fan corridor, the same Gibdo and moving-spikes room: bomb the cracked east wall, opposite the room-clear chest, and use the Lens of Truth to find the invisible chest behind it"
 oot_randomizer_name = "Shadow Temple After Wind Hidden Chest"
@@ -1253,6 +1361,7 @@ ids = ["169081039115821925"]
 
 [[location]]
 location = "Shadow Temple After Wind Enemy Chest"
+floor = "B3" # MapParam ShadowTemple: TBox 5681107746948738726
 name = "Shadow Temple Fan Gap Room Clear Chest"
 where = "Shadow Temple, past the fan corridor: leaving the sign room, put on the Lens to see a door to the right and Hover Boots across the gap (the fan pushes you); in the room with two Gibdos among moving spike traps, defeat them and the chest appears on the west side"
 oot_randomizer_name = "Shadow Temple After Wind Enemy Chest"
@@ -1261,6 +1370,7 @@ ids = ["5681107746948738726"]
 
 [[location]]
 location = "Shadow Temple Spike Walls Left Chest"
+floor = "B4" # MapParam ShadowTemple: TBox 9852624243105848451
 name = "Shadow Temple Spike Walls West Chest"
 where = "Shadow Temple, beyond the ghost ship: in the spike-walls room behind the Floormaster room's locked north door, once the webbed walls are burned with Din's Fire, the chest on the left (west) side of the room"
 oot_randomizer_name = "Shadow Temple Spike Walls Left Chest"
@@ -1269,6 +1379,7 @@ ids = ["9852624243105848451"]
 
 [[location]]
 location = "Shadow Temple Boss Key Chest"
+floor = "B4" # MapParam ShadowTemple: TBox 9221365632831348137
 name = "Shadow Temple Spike Walls East Chest"
 where = "Shadow Temple, beyond the ghost ship: through the locked north door of the Floormaster room, burn the webs on the closing spike walls with Din's Fire at once; the large chest is on the right (east) side, with a ReDead nearby"
 oot_randomizer_name = "Shadow Temple Boss Key Chest"
@@ -1277,6 +1388,7 @@ ids = ["9221365632831348137"]
 
 [[location]]
 location = "Shadow Temple Invisible Floormaster Chest"
+floor = "B4" # MapParam ShadowTemple: TBox 17902550525792072472
 name = "Shadow Temple Invisible Floormaster Chest"
 where = "Shadow Temple, beyond the ghost ship: burn the web on the west doorway with Din's Fire, follow the Lens path through the invisible-wall Floormaster room to its southern door; inside, defeat the invisible Floormaster and the chest appears"
 oot_randomizer_name = "Shadow Temple Invisible Floormaster Chest"
@@ -1285,6 +1397,7 @@ ids = ["17902550525792072472"]
 
 [[location]]
 location = "Shadow Temple Invisible Blades Invisible Chest"
+floor = "B3" # MapParam ShadowTemple: TBox 3718790579351798247
 name = "Shadow Temple Invisible Blade Annex Invisible Chest"
 where = "Shadow Temple, lower level past the Business Scrub: cross the jar room's invisible spinning blade with the Lens of Truth, defeat the Like Like, and in the small room beyond wear the Lens to find the invisible chest just south of the visible one"
 oot_randomizer_name = "Shadow Temple Invisible Blades Invisible Chest"
@@ -1293,6 +1406,7 @@ ids = ["3718790579351798247"]
 
 [[location]]
 location = "Shadow Temple Invisible Blades Visible Chest"
+floor = "B3" # MapParam ShadowTemple: TBox 10344372963276519235
 name = "Shadow Temple Invisible Blade Annex Visible Chest"
 where = "Shadow Temple, lower level past the Business Scrub: cross the jar room's invisible spinning blade with the Lens of Truth, defeat the Like Like, and in the small room beyond take the chest you can see without the Lens (the north one of the pair)"
 oot_randomizer_name = "Shadow Temple Invisible Blades Visible Chest"
@@ -1301,6 +1415,7 @@ ids = ["10344372963276519235"]
 
 [[location]]
 location = "Spirit Temple Child Bridge Chest"
+floor = "1F" # MapParam SpiritTemple: TBox 5309180490719879013
 name = "Spirit Temple Child Bridge Corner Chest"
 where = "Spirit Temple, child side (crawl through Nabooru's gap): in the room with a Stalfos and a wide gap, hit the crystal across the gap with the Boomerang to lower the grate as a bridge, cross, and the chest is in the corner beside the crawl-hole"
 oot_randomizer_name = "Spirit Temple Child Bridge Chest"
@@ -1309,6 +1424,7 @@ ids = ["5309180490719879013"]
 
 [[location]]
 location = "Spirit Temple Child Early Torches Chest"
+floor = "1F" # MapParam SpiritTemple: TBox 5703423643219134246
 name = "Spirit Temple Child Pit Room Torch Chest"
 where = "Spirit Temple, child side, the room with a pit in the middle (door on the right past the Armos): light the two torches at the near edge with Din's Fire and the chest appears between two torches across the pit; reach that side (Wallmaster, silver diamonds) through the Stalfos bridge room and the Anubis crawl-hole"
 oot_randomizer_name = "Spirit Temple Child Early Torches Chest"
@@ -1317,6 +1433,7 @@ ids = ["5703423643219134246"]
 
 [[location]]
 location = "Spirit Temple Child Climb North Chest"
+floor = "2F" # MapParam SpiritTemple: TBox 1501288453962537671
 name = "Spirit Temple Child Lizalfos Room Chest"
 where = "Spirit Temple, child side upper floor (locked door, then the climbable wall): in the room with two Lizalfos, hit the crystal switch high on a ledge with the Slingshot and the chest appears"
 oot_randomizer_name = "Spirit Temple Child Climb North Chest"
@@ -1325,6 +1442,7 @@ ids = ["1501288453962537671"]
 
 [[location]]
 location = "Spirit Temple Statue Room Hand Chest"
+floor = "2F" # MapParam SpiritTemple: TBox 2203243501006528435
 name = "Spirit Temple Statue's Other Hand Chest"
 where = "Spirit Temple, giant statue hall (adult): from the upper stairs jump onto the statue hand with the Triforce symbol and play Zelda's Lullaby; the chest appears on the statue's other (west) hand, reached from Pierre's corner ledge (Scarecrow's Song) or by Longshot"
 oot_randomizer_name = "Spirit Temple Statue Room Hand Chest"
@@ -1333,6 +1451,7 @@ ids = ["2203243501006528435"]
 
 [[location]]
 location = "Spirit Temple Map Chest"
+floor = "2F" # MapParam SpiritTemple: TBox 13852283723126411131
 name = "Spirit Temple Statue Hall Torch Chest"
 where = "Spirit Temple, giant statue hall ground floor: light the unlit torch in front of the statue (carry flame from the lit one on a Deku Stick, or any fire) and the chest appears between the two torches"
 oot_randomizer_name = "Spirit Temple Map Chest"
@@ -1341,6 +1460,7 @@ ids = ["13852283723126411131"]
 
 [[location]]
 location = "Spirit Temple Sun Block Room Chest"
+floor = "3F" # MapParam SpiritTemple: TBox 17407066694905911064
 name = "Spirit Temple Beamos Room Sun Block Chest"
 where = "Spirit Temple, child side upper floor: in the large room with several Beamos and five silver diamonds, pull the block with the sun emblem into the light from the window on the west side; the chest appears there"
 oot_randomizer_name = "Spirit Temple Sun Block Room Chest"
@@ -1349,6 +1469,7 @@ ids = ["17407066694905911064"]
 
 [[location]]
 location = "Spirit Temple Compass Chest"
+floor = "1F" # MapParam SpiritTemple: TBox 15633505270333176438
 name = "Spirit Temple Wolfos Room Triforce Chest"
 where = "Spirit Temple, adult side: push the big block right of the entrance stairs, hit the ceiling crystal in the Beamos room, then take the door left of the locked one; defeat the Wolfos, play Zelda's Lullaby on the Triforce tile against the wall and Hookshot to the large chest on the platform in the opposite corner"
 oot_randomizer_name = "Spirit Temple Compass Chest"
@@ -1357,6 +1478,7 @@ ids = ["15633505270333176438"]
 
 [[location]]
 location = "Spirit Temple Early Adult Right Chest"
+floor = "1F" # MapParam SpiritTemple: TBox 4277978357934400600
 name = "Spirit Temple Boulder Hall Like Like Chest"
 where = "Spirit Temple, adult side: from the Beamos room take the door right of the locked one into the rolling-boulder hall, collect the five silver diamonds (one behind a Song of Time block) to open the far door, defeat the Like Like and open the chest in that room"
 oot_randomizer_name = "Spirit Temple Early Adult Right Chest"
@@ -1365,6 +1487,7 @@ ids = ["4277978357934400600"]
 
 [[location]]
 location = "Spirit Temple First Mirror Right Chest"
+floor = "2F" # MapParam SpiritTemple: TBox 12909857529499414969
 name = "Spirit Temple Lamp Room First Sun Chest"
 where = "Spirit Temple, adult climb (locked door off the Beamos room, up the climbable wall): in the room with the turnable light lamp and an invisible Floormaster, turn the lamp clockwise onto the first sun emblem; the chest appears at the far (east) end of the room (the emblem nearest the door gives a trap chest instead)"
 oot_randomizer_name = "Spirit Temple First Mirror Right Chest"
@@ -1373,6 +1496,7 @@ ids = ["12909857529499414969"]
 
 [[location]]
 location = "Spirit Temple Hallway Left Invisible Chest"
+floor = "3F" # MapParam SpiritTemple: TBox 9143177002861777924
 name = "Spirit Temple Iron Knuckle Door West Invisible Chest"
 where = "Spirit Temple, adult side: past the Armos switch room, stop in the passage before the door to the Iron Knuckle room and wear the Lens of Truth; of the two invisible chests flanking that door, this is the west one (on your right as you face the door)"
 oot_randomizer_name = "Spirit Temple Hallway Left Invisible Chest"
@@ -1381,6 +1505,7 @@ ids = ["9143177002861777924"]
 
 [[location]]
 location = "Spirit Temple Hallway Right Invisible Chest"
+floor = "3F" # MapParam SpiritTemple: TBox 14040210993541550542
 name = "Spirit Temple Iron Knuckle Door East Invisible Chest"
 where = "Spirit Temple, adult side: past the Armos switch room, stop in the passage before the door to the Iron Knuckle room and wear the Lens of Truth; of the two invisible chests flanking that door, this is the east one (on your left as you face the door)"
 oot_randomizer_name = "Spirit Temple Hallway Right Invisible Chest"
@@ -1389,6 +1514,7 @@ ids = ["14040210993541550542"]
 
 [[location]]
 location = "Spirit Temple Near Four Armos Chest"
+floor = "3F" # MapParam SpiritTemple: TBox 12042193296697281461
 name = "Spirit Temple Armos Room Sun Door Chest"
 where = "Spirit Temple, adult side: in the Armos switch room (golden statues, light through a window), stand in the light and reflect it with the Mirror Shield onto the sun emblem above the door; the chest is in the small room behind that door"
 oot_randomizer_name = "Spirit Temple Near Four Armos Chest"
@@ -1397,6 +1523,7 @@ ids = ["12042193296697281461"]
 
 [[location]]
 location = "Spirit Temple Boss Key Chest"
+floor = "4F" # MapParam SpiritTemple: TBox 16272168033146555902
 name = "Spirit Temple Lullaby Door Flame Chest"
 where = "Spirit Temple, top floor: play Zelda's Lullaby on the Triforce floor symbol to open the door ahead, defeat the Torch Slugs, break the false north-west door and shoot the eye switch behind it, Longshot to the lowered platform and drop onto its switch to put out the flames; the large chest is in the middle of the room"
 oot_randomizer_name = "Spirit Temple Boss Key Chest"
@@ -1405,6 +1532,7 @@ ids = ["16272168033146555902"]
 
 [[location]]
 location = "Spirit Temple Topmost Chest"
+floor = "4F" # MapParam SpiritTemple: TBox 13828480906010430010
 name = "Spirit Temple Top Floor Sun Switch Chest"
 where = "Spirit Temple, top floor: climb the wall right of the Triforce-symbol room, drop into the lowered area past the door and hit the crystal switch tucked there; in the next room stand in the beam of light and reflect it with the Mirror Shield onto the sun emblem above the hole in the wall, and the chest appears"
 oot_randomizer_name = "Spirit Temple Topmost Chest"
@@ -1413,6 +1541,7 @@ ids = ["13828480906010430010"]
 
 [[location]]
 location = "Water Temple Central Pillar Chest"
+floor = "B1" # MapParam WaterTemple: TBox 11682974908842171598
 name = "Water Temple Central Tower Basement Chest"
 where = "Water Temple, central tower: with the water at the middle level, drop through the hole inside the tower base to its flooded basement; Hookshot the green ceiling switch to open the gate and find the chest in the small underwater chamber beyond"
 oot_randomizer_name = "Water Temple Central Pillar Chest"
@@ -1421,6 +1550,7 @@ ids = ["11682974908842171598"]
 
 [[location]]
 location = "Water Temple Compass Chest"
+floor = "1F" # MapParam WaterTemple: TBox 16424266294822218796
 name = "Water Temple South Basement Corridor Chest"
 where = "Water Temple, south-west basement: with the water drained, bomb the cracked wall on the south side of the central tower room, sink through the pool behind it and follow the long Tektite corridor (Like Like overhead, Hookshot posts and a raised statue target) to the chest at its far end"
 oot_randomizer_name = "Water Temple Compass Chest"
@@ -1429,6 +1559,7 @@ ids = ["16424266294822218796"]
 
 [[location]]
 location = "Water Temple Cracked Wall Chest"
+floor = "2F" # MapParam WaterTemple: TBox 16490222392193949581
 name = "Water Temple East Geyser Alcove Chest"
 where = "Water Temple, east side at the middle water level: bomb the cracked wall of the east alcove at the waterline, sink through the Stinger-filled underwater passage, then use the switch to ride the geyser up to the chest in a high alcove"
 oot_randomizer_name = "Water Temple Cracked Wall Chest"
@@ -1437,6 +1568,7 @@ ids = ["16490222392193949581"]
 
 [[location]]
 location = "Water Temple Longshot Chest"
+floor = "3F" # MapParam WaterTemple: TBox 18059711820131847165
 name = "Water Temple Dark Link Chest"
 where = "Water Temple, west wing at the highest water level: through the second locked door and across the pit of moving platforms into the misty lake room with a lone tree; defeat Dark Link and the chest waits ahead at the far (north-west) end where the mist cleared"
 oot_randomizer_name = "Water Temple Longshot Chest"
@@ -1445,6 +1577,7 @@ ids = ["18059711820131847165"]
 
 [[location]]
 location = "Water Temple Dragon Chest"
+floor = "1F" # MapParam WaterTemple: TBox 2503861086004941173
 name = "Water Temple Dragon Statue Chest"
 where = "Water Temple, west basement with the water drained: push the big block off the west ledge into the pool, sink after it, Hookshot the switch in the dragon statue's mouth and get past the whirlpool; the chest is on the platform above the far side of the opened gate"
 oot_randomizer_name = "Water Temple Dragon Chest"
@@ -1453,6 +1586,7 @@ ids = ["2503861086004941173"]
 
 [[location]]
 location = "Water Temple Boss Key Chest"
+floor = "1F" # MapParam WaterTemple: TBox 10378828369334876242
 name = "Water Temple Past the Rolling Boulders Chest"
 where = "Water Temple, north wing: take the locked door on the central tower room's ground floor, cross the boulder-and-whirlpool pool, the bombable-wall block room and the geyser platforms, run the rolling-boulder waterway, then beat the Shell Blade at the alcove door; the large chest sits behind the gate in the north-east"
 oot_randomizer_name = "Water Temple Boss Key Chest"
@@ -1461,6 +1595,7 @@ ids = ["10378828369334876242"]
 
 [[location]]
 location = "Water Temple Map Chest"
+floor = "3F" # MapParam WaterTemple: TBox 16384925224245172970
 name = "Water Temple Ruto's Room Top Chest"
 where = "Water Temple, east wing (the blue-pillared room where you meet Ruto): with the water at its highest, sink to the bottom, then take off the Iron Boots and float up to the top floor; the chest is there, visible behind bars from the entrance hall"
 oot_randomizer_name = "Water Temple Map Chest"
@@ -1469,6 +1604,7 @@ ids = ["16384925224245172970"]
 
 [[location]]
 location = "Water Temple Torches Chest"
+floor = "1F" # MapParam WaterTemple: TBox 18099019250896853049
 name = "Water Temple Ruto's Room Torch Chest"
 where = "Water Temple, east wing ground floor (Ruto's room) after the water is drained: light the two corner braziers by shooting an arrow through the lit torch or with Din's Fire, defeat the three Spikes when the door locks, and the chest appears on the floor"
 oot_randomizer_name = "Water Temple Torches Chest"
@@ -1477,6 +1613,7 @@ ids = ["18099019250896853049"]
 
 [[location]]
 location = "Water Temple Central Bow Target Chest"
+floor = "2F" # MapParam WaterTemple: TBox 3693930347660122883
 name = "Water Temple North Eye Target Chest"
 where = "Water Temple, north side at the middle water level: shoot the eye target on the far north wall, Longshot to the target it reveals, then use the ceiling target above the waterfall alcove to work the underwater block from both sides; the chest is behind the grate in the corner"
 oot_randomizer_name = "Water Temple Central Bow Target Chest"
@@ -2277,6 +2414,7 @@ ids = ["Dm_MelodyGet_Time/Event70"]
 
 [[location]]
 location = "Sheik in Ice Cavern"
+floor = "1F" # MapParam IceCavern: TBox 6859289214373847284
 name = "Sheik in the Ice Cavern"
 where = "Ice Cavern, the Iron Boots chest room past the White Wolfos (adult): Sheik appears once the chest is opened"
 oot_randomizer_name = "Sheik in Ice Cavern"
@@ -2916,3 +3054,83 @@ where = "Zora's River: the raised ledge near the open grotto, reached by the sup
 oot_randomizer_name = "ZR Near Open Grotto Freestanding PoH"
 source = "Round 8 anchor/placement audit: ZoraRiver Hash 11455676800795329345; existing Zora River rule retained; https://www.nintendolife.com/guides/zelda-ocarina-of-time-heart-piece-locations-switch-2. Placement-derived identity, not a new traversal guarantee."
 ids = ["11455676800795329345"]
+
+
+[[location]]
+location = "Dodongos Cavern King Dodongo Heart"
+name = "Dodongo's Cavern: King Dodongo Boss Pickup"
+floor = "1F"
+where = "Dodongo's Cavern, King Dodongo's arena: the saved floor pickup after the boss is defeated."
+oot_randomizer_name = "Dodongos Cavern King Dodongo Heart"
+source = "Native boss-heart Hash in Banc/DodongoCavern/DodongoCavern_Static.bcett.byml.zs; saved pickup/Logic_Create binding: section27 and r7-drops. MapParam.byml.zs DodongoCavern BossRoomId=22, Room.Floor; cs9c round9, build e0f3ccfa."
+ids = ["5936534468710061389"]
+
+
+[[location]]
+location = "Fire Temple Volvagia Heart"
+name = "Fire Temple: Volvagia Boss Pickup"
+floor = "1F"
+where = "Fire Temple, Volvagia's arena: the saved floor pickup after the boss is defeated."
+oot_randomizer_name = "Fire Temple Volvagia Heart"
+source = "Native boss-heart Hash in Banc/FireTemple/FireTemple_Static.bcett.byml.zs; saved pickup/Logic_Create binding: section27 and r7-drops. MapParam.byml.zs FireTemple BossRoomId=33, Room.Floor; cs9c round9, build e0f3ccfa."
+ids = ["9478330070473364248"]
+
+
+[[location]]
+location = "Forest Temple Phantom Ganon Heart"
+name = "Forest Temple: Phantom Ganon Boss Pickup"
+floor = "B2"
+where = "Forest Temple, Phantom Ganon's arena: the saved floor pickup after the boss is defeated."
+oot_randomizer_name = "Forest Temple Phantom Ganon Heart"
+source = "Native boss-heart Hash in Banc/ForestTemple/ForestTemple_Static.bcett.byml.zs; saved pickup/Logic_Create binding: section27 and r7-drops. MapParam.byml.zs ForestTemple BossRoomId=29, Room.Floor; cs9c round9, build e0f3ccfa."
+ids = ["18379569660496940670"]
+
+
+[[location]]
+location = "Jabu Jabus Belly Barinade Heart"
+name = "Jabu-Jabu's Belly: Barinade Boss Pickup"
+floor = "2F"
+where = "Jabu-Jabu's Belly, Barinade's arena: the saved floor pickup after the boss is defeated."
+oot_randomizer_name = "Jabu Jabus Belly Barinade Heart"
+source = "Native boss-heart Hash in Banc/InsideJabuJabuBelly/InsideJabuJabuBelly_Static.bcett.byml.zs; saved pickup/Logic_Create binding: section27 and r7-drops. MapParam.byml.zs InsideJabuJabuBelly BossRoomId=15, Room.Floor; cs9c round9, build e0f3ccfa."
+ids = ["17608884438514432711"]
+
+
+[[location]]
+location = "Deku Tree Queen Gohma Heart"
+name = "Deku Tree: Queen Gohma Boss Pickup"
+floor = "B2"
+where = "Deku Tree, Queen Gohma's arena: the saved floor pickup after the boss is defeated."
+oot_randomizer_name = "Deku Tree Queen Gohma Heart"
+source = "Native boss-heart Hash in Banc/InsideTheDekuTree/InsideTheDekuTree_Static.bcett.byml.zs; saved pickup/Logic_Create binding: section27 and r7-drops. MapParam.byml.zs InsideTheDekuTree BossRoomId=10, Room.Floor; cs9c round9, build e0f3ccfa."
+ids = ["17948245526767051747"]
+
+
+[[location]]
+location = "Shadow Temple Bongo Bongo Heart"
+name = "Shadow Temple: Bongo Bongo Boss Pickup"
+floor = "B4"
+where = "Shadow Temple, Bongo Bongo's arena: the saved floor pickup after the boss is defeated."
+oot_randomizer_name = "Shadow Temple Bongo Bongo Heart"
+source = "Native boss-heart Hash in Banc/ShadowTemple/ShadowTemple_Static.bcett.byml.zs; saved pickup/Logic_Create binding: section27 and r7-drops. MapParam.byml.zs ShadowTemple BossRoomId=24, Room.Floor; cs9c round9, build e0f3ccfa."
+ids = ["17599164808183510748"]
+
+
+[[location]]
+location = "Spirit Temple Twinrova Heart"
+name = "Spirit Temple: Twinrova Boss Pickup"
+floor = "3F"
+where = "Spirit Temple, Twinrova's arena: the saved floor pickup after the boss is defeated."
+oot_randomizer_name = "Spirit Temple Twinrova Heart"
+source = "Native boss-heart Hash in Banc/SpiritTemple/SpiritTemple_Static.bcett.byml.zs; saved pickup/Logic_Create binding: section27 and r7-drops. MapParam.byml.zs SpiritTemple BossRoomId=33, Room.Floor; cs9c round9, build e0f3ccfa."
+ids = ["4720088048159616469"]
+
+
+[[location]]
+location = "Water Temple Morpha Heart"
+name = "Water Temple: Morpha Boss Pickup"
+floor = "3F"
+where = "Water Temple, Morpha's arena: the saved floor pickup after the boss is defeated."
+oot_randomizer_name = "Water Temple Morpha Heart"
+source = "Native boss-heart Hash in Banc/WaterTemple/WaterTemple_Static.bcett.byml.zs; saved pickup/Logic_Create binding: section27 and r7-drops. MapParam.byml.zs WaterTemple BossRoomId=23, Room.Floor; cs9c round9, build e0f3ccfa."
+ids = ["14426685265732353862"]

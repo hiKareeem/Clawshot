@@ -96,18 +96,46 @@ No guide text or decoded map tree goes in the repository.
 Boss-heart research first printed KeyError Dynamic for Volvagia's native pickup; the exact actor
 payload has no Dynamic override. Printed all eight existing identities plus MapParam.BossRoomId:
 seven explicit room values agree; Volvagia uses the unique boss room33, floor0=1F. This is a
-boss-room identity join, not a guessed actor default. Planned coverage includes eight already-supported
+boss-room identity join, not a guessed actor default. Implemented coverage includes eight already-supported
 BossHeart descriptions and the Ice Cavern Sheik lesson at the mapped Iron Boots chest.
 
 **Kareem: compare the timed trio with Fire5F and the shortcut cell with2F on the pause map.
 GTG/Ganon have floor metadata but no shipped dungeon-floor texture set: confirm whether the pause UI
 shows a floor number there; until observed, their labels describe stored floor metadata, not a proven UI.**
 
+### Implemented and exercised
+
+Catalogue now has369 descriptions with143 structured floor labels (134 chests,8 native boss pickups,
+1 lesson). The one reader renders the floor in names used by spoiler, note and location hints; its
+new floor field serializes independently of label punctuation. Logical keys/IDs/rules stay unchanged.
+Removed three old hard-coded Deku floor prefixes so a label does not repeat its floor twice.
+Python LSP references returned no server; literal fallback found only the one LocationName constructor
+and existing spoiler/hint consumers; all consumers use the same reader. Shared reader/coverage edits
+are isolated; no fill/CLI/settings/patch algorithm change.
+
+Scoped checks: format/lint passed; names/route/presentation **12 passed**; independent native floor
+oracle **1 passed** (0.76s), covering every definition, basement offset, tall-room distinction,
+visible floor tokens and physical-ID coverage. The external researcher's first native run printed
+Forest Boss Key Hash5306318520835485827 with **no explicit room**, but exact map-icon logical floor2=3F.
+Its overstrict room assertion was removed only for exact-icon matches; aimed rerun reports all143
+facts with126 icon/8 room chest matches. Production oracle already used the correct icon-first order
+and passed on its first attempt. No fake room0, height fallback or narrowed oracle.
+
+Actual public generator CLI, original seed8/effective CS1 into fresh `floors-seed8-next`: **exit0**.
+All131 output paths remain; placements and chronological spheres are exactly unchanged.
+**142 shuffled locations** display their correct floor (the excluded Well check remains excluded).
+The printed play-note rows show timed Scarecrow5F, cracked-floor pit2F, Deku vine-wall2F,
+Volvagia pickup1F. Only spoiler/note,16 Mals hint archives and the common size table differ from
+r8-full. No Banc, flow, GameData or item placement delta. Retained `floors-output-proof.json`,
+`floors-cli.log`, `floor-facts.json` and reusable `floors.py` outside the repo.
+
+All four complete gates will run again on this final floor cutover before readiness/handoff.
+
 ## Coordination
 
 Posted cs-r9 as cs9c: item order, no planned shared fill/CLI edit, supported-dump fingerprint and scratch-only
-output. No request for another track's source files. Python LSP has no configured server (marksman only),
-so no Python exported symbols are changed by this new package.
+output. No request for another track's source files. Python LSP has no configured server (marksman only);
+the floor-reader references attempt/fallback is recorded above. No existing pack/CLI API is replaced.
 
 Reviewer steer: cs9b `806b1c7` changes Sheik text in16 Mals archives. The exact-r8-full comparison
 is branch-local historical proof only. Pack `build()` computes each oracle by generating from the source
