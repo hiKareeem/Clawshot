@@ -381,3 +381,68 @@ followed their start. All generated `-next` output folders and basetemps are ret
 outputs/user folders, dump and save backups remain unchanged. Only the completed external counter
 harness code was removed, not any output directory or resource. The final documentation-only head
 is posted after this record is committed; no merge, push, game launch or hot output swap by the agent.
+
+## Final integration onto main `2100234` (merged A/B/C)
+
+Claude authorized this rebase after A's hints merge. All 17 gifts commits replayed without conflicts.
+`03-game-data.md` now has sections **25, 26, 27, 28** in that order, with no placeholder or dropped
+other-track section. The output-reader rule is present in the rebased `02-orchestration.md`.
+Only this round record is edited after the rebase; no repository source/test changes.
+
+The earlier commit IDs and gate results above describe their historical bases. Current rebased
+commits, in order:
+
+| Commit | Scope |
+|---|---|
+| `378e3ba` | Shopkeeper once-gate contract |
+| `570861d` | Remake shopkeeper check description |
+| `db69ce9` | Shield's identical chest-pouch item mapping |
+| `8ad16be` | Both shuffled shopkeeper branches once-only |
+| `b3d408e` | First-win Treasure Chest Game contents check |
+| `9303b97` | Nine boss rewards research only |
+| `9540675` | Original Track D checks and handoff |
+| `099fde5` | Own-dungeon items before bag-gated ammo |
+| `e413007` | Early type-held progression |
+| `d851bd5` | Explicit type-held stage |
+| `3eff952` | Sparse type-held destinations before refills |
+| `be34bef` | Owned Blue Fire after first synthetic purchase |
+| `cf5558e` | Reject progression at missable locations |
+| `2f16f40` | Shuffled shopkeeper missable policy |
+| `e8beedf` | Approved policy checkpoint |
+| `e1656d6` | D25 applies to type-held ammo too |
+| `51263ff` | Previous integrated evidence, now rebased |
+
+Fresh retained workspace: `E:/OOTRemake/work/r7-gifts/rebase-2100234-m4pfnwab-next/`.
+No old basetemp or player output is reused, rewritten or deleted.
+
+| Fresh command on this base | Observed result |
+|---|---|
+| `uv run ruff format --check` | 200 files already formatted |
+| `uv run ruff check` | All checks passed |
+| `uv run pytest --basetemp E:/OOTRemake/work/r7-gifts/rebase-2100234-m4pfnwab-next/synthetic-next` | 585 passed, 79 skipped; 259.26 s |
+| `OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump --basetemp E:/OOTRemake/work/r7-gifts/rebase-2100234-m4pfnwab-next/dump-next` | 78 passed, 586 deselected; 1042.42 s |
+
+All four fresh full gates passed on the `2100234` integration, including A's hint seed checks and
+updated seed-output oracle. No repository source/test changes after the rebase. The final commit
+only records this evidence; its actual head is posted to `cs-r7` after committing. New output
+folders and basetemps are retained; no existing player output, dump or save backup was changed.
+No merge, push, agent game launch or hot swap.
+
+The real CLI completed successfully:
+
+```sh
+uv run python -m clawshot --romfs E:/Games/Hookshot/romfs --seed 7 --shuffle Chest Shop Gift --hints always --hint-distribution balanced --out E:/OOTRemake/work/r7-gifts/rebase-2100234-m4pfnwab-next/seed7-gift-hints-next
+```
+
+It reports **278 shuffled checks, 22 collection spheres and 134 written resource files**.
+The new spoiler records `always`/`balanced`, **40 hints on 40 unique labels**; all **36** hints
+naming a location name exactly its placed item (zero mismatches). The merchant still holds
+**Deku Nuts (5)**. Both `GossipStone` and the once-gated merchant flow are written in the same
+real output. This is fresh A+D integration evidence, not a reused pre-A smoke result.
+`seed7-gift-hints-next` is retained, never swapped in or launched by the agent.
+
+The effective **956-character CS1** from that new spoiler was replayed through the actual CLI,
+with no shuffle/hint overrides, into fresh `seed7-gift-hints-cs1-next`. It again reports 278 checks,
+22 collection spheres and 134 resources. `diff -qr` over the **complete two output folders**
+passed: resources, spoiler and play note are byte-identical. Both folders remain retained.
+This exercises the merged hint settings together with Gift's expanded `Missable` type.
