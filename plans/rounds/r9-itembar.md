@@ -107,3 +107,7 @@ fallback follows; no setting or gameplay patch is silently substituted.
 as adult, note whether it appears greyed on ZR and whether adult items stop working, then Save and Continue.
 Report both the bar and actual item use before/after; a zone transition alone is not the recovery step.**
 This is a pending reverse-direction gameplay check, not an agent-run reproduction.
+
+Item2 checkpoint: no `patch/itembar.py`, dependency, saved layout, age permission, setting or experimental
+default is introduced. No speculative patched player overlay/launcher is produced. The conditional outcome
+is explicit rather than calling an unobserved refresh a fix. Item1 source checkpoint: `486f832`.
