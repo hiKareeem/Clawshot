@@ -154,9 +154,26 @@ def _seed_failure(seed: int, progressive: bool) -> str | None:
     return None
 
 
+def _workers() -> int:
+    """At most 3 pool workers, 1 while hookshot.exe runs (plans/02-orchestration.md: Kareem plays on this PC; an
+    8-worker sweep beside other test runs held the CPU at 100% and the game crashed twice). CLAWSHOT_WORKERS
+    overrides."""
+    if os.environ.get("CLAWSHOT_WORKERS"):
+        return max(1, int(os.environ["CLAWSHOT_WORKERS"]))
+    if sys.platform == "win32":
+        try:
+            tasks = subprocess.run(
+                ["tasklist", "/FI", "IMAGENAME eq hookshot.exe", "/NH"], capture_output=True, text=True, timeout=10
+            ).stdout
+        except (OSError, subprocess.SubprocessError):
+            tasks = ""
+        if "hookshot.exe" in tasks.lower():
+            return 1
+    return min(os.cpu_count() or 1, 3)
+
+
 def _failures(seeds: range, progressive: bool) -> list[str]:
-    workers = min(os.cpu_count() or 1, 8)
-    with ProcessPoolExecutor(workers) as pool:
+    with ProcessPoolExecutor(_workers()) as pool:
         results = pool.map(_seed_failure, seeds, [progressive] * len(seeds), chunksize=5)
         return [r for r in results if r]
 
