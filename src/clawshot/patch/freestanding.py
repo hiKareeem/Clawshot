@@ -103,7 +103,8 @@ def seed_setup(
     definitions: Sequence[Definition],
     vanilla: Mapping[str, str],
 ):
-    """Link selected hearts and intersect native-only destinations with prior holds."""
+    """Link selected hearts; restrict Freestanding destinations to the native palette
+    (``Settings.location_type_items``), intersecting a palette already given."""
     shuffled = shuffled_locations(world, settings)
     checks = [name for name in shuffled if world.locations[name].type == SHUFFLE]
     locations = {loc.id: loc for loc in census}
@@ -116,13 +117,9 @@ def seed_setup(
         if not _saved_heart(loc) or loc.area != world.locations[name].area:
             raise PatchError(f"{name}: not a saved native heart piece in its world area")
         linked[name] = loc
-    held = dict(settings.item_location_types)
-    other_types = tuple(sorted({loc.type for loc in world.locations.values()} - {SHUFFLE}))
-    pool = {vanilla.get(name, world.locations[name].vanilla) for name in shuffled}
-    for item in sorted(pool):
-        if item not in NATIVE_ITEMS:
-            held[item] = tuple(t for t in held.get(item, other_types) if t != SHUFFLE)
-    settings = replace(settings, item_location_types=held)
+    palettes = dict(settings.location_type_items)
+    palette = [item for item in NATIVE_ITEMS if item in palettes.get(SHUFFLE, NATIVE_ITEMS)]
+    settings = replace(settings, location_type_items={**palettes, SHUFFLE: tuple(palette)})
 
     def step(placements: Mapping[str, str]) -> FileChanges:
         targets = {}
