@@ -2266,6 +2266,31 @@ Python hash-seed process reproduces all15 resources byte-identically (`artifact-
 Only the already player-confirmed Din's Fire and Adult's Wallet join the chest-verified list.
 The new experiment admits no unreported actor; songs-anywhere's existing opt-in inference remains.
 
+## 34. Round 8: shopkeeper gift window and shop settings (cs8c)
+
+Read-only dump build `e0f3ccfa`; reproducible commands and player checklist:
+`plans/rounds/r8-shops.md`. External research/output: `E:/OOTRemake/work/r8-shops-cs8c/`.
+
+### Uncollected shuffled shopkeeper gift
+
+Round7's saved Bool `HaveTalked_Npc_Kokiri_001_Shop_Child_PresentDekuShield` remains the
+completion gate (false/reset8/save0); no new flag/save layout. `Talk` initializes camera/Navi state
+before Event24 -> Event23 (castle completion) -> Event21 (Gohma completion) -> Event1 (tree meeting).
+When the merchant gift is shuffled, Event24 instead checks saved completion, then the same
+`Meet_DekuTree_IsAfter_Step02_Exp` as Event1. Incomplete and met-tree goes to the original
+Event83 offer call, past both late-story cutoffs. All other cases use original Event23 dispatch.
+Both grant branches set completion, independent of equipped shield. Native shopping, quest queries,
+purchase/tutorial/shelf releases and unshuffled repeat-shield behavior are unchanged.
+
+Control-flow/readback oracles prove early/late/castle combinations, repeats, restored completion
+and pre-meeting refusal. The common writer built the requested new-game Boomerang experiment:
+`ingame/shopkeeper-after-gohma-next/`, own empty user and copied release-only launcher.
+Mido far-right chest supplies Deku Shield so the merchant can be skipped until after Gohma
+(optionally also Zelda). Flow50552 ->51736, allocation50832 ->52016; no GameDataList.
+Exact inverse deltas recover the original flow and both chest files. **Kareem must confirm the
+late grant, equipped-shield interaction, normal shopping and no repeat after Save/Continue,
+with overlay log.** No game was run here. D28's Missable/non-progression policy remains until that result.
+
 ## 36. Round 8: freestanding native pick-ups (cs8e)
 
 Build `e0f3ccfa`, dump/save backups read-only. Complete 36-anchor ledger, native actor-pack survey,
