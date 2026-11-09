@@ -108,8 +108,6 @@ them failed before its fix with the same message as the whole-world failure it m
    does not place by reachability. This replaces fix 2's helper (`_assumable`). Test:
    `test_no_stage_assumes_junk_that_the_fast_fill_may_leave_out_of_reach` (failed before: "the goal cannot be
    reached"). The measurement harness now records such a seed instead of stopping.
-
-The fill's stage order and assumptions are written up in `plans/04-world-format.md` ("Generating a seed").
 7. **The five chests before Mido.** With fixes 1–6, the remaining failures were one cause: a late progression
    item (Kokiri Sword, Fairy Ocarina, Slingshot, Boomerang) found no reachable location, because with the forest
    closed (D24) the last items an assumed fill places need one of the five chests before Mido and earlier items had
@@ -123,3 +121,113 @@ The fill's stage order and assumptions are written up in `plans/04-world-format.
    assume the displaced item can still be collected, which nothing then guarantees. No RNG is drawn for a swap.
    Test: `test_a_late_item_that_finds_the_only_chest_before_mido_full_swaps_into_it` (failed before: "progression:
    no reachable location for 'Sword' (1 allowed of 1 left ...)").
+   On the final head the swap fired in the formerly failing Gift seeds 12, 66, 109 and 138 (seed 72 now needed
+   none): late Slingshot/Deku Shield in Mido's chests, and songs in the type-held stage (Zelda's Lullaby, Saria's
+   Song, Requiem into Impa's, Malon's, Saria's and the Royal Family's Tomb's song checks).
+
+The fill's stage order and assumptions are written up in `plans/04-world-format.md` ("Generating a seed"); the
+world facts behind them in `plans/03-game-data.md` section 32.
+
+### After (this branch, rebased onto main `37a1b2f`)
+
+| Mode | First attempt | Most attempts | No fill in 10 | Unbeatable fill | Collection spheres |
+|---|---|---|---|---|---|
+| chest | 200/200 (100%) | 1 | 0 | 0 | 22–34 |
+| shop | 200/200 (100%) | 1 | 0 | 0 | 21–35 |
+| gift | 200/200 (100%) | 1 | 0 | 0 | 17–32 |
+| all (Chest Shop Gift Scrub BossHeart) | 200/200 (100%) | 1 | 0 | 0 | 16–33 |
+| default (`CS1`) | 200/200 (100%) | 1 | 0 | 0 | 22–34 |
+| boss (Chest BossHeart) | 200/200 (100%) | 1 | 0 | 0 | 23–35 |
+| freestanding (Chest Freestanding) | 200/200 (100%) | 1 | 0 | 0 | 22–33 |
+
+`default`'s 200 attempt and sphere counts are identical to `chest`'s. Every success passed the beatability search
+in the harness. Intermediate measurements on the way (all 200 seeds, first attempts), for the record:
+
+| Head | chest | shop | gift | all | freestanding |
+|---|---|---|---|---|---|
+| fix 1, keys first only (experiment copy) | 155 | | | | |
+| fix 1 (experiment copy) | 200 | | | | |
+| fixes 1–3 (experiment copy) | | | 183 | | |
+| fixes 1–5 | 200 | 194 | 190 | stopped: seed 40 unbeatable (fix 6) | 200 (palette contract on track E's snapshot) |
+| fixes 1–6, rebased onto `94699db` | 200 | 194 | 187 | | |
+| fixes 1–7, before the `37a1b2f` rebase | 200 | 200 | 200 | 200 | |
+
+Track D's case: Chest+BossHeart seed 7 on `r8/gifts` `c9afedd` with this branch's `fill.py` and `drops.py`: attempt 1.
+
+### Seed 7 through the real CLI (final head)
+
+`python -m clawshot --romfs E:/Games/Hookshot/romfs --seed 7 <mode> --out E:/OOTRemake/work/r8-fill/cli-final/seed7-<mode>-next`;
+the harness had already shown attempt 1 for seed 7 in every mode.
+
+| Mode | Shuffled checks | Collection spheres | romfs resources written | Note |
+|---|---|---|---|---|
+| `--shuffle Chest` | 164 | 25 | 79 | |
+| `--shuffle Chest Shop` | 228 | 26 | 92 | |
+| `--shuffle Chest Shop Gift` | 278 | 23 | 139 | |
+| `--settings CS1` | 164 | 25 | 79 | folder byte-identical to `--shuffle Chest` (`diff -rq`) |
+| `--shuffle Chest Shop Gift Scrub BossHeart` | 290 | 20 | 140 | its spoiler's 1,012-character `CS1` string replayed into a new folder: byte-identical (`diff -rq`) |
+| `--shuffle Chest BossHeart` | 172 | 28 | 81 | |
+| `--shuffle Chest Freestanding` | 178 | 26 | 86 | |
+
+The outputs stay under `E:/OOTRemake/work/r8-fill/cli-final/` (new `-next` folders, never a played folder); no
+launcher, game or test user folder was made: this track changes no game file format, only which item goes where.
+
+## Gates (final head, rebased onto `37a1b2f`)
+
+| Command | Result |
+|---|---|
+| `uv run ruff format --check` | 218 files already formatted |
+| `uv run ruff check` | All checks passed |
+| `uv run pytest` | 714 passed, 85 skipped (338.90 s) |
+| `OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump` | 84 passed, 715 deselected (714.22 s) |
+
+Both pytest runs used `-p no:cacheprovider --basetemp E:/OOTRemake/work/r8-fill/gate-*` (removed after they
+passed), serially, while no sweep ran. The dump run includes track D's reported `test_drops_seed_dump` boss-heart
+seed 7 case, which passes here.
+
+## Choices made provisionally (for review)
+
+- Small keys before boss keys departs from OoT Randomizer's order; it follows the remake's Fire Temple (fix 1) and
+  matches what the return kit already did for the Forest Temple.
+- The type-held stage retries as one stage (OoT Randomizer retries its shop and song stages separately; here songs,
+  shop refills and gift-held items share one stage, as round 7 built it).
+- The palette stage picks the first matching items of the shuffled pool, so a boss heart or freestanding pick-up is
+  most often a red rupee or a heart piece, as the pool is; nothing weights it further.
+- `drops.seed_setup` keeps its `vanilla` parameter, now unused, so callers on other branches keep working.
+- The `Missable` rule in `allowed()` stays; track C made the shopkeeper an NPC check, so no location has that type
+  on main any more. Removing it is track C's or Claude's call.
+
+## Questions
+
+None for Kareem: nothing here changes what a seed contains beyond which item goes where, and every restriction
+(D21, D25, D27, D28, own-dungeon items, type holds, the return guarantee) is still enforced by `allowed()` and the
+oracles.
+
+## Commits (on `r8/fill`, after `37a1b2f`)
+
+| Commit | What |
+|---|---|
+| `abb2612` | `FillError` names stage, item, allowed locations and frontier (item 1) |
+| `5152887` | Small keys before boss keys; other dungeons before the return kit (fix 1) |
+| `9d6c34c` | No bag-gated ammo assumed before its stage (fix 2) |
+| `f414f94` | Type-held stage retried on its own (fix 3) |
+| `386e022` | Native-display progression first (fix 4) |
+| `6b33b76` | `Settings.location_type_items` and the palette stage (fix 5) |
+| `63207e9` | Shared, isolated: `drops.seed_setup` uses the palette |
+| `ad8c7be` | No stage assumes junk (fix 6; replaces fix 2's helper) |
+| `7d5efce` | `04-world-format.md`: the stages |
+| `358f509` | This round file, first part |
+| `865327a` | Palette stage takes items that may go nowhere else first |
+| `33307e2` | Shared, isolated: `freestanding.seed_setup` uses the palette |
+| `8e67b2f` | Fill docstrings |
+| `7d2c2c2` | `03-game-data.md` section 32 |
+| `aab0568` | Archipelago's safe swap, credited in `NOTICE` and `README.md` (fix 7) |
+| `79415da` | `04-world-format.md`: the swap |
+| `a0eaec7` and the final commit | This round file |
+
+## Handoff
+
+Done: item 1 (measurement, every failed attempt's stage, item, allowed locations and frontier) and item 2 (each
+measured cause fixed with a failing-before test; every mode's first attempt succeeds for 200 of 200 seeds; no
+relaxed rule, the ten-attempt bound unchanged). Left: nothing on this track. Claude's review, merge and the
+`decisions.md` entries (small keys before boss keys; `location_type_items`; Archipelago's swap).
