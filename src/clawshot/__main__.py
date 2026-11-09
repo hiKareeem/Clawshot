@@ -69,6 +69,11 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--shop-prices", choices=("vanilla", "affordable"), help="affordable: shuffled shop items cost 10"
     )
+    parser.add_argument("--shop-slots", type=int, help="0..8 shuffled shelves per shop (first native indices; default 8)")
+    parser.add_argument(
+        "--scrub-prices", choices=("vanilla", "fixed"), help="price policy for supported shuffled once-sale scrubs"
+    )
+    parser.add_argument("--scrub-price", type=int, help="fixed scrub fee, 0..1000 rupees (default 10)")
     parser.add_argument(
         "--cheap-deku-shield",
         action=argparse.BooleanOptionalAction,
@@ -104,6 +109,9 @@ def main(argv: list[str] | None = None) -> int:
             ("skip", "fast_start"),
             ("songs", "songs"),
             ("shop_prices", "shop_prices"),
+            ("shop_slots", "shop_slots"),
+            ("scrub_prices", "scrub_prices"),
+            ("scrub_price", "scrub_price"),
             ("cheap_deku_shield", "cheap_deku_shield"),
             ("forest", "forest"),
             ("hints", "hints"),
