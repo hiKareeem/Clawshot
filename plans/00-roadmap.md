@@ -873,6 +873,12 @@ Round 9 candidate (Kareem, 2026-11-09): label dungeon checks in `location_names.
 16 chests and 5 Gold Skulltulas, as the census has, the two remake chests being the timed 5F trio's extra pair.
 Derive floors from game data (room index to map floor) [inference: the map data holds it; not traced].
 
+Round 9 candidate (seed 8 play, Kareem 2026-11-09): adult-only items obtained as child lock the item buttons. The
+Bow from a chest auto-equipped as child; afterwards the Boomerang and Deku Sticks could not be used until save and
+reload. Trace the remake's age gate for button items and the get-time auto-assign (player and pouch data, the get
+flow); fix in data if it lives there, otherwise document the reload workaround and consider which items (Bow,
+Hookshot, Hammer and others) need it. Backup: `save-backups/2026-11-09_1423-seed8-bow-lock`.
+
 ### Settings backlog (Ship of Harkinian's lists, shown by Kareem 2026-11-09)
 
 Reference for later rounds and presets; feasibility marked [inference] is unverified. RomFS-only (D14) rules out
