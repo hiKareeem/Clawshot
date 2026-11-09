@@ -20,6 +20,7 @@ class LocationName:
     oot_randomizer_name: str
     source: str
     ids: tuple[str, ...]
+    floor: str
 
 
 def load(path: Path = CATALOG) -> dict[str, LocationName]:
@@ -30,8 +31,17 @@ def load(path: Path = CATALOG) -> dict[str, LocationName]:
         key = row["location"]
         if key in result:
             raise ValueError(f"two location descriptions for {key!r}")
+        floor = row.get("floor", "")
+        source = row["source"]
+        if floor:
+            source += "; floor: Banc/BancBasedResource/MapParam.byml.zs (e0f3ccfa), section39."
         result[key] = LocationName(
-            row["name"], row["where"], row["oot_randomizer_name"], row["source"], tuple(row["ids"])
+            row["name"] + (f" ({floor})" if floor else ""),
+            row["where"],
+            row["oot_randomizer_name"],
+            source,
+            tuple(row["ids"]),
+            floor,
         )
     return result
 
