@@ -39,7 +39,7 @@ Provisional choices by cs8c: first N catalog indices rather than randomizing she
 - `uv run pytest tests/test_shop_settings.py tests/test_settings.py tests/test_settings_prices.py tests/test_scrubs.py tests/test_scrub_seed.py -q --tb=short`: **61 passed**. All nine shelf counts, exact selected pool/fixed remainder, CS1 fill replay, price-only effect on selected shelves, retained stock gates, fee0/200/201/500/501/1000 wallet boundaries, all native grant tiers and CLI override/refusals.
 - Scoped format followed by `uv run ruff check`: **passed** after correcting the two printed excess-width lines (CLI help122, scrub source123).
 - `OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump tests/test_shop_settings_dump.py -q --tb=short --basetemp E:/OOTRemake/work/r8-shops-cs8c/partial-dump-next`: **1 passed**. Real writer checks24 selected logical shelves across all128 physical definitions; unchanged unselected shelf/seller rows (except independent cheap shield), exact201 fees, wallet predicate transitions, exact inverse scrub flow and fresh chronological win.
-- Actual public CLI, seed7, `--shuffle Chest Shop Scrub --shop-slots 3 --shop-prices affordable --scrub-prices fixed --scrub-price 201 --out E:/OOTRemake/work/r8-shops-cs8c/partial-fixed-seed-next`: **exit0, 192 checks, 23 spheres, 92 resources**, spoiler and play note. Full-world/default forest/return guarantee, no reroll or increased retry bound. CS1/zero-slot CLI proofs follow when completed.
+- Actual public CLI, seed7, `--shuffle Chest Shop Scrub --shop-slots 3 --shop-prices affordable --scrub-prices fixed --scrub-price 201 --out E:/OOTRemake/work/r8-shops-cs8c/partial-fixed-seed-next`: **exit0, 192 checks, 23 spheres, 92 resources**, spoiler and play note. Full-world/default forest/return guarantee, no reroll or increased retry bound.
 
 ### Isolated shared commits (pre-rebase)
 
@@ -55,4 +55,31 @@ Provisional choices by cs8c: first N catalog indices rather than randomizing she
 | `48956a6` | prepare hook before effective prices |
 | `7f6de32` | scrub fees, wallet predicates and presentation metadata |
 
-Reviewer authorized next clean rebase for plans-only main `e3745f5`; item2 tests/docs commit precedes it. Full gates and final rebased ledger will be recorded before readiness/handoff. No tested resource or player folder is rewritten.
+Reviewer-authorized rebase onto plans-only main `e3745f5` completed without conflict. Read the new settings backlog; it changes no Track C acceptance criterion. No tested resource or player folder is rewritten.
+
+### Actual settings replay and zero boundary
+
+`uv run python -u E:/OOTRemake/work/r8-shops-cs8c/smoke_replay.py` (completed external driver, subsequently removed):
+
+- Replayed the first written spoiler's effective CS1 in another interpreter (`PYTHONHASHSEED=888`), no overrides: **exit0, 192 checks/23 spheres, all94 complete output files SHA256-identical**, including spoiler/note and all92 resources.
+- Fresh full CLI seed7 with `--shuffle Chest Shop Scrub --shop-slots 0 --scrub-prices fixed --scrub-price 0`: **exit0, 168 checks/28 spheres**, no Shop check in the written placements and all four supported Scrub descriptions at price0.
+- Read the saved partial-seed spoiler's actual three fields, selected shelves at10 and all four Scrub prices201. Read its actual play-note opening: unselected KF7 remains vanilla Deku Shield at the independent cheap price10, explicitly Buy before Tree entry. Selection does not erase fixed stock from the player's route.
+
+Retained `settings-cli-proof.json`, both replay/zero CLI logs, the original partial CLI log, every fresh output folder, and `ingame/late-gift-proof.json`. Removed only the two completed session-created builder/smoke driver files, never an output/user/backup/game path. Original reusable trace reports remain external. The copied new-game launcher was read back from disk: bin executable only, update checks disabled, missing-exe hard stop, unique user/overlay/log; no batch executed.
+
+### Current commit ledger on e3745f5
+
+| Commit | Scope |
+|---|---|
+| `b6455d9` | item1 merchant-only shared gift patch |
+| `b051367` | existing shared inverse-gift oracle |
+| `feaf020` | item1 owned regressions/report/section34 |
+| `eeb5181` | settings defaults only |
+| `f611b46` | Settings fields only, no fill-algorithm edit |
+| `1ed428e`, `c16b944` | CLI only |
+| `b5c9ae3` | logical shelf selection metadata |
+| `995438d` | prepare hook before pricing |
+| `d0b61d2` | scrub fee/logic/metadata integration |
+| `90ad1b3` | item2 owned synthetic/dump regressions, README and research |
+
+Full gates run on this rebased source; later commits change this report only. Shared hashes were posted to `cs-r8` as cs8c. Section34 follows existing31; reviewer inserts32/33 before34 when those tracks merge, without placeholders or other-track edits.
