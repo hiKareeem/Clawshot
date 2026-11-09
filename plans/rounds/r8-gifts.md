@@ -350,3 +350,101 @@ this branch and run all four full gates.** Final readiness is blocked on that up
 not on the now-fixed Granny traversal. No fill edit, seed substitution, retry increase or test
 weakening is made here. All reachable implementation, player artifacts, exact failure/pool
 evidence and the clean15d4c70 integration are complete; gameplay acceptance remains Kareem's.
+
+## Additional research: Egg, Chicken and Zelda's Letter share the child trade cell
+
+Reviewer/Kareem observation is accepted: taking Zelda's Letter from a chest while holding
+the Weird Egg made the Egg disappear from the inventory. **Research only; no gameplay,
+world rule, pool, grant, pouch or engine code is changed for this item.**
+
+### Native evidence
+
+Read-only `uv run python E:/OOTRemake/work/r8-gifts/child_trade.py` passed against builde0f3ccfa:
+
+- `RSDB/PouchActorInfo.Product.111.rstbl.byml.zs` has distinct AssignableItem identities
+  `WeirdEgg`, `AlarmCucco` (the child Chicken), `ZeldaLetter`; all are Material/Large,
+  PouchSpecialDeal None and autosave-on-get. Each native PouchContent component has
+  `EnableStock=false`. **Those rows alone do not declare an independent slot per item.**
+- `UI/Pouch/PouchTable/PouchTable.game__ui__PouchTable.bgyml` groups all three in the
+  **same** ItemArray cell, `BtnName=Pa_ItemIcon_23`, `SpecialDeal=SwordBigGoronChallenge`.
+  They are the cell's only child-usable variants, ordered Letter, AlarmCucco, WeirdEgg.
+  Adult trade variants occupy that same UI group for their age. This confirms the shared
+  child-trade presentation/selection cell, not three simultaneously selectable inventory cells.
+- This is consistent with the reported loss of the Egg from the visible inventory. **Whether
+  receiving Letter actually deletes the Egg's underlying pouch record, rather than making
+  it inaccessible behind another cell variant, is not established by these metadata files.**
+  No before/after raw save was supplied or invented. Do not infer recoverable independent
+  ownership from separate IsGet flags; usable Egg/Chicken must remain available for Talon.
+- The actual native chain is explicit: `Goto_HyruleCastle/Event55` takes WeirdEgg,
+  `Event20` gives `Item_AlarmCucco` through the egg-hatch event, and `Event93` checks the
+  Chicken in the pouch. Talon's wake cutscene `Dm_HrlCastle_0020/Event69` takes Chicken;
+  `Event121` advances Goto_HyruleCastle to Step04 and `Event134` sets **Talon_AfterWakeUp**.
+  The existing Bool is defaultfalse/reset8/save0, verified by its GameDataList hash822480096.
+  That saved event, not mere historical Egg ownership, is the relevant completion fact.
+
+### What OoT Randomizer526b4c8d actually does
+
+The existing read-only upstream checkout at `E:/OOTRemake/work/r2-world/OoT-Randomizer`
+reports HEAD **526b4c8d81b7c4023ef4573ffbaf39344e270d5b**. No NX2navi code/docs were read.
+Facts below are source evidence, not a claimed execution of OoTR or its N64 runtime:
+
+1. [Castle rules][ct-castle] require Weird Egg **or** Chicken to reach HC Garden;
+   Zelda's Letter and Impa's song are checks beyond that gate. [Ranch rules][ct-ranch]
+   independently retain the castle Egg/Chicken prerequisite for child Malon's song and Talon's
+   chicken game, unless Skip Child Zelda is selected. Early Letter is **not** treated as a
+   substitute for waking Talon.
+2. [ItemPool.py695–712][ct-pool] shuffles only selected child-trade items; otherwise they stay
+   vanilla. Selecting Chicken but not Egg replaces the native Egg pool contribution with
+   Chicken; selecting both does not add both stages. [Patches.py796–797][ct-enable] enables
+   CFG_CHILD_TRADE_SHUFFLE when child trade is shuffled (or advanced logic).
+3. The runtime has **more state than vanilla's current child-trade slot**.
+   [trade_quests.c53–139][ct-owned] maps child items to one slot but keeps a separate
+   per-item owned bitset; Egg/Chicken/Letter are distinct ownership bits. Hatching updates
+   Egg ownership to Chicken without clearing unrelated owned Letter. The same file's
+   179–230 functions select next/previous owned items and update the selected slot/equips.
+   [dpad.c22–37][ct-cycle] exposes that cycling in the item menu. Thus selecting Letter does
+   not destroy the ability to reselect owned Egg/Chicken and wake Talon; Letter remains owned.
+4. [Item grant effects][ct-effects] register Zelda's Letter as owned too (the Letter effect ends
+   in trade_quest_upgrade); it is not protected merely by a fill-order rule.
+   [Installed runtime hooks][ct-hooks] update owned flags on hatch and prevent courtyard
+   savewarp from reverting Letter to Chicken when child-trade shuffle is on; a separate
+   hook prevents collecting the shuffled Zelda check twice. These are executable patches,
+   not guarantees obtained by copying OoTR's monotonic inventory logic into a RomFS-only mod.
+
+### Proposal for Clawshot — not applied
+
+**Recommendation for the next reviewed playable seed: keep both Weird Egg and Zelda's Letter
+at their native gifts, with native hatch/Chicken consumption unchanged, until the shared-slot
+contract has an accepted solution. Kareem/co-owner: approve this temporary hold?**
+No claim that a seed may require both simultaneously usable merely because Search remembers
+both. A check granting Letter before Talon's chain completes can strand the required Chicken.
+
+If keeping the two shuffled is preferred, the minimum safe alternative is to constrain Letter
+to checks **physically impossible to collect before Talon_AfterWakeUp**, and prove every
+permitted destination has that native gate. The native Zelda courtyard gift is the conservative
+candidate. Merely adding `Weird_Egg` to a logical requirement is insufficient: the reported
+failure occurs while holding Egg, and logic-only gates do not stop an optional chest being
+opened early. An explicit persistent “child Talon woken” event, item-placement restrictions
+and physical gate acceptance would be needed, plus shuffled-Egg hatch/Talon tests.
+
+The full OoTR solution instead requires independently retained ownership plus a demonstrated
+selection/cycling mechanism and native trade/hatch integration; no such remake contract is
+proved here, and no Hookshot/runtime patch is proposed as Round8 code. No allowlist expansion
+or quiet production restriction is made by this research.
+
+[ct-castle]: https://github.com/OoTRandomizer/OoT-Randomizer/blob/526b4c8d/data/World/Overworld.json#L1351-L1404
+[ct-ranch]: https://github.com/OoTRandomizer/OoT-Randomizer/blob/526b4c8d/data/World/Overworld.json#L2792-L2817
+[ct-pool]: https://github.com/OoTRandomizer/OoT-Randomizer/blob/526b4c8d/ItemPool.py#L695-L712
+[ct-enable]: https://github.com/OoTRandomizer/OoT-Randomizer/blob/526b4c8d/Patches.py#L792-L797
+[ct-owned]: https://github.com/OoTRandomizer/OoT-Randomizer/blob/526b4c8d/ASM/c/trade_quests.c#L53-L230
+[ct-cycle]: https://github.com/OoTRandomizer/OoT-Randomizer/blob/526b4c8d/ASM/c/dpad.c#L22-L37
+[ct-effects]: https://github.com/OoTRandomizer/OoT-Randomizer/blob/526b4c8d/ASM/c/item_effects.c#L231-L269
+[ct-hooks]: https://github.com/OoTRandomizer/OoT-Randomizer/blob/526b4c8d/ASM/src/hacks.asm#L2717-L2785
+
+### Temporary gate cleanup
+
+Removed only this session's completed full-gate basetemps, leaving requested player outputs
+untouched. Git Bash rm initially refused47 dangling pytest `*current` directory symlinks.
+Printed reparse attributes1040 and native link targets, verified every remaining link points
+inside its own session basetemp, then removed only the links with native directory-unlink and
+the now-empty roots. No unchanged rm retry, target traversal or unrelated deletion.
