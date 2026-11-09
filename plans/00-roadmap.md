@@ -838,6 +838,19 @@ section 36.
 2. `--shuffle Freestanding` (off) restricted to that palette, logic and tests; one test output (an early heart piece
    swapped for a shield), with what Kareem should see, including after Save and Continue.
 
+### Round 8 result (2026-11-09)
+
+All five tracks merged; main `14d7a26`, gates 721 passed / 86 skipped, dump 85.
+- A fill: every mode 200/200 seeds on the first attempt, none unbeatable (D32 keys first, D33 type palettes, D34
+  Archipelago's safe swap). Before: all kinds 0%, gifts 9.5%.
+- B get-item models: gift items in chests show their models and text (Letter, Egg, Card confirmed by Kareem); the two
+  ocarinas still show none (cosmetic; parked).
+- C shops: `shop_slots`, fixed scrub fees; the shopkeeper's gift persists past Gohma and the castle (Kareem's test),
+  so it holds any item (D28 lifted).
+- D gifts: frog prizes, Skulltula House rewards and three merchant sales built behind in-game acceptance (not in
+  `--shuffle Gift` yet); D31 keeps the Weird Egg and Zelda's Letter vanilla (one shared trade cell).
+- E freestanding: floor heart pieces and boss hearts take native pickups; Kareem confirmed the ranch tower shield.
+
 ### After round 8
 
 Round 9 candidate from play: `free_time_travel` also needs Sheik moved: as adult before the Forest Temple, Sheik
