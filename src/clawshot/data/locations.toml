@@ -4859,6 +4859,14 @@ vanilla_item = "Item_OddPowder"
 oot_randomizer_name = "Kak Granny Trade Odd Mushroom"
 
 [[location]]
+id = "Npc_Hylia_053_Adult/Event12"
+kind = "npc_gift"
+area = "KakarikoVillage"
+name = "Kak Granny Buy Blue Potion"
+vanilla_item = "Item_Bottle_BluePotion"
+oot_randomizer_name = "Kak Granny Buy Blue Potion"
+
+[[location]]
 id = "Npc_Hylia_Dampe_001/Event628"
 kind = "npc_gift"
 area = "Graveyard"

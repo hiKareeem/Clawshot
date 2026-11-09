@@ -2568,7 +2568,7 @@ location = "GC Medigoron"
 name = "Medigoron's Blade"
 where = "Goron City (adult), Medigoron's side cave opened with bomb flowers: buy his blade for 200 Rupees"
 oot_randomizer_name = "GC Medigoron"
-source = "https://zeldacentral.com/games/ocarina-of-time-remake/shops-and-prices/#medigoron-masterworks; https://zeldacentral.com/games/ocarina-of-time-remake/walkthrough/biggoron-sword-route/#giants-knife; data: census gift step(s) Npc_Goron_Medigoron_Adult/Event11 (src/clawshot/data/locations.toml; gift_rules.toml class more; plans/03-game-data.md section 19)"
+source = "https://zeldacentral.com/games/ocarina-of-time-remake/shops-and-prices/#medigoron-masterworks; https://zeldacentral.com/games/ocarina-of-time-remake/walkthrough/biggoron-sword-route/#giants-knife; data: Npc_Goron_Medigoron_Adult/Event11, price200; private saved success gate, held vanilla pending Kareem (section 35)"
 ids = ["Npc_Goron_Medigoron_Adult/Event11"]
 
 [[location]]
@@ -2598,9 +2598,9 @@ ids = ["Npc_Hylia_017_Adult/Event100", "Npc_Hylia_017_Adult/Event116"]
 [[location]]
 location = "Wasteland Bombchu Salesman"
 name = "Mirage Desert Carpet Merchant"
-where = "Mirage Desert (Haunted Wasteland, adult): the flying carpet merchant on the left after the sand river, at the end of a wooden bridge; buy his mystery item"
+where = "Mirage Desert (Haunted Wasteland, adult): the flying carpet merchant on the left after the sand river, at the end of a wooden bridge; buy his mystery item for 90 Rupees"
 oot_randomizer_name = "Wasteland Bombchu Salesman"
-source = "https://www.eurogamer.net/zelda-ocarina-of-time-mirage-desert#section-1; vanilla sale Shop_BombchuBundle_01 = Bombchu (10) in src/clawshot/data/shops.toml; data: census gift step(s) Npc_Hylia_044_Adult/Event3 (src/clawshot/data/locations.toml; gift_rules.toml class more; plans/03-game-data.md section 19)"
+source = "https://www.eurogamer.net/zelda-ocarina-of-time-mirage-desert#section-1; data: Npc_Hylia_044_Adult/Event3, price90, Shop_BombchuBundle_01 = Bombchu (10); private saved success gate, held vanilla pending Kareem (section 35)"
 ids = ["Npc_Hylia_044_Adult/Event3"]
 
 [[location]]
@@ -2650,6 +2650,14 @@ where = "Kakariko Village, Granny's potion shop behind the Potion Shop, through 
 oot_randomizer_name = "Kak Granny Trade Odd Mushroom"
 source = "https://www.ign.com/wikis/ocarina-of-time-remake/How_to_Get_the_Biggoron_Sword_-_Trading_Sidequest; https://zeldacentral.com/games/ocarina-of-time-remake/walkthrough/biggoron-sword-route/#odd-poultice; data: census gift step(s) Npc_Hylia_053_Adult/Event167 (src/clawshot/data/locations.toml; gift_rules.toml class swap; plans/03-game-data.md section 19)"
 ids = ["Npc_Hylia_053_Adult/Event167"]
+
+[[location]]
+location = "Kak Granny Buy Blue Potion"
+name = "Granny's Blue Potion Sale"
+where = "Kakariko Village (adult), Granny's shop behind the Potion Shop: after completing her Odd Mushroom trade, bring an empty bottle and 100 Rupees; this is separate from the trade reward"
+oot_randomizer_name = "Kak Granny Buy Blue Potion"
+source = "data: Npc_Hylia_053_Adult Buy_BluePotion, Event11 funds100, Event15 empty bottle, Event12 GetInEventInBottle_BlueBottleShop; Event3 quest unlock retained. Native sale censused separately from Odd Powder trade Event167; swap held pending Kareem (section 35)"
+ids = ["Npc_Hylia_053_Adult/Event12"]
 
 [[location]]
 location = "LW Trade Odd Potion"
