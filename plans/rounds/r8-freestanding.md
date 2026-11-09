@@ -266,3 +266,88 @@ Shared checkpoints after item1: **afb0ceb** definitions, **2e060a8** owned trans
 **c477fc1** README/world-format contract. The next item2 commit includes the whole-dump
 oracle, floor-required-shield regression, section36 and this evidence. All are checkpoints
 until the complete four gates below; no commit is posted ready based only on focused checks.
+
+## Authorized integration and CLI replay
+
+Committed item2 as `8debaae`, then performed the reviewer-authorized `git rebase main`
+onto **e3745f5** (settings backlog in the roadmap only). All eight commits replayed without
+conflicts. Read the updated backlog; it adds no Track E scope or runtime change.
+Earlier hashes above are historical; the rebased branch ledger is:
+
+| Commit | Scope |
+|---|---|
+| `a019d45` | Item1 complete anchor/native-pack/respawn audit |
+| `3be0e9d` | Shared definitions only: DMC pair and GV waterfall links |
+| `97cfc47` | Owned native floor transforms, eligibility and synthetic regressions |
+| `0ab2619` | Shared seed pipeline only |
+| `3e86de4` | Shared public CLI choice only |
+| `082c748` | Shared14-check player catalog and coverage oracle |
+| `4f79c01` | README/world-format contract |
+| `8a78867` | Item2 whole-dump oracle, required-floor-shield regression, section36 and output evidence |
+
+Actual public CLI smoke, before the plans-only rebase (same source):
+`uv run python -m clawshot --romfs E:/Games/Hookshot/romfs --seed 2 --shuffle Chest
+Freestanding --no-cheap-deku-shield --hints mask --out
+E:/OOTRemake/work/r8-freestanding-cs8e/cli-seed2-0-next`.
+Exit **0**, **178 shuffled checks /24 spheres**, **78 canonical output files**.
+A second interpreter with a different `PYTHONHASHSEED` used the written effective CS1,
+no shuffle/logic overrides, and fresh `cli-seed2-1-next`: exit0, same counts,
+**78/78 files byte-identical**, including every resource, spoiler and play note.
+Transcripts `cli-seed2-{0,1}.log` and `cli-replay-proof.json` retain exact command/settings/hashes.
+Both new folders remain staged, never launched or swapped over a player output.
+
+Read the actual rendered play-note floor rows and hints, not merely a serializer:
+all14 physical pickup names/directions appear; ranch and river-near-Domain hold Deku Shields,
+windmill and river-open-grotto hold Red Rupees, and the unchanged GV floor piece retains its
+own variant. The different `GV Crate` and Dampé race checks are still chests, not extra floor
+checks. This confirms the visible CLI/spoiler/note surface; it does not certify in-game pickup.
+The independent whole-dump seed14 oracle covers native actors and all affected written Bancs.
+
+The saved player batch was read back independently: bin EXE, update suppression, missing-EXE
+stop, unique user, backup-copy direction and overlay/log paths correct. No batch, dry run,
+game, window, source save or active output was run/written. Removed only the session-created
+throwaway CLI driver after both successful processes and byte proof; retained the research,
+failure reproducers, controlled builder/checker/checklist, outputs and JSON/transcript evidence.
+
+All four full gates completed on rebased source through `8a78867`, with fresh external
+`gate-synthetic-next` and `gate-dump-next` basetemps. No repository source/test edits followed
+their start; only this documentation-only handoff follows the successful results.
+
+Respawn evidence labels: the other-pickup ledger records **native metadata/AI contracts**,
+not newly observed reload behavior. `NoRespawn`, `AlwaysRespawn`, `BancReset`, `SupplyObject`
+and reset values come from the resolved pack/GameDataList; their runtime implications are
+inferred unless sections11/27 explicitly record Kareem's observation. In particular, no
+permanent replacement collection is certified from a flag's existence alone.
+
+## Full gate evidence
+
+Observed completed stages on the final rebased source, without source/test changes:
+
+| Full command | Observed result |
+|---|---|
+| `uv run ruff format --check` | **209 files already formatted** |
+| `uv run ruff check` | **All checks passed** |
+| `uv run pytest --basetemp E:/OOTRemake/work/r8-freestanding-cs8e/gate-synthetic-next` | **651 passed,81 skipped**,785.54s |
+| `OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump --basetemp E:/OOTRemake/work/r8-freestanding-cs8e/gate-dump-next` | **80 passed,652 deselected**,895.04s |
+
+732 tests collected. The synthetic suite includes the existing default/progressive/determinism/
+age-return sweeps and all32 new native-floor cases. The unfiltered dump gate passed every
+selected test, including both Track E whole-dump oracles. The full chain exited successfully.
+
+## Review handoff
+
+Branch **`r8/freestanding`**, rebased onto authorized **e3745f5**. The eight scoped commits
+are listed above; the final documentation-only commit records these completed gates. No merge
+or push. Track E is ready for code review, **not certified in game**.
+
+Remaining external acceptance:
+
+- **Kareem: run the isolated LLR shield test and `ingame/llr-checklist.md` above; provide
+  the overlay log, native shield grant, and Save/Continue/re-entry once-only result.**
+  Other palette/location combinations, particularly underwater collection, remain unplayed.
+- Track A owns the exact seed7/seed3 fill refusals recorded above, per Claude's direction.
+  No retries were added and no access, return, or native-palette restriction was relaxed.
+
+The refused CLI seed3 output folders and isolated test-user folder were also checked absent
+after the CLI probes. No game/launcher/window was opened, no source backup was written,
+and no existing player output was replaced.
