@@ -167,3 +167,44 @@ Longshot in Dodongo's west alcove, Pocket Egg at the moat. Adult-first precautio
 potion shelves' sticks and the Ganon Light Trial sticks. No new gameplay result is inferred.
 Removed only the completed session-created throwaway smoke driver after this proof; research
 reproducers and the fresh review output remain external. Existing player folders were not rebuilt.
+
+## Full gates and handoff
+
+All four required gates ran in full, serially, with no source change during the run.
+The reviewer-requested Lichii evidence was the only intervening documentation change.
+
+| Command | Result |
+|---|---|
+| `uv run ruff format --check` | 227 files already formatted |
+| `uv run ruff check` | All checks passed |
+| `uv run pytest` (OOT_ROMFS unset) | 736 passed, 87 skipped; 462.04s |
+| `OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump` | 86 passed, 737 deselected; 847.14s |
+
+Both pytest runs used separate session-created external `PYTEST_ADDOPTS=--basetemp=...`
+folders under `E:/OOTRemake/work/r9-itembar-cs9a/`; no fixture data was written into the repo.
+The new frontier/presentation tests passed (15 synthetic), and the native-age catalogue
+oracle passed in the full dump run. Actual CLI/unchanged-resource proof is recorded above.
+No game was started, no player output rebuilt, no save copy altered.
+
+Branch `r9/itembar`, in order:
+
+- `486f832` — item1 age table, assignment trace and section37.
+- `a65af4e` — item2 unsupported data-fix boundary and reverse-age checklist.
+- `5502718` — sourced native-age catalogue, first-frontier analysis and tests.
+- `e05a45a` — isolated shared generator integration for spoiler/play-note warnings.
+- `594432e` — seed8 replay proof, documentation and proposed owner choices.
+- `4085413` — reviewer-relayed Lichii reproduction, documentation only.
+
+The final handoff metadata commit follows these checkpoints; no merge or push was performed.
+Shared edits for review: `generate/__init__.py`, README and section37 of `03-game-data.md`.
+Preserve the other tracks' shared additions; the location catalogue is read dynamically,
+so their floor-qualified names can flow into these warning rows at integration.
+
+Remaining limits: the precise boot caller reconstructing the live ZR bar is unproved;
+no supported data-only repair is claimed. Adult-first Slingshot/Boomerang gameplay remains
+Kareem's isolated-copy check. Get-text and matching-age fill remain proposals awaiting
+Kareem/co-owner approval, not shipped settings. The specified note-only fallback is implemented.
+
+Thread-command diagnosis: `~/go/bin/bermuda` failed with exit127 because this host has
+`C:/Users/hi/go/bin/bermuda.exe`, not an extensionless binary. Printed the installed filename
+before using that exact executable; no unchanged retry.
