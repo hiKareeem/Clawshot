@@ -878,6 +878,10 @@ Bow from a chest auto-equipped as child; afterwards the Boomerang and Deku Stick
 reload. Trace the remake's age gate for button items and the get-time auto-assign (player and pouch data, the get
 flow); fix in data if it lives there, otherwise document the reload workaround and consider which items (Bow,
 Hookshot, Hammer and others) need it. Backup: `save-backups/2026-11-09_1423-seed8-bow-lock`.
+Detail (Kareem): loading zones do not clear it, Save and Continue does; at pickup the Bow joined the ZR item bar though
+greyed out for child, and the reload removed it from the bar. Test the reverse too (adult picking up the Slingshot or
+Boomerang). Fallbacks if no data fix: the play note and get text tell the player to Save and Continue, or a setting
+keeps age-locked button items out of locations the other age reaches first.
 
 ### Settings backlog (Ship of Harkinian's lists, shown by Kareem 2026-11-09)
 
