@@ -82,4 +82,6 @@ Python 3.12+ with uv. Reasons and alternatives: `plans/decisions.md`.
 
 ## License
 
-MIT (`LICENSE`), like OoT Randomizer and Archipelago. Code ported from other projects is credited in `NOTICE`.
+MIT (`LICENSE`), like OoT Randomizer and Archipelago. Code ported from other projects is credited in `NOTICE`: OoT
+Randomizer's world, logic and fill (`526b4c8d`), and Archipelago's fill swap (`Fill.py` at `1041167c`,
+`generate/fill.py` `_swap`).

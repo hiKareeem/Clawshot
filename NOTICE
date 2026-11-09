@@ -26,5 +26,11 @@ The MIT permission notice in LICENSE covers the files below under the copyright 
 - src/clawshot/generate/fill.py: the assumed fill from Fill.py (distribute_items_restrictive, fill_restrictive,
   fill_restrictive_fast, fast_fill).
 
+Archipelago (https://github.com/ArchipelagoMW/Archipelago), MIT License, Copyright (c) 2017 LLCoolDave,
+Copyright (c) 2025 Berserker66, Copyright (c) 2022 CaitSith2, Copyright (c) 2021 LegendaryLinux.
+Commit 1041167c31ec80c9bb0a84c90e09e70be962fe75 (branch main).
+- src/clawshot/generate/fill.py: the swap of an unplaceable item into a location filled earlier, from Fill.py
+  (fill_restrictive, swap=True); safe swaps only.
+
 The Legend of Zelda and Ocarina of Time are trademarks of Nintendo. Clawshot is an unofficial fan project, not
 affiliated with or endorsed by Nintendo, and contains no part of the game.

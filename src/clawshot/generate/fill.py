@@ -3,8 +3,9 @@
 Stages: own-dungeon items of the dungeons the return kit does not draw from, the return kit, the kit's own
 dungeons' items, native pick-up palettes, type-held items (songs, shop refills, gift items; retried on their own),
 bag-gated bomb ammo, progression, then filler. A stage puts an item only where it can be reached holding the items a
-later stage places by reachability, never junk. Priority filler respects its restriction; the rest can go anywhere,
-including unreachable junk locations in otherwise-beatable slices. ``plans/04-world-format.md`` has the reasons.
+later stage places by reachability, never junk; an item with nowhere left swaps into a location its stage filled
+(Archipelago). Priority filler respects its restriction; the rest can go anywhere, including unreachable junk
+locations in otherwise-beatable slices. ``plans/04-world-format.md`` has the reasons.
 """
 
 import base64
@@ -267,10 +268,15 @@ def _fill_restrictive(
 
     Items with a native shop display are taken last, leaving chests to items that can only go there, unless
     ``natives_first``: the progression stage takes them first, while the other shield can still open the way past
-    Mido. Taken last, the second shield found every chest before Mido full (Chest+Shop: 11 of 130 failed attempts)."""
+    Mido. Taken last, the second shield found every chest before Mido full (Chest+Shop: 11 of 130 failed attempts).
+
+    An item with no reachable location left swaps into one this call filled before (:func:`_swap`); the displaced
+    item goes back to be placed next, under the same rules."""
     native = world.settings.get("native_shop_items", ()) if "Shop" in settings.shuffle else ()
     # Reserve only the slots needed by remaining refills, not every shop slot.
     items.sort(key=lambda name: (not world.items[name].priority, (name in native) == natives_first))
+    filled: list[str] = []
+    swaps: dict[str, int] = {}
     while items:
         item = items.pop()
         search = Search(world, [*assumed, *items])
@@ -284,6 +290,15 @@ def _fill_restrictive(
             preferred = "Chest" if reserve and settings.item_location_types.get(item) != ("Shop",) else "Shop"
             candidates.sort(key=lambda name: world.locations[name].type != preferred)
         spot = next((name for name in candidates if search.can_access(world.locations[name])), None)
+        if spot is not None:
+            locations.remove(spot)
+            filled.append(spot)
+        else:
+            spot = _swap(world, settings, placements, filled, item, [*assumed, *items], swaps)
+            if spot is not None:
+                displaced = placements[spot]
+                items.append(displaced)  # placed next
+                shop_refills += _is_shop_refill(settings, displaced)
         if spot is None:
             frontier = tuple(sorted(name for name in locations if search.can_access(world.locations[name])))
             raise FillError(
@@ -295,10 +310,43 @@ def _fill_restrictive(
                 frontier=frontier,
             )
         placements[spot] = item
-        locations.remove(spot)
-        if item.startswith("Buy ") and settings.item_location_types.get(item) == ("Shop",):
-            shop_refills -= 1
+        shop_refills -= _is_shop_refill(settings, item)
     return shop_refills
+
+
+def _is_shop_refill(settings: Settings, item: str) -> bool:
+    return item.startswith("Buy ") and settings.item_location_types.get(item) == ("Shop",)
+
+
+def _swap(
+    world: World,
+    settings: Settings,
+    placements: dict[str, str],
+    filled: list[str],
+    item: str,
+    assumed: list[str],
+    swaps: dict[str, int],
+) -> str | None:
+    """Archipelago's swap (``Fill.py`` ``fill_restrictive``, ``swap=True``, at 1041167c, MIT): the first location this
+    stage filled, in filling order, that ``item`` may take and that is reachable holding ``assumed`` without the item
+    there now. That item is displaced and placed again; an item name is displaced at most twice. Only Archipelago's
+    safe swaps: its unsafe ones assume the displaced item, which nothing guarantees can still be reached.
+
+    With the forest closed, the last progression items can only go to the five chests before Mido; an earlier item
+    had taken them in 13 of the 14 failed attempts of 200 Gift seeds (Kokiri Sword, Fairy Ocarina, Slingshot,
+    Boomerang)."""
+    for spot in filled:
+        displaced = placements[spot]
+        if displaced == item or swaps.get(displaced, 0) > 1 or not allowed(world, settings, spot, item):
+            continue
+        del placements[spot]
+        search = Search(world, assumed)
+        search.collect_spheres(placements)
+        placements[spot] = displaced
+        if search.can_access(world.locations[spot]):
+            swaps[displaced] = swaps.get(displaced, 0) + 1
+            return spot
+    return None
 
 
 def _fill_restrictive_fast(

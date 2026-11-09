@@ -230,3 +230,30 @@ def test_a_palette_location_takes_first_the_item_that_may_go_nowhere_else():
     for number in range(20):
         seed = generate(spec, number, settings, attempts=1)
         assert seed.placements["Floor"] == "Shield", (number, seed.placements)
+
+
+def test_a_late_item_that_finds_the_only_chest_before_mido_full_swaps_into_it():
+    # Closed forest: the last progression items can only go to the five chests before Mido; an earlier item had taken
+    # them (Gift seeds: Kokiri Sword, Fairy Ocarina, Slingshot, Boomerang with none of the 70 left reachable).
+    spec = {
+        "start": "Start",
+        "goal": "Sword and Ocarina and Slingshot",
+        "items": {"Sword": {}, "Ocarina": {}, "Slingshot": {}},
+        "regions": [
+            {
+                "name": "Start",
+                "locations": {"Before Mido": {"rule": "True", "type": "Chest", "vanilla": "Sword"}},
+                "exits": {"Village": "Sword"},
+            },
+            {
+                "name": "Village",
+                "locations": {
+                    "Village A": {"rule": "True", "type": "Chest", "vanilla": "Ocarina"},
+                    "Village B": {"rule": "True", "type": "Chest", "vanilla": "Slingshot"},
+                },
+            },
+        ],
+    }
+    for number in range(20):
+        seed = generate(spec, number, Settings(), attempts=1)
+        assert seed.placements["Before Mido"] == "Sword", (number, seed.placements)
