@@ -736,4 +736,18 @@ Owns `src/clawshot/data/world/remake/child_graveyard.toml`, the graveyard rows o
    Hylian Shield held; Kareem got 20 rupees from that grave while the graveyard had loaded vanilla files).
 4. Record each in `plans/playtest/answers.md`, the catalogue and section 30.
 
+### Track G: bombs need Goron's Bracelet (`r7/bombs`, added 2026-11-08)
+
+Owns the remake helper overrides for explosives (wherever the world's remake overrides keep them; small posted
+commits to shared world files), `tests/test_world_remake_bombs.py`, `plans/rounds/r7-bombs.md`, section 31.
+1. D30: every rule that uses bombs (OoT Randomizer's `Bombs`/`has_bombs`, the bomb half of `has_explosives` and
+   `can_blast_or_smash`, `can_use(Bombs)`, bomb-only tricks) also needs lift grade Low: Goron's Bracelet as child, any
+   strength upgrade as adult. Which items grant `LiftGradeUP` at which grade: from `PouchActorInfo`/`ExpansionAvility`
+   (section 30), per age. Bombchus and Bomb Flowers keep their own rules (check Bomb Flowers already need strength).
+   Overrides with `was` and `source`, never edits to the translated OoT Randomizer files.
+2. Tests: a synthetic world where bombs without the Bracelet reach nothing new; the seed 7 matrix (Chest,
+   Chest+Shop, Chest+Shop+Gift, the default string) still generates within the existing bound (print attempts and
+   spheres); the 200-seed default beatability test passes; 7b's 228 placements still replay to a win.
+3. List, from those seeds, how often the first bomb use moved later, and any rule that now cannot be met.
+
 ### After round 7

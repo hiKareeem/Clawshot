@@ -92,6 +92,11 @@
   `sometimes` and random hints name only items worth having (progression, heart pieces and containers, upgrades);
   never rupees, ammo, refills or shop items. Barren ("foolish") hints still mark empty areas. This departs from OoT
   Randomizer, whose random and `sometimes` hints can name junk.
+- **D30 Bombs need the Bomb Bag and Goron's Bracelet in logic** (Kareem, 2026-11-08, Claude's recommendation). The
+  remake's `Item_Bomb` requires lift grade Low, which only the Bracelet (or a higher strength upgrade) grants; Bombchus
+  require none (round 7, section 30; Kareem used Bombchus without a bag). The logic follows the game; no patch.
+  Patching bombs to need no strength (N64 behaviour) is a possible later option. In-game confirmation pending
+  (Kareem's 7c save, before and after Darunia's Bracelet).
 
 ## Open (only Kareem and his co-owner decide)
 
