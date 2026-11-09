@@ -526,3 +526,83 @@ No fresh rerun of that failure, filler edit, seed change, retry increase or weak
 rebase and all four gates.** The latest requested37a1b2f integration and four full commands
 are complete; they are not represented as all-green. Native player experiments/checklists,
 source read-only guarantees and gameplay acceptance boundaries remain unchanged.
+
+## Final authorized integration onto 81bc218
+
+Claude merged Track A's fill and authorized this rebase. All twelve commits rebased
+conflict-free; sections **32, 33, 34, 35, 36** are present in that order. This supersedes the
+previous wait-for-cs8a blocker. No Track D production change, weakened test, changed seed,
+increased attempts, relaxed palette or fill edit was needed for the integration.
+
+Superseding complete branch ledger on `81bc218`:
+
+| Commit | Scope |
+|---|---|
+| 951a0dc | Cow research; D11 stands |
+| 0791029 | Native 40-token quantity metadata |
+| 64cbdec | House assigned-item previews and controlled rewards |
+| db3aecc | Frog identities and catalogue |
+| 47ccd28 | Per-song specialization and first-win retry preservation |
+| 609d20b | Merchant definitions, rules and catalogue |
+| 1785eb0 | Success-only merchant saved gates |
+| 56545f2 | Terminal switch traversal correction |
+| 2214635 | Exact pool delta and former fill dependency |
+| 0bb0a2d | Native child trade cell and pinned OoTR research |
+| a2a7563 | Approved D31 Egg/Letter native holds and both regressions |
+| 6ef8c58 | Previous shops integration gate evidence |
+
+Only sequential plain pytest runs: no pool, xdist, seed sweep, second CPU-heavy process,
+game/launcher execution or interaction with Kareem's running Hookshot. Fresh basetemps:
+`E:/OOTRemake/work/r8-gifts/gate-synthetic-fill81b` and `gate-dump-fill81b`.
+
+Runner correction before pytest started: `env -u OOT_ROMFS ... uv run pytest` could not exec
+the Windows uv shim. Printed resolution was `uv.exe` in the Hermes bin; `OOT_ROMFS` and
+`PYTEST_ADDOPTS` were empty. Replaced that wrapper with shell `unset OOT_ROMFS` plus the
+direct uv invocation that already works. Format/lint had passed and were not rerun unchanged.
+No pytest case ran in the failed wrapper invocation. Full pytest results follow below.
+
+### Final full gates — all green
+
+| Full command | Observed result |
+|---|---|
+| `uv run ruff format --check` | 223 files already formatted |
+| `uv run ruff check` | All checks passed |
+| `uv run pytest` | 721 passed, 86 skipped; 291.11s |
+| `OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump` | 85 passed, 722 deselected; 633.57s |
+
+The original, unmodified Chest+BossHeart seed-7 dump regression **now passes**:
+`tests/test_drops_seed_dump.py::test_boss_heart_seed_writes_native_pickups_without_changing_spawn_or_flags`.
+All gift, Granny traversal, House, frog, merchant, C shopkeeper and D31 regression cases pass
+in those unfiltered gates. No skip/filter was added and no old failure was suppressed.
+
+Independent actual CLI smoke, only after the gates finished:
+
+```sh
+uv run python -m clawshot --romfs E:/Games/Hookshot/romfs --seed 7 --shuffle Chest BossHeart --out E:/OOTRemake/work/r8-gifts/final-bossheart7-81bc218
+```
+
+Exit 0: **172 locations shuffled, 27 spheres**, overlay and spoiler successfully written
+to that previously nonexistent scratch output (25.81s). This is the same seed and shuffle
+selection as the former blocker, with current defaults; no seed reroll or retry override.
+After observing proof, removed only these completed session gate basetemps and that CLI
+scratch output using native `shutil.rmtree`; all three removals succeeded. Retained player
+experiments, launchers, user copies and read-only game/backup sources are untouched.
+
+**Ready for code review/merge on 81bc218; no generator blocker remains. Not in-game
+certified.** The final handoff commit is reported with its head in the Bermuda thread.
+Remaining game acceptance is Kareem's, under `E:/OOTRemake/work/r8-gifts/`:
+
+- `ingame/skulltula-rewards-play-next/`, `skulltula-check.md`: assigned preview/item/text,
+  threshold rewards, repeat denial and Save/Continue; the first unowned 10-token reward is
+  immediately available on the separate copied user.
+- `ingame/frog-seven-play-next/`, `ingame/frog-check.md`: learn missing songs, retain growth,
+  first-song and bug initial/retry payouts, native repeats, Save/Continue.
+- `ingame/merchants-three-play-next/`, `merchant-check.md`: normal adult/trade progression,
+  native fee/cancel/poor/full behavior, assigned item and success-only saved no-repeat gate;
+  Granny before carpet avoids the Hookshot/Longshot ownership interaction.
+
+For each, require the appropriate `fs: OpenFile(...): from the overlay` line **and** the
+in-game result. No new/corrected family was enabled without acceptance; cows remain out
+under D11, and D31 keeps Egg/Letter native and out of the shuffled pool/chest palette.
+Earlier research limitations and approved acceptance boundaries are not lifted by green
+generator gates. This track did not boot, stop, modify or otherwise touch the running game.
