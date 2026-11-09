@@ -44,6 +44,7 @@
 "Deku Stick (1)" = { actor = "Item_DekuStickBundle_Small", source = "Deku Tree Basement Chest (N64: Recovery Heart); holds 3 sticks" }
 "Bombs (5)" = { actor = "Item_BombBundle_Small", source = "census: 3 chests; holds 5 bombs" }
 "Bombchus (5)" = { actor = "Item_BombchuBundle_Small", source = "Gerudo Training Ground Maze Right Central Chest; holds 5 bombchus" }
+"Bombchus (20)" = { actor = "Item_BombchuBundle_Large", source = "GatheringTokenGold Event200; PouchActorInfo BundleActorNum=20, r8-gifts.md" }
 "Arrows (5)" = { actor = "TBox_ArrowBundle_Medium", source = "census: 2 chests; holds 5 arrows" }
 "Arrows (10)" = { actor = "TBox_ArrowBundle_Large", source = "census: 1 chest; holds 10 arrows" }
 
