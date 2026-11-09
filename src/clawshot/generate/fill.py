@@ -540,14 +540,18 @@ def _fill_palettes(
     """Fill each location type of ``settings.location_type_items`` from its items before anything else can need it,
     as OoT Randomizer fills its shop locations first (``distribute_items_restrictive``, 526b4c8d).
 
-    The items are the first of the shuffled pool that the type may take, as many as it has locations. Holding every
-    other item away from these locations instead sent the junk through the reachability stages with the progression,
-    where it took the early chests (Chest+Freestanding seed 7: no reachable location for the Boomerang)."""
+    The items are those that may go nowhere else (a shield held to Freestanding), then the first of the shuffled pool
+    that the type may take, as many as it has locations. Holding every other item away from these locations instead
+    sent the junk through the reachability stages with the progression, where it took the early chests
+    (Chest+Freestanding seed 7: no reachable location for the Boomerang)."""
     for location_type in sorted(settings.location_type_items):
         destinations = [name for name in locations if world.locations[name].type == location_type]
         if not destinations:
             continue
-        items = [item for item in pool if any(allowed(world, settings, name, item) for name in destinations)]
+        elsewhere = [name for name in locations if world.locations[name].type != location_type]
+        fits = {item: any(allowed(world, settings, name, item) for name in destinations) for item in set(pool)}
+        only = {item: fits[item] and not any(allowed(world, settings, n, item) for n in elsewhere) for item in fits}
+        items = [item for item in pool if only[item]] + [item for item in pool if fits[item] and not only[item]]
         items = items[: len(destinations)]
         if len(items) < len(destinations):
             raise FillError(

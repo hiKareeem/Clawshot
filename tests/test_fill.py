@@ -216,3 +216,17 @@ def test_no_stage_assumes_junk_that_the_fast_fill_may_leave_out_of_reach():
     for number in range(20):
         seed = generate(spec, number, Settings(), attempts=1)
         assert seed.placements["Open"] == "Sword", (number, seed.placements)
+
+
+def test_a_palette_location_takes_first_the_item_that_may_go_nowhere_else():
+    spec = _pickup_spec()
+    spec["items"]["Shield"] = {"class": "normal"}
+    spec["regions"][0]["locations"]["Early"]["vanilla"] = "Shield"
+    settings = Settings(
+        shuffle=("Chest", "BossHeart"),
+        location_type_items={"BossHeart": ("Heart", "Shield")},
+        item_location_types={"Shield": ("BossHeart",)},
+    )
+    for number in range(20):
+        seed = generate(spec, number, settings, attempts=1)
+        assert seed.placements["Floor"] == "Shield", (number, seed.placements)
