@@ -2524,6 +2524,10 @@ childhood, acquired `Weapon_Range_Bow`/stock1 in all six saves; four retain Bow 
 0xa0029837. Two other assignable enums are saved; fourth candidate0x76f85e6d is save-1, so its
 absence from progress.sav is expected. Separate live selection is not represented by ownership alone.
 
+Kareem also reproduced seed8's lock in **Lichii**: Bow obtained before Boomerang, item use
+locked, Save and Continue cleared it (`answers.md`, R9-LICHII; reviewer relay).
+This establishes game behaviour, not a Hookshot-specific defect. No gameplay/fill change follows.
+
 `PouchActorInfo` supplies `AssignableItem`; the UI's
 `UI/Pouch/PouchTable/PouchTable.game__ui__PouchTable.bgyml` supplies per-variant
 `IsUsableChild`/`IsUsableAdult`. Child-only ZR families: Sticks, Slingshot, Boomerang, Beans,

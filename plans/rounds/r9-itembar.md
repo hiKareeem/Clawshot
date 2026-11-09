@@ -40,6 +40,11 @@ added to the project. No NX2navi code/docs or GPL implementation was read or cop
   would allow unsupported actions instead of repairing assignment. Removing AssignableItem would also remove
   legitimate menu selection. Neither experiment is shipped as a default-on fix.
 
+Reviewer-relayed gameplay evidence (`answers.md`, R9-LICHII): Kareem reproduced the seed8
+item-bar lock in **Lichii**, obtaining Bow before Boomerang; Save and Continue cleared it.
+This establishes the game's own behaviour, not a Hookshot-specific defect. This is Kareem's
+observed emulator result, not an agent-run check; no code or policy change follows.
+
 ### Read-only save evidence
 
 All six `progress.sav` slots have `Sequence_IsChildhood=true`, Bow acquired and Bow stock1. Slots01–04
