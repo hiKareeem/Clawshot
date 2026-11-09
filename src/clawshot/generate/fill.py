@@ -1,9 +1,10 @@
 """The fill: OoT Randomizer's assumed fill (``Fill.py``, ``distribute_items_restrictive``, MIT), for one world.
 
-Order, as there: own-dungeon items, type-held items (songs and shop refills), bag-gated bomb ammo, then
-remaining progression and filler. Each constrained/progression stage assumes every item not yet placed.
-This preserves restricted capacity and keeps progression reachable. Priority filler respects its restriction;
-the rest can go anywhere, including unreachable junk locations in otherwise-beatable slices.
+Stages: own-dungeon items of the dungeons the return kit does not draw from, the return kit, the kit's own
+dungeons' items, native pick-up palettes, type-held items (songs, shop refills, gift items; retried on their own),
+bag-gated bomb ammo, progression, then filler. A stage puts an item only where it can be reached holding the items a
+later stage places by reachability, never junk. Priority filler respects its restriction; the rest can go anywhere,
+including unreachable junk locations in otherwise-beatable slices. ``plans/04-world-format.md`` has the reasons.
 """
 
 import base64
@@ -476,7 +477,7 @@ def _fill_dungeon_items(
 
     Small keys go first, then boss keys, then maps and compasses. OoT Randomizer takes boss keys first, but the
     remake's Fire Temple has exactly one key-free chest and two more behind the first lock, all three needed by small
-    keys; no chest there needs its boss key. A boss key placed first took one of them in 40% of chest-only fills."""
+    keys; no chest there needs its boss key. Fire Temple keys were all 134 failed attempts of 200 chest-only seeds."""
     items = [item for item in pool if is_restricted(world, settings, item) and dungeons(world.items[item].dungeon)]
     if not items:
         return shop_refills
