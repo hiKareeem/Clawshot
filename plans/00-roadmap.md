@@ -845,6 +845,10 @@ stands at the pedestal with a Talk prompt in the way (Kareem, 2026-11-09). Trace
 and its gate, and patch both before the pedestal test. Speedrunners (via Kareem, 2026-11-09): Sheik leaves once the Forest
 Medallion is held, not after the Minuet; trace whether that reads the medallion item or the sage flag, which matters once
 rewards are shuffled.
+Kareem (2026-11-09, after the Forest Temple): Sheik stays at the pedestal until entering the room plays the Prelude
+of Light scene, then leaves. `free_time_travel` must therefore clear Sheik's pre-Forest placement or that scene's
+gate as well as the pedestal's; saves from before Phantom Ganon to after the scene are in
+`save-backups/2026-11-09_1347-main-after-forest` for the trace.
 Also from play: Sheik's second line there sends the player to Kakariko for the Hookshot (its vanilla place). In a seed
 it should name where the Hookshot is (a static hint through `patch/text`, like Dampé's diary) or say nothing about it.
 
