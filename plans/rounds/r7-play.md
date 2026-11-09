@@ -226,4 +226,41 @@ This is removal of vacuous checks, not re-pinning implementation wording.
 
 The initial full gate chain passed format (197 files) and lint, then was intentionally cancelled during
 the synthetic suite before this test cleanup. No completed full-suite/dump result is claimed for that
-cancelled chain. A fresh four-gate chain on the final source/test tree follows.
+cancelled chain. The fresh four-gate chain on the final source/test tree passed as recorded below.
+
+### Commits and review boundary
+
+| Commit | Item |
+|---|---|
+| `a03613d` | 1: Royal Tomb viewpoint, grave identities, heart-chest evidence |
+| `5eeac10` | 1 reviewer follow-up: independent Fairy Grave and explosives/bottle gate |
+| `fa549f1` | 2: native lift gate, save comparison, old-seed Bombchu route |
+| `7249719` | 3: explicit owned-shield substitute and existing shuffled writer behavior |
+| `639165a` | 4: answers, catalogue, section30; remove vacuous inventory/event assertions |
+
+All on `r7/play`; no merge, rebase or push. Native metadata and the in-memory/search smokes support
+the conclusions; gameplay follow-up remains Kareem's, especially ordinary bombs after Bracelet.
+Reviewer owns the shared `has_bombs` change or any alternative gameplay policy. No requested
+graveyard/check rule was silently expanded to solve that shared issue.
+
+### Final gates and handoff
+
+Final source/test tree is `639165a`; subsequent changes are this round record only.
+
+| Command | Result |
+|---|---|
+| `uv run ruff format --check` | 197 files already formatted |
+| `uv run ruff check` | All checks passed |
+| `uv run pytest` | 581 passed, 78 skipped; 246.53s |
+| `OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump` | 77 passed, 582 deselected; 436.29s |
+
+All 27 `test_world_remake_play.py` cases passed in the full synthetic run. Runtime/data smokes:
+published world/catalogue access; native bomb/Bombchu lift metadata plus named saves; unchanged228-
+placement old-seed replay and GC8-removal counterfactual; actual writer on both real shield chest copies.
+No test failure was suppressed, no retry bound or shuffled placement changed.
+
+**Left for Kareem:** the GC8 purchase/use on7c and ordinary bombs after obtaining Bracelet; new grave
+directions beyond the observed ReDead grave. These are explicitly unplayed, not blockers disguised as
+passing tests. **Left for reviewer/owners:** shared bomb-use logic or a deliberate ordinary-bomb
+gameplay change; integrate sections28/29 before30. The requested investigation and owned graveyard
+logic/catalogue/documentation work is complete.
