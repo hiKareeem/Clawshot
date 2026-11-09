@@ -71,8 +71,8 @@ age_return_region = "Beyond Door of Time"
 age_return_guarantee = true
 age_pull_event = "Time Travel"
 
-# Default off pending Kareem's pedestal test. Must be paired with clawshot.patch.age.changes in seed output.
-# This bypasses only the adult attention-actor gate, not Forest completion, rewards or Sheik's Prelude.
+# Default off pending Kareem's return/Prelude test. Paired with clawshot.patch.age.changes in seed output.
+# Opens the adult pedestal and hides only Temple Sheik until Forest completion; Prelude still needs that completion.
 free_time_travel = false
 
 # Return-kit fill constraint (reviewer, round 5): Forest's checked rules need Bow, strength, grapple and keys.
