@@ -751,3 +751,26 @@ commits to shared world files), `tests/test_world_remake_bombs.py`, `plans/round
 3. List, from those seeds, how often the first bomb use moved later, and any rule that now cannot be met.
 
 ### After round 7
+
+**Round 7 result (2026-11-08/09):** all seven tracks merged (`main` 739b930; 619 tests, 78 dump tests).
+- A, hints: the 40 Gossip Stones as hint locations; Way of the Hero, barren, item, `always`/`sometimes`, random and
+  junk hints; `hints` = `always` (default, D26) or `mask`; English text in every language archive. In game
+  (`seed-shop-7c`): the stones speak without the mask; the highlight colour now ends after each name.
+- B, get-item models: the get window's model traced; the Song of Storms shows an ocarina stand-in, Din's Fire and
+  the Adult's Wallet work from chests; the Fairy Ocarina still shows no model.
+- C, boss hearts and tokens: `--shuffle BossHeart` (off) with native floor pick-ups only (D27), game-confirmed at
+  King Dodongo; a token's pouch reference does not decide its grant, so tokens stay unshuffled.
+- D, gift follow-ups: the Kokiri shopkeeper's gift is a once-only check holding only items no seed needs (D28,
+  game-confirmed); the fill places items in order of restriction; the Treasure Chest Game swap is built, untested;
+  the nine boss rewards researched.
+- E, hints never name junk (D29).
+- F, from play: the graveyard's three graves (the fairy wall split from the shield grave); an owned Hylian Shield
+  turns that chest into a red rupee, which the seed's patch overrides; bombs need lift strength.
+- G, bombs need Goron's Bracelet in logic (D30); helper overrides in the remake files.
+
+Waiting on Kareem in game: bombs before and after Darunia's Bracelet on `seed-shop-7c`; the Jabu-Jabu switch with
+Bombchus; the Treasure Chest Game swap; `free_time_travel` after his first Master Sword pull; the route cards.
+
+For round 8 (to agree with Kareem): fill robustness (Chest+Shop+Gift seed 7 needed all 10 attempts); the Fairy
+Ocarina's get model; a fresh full seed with every proven setting for a real playthrough; extending the shopkeeper's
+window (D28); token shuffle by another route; the boss rewards; run and sprint speeds from the animations (optional).
