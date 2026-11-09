@@ -74,6 +74,8 @@ def test_scarecrow_ledge_does_not_bypass_the_statue_bridge():
     search.collect("Bow")
     assert not search.can_reach("Shadow Temple Before Boss", ADULT)
     search.collect("Bomb Bag")
+    assert not search.can_reach("Shadow Temple Before Boss", ADULT)
+    search.collect("Goron Bracelet")
     assert search.can_reach("Shadow Temple Before Boss", ADULT)
 
 

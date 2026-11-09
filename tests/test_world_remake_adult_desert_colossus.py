@@ -24,4 +24,7 @@ def test_fairy_wall_accepts_the_documented_hammer_and_existing_bombs():
     target = "Colossus Great Fairy Fountain"
     assert not Search(world).can_reach(target, ADULT)
     assert Search(world, ["Megaton Hammer"]).can_reach(target, ADULT)
-    assert Search(world, ["Bomb Bag"]).can_reach(target, ADULT)
+    bombs = Search(world, ["Bomb Bag"])
+    assert not bombs.can_reach(target, ADULT)
+    bombs.collect("Goron Bracelet")
+    assert bombs.can_reach(target, ADULT)

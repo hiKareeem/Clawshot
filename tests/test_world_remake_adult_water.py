@@ -36,6 +36,8 @@ def test_compass_and_pillar_basement_no_longer_share_the_old_south_region():
     assert search.can_access(world.locations["Water Temple GS Behind Gate"], ADULT)
     assert not search.can_access(world.locations["Water Temple Compass Chest"], ADULT)
     search.collect("Bomb Bag")
+    assert not search.can_access(world.locations["Water Temple Compass Chest"], ADULT)
+    search.collect("Goron Bracelet")
     assert search.can_access(world.locations["Water Temple Compass Chest"], ADULT)
 
 
@@ -45,6 +47,8 @@ def test_ruto_cracked_wall_token_is_not_on_the_longshot_route():
     token = world.locations["Water Temple GS Falling Platform Room"]
     assert not search.can_access(token, ADULT)
     search.collect("Bomb Bag")
+    assert not search.can_access(token, ADULT)
+    search.collect("Goron Bracelet")
     assert search.can_access(token, ADULT)
     assert not search.can_reach("Water Temple Falling Platform Room", ADULT)
 

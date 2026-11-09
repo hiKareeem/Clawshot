@@ -13,6 +13,9 @@ def test_statue_corner_token_does_not_require_a_hookshot_or_boomerang():
     world = spirit_world("Spirit Temple Central Chamber")
     search = Search(world, ["Bomb Bag"])
     token = world.locations["Spirit Temple GS Lobby"]
+    assert not search.can_access(token, ADULT)
+    assert not search.can_access(token, CHILD)
+    search.collect("Goron Bracelet")
     assert search.can_access(token, ADULT)
     assert search.can_access(token, CHILD)
 
@@ -33,6 +36,8 @@ def test_old_child_climb_cannot_collect_the_moved_statue_hand_token():
     token = world.locations["Spirit Temple GS Sun on Floor Room"]
     assert not search.can_access(token, ADULT)
     search.collect("Bomb Bag")
+    assert not search.can_access(token, ADULT)
+    search.collect("Goron Bracelet")
     assert search.can_access(token, ADULT)
 
 
@@ -40,6 +45,9 @@ def test_sun_block_key_uses_window_light_not_fire_or_silver_rupees():
     world = spirit_world("Spirit Temple Central Chamber")
     search = Search(world, ["Bomb Bag"])
     chest = world.locations["Spirit Temple Sun Block Room Chest"]
+    assert not search.can_access(chest, CHILD)
+    assert not search.can_access(chest, ADULT)
+    search.collect("Goron Bracelet")
     assert search.can_access(chest, CHILD)
     assert search.can_access(chest, ADULT)
 

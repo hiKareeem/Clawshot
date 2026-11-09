@@ -108,7 +108,7 @@ def test_adult_cannot_claim_the_child_shopkeepers_free_shield():
 @pytest.mark.parametrize("weapon", ["Slingshot", "Boomerang"])
 def test_jabu_tonsil_switch_needs_a_projectile_not_bombs(weapon):
     world = starting_at("Jabu Jabus Belly Beginning")
-    search = Search(world, ["Bomb Bag"])
+    search = Search(world, ["Bomb Bag", "Goron Bracelet"])
     assert not search.can_reach("Jabu Jabus Belly Main", CHILD)
     search.collect(weapon)
     assert search.can_reach("Jabu Jabus Belly Main", CHILD)
@@ -146,6 +146,9 @@ def test_fairy_only_grave_needs_explosives_and_a_bottle_not_a_redead_weapon(expl
     search = Search(world, [explosives])
     assert not search.holds("Fairy")
     search.collect("Bottle")
+    if explosives == "Bomb Bag":
+        assert not search.holds("Fairy")
+        search.collect("Goron Bracelet")
     assert search.holds("Fairy")
 
 
@@ -162,4 +165,6 @@ def test_shield_grave_does_not_contain_the_fairy_pool():
     assert not search.can_reach("Graveyard Fairy Grave", CHILD)
     search.collect("Time Flows")
     assert search.can_reach("Graveyard Fairy Grave", CHILD)
+    assert not search.holds("Fairy")
+    search.collect("Goron Bracelet")
     assert search.holds("Fairy")
