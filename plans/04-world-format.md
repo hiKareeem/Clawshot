@@ -240,9 +240,11 @@ conservative intersection and rejection. Off retains temporal correctness but do
 an early pull. Child-only goals that never open travel need no return proof.
 
 `free_time_travel = false` by default. With it on, the search uses unrestricted shared inventory and skips the
-extra return proof; `make_seed` automatically pairs that assumption with `patch.age`'s isolated pedestal
-placement transform. The Forest quest, sage reward and Sheik/Prelude gates remain unchanged. In-game proof
-is pending (`03-game-data.md` section 16); no GameDataList return-unlock Bool exists.
+extra return proof; `make_seed` pairs that assumption with `patch.age`'s isolated pedestal/Temple-Sheik
+placement transform. Temple Sheik is absent before Forest completion, then available to the unchanged Prelude
+scene. `remake/sheik.toml` gates that check on adult Forest completion (not medal ownership), independently of
+free travel. No quest, reward, saved default or event-flow edit. In-game proof is pending (section38);
+no GameDataList return-unlock Bool exists.
 
 **Time of day.** Without entrance shuffle OoT Randomizer assumes any time of day can be reached from wherever the
 player stands, and `at_day`/`at_night` are `True` (`RuleParser.at_day`: unless `world.ensure_tod_access`). Clawshot
