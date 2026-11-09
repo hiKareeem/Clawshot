@@ -23,6 +23,8 @@ from clawshot.world.search import Search
 
 DUNGEON_ITEM_CHOICES = ("own_dungeon", "anywhere")
 _BOMB_AMMO_PREFIXES = ("Bombs (", "Bombchus (")
+STAGE_ATTEMPTS = 15
+"""Tries of a stage placed on its own before the fill fails (``Fill.fill_ownworld_restrictive``'s ``attempts``)."""
 
 
 class FillError(RuntimeError):
@@ -448,6 +450,45 @@ def _fill_dungeon_items(
     )
 
 
+def _fill_type_held(
+    world: World,
+    settings: Settings,
+    rng: random.Random,
+    placements: dict[str, str],
+    locations: list[str],
+    items: list[str],
+    assumed: list[str],
+    shop_refills: int,
+) -> int:
+    """Items held to some location types (songs, shop refills, gift items), on their own.
+
+    OoT Randomizer places shop items and songs this way (``Fill.fill_ownworld_restrictive``, 526b4c8d): a failed
+    stage is undone and tried again, up to ``STAGE_ATTEMPTS`` times, before the whole fill fails ("songs have a
+    relatively high chance of failing compared to other item types"). The remake's twelve song checks take exactly
+    the twelve songs: in 200 Gift seeds a song with no reachable song check ended 451 of the 1,001 failed attempts."""
+    attempt = 0
+    while True:
+        attempt += 1
+        rng.shuffle(items)
+        # Sparse native shop whitelists must keep their slots before general refills take them.
+        stage_items = sorted(
+            items, key=lambda item: sum(allowed(world, settings, name, item) for name in locations), reverse=True
+        )
+        stage_locations, before = list(locations), set(placements)
+        try:
+            refills = _fill_restrictive(
+                world, settings, rng, placements, stage_locations, stage_items, assumed, shop_refills, "type-held"
+            )
+        except FillError:
+            for name in [name for name in placements if name not in before]:
+                del placements[name]
+            if attempt == STAGE_ATTEMPTS:
+                raise
+            continue
+        locations[:] = stage_locations
+        return refills
+
+
 def fill(
     world: World, settings: Settings, rng: random.Random, vanilla: Mapping[str, str] | None = None
 ) -> dict[str, str]:
@@ -486,10 +527,8 @@ def fill(
     # Type-held ammo still needs the stronger D25 bag gate in its dedicated stage.
     type_held = [item for item in unrestricted if item in held and not item.startswith(_BOMB_AMMO_PREFIXES)]
     unrestricted = [item for item in unrestricted if item not in held or item.startswith(_BOMB_AMMO_PREFIXES)]
-    # Sparse native shop whitelists must keep their slots before general refills take them.
-    type_held.sort(key=lambda item: sum(allowed(world, settings, name, item) for name in locations), reverse=True)
-    shop_refills = _fill_restrictive(
-        world, settings, rng, placements, locations, type_held, _before_ammo(unrestricted), shop_refills, "type-held"
+    shop_refills = _fill_type_held(
+        world, settings, rng, placements, locations, type_held, _before_ammo(unrestricted), shop_refills
     )
     _fill_bomb_ammo(world, settings, rng, placements, locations, unrestricted)
     progression = [item for item in unrestricted if world.items[item].progression]

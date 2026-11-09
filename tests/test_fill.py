@@ -103,3 +103,29 @@ def test_held_items_before_the_ammo_stage_do_not_rely_on_bag_gated_bombchus():
     for number in range(20):
         seed = generate(_bracelet_spec(), number, settings, attempts=1)
         assert seed.placements["Open NPC"] == "Bracelet", (number, seed.placements)
+
+
+def test_songs_with_no_spare_song_location_are_retried_as_their_own_stage():
+    # OoT Randomizer places songs on their own and retries only that stage (Fill.py:348, 15 attempts at 526b4c8d).
+    spec = {
+        "start": "Start",
+        "goal": "Lullaby and Storms",
+        "items": {"Lullaby": {"type": "Song"}, "Storms": {"type": "Song"}},
+        "regions": [
+            {
+                "name": "Start",
+                "locations": {
+                    "Free Song": {"rule": "True", "type": "Song", "vanilla": "Lullaby"},
+                    "Lullaby Song": {"rule": "Lullaby", "type": "Song", "vanilla": "Storms"},
+                },
+            }
+        ],
+    }
+    settings = Settings(
+        shuffle=("Song",),
+        item_location_types={"Lullaby": ("Song",), "Storms": ("Song",)},
+        exclusive_location_types=("Song",),
+    )
+    for number in range(20):
+        seed = generate(spec, number, settings, attempts=1)
+        assert seed.placements == {"Free Song": "Lullaby", "Lullaby Song": "Storms"}, (number, seed.placements)
