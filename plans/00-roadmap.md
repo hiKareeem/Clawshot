@@ -900,6 +900,10 @@ Round 10 candidates (seed 8 play, Kareem 2026-11-09):
   between child and adult). `door_of_time` = closed (vanilla) | song_only | open, through the `DoorOfTime` flow and
   its gates; logic for each; the default is Kareem's call (asked 2026-11-09). With it, decide whether
   `free_time_travel` becomes default on (after the first-pull boundary test).
+- `free_time_travel` first-pull bug (Kareem, 2026-11-09, answers.md R9-FIRST-PULL): with the patch, Sheik's first adult
+  scene plays without him (dialogue skipped). Keep the placed Temple Sheik for `Dm_TimeTemple_0050` (present while it
+  has not played, or after Forest completion until the Prelude), check flags the skipped dialogue sets, and retest
+  from an older child autosave; the pedestal may stay blocked until he leaves after that first scene.
 
 Later-round candidate (Kareem, 2026-11-09, seed 8: "we need a check/item tracker"): a check and item tracker. The
 save already records opened checks (the Bool64bitKey list of actor Hashes, `src/clawshot/save.py`) and owned items,
