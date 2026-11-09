@@ -153,7 +153,7 @@ def test_item_locked_behind_itself_raises():
     spec = dungeon_world()
     del spec["regions"][1]["locations"]["Village Chest"]  # the only chest open without the Sword
     spec["regions"][3]["locations"]["Hall Sword Chest"] = chest("Sword")
-    with pytest.raises(FillError, match="no beatable fill in 10 attempts; last: no reachable location"):
+    with pytest.raises(FillError, match="no beatable fill in 10 attempts; last: progression: no reachable location"):
         generate(spec, 1, Settings())
 
 

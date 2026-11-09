@@ -26,7 +26,26 @@ _BOMB_AMMO_PREFIXES = ("Bombs (", "Bombchus (")
 
 
 class FillError(RuntimeError):
-    """No placement was found (an item with nowhere reachable to go, or a game that cannot be beaten)."""
+    """No placement was found (an item with nowhere reachable to go, or a game that cannot be beaten).
+
+    A failed assumed-fill stage says which: ``stage``, the ``item`` it could not place, the ``allowed`` locations
+    still empty (none reachable) and the ``frontier``: the empty locations reachable with the assumed items, which
+    the item may not take."""
+
+    def __init__(
+        self,
+        message: str,
+        *,
+        stage: str | None = None,
+        item: str | None = None,
+        allowed: tuple[str, ...] = (),
+        frontier: tuple[str, ...] = (),
+    ) -> None:
+        super().__init__(message)
+        self.stage = stage
+        self.item = item
+        self.allowed = allowed
+        self.frontier = frontier
 
 
 @dataclass(frozen=True)
@@ -226,6 +245,7 @@ def _fill_restrictive(
     items: list[str],
     assumed: list[str],
     shop_refills: int = 0,
+    stage: str = "progression",
 ) -> int:
     """OoT Randomizer ``fill_restrictive``: take items from the end of ``items``; put each in a location that is
     reachable holding ``assumed``, the items still to place and whatever the placements so far give."""
@@ -247,9 +267,14 @@ def _fill_restrictive(
             candidates.sort(key=lambda name: world.locations[name].type != preferred)
         spot = next((name for name in candidates if search.can_access(world.locations[name])), None)
         if spot is None:
+            frontier = tuple(sorted(name for name in locations if search.can_access(world.locations[name])))
             raise FillError(
-                f"no reachable location for {item!r} ({len(candidates)} allowed of {len(locations)} left; "
-                f"{len(items)} other items left to place)"
+                f"{stage}: no reachable location for {item!r} ({len(candidates)} allowed of {len(locations)} left; "
+                f"{len(items)} other items left to place; {len(frontier)} empty locations reachable)",
+                stage=stage,
+                item=item,
+                allowed=tuple(sorted(candidates)),
+                frontier=frontier,
             )
         placements[spot] = item
         locations.remove(spot)
@@ -348,7 +373,7 @@ def _fill_age_return(
                 staged.pop(index)
                 break
         else:
-            raise FillError(f"no adult return-kit destination for {staged!r}")
+            raise FillError(f"return kit: no adult return-kit destination for {staged!r}", stage="return kit")
 
 
 def _fill_bomb_ammo(
@@ -384,7 +409,7 @@ def _fill_bomb_ammo(
     # Assumed fill still requires actual reachability and respects dungeon/display restrictions.
     held = settings.item_location_types
     shop_refills = sum(item.startswith("Buy ") and held.get(item) == ("Shop",) for item in pool)
-    _fill_restrictive(world, settings, rng, placements, destinations, ammo, pool, shop_refills)
+    _fill_restrictive(world, settings, rng, placements, destinations, ammo, pool, shop_refills, "bomb ammo")
     locations[:] = [name for name in locations if name not in placements]
 
 
@@ -422,20 +447,22 @@ def fill(
         order = {"BossKey": 3, "GanonBossKey": 3, "SmallKey": 2, "SmallKeyRing": 2}
         restricted.sort(key=lambda name: order.get(world.items[name].type, 1))
         shop_refills = _fill_restrictive(
-            world, settings, rng, placements, locations, restricted, unrestricted, shop_refills
+            world, settings, rng, placements, locations, restricted, unrestricted, shop_refills, "dungeon"
         )
     # Type-held ammo still needs the stronger D25 bag gate in its dedicated stage.
     type_held = [item for item in unrestricted if item in held and not item.startswith(_BOMB_AMMO_PREFIXES)]
     unrestricted = [item for item in unrestricted if item not in held or item.startswith(_BOMB_AMMO_PREFIXES)]
     # Sparse native shop whitelists must keep their slots before general refills take them.
     type_held.sort(key=lambda item: sum(allowed(world, settings, name, item) for name in locations), reverse=True)
-    shop_refills = _fill_restrictive(world, settings, rng, placements, locations, type_held, unrestricted, shop_refills)
+    shop_refills = _fill_restrictive(
+        world, settings, rng, placements, locations, type_held, unrestricted, shop_refills, "type-held"
+    )
     _fill_bomb_ammo(world, settings, rng, placements, locations, unrestricted)
     progression = [item for item in unrestricted if world.items[item].progression]
     priority = [item for item in unrestricted if not world.items[item].progression and world.items[item].priority]
     rest = [item for item in unrestricted if not world.items[item].progression and item not in priority]
     shop_refills = _fill_restrictive(
-        world, settings, rng, placements, locations, progression, [*priority, *rest], shop_refills
+        world, settings, rng, placements, locations, progression, [*priority, *rest], shop_refills, "progression"
     )
     if any(world.locations[name].type == "Shop" for name in shuffled):
         native = world.settings.get("native_shop_items", ())
