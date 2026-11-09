@@ -69,7 +69,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--shop-prices", choices=("vanilla", "affordable"), help="affordable: shuffled shop items cost 10"
     )
-    parser.add_argument("--shop-slots", type=int, help="0..8 shuffled shelves per shop (first native indices; default 8)")
+    parser.add_argument("--shop-slots", type=int, help="0..8 shuffled shelves per shop (first native indices)")
     parser.add_argument(
         "--scrub-prices", choices=("vanilla", "fixed"), help="price policy for supported shuffled once-sale scrubs"
     )
