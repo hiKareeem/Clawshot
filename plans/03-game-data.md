@@ -2618,3 +2618,25 @@ Readback found both lines in all16 archives name its real **Ganon's Castle Light
 Triforce Tile Chest** Hookshot. All40 stone texts survive; Prelude's native completion
 write is unchanged despite its normal shuffled gift. Synthetic boundaries and all-language
 inverse archive oracle pass. Full-gate evidence and remaining human acceptance are in the round file.
+
+## 39. Round 9: private seed packs and pause-map floors (cs9c)
+
+Build `e0f3ccfa`, read-only dump; implementation/check evidence: `plans/rounds/r9-seedpack.md`.
+The repository and source-containing packs remain private to invited testers.
+
+### Source-only seed packs
+
+`python -m clawshot.pack` snapshots the generator's source/data and frozen dependency metadata,
+generates an external reference seed from that snapshot, and records only its whole-output SHA256.
+No game resource, generated overlay, decoded data, spoiler, save or plan is in the zip.
+Testers generate against their own dump; both Make and Play require exact output digest equality.
+
+RomFS has no NSO build-ID header. The supported-dump preflight hashes four known existing resources
+(`Pack/ZsDic.pack.zs`, GameDataList, EventSetting, child Kokiri Dynamic Banc), then hashes their lowercase
+hex digests with LF separators. This identifies the known build's RomFS before uv/generation; it is not
+an executable build-ID read or a whole-dump checksum. Changes elsewhere that affect the output fail the
+independent reference digest. Only the signature and output digest are distributed, not file content.
+
+Play uses only `<Hookshot>/bin/hookshot.exe`, `HOOKSHOT_NO_UPDATE_CHECK=1`, the verified overlay
+and a per-pack `--user` folder. Missing bin or wrong digest stops before launching. Existing seed
+folders are never rebuilt in place. The agent does not run Play, a batch or the game.
