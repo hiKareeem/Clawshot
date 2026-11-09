@@ -883,6 +883,12 @@ greyed out for child, and the reload removed it from the bar. Test the reverse t
 Boomerang). Fallbacks if no data fix: the play note and get text tell the player to Save and Continue, or a setting
 keeps age-locked button items out of locations the other age reaches first.
 
+Later-round candidate (Kareem, 2026-11-09, seed 8: "we need a check/item tracker"): a check and item tracker. The
+save already records opened checks (the Bool64bitKey list of actor Hashes, `src/clawshot/save.py`) and owned items,
+so a local page can read the seed's spoiler and the newest autosave and show collected checks by area, items owned,
+and how many checks are in logic now, without naming unfound items. Updates at each autosave. Optional export of a
+PopTracker/EmoTracker-style pack later.
+
 ### Settings backlog (Ship of Harkinian's lists, shown by Kareem 2026-11-09)
 
 Reference for later rounds and presets; feasibility marked [inference] is unverified. RomFS-only (D14) rules out
