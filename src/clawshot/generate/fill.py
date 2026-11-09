@@ -11,7 +11,7 @@ import binascii
 import json
 import random
 import zlib
-from collections.abc import Mapping
+from collections.abc import Callable, Mapping
 from dataclasses import dataclass, field, replace
 from typing import Any
 
@@ -413,6 +413,32 @@ def _fill_bomb_ammo(
     locations[:] = [name for name in locations if name not in placements]
 
 
+def _fill_dungeon_items(
+    world: World,
+    settings: Settings,
+    rng: random.Random,
+    placements: dict[str, str],
+    locations: list[str],
+    pool: list[str],
+    shop_refills: int,
+    dungeons: Callable[[str], bool] = lambda dungeon: True,
+) -> int:
+    """Own-dungeon items (``Fill.fill_dungeons_restrictive``) of the ``dungeons`` chosen, taken out of ``pool``, which
+    stays assumed.
+
+    Small keys go first, then boss keys, then maps and compasses. OoT Randomizer takes boss keys first, but the
+    remake's Fire Temple has exactly one key-free chest and two more behind the first lock, all three needed by small
+    keys; no chest there needs its boss key. A boss key placed first took one of them in 40% of chest-only fills."""
+    items = [item for item in pool if is_restricted(world, settings, item) and dungeons(world.items[item].dungeon)]
+    if not items:
+        return shop_refills
+    for item in items:
+        pool.remove(item)
+    order = {"SmallKey": 3, "SmallKeyRing": 3, "BossKey": 2, "GanonBossKey": 2}
+    items.sort(key=lambda name: order.get(world.items[name].type, 1))  # taken from the end
+    return _fill_restrictive(world, settings, rng, placements, locations, items, pool, shop_refills, "dungeon")
+
+
 def fill(
     world: World, settings: Settings, rng: random.Random, vanilla: Mapping[str, str] | None = None
 ) -> dict[str, str]:
@@ -436,19 +462,18 @@ def fill(
     pool = [vanilla_item(name) for name in shuffled]
     rng.shuffle(pool)
     locations = list(shuffled)
-    _fill_age_return(world, settings, rng, placements, locations, pool)
-    restricted = [item for item in pool if is_restricted(world, settings, item)]
-    unrestricted = [item for item in pool if not is_restricted(world, settings, item)]
     held = settings.item_location_types
     shop_refills = sum(item.startswith("Buy ") and held.get(item) == ("Shop",) for item in pool)
-
-    if restricted:
-        # Boss keys are taken first, then small keys, then the rest (Fill.fill_dungeons_restrictive).
-        order = {"BossKey": 3, "GanonBossKey": 3, "SmallKey": 2, "SmallKeyRing": 2}
-        restricted.sort(key=lambda name: order.get(world.items[name].type, 1))
-        shop_refills = _fill_restrictive(
-            world, settings, rng, placements, locations, restricted, unrestricted, shop_refills, "dungeon"
-        )
+    # The return kit's forward placement takes any adult chest, so the own-dungeon items of every dungeon it does not
+    # draw from go first: the remake's Fire Temple has no spare chest for its keys (plans/rounds/r8-fill.md).
+    families = world.settings.get("age_return_fill_families", ())
+    kit_dungeons = {world.items[item].dungeon for item in pool if _age_family(world, item) in families}
+    shop_refills = _fill_dungeon_items(
+        world, settings, rng, placements, locations, pool, shop_refills, lambda dungeon: dungeon not in kit_dungeons
+    )
+    _fill_age_return(world, settings, rng, placements, locations, pool)
+    shop_refills = _fill_dungeon_items(world, settings, rng, placements, locations, pool, shop_refills)
+    unrestricted = pool
     # Type-held ammo still needs the stronger D25 bag gate in its dedicated stage.
     type_held = [item for item in unrestricted if item in held and not item.startswith(_BOMB_AMMO_PREFIXES)]
     unrestricted = [item for item in unrestricted if item not in held or item.startswith(_BOMB_AMMO_PREFIXES)]
