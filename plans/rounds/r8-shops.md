@@ -82,4 +82,6 @@ Retained `settings-cli-proof.json`, both replay/zero CLI logs, the original part
 | `d0b61d2` | scrub fee/logic/metadata integration |
 | `90ad1b3` | item2 owned synthetic/dump regressions, README and research |
 
-Full gates run on this rebased source; later commits change this report only. Shared hashes were posted to `cs-r8` as cs8c. Section34 follows existing31; reviewer inserts32/33 before34 when those tracks merge, without placeholders or other-track edits.
+Full gates run on this rebased source; later commits change documentation only. Shared hashes were posted to `cs-r8` as cs8c. Section34 follows existing31; reviewer inserts32/33 before34 when those tracks merge, without placeholders or other-track edits.
+
+Additional read-only quote audit (`scrub-quote-trace.txt`, `scrub-quote-tokens.txt`, `scrub-price-languages.txt`): Event289 uses `SellerMessageId`; all seven native calls' four distinct seller labels carry group2/type12 `SimpleShop_Price` in **all16 language archives**. Fixed fees therefore reuse the native dynamic price quote, rupee query and payment variable without writing language archives. Original item-flavour wording remains unchanged; no game text is copied into the repo.

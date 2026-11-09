@@ -2307,6 +2307,10 @@ reward as before. Cancel/shortfall and success-only saved Bools/control flow sta
 Native prices remain40/100 by default. Wallet predicates read the existing shops.toml tiers
 (200/500/1000); the original stun/age/puzzle rule stays conjunctive. Spoiler/opening-note prices
 come from the same effective fees. All three fields serialize through CS1 and have explicit CLI overrides.
+Event289 quotes the supplied `SellerMessageId`. All four distinct seller labels used by the seven
+grant/tier calls have a group2/type12 run-time tag on `SimpleShop_Price` in `Enemy_Event.msbt`
+(all16 language archives checked). No literal rupee amount or archive edit is needed for those price quotes; native
+flavour still names the vanilla item, as with the existing reward swaps.
 
 Provisional implementation choices by cs8c (2026-11-09): deterministic first-N indices rather
 than a second random shelf-selection algorithm; fixed-price default10; scope restricted to supported
