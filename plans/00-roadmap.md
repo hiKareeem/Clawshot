@@ -842,3 +842,21 @@ section 36.
 
 Claude builds a fresh full seed with every game-confirmed setting (Chest, Shop, Gift, Scrub, BossHeart as proven;
 hints; forest closed; cheap Deku Shield) for Kareem's first full playthrough.
+
+### Settings backlog (Ship of Harkinian's lists, shown by Kareem 2026-11-09)
+
+Reference for later rounds and presets; feasibility marked [inference] is unverified. RomFS-only (D14) rules out
+anything needing engine code.
+- **Have:** songs anywhere; forest closed/`closed_deku`/open; dungeon items in their own dungeon or anywhere; Gossip
+  Stone hints without the mask (`always`) or with it, `balanced` distribution; scrubs; shops and prices; boss hearts.
+- **Likely through saved flags or flows** [inference, each needs research and an in-game test]: Door of Time open
+  (the `DoorOfTime` flow counts the stones); Zora's Fountain open (King Zora moved); Jabu-Jabu open; Gerudo Fortress
+  fast carpenters; skip Ganon's trials; skip child stealth, the Epona race, planting beans; start with maps and
+  compasses; full wallets; Big Poe count; Rainbow Bridge conditions (the bridge's check); separate small key, boss key
+  and Fortress key settings (logic and fill only).
+- **Text, through `patch/text`:** static hints at Dampé's diary, the Skulltula House, merchants, Malon, the frogs,
+  Saria, warp-song destinations; the Temple of Time altar and Ganondorf need their text traced first (round 6 note).
+- **Research first:** random or adult starting age; shuffled dungeon rewards (round 7 researched how they are given);
+  dungeon and boss entrance shuffle (whether Banc exits name their destination).
+- **Needs engine code, out of reach:** ice traps, keyrings, boss and Ganon souls, Triforce Hunt, Ganon's boss key
+  given by a reward count, Blue Fire and Sunlight Arrows, Bunny Hood speed, masks as adult.
