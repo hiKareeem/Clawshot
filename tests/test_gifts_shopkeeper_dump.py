@@ -50,7 +50,7 @@ def test_shopkeeper_both_grants_are_once_only_without_new_save_data(romfs):
     # Independently reverse only the allowed mutations; every other original event/actor/entry stays equal.
     restored = copy.deepcopy(after)
     for i, old in enumerate(before.events):
-        if old.name in {"Event116", "Event117", "Event45"}:
+        if old.name in {"Event116", "Event117", "Event45", "Event24"}:
             restored.events[i] = copy.deepcopy(old)
     restored.events = restored.events[: len(before.events)]
     assert restored == before
