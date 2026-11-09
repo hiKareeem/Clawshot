@@ -248,13 +248,17 @@ def _fill_restrictive(
     assumed: list[str],
     shop_refills: int = 0,
     stage: str = "progression",
+    natives_first: bool = False,
 ) -> int:
     """OoT Randomizer ``fill_restrictive``: take items from the end of ``items``; put each in a location that is
-    reachable holding ``assumed``, the items still to place and whatever the placements so far give."""
+    reachable holding ``assumed``, the items still to place and whatever the placements so far give.
+
+    Items with a native shop display are taken last, leaving chests to items that can only go there, unless
+    ``natives_first``: the progression stage takes them first, while the other shield can still open the way past
+    Mido. Taken last, the second shield found every chest before Mido full (Chest+Shop: 11 of 130 failed attempts)."""
     native = world.settings.get("native_shop_items", ()) if "Shop" in settings.shuffle else ()
     # Reserve only the slots needed by remaining refills, not every shop slot.
-    # Leave flexible native-display items until items that can only occupy chests.
-    items.sort(key=lambda name: (not world.items[name].priority, name not in native))
+    items.sort(key=lambda name: (not world.items[name].priority, (name in native) == natives_first))
     while items:
         item = items.pop()
         search = Search(world, [*assumed, *items])
@@ -535,7 +539,7 @@ def fill(
     priority = [item for item in unrestricted if not world.items[item].progression and world.items[item].priority]
     rest = [item for item in unrestricted if not world.items[item].progression and item not in priority]
     shop_refills = _fill_restrictive(
-        world, settings, rng, placements, locations, progression, [*priority, *rest], shop_refills, "progression"
+        world, settings, rng, placements, locations, progression, [*priority, *rest], shop_refills, "progression", True
     )
     if any(world.locations[name].type == "Shop" for name in shuffled):
         native = world.settings.get("native_shop_items", ())

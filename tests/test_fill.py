@@ -129,3 +129,32 @@ def test_songs_with_no_spare_song_location_are_retried_as_their_own_stage():
     for number in range(20):
         seed = generate(spec, number, settings, attempts=1)
         assert seed.placements == {"Free Song": "Lullaby", "Lullaby Song": "Storms"}, (number, seed.placements)
+
+
+def test_either_shield_is_placed_while_the_other_can_still_open_the_way():
+    # Shop mode kept native-display items (both shields) to the end of the progression stage; the last shield then
+    # needed the only chest before Mido, already taken (seed 17 Chest+Shop: 70 allowed, none reachable).
+    spec = {
+        "start": "Start",
+        "goal": "Sword",
+        "settings": {"native_shop_items": ["Deku Shield", "Hylian Shield"]},
+        "items": {"Sword": {}, "Deku Shield": {}, "Hylian Shield": {}, "Rupee": {"class": "normal"}},
+        "regions": [
+            {
+                "name": "Start",
+                "locations": {"Early Chest": {"rule": "True", "type": "Chest", "vanilla": "Deku Shield"}},
+                "exits": {"Village": "Deku_Shield or Hylian_Shield"},
+            },
+            {
+                "name": "Village",
+                "locations": {
+                    "Village A": {"rule": "True", "type": "Chest", "vanilla": "Sword"},
+                    "Village B": {"rule": "True", "type": "Chest", "vanilla": "Hylian Shield"},
+                    "Village C": {"rule": "True", "type": "Chest", "vanilla": "Rupee"},
+                },
+            },
+        ],
+    }
+    for number in range(20):
+        seed = generate(spec, number, Settings(shuffle=("Chest", "Shop")), attempts=1)
+        assert seed.placements["Early Chest"] in ("Deku Shield", "Hylian Shield"), (number, seed.placements)
