@@ -52,6 +52,9 @@ RomFS and Hookshot folders; emulator loading replaces the Play step only. Do not
 4. To play normally, untick the mod in Add-ons. Restore your backed-up save if you want the pre-seed progress;
    disabling the mod alone does not restore saves.
 
+For reports, name the emulator/version and attach its own log plus `pack.json`;
+the Hookshot log is not produced on this route.
+
 Other conventional layouts are **untested with Clawshot**:
 
 | Runtime | Generated overlay destination |

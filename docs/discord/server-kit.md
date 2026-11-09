@@ -34,11 +34,11 @@ to invited testers. The implemented pack format is documented in `docs/seed-pack
 
 ```
 Seed pack:
-Hookshot version:
+Runtime and version (Hookshot / Lichii / other):
 Where you were and what you did:
 What you expected:
 What happened:
-Log: attach hookshot_log.txt from the seed folder
+Log: Hookshot = pack-root hookshot_log.txt; emulator = its own log. Include pack.json.
 ```
 
 A crash report without the log is very hard to use, so please attach it even if it looks like noise.
@@ -93,6 +93,9 @@ the current setup still asks for RomFS and Hookshot folders. For this route, do 
 3. Tick the mod in the game's **Properties > Add-ons**, launch in Lichii, and start New Game.
 4. Untick the mod to play normally. Restore your backup if you want the old save progress;
    unticking does not undo changes to saves.
+
+For emulator reports, give its name/version and attach its own log plus `pack.json`;
+there is no Hookshot log when Play was not used.
 
 **Untested:** Ryujinx `mods/contents/0400486024dec000/<name>/romfs`;
 Atmosphere `atmosphere/contents/0400486024DEC000/romfs`. Those layouts are not confirmation that
