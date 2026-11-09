@@ -58,6 +58,9 @@ class Settings:
     fast_start: tuple[str, ...] = tuple(DEFAULTS["fast_start"])
     songs: str = DEFAULTS["songs"]
     shop_prices: str = DEFAULTS["shop_prices"]
+    shop_slots: int = DEFAULTS["shop_slots"]
+    scrub_prices: str = DEFAULTS["scrub_prices"]
+    scrub_price: int = DEFAULTS["scrub_price"]
     cheap_deku_shield: bool = DEFAULTS["cheap_deku_shield"]
     forest: str = DEFAULTS["forest"]
     hints: str = DEFAULTS["hints"]
@@ -95,6 +98,12 @@ class Settings:
             raise ValueError("songs must be 'song' or 'anywhere'")
         if self.shop_prices not in ("vanilla", "affordable"):
             raise ValueError("shop_prices must be 'vanilla' or 'affordable'")
+        if type(self.shop_slots) is not int or not 0 <= self.shop_slots <= 8:
+            raise ValueError("shop_slots must be an integer from 0 to 8")
+        if self.scrub_prices not in ("vanilla", "fixed"):
+            raise ValueError("scrub_prices must be 'vanilla' or 'fixed'")
+        if type(self.scrub_price) is not int or not 0 <= self.scrub_price <= 1000:
+            raise ValueError("scrub_price must be an integer from 0 to 1000 rupees")
         if not isinstance(self.cheap_deku_shield, bool):
             raise ValueError("cheap_deku_shield must be a boolean")
         if not isinstance(self.forest, str) or self.forest not in CATALOG["forest"]:
@@ -119,6 +128,9 @@ class Settings:
             "fast_start": list(self.fast_start),
             "songs": self.songs,
             "shop_prices": self.shop_prices,
+            "shop_slots": self.shop_slots,
+            "scrub_prices": self.scrub_prices,
+            "scrub_price": self.scrub_price,
             "cheap_deku_shield": self.cheap_deku_shield,
             "forest": self.forest,
             "hints": self.hints,
