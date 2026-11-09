@@ -74,3 +74,32 @@ def test_the_return_kit_leaves_another_dungeons_key_chest_to_its_key():
     for number in range(20):
         seed = generate(spec, number, Settings(), attempts=1)
         assert seed.placements["E Entrance"] == "Small Key (E)", (number, seed.placements)
+
+
+def _bracelet_spec() -> dict:
+    # Seed 7 Gift: Zelda's Letter went where only Bombchus reach while every Bombchu pack still had to wait behind a
+    # Bomb Bag (D25), so the last pack had nowhere reachable.
+    explosives = "(Bomb_Bag and Bracelet) or Bombchus_5"
+    return {
+        "start": "Start",
+        "goal": "Bracelet and Bomb_Bag and Bombchus_5",
+        "items": {"Bomb Bag": {}, "Bracelet": {}, "Bombchus (5)": {}, "Rupee": {"class": "normal"}},
+        "regions": [
+            {
+                "name": "Start",
+                "locations": {
+                    "Open NPC": {"rule": "True", "type": "NPC", "vanilla": "Rupee"},
+                    "Wall NPC": {"rule": explosives, "type": "NPC", "vanilla": "Bracelet"},
+                    "Bag Chest": {"rule": "True", "type": "Chest", "vanilla": "Bomb Bag"},
+                    "Wall Chest": {"rule": explosives, "type": "Chest", "vanilla": "Bombchus (5)"},
+                },
+            }
+        ],
+    }
+
+
+def test_held_items_before_the_ammo_stage_do_not_rely_on_bag_gated_bombchus():
+    settings = Settings(shuffle=("Chest", "NPC"), item_location_types={"Bracelet": ("NPC",)})
+    for number in range(20):
+        seed = generate(_bracelet_spec(), number, settings, attempts=1)
+        assert seed.placements["Open NPC"] == "Bracelet", (number, seed.placements)

@@ -376,6 +376,13 @@ def _fill_age_return(
             raise FillError(f"return kit: no adult return-kit destination for {staged!r}", stage="return kit")
 
 
+def _before_ammo(items: list[str]) -> list[str]:
+    """What a stage before :func:`_fill_bomb_ammo` may assume: not the bomb and Bombchu packs. D25 puts every pack
+    where only a Bomb Bag reaches, so a placement that needed a pack to be reached could leave the last pack nowhere
+    (seed 7 Gift: Zelda's Letter behind Bombchus, every Bombchu pack behind a bag that needed the letter)."""
+    return [item for item in items if not item.startswith(_BOMB_AMMO_PREFIXES)]
+
+
 def _fill_bomb_ammo(
     world: World,
     settings: Settings,
@@ -436,7 +443,9 @@ def _fill_dungeon_items(
         pool.remove(item)
     order = {"SmallKey": 3, "SmallKeyRing": 3, "BossKey": 2, "GanonBossKey": 2}
     items.sort(key=lambda name: order.get(world.items[name].type, 1))  # taken from the end
-    return _fill_restrictive(world, settings, rng, placements, locations, items, pool, shop_refills, "dungeon")
+    return _fill_restrictive(
+        world, settings, rng, placements, locations, items, _before_ammo(pool), shop_refills, "dungeon"
+    )
 
 
 def fill(
@@ -480,7 +489,7 @@ def fill(
     # Sparse native shop whitelists must keep their slots before general refills take them.
     type_held.sort(key=lambda item: sum(allowed(world, settings, name, item) for name in locations), reverse=True)
     shop_refills = _fill_restrictive(
-        world, settings, rng, placements, locations, type_held, unrestricted, shop_refills, "type-held"
+        world, settings, rng, placements, locations, type_held, _before_ammo(unrestricted), shop_refills, "type-held"
     )
     _fill_bomb_ammo(world, settings, rng, placements, locations, unrestricted)
     progression = [item for item in unrestricted if world.items[item].progression]
