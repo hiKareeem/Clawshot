@@ -274,9 +274,53 @@ def _once_gate(fc: evfl.Flowchart, flow: str, ref: str, flag: str) -> None:
         or sorted(case for case, _ in event.cases) != [0, 1]
     ):
         raise GiftPatchError(f"{ref}: unexpected equipped-shield gate: {event}")
+    if flow == SHOPKEEPER_FLOW and ref == f"{SHOPKEEPER_FLOW}/Event45":
+        _shopkeeper_window(fc, flag)
     event.actor = _game_data_actor(fc, flow)
     event.query = _slot(fc.actors[event.actor].queries, READ_QUERY)
     event.params = {"GameDataName": flag, "Index": -1}
+
+
+def _shopkeeper_window(fc: evfl.Flowchart, flag: str) -> None:
+    """Offer an uncollected shuffled gift after initialization, before native quest dispatch."""
+    dispatch = fc.events[_index(fc, SHOPKEEPER_FLOW, "Event24")]
+    original = _index(fc, SHOPKEEPER_FLOW, "Event23")
+    meeting = fc.events[_index(fc, SHOPKEEPER_FLOW, "Event1")]
+    offer = _index(fc, SHOPKEEPER_FLOW, "Event83")
+    if (
+        not isinstance(dispatch, evfl.ActionEvent)
+        or dispatch.next != original
+        or not isinstance(meeting, evfl.SwitchEvent)
+        or fc.actors[meeting.actor].name != GAME_DATA_ACTOR
+        or fc.actors[meeting.actor].queries[meeting.query] != "EventQueryIsGameDataBoolExp"
+        or meeting.params != {"GameDataName": "Meet_DekuTree_IsAfter_Step02_Exp"}
+        or dict(meeting.cases).get(0) != offer
+    ):
+        raise GiftPatchError(f"{SHOPKEEPER_FLOW}: stale shopkeeper story dispatch: {dispatch!r}, {meeting!r}")
+    names = {event.name for event in fc.events}
+    if names & {"ClawshotShopkeeperDone", "ClawshotShopkeeperMetTree"}:
+        raise GiftPatchError(f"{SHOPKEEPER_FLOW}: shopkeeper dispatch already extended")
+    actor = _game_data_actor(fc, SHOPKEEPER_FLOW)
+    start = len(fc.events)
+    fc.events.extend(
+        [
+            evfl.SwitchEvent(
+                "ClawshotShopkeeperDone",
+                actor,
+                _slot(fc.actors[actor].queries, READ_QUERY),
+                [(0, original), (1, start + 1)],
+                {"GameDataName": flag, "Index": -1},
+            ),
+            evfl.SwitchEvent(
+                "ClawshotShopkeeperMetTree",
+                meeting.actor,
+                meeting.query,
+                [(0, offer), (1, original)],
+                dict(meeting.params),
+            ),
+        ]
+    )
+    dispatch.next = start
 
 
 def _skip(fc: evfl.Flowchart, flow: str, ref: str) -> None:
