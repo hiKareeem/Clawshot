@@ -2,10 +2,11 @@
 
 Keep the Banc offer selectors: the common flow dispatches known names, not arbitrary
 items. Rewrite every grant of a logical check, including both capacity tiers, and
-its explicit selection identity. Prices, puzzle, cancel/shortfall paths, and the
-success-only saved completion flags stay native. See r6-tokens.md for all 21 actors.
+its explicit selection identity. Puzzle, cancel/shortfall paths and success-only
+saved flags stay native; optional exact fees cover only supported shuffled families.
 """
 
+import tomllib
 from collections.abc import Mapping
 from dataclasses import dataclass, replace
 from typing import Any
@@ -14,6 +15,7 @@ from clawshot.formats import evfl
 from clawshot.generate import Settings, prepare
 from clawshot.patch import items as item_actors
 from clawshot.patch.plan import PatchError
+from clawshot.patch.shops import SHOPS_TOML
 from clawshot.patch.write import FileChanges
 
 FLOW = "Enemy_Scrub_Business_Common"
@@ -65,10 +67,15 @@ SALES = {
 }
 
 
-def patch_flowchart(fc: evfl.Flowchart, placements: Mapping[str, str]) -> None:
+def patch_flowchart(
+    fc: evfl.Flowchart, placements: Mapping[str, str], *, prices: Mapping[str, int] | None = None
+) -> None:
     """Validate every target before mutation; preserve all control flow and flags."""
     if fc.name != FLOW or set(placements) - SALES.keys():
         raise PatchError(f"{FLOW}: invalid flow or unsupported scrub checks {sorted(placements)}")
+    prices = dict(prices or {})
+    if prices.keys() - placements.keys() or any(type(p) is not int or not 0 <= p <= 1000 for p in prices.values()):
+        raise PatchError(f"{FLOW}: invalid fixed scrub prices {prices!r}")
     edits = []
     for check, item in placements.items():
         if not isinstance(item, str) or not item:
@@ -88,6 +95,8 @@ def patch_flowchart(fc: evfl.Flowchart, placements: Mapping[str, str]) -> None:
             ):
                 raise PatchError(f"{FLOW}/{name}: stale sale {event!r}")
             edits.append((event.params, "ActorName", item))
+            if check in prices:
+                edits.append((event.params, "Price", prices[check]))
         if sale.selection:
             found = [e for e in fc.events if e.name == sale.selection]
             if len(found) != 1:
@@ -106,19 +115,20 @@ def patch_flowchart(fc: evfl.Flowchart, placements: Mapping[str, str]) -> None:
         params[key] = value
 
 
-def changes(placements: Mapping[str, str]) -> FileChanges:
+def changes(placements: Mapping[str, str], *, prices: Mapping[str, int] | None = None) -> FileChanges:
     """Actor-name placements for supported checks, for the common writer."""
     if unknown := set(placements) - SALES.keys():
         raise PatchError(f"unsupported scrub checks: {sorted(unknown)}")
     if not placements:
         return {}
     placements = dict(placements)
+    prices = dict(prices or {})
 
     def transform(data: bytes) -> bytes:
         tree = evfl.read(data)
         if tree.flowchart is None:
             raise PatchError(f"{PATH}: no flowchart")
-        patch_flowchart(tree.flowchart, placements)
+        patch_flowchart(tree.flowchart, placements, prices=prices)
         out = evfl.write(tree)
         if evfl.read(out) != tree:
             raise PatchError(f"{PATH}: changed flow does not read back")
@@ -141,12 +151,36 @@ def seed_setup(spec: Mapping[str, Any], settings: Settings):
         elif info.get("type") in ("Scrub", "GrottoScrub") and not info.get("keep_vanilla"):
             info = {**info, "keep_vanilla": "scrub shuffle: repeat/rotating vendor, not a saved one-time family"}
         locations[name] = info
+    prices = {
+        name: settings.scrub_price if settings.scrub_prices == "fixed" else sale.price for name, sale in SALES.items()
+    }
+    with SHOPS_TOML.open("rb") as stream:
+        wallets = tomllib.load(stream)["wallet"]
+    regions = []
+    for region in spec["regions"]:
+        rules = dict(region.get("locations", {}))
+        for name in rules:
+            if name not in prices:
+                continue
+            old = rules[name]
+            rule = old if isinstance(old, str) else old["rule"]
+            source = spec["locations"][name].get("source", "") if isinstance(old, str) else old.get("source", "")
+            wallet = next((tier["rule"] for tier in wallets if prices[name] <= tier["capacity"]), "False")
+            rules[name] = {
+                "rule": f"({rule}) and ({wallet})",
+                "source": (
+                    f"scrub_prices={settings.scrub_prices}: {prices[name]} rupees; "
+                    f"native puzzle/once gate retained; {source}"
+                ),
+            }
+        regions.append({**region, "locations": rules})
     spec = {
         **spec,
+        "regions": regions,
         "locations": locations,
         "settings": {
             **spec.get("settings", {}),
-            "scrub_sale_prices": {name: sale.price for name, sale in SALES.items()},
+            "scrub_sale_prices": prices,
         },
     }
     held = dict(settings.item_location_types)
@@ -164,6 +198,8 @@ def seed_setup(spec: Mapping[str, Any], settings: Settings):
     def step(placements: Mapping[str, str]) -> FileChanges:
         # Even an unchanged capacity placement must normalize both native tier
         # branches to the single fixed item represented in the pool.
-        return changes({name: actors.actor(placements[name]) for name in checks})
+        return changes(
+            {name: actors.actor(placements[name]) for name in checks}, prices={name: prices[name] for name in checks}
+        )
 
     return spec, settings, step
