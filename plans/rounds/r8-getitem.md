@@ -104,8 +104,8 @@ Fourteen existing saved chest Hashes, across ten Banc files:
 The enabled seed actor catalog currently has **zero mask mappings**. To provide useful complete evidence
 without inventing mask shuffle, the controlled output tests all eight ordinary native `Item_Mask_*` actors;
 no shop display/raw armor/Amiibo actor or seed mapping was added. Mask discovery initially printed no mappings
-and then failed looking for an inherited pouch field locally; printed the actual local component and followed
-its existing inheritance instead. It did not justify a policy or engine change.
+and then failed resolving the external default pouch parent from the actor-local pack. Printed each actual
+local component with that parent explicitly omitted; no inherited defaults or policy/engine fix were invented.
 
 This is an experiment, **not a randomized seed or beatability-certified placement**. Native Sword, main
 Slingshot and Bomb Bag chests, gifts, doors, forest progression and prices remain unchanged. The route obtains
@@ -149,3 +149,33 @@ Letter guard use and adult Card use are separate observations, not proved by the
 
 **Provisional presentation choice for review:** reuse native handheld cutscene props, rather than mutate
 playable equipment or claim an unproved floating get-model fix. Runtime visibility remains unverified.
+
+## Commits and full gates
+
+Item1: `b76da61` (authorized rebase of initial `0a96aa1` onto `e3745f5`).
+Item2 eligibility: `02277d1`; experiment/report: `129a816`.
+All commits are local on `r8/getitem`; no merge or push performed.
+
+The full chained gates use fresh external `PYTEST_ADDOPTS=--basetemp=.../gate-synthetic-next`
+and `.../gate-dump-next` directories:
+
+- `uv run ruff format --check`: **207 files already formatted**.
+- `uv run ruff check`: **All checks passed**.
+- `uv run pytest`: **628 passed, 80 skipped**, 584.60s.
+- `OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump`: **79 passed, 629 deselected**, 860.47s.
+
+All four full gates passed in one chain (1448.74s total); no unchanged failed command was rerun.
+Actual-output common-writer smoke and byte-identical replay proof are recorded above, independently of tests.
+Only round-file evidence wording changed after the gates; source and test contracts did not.
+
+### Handoff boundary
+
+Ready for code review, **not in-game certified**. Source checkpoints `b76da61` and `02277d1`,
+experiment/report `129a816`, plus the final evidence-only round-file commit. Reviewer integrates section33
+after Track A's32; no other track's source was changed. The staged-prop path is still explicit experiment-only,
+not automatically applied to generated seeds.
+
+Remaining: Kareem's single isolated new-game check and model/use/persistence/overlay results listed above.
+The exact engine visibility predicate remains unproved; no claim that data tests establish runtime visibility.
+No additional chest allowlist expansion until those player results. The reviewer owns final product approval
+of the native handheld presentation choice.
