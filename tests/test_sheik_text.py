@@ -47,7 +47,8 @@ def test_multiple_real_sources_select_same_true_location_in_any_order(tmp_path):
     forward = patch(original)
     reverse = text.sheik_hint_changes(tmp_path, ["A chest", "B chest"])[text.archive_path("Synthetic")](original)
     assert forward == reverse
-    assert "A chest" in msbt.plain(msbt.read(sarc.read(forward)[text.SHEIK_MESSAGES]).messages["Talk_03"])
+    said = msbt.plain(msbt.read(sarc.read(forward)[text.SHEIK_MESSAGES]).messages["Talk_03"])
+    assert any(location in said for location in ("A chest", "B chest"))
 
 
 def test_missing_native_tool_line_refuses_instead_of_leaving_wrong_directions(tmp_path):

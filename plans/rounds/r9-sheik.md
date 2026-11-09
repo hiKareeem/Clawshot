@@ -151,7 +151,65 @@ finding Hookshot; both tool-direction variants should name the seed's actual Hoo
 not send you to vanilla Kakariko. Check wrapping/highlight reset and the language-archive
 overlay log. Free travel ON deliberately hides that optional pre-Forest speaker.**
 
-Shared-file changes are isolated: sourced logic/settings checkpoint47f25da and documentation
-e05c49a; the seed-pipeline hook/README follow as their own commits. Section38 follows the
+Shared-file changes are isolated: sourced logic/settings checkpoint47f25da, world-format
+documentation e05c49a, seed-pipeline hook806b1c7, README a287d1e. Section38 follows the
 present36 on this base; reviewer inserts Track A's37 before it and C's39 afterwards. No
 placeholder sections or other track's text are invented.
+
+## Commit ledger and acceptance boundary
+
+| Commit | Scope |
+|---|---|
+| `cbc8e90` | Item1 native Sheik/Prelude/save trace, section38 |
+| `47f25da` | Isolated native Prelude logic correction and its boundary test |
+| `f42571a` | Item2 pedestal/Sheik placement transform and atomic/inverse oracles |
+| `e05c49a` | Isolated world-format documentation |
+| `f199780` | Item3 both tool lines, synthetic/all-language inverse tests, section38 |
+| `806b1c7` | Isolated automatic seed text composition |
+| `a287d1e` | Isolated README feature/acceptance description |
+
+The report-only final evidence commit follows these implementation checkpoints. No rebase,
+merge, push, stash, dependency edit, game/window/launcher execution or played-output rewrite.
+Removed only the two completed session-created smoke drivers after retaining their JSON proofs;
+the read-only research reproducer, fresh requested outputs and unrun launchers/checklist remain.
+
+Additional first-arrival boundary: recorded native0050 timeline's Sheik member uses
+EventMemberCreateMethod0, IsWorldfalse and its own event model animation. The numeric creation
+mode's engine meaning was not reverse-engineered; this is not proof that a missing field NPC
+is recreated. The long-path checklist explicitly tests that first arrival plus later Prelude.
+No in-game success or changed default is inferred.
+
+### Cross-track pack integration
+
+Posted on cs-r9: Track C's existing r8 seed8 byte-identical pack proof is historical once
+806b1c7 is merged: every new seed's16 Mals archives gain the two Sheik lines. Recompute the
+integrated pack reference digest from integrated source; never rebuild the played r8-full
+output. Track C's floor-qualified catalogue labels automatically appear in this static hint
+after merge. Both README additions are isolated for additive integration. No other worktree
+or existing pack/output is changed here.
+
+## First complete gates: stale archive oracle diagnosed
+
+The full unfiltered chain completed on a287d1e plus report-only edits:
+
+| Full command | Observed result |
+|---|---|
+| `uv run ruff format --check` | 227 files already formatted |
+| `uv run ruff check` | All checks passed |
+| `uv run pytest` | 733 passed,87 skipped;428.54s |
+| `OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump` | 84 passed,2 failed,734 deselected;1071.49s |
+
+Both failures are `test_hints_seed_dump.py::test_dump_the_stones_say_the_spoiler_hints`
+for always/mask. Printed payload: CNzh stone01 still vanilla instead of the expected
+English spoiler text. Its local dict comprehension flattened all PatchSteps, selecting
+only the last Sheik transform for each archive and discarding the earlier stone transform.
+That is not the common writer's behavior: it composes every step, independently proved
+by the successful full CLI/all16 readback above.
+
+Changed the oracle to run actual `write_seed` and read the on-disk compressed archives.
+Retained every stone/spoiler equality and mode/flow assertion; additionally require both
+Sheik lines in every written archive to identify an actual shuffled Hookshot source.
+No production transform, composition, goal, fill bound or hint policy changed.
+Also removed the incidental exact A-chest preference assertion from the multiple-source
+test; it now requires deterministic bytes AND a true source, not a particular correct source.
+Cause-aimed native check and fresh full gates follow; no unchanged failed command rerun.
