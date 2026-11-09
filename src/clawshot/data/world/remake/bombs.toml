@@ -1,0 +1,23 @@
+# D30: ordinary bombs need Low lift grade; Bombchus and local Bomb Flowers are separate capabilities.
+# Fixed child strength is the Bracelet itself, not adult-only gauntlets' progressive alias.
+# In progressive mode the first strength tier is the Bracelet (D16).
+[helpers.Bombs]
+rule = "Bomb_Bag and ((is_child and ('Goron Bracelet' or (progressive_items and Progressive_Strength_Upgrade))) or (is_adult and Progressive_Strength_Upgrade))"
+was = "Bomb_Bag"
+source = "D30; 03-game-data.md sections 30-31, build e0f3ccfa: Item_Bomb LiftableParam requires Low; Item_Gauntlet_Goron/Armor_Child_Gauntlet_Goron grants LiftGradeUP Low (GoronGauntlet), Silver/Gold grant Middle/High with AdultEquipment. Bracelet works as child; any strength tier as adult. Bomb Bag grants capacity only. Native pre-lift compares required <= PlayerStatus.LiftGrade; gameplay confirmation pending."
+
+# N64's two direct Bomb_Bag combat shortcuts must use the same usable-bomb capability.
+[helpers.can_kill_octorok_with_bombs]
+rule = "has_soul(Octorok) and (Bombs or (is_child and (Boomerang or Slingshot or Deku_Shield)) or (is_adult and (Bow or Hookshot or Hylian_Shield or can_use(Slingshot) or can_use(Boomerang))))"
+was = "has_soul(Octorok) and (Bomb_Bag or (is_child and (Boomerang or Slingshot or Deku_Shield)) or (is_adult and (Bow or Hookshot or Hylian_Shield or can_use(Slingshot) or can_use(Boomerang))))"
+source = "D30; 03-game-data.md sections 30-31: Item_Bomb requires Low lift grade for every use, including combat. Preserve all non-bomb Octorok alternatives and the soul gate."
+
+[helpers.can_kill_octorok_with_bombs_or_magic]
+rule = "has_soul(Octorok) and (Bombs or (is_child and (Boomerang or Slingshot or Deku_Shield)) or (is_adult and (Magic_Meter or Bow or Hookshot or Hylian_Shield or can_use(Slingshot) or can_use(Boomerang))))"
+was = "has_soul(Octorok) and (Bomb_Bag or (is_child and (Boomerang or Slingshot or Deku_Shield)) or (is_adult and (Magic_Meter or Bow or Hookshot or Hylian_Shield or can_use(Slingshot) or can_use(Boomerang))))"
+source = "D30; 03-game-data.md sections 30-31: use the shared usable-bomb capability, retaining magic, projectile, shield and soul alternatives."
+
+[helpers."can_use(item)"]
+rule = "(item == Bombs and Bombs) or (_is_magic_item(item) and item and Magic_Meter) or (_is_adult_item(item) and is_adult and item) or (_is_magic_arrow(item) and is_adult and item and Bow and Magic_Meter) or (_is_child_item(item) and is_child and item) or (_is_swappable_adult(item) and can_equip_swap_adult and item) or (_is_swappable_child(item) and can_equip_swap_child and item) or (_adult_slingshot(item) and is_adult and Bow and can_equip_swap_adult and item)"
+was = "(_is_magic_item(item) and item and Magic_Meter) or (_is_adult_item(item) and is_adult and item) or (_is_magic_arrow(item) and is_adult and item and Bow and Magic_Meter) or (_is_child_item(item) and is_child and item) or (_is_swappable_adult(item) and can_equip_swap_adult and item) or (_is_swappable_child(item) and can_equip_swap_child and item) or (_adult_slingshot(item) and is_adult and Bow and can_equip_swap_adult and item)"
+source = "D30; 03-game-data.md sections 30-31: can_use(Bombs) uses exactly Bombs' bag-plus-age-appropriate-lift predicate. Other item categories are unchanged. N64's helper did not classify Bombs."

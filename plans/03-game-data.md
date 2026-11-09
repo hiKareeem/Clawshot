@@ -2185,3 +2185,28 @@ The existing shuffled writer `patch_tree` already overwrites primary **and** sub
 reward, so owning the shield cannot turn shuffled progression into vanilla rupees. Real-placement,
 in-memory smoke across both ages selected shield/red rupee before patch and Boomerang/Boomerang
 after patch. No blanket20-rupee rule for other duplicate items, and no shuffled in-game result inferred.
+
+## 31. Round 7: usable bombs need age-appropriate lift strength (cs7g)
+
+D30, build e0f3ccfa. Native trace: section30; independent PouchActorInfo/actor-pack audit and
+commands: `plans/rounds/r7-bombs.md`, `E:/OOTRemake/work/r7-bombs-cs7g/lift_audit.py`.
+Canonical Item_Gauntlet_Goron / Armor_Child_Gauntlet_Goron grants LiftGradeUP **Low**;
+Item_Gauntlet_Silver / Armor_Adult_Gauntlet_Silver grants **Middle** and declares AdultEquipment;
+Item_Gauntlet_Gold / Armor_Adult_Gauntlet_Gold grants **High** and declares AdultEquipment.
+The three ExpansionAbilityActor resources agree. Item_Bomb needs Low, Item_Bombchu needs None;
+the Bomb Flower fruit also requires Low. The bag expands capacity, not lift strength.
+
+`data/world/remake/bombs.toml` supplies guarded helper overrides, leaving translated files intact.
+Bombs requires Bomb Bag and the actual Goron Bracelet as fixed child, any strength upgrade as adult;
+progressive mode's first strength tier represents the Bracelet. Higher fixed adult gauntlets do not
+substitute for the child's Bracelet through their shared progressive alias. `can_use(Bombs)` shares
+that rule; both Octorok bomb shortcuts now use Bombs instead of direct bag possession. All other
+bomb paths inherit it through existing helpers, including explosives/blast-or-smash and bomb-only
+tricks. There is no existing `has_bombs` alias. Bombchu supply helpers and strength-gated local
+Bomb Flower routes remain unchanged; no item actor, saved flag, gameplay parameter or D25 policy
+is patched. Helper overrides require `rule`, `was`, `source` and unique ownership.
+
+Synthetic independent-path tests exercise bag-without-strength rejection, per-age fixed tiers,
+the progressive first tier, wake-on-strength, unchanged Bombchu/Hammer/flower alternatives and
+stale/duplicate/missing helper contracts. Native metadata plus search behavior is not new in-game
+acceptance: **Kareem's same-bombs-before/after-Bracelet comparison on 7c remains pending.**
