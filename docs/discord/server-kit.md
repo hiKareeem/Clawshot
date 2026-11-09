@@ -81,6 +81,23 @@ Version/digest mismatch: stop and post the actual/expected fingerprints in #help
 Partial/modified build: extract into a new folder, keeping the old folder and its saves.
 Code is included for inspection; neither the repository nor packs are public yet. Do not repost.
 
+### Playing in Lichii instead of Hookshot
+
+Kareem confirmed seed8 loads and plays on **Lichii (Eden/yuzu family)**. Run **Make seed as usual** first;
+the current setup still asks for RomFS and Hookshot folders. For this route, do not run Play.
+
+1. **Back up the emulator's saves for this game before starting.** A **New Game** for the seed takes over
+   this game's emulator save slots; the pack's Hookshot `user` folder does not isolate emulator saves.
+2. Copy generated `seed\romfs` to
+   `%APPDATA%\eden\load\0400486024DEC000\<mod name>\romfs` (no extra nested `romfs`).
+3. Tick the mod in the game's **Properties > Add-ons**, launch in Lichii, and start New Game.
+4. Untick the mod to play normally. Restore your backup if you want the old save progress;
+   unticking does not undo changes to saves.
+
+**Untested:** Ryujinx `mods/contents/0400486024dec000/<name>/romfs`;
+Atmosphere `atmosphere/contents/0400486024DEC000/romfs`. Those layouts are not confirmation that
+Clawshot works there. Keep backups, and never share generated overlays.
+
 ---
 
 ## First post in #announcements

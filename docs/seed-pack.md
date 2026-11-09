@@ -4,7 +4,7 @@ Repository and packs are private to invited testers. Do not repost the zip or it
 Code is included, not hidden. No game files, decoded data, generated overlay, save or spoiler
 is distributed; the zip records only the reference seed's SHA256 digest.
 
-## Tester (Windows)
+## Tester (Windows, Hookshot)
 
 1. Set up Hookshot with your own legal dump of the supported game update (build `e0f3ccfa`).
 2. Install [uv](https://docs.astral.sh/uv/getting-started/installation/). Internet is needed for
@@ -29,6 +29,33 @@ A partial or altered `seed` folder is not repaired in place: extract the origina
 Keep the old folder and its saves. Avoid multiple simultaneous games using the same pack.
 Do not point Hookshot's separate mods loader at another randomizer overlay: the digest checks this pack,
 not unrelated installed mods. The pack does not update Hookshot or touch your game directory.
+
+## Emulator / console loading
+
+**Confirmed by Kareem:** seed8 loads and plays on Lichii (Eden/yuzu family), 2026-11-09;
+reviewer record `plans/playtest/answers.md`, R9-LICHII, main `d3e5c08`.
+Generate with **Make seed as above** and wait for Verified seed. Current Make still asks for both
+RomFS and Hookshot folders; emulator loading replaces the Play step only. Do not run Play for this route.
+
+1. **Back up this game's entire emulator save folder first.** Start a **New Game** for the seed:
+   it takes over the emulator's save slots for this game. The pack's isolated Hookshot `user` folder
+   does not isolate emulator saves.
+2. Copy the generated `seed\romfs` folder into
+   `%APPDATA%\eden\load\0400486024DEC000\<mod name>\romfs`.
+   The final folder must contain overlay subfolders such as `Banc`, not another nested `romfs`.
+3. In the game's **Properties > Add-ons**, tick that mod, then launch the game in Lichii and start New Game.
+4. To play normally, untick the mod in Add-ons. Restore your backed-up save if you want the pre-seed progress;
+   disabling the mod alone does not restore saves.
+
+Other conventional layouts are **untested with Clawshot**:
+
+| Runtime | Generated overlay destination |
+|---|---|
+| Ryujinx | `mods/contents/0400486024dec000/<name>/romfs` |
+| Atmosphere | `atmosphere/contents/0400486024DEC000/romfs` |
+
+Only the Lichii path and loading result above are confirmed. Keep backups before trying another runtime.
+Copy generated files locally from your own dump; never redistribute the overlay.
 
 ## Publisher
 
