@@ -104,6 +104,15 @@
   section 35; Kareem's chest test lost the Egg when he took the Letter). OoT Randomizer keeps both in a seed only
   through code patches (separate owned bits, menu cycling), which RomFS-only mods (D14) cannot do. Neither item
   enters the pool or a chest; Malon and Zelda give them as in vanilla.
+- **D32 Fill order: small keys before boss keys, other dungeons' items before the return kit** (Claude, 2026-11-09,
+  round 8 track A). The Fire Temple has no spare chest for its first small key once a boss key takes it.
+- **D33 Item type palettes are a setting, `Settings.location_type_items`** (Claude, 2026-11-09, round 8). Locations
+  that can only show some items (boss hearts, floor pickups) take them from their own stage, before the general fill;
+  `patch/drops.py` and `patch/freestanding.py` read it.
+- **D34 The fill may swap** (Claude, 2026-11-09, round 8). When an item has no reachable location left, it takes one
+  its stage filled before and the displaced item is placed next under the same rules: Archipelago's safe swap
+  (`Fill.py`, MIT, credited in `NOTICE`). Only on failure, no RNG, each item name displaced at most twice. Result:
+  every mode 200/200 seeds on the first attempt.
 
 ## Open (only Kareem and his co-owner decide)
 
