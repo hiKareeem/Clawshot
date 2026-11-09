@@ -840,11 +840,11 @@ section 36.
 
 ### After round 8
 
-Round 9 candidate from play (Kareem, 2026-11-09): grotto openers. The remake shows on each grotto whether bombs or the
-Song of Storms opens it (Eurogamer), and some changed from the N64: the Sacred Forest Meadow Wolfos grotto opens with
-Storms in the remake (Kareem played it; the catalogue agrees), but the logic still has OoT Randomizer's
-`can_open_bomb_grotto`. Audit every grotto entrance against its cover actor (`Land_*_HidingHoleCover_*` and the
-storm/bomb variants), fix the rules with sources, and replay `seed-shop-7b` (its Hookshot is in that grotto).
+Round 9 candidate from play (Kareem, 2026-11-09): grotto openers. Kareem opened a grotto just past the Lost Woods
+with the Song of Storms on his main save; its chest appears after the enemies die [inference: the SFM Wolfos Grotto,
+whose logic still has OoT Randomizer's `can_open_bomb_grotto`]. Audit every grotto entrance against its cover actor
+in the Banc files (SFM has `Land_Kokiri_HidingHoleCover_A_01` and `Land_SacredForest_HidingHoleCover_A_02`), fix the
+rules with sources, and check `seed-shop-7b`/7c (its Hookshot is in that grotto).
 
 Round 9 candidate from play: `free_time_travel` also needs Sheik moved: as adult before the Forest Temple, Sheik
 stands at the pedestal with a Talk prompt in the way (Kareem, 2026-11-09). Trace Sheik's Temple of Time placement
