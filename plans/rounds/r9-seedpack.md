@@ -43,7 +43,20 @@ No batch, Play, executable or window started; only setup.ps1 `-Action make`.
 
 All five new safety regressions pass: wrong-version pre-generation refusal, complete-tree digest changes,
 existing seed non-overwrite, changed-seed launch refusal, missing-bin no-fallback and game-folder isolation.
-All four full gates now run as one serial chain with external basetemps; results not assumed.
+All four complete gates passed serially before the floor source/data cutover; no Python/TOML/test mutation
+during that chain. Basetemps: external `item1-synthetic-next`, `item1-dump-next`. No pools or filtered tests.
+
+| Full command | Observed result |
+|---|---|
+| `uv run ruff format --check` |229 files already formatted |
+| `uv run ruff check` |All checks passed |
+| `uv run pytest` |726 passed,86 skipped;319.11s |
+| `OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump` |85 passed,727 deselected;1402.32s |
+
+812 tests collected. Initial tasklist in this chain reported no matching Hookshot process.
+Item1 commits: `9370057` pack/tests/source-only oracle, `92aec67` isolated README/Discord guide,
+`cc7047a` reviewer-requested Lichii/save-safety docs. Runtime proof is branch-local, not a claim about
+the future merged source. No in-game acceptance is invented.
 
 ### Diagnostics before gate checkpoint
 
@@ -59,12 +72,55 @@ streaming .NET SHA256, retaining the same exact signature format. Also included 
 Removed inherited VIRTUAL_ENV in the publisher's child. No game/launcher was invoked in either probe.
 The cause-aimed second proof uses a new `seed-8-private-net-next` zip/folder, never rewrites the first.
 
-## Item 2
+## Item 2: room and pause-map floors
 
-Not started: item1 is first in the requested order. No floor is guessed from N64 or Y position.
+Read-only research began after item1 commits `9370057`, `92aec67`; gates remain serial.
+The authoritative mapping is **Banc/BancBasedResource/MapParam.byml.zs**, not RSDB/DungeonParam,
+Scene/Component/DungeonParam, MapMenuInfo or MapCaptureInfo (those were inspected first).
+`<area>.Room[Dynamic.DefaultDungeonRoomIndex].Floor` stores signed logical floors (0=1F,
+-1=B1); `<area>.Floor[slot]` starts at `MinFloor` and lists chest `TBox.InstanceID` hashes.
+Use the exact icon's floor when a room spans multiple floors, never chest height or N64 room names.
+
+All **134 existing dungeon chest descriptions** resolve:126 by exact icon Hash,8 Ganon trial
+chests absent from icon lists by their single-valued room floor. No unresolved/multi-floor guess.
+The Remake map texture filenames independently agree with displayed labels (Deku B2..3F,
+Well B2/B1, Jabu B1..2F, Fire1F..5F). GTG and Ganon have stored map floors but no matching
+floor-texture set; no newly observed pause-map surface is claimed for them.
+
+Fire Temple: exactly **16 chests /5 Skulltulas**, matching Kareem's guide-map count; map icon lists
+independently hold16 TBox and5 CollectSign entries. Chest floors:1F five,2F one,3F six,4F zero,
+5F four. The timed trio's two extra red-rupee chests and the old Scarecrow check are all5F,
+alongside the Hammer. The Bomb-floor shortcut chest is2F even though the boulder maze is3F.
+No guide text or decoded map tree goes in the repository.
+
+Boss-heart research first printed KeyError Dynamic for Volvagia's native pickup; the exact actor
+payload has no Dynamic override. Printed all eight existing identities plus MapParam.BossRoomId:
+seven explicit room values agree; Volvagia uses the unique boss room33, floor0=1F. This is a
+boss-room identity join, not a guessed actor default. Planned coverage includes eight already-supported
+BossHeart descriptions and the Ice Cavern Sheik lesson at the mapped Iron Boots chest.
+
+**Kareem: compare the timed trio with Fire5F and the shortcut cell with2F on the pause map.
+GTG/Ganon have floor metadata but no shipped dungeon-floor texture set: confirm whether the pause UI
+shows a floor number there; until observed, their labels describe stored floor metadata, not a proven UI.**
 
 ## Coordination
 
 Posted cs-r9 as cs9c: item order, no planned shared fill/CLI edit, supported-dump fingerprint and scratch-only
 output. No request for another track's source files. Python LSP has no configured server (marksman only),
 so no Python exported symbols are changed by this new package.
+
+Reviewer steer: cs9b `806b1c7` changes Sheik text in16 Mals archives. The exact-r8-full comparison
+is branch-local historical proof only. Pack `build()` computes each oracle by generating from the source
+snapshot it ships, never from a stored r8-full seed digest. Claude will rebuild into a NEW zip/folder after
+merges (floor-labelled hint names also legitimately change Mals). Posted acknowledgement on cs-r9.
+
+Reviewer docs-only steer: Kareem played seed8 successfully in Lichii (Eden/yuzu family), recorded on
+main `d3e5c08` in answers R9-LICHII. That new answer is not in this worktree's base; the reported
+player result is accepted, not rerun. Added Lichii's confirmed LayeredFS destination and Add-ons steps
+to `docs/seed-pack.md` and the Discord tester guide; clearly marked Ryujinx/Atmosphere paths untested.
+New Game takes over this game's emulator save slots: back up first; Hookshot user isolation does not
+apply; unticking a mod does not restore saves. No Make/Play behavior change. No emulator/window started.
+Current Make still asks for a valid Hookshot folder; the emulator instructions replace only Play.
+
+Removed only the completed session-created smoke_pack.py driver after its successful proof;
+reference zip, extracted output, proof JSON, player checklist and reusable floor researcher are retained.
