@@ -42,6 +42,11 @@ heart-piece, shield and red-rupee pickups. Boss pickup persistence and Heart Con
 Kareem's in-game acceptance. `--shuffle Token` remains unavailable; the native-token grant experiment is global,
 not per-location tokensanity (`plans/rounds/r7-drops.md`).
 
+`--shuffle Chest Freestanding` adds the fourteen anchored, saved floor Heart Pieces (off by default),
+using the same five native pickups as BossHeart. Other anchors belong to chests, gifts or scrubs;
+loose rupees, refills, keys and silver-rupee puzzles remain vanilla. The isolated ranch shield
+Save/Continue test still needs Kareem's result (`plans/rounds/r8-freestanding.md`).
+
 `--shop-prices vanilla` (default) keeps original slot prices; `affordable` makes every shuffled shop item
 exactly 10 rupees. `--cheap-deku-shield` (provisionally on) prices a Deku Shield in Kokiri shop at 10 even
 without Shop shuffle; `--no-cheap-deku-shield` disables it. Exact prices replace conditional discounts.

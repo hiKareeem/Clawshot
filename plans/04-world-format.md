@@ -310,6 +310,14 @@ The overlay writer's `make_seed` supplies the remake's actual chest pool through
 `item_actors.toml`, not the untranslated N64 chest contents. Native shops use their catalog; gift checks join
 only when their fixed logic item matches the actor every grant step gives. Unresolved upgrade tiers stay vanilla.
 
+`--shuffle Freestanding` (off) adds only the fourteen anchored floor Heart Pieces (round 8,
+scope confirmed by Claude). `patch.freestanding.restrict_spec` copies the spec and retypes those
+census-linked `Collectable` checks; it holds original unlinked N64 floor rows vanilla rather
+than treating translated counts as remake identities. Existing access rules and exclusions stay.
+The destination palette is shared with BossHeart (D27), enforced by intersected per-item type
+holds. Keys and event/digging hearts retain their original kinds; all age/Alternative copies of
+one physical floor Hash receive the same native pickup. Section 36 records persistence limits.
+
 ## Porting OoT Randomizer
 
 ```sh
