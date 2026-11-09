@@ -83,7 +83,7 @@ _LOCATION_FIELDS = frozenset(
 )
 _REGION_FIELDS = frozenset({"area", "dungeon", "scene", "hint", "time_passes", "provides_time", "new"})
 _RULE_FIELDS = frozenset({"rule", "was", "new"})
-_TABLES = ("regions", "locations", "exits", "events", "key_counts", "items")
+_TABLES = ("regions", "locations", "exits", "events", "key_counts", "items", "helpers")
 
 
 def apply_overrides(spec: dict[str, Any], files: Sequence[tuple[str, Mapping[str, Any]]]) -> None:
@@ -108,6 +108,9 @@ def apply_overrides(spec: dict[str, Any], files: Sequence[tuple[str, Mapping[str
 
     ``[items."<name>"]``: ``alias = ["<item>", count]``, a count of another item that collecting this one adds
     (the remake's Din's Fire carries a magic meter), for an item that has no alias yet.
+
+    ``[helpers."<signature>"]``: ``rule`` with ``was`` and ``source``, replacing an existing helper without
+    changing the mechanically translated helper file.
     """
     owner: dict[tuple[str, ...], str] = {}
     for label, overrides in files:
@@ -135,6 +138,15 @@ def apply_overrides(spec: dict[str, Any], files: Sequence[tuple[str, Mapping[str
             region = {"name": name, **fields, "events": {}, "locations": {}, "exits": {}}
             spec["regions"].append(region)
             regions[name] = region
+
+    for label, overrides in files:
+        for name, fields in overrides.get("helpers", {}).items():
+            where = f"{label}: helper {name!r}"
+            _check_fields(fields, frozenset({"rule", "was"}), where)
+            if "rule" not in fields or "was" not in fields:
+                raise WorldError(f"{where}: needs rule and was")
+            _check_was(spec.get("helpers", {}), name, fields["was"], where)
+            spec["helpers"][name] = {"rule": fields["rule"], "source": fields["source"]}
 
     for label, overrides in files:
         for kind, singular in (("exits", "exit to"), ("events", "event")):
