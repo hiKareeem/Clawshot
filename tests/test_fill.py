@@ -191,3 +191,28 @@ def test_native_pickup_destinations_take_their_palette_and_leave_junk_to_the_fas
         seed = generate(_pickup_spec(), number, settings, attempts=1)
         assert seed.placements["Early"] == "Key", (number, seed.placements)
         assert seed.placements["Floor"] == "Heart"
+
+
+def test_no_stage_assumes_junk_that_the_fast_fill_may_leave_out_of_reach():
+    # shops.toml's Nuts and Sticks read the physical nut and stick packs, which stay normal items (D29: hints never
+    # name them). Assumed by the progression stage, a pack let the Kokiri Sword go to a Deku Scrub; the fast fill then
+    # put every pack behind Mido and the seed could not be won (Chest+Shop+Gift+Scrub+BossHeart seed 40).
+    spec = {
+        "start": "Start",
+        "goal": "Sword",
+        "items": {"Sword": {}, "Nuts": {"class": "normal"}, "Rupee": {"class": "normal"}},
+        "regions": [
+            {
+                "name": "Start",
+                "locations": {
+                    "Open": {"rule": "True", "type": "Chest", "vanilla": "Rupee"},
+                    "Scrub": {"rule": "Nuts", "type": "Chest", "vanilla": "Sword"},
+                },
+                "exits": {"Village": "Sword"},
+            },
+            {"name": "Village", "locations": {"Village": {"rule": "True", "type": "Chest", "vanilla": "Nuts"}}},
+        ],
+    }
+    for number in range(20):
+        seed = generate(spec, number, Settings(), attempts=1)
+        assert seed.placements["Open"] == "Sword", (number, seed.placements)
