@@ -16,13 +16,15 @@ from clawshot.formats.evfl import (
     SubFlowEvent,
     SwitchEvent,
 )
-from clawshot.generate import Settings
-from clawshot.generate.fill import allowed
+from clawshot.generate import Settings, prepare
+from clawshot.generate.fill import allowed, shuffled_locations
 from clawshot.patch import gifts
 from clawshot.patch import items as item_actors
 from clawshot.patch.gifts import GiftChange, GiftPatchError, Rule
 from clawshot.save import murmur3_32
+from clawshot.settings import CATALOG
 from clawshot.world import build_world
+from clawshot.world.load import load_spec
 
 FLOW = "Npc_Test"
 
@@ -385,3 +387,17 @@ def test_anchors_stay_vanilla_unless_time_travel_is_free():
     assert gifts.seed_checks(_World(locations), [s], defs, rules, actors) == []
     free = _World(locations, {"free_time_travel": True})
     assert gifts.seed_checks(free, [s], defs, rules, actors) == ["GC Darunias Joy"]
+
+
+@pytest.mark.parametrize(
+    "check,item",
+    [("HC Malon Egg", "Weird Egg"), ("HC Zeldas Letter", "Zeldas Letter")],
+)
+def test_child_trade_gifts_stay_vanilla_and_out_of_the_pool_and_chest_allowlist(check, item):
+    settings, world = prepare(load_spec(), Settings(shuffle=("Chest", *gifts.GIFT_TYPES)))
+    shuffled = shuffled_locations(world, settings)
+    pool = [world.locations[name].vanilla for name in shuffled]
+    assert world.locations[check].vanilla == item
+    assert check not in shuffled
+    assert item not in pool
+    assert item_actors.load().actor(item) not in CATALOG["chest_verified"]

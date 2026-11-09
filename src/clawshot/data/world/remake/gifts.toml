@@ -1,5 +1,13 @@
 # Gift follow-ups: native flow facts, not N64 defaults. Acceptance stays per check (D15).
 
+[locations."HC Malon Egg"]
+keep_vanilla = "D31: the child trade cell must retain the native Egg -> Chicken -> Talon -> Letter order"
+source = "Claude approved cs8d's conservative child-trade hold, 2026-11-09; plans/decisions.md D31. Native Item_WeirdEgg and Item_ZeldaLetter share Pa_ItemIcon_23; no independent ownership/cycling contract exists. Keep Malon's grant and the native hatch unchanged."
+
+[locations."HC Zeldas Letter"]
+keep_vanilla = "D31: an early shuffled Letter hides or replaces the Egg/Chicken needed to wake Talon"
+source = "Kareem's chest test lost the held Egg when Letter arrived; Claude approved keeping both native gifts, 2026-11-09, plans/decisions.md D31. No pool/chest admission; native Zelda courtyard grant follows Talon's wake-up."
+
 [locations."Kak 40 Gold Skulltula Reward"]
 vanilla = "Bombchus (20)"
 keep_vanilla = "Round 8: native twenty-Bombchu reward; controlled swap awaits Kareem's result"

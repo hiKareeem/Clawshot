@@ -448,3 +448,26 @@ untouched. Git Bash rm initially refused47 dangling pytest `*current` directory 
 Printed reparse attributes1040 and native link targets, verified every remaining link points
 inside its own session basetemp, then removed only the links with native directory-unlink and
 the now-empty roots. No unchanged rm retry, target traversal or unrelated deletion.
+
+## D31 implementation — approved, not just proposed
+
+Claude approved the conservative option and recorded D31 on main (plans-only
+94699db..a3670ee). Read the actual decision. One small policy commit adds only existing
+`keep_vanilla` overrides for **HC Malon Egg -> Weird Egg** and **HC Zeldas Letter ->
+Zeldas Letter**, with D31 provenance. No new patch branch, saved flag, native-flow edit
+or chest allowlist entry. The previous proposal above is now adopted by this implementation.
+
+The two regression cases first failed, printing both checks in the shuffled selection;
+printed actual metadata confirmed `keep_vanilla=None` for each. After the two holds:
+`uv run pytest tests/test_gifts.py -q`: **20 passed**; scoped format/lint both pass.
+The regression covers both actual world checks, both absent pool items and both actor
+identities absent from `chest_verified`.
+
+Real-dump smoke exercised actual `gifts.seed_setup` plus `make_seed` preparation, without
+invoking fill: both fixed placements remained native, each pool count was **zero**, neither
+actor was chest-verified, and the Gift step produced no transform for either native grant
+flow. Removed only that completed throwaway driver after proof. No test output, game,
+launcher or save was modified/run. Existing player experiments are not regenerated.
+
+Still wait for cs8a's merge before the next rebase and four complete gates, as directed.
+This policy commit is not a final readiness claim and does not weaken the failing seed7 test.

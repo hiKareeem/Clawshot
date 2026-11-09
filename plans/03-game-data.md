@@ -2424,6 +2424,15 @@ requirement and carpet drops the unsupported upgraded-wallet/Bombchu prerequisit
 Every merchant stays held vanilla pending Kareem. Graph/state, serialization, allocation and
 saved-Bool proofs do not establish engine presentation, actual grants/use or Save/Continue.
 
+### D31: native child-trade sequence
+
+Claude approved keeping `HC Malon Egg` and `HC Zeldas Letter` vanilla. The existing
+`keep_vanilla` metadata excludes both checks and their items from the Gift pool; neither
+actor is admitted to `chest_verified`. Native Malon, Egg hatch, Chicken/Talon and Zelda
+grants remain unchanged. The shared child-trade cell is not treated as independently
+retained items without an accepted ownership/cycling contract. Detailed native evidence
+and pinned OoTR526b4c8d rules/runtime patch citations are in the round file.
+
 ## 36. Round 8: freestanding native pick-ups (cs8e)
 
 Build `e0f3ccfa`, dump/save backups read-only. Complete 36-anchor ledger, native actor-pack survey,
