@@ -111,8 +111,9 @@ They lack ordinary PouchContent and are outside the pack survey's pickup predica
 completion behavior, not a native shield swap. Shop display families were inspected but excluded
 from floor counts; their stock/reset behavior remains the shop track's.
 
-**Provisional boundary / question for Claude and Kareem:** enable the 14 anchored placed heart
-pieces first, with the five D27 destination actors only. Ordinary rupee/heart/ammo locations need
+**Scope confirmed by Claude, 2026-11-09:** the 14 anchored placed heart pieces only this round,
+with the five D27 destination actors. No new rupee/refill/key/silver physical logic this round.
+Ordinary rupee/heart/ammo locations need
 exact physical-to-logic links before a seed may use them; no N64 row-count/position guess is a safe
 substitute. Keys, refills and scripted story objects cannot use the permanent saved-Hash contract.
 This is an explicit eligibility finding, not a claim all 36 anchors are floor pickups or that every
@@ -125,3 +126,143 @@ backslash/slash executable path. `command -v bermuda` printed the PATH-resolved 
 the cause-specific PATH invocation posted successfully. Only thread post/log commands are used.
 LSP status: marksman only, no Python language server. No unchanged failed command rerun.
 Item1 is research-only; full four gates run on the implementation before any ready/handoff post.
+
+## Item 2: native-only seed integration and controlled output
+
+`patch/freestanding.py`: copy the spec, retype only census-linked placed heart-piece checks
+from Collectable to Freestanding, and hold original unlinked N64 Freestanding rows vanilla.
+Small keys, digging rewards, chests, gifts and existing exclusions retain their original types/rules.
+Every selected check must resolve to exactly one saved native heart-piece Hash in its world area.
+Non-native actual-pool items intersect existing type holds to exclude Freestanding; the palette is
+imported from `patch.drops.NATIVE_ITEMS`, not a second diverging allowlist. Unmoved pieces retain
+their native GV actor variant. No fill algorithm, retry bound, inventory alias or game flag changes.
+
+Transforms change only Gyaml on all age/Alternative copies; reject stale/missing/duplicate actors,
+lost Phive identity or a newly introduced script binding. All anchor links and group tables remain.
+Native surface/once behavior remains an in-game question, not inferred from field equality.
+
+### Controlled player output (built, never run)
+
+`E:/OOTRemake/work/r8-freestanding-cs8e/ingame/llr-tower-hylian-next/`.
+Adjacent launcher **`Test - llr-tower-hylian-next.bat`**, copied from the approved
+`r5-gifts/ingame/Test - talon-boomerang.bat`: bin game executable only, update suppression,
+missing-exe stop, own `user-llr-tower-hylian-next`, one-time outward copy from read-only
+`2026-11-07_llr-tower-before-pickup`. No launcher/dry run/game/window executed.
+All six source saves: child, target pickup Hash unset, Hylian Shield absent. Backup SHA256
+map unchanged after building. No test user/save was created by the agent.
+
+Real common writer changed only pickup **9814903750835309225** in HyruleField Child Static:
+decompressed **395636 -> 395656**, compressed **134949 -> 132472**, allocation
+**395912 -> 395944**; the shared resource size table is emitted. Exact inverse Gyaml tree
+diff, readback, effective allocation and static launcher checks passed (`build_llr.py`).
+`verification.json` records the resource and source-backup checksum evidence outside the repo.
+
+**Kareem:** follow `ingame/llr-checklist.md`: Continue manual slot01; ranch tower, move crates,
+crawl to the rear pickup. Hylian Shield on the floor, shield notice and usable inventory, no
+heart-piece/max-heart increase. Check uncollected recovery if practical, then collect/Save/quit/
+Continue/re-enter: no duplicate. Require the HyruleField Child Static `from the overlay` log.
+`ingame/check_llr_save.py` reads only the isolated test user; collected Hash and shield ownership
+should both be true. Underwater replacement collection and other palette/location pairs are unplayed.
+
+### Exercised checks and diagnosed failures
+
+- Synthetic/native transform and census/name suites: **36 passed**. Covers five palette actors,
+  ordinary/GV source variants, stale identity and script refusal, default-off/unsupported families,
+  prior restriction intersections, actual twenty-seed fills, CS1 replay and BossHeart composition.
+- All fourteen real floor hearts / **26 copies**: saved reset24/file0 and exact inverse transform
+  oracle **passed**. Anchor links exactly cover all fourteen.
+- First integrated dump attempt printed `Graveyard Dampe Gravedigging Tour` as an unsupported
+  selected Collectable heart. Diagnostic printed all Collectable/vanilla/census identities:
+  digging is an event reward, not an anchored floor actor. Corrected eligibility to require the
+  actual freestanding census definition; synthetic `Event Heart` regression remains Collectable.
+  No access rule or census family was loosened.
+- The cause-aimed integration run passed physical eligibility, then exposed a separate fill failure:
+  Chest+Freestanding seed7 exhausted the unchanged ten attempts; last failure Boomerang,
+  **43 allowed / 57 remaining / four other items**. No unchanged test retry or alternate seed.
+- Single-attempt diagnostic (`diagnose_fill.py`) printed the earlier Fire-key frontier:
+  **8 allowed / 132 remaining / 21 items**, all eight remaining Fire chests inaccessible.
+  Full actual assumed inventory, placed items, allowed/reachable frontier and holds are in
+  external `fill-failure.json`; no seed output was written. Posted to Track A/Claude.
+  After Claude's explicit handoff direction below, the permanent integration oracle uses independent
+  successful sample14; seed7 remains a documented Track A failure, not a success claim.
+- Eval's FREEFORM edit bridge rejected a string argument before mutation (`TypeError`, expects dict).
+  Tool issue reported; refreshed the unchanged catalog and used the direct edit tool. No source
+  data was lost or overwritten by the failed bridge.
+
+### Shared-file checkpoints / coordination
+
+Research item1 committed **a17e372**; definitions-only **afb0ceb** links DMC volcano/wall and GV waterfall;
+owned native transforms/synthetic tests **2e060a8**. Shared pipeline, CLI and catalog wiring are isolated
+commits and posted as checkpoints, not ready claims before the full gates. No fill.py/settings/dependency
+change by this track. Main's plans-only **e3745f5** rebase is authorized at the next clean checkpoint.
+
+### Exact fill handoff (not a successful seed)
+
+Executed failing integration command:
+`OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump tests/test_freestanding_dump.py -q -s
+--basetemp E:/OOTRemake/work/r8-freestanding-cs8e/pytest-physical-link-next`.
+API arguments: seed **7**, `Settings(shuffle=("Chest","Freestanding"),
+cheap_deku_shield=False, hints="mask")`; every other default unchanged (forest closed,
+own-dungeon items, chronological return guarantee on). Equivalent CLI reproduction:
+`uv run python -m clawshot --romfs E:/Games/Hookshot/romfs --seed 7 --shuffle Chest
+Freestanding --no-cheap-deku-shield --hints mask --out <new absent external folder>`.
+The equivalent seed7 CLI is a reproduction instruction, not an additional agent run.
+
+The one-attempt diagnostic uses the same actual census pool/prepared spec and `Random(7)`,
+calling fill once to print state instead of rerunning the ten-attempt failing check.
+Fire Temple's already-placed values at the first failure:
+
+| Location | Item |
+|---|---|
+| Fire Temple Big Lava Room Lower Open Door Chest | Boss Key (Fire Temple) |
+| Fire Temple Boulder Maze Lower Chest | Small Key (Fire Temple) |
+| Fire Temple Room 8 Chest (TBox_Rupee_Red) #1 | Small Key (Fire Temple) |
+| Fire Temple Highest Goron Chest | Small Key (Fire Temple) |
+| Fire Temple Map Chest | Small Key (Fire Temple) |
+| Fire Temple Big Lava Room Blocked Door Chest | Small Key (Fire Temple) |
+| Fire Temple Compass Chest | Small Key (Fire Temple) |
+| Fire Temple Near Boss Chest | Small Key (Fire Temple) |
+
+The eighth small key has eight allowed candidates, **all inaccessible**: Boulder Maze Shortcut,
+Boulder Maze Side Room, Flare Dancer, Boulder Maze Upper, Megaton Hammer, Scarecrow,
+Boss Key, and Room 8 Red #2 chests. **132 destinations** remain (118 Chest,14 Freestanding);
+21 other restricted items remain. No shuffled Sword/shield/Boomerang/Slingshot has been placed
+yet; they are in assumed inventory at this stage. Full exact placements (including held vanilla),
+assumed inventory, restrictions, all remaining locations and per-candidate regions/access:
+`E:/OOTRemake/work/r8-freestanding-cs8e/fill-failure.json`. Diagnostic executable:
+`uv run python E:/OOTRemake/work/r8-freestanding-cs8e/diagnose_fill.py`. Posted to `cs-r8`.
+
+A separate actual CLI sample **seed3**, same settings, also refuses after10 attempts
+(last Fire small key,7 allowed/132 remaining/21 items); its complete transcript is
+`cli-seed3-0.log`, no output folder written. A bounded distinct-seed diagnostic measures
+seeds0–19 once each and prints each failure payload; it does not retry seed7 or relax a rule.
+
+**Reviewer direction (Claude, 2026-11-09):** Track A owns the fill fix; carry on with Track E.
+Handoff may rely on the synthetic proof and Chest+Freestanding samples that do generate.
+The seed7 failure stays explicit, not disguised as a successful seed or a gameplay result.
+
+Bounded one-attempt measurement completed for all20 distinct seeds: **2,14,18 pass**, in
+24/26/28 collection spheres. Other failures are Fire small-key capacity or D25 Bombchus
+with zero to six remaining candidates, none accessible. Exact per-seed remaining/assumed
+values are in `seed-capability-measurement.json`; only this diagnostic used one attempt
+(stricter than normal, not an increased bound). It did not write overlays or choose an
+easier logic/settings combination. Public sample2 and independent dump sample14 keep the
+same fourteen checks, native palette, closed forest and chronological return guarantee.
+
+Latest focused checks:
+- `uv run pytest tests/test_freestanding.py tests/test_names.py -q`: **33 passed**,
+  including twenty seeds requiring a native Hylian Shield specifically from a floor check,
+  with its actual resulting Gyaml transform exercised.
+- `OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump tests/test_freestanding_dump.py
+  -k seed -q -s --basetemp E:/OOTRemake/work/r8-freestanding-cs8e/pytest-seed14-next`:
+  **1 passed,1 deselected**. Actual whole-world seed14 generated, won under a fresh Search,
+  wrote/read back all14 assigned floor identities, and inverse floor/chest deltas recovered
+  every entire affected original Banc. This is data/search proof, not a Hookshot run.
+- Actual `python -m clawshot --shuffle Chest Freestanding --print-settings` exits0 with
+  a CS1 value; no dump/output is required for that settings surface. Full CLI replay follows.
+
+Shared checkpoints after item1: **afb0ceb** definitions, **2e060a8** owned transforms/tests,
+**f194084** seed pipeline, **fc44d13** CLI, **c3d7533** directions/coverage,
+**c477fc1** README/world-format contract. The next item2 commit includes the whole-dump
+oracle, floor-required-shield regression, section36 and this evidence. All are checkpoints
+until the complete four gates below; no commit is posted ready based only on focused checks.

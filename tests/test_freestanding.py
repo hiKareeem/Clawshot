@@ -219,3 +219,27 @@ def test_boss_heart_and_floor_destination_policies_intersect():
     assert all(seed.placements[name] in freestanding.NATIVE_ITEMS for name in ("Heart A", "Heart B"))
     assert not allowed(world, effective, "Boss", "Normal")
     assert not allowed(world, effective, "Heart A", "Normal")
+
+
+def test_native_shield_from_floor_check_can_be_required_for_the_goal():
+    spec, census, definitions = setup()
+    spec["goal"] = "Sword and Hylian_Shield"
+    settings = Settings(
+        shuffle=("Chest", "Freestanding"),
+        item_location_types={"Hylian Shield": ("Freestanding",)},
+    )
+    restricted = freestanding.restrict_spec(spec, definitions)
+    _, world = prepare(restricted, settings)
+    effective, step = freestanding.seed_setup(world, settings, census, definitions, {})
+    for n in range(20):
+        seed = generate(restricted, n, effective, attempts=1)
+        floor = {name: seed.placements[name] for name in ("Heart A", "Heart B")}
+        assert "Hylian Shield" in floor.values()
+        transforms = step(floor)
+        target = next(name for name, item in floor.items() if item == "Hylian Shield")
+        loc = census[0 if target == "Heart A" else 1]
+        source = tree(loc.actor)
+        source["Actors"][0]["Hash"] = U64(loc.id)
+        source["Actors"][0]["Phive"]["Placement"]["ID"] = U64(loc.id)
+        after = byml.read(transforms[loc.files[0]](byml.write(source)))
+        assert after["Actors"][0]["Gyaml"] == "Obj_Shield_Hylian"

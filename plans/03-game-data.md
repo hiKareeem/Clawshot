@@ -2265,3 +2265,82 @@ Independent actual-output inverse diffs and source hashes pass; reversed actor o
 Python hash-seed process reproduces all15 resources byte-identically (`artifact-proof.json`).
 Only the already player-confirmed Din's Fire and Adult's Wallet join the chest-verified list.
 The new experiment admits no unreported actor; songs-anywhere's existing opt-in inference remains.
+
+## 36. Round 8: freestanding native pick-ups (cs8e)
+
+Build `e0f3ccfa`, dump/save backups read-only. Complete 36-anchor ledger, native actor-pack survey,
+diagnostics, commands and acceptance checklist: `plans/rounds/r8-freestanding.md`.
+Reproducers and decoded evidence stay under `E:/OOTRemake/work/r8-freestanding-cs8e/`.
+Sections32–35 belong ahead of36 when their tracks merge; no placeholder sections are invented.
+
+### What an anchor represents
+
+The **36 unique HeartPieceAnchors / 55 placement copies** represent **14 placed heart pieces,
+six ordinary chests and16 named completion flags**, not36 floor pickups. The old section5
+count of21 named paths is superseded. Every direct reward link resolves to a permanent
+type24/save0 Bool64bitKey; all16 named completion Bools are false/reset8/save0. LLR's extra
+reference is its LocationArea, not a second check. Anchors and their links stay unchanged.
+
+The14 placed pickups are13 `Obj_Heart_Piece` plus GV's `Obj_GerudoValley_Heart_Piece`.
+All are ungrouped, saved by their pickup Hash, inheriting NoRespawn and ActorLogicSimpleActor.
+Existing heart-piece AI calls `OneShotHeartPieceTakenDeadAfter`; replacement native shield/rupee/
+container actors use DropItem instead. D27's actual King Dodongo persistence result is the
+precedent, not proof that every replacement at every floor/water location persists.
+
+Census links now identify DMC volcano **744856631664786545**, wall **10331043360028932045**,
+and GV waterfall **16129198288828948135**. Existing OoTR/remake access rules are retained,
+not swapped by file order. The other11 pieces were already linked. All14 now have player
+directions in the existing location-name catalog; no physical position or check Hash changes.
+
+### Default-off Freestanding
+
+Scope confirmed by Claude, 2026-11-09: **only the14 anchored heart-piece checks this round**.
+`--shuffle Chest Freestanding` joins them to the pool. Census-linked Collectable hearts become
+Freestanding on a copied spec; original unlinked N64 Freestanding rows remain vanilla.
+Digging/event hearts, keys, chests, gifts and existing exclusions keep their own types/rules.
+Native grants reuse D27's single palette: Heart Container, Piece of Heart, Deku Shield, Hylian
+Shield,20-rupee Red Rupee (`Obj_`, not the chest's `TBox_` actor). All other actual-pool items
+intersect prior type restrictions to stay away from floor destinations; BossHeart restrictions
+compose. The CS1 string retains the option and its effective restrictions; default stays Chest.
+
+The patch changes only Gyaml on every age/Alternative copy. Hash, Phive identity, Presence,
+transforms, anchors and group tables remain. Stale/missing/duplicate actors, lost placement
+identity, new unaudited AI bindings, unsaved sources and non-palette grants are refused.
+An unmoved Piece of Heart retains its native GV variant rather than rewriting it unnecessarily.
+
+### Other pickups: audited, not enabled
+
+All7,239 non-DreamWorld placed actor types' packs resolve. Ordinary rupees (81 green,25 blue,
+four red,two purple),25 recovery/water hearts and three loose nut/seed/stick actors have
+type24/save0 flags and native DropItem/NoRespawn metadata, but lack exact physical remake-to-logic
+links; those are later work. Silver rupees85 retain puzzle-specific AI. The two Well/Shadow keys
+and eight Fortress key actors have **no saved actor Hash** and effective **AlwaysRespawn**,
+despite their inherited NoRespawn base: level/key-specific logic owns their lifetime.
+Fire Arrows retain the known crash exclusion. Story ocarina/letter, lures, renewable bottle
+contents/fairies, diving-game rupees and shop displays do not become floor checks.
+
+The complete family counts and respawn contracts are in the round ledger. No new physical
+logic or replacement scene/callback was invented for any excluded family.
+
+### Isolated player test and verification boundary
+
+`ingame/Test - llr-tower-hylian-next.bat` copies the approved pre-pickup ranch backup into
+its own user when Kareem runs it; bin game executable only, updates disabled, missing-exe stop.
+Only LLR tower pickup9814903750835309225 becomes Obj_Shield_Hylian. All six source saves
+are child, pickup unset, Hylian Shield absent; source checksums unchanged. The agent never
+started the game, launcher or a window and never copied/wrote a player save.
+
+HyruleField Child Static **395636 ->395656** decompressed bytes, **134949 ->132472** compressed;
+allocation **395912 ->395944**, with the common size table emitted. Inverse tree diff and
+allocation/readback checks pass. The14-check /26-copy whole-dump transform oracle and synthetic
+palette/eligibility/restriction/CS1/BossHeart composition checks pass; full gate evidence follows
+in the round file. **Kareem:** tower rear recess must show/grant the Hylian Shield, no heart
+progress; uncollected recovery, then collect/Save/quit/Continue/re-enter with no respawn.
+Require the Child Static overlay-open log and isolated save checker's collected Hash.
+Underwater collection and other unplayed palette/location combinations remain inferred.
+
+Seed7 Chest+Freestanding currently exposes Track A's fill robustness issue (ten attempts,
+last Boomerang43 allowed/57 remaining). Exact first-attempt Fire-key frontier/placements and
+repro are recorded in the round file and posted to `cs-r8`; no retry/rule/fill change here.
+Claude permits independent successful-seed smoke plus the synthetic proof while Track A fixes
+that failure; no seed7 success or gameplay certification is claimed.
