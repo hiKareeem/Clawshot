@@ -46,6 +46,7 @@ def apply_shop_data(spec: dict[str, Any], data: Mapping[str, Any]) -> None:
             "actor": copies[0]["vanilla_item"],
             "price": max(slot["price"] for slot in copies),
             "base_rule": f"({old_rule}) and ({availability})",
+            "index": copies[0]["index"],
             "wallet": data["wallet"],
         }
         regions[name]["locations"][name] = _priced_rule(price_rules[name], price)
@@ -57,6 +58,18 @@ def _priced_rule(entry: Mapping[str, Any], price: int) -> dict[str, str]:
         "rule": f"({entry['base_rule']}) and ({wallet})",
         "source": f"shops.toml/settings.toml: price {price}; 200/500/1000 wallets; original shelf releases",
     }
+
+
+def with_shop_slots(spec: Mapping[str, Any], count: int) -> Mapping[str, Any]:
+    """Keep shelves outside the first ``count`` native indices vanilla, across all physical copies."""
+    entries = spec.get("shop_price_rules", {})
+    if count == 8 or not entries:
+        return spec
+    locations = dict(spec["locations"])
+    for name, entry in entries.items():
+        if entry["index"] >= count and not locations[name].get("keep_vanilla"):
+            locations[name] = {**locations[name], "keep_vanilla": f"shop_slots={count}: unshuffled native shelf"}
+    return {**spec, "locations": locations}
 
 
 def with_shop_prices(
