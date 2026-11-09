@@ -4,3 +4,31 @@
 vanilla = "Bombchus (20)"
 keep_vanilla = "Round 8: native twenty-Bombchu reward; controlled swap awaits Kareem's result"
 source = "cs8d, build e0f3ccfa: GatheringTokenGold/Event200 grants Item_BombchuBundle_Large; PouchActorInfo BundleActorNum=20; saved GetReward40 Bool. plans/03-game-data.md section 35"
+
+[locations."ZR Frogs Ocarina Game"]
+keep_vanilla = "Round 8: corrected first-win/retry identity; awaits Kareem's frog experiment"
+source = "cs8d MiniGame_FrogTenors Event161/Event75 -> MushiToriGame; InsectRepellent saved Bool. Rule remains Overworld.json:2516 (child and all six songs); native SongClear requires all six completion Bools."
+
+[locations."ZR Frogs in the Rain"]
+keep_vanilla = "Round 8: distinct Storms heart reward; awaits Kareem's frog experiment"
+source = "cs8d MiniGame_FrogTenors Event104 tests StormSong, Event384 grants, Event112 saves completion. Rule remains Overworld.json:2526 (child and playable Storms)."
+
+[locations."ZR Frogs Zeldas Lullaby"]
+keep_vanilla = "Round 8: variable 5/10/15/20/30 native rupees; fixed shuffled pool policy and game acceptance pending"
+source = "cs8d MiniGame_FrogTenors Event172 -> TeachNewMusic, ZeldaLullaby saved Bool. Native melody0; child playable-song rule remains Overworld.json:2521."
+
+[locations."ZR Frogs Eponas Song"]
+keep_vanilla = "Round 8: variable 5/10/15/20/30 native rupees; fixed shuffled pool policy and game acceptance pending"
+source = "cs8d MiniGame_FrogTenors Event220 -> TeachNewMusic, EponaSong saved Bool. Native melody1; child playable-song rule remains Overworld.json:2522."
+
+[locations."ZR Frogs Sarias Song"]
+keep_vanilla = "Round 8: variable 5/10/15/20/30 native rupees; fixed shuffled pool policy and game acceptance pending"
+source = "cs8d MiniGame_FrogTenors Event221 -> TeachNewMusic, SariaSong saved Bool. Native melody2; child playable-song rule remains Overworld.json:2523."
+
+[locations."ZR Frogs Suns Song"]
+keep_vanilla = "Round 8: variable 5/10/15/20/30 native rupees; fixed shuffled pool policy and game acceptance pending"
+source = "cs8d MiniGame_FrogTenors Event222 -> TeachNewMusic, SunSong saved Bool. Native melody3; child playable-song rule remains Overworld.json:2524."
+
+[locations."ZR Frogs Song of Time"]
+keep_vanilla = "Round 8: variable 5/10/15/20/30 native rupees; fixed shuffled pool policy and game acceptance pending"
+source = "cs8d MiniGame_FrogTenors Event223 -> TeachNewMusic, TimeSong saved Bool. Native melody4; child playable-song rule remains Overworld.json:2525."

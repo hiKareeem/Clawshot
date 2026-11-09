@@ -4494,9 +4494,9 @@ oot_randomizer_name = ""
 id = "MiniGame_FrogTenors/Event161"
 kind = "npc_gift"
 area = ""
-name = "MiniGame_FrogTenors Event161 (Obj_Heart_Piece)"
+name = "ZR Frogs Ocarina Game (initial)"
 vanilla_item = "Obj_Heart_Piece"
-oot_randomizer_name = ""
+oot_randomizer_name = "ZR Frogs Ocarina Game"
 
 [[location]]
 id = "MiniGame_FrogTenors/Event162"
@@ -4507,12 +4507,52 @@ vanilla_item = "Obj_Rupee_Blue"
 oot_randomizer_name = ""
 
 [[location]]
+id = "MiniGame_FrogTenors/Event172"
+kind = "npc_gift"
+area = ""
+name = "ZR Frogs Zeldas Lullaby"
+vanilla_item = ""
+oot_randomizer_name = "ZR Frogs Zeldas Lullaby"
+
+[[location]]
+id = "MiniGame_FrogTenors/Event220"
+kind = "npc_gift"
+area = ""
+name = "ZR Frogs Eponas Song"
+vanilla_item = ""
+oot_randomizer_name = "ZR Frogs Eponas Song"
+
+[[location]]
+id = "MiniGame_FrogTenors/Event221"
+kind = "npc_gift"
+area = ""
+name = "ZR Frogs Sarias Song"
+vanilla_item = ""
+oot_randomizer_name = "ZR Frogs Sarias Song"
+
+[[location]]
+id = "MiniGame_FrogTenors/Event222"
+kind = "npc_gift"
+area = ""
+name = "ZR Frogs Suns Song"
+vanilla_item = ""
+oot_randomizer_name = "ZR Frogs Suns Song"
+
+[[location]]
+id = "MiniGame_FrogTenors/Event223"
+kind = "npc_gift"
+area = ""
+name = "ZR Frogs Song of Time"
+vanilla_item = ""
+oot_randomizer_name = "ZR Frogs Song of Time"
+
+[[location]]
 id = "MiniGame_FrogTenors/Event75"
 kind = "npc_gift"
 area = ""
-name = "MiniGame_FrogTenors Event75 (Obj_Heart_Piece)"
+name = "ZR Frogs Ocarina Game (retry)"
 vanilla_item = "Obj_Heart_Piece"
-oot_randomizer_name = ""
+oot_randomizer_name = "ZR Frogs Ocarina Game"
 
 [[location]]
 id = "MiniGame_FrogTenors/Event76"
@@ -4526,9 +4566,9 @@ oot_randomizer_name = ""
 id = "MiniGame_FrogTenors/Event384"
 kind = "npc_gift"
 area = ""
-name = "ZR Frogs Ocarina Game"
+name = "ZR Frogs in the Rain"
 vanilla_item = "Obj_Heart_Piece"
-oot_randomizer_name = "ZR Frogs Ocarina Game"
+oot_randomizer_name = "ZR Frogs in the Rain"
 
 [[location]]
 id = "MiniGame_HitTarget/Event8"

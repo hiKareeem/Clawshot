@@ -2440,8 +2440,56 @@ location = "ZR Frogs Ocarina Game"
 name = "Zora's River Frog Chorus"
 where = "Zora's River, the frogs' stumps in the alcove partway up the river (child): after growing the frogs with songs, win their bug-note game"
 oot_randomizer_name = "ZR Frogs Ocarina Game"
-source = "https://zeldacentral.com/games/ocarina-of-time-remake/mini-games/#fabulous-five-froggish-tenors; https://www.ign.com/wikis/ocarina-of-time-remake/All_Heart_Piece_Locations; https://www.nintendolife.com/guides/zelda-ocarina-of-time-heart-piece-locations-switch-2#zoras-river; data: census gift step(s) MiniGame_FrogTenors/Event384 (src/clawshot/data/locations.toml; gift_rules.toml class swap; plans/03-game-data.md section 19)"
+source = "cs8d native MiniGame_FrogTenors: MushiToriGame first success via Event161 or Event75 retry; saved InsectRepellent Bool. Section 35; corrects old Event384/Rain mislink."
+ids = ["MiniGame_FrogTenors/Event161", "MiniGame_FrogTenors/Event75"]
+
+[[location]]
+location = "ZR Frogs in the Rain"
+name = "Zora's River Frogs: Song of Storms"
+where = "Zora's River frog stumps (child): play the Song of Storms for the first time"
+oot_randomizer_name = "ZR Frogs in the Rain"
+source = "cs8d native MiniGame_FrogTenors Event104 StormSong gate, Event384 grant, Event112 saved flag; section 35."
 ids = ["MiniGame_FrogTenors/Event384"]
+
+[[location]]
+location = "ZR Frogs Zeldas Lullaby"
+name = "Zora's River Frogs: Zelda's Lullaby"
+where = "Zora's River frog stumps (child): play Zelda's Lullaby for the first time"
+oot_randomizer_name = "ZR Frogs Zeldas Lullaby"
+source = "cs8d MiniGame_FrogTenors Event172 TeachNewMusic, saved ZeldaLullaby Bool; variable rupee reward, section 35."
+ids = ["MiniGame_FrogTenors/Event172"]
+
+[[location]]
+location = "ZR Frogs Eponas Song"
+name = "Zora's River Frogs: Epona's Song"
+where = "Zora's River frog stumps (child): play Epona's Song for the first time"
+oot_randomizer_name = "ZR Frogs Eponas Song"
+source = "cs8d MiniGame_FrogTenors Event220 TeachNewMusic, saved EponaSong Bool; variable rupee reward, section 35."
+ids = ["MiniGame_FrogTenors/Event220"]
+
+[[location]]
+location = "ZR Frogs Sarias Song"
+name = "Zora's River Frogs: Saria's Song"
+where = "Zora's River frog stumps (child): play Saria's Song for the first time"
+oot_randomizer_name = "ZR Frogs Sarias Song"
+source = "cs8d MiniGame_FrogTenors Event221 TeachNewMusic, saved SariaSong Bool; variable rupee reward, section 35."
+ids = ["MiniGame_FrogTenors/Event221"]
+
+[[location]]
+location = "ZR Frogs Suns Song"
+name = "Zora's River Frogs: Sun's Song"
+where = "Zora's River frog stumps (child): play the Sun's Song for the first time"
+oot_randomizer_name = "ZR Frogs Suns Song"
+source = "cs8d MiniGame_FrogTenors Event222 TeachNewMusic, saved SunSong Bool; variable rupee reward, section 35."
+ids = ["MiniGame_FrogTenors/Event222"]
+
+[[location]]
+location = "ZR Frogs Song of Time"
+name = "Zora's River Frogs: Song of Time"
+where = "Zora's River frog stumps (child): play the Song of Time for the first time"
+oot_randomizer_name = "ZR Frogs Song of Time"
+source = "cs8d MiniGame_FrogTenors Event223 TeachNewMusic, saved TimeSong Bool; variable rupee reward, section 35."
+ids = ["MiniGame_FrogTenors/Event223"]
 
 [[location]]
 location = "Market Shooting Gallery Reward"
