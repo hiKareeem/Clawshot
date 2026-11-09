@@ -81,11 +81,71 @@ These runtime observations cannot be certified by a parsed file or flow interpre
 ## Coordination
 
 Posted scope, corrected guest-dispatch finding and instrument-preservation design on `cs-r8` as cs8b.
-No shared code edit yet. Section33 follows the last present section31; reviewer inserts A's32 before33.
-Reviewer's plans-only main move `e3745f5` is authorized; rebase at the next committed checkpoint.
+Section33 follows the last present section31; reviewer inserts A's32 before33.
+After the item1 checkpoint, rebased onto the reviewer's authorized plans-only main `e3745f5`.
 No commit is called ready before the complete four gates.
 
-## Item 2
+## Item 2: one isolated new-game output
 
-Player output and exact actor/checklist inventory follow after the item1 commit. Chest admission changes
-will use only supplied player results; unreported actors are not enabled by preparing an experiment.
+Output: `E:/OOTRemake/work/r8-getitem/ingame/chest-gifts-next/`.
+Launcher: `E:/OOTRemake/work/r8-getitem/ingame/Test - chest-gifts-next.bat`.
+Exact routes, models, use checks and log evidence:
+`E:/OOTRemake/work/r8-getitem/ingame/checklist.md`. Neither launcher nor game was run.
+`build_output.py` built this fresh destination through the real common writer; no played output was replaced.
+
+Fourteen existing saved chest Hashes, across ten Banc files:
+
+- Mido far-left/middle-left/middle-right/far-right: Fairy Ocarina, Zelda's Letter, Weird Egg, Membership Card.
+- Deku Slingshot-room upper side chest: Epona's Song; lobby map chest: Ocarina of Time.
+- Deku compass main/side and basement: Keaton, Skull and Spooky masks.
+- Graveyard left-end/ReDead graves: Bunny Hood and Goron Mask.
+- Dodongo map/compass/lower-Lizalfos reward: Zora Mask, Gerudo Mask and Mask of Truth.
+
+The enabled seed actor catalog currently has **zero mask mappings**. To provide useful complete evidence
+without inventing mask shuffle, the controlled output tests all eight ordinary native `Item_Mask_*` actors;
+no shop display/raw armor/Amiibo actor or seed mapping was added. Mask discovery initially printed no mappings
+and then failed looking for an inherited pouch field locally; printed the actual local component and followed
+its existing inheritance instead. It did not justify a policy or engine change.
+
+This is an experiment, **not a randomized seed or beatability-certified placement**. Native Sword, main
+Slingshot and Bomb Bag chests, gifts, doors, forest progression and prices remain unchanged. The route obtains
+Epona with Fairy before opening Time, then checks song retention after upgrade. Later native Saria can still
+give Fairy; the checklist explicitly distinguishes that native downgrade behavior from this overlay.
+
+### Eligibility: evidence only
+
+Item2 source commit `02277d1` adds only already reported round7 successes: `Item_DinFire` (spell/magic meter)
+and `Item_Wallet_Medium` (500 rupees), citing section26. They were omitted from the old list despite supplied
+player results. Minuet was already explicitly confirmed; the opt-in song inference wording now correctly says
+the other **ten**, not eleven, are inferred. No new result is invented for Epona or the other experiment actors.
+Letter, Egg, Card, Time and masks gain no chest admission from output construction. The songs-anywhere policy
+is otherwise unchanged.
+
+### Independent actual-output proof
+
+`PYTHONHASHSEED=803 E:/OOTRemake/clawshot-r8/getitem/.venv/Scripts/python.exe -u
+E:/OOTRemake/work/r8-getitem/verify_output.py` completed; evidence:
+`E:/OOTRemake/work/r8-getitem/artifact-proof.json`.
+
+- All source and output SHA256 values match the build manifest; **14 chests / 15 resources**.
+- Inverse tree diffs leave every Banc field native except the intended chest content/substitute edits.
+  Sword, Slingshot and Bomb Bag contents remain native in actually written files.
+- Independent inverse EVFL diffs preserve all original event data except the intended display/cleanup edges.
+  Both added prop actors use native creation method1. Neither playable nor prop ocarina pack is emitted.
+- Fresh `deterministic-replay-next` uses reversed requested actor order and another Python hash seed:
+  all **15 resource bytes identical**. No old output was regenerated in place.
+- Launcher statically checked: bin executable only, missing-exe stop, updater disabled, unique `--user`,
+  no backup/main-user copy; isolated user directory does not exist before play.
+
+The initial verification attempt did not expose a replay/proof result. Printed the script and the actual
+`Location.id` contract, then added flushed per-stage diagnostics before the independent run above.
+That run produced its complete proof. Background tool delivery exposed only early stdout;
+the completed proof artifact, not that partial delivery, supplies the claims above.
+
+**Kareem: run the single launcher after quitting the current game. Do both native hand props appear and
+disappear correctly, do Fairy/Time equip/play, and does Epona survive the upgrade and Save/Continue? For every
+other gift/mask, return its model, actual inventory/use and persistence, plus the overlay log. Egg hatching,
+Letter guard use and adult Card use are separate observations, not proved by the item notice.**
+
+**Provisional presentation choice for review:** reuse native handheld cutscene props, rather than mutate
+playable equipment or claim an unproved floating get-model fix. Runtime visibility remains unverified.

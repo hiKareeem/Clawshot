@@ -2254,3 +2254,14 @@ Small flow74808 ->79616/allocation79888; big38848 ->43680/allocation43952. Nativ
 Rotate/NoHit/Bind order differs from small NoHit/Bind/Rotate and is guarded independently.
 **Kareem: visibility, position, disappearance, actual instrument use and Time upgrade/song
 retention still need the single isolated new-game experiment; no agent game run.**
+
+The single fresh new-game experiment is `E:/OOTRemake/work/r8-getitem/ingame/chest-gifts-next/`;
+the sibling `Test - chest-gifts-next.bat` and `checklist.md` specify native progression, exact chest
+directions, expected models/use and overlay evidence. Fourteen existing saved chests cover Fairy/Time,
+Letter, Egg, Card, Epona and all eight ordinary native masks. The seed catalog has zero mask mappings;
+this experiment adds none. Sword, Slingshot and Bomb Bag chests remain native. No game/launcher run.
+
+Independent actual-output inverse diffs and source hashes pass; reversed actor order in a fresh
+Python hash-seed process reproduces all15 resources byte-identically (`artifact-proof.json`).
+Only the already player-confirmed Din's Fire and Adult's Wallet join the chest-verified list.
+The new experiment admits no unreported actor; songs-anywhere's existing opt-in inference remains.
