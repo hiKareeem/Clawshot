@@ -106,6 +106,7 @@ source = "PouchActorInfo Item_DinFire: ExpansionAvility MPMaxUP, MPMax 24"
 | `[exits."<region>"."<target>"]`, `[events."<region>"."<event>"]` | `rule` with `was` (a change; `"False"` closes it) or with `new = true` (an addition) |
 | `[key_counts]` | the remake's number of a dungeon's small keys, where it has fewer than N64: a rule asking for more asks for that many |
 | `[items."<name>"]` | `alias = ["<item>", count]`: collecting the item also adds that many of another (an item without an alias of its own); the search counts both |
+| `[helpers."<signature>"]` | `rule` + `was` + `source`: replace an existing helper (including parameterized signatures); the same helper cannot be overridden twice |
 
 Remake-only checks use `[locations."<census definition name>"]` with `new = true`, `region`, `type`, `vanilla`,
 `rule` and `source` (no `was`). The name must not already exist. They live in `remake/extra_<area>.toml`; a check
@@ -157,6 +158,13 @@ tier (`vanilla_fixed`), or the world does not build.
   `ensure_tod_access`, ...), at their values for its defaults: no entrance shuffle. Two are random in OoT
   Randomizer's `World` and are fixed by the translator: `skipped_trials` (all six trials active, its default
   `trials = 6`) and `selected_adult_trade_item` (`Pocket Egg`, where the unshuffled game starts the trade).
+
+**Usable bombs (D30).** `remake/bombs.toml` guards `Bombs` with the Bomb Bag and age-appropriate
+Low-or-higher lift strength: the actual fixed Goron Bracelet as child, any strength upgrade as adult.
+Progressive mode's first strength tier represents the Bracelet. `can_use(Bombs)` and the Octorok
+bomb shortcuts share that predicate; explosives/blast-or-smash and bomb-only tricks inherit it.
+Bombchu supply and local strength-gated Bomb Flower routes are unchanged. This is logic matching
+native lift requirements, not a gameplay patch or an extra bag/strength grant (sections30–31).
 
 ## The rule language
 
