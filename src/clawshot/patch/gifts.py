@@ -458,6 +458,48 @@ def file_changes(changes: Sequence[GiftChange], files: Mapping[str, str]) -> dic
     return out
 
 
+# Native reward-preview labels (round 6 hints design note; section 35).
+SKULLTULA_HINTS = {
+    f"Kak {count} Gold Skulltula Reward": (count, label)
+    for count, label in ((10, "Talk_28"), (20, "Talk_23"), (30, "Talk_24"), (40, "Talk_25"), (50, "Talk_26"))
+}
+
+
+def skulltula_hint_changes(
+    romfs: str | Path, placements: Mapping[str, str]
+) -> dict[str, Callable[[bytes], bytes]]:
+    """Name the actual actor at each shuffled 10–50 reward, in the native preview lines.
+
+    English in every language archive follows D26. The repeat 100-token rupee is not a new check.
+    """
+    from clawshot.formats import msbt, sarc
+    from clawshot.patch import text
+
+    selected = {name: actor for name, actor in placements.items() if name in SKULLTULA_HINTS}
+    if not selected:
+        return {}
+    romfs = Path(romfs)
+    dicts = zsdic.Dictionaries.from_romfs(romfs)
+    path = text.archive_path(text.NAME_LANGUAGE)
+    archive = sarc.read(dicts.decompress(path, (romfs / path).read_bytes()))
+    pouch = msbt.read(archive[text.POUCH_TEXT])
+    lines = {}
+    for name, actor in selected.items():
+        count, label = SKULLTULA_HINTS[name]
+        key = text.read_text_key(romfs, actor, dicts)
+        item = "".join(p for p in text.item_name(pouch, key) if isinstance(p, str))
+        lines[label] = f"For {count} tokens, the reward is {text.FIELD_START}{item}{text.FIELD_END}."
+
+    def transform(data: bytes) -> bytes:
+        archive = sarc.read(data)
+        file = "EventFlowMsg/Npc_SkullDad.msbt"
+        messages = msbt.read(archive[file])
+        edits = {label: text.stone_line(messages.messages[label], line) for label, line in lines.items()}
+        return text.edit_messages({file: edits})(data)
+
+    return {text.archive_path(language): transform for language in text.languages(romfs)}
+
+
 # --- seeds --------------------------------------------------------------------------------------------------------
 
 # World event-gift types; the persistent shopkeeper reward is an ordinary NPC check (section 34).
@@ -594,7 +636,14 @@ def seed_setup(
     dicts = zsdic.Dictionaries.from_romfs(Path(romfs))
     versions = {str(k): str(v) for k, v in read_romfs_byml(Path(romfs), dicts, FLOW_VERSIONS)["Versions"].items()}
     files = flow_files(Path(romfs), versions)
-    step = seed_step(shuffled, census, definitions, rules, actors, vanilla, files)
+    gift_step = seed_step(shuffled, census, definitions, rules, actors, vanilla, files)
+
+    def step(placements: Mapping[str, str]) -> dict[str, Callable[[bytes], bytes]]:
+        hints = skulltula_hint_changes(
+            romfs, {name: actors.actor(placements[name]) for name in shuffled if name in SKULLTULA_HINTS}
+        )
+        return {**gift_step(placements), **hints}
+
     return restrict_spec(spec, shuffled), settings, step
 
 

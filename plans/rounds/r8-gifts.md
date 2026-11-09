@@ -54,18 +54,65 @@ The full active event-query inventory has no actor-hash/instance-name equality q
 Distance queries support named actors but are not identity predicates; inventing a geometric
 dispatcher would not prove an independent saved check and is not applied.
 
-**Missing prerequisite:** a demonstrated per-placed-cow grant dispatcher (or a code hook), plus
-approval to supersede D11. Adding eight Bools alone would still grant through the same shared
-flow and cannot distinguish the two simultaneously loaded ranch cows. No global replacement
-is mislabeled as fourteen checks, no unsafe test overlay is written, and no cow is enabled.
-The inherited Epona/song/access rules remain unchanged. This item is a research checkpoint,
-not an implementation-ready claim. The blocker was posted to `cs-r8`; remaining families proceed.
+Reviewer direction (Claude, 2026-11-09): timebox to Banc/event-request selectors; **no cow patch
+this round either way**. That bounded audit found no existing per-placement event/flag selector.
+The fourteen complete placement records contain no Dynamic parameters; schedules/replacement events
+are per actor variant. Absence of a shipped override does not prove the engine could never support a
+new one, but no such contract has been demonstrated. **D11 stands.** No cow patch/test overlay,
+new Bool, global milk replacement or logic change is introduced. Item 1 is complete as the narrowed
+research task; no gameplay claim or fourteen-independent-check claim.
+
+## Item 2: Skulltula House rewards
+
+Native read-only trace `rewards.py GatheringTokenGold` confirms:
+
+| Tokens | Grant event | Actor | Persistence |
+|---|---|---|---|
+| 10 | Event398 | Item_Wallet_Medium | KakarikoVillage_GatheringTokenGold_GetReward10 |
+| 20 | Event75 | Item_AgonyStone | corresponding GetReward20 |
+| 30 | Event194 | Item_Wallet_Large | corresponding GetReward30 |
+| 40 | Event200 | Item_BombchuBundle_Large | corresponding GetReward40 |
+| 50 | Event219 | Obj_Heart_Piece | corresponding GetReward50 |
+| 100 | Event215 | Obj_Rupee_Gold | GatheringTokenGold Complete; father transformation |
+
+10–50 reuse native saved Bools (D22); no new Bool is needed. Event471 is the native repeat
+200-rupee reward after completion and is deliberately untouched. First100 is distinct and
+changeable through its existing wrapper, without shuffling every repeat.
+
+Shared data commit `f0b4451`: PouchActorInfo proves the large Bombchu bundle is **20**, not the
+translated ten; `remake/gifts.toml` corrects vanilla to `Bombchus (20)` and holds40 vanilla until
+Kareem's result. The actor table now represents that actual item. Existing threshold rules are
+the sourced OoTR token-count predicates; all native token-count/quest queries are unchanged.
+
+`skulltula_hint_changes` implements the round6 design note: native `Npc_SkullDad` labels
+Talk_28/Talk_23–26 name each assigned10–50 reward using native English item names in all16
+language archives (D26), with existing style/wrapping/highlight helpers. The Gift seed step
+composes these transforms with existing Gossip Stone text;100's repeat is not a hint/check slot.
+
+Controlled final output: `E:/OOTRemake/work/r8-gifts/ingame/skulltula-rewards-play-next/`.
+Copied release-only launcher `Test - skulltula-rewards-play-next.bat`; checklist `skulltula-check.md`.
+Its separate user copies `2026-11-08_2140-main-jabu/save/5a3c9e1f0b7d24680000000000000001`.
+Read-only slot01: child,14 tokens, GetReward10 false; Hookshot not owned. Swaps10 Hookshot,
+20 Boomerang,30 Longshot,40 Hammer,50 Lens,100 Deku Shield. Native repeats remain gold rupees.
+Actual common writer emitted17 resources, all parsed/sized; inverse six-item delta restores
+the entire original flow. No GameDataList or resource-size growth was needed.
+
+**Kareem: follow `skulltula-check.md`: immediately claim10 at the House, check Hookshot/text/
+preview, revisit and Save/Continue with no duplicate; later collect the natural20–100 thresholds.
+Require overlay log plus game result.** No launcher/game was executed here.40 stays disabled.
+
+Diagnostics: first preview regression printed literal `{Boomerang}` (wrong highlight markup);
+used canonical FIELD_START/FIELD_END, not braces. The cause-aimed run passed:
+`OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump tests/test_gifts_rewards_dump.py -q
+--basetemp E:/OOTRemake/work/r8-gifts/pytest-skulltula-markup-fixed-next`: **1 passed**.
+This regression verifies actual assigned names and preservation of already-patched stone text.
+Two unused prototype overlays are superseded, not overwritten; the final play-next test
+uses an unowned10 reward after printing the backup's actual ownership.
+
 
 ## Decisions / questions
 
-- **Kareem/Claude: Round 8 requests cow checks but D11 says cows stay out (no per-cow flag).
-  May a proven RomFS-only per-cow D22 gate supersede D11?** Research and a controlled experiment
-  may proceed; no production cow enable is assumed.
+- Cow policy resolved by the reviewer above: D11 stands; no cow patch in Round 8.
 
 ## Coordination
 
