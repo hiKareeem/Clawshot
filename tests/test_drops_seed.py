@@ -60,7 +60,7 @@ def test_non_native_progression_and_normal_filler_cannot_leak_to_boss_hearts():
     effective, step = drops.seed_setup(world, settings, census, definitions, {})
     assert spec == before
     assert settings.item_location_types["Junk"] == ("BossHeart", "Chest")
-    assert effective.item_location_types["Junk"] == ("Chest",)
+    assert effective.location_type_items == {"BossHeart": tuple(sorted(drops.NATIVE_ITEMS))}
     for n in range(20):
         seed = generate(spec, n, effective, attempts=1)
         assert Counter(seed.placements.values()) == Counter(loc.vanilla for loc in world.locations.values())
