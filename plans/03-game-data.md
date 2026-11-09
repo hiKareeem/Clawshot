@@ -2210,3 +2210,17 @@ Synthetic independent-path tests exercise bag-without-strength rejection, per-ag
 the progressive first tier, wake-on-strength, unchanged Bombchu/Hammer/flower alternatives and
 stale/duplicate/missing helper contracts. Native metadata plus search behavior is not new in-game
 acceptance: **Kareem's same-bombs-before/after-Bracelet comparison on 7c remains pending.**
+
+Search acceptance: real seed7 CLI modes Chest, Chest+Shop, Chest+Shop+Gift and default `CS1`
+succeed in **1, 3, 10, 1** attempts within the unchanged ten-attempt bound, with **25, 24, 27, 25**
+collection spheres. Gift mode uses its last permitted attempt; its rejection payloads are retained.
+The old 7b's **228 unchanged placements** still win in **25 spheres**; no continuation is rewritten.
+
+Matched-placement timing (1-based first ordinary-bomb-use sphere, not ammo pickup): seed7 Chest
+**3 -> 5**, Chest+Shop **6 -> 6**, Chest+Shop+Gift **4 -> 7**, default CS1 **3 -> 5**;
+old 7b **7 -> 7**. Independently, all 200 logic-level default seeds0–199 win before/after:
+**153 later, 47 unchanged, zero earlier**, zero newly uncollected checks. An upper-bound inventory
+audit over **2,405** exit/event/location/stone rules finds zero newly impossible rules. Existing
+disabled/N64-only rules are not claimed satisfiable. Exact method, output paths, full diagnostics
+and verification commands are in the round report; generated output and game data stay outside
+the repository. These are search/data proofs, not an agent game run.

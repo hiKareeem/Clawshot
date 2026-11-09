@@ -100,8 +100,37 @@ Cause-aimed five-file targeted run: **52 passed**. Four full corrected gates fol
 
 ## Item 3: bomb-use timing and unsatisfied rules
 
-Compare identical placements under pre-D30 and D30 rules; report first usable-bomb sphere,
-not the first ammo pickup. Do not compare rerolled placements as if they were the same seed.
+For each successful matrix placement, rebuild two worlds: current helpers, and only those four
+helpers restored to their guarded `was` bodies. Replay **the same placements** in both; never
+compare two differently filled seeds. A disposable non-pool observer at `Root Exits` uses `Bombs`
+and grants only Nothing, so collection records the first sphere when ordinary bombs are usable.
+The full chronological search preserves child-prefix provenance. Spheres below are **1-based**,
+including the observation sphere, not a physical action performed in game.
+
+| Placement sample | Pre-D30 first usable bombs | D30 first usable bombs |
+|---|---|---|
+| Seed7 Chest | 3 | 5 |
+| Seed7 Chest+Shop | 6 | 6 |
+| Seed7 Chest+Shop+Gift | 4 | 7 |
+| Seed7 default `CS1` | 3 | 5 |
+| Fixed old 7b | 7 | 7 |
+
+Later in **3/4 matrix invocations**, or **2/3 distinct shuffle-mode outputs** (Chest and CS1
+are the same configuration); unchanged in old 7b. Every baseline/current replay wins, and there
+are **zero newly uncollected checks** in all five comparisons. `seed-proof.json` retains the
+full sphere/item witnesses, missing-check sets and attempt diagnostics.
+
+7b's witness: Darunia's Bracelet and GC8 Bombchus in sphere5; vanilla Bowling/Rolling-Goron bag
+rewards in sphere6; usable ordinary bombs in sphere7; KF Storms Grotto bag in sphere11. This
+distinguishes first usable bombs from the particular bag named by its hint. The unchanged 7b
+placement remains playable in the oracle; no new-seed D25 restriction is imposed on its old rows.
+
+The independent two-worker timing sweep ran `generate(load_spec(), n, Settings())` for **all
+200 seeds, n=0..199**, then the same matched-placement pre-D30/D30 observer replay. This is
+the existing logic-level default pool, not a claim that 200 dump-backed CLI overlays were built.
+Every generated seed and both replay oracles win: **153 later, 47 unchanged, 0 earlier**.
+No newly uncollected checks in any of the 200. External `timing-sweep.json` lists every seed's
+before/after sphere and missing-check set. The sweep completed once without failure or reroll.
 
 ### Independent runtime proofs
 
@@ -110,8 +139,13 @@ and both Octorok alternatives. D30 bag-only opens none. Collecting the real `Gor
 wakes all six paths, including `can_use(Bombs)`.
 
 `rule_audit.py` independently compiles pre-D30 and D30 full worlds, supplies an upper-bound
-inventory (100 of each real item; events still follow their actual rules), and checks exits,
+inventory (100 of each item-table identity, including logical Drop/Event items), and checks exits,
 events, locations and hint stones across child/adult and day/night. **2,405 rules** in each
 world; **zero newly impossible** and zero newly possible with that inventory. This does not
 claim every pre-existing disabled/N64-only rule is satisfiable. External `rule-audit.json`
 records the result.
+
+The completed matrix, rule-audit and timing-sweep throwaway drivers were removed after their
+results were recorded; JSON evidence and CLI transcripts remain. `lift_audit.py` is retained
+as the read-only native-metadata reproducer. The four fresh CLI outputs remain staged under
+`seed7-matrix-next/`; no launcher/user folder was created and no played output was deleted.
