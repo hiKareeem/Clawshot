@@ -71,6 +71,12 @@ before using other items. Child Bow pickup has jammed the ZR item bar; changing 
 search frontier (ties included). Other item families are precautionary warnings, not individually
 confirmed failures. Optional later pickups can differ from the search order; no data-only fix is enabled.
 
+`--logic free_time_travel=true` is an experimental, default-off option: it opens the adult pedestal
+before Forest clear and hides Temple Sheik until the normal Prelude scene can play. Forest rewards
+stay native; Prelude still requires Forest quest completion, not medallion ownership. In-game acceptance is
+pending (`plans/rounds/r9-sheik.md`). Seeds replace both of Sheik's vanilla Hookshot directions with
+the actual Hookshot location (English in all 16 language archives); slices without it omit the tool.
+
 ## Stack
 
 Python 3.12+ with uv. Reasons and alternatives: `plans/decisions.md`.
