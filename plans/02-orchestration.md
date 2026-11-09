@@ -58,6 +58,9 @@ OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump
   folder's `hookshot.exe` is a launcher that ignores `--user` and starts the main save with the caller's overlay:
   every test launcher starts `E:\Games\Hookshot\bin\hookshot.exe` with `HOOKSHOT_NO_UPDATE_CHECK=1` and stops if it
   is missing.
+- **Kareem's PC is shared with his play.** A parallel pool (seed sweeps, `multiprocessing`) uses at most 3
+  workers, 1 while `hookshot.exe` runs, and one sweep at a time (round 8: a 7-worker sweep beside other tracks'
+  gates held the CPU at 99%).
 - **Never delete or rewrite an output folder a game may be reading.** The overlay is read file by file as Kareem
   moves; a file missing for a moment loads the vanilla one (round 7: a rebuild wiped `seed-shop-7c` for four minutes
   while he played it). A changed output goes to a new folder (`<name>-next`); Claude swaps it in after he quits.
