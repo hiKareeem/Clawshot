@@ -121,6 +121,13 @@ def make_seed(
     if out.hints:
         item_names, hint_changes = hint_step(romfs, out, table)
         changes += (hint_changes,)
+    catalog = location_names.load()
+    hookshot_locations = [
+        catalog[name].name if name in catalog else name
+        for name, item in sorted(out.placements.items())
+        if item == "Hookshot"
+    ]
+    changes += (text.sheik_hint_changes(romfs, hookshot_locations),)
     # GameData defaults compose before gift flag additions; only cutscene component files are prebuilt.
     event_settings = {s.name: replace(s, game_data={}) for s in chosen if s.skippable}
     fast_files = tuple(gamedata.build(romfs, list(event_settings), event_settings)) if event_settings else ()
