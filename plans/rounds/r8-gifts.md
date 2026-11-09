@@ -304,3 +304,49 @@ Both suites used only outside-repository `PYTEST_ADDOPTS=--basetemp=...` directo
 
 Reviewer corrected the rebase target to **15d4c70** (B/E merged; the earlier536b4a5 hash was
 incorrect), followed by all four gates again. Preserve section order33/35/36.
+
+### Rebase15d4c70 and measured pool delta for Track A
+
+Authorized rebase completed. The only conflict was additive `03-game-data.md`; retained B's
+entire33 and E's entire36, inserting owned35 between them. No source/test conflicts.
+Current ledger:
+
+| Commit | Scope |
+|---|---|
+| a7ba027 | Cow research; D11 stands |
+| 7bc50c0 | Native40 quantity, shared metadata |
+| dd4c041 | House previews / controlled rewards |
+| 42be03e | Frog identities / shared metadata |
+| 6ede2d5 | Per-song specialization / first-win retries |
+| 8945263 | Merchant shared metadata |
+| 4b75106 | Success-only merchant transactions / section35 |
+| ca81dd7 | Terminal switch traversal correction / regression |
+
+Reviewer requested a pool delta because his main seed7 passes. Read-only instrumentation
+intercepted `patch.make_seed` at its actual `generate` boundary, prepared the real Settings/world,
+and captured the pool/fixed placements **without invoking fill**. Separate interpreters explicitly
+imported this branch and `E:/OOTRemake/Clawshot/src`; printed module paths prove which source ran.
+
+For `make_seed(Path("E:/Games/Hookshot/romfs"),7,Settings(shuffle=("Chest","BossHeart")))`:
+
+- Both have **172 shuffled locations**, identical order, identical per-location items and item
+  multiset; **no shuffled pool item is added, removed or moved**. Effective Settings and
+  `remake_vanilla` overrides are identical.
+- Both have1156 fixed placements; the only fixed-item difference is **Kak40 reward:
+  Bombchus(10) -> Bombchus(20)**, the native quantity correction.
+- Other access-rule changes are the native90-rupee carpet sale dropping upgraded-wallet/Bombchu
+  prerequisites, and Granny adding her native bottle prerequisite. No claim that a particular
+  one of these is the single causal trigger; the shuffled-pool-change hypothesis is not supported.
+- Exact JSON snapshots/delta and read-only reproducer:
+  `E:/OOTRemake/work/r8-gifts/pool-{main,branch,delta}.json`, `capture_pool.py`.
+  Full findings and exact API/test command posted to `cs-r8` for cs8a.
+
+Track A's09:50 post independently confirms this branch's case: diagnostic old fill fails all10
+attempts (six Fire-key failures, four Bombchu-pack failures); their fill+BossHeart palette fix
+passes attempt1. No Track A code is copied into this branch and no gate is rerun unchanged.
+
+**Claude/cs8a: merge the fill fix first and provide its main target, as directed. Then rebase
+this branch and run all four full gates.** Final readiness is blocked on that upstream merge,
+not on the now-fixed Granny traversal. No fill edit, seed substitution, retry increase or test
+weakening is made here. All reachable implementation, player artifacts, exact failure/pool
+evidence and the clean15d4c70 integration are complete; gameplay acceptance remains Kareem's.
