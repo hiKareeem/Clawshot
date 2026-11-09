@@ -843,6 +843,8 @@ section 36.
 Round 9 candidate from play: `free_time_travel` also needs Sheik moved: as adult before the Forest Temple, Sheik
 stands at the pedestal with a Talk prompt in the way (Kareem, 2026-11-09). Trace Sheik's Temple of Time placement
 and its gate, and patch both before the pedestal test.
+Also from play: Sheik's second line there sends the player to Kakariko for the Hookshot (its vanilla place). In a seed
+it should name where the Hookshot is (a static hint through `patch/text`, like Dampé's diary) or say nothing about it.
 
 Claude builds a fresh full seed with every game-confirmed setting (Chest, Shop, Gift, Scrub, BossHeart as proven;
 hints; forest closed; cheap Deku Shield) for Kareem's first full playthrough.
