@@ -57,8 +57,35 @@ rule = "True"
 was = "can_play(Suns_Song)"
 source = "Nintendo Life heart pieces (#8): no Sun's Song in the remake; IGN heart pieces (#4): no enemies. Round 7 read-only audit (cs7f, build e0f3ccfa): Obj_TBox_A_02 9622128545943056087 (21,86,39), both age Static files, Dynamic only Drop__DropActor=Obj_Heart_Piece; no Presence, SpawnType override, actor link or AiGroup reference to the chest in either age's Static/Dynamic files. Native SpawnType defaults to 0; no song, wall or enemy-clear trigger binds this chest. True is inside the grave only: its night/time-flow entrance gate remains."
 
-# OoT Randomizer folds the third (fairy-only) grave into Shield Grave's Fairy event. Both graves have
-# the same pull-back access rule; retain that equivalent capability model, not a new shuffled location.
+# N64 put the shield chest and the fairy wall in one flower-marked grave. The remake splits them:
+# the unmarked ReDead grave has the shield chest; the flower-marked grave has only the fairy wall.
+
+[regions."Graveyard Fairy Grave"]
+area = "Graveyard"
+scene = "Graveyard Fairy Grave"
+hint = "GRAVEYARD"
+source = "cs7f read-only placement audit, build e0f3ccfa: hole (4,101.5,5.75), WallCrack 9366825990748670811 (4,84,27), eight fairies at (-21,84,34), separate from shield grave (21.5,103,11.2). Kareem via Claude, 2026-11-08: marked grave has a cracked wall. N64 comparison only: https://www.zeldadungeon.net/wiki/Graveyard_(Ocarina_of_Time) (reviewer-supplied facts; direct fetch HTTP 403)"
+
+[exits.Graveyard."Graveyard Fairy Grave"]
+rule = "is_adult or (at_night and 'Time Flows')"
+new = true
+source = "Same pull-back tombstone actor and child night/time-flow access as the two chest graves; surface hole 11636637601453373828 in Child Dynamic, 5871684503472810441 in Adult Dynamic. Placement-derived, cs7f, build e0f3ccfa"
+
+[exits."Graveyard Fairy Grave".Graveyard]
+rule = "True"
+new = true
+source = "Independent fairy-only grave's return to its surface entrance, like the other two graves; cs7f placement audit, build e0f3ccfa"
+
+[events."Graveyard Shield Grave".Fairy]
+rule = "False"
+was = "can_blast_or_smash and has_bottle"
+source = "Remake splits N64's shield/fairy grave: no wall or fairy pool in the ReDead/shield grave. Fairy source moved to Graveyard Fairy Grave; cs7f placement audit, build e0f3ccfa"
+
+[events."Graveyard Fairy Grave".Fairy]
+rule = "has_explosives and has_bottle"
+new = true
+source = "WallCrack 9366825990748670811 blocks the fairy pool under the flower-marked grave (4,101.5,5.75); eight Obj_Fairy, no chest/check. Kareem via Claude, 2026-11-08: wall needs bombs. Explosives required; no unverified Hammer bypass. cs7f read-only placement audit, build e0f3ccfa"
+
 # The Royal Family's Tomb: Keese room, ReDead room, Sun's Song tablet. No torches and no chest.
 
 [locations."Graveyard Royal Familys Tomb Chest"]

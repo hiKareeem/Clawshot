@@ -23,9 +23,9 @@ graveyard**, not toward the tomb. Kareem's shield-grave observation calibrates r
 
 The last two ordinals are placement-derived, not new gameplay observations. Both chest catalogue rows now
 use this single viewpoint. The fairy-only grave is explained as a non-check, not fabricated as a catalogue
-location or added to the pool. Existing Shield Grave `Fairy` capability folds the separate third grave into
-an equivalent entrance rule plus `can_blast_or_smash and has_bottle`; no new region is needed for this audit.
-
+location or added to the pool. Reviewer follow-up explicitly requests a separate `Graveyard Fairy Grave`
+region: implemented below rather than retaining the translated N64 Shield Grave fairy source.
+Both chest identities and the item pool remain unchanged.
 Heart chest remains `True` **inside** the grave. Both age Static copies have only
 `Drop__DropActor=Obj_Heart_Piece` in Dynamic; no Presence, SpawnType override, links or AiGroup reference to
 that chest in either age's pair. Native `SpawnType=0`; no Sun's Song, wall or clear trigger binds it. The only
@@ -58,3 +58,25 @@ Full gates will run on the final tree before any commit is posted ready. Targete
 Scoped ruff format/lint passed. Actual full-world `load_world`/`Search` plus catalogue reader smoke:
 child with Gohma exit and `Time Flows`, no weapon/song/bombs, reaches the heart chest but not the
 guarded shield chest. Rendered both player directions. No in-game observation is claimed.
+
+### Reviewer follow-up: split N64's combined grave
+
+Claude supplied N64 comparison facts from
+https://www.zeldadungeon.net/wiki/Graveyard_(Ocarina_of_Time) : its flower-marked shield grave combines
+the shield chest and the bombable fairy wall, and its heart chest needs Sun's Song. Direct fetch here
+returned HTTP 403; citation/facts are reviewer-supplied, not a claimed successful web read.
+The remake placements above confirm the split: ReDead/shield at x21.5/z11.2, fairy wall under the
+marked grave at x4/z5.7, heart chest at x21.4/z23.2 without the old song trigger.
+
+Added `Graveyard Fairy Grave` with its own night/time-flow child entrance and unrestricted return.
+Disabled the translated Shield Grave Fairy event (`was` guards the old rule); new fairy event needs
+`has_explosives and has_bottle`, not an unverified Hammer alternative. No shuffled check added.
+
+First targeted follow-up: 4 passed, 2 failed because the full-world searches escaped into unrelated
+fairy sources. Printed successful event sources: adult HF/ZR fairy grottos; child several overworld
+sources after acquiring implicit drops. Isolated the three real graves' graph by excluding the
+surface's exits to other areas in the test fixture, leaving actual grave/event rules intact.
+This fixes the test's scope, not a production gate. Cause-aimed rerun:
+`uv run pytest tests/test_world_remake_play.py -k grave -q`: **6 passed, 21 deselected**;
+scoped ruff format/lint passed. Full-world runtime smoke was already exercised above; the new source's
+explosive/bottle and Hammer-negative behavior is exercised by these searches.

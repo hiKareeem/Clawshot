@@ -133,3 +133,38 @@ def test_adult_heart_piece_grave_needs_no_child_time_event_or_song():
     assert search.can_access(world.locations["Graveyard Heart Piece Grave Chest"], ADULT)
     assert not search.holds("Time Flows")
     assert not search.holds("Suns Song")
+
+
+def graveyard_starting_at(region, age=CHILD):
+    world = starting_at(region, age)
+    # Keep the real grave rules but exclude unrelated overworld fairy sources.
+    world.regions["Graveyard"].exits = [
+        exit_ for exit_ in world.regions["Graveyard"].exits if exit_.target.endswith("Grave")
+    ]
+    return world
+
+
+@pytest.mark.parametrize("explosives", ["Bomb Bag", "Bombchus (5)"])
+def test_fairy_only_grave_needs_explosives_and_a_bottle_not_a_redead_weapon(explosives):
+    world = graveyard_starting_at("Graveyard Fairy Grave")
+    search = Search(world, [explosives])
+    assert not search.holds("Fairy")
+    search.collect("Bottle")
+    assert search.holds("Fairy")
+    assert not search.holds("Kokiri Sword")
+
+
+def test_hammer_alone_does_not_open_the_fairy_grave_wall():
+    world = graveyard_starting_at("Graveyard Fairy Grave", ADULT)
+    search = Search(world, ["Bottle", "Megaton Hammer"])
+    assert not search.holds("Fairy")
+
+
+def test_shield_grave_does_not_contain_the_fairy_pool():
+    world = graveyard_starting_at("Graveyard Shield Grave")
+    search = Search(world, ["Bottle", "Bomb Bag"])
+    assert not search.holds("Fairy")
+    assert not search.can_reach("Graveyard Fairy Grave", CHILD)
+    search.collect("Time Flows")
+    assert search.can_reach("Graveyard Fairy Grave", CHILD)
+    assert search.holds("Fairy")
