@@ -2511,3 +2511,36 @@ last Boomerang43 allowed/57 remaining). Exact first-attempt Fire-key frontier/pl
 repro are recorded in the round file and posted to `cs-r8`; no retry/rule/fill change here.
 Claude permits independent successful-seed smoke plus the synthetic proof while Track A fixes
 that failure; no seed7 success or gameplay certification is claimed.
+
+## 37. Round 9: item-bar assignment and age-locked pickups (cs9a)
+
+Read-only dump/build e0f3ccfa and bow-lock backup; full button-family age table, native addresses,
+provenance, limits and reproducible probes: `plans/rounds/r9-itembar.md`,
+`E:/OOTRemake/work/r9-itembar-cs9a/`. No agent game run or save edit.
+
+Kareem's seed8 Bow joined child Link's greyed ZR bar and jammed item use. Zone transitions did
+not help; Save and Continue removed Bow from the bar and restored use. The backup confirms
+childhood, acquired `Weapon_Range_Bow`/stock1 in all six saves; four retain Bow in saved enum
+0xa0029837. Two other assignable enums are saved; fourth candidate0x76f85e6d is save-1, so its
+absence from progress.sav is expected. Separate live selection is not represented by ownership alone.
+
+`PouchActorInfo` supplies `AssignableItem`; the UI's
+`UI/Pouch/PouchTable/PouchTable.game__ui__PouchTable.bgyml` supplies per-variant
+`IsUsableChild`/`IsUsableAdult`. Child-only ZR families: Sticks, Slingshot, Boomerang, Beans,
+Weird Egg/Chicken/Letter. Adult-only: Bow/arrows, Hammer, Hookshot/Longshot and adult trade
+items. Nuts, bombs, Bombchus, spells, bottles, Business Scrub Seed and Amiibo are both-age
+in that metadata. Ocarina, head and boot shortcuts are distinct; the round file separates them
+and the scene-only fishing controls rather than inventing ZR permissions.
+
+Chest `ContentName` reaches `GetPouchContent/Event0`, whose `IsEquipDIrect` is **already false**.
+Native get code separately calls its selected-item setter (0x01110158..0x01110198 ->
+0x01211c00). Native inventory readers consult the table's age fields. **[INFERENCE]** Get-time
+selection misses an age-filtered rebuild that Save/Continue performs; the precise boot caller
+and live use-cancellation predicate are unproved. Display/model changes do not repair inventory.
+The shipped equipment-sync action calls wearable reapplication (0x02951f50 ->0x00f201b0),
+not a demonstrated item-bar refresh. No safe data-only fix is established and none is enabled.
+
+Facts-only lead: [sloperina docs/FINDINGS.md](https://github.com/PracticeROM/sloperina/blob/master/docs/FINDINGS.md),
+sections1/2/5.6 (enum hashes, PouchTable, separate wheel state); independently checked against
+the player's data. No GPL code/file copied. Adult Slingshot/Boomerang recovery remains
+Kareem's reverse-direction check; only the child Bow failure/recovery is game-confirmed.
