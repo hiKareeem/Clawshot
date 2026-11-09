@@ -2079,3 +2079,11 @@ Barren/Way-of-the-Hero eligibility and the required-item oracle are unchanged: h
 may be named without making their area non-barren. Candidate filtering changes RNG draws, so exact
 stone assignments need not match older builds. Tests, continuation output and verification evidence:
 `plans/rounds/r7-hintfix.md`. No game data or item-pool/settings change.
+
+Continuation built at `E:/OOTRemake/work/r7-hints/seed-shop-7c-next`: all 228 placements and all 77
+original 7b resources byte-identical, beatable in 25 current-logic spheres. Adds the no-mask stone flow
+and 13 language archives; the three size-growing archives remain omitted as in section 25's continuation,
+so 7b's size table stays unchanged. Independent readback checks all 40 lines in each written archive
+and highlight resets; the round file lists the 40 lines. **Kareem: after Claude swaps the staged output
+following game exit, check the Temple of Time's four lines and normal colour after each name.**
+No agent game run, played-folder write or save/launcher change.

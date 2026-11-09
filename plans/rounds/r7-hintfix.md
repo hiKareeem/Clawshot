@@ -132,7 +132,38 @@ After successful smoke/readback, removed only the two session-created throwaway 
 completed stage (the builder removes its stage); retained the requested output and JSON manifests
 under `E:/OOTRemake/work/r7-hintfix-cs7e/`. The original `make_7c.py` remains untouched.
 
+Read the actual generated `play-note.md` Gossip Stones table (40 rows), including the settled physical
+Temple-of-Time order and new item/area wording. WotH remains area-only speech: its internal `Points at`
+field can still identify required ammo (Goron City's Bombchus in this old seed). D29 filters the four
+item-naming kinds, not that unchanged required-item analysis.
+
 ## Readiness
 
-Four complete gates will be recorded before posting any commit ready and before final handoff.
-In-game presentation requires Kareem's check after Claude swaps the new overlay following game exit.
+All four complete gates passed on the finished code (`6fdf7e1`; later commits are documentation only).
+`PYTEST_ADDOPTS` supplied only session-owned external `--basetemp` directories, keeping decoded/generated
+temporary data outside the repository. No filtering beyond the prescribed `-m dump`, retries or skipped failures.
+
+| Full command | Observed result |
+|---|---|
+| `uv run ruff format --check` | **198 files already formatted** |
+| `uv run ruff check` | **All checks passed** |
+| `uv run pytest` | **586 passed, 78 skipped**, 265.69 s |
+| `OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump` | **77 passed, 587 deselected**, 523.84 s |
+
+The full synthetic run includes the default/progressive/beatability/determinism sweeps and all new D29
+boundary cases. The dump run includes both mask-mode whole-seed hint/reachability/text checks, archive
+round trips and actual CLI output integration. Public generator smoke and independent continuation
+readback are recorded above, not inferred from the tests.
+
+Commits, in order: `6fdf7e1` item 1; `128e3c7` item 2; final documentation/evidence commit follows
+(its hash is posted in the thread and final handoff).
+No implementation acceptance criterion remains. Human game acceptance is still Kareem's: the exact
+post-swap Temple-of-Time/colour/overlay-log checklist is above; no game was started by this track.
+
+Checkpoint posted on `cs-r7` as `cs7e`: item commits `6fdf7e1`, `128e3c7`, staged continuation proof
+and section-28/29 integration note; explicitly not readiness while the complete gates run.
+
+Removed only the two completed session-owned gate basetemps after their successful processes exited.
+Requested `seed-shop-7c-next`, its spoiler/note and the external JSON proof remain. Played seed/user,
+save backups, dump, original builder and launcher untouched. Ready for Claude's branch review and
+safe output swap; section 28 belongs before this track's section 29 when integrated.
