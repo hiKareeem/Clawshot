@@ -62,10 +62,56 @@ real Bomb Bag was obtained before the comparison.** No new launcher or game patc
 
 ## Item 2: seed/search acceptance
 
-Evidence will be recorded after the public seed-7 matrix, unchanged 200-default sweep and
-fixed-placement 7b replay. No retry bound or goal is changed.
+`uv run python -u E:/OOTRemake/work/r7-bombs-cs7g/verify_seeds.py` exercised the actual
+`clawshot.__main__.main` four times, with pass-through wrappers counting real fill attempts.
+Every invocation wrote a fresh folder in `seed7-matrix-next/`; no prior seed/user was rewritten.
+The writer, hints, spoiler and play note all ran. Re-read written placements and independently
+ran `Search.collect_spheres` plus `won()` (including the gated return proof).
+
+| Seed7 mode | Attempts / bound | Shuffled checks | Collection spheres | Written files including spoiler/note |
+|---|---|---|---|---|
+| Chest | 1 / 10 | 164 | 25 | 81 |
+| Chest+Shop | 3 / 10 | 228 | 24 | 99 |
+| Chest+Shop+Gift | 10 / 10 | 278 | 27 | 142 |
+| Default string `CS1` | 1 / 10 | 164 | 25 | 81 |
+
+The gift mode succeeds **on the last permitted attempt**, not with a raised bound. Its failed
+attempts (native Bombchu capacity and song placement), and Shop's two Fire-key failures, are
+retained in external `seed-proof.json` and the four `cli-*.log` transcripts. No seed, goal,
+settings or placement-policy reroll was used. This is limited headroom, not an unbounded guarantee.
+
+Fixed 7b replay follows cs7f's available `work/r7-play-cs7f/old_seed.py` reconstruction (the
+older `work/r7-play/old_seed.py` is absent). Read its spoiler only; fill nothing. Resolve the
+remaining fixed native chest items from census/actor mappings, overlay its **228 exact shuffled
+placements**, run the current chronological search: **won=True, 25 spheres**. Assert the 228-row
+mapping and the source spoiler bytes unchanged. No 7b/7c file is written.
+
+`tests/test_world_remake_bombs.py`: **17 passed**. The unchanged existing 200-default-seed,
+20-progressive-seed, vanilla-world and cross-process determinism tests all passed in the first
+full synthetic run. That complete run was **610 passed, 79 skipped, 9 failed**: the nine
+failures were old route fixtures treating bag-only bombs as usable, not seed-generation failures.
+The `&&` chain stopped there, so no full dump result is attributed to that attempt.
+
+Printed failures named Colossus fairy wall, Shadow statue bridge, three Spirit routes, two Water
+routes and two fairy-grave cases. Shared test-only commit `5c9c96c` keeps the route assertions,
+adds bag-only negative then Bracelet-positive transitions, and supplies strength in the existing
+Jabu usable-bombs-versus-projectile negative case (otherwise that check would become vacuous).
+Cause-aimed five-file targeted run: **52 passed**. Four full corrected gates follow at handoff.
 
 ## Item 3: bomb-use timing and unsatisfied rules
 
 Compare identical placements under pre-D30 and D30 rules; report first usable-bomb sphere,
 not the first ammo pickup. Do not compare rerolled placements as if they were the same seed.
+
+### Independent runtime proofs
+
+Full helper-backed synthetic Search (not a mock): pre-D30 bag-only opens Wall, Explosion, Rock
+and both Octorok alternatives. D30 bag-only opens none. Collecting the real `Goron Bracelet`
+wakes all six paths, including `can_use(Bombs)`.
+
+`rule_audit.py` independently compiles pre-D30 and D30 full worlds, supplies an upper-bound
+inventory (100 of each real item; events still follow their actual rules), and checks exits,
+events, locations and hint stones across child/adult and day/night. **2,405 rules** in each
+world; **zero newly impossible** and zero newly possible with that inventory. This does not
+claim every pre-existing disabled/N64-only rule is satisfiable. External `rule-audit.json`
+records the result.
