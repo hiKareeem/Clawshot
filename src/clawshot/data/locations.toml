@@ -182,17 +182,17 @@ oot_randomizer_name = "DMC GS Crate"
 id = "744856631664786545"
 kind = "freestanding"
 area = "DeathMountainCrater"
-name = "Death Mountain Crater Freestanding (Obj_Heart_Piece) #1"
+name = "DMC Volcano Freestanding PoH"
 vanilla_item = "Obj_Heart_Piece"
-oot_randomizer_name = ""
+oot_randomizer_name = "DMC Volcano Freestanding PoH"
 
 [[location]]
 id = "10331043360028932045"
 kind = "freestanding"
 area = "DeathMountainCrater"
-name = "Death Mountain Crater Freestanding (Obj_Heart_Piece) #2"
+name = "DMC Wall Freestanding PoH"
 vanilla_item = "Obj_Heart_Piece"
-oot_randomizer_name = ""
+oot_randomizer_name = "DMC Wall Freestanding PoH"
 
 [[location]]
 id = "2518138296199711695"
@@ -1118,9 +1118,9 @@ oot_randomizer_name = "GV GS Small Bridge"
 id = "16129198288828948135"
 kind = "freestanding"
 area = "GerudoValley"
-name = "Gerudo Valley Freestanding (Obj_GerudoValley_Heart_Piece)"
+name = "GV Waterfall Freestanding PoH"
 vanilla_item = "Obj_GerudoValley_Heart_Piece"
-oot_randomizer_name = ""
+oot_randomizer_name = "GV Waterfall Freestanding PoH"
 
 [[location]]
 id = "1176975953041865014"
