@@ -206,3 +206,24 @@ It asserts both shuffled branches and prints the red-rupee count20. No output un
 This is a data/patch-path smoke, not an invented in-game play result; Kareem's vanilla observation is
 the gameplay evidence. Existing `test_owned_item_substitute_cannot_replace_a_shuffled_reward` covers
 the synthetic writer regression and will run in the full gates.
+
+## Item 4: published findings and final verification
+
+Updated the existing R7-BOMBBAG/R7-GRAVES answers; added reported no-bag Bombchu and duplicate-shield
+rows with gameplay versus metadata/inference separated. Both grave catalogue entries now distinguish
+all three graves, vanilla duplicate-shield rupees and bombs' Bracelet requirement. No fairy check was
+invented. Section30 contains the three findings plus the pre-D25 route; sections28/29 remain their
+tracks' responsibility and must be integrated before30 by the reviewer.
+
+Actual published world/catalogue smoke (`grave_smoke.py`) loads the complete world and catalogue,
+prints both directions, reaches the heart chest with only Gohma exit/Time Flows, and refuses the
+ReDead chest without a weapon.
+
+Following the route diagnostic's `holds` correction, removed five newly introduced assertions that
+queried inventory item names through the events-only API. They could not establish item absence;
+the meaningful before/after access assertions remain. Also removed the equivalent scratch assertion.
+This is removal of vacuous checks, not re-pinning implementation wording.
+
+The initial full gate chain passed format (197 files) and lint, then was intentionally cancelled during
+the synthetic suite before this test cleanup. No completed full-suite/dump result is claimed for that
+cancelled chain. A fresh four-gate chain on the final source/test tree follows.

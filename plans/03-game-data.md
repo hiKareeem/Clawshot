@@ -2092,3 +2092,96 @@ so 7b's size table stays unchanged. Independent readback checks all 40 lines in 
 and highlight resets; the round file lists the 40 lines. **Kareem: after Claude swaps the staged output
 following game exit, check the Temple of Time's four lines and normal colour after each name.**
 No agent game run, played-folder write or save/launcher change.
+
+## 30. Round 7: graves, bomb lift strength and owned-shield substitute (cs7f)
+
+Build `e0f3ccfa`; read-only Banc, actor packs, PouchActorInfo, GameDataList, guest game NSO and save
+samples. Full provenance, native addresses, commands and pending gameplay checks:
+`plans/rounds/r7-play.md`. Reproducers/decoded data stay outside the repo:
+`E:/OOTRemake/work/r7-play-cs7f/`. No game, launcher, save edit or active-overlay rewrite.
+
+### Three pull-back graves, one viewpoint
+
+Stand at the Royal Family's Tomb entrance (48.4,104.6,2.6), **face out over the graveyard**.
+Kareem's fourth-from-right ReDead observation calibrates handedness; the other ordinals are
+placement-derived, not separately played.
+
+| Grave | Direction | Contents |
+|---|---|---|
+| Shield / ReDead | Nearest row of seven, fourth from right, unmarked; hole x21.5/z11.2 | Chest16912540161937823130, ReDead17994273783244561622 |
+| Heart piece | Same row, leftmost/seventh from right; hole x21.4/z23.2 | Chest9622128545943056087; no enemy/song puzzle |
+| Marked fairy grave | Lower row of five, second from right, flowers/butterflies; hole x4/z5.7 | Cracked wall9366825990748670811, eight fairies behind it; **no chest or shuffled check** |
+
+Both age Static/Dynamic copies were checked. Heart chest has only its item Dynamic parameter:
+no Presence, spawn override, actor link or AiGroup/song trigger. `True` remains the inside-grave
+rule; child entrance still needs night and `Time Flows`.
+Remake fact corroboration, not copied guide text:
+https://www.nintendolife.com/guides/zelda-ocarina-of-time-heart-piece-locations-switch-2 (#8);
+https://www.ign.com/wikis/ocarina-of-time-remake/Spiritual_Stone_of_Fire_-_Kakariko_Village_Walkthrough .
+
+N64 comparison only: https://www.zeldadungeon.net/wiki/Graveyard_(Ocarina_of_Time) (facts supplied by
+Claude; direct fetch returned403). N64 combines shield chest/fairy wall in its marked grave and
+requires Sun's Song for the heart chest. Remake splits them. `child_graveyard.toml` introduces
+`Graveyard Fairy Grave`, moves Fairy out of Shield Grave and requires `has_explosives and has_bottle`,
+not Hammer. Both ordinary grave entrances keep the same child night/time-flow access; no check added.
+
+### Bomb capacity is not bomb usability
+
+Samples: newest 7c under `E:/OOTRemake/work/r7-hints/user-seed-shop-7c`, main backup
+`E:/OOTRemake/work/save-backups/2026-11-08_2140-main-jabu`. Exact paths/digests in external report.
+Main digest stayed unchanged; live 7c changed during play but the diagnostic fields stayed the same.
+
+| Saved name | 7c | main |
+|---|---|---|
+| `IsGet.Item_Bomb` / `IsGet.Item_BombBag_Small` | true / true | true / true |
+| `PouchData.Item_BombBag_Small.StockNum` / `PouchContentMaxNum.Bomb` | 1 / 20 | 1 / 20 |
+| `PouchData.Item_Bomb.StockNum` | 20 | 8 |
+| `HavePlayedGetEvent.Item_BombBag_Small` | false | true |
+| `IsGet.Armor_Child_Gauntlet_Goron` | false | true |
+| `PlayerStatus.LiftGrade` (Enum hash0x59979321) | None | Low |
+
+**Native gate:** spawned `Item_Bomb` LiftableParam requires Low (hash3655598229), whereas 7c's saved
+None is hash3069107721. Bomb pre-lift calls `0x027e2c50 -> 0x02e50760 -> 0x02e50570`;
+`0x02e506ac..b0` compares required <= available. Player virtual +0x100 override `0x02e878d0`
+reads PlayerStatus/LiftGrade and maps None/Low/Middle/High to0/1/2/3. Failure finishes pre-lift:
+this explains Kareem's brief raise/cancel, not missing capacity. No bag get-history use gate was found
+on this path; setting a presentation flag is not a justified fix.
+
+The real small Bomb Bag's expansion resource targets bombs/Bombchus capacity20, not strength.
+Goron Bracelet (`Item_Gauntlet_Goron` / `Armor_Child_Gauntlet_Goron`) grants LiftGradeUP Low.
+**[INFERENCE] The KF Storms bag alone will not fix canceled bombs with strength None; Bracelet should.**
+Do not infer permanent save damage. Future shared bomb logic needs the native strength requirement,
+or an owner-approved gameplay change limited to ordinary bombs; proposal/request in the round report.
+No shared helper, saved flag, bag policy or game parameter was changed by this investigation.
+
+### Pre-D25 7b/7c can continue via native Bombchus
+
+Kareem via Claude, 2026-11-08: Bombchus used on main with no Bomb Bag. Native Item_Bombchu
+LiftableParam independently requires **None**, not Low. Its SmallBagActor points to the Bomb Bag,
+but that link does not impose a lifting prerequisite.
+
+Readback of **written** 7b GC Shop Item8: native Shop_BombchuBundle_05, five Item_Bombchu,
+PriceOffset35, StockNum -1. Normal repeatable ShopItem sale, not a chest-style grant; no explicit
+bag/Dodongo gate in this item branch (section24). 7b/7c's228 shuffled placements are identical.
+Fixed-placement replay with current rules and native fixed vanilla mapping wins in25 spheres;
+GC8 at4 precedes Windmill/Storms at9 and KF bag at10. Removing GC8 alone stalls before the pull
+and bag (334 checks,8 spheres). That establishes the logic dependency, not every possible game route.
+The child-only prefix obtains unshuffled Saria's Song at3, Darunia's Bracelet plus GC8 at4;
+it reaches the pull without adult loot or the Storms bag.
+
+**Advice:** keep these saves; buy/use GC8 Bombchus for early explosives. Learn Saria's Song and play
+for Darunia to obtain the unshuffled Bracelet, then retry current bombs rather than waiting for the bag.
+GC8 purchase/use on7c and the post-Bracelet bomb comparison still need Kareem; no new gameplay
+result is claimed. D25 remains the policy for new seeds, not a reason to rewrite this old output.
+
+### Vanilla shield grave: explicit fallback, not universal duplicate conversion
+
+Both ages' A_06 chest16912540161937823130 explicitly checks TBox_Shield_Hylian and selects
+TBox_Rupee_Red when already held; its default CheckCondition is true. Native root nodes16/30/29
+perform count>0 then XOR CheckCondition; nodes24/25 select main/substitute. Red rupee's bundle count
+is20. Kareem's vanilla-file20-rupee observation matches this exact branch, not a different grave.
+
+The existing shuffled writer `patch_tree` already overwrites primary **and** substitute with the new
+reward, so owning the shield cannot turn shuffled progression into vanilla rupees. Real-placement,
+in-memory smoke across both ages selected shield/red rupee before patch and Boomerang/Boomerang
+after patch. No blanket20-rupee rule for other duplicate items, and no shuffled in-game result inferred.

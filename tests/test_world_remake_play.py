@@ -121,9 +121,6 @@ def test_child_heart_piece_grave_needs_night_access_but_no_song_bombs_or_weapon(
     assert not search.can_access(chest, CHILD)
     search.collect("Time Flows")
     assert search.can_access(chest, CHILD)
-    assert not search.holds("Suns Song")
-    assert not search.holds("Bomb Bag")
-    assert not search.holds("Kokiri Sword")
     assert not search.can_access(world.locations["Graveyard Shield Grave Chest"], CHILD)
 
 
@@ -132,7 +129,6 @@ def test_adult_heart_piece_grave_needs_no_child_time_event_or_song():
     search = Search(world)
     assert search.can_access(world.locations["Graveyard Heart Piece Grave Chest"], ADULT)
     assert not search.holds("Time Flows")
-    assert not search.holds("Suns Song")
 
 
 def graveyard_starting_at(region, age=CHILD):
@@ -151,7 +147,6 @@ def test_fairy_only_grave_needs_explosives_and_a_bottle_not_a_redead_weapon(expl
     assert not search.holds("Fairy")
     search.collect("Bottle")
     assert search.holds("Fairy")
-    assert not search.holds("Kokiri Sword")
 
 
 def test_hammer_alone_does_not_open_the_fairy_grave_wall():

@@ -766,9 +766,9 @@ ids = ["10944569637726152230"]
 [[location]]
 location = "Graveyard Shield Grave Chest"
 name = "Graveyard: ReDead Grave Chest"
-where = "At the Royal Family's Tomb entrance, turn to face out over the graveyard. In the nearest row of seven ordinary graves, pull the fourth from your right (unmarked) and drop in; defeat the ReDead guarding the chest. Child Link needs night after meeting Zelda."
+where = "At the Royal Family's Tomb entrance, turn to face out over the graveyard. In the nearest row of seven ordinary graves, pull the fourth from your right (unmarked) and drop in; defeat the ReDead guarding the chest. Child Link needs night after meeting Zelda. In vanilla, this chest gives 20 rupees if you already hold the Hylian Shield; a shuffled chest keeps its assigned reward instead."
 oot_randomizer_name = "Graveyard Shield Grave Chest"
-source = "Kareem via Claude, 2026-11-08: fourth from the right when looking out from the Royal Family's Tomb, unmarked, ReDead and chest; cs7f placement audit (build e0f3ccfa): row x21.5, z -6.3/-2.3/7.2/11.2/15.2/19.2/23.2, shield hole z11.2, chest Hash 16912540161937823130 in both age Dynamic files, ReDead nearby; plans/rounds/r7-play.md; child_graveyard.toml. https://www.ign.com/wikis/ocarina-of-time-remake/Spiritual_Stone_of_Fire_-_Kakariko_Village_Walkthrough"
+source = "Kareem via Claude, 2026-11-08: fourth from right looking out from Royal Tomb, unmarked, ReDead/chest; got 20 rupees while vanilla loaded with Hylian Shield owned. cs7f read-only audit, build e0f3ccfa: row x21.5, z -6.3/-2.3/7.2/11.2/15.2/19.2/23.2, shield hole z11.2; chest 16912540161937823130 in both age Dynamic files explicitly checks TBox_Shield_Hylian and substitutes TBox_Rupee_Red (20), A_06 native count branch. patch_tree overwrites both shuffled branches. plans/rounds/r7-play.md; 03-game-data.md section 30; child_graveyard.toml; https://www.ign.com/wikis/ocarina-of-time-remake/Spiritual_Stone_of_Fire_-_Kakariko_Village_Walkthrough"
 ids = ["16912540161937823130"]
 
 [[location]]
@@ -806,7 +806,7 @@ ids = ["16041366920820397198"]
 [[location]]
 location = "Graveyard Heart Piece Grave Chest"
 name = "Graveyard: Left-End Grave Chest (from Royal Tomb)"
-where = "At the Royal Family's Tomb entrance, turn to face out over the graveyard. In the nearest row of seven ordinary graves, pull the leftmost (seventh from your right) and drop in; the large chest is at the back, with no enemy or Sun's Song puzzle. Child Link needs night after meeting Zelda. The flower-and-butterfly grave is instead second from your right in the lower row of five, farther from the tomb: explosives open its cracked wall to a fairy pool, with no chest."
+where = "At the Royal Family's Tomb entrance, turn to face out over the graveyard. In the nearest row of seven ordinary graves, pull the leftmost (seventh from your right) and drop in; the large chest is at the back, with no enemy or Sun's Song puzzle. Child Link needs night after meeting Zelda. The flower-and-butterfly grave is instead second from your right in the lower row of five, farther from the tomb: explosives open its cracked wall to a fairy pool, with no chest. Carried bombs need Goron's Bracelet as well as bomb capacity; Bombchus need no Bracelet."
 oot_randomizer_name = "Graveyard Heart Piece Grave Chest"
 source = "cs7f read-only placement/AI audit, build e0f3ccfa: tomb entrance x48.4/z2.6; upper seven-grave row x21.5 ends at z23.2, hole 14989078271173641200 above chest 9622128545943056087 (both age Static files); no chest AiGroup/song/spawn override. Lower five-grave row x4, second from right z5.7: marked fairy hole 11636637601453373828, WallCrack 9366825990748670811 and eight fairies, no check. Handedness calibrated by Kareem's fourth-from-right shield grave (2026-11-08); other ordinals are placement-inferred, not separately played. plans/rounds/r7-play.md; child_graveyard.toml; https://www.nintendolife.com/guides/zelda-ocarina-of-time-heart-piece-locations-switch-2 (#8)"
 ids = ["9622128545943056087"]
