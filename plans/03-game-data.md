@@ -2809,6 +2809,51 @@ The return kit's data-defined mandatory inventory/staged families follow each do
 early pulls cannot assume optional child Saria, strength or Time ocarina. D20's actual
 first-pull proof remains strict; no silent free-travel/guarantee override or retry increase.
 
+## 42. Round 10: NUP input for source-only seed packs (cs10c)
+
+Implementation, exact commands/results and review boundary: `plans/rounds/r10-nup.md`.
+The player's original NUP and extracted RomFS are read-only; all local output is outside the repo.
+
+`python -m clawshot.pack --romfs` / `OOT_ROMFS` and Make's dump-path answer accept either a
+RomFS directory or full `.nup` filename. The generator itself retains its ordinary directory API.
+The reader is [a55uka/nup](https://github.com/a55uka/nup) at
+`a4840f06c94ddeb414eea5b33c9704ffe995f11c`, MIT; reader/format modules and the complete licence
+are vendored and attributed in `NOTICE`. PyPI's unrelated `nup` package is not used.
+
+Preflight reads the same four supported-version resources directly inside the newest complete
+base/update RomFS. Add-ons are not selected; ambiguous/incomplete/unsupported newer packages
+never borrow or fall back to older content. Upstream TOC/bounds checks precede tree indexing;
+every resource read verifies its actual SHA256 against its NUP record. No filename or display
+version is trusted as the supported-build oracle. Folder and NUP fingerprints must agree.
+
+Kareem's read-only NUP is25,020,741,061 bytes, one standalone update131072 with186,592 file
+records and601 directories. Its fingerprint is the existing supported signature
+`fc09c4af707a0ca092188cf014f6fdf3d40514def773f097b798f52f9f28bc93`.
+The initial1,239 selected generator inputs /25,821,037 bytes compare byte-identical with his
+extracted RomFS. The later data-defined cache also includes Track B's Door of Time input
+`Logic/Market_Common_f252.logic.module.ainb`; all its other named inputs are already covered.
+The working set excludes ExeFS/models/textures/audio, not a full25GB extraction.
+
+NUP Make bootstraps frozen uv/Python/zstd for input preflight, then saves configuration and
+creates a unique pack-local `.romfs-*` cache only after version success. Folder preflight remains
+before uv. Cache removal occurs on normal completion or exception; force-killed remnants, like
+the generated seed, remain private game data. The positive ZIP allowlist includes source/licences
+only, never cache/seed resources. Existing seeds are verified, not overwritten; emulator Make
+still needs no Hookshot, and Play's bin-only/isolated-save safeguards are unchanged.
+
+Cache selection lives in one data definition, `src/clawshot/pack/resources.toml`: exact paths,
+family patterns, supported item/shop actor-pack template and fast-start component discovery.
+The optional `OOT_NUP` + `OOT_ROMFS` dump oracle generates AND writes complete seeds from the
+cache directory alone for every enabled shuffle kind and resource-reading setting; an independent
+full-RomFS run must produce exactly the same output paths and byte digests. Missing file errors
+name the RomFS resource; silent missing glob members fail output equality. Forest modes, all
+fast starts, free travel, songs/prices/partial shops, mask mode and (once the setting exists)
+all three Door of Time modes are covered. Re-run after each integration/rebase.
+
+Synthetic fixtures contain invented bytes only. The native oracle also compares cached bytes
+and preserves NUP size/mtime. Actual publisher/PowerShell Make and observed matrix/gate results
+are recorded in the round file; no game or launcher is run by the agent.
+
 ## 43. Round 10: pots, crates and ground rupees (cs10d, exploration)
 
 Read-only native dump/build `e0f3ccfa`; full per-area counts, evidence, commands and
@@ -2878,48 +2923,3 @@ rows (not155 rupees). Counts, ages, geometry and vanilla rewards differ material
 Future checks use **remake names and the actual region's access rule**, like `extra_*`
 chests; record an N64 name only for an exact mapping. No ordinal/nearest-position join,
 unverified rule, new saved flag or shuffle setting is introduced by this exploration.
-
-## 42. Round 10: NUP input for source-only seed packs (cs10c)
-
-Implementation, exact commands/results and review boundary: `plans/rounds/r10-nup.md`.
-The player's original NUP and extracted RomFS are read-only; all local output is outside the repo.
-
-`python -m clawshot.pack --romfs` / `OOT_ROMFS` and Make's dump-path answer accept either a
-RomFS directory or full `.nup` filename. The generator itself retains its ordinary directory API.
-The reader is [a55uka/nup](https://github.com/a55uka/nup) at
-`a4840f06c94ddeb414eea5b33c9704ffe995f11c`, MIT; reader/format modules and the complete licence
-are vendored and attributed in `NOTICE`. PyPI's unrelated `nup` package is not used.
-
-Preflight reads the same four supported-version resources directly inside the newest complete
-base/update RomFS. Add-ons are not selected; ambiguous/incomplete/unsupported newer packages
-never borrow or fall back to older content. Upstream TOC/bounds checks precede tree indexing;
-every resource read verifies its actual SHA256 against its NUP record. No filename or display
-version is trusted as the supported-build oracle. Folder and NUP fingerprints must agree.
-
-Kareem's read-only NUP is25,020,741,061 bytes, one standalone update131072 with186,592 file
-records and601 directories. Its fingerprint is the existing supported signature
-`fc09c4af707a0ca092188cf014f6fdf3d40514def773f097b798f52f9f28bc93`.
-The initial1,239 selected generator inputs /25,821,037 bytes compare byte-identical with his
-extracted RomFS. The later data-defined cache also includes Track B's Door of Time input
-`Logic/Market_Common_f252.logic.module.ainb`; all its other named inputs are already covered.
-The working set excludes ExeFS/models/textures/audio, not a full25GB extraction.
-
-NUP Make bootstraps frozen uv/Python/zstd for input preflight, then saves configuration and
-creates a unique pack-local `.romfs-*` cache only after version success. Folder preflight remains
-before uv. Cache removal occurs on normal completion or exception; force-killed remnants, like
-the generated seed, remain private game data. The positive ZIP allowlist includes source/licences
-only, never cache/seed resources. Existing seeds are verified, not overwritten; emulator Make
-still needs no Hookshot, and Play's bin-only/isolated-save safeguards are unchanged.
-
-Cache selection lives in one data definition, `src/clawshot/pack/resources.toml`: exact paths,
-family patterns, supported item/shop actor-pack template and fast-start component discovery.
-The optional `OOT_NUP` + `OOT_ROMFS` dump oracle generates AND writes complete seeds from the
-cache directory alone for every enabled shuffle kind and resource-reading setting; an independent
-full-RomFS run must produce exactly the same output paths and byte digests. Missing file errors
-name the RomFS resource; silent missing glob members fail output equality. Forest modes, all
-fast starts, free travel, songs/prices/partial shops, mask mode and (once the setting exists)
-all three Door of Time modes are covered. Re-run after each integration/rebase.
-
-Synthetic fixtures contain invented bytes only. The native oracle also compares cached bytes
-and preserves NUP size/mtime. Actual publisher/PowerShell Make and observed matrix/gate results
-are recorded in the round file; no game or launcher is run by the agent.
