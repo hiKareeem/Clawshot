@@ -207,3 +207,41 @@ Results posted in cs-r10 as a separate note.
   symlinks needed non-recursive `rmdir`, not Git Bash's file unlink.
 - The focused 102-test pass is retained; the corrected four-command gate starts at
   format/lint and does not repeat that already-passing focused run.
+
+### Final four-command gates: passed
+
+Run serially with `CLAWSHOT_WORKERS=1` under the shared gate lock; the exit trap
+releases it on success or failure. Absolute forward-slash basetemps are outside
+the repository; `OOT_ROMFS` is unset for synthetic tests and read-only for dump tests.
+
+| Command | Observed result |
+| --- | --- |
+| `uv run ruff format --check` | 242 files already formatted |
+| `uv run ruff check` | All checks passed |
+| `uv run pytest` | 786 passed, 91 skipped (1052.86s) |
+| `OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump` | 90 passed, 787 deselected (625.40s) |
+
+Logs: `work/r10-agetravel-cs10b/gate-final-{format,lint,synthetic,dump}.log`.
+No unchanged failing stage was retried: the first failure changed adult fixtures;
+the format-environment failure changed the path representation and removed only
+this run's accidental temporary tree.
+
+### Review handoff
+
+Committed on `r10/agetravel`, no merge/push/rebase:
+
+- `51f442b`: item1, keep Sheik through the entire first-adult dialogue.
+- `2b889c2`: replayable Door of Time setting (isolated shared edit).
+- `876956f`: CLI mode selection (isolated shared edit).
+- `890074c`: door/instrument logic and prepared return contracts.
+- `b0e28f5`: seed pipeline integration (isolated shared edit).
+- `6da30c9`: native song-only/open patches, contracts and documentation.
+- `d022550`: migrate adult test instruments; all-mode age regression.
+- `65627c9`: released-seed audit and isolated player-copy evidence.
+
+Ready for code review, **not claimed game-confirmed**. Kareem's first-pull and three
+door-mode checks remain, using the named launchers/checklists above; preserve their
+overlay OpenFile logs. Observe the explicitly recorded early escape/moat story-timing
+question, not an invented story-policy change. `door_of_time=closed` and
+`free_time_travel=false` remain the defaults. Nothing under the game dump, main user,
+played output or original backup was written; no game was started.
