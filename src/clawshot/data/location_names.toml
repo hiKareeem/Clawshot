@@ -3134,3 +3134,11 @@ where = "Water Temple, Morpha's arena: the saved floor pickup after the boss is 
 oot_randomizer_name = "Water Temple Morpha Heart"
 source = "Native boss-heart Hash in Banc/WaterTemple/WaterTemple_Static.bcett.byml.zs; saved pickup/Logic_Create binding: section27 and r7-drops. MapParam.byml.zs WaterTemple BossRoomId=23, Room.Floor; cs9c round9, build e0f3ccfa."
 ids = ["14426685265732353862"]
+
+[[location]]
+location = "Market Potion Shop Bottle"
+name = "Market: Potion Shop Bottle Tutorial"
+where = "As child, enter the Market Potion Shop by day and accept the owner's bottle tutorial. Vanilla gives an empty bottle before the bug-catching lesson; a shuffled reward ends the bottle-only lesson after the gift."
+oot_randomizer_name = ""
+source = "Kareem R9-SEED8-MARKET, 2026-11-09; cs10a native Npc_Hylia_020_Shop_Child/Event171 and default AISchedule; section40."
+ids = ["Npc_Hylia_020_Shop_Child/Event171"]

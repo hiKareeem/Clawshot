@@ -4766,7 +4766,7 @@ oot_randomizer_name = "LW Trade Cojiro"
 id = "Npc_Hylia_020_Shop_Child/Event171"
 kind = "npc_gift"
 area = "Market"
-name = "Npc_Hylia_020_Shop_Child Event171 (Item_Bottle)"
+name = "Market Potion Shop Bottle"
 vanilla_item = "Item_Bottle"
 oot_randomizer_name = ""
 
