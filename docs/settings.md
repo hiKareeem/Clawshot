@@ -53,12 +53,14 @@ Major items on the floor can crash. Heart Containers from chests have no recorde
 `Gift` includes five frog song prizes contributing **Rupees (20)** each, the Storms prize and the
 bug game. All seven passed the frog experiment. It also includes two deterministic Bombchu Bowling
 prizes (first win, second win, then native filler) and the normal child/adult shooting-gallery
-upgrades. Those minigame changes are implementation-tested but their dedicated in-game checks
-are still pending. Rental weapons do not become inventory rewards.
+upgrades. The adult gallery prize passed its in-game check (R10-MINIGAMES-ADULT); the bowling
+prizes and the child gallery prize are implementation-tested and their in-game checks are still
+pending. Rental weapons do not become inventory rewards.
 
-The Market Potion Shop's free child bottle is modeled in logic but its shuffled tutorial bypass
-is **held**: the first version crashed on re-entry and its corrected finalization is untested.
-Dampé's digging swap and both first-expert gallery rewards are also built but held. Expert checks
+The Market Potion Shop's free child bottle is modeled in logic. Its shuffled version (the first
+crashed on re-entry; the corrected one passed its in-game test, R10-MARKET-BOTTLE-FIX) and Dampé's
+digging swap (passed, R10-DIGGING) are still **held** in this build until the change that releases
+them lands. Both first-expert gallery rewards are built but held until tested. Expert checks
 contribute Rupees (20) when released; later expert wins retain native 30/70-rupee payouts.
 
 Merchant sale experiments (Medigoron, Granny, desert carpet) remain held. The Skulltula House's

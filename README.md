@@ -38,10 +38,11 @@ that proves the model, not that every route has been verified in the game.
 | Free time travel | Experimental, off by default. Early adult return, the Prelude scene and the corrected first adult arrival have passed in-game checks. |
 
 **Implemented, not yet accepted in game:** deterministic first/second Bombchu Bowling prizes and
-normal shooting-gallery upgrades are enabled with gift shuffle but await their dedicated player
-checks. The Market Potion Shop bottle swap, Dampé's digging reward and first expert gallery rewards
-are built but **held unchanged** until their tests pass. The bottle swap's first test crashed on
-re-entry; its replacement fix is untested. The Door of Time's song-only and open modes each passed
+the child shooting-gallery prize are enabled with gift shuffle but await their player checks; the
+adult gallery prize passed its check. The Market Potion Shop bottle swap (its first version
+crashed on re-entry; the fixed one passed) and Dampé's digging reward passed their in-game tests on
+2026-11-10 and stay **held unchanged** in this build until the change that releases them lands.
+First expert gallery rewards are built but held until their tests pass. The Door of Time's song-only and open modes each passed
 a first in-game check (the door and the first sword pull); returning to child afterwards is untested. Merchant gift experiments and some Skulltula House rewards also remain held; the 10-token
 swap alone has been observed, not every threshold.
 

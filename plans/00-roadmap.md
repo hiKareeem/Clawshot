@@ -1222,3 +1222,28 @@ Hookshot's code, XAML, images or logo.
 5. `docs/ui.md` and `plans/05-ui.md`: the architecture, the calls, how to add a setting or restyle, what is not done:
    the base a contributor starts from.
 
+### Track E: release the tested gift checks (`r11/release`; added 2026-11-10 after Kareem's gift tests)
+
+Owns the two entries named below in `src/clawshot/data/world/remake/gifts.toml`, the tests that pin them,
+`src/clawshot/pack/resources.toml` if the release reads files the cache lacks, the status lines about these two checks
+in `README.md`, `docs/settings.md`, `docs/discord/server-kit.md` and `src/clawshot/pack/templates/READ ME FIRST.txt`,
+`plans/rounds/r11-release.md`, and one new subsection at the end of section 40.
+Facts: answers.md R10-MARKET-BOTTLE-FIX and R10-DIGGING (both confirmed in game), R10-MINIGAMES-ADULT (confirmed),
+R10-MINIGAMES-CHILD (not run yet); section 40; `plans/rounds/r10-gifts.md`.
+1. Release (D15) "Market Potion Shop Bottle" and "Graveyard Dampe Gravedigging Tour": remove their `keep_vanilla`
+   holds, so `--shuffle Gift` shuffles both. The generator must write the patch Kareem tested and no other: build
+   each with the placement of its test (Boomerang) and compare the changed flow files, decompressed, with the tested
+   ones in `E:/OOTRemake/work/r10-gifts-cs10a/ingame/mods/market-bottle-fix-next/` and `.../digging-next/` (read
+   only). A difference is reported in the round file and that check stays held.
+2. Logic: with the bottle shuffled the early fixed bottle is no longer assumed; without Gift shuffle the model of
+   section 40 stays. One sweep under the gate lock (seeds 1 to 50, seed 8's settings string and the default
+   settings, at most one worker while the game runs): every seed beatable; report the check counts before and after.
+3. Names, hints, play note: both locations keep their player-facing name and "where"; the hint classes cover them;
+   a test fails if either is missing from the names catalogue.
+4. Packs: the dump test that builds from the `.nup` cache alone covers both patches (it names any missing input).
+   Seed 8 and seed 10 packs already built are pinned to the source they ship and are not rebuilt.
+5. Status wording in the documents this track owns: both checks become shuffled with Gift and confirmed in game,
+   with their answers ids.
+Not in scope, still held or pending: the first expert gallery wins (untested), the bowling prizes and the child
+gallery prize (enabled, Kareem's child test pending), the merchant experiments, Skulltula House rewards.
+
