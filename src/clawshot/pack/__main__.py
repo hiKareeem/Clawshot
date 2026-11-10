@@ -14,7 +14,9 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--settings", required=True, help="CS1 settings string")
     parser.add_argument("--seed", required=True, type=int)
     parser.add_argument("--out", required=True, type=Path, help="new zip outside the repository and dump")
-    parser.add_argument("--romfs", type=Path, default=os.environ.get("OOT_ROMFS"), help="or set OOT_ROMFS")
+    parser.add_argument(
+        "--romfs", type=Path, default=os.environ.get("OOT_ROMFS"), help="RomFS folder or .nup file; or set OOT_ROMFS"
+    )
     args = parser.parse_args(argv)
     if args.romfs is None:
         parser.error("publisher needs --romfs or OOT_ROMFS to compute the reference digest")

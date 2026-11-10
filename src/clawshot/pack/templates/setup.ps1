@@ -8,34 +8,42 @@ try {
         $config = Get-Content -LiteralPath $configPath -Raw | ConvertFrom-Json
     } elseif ($Action -eq 'make') {
         $config = [pscustomobject]@{
-            romfs = (Read-Host 'Your game romfs folder (no quotes)').Trim()
+            romfs = (Read-Host 'Your game .nup file or extracted romfs folder (no quotes)').Trim()
             hookshot = (Read-Host 'Optional Hookshot folder containing bin (no quotes; empty = emulator)').Trim()
         }
     } else {
         throw 'Run Make seed.bat first.'
     }
-    # RomFS-only build signature. No uv/Python install, generation or config write before this check.
+    # Check the source before generation, cache creation or saving configuration.
     $config.romfs = [IO.Path]::GetFullPath($config.romfs)
-    $files = @(
-        'Pack/ZsDic.pack.zs',
-        'GameData/GameDataList.Product.110.byml.zs',
-        'RSDB/EventSetting.Product.111.rstbl.byml.zs',
-        'Banc/KokiriForest/KokiriForest_Child_Dynamic.bcett.byml.zs'
-    )
-    $hashes = ''
-    foreach ($file in $files) {
-        $stream = [IO.File]::OpenRead((Join-Path $config.romfs $file))
-        $fileSha = [Security.Cryptography.SHA256]::Create()
+    if (Test-Path -LiteralPath $config.romfs -PathType Container) {
+        # Folder preflight needs no uv/Python installation.
+        $files = @(
+            'Pack/ZsDic.pack.zs',
+            'GameData/GameDataList.Product.110.byml.zs',
+            'RSDB/EventSetting.Product.111.rstbl.byml.zs',
+            'Banc/KokiriForest/KokiriForest_Child_Dynamic.bcett.byml.zs'
+        )
+        $hashes = ''
+        foreach ($file in $files) {
+            $stream = [IO.File]::OpenRead((Join-Path $config.romfs $file))
+            $fileSha = [Security.Cryptography.SHA256]::Create()
+            try {
+                $hashes += [BitConverter]::ToString($fileSha.ComputeHash($stream)).Replace('-', '').ToLowerInvariant() + "`n"
+            } finally { $stream.Dispose(); $fileSha.Dispose() }
+        }
+        $sha = [Security.Cryptography.SHA256]::Create()
         try {
-            $hashes += [BitConverter]::ToString($fileSha.ComputeHash($stream)).Replace('-', '').ToLowerInvariant() + "`n"
-        } finally { $stream.Dispose(); $fileSha.Dispose() }
-    }
-    $sha = [Security.Cryptography.SHA256]::Create()
-    try {
-        $actual = [BitConverter]::ToString($sha.ComputeHash([Text.Encoding]::ASCII.GetBytes($hashes))).Replace('-', '').ToLowerInvariant()
-    } finally { $sha.Dispose() }
-    if ($actual -ne $manifest.romfs_sha256) {
-        throw "RomFS does not match build $($manifest.build). Fingerprint $actual; expected $($manifest.romfs_sha256). Stop and report in help."
+            $actual = [BitConverter]::ToString($sha.ComputeHash([Text.Encoding]::ASCII.GetBytes($hashes))).Replace('-', '').ToLowerInvariant()
+        } finally { $sha.Dispose() }
+        if ($actual -ne $manifest.romfs_sha256) {
+            throw "RomFS does not match build $($manifest.build). Fingerprint $actual; expected $($manifest.romfs_sha256). Stop and report in help."
+        }
+    } else {
+        # NUP extents may use zstd: bootstrap the locked reader, not the generator.
+        Get-Command uv -ErrorAction Stop | Out-Null
+        & uv run --project $root --frozen --no-dev python -m clawshot.pack.source $config.romfs --expected $manifest.romfs_sha256
+        if ($LASTEXITCODE -ne 0) { throw 'NUP version/integrity check failed. No seed or cache was created.' }
     }
     if ($config.hookshot) {
         $config.hookshot = [IO.Path]::GetFullPath($config.hookshot)

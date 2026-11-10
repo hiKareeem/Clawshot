@@ -12,10 +12,11 @@ player-facing summary (steps, known issues, the Discord link); this file has the
    Python and locked dependencies on the first build.
 3. Extract the zip into its **own new folder outside RomFS and Hookshot**, e.g. `C:\Clawshot\seed-8`.
    Extract every pack separately: each has its own `user` save folder. Do not extract over an old pack.
-4. Run `Make seed.bat`. It asks once for RomFS and an **optional** Hookshot folder (the folder containing `bin`).
+4. Run `Make seed.bat`. It asks once for your **`.nup` file or extracted RomFS folder** and an
+   **optional** Hookshot folder (the folder containing `bin`).
    Leave Hookshot **empty for emulator loading**; Make needs no Hookshot installation or executable.
    Enter paths without enclosing quotes. It stores your answers in this pack's `folders.json`.
-   It fingerprints the supported RomFS before running uv or generating anything, then uses frozen dependencies
+   It fingerprints resources inside either source before generating anything, then uses frozen dependencies
    and the included source/settings/seed. The complete output, including spoiler and play note, must match
    the reference digest. An existing seed is verified, **never regenerated or overwritten**.
 5. Only after **Verified seed** appears, run `Play seed.bat`. It checks the digest again, then starts
@@ -39,12 +40,33 @@ Keep the old folder and its saves. Avoid multiple simultaneous games using the s
 Do not point Hookshot's separate mods loader at another randomizer overlay: the digest checks this pack,
 not unrelated installed mods. The pack does not update Hookshot or touch your game directory.
 
+### NUP input
+
+Give the full `.nup` filename, not its containing folder. Make reads it **read-only** using
+[a55uka's MIT NUP reader](https://github.com/a55uka/nup), shipped with its licence. No separate
+extractor, keys or Hookshot installation is needed. NUP compression needs the locked Python/zstd
+dependencies, so uv may install those before the version check; no seed, game-file cache or saved
+folder configuration is created until that check succeeds. Folder preflight still runs before uv.
+
+The newest base/update package must contain a complete supported RomFS. Add-ons are not used;
+incomplete or unsupported newer updates never fall back to an older package. Every resource read
+is checked against its NUP SHA256. The same four-resource fingerprint is computed **from inside
+the container**, not from its name or display-version metadata.
+
+After preflight, Make creates a unique `.romfs-*` working cache inside this extracted pack.
+It contains only the generator's resource working set (placements, flows, messages, supported
+item/shop packs and supporting tables/components), not the whole dump or ExeFS/models/textures/audio.
+The cache is removed when generation finishes or fails. A force-terminated Make may leave its own
+cache behind; keep it private like `seed` and use a fresh pack folder rather than repairing in place.
+Never share any locally generated cache or overlay. The published zip contains neither.
+
+
 ## Emulator / console loading
 
 **Confirmed by Kareem:** seed8 loads and plays on Lichii (Eden/yuzu family), 2026-11-09;
 reviewer record `plans/playtest/answers.md`, R9-LICHII, main `d3e5c08`.
-Install uv and extract the pack as above, then run **Make seed**, give your RomFS path and **leave the
-optional Hookshot answer empty**. No Hookshot installation is needed. Wait for Verified seed, then follow
+Install uv and extract the pack as above, then run **Make seed**, give your `.nup` filename or
+RomFS folder and **leave the optional Hookshot answer empty**. No Hookshot installation is needed. Wait for Verified seed, then follow
 the steps below instead of Play. Do not run Play for this route.
 
 1. **Back up this game's entire emulator save folder first.** Start a **New Game** for the seed:
@@ -76,7 +98,7 @@ Copy generated files locally from your own dump; never redistribute the overlay.
 OOT_ROMFS=E:/Games/Hookshot/romfs uv run python -m clawshot.pack --settings <CS1> --seed 8 --out E:/OOTRemake/work/seed-8-next.zip
 ```
 
-`--romfs <path>` may replace `OOT_ROMFS`. The publisher needs the read-only supported dump to compute
+`--romfs <path>` may replace `OOT_ROMFS`; either accepts a RomFS folder or `.nup` file. The publisher needs the read-only supported dump to compute
 an oracle; testers do not need the publisher's dump. The zip destination must be new and outside both
 repository and dump. No existing zip or seed folder is replaced.
 
@@ -84,7 +106,7 @@ The builder positively selects Clawshot `.py`/`.toml` source and launcher templa
 `uv.lock`, README, LICENSE, NOTICE and this guide. Plans, tests, `.git`, environments and generated files
 are excluded. It generates a reference from **that exact source snapshot** in a disposable external
 folder, hashes it, and discards it. Only `pack.json`'s digest survives, not filenames or resource bytes.
-The zip uses fixed timestamps and sorted entries. No new dependency.
+The zip uses fixed timestamps and sorted entries. No new dependency; the vendored reader's MIT licence is included.
 
 RomFS has no NSO build-ID header. Preflight identifies the known `e0f3ccfa` dump by a SHA256 fingerprint
 of four existing files (dictionary pack, GameDataList, EventSetting and child Kokiri Dynamic Banc),

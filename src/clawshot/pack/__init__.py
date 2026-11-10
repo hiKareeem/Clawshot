@@ -26,8 +26,12 @@ class PackError(ValueError):
 
 
 def version_digest(romfs: Path) -> str:
-    hashes = "".join(hashlib.sha256((romfs / p).read_bytes()).hexdigest() + "\n" for p in VERSION_FILES)
-    return hashlib.sha256(hashes.encode("ascii")).hexdigest()
+    from clawshot.pack.source import fingerprint, open_nup
+
+    if romfs.is_dir():
+        return fingerprint(lambda relative: (romfs / relative).read_bytes())
+    with open_nup(romfs) as source:
+        return fingerprint(source.read)
 
 
 def check_version(romfs: Path) -> None:
@@ -55,6 +59,7 @@ def source_files(root: Path = ROOT) -> dict[str, bytes]:
     """Positive allowlist: no plans, tests, outputs, Git metadata, caches or arbitrary root files."""
     names = ["pyproject.toml", "uv.lock", ".python-version", "README.md", "LICENSE", "NOTICE", "docs/seed-pack.md"]
     files = {name: (root / name).read_bytes() for name in names}
+    files["src/clawshot/pack/_nup/LICENSE.txt"] = (root / "src/clawshot/pack/_nup/LICENSE.txt").read_bytes()
     for path in sorted((root / "src/clawshot").rglob("*")):
         if path.is_file() and path.suffix in {".py", ".toml", ".bat", ".ps1"} and "__pycache__" not in path.parts:
             if path.is_symlink():
@@ -64,6 +69,13 @@ def source_files(root: Path = ROOT) -> dict[str, bytes]:
 
 
 def generate(root: Path, romfs: Path, seed: int, settings: str, out: Path) -> None:
+    from clawshot.pack.source import local_romfs
+
+    with local_romfs(romfs, root) as extracted:
+        _generate(root, extracted, seed, settings, out)
+
+
+def _generate(root: Path, romfs: Path, seed: int, settings: str, out: Path) -> None:
     env = dict(os.environ)
     env.pop("PYTHONPATH", None)  # run the shipped source, not the publisher's checkout
     env.pop("VIRTUAL_ENV", None)
