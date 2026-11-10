@@ -56,6 +56,17 @@ Actual read-only detection reports v2.0.13, bin executable, RomFS, one adjacent 
 supports_mods=true and empty reason. No file byte/mtime changes in synthetic detection.
 The first actual detection exposed the key/value version format; corrected parsing before commit.
 
+## Item 2: player instructions
+
+Both READ ME FIRST.txt and docs/seed-pack.md now describe the game's own Switch icons
+in text as expected while a seed is loaded. Never delete its size table to restore icons.
+Manual route: copy made seed/romfs to a named Hookshot mods child, real folders, one seed,
+no HOS_FS_OVERLAY. Explicit main-save/New Game overwrite/back-up warning; disabling the mod
+does not restore saves. Play remains the safer isolated route. Emulator steps are unchanged.
+Removed the summary's obsolete random-Bowling warning against Round10's implemented first/
+second deterministic rewards; no generation behavior changes. Player-facing summary reviewed
+directly; actual two-source source-pack/Make/dry-Play proof follows next.
+
 ## Player acceptance boundary
 
 **Kareem: after Claude reviews/rebuilds a fresh pack, Make, then Play only after quitting the

@@ -33,14 +33,27 @@ STEPS
    NUP input may first install the locked reader dependencies through uv. Only after
    version verification does it make a small private .romfs-* cache in this pack;
    the cache is removed when generation ends. Never share that cache or "seed".
-3. Hookshot: run "Play seed.bat" and start a NEW GAME. It uses its own save folder,
-   so your normal saves are never touched.
+3. Hookshot 2.0.12+: run "Play seed.bat" and start a NEW GAME. It loads seed/romfs
+   as the pack's only mod, with its own save folder, so normal saves are not touched.
+   Unknown/older binaries without confirmed mods support stop instead of starting vanilla.
    Emulator: back up your saves for this game first (a new game overwrites them),
    then follow "Emulator / console loading" in docs\seed-pack.md.
 4. seed\play-note.md explains how the seed opens. seed\spoiler.json lists every item;
    only open it if you are stuck.
 
+MANUAL HOOKSHOT MODS (optional; Play is safer)
+After Make, close Hookshot and copy seed\romfs to
+<Hookshot>\mods\Clawshot-seed-<number>\romfs (real folders, no links).
+Keep only one seed mod enabled. Do NOT set HOS_FS_OVERLAY: Hookshot 2.0.12+
+crashes at startup with a seed's size table through that route.
+WARNING: launching Hookshot normally uses your MAIN saves, not this pack's user.
+Back up the entire playthrough first. New Game overwrites it; disabling a mod
+does not restore saves. Never replace mod files while the game is running.
+The log's loading proof is "mods: <file> <- <path>". More: docs\seed-pack.md.
+
 KNOWN ISSUES
+- With a seed loaded, button icons in text are the game's own Switch icons, not
+  Hookshot's controller-specific icons. Controls are unchanged. Keep the size table.
 - Getting an item your current age can't use (the Bow as child, for example) can
   jam your item buttons. Save and Continue fixes it. play-note.md lists the places
   in your seed where that can happen.
@@ -48,8 +61,8 @@ KNOWN ISSUES
   Both work normally.
 - The Weird Egg and Zelda's Letter are not shuffled (the remake keeps them in one
   inventory slot).
-- Bombchu Bowling's prizes are random in the remake for now, so a shuffled item
-  there can take more than one win.
+- Bombchu Bowling's first two wins award the seed's two prizes; later wins use
+  native filler. Rental weapons are not permanent rewards.
 - Hookshot can crash in the Castle Town guard house. That is a Hookshot bug
   (github.com/NotRexed/Hookshot/issues/1112), not the seed: reload and carry on.
 

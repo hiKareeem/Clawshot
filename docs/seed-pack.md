@@ -43,6 +43,25 @@ Keep the old folder and its saves. Avoid multiple simultaneous games using the s
 Do not add other mods inside this pack: Play requires exactly one discoverable mod, `seed\romfs`.
 Hidden `.romfs-*` caches are not mods. The pack does not update Hookshot or touch your game directory.
 
+### Hookshot manual mods route
+
+Prefer **Play seed.bat**, which isolates saves. For manual loading, after Make succeeds and
+Hookshot is closed, copy `seed\romfs` to `<Hookshot>\mods\Clawshot-seed-<number>\romfs`
+(real folders, not links). Keep exactly one seed mod enabled; remove/disable other randomizer
+mods before launching normally. The mods root itself is not a mod: it holds the named folder
+which holds `romfs`. Names starting `.`, `-` or `_` are ignored.
+
+**The normal Hookshot launcher uses the main save folder. Back up the entire playthrough
+before a New Game: it overwrites that playthrough.** The pack's `user` folder does not isolate
+this route. Disabling/removing the mod does not restore saves. Never replace files while the
+game is running. Do not set `HOS_FS_OVERLAY`: on Hookshot 2.0.12+ it crashes at startup with
+Clawshot's size table. Confirm `mods: <file> <- <path>` in the game log (first 200 files).
+
+**Known cosmetic issue:** while a seed is loaded, button icons in text are the game's own
+Switch icons, not Hookshot's Xbox/PlayStation/Steam Deck replacements. Controls are unchanged.
+Hookshot currently falls back because every seed supplies its resource size table; do not
+delete that table or change seed bytes to restore icons.
+
 ### NUP input
 
 Give the full `.nup` filename, not its containing folder. Make reads it **read-only** using
