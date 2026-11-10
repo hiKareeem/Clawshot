@@ -2959,7 +2959,7 @@ fill's `anywhere` option nor a saved-flag prototype proves keysanity works in ga
 Section6's old blanket chest claim is superseded, not erased. Native `TreasureBox.module`
 reads/writes `IsTreasureBoxOpen`, indexed by `QueryGenericGetInstanceId.InstanceIDString`.
 The Struct child key is murmur3 of the **decimal actor Hash**, and its Value selects the saved
-Bool whose full name is `IsTreasureBoxOpen.<Hash>` (reset8/file0). The same unchanged Hash
+Bool whose full name is `IsTreasureBoxOpen.<Hash>` (reset24/file0). The same unchanged Hash
 still identifies the check; `Save.is_set(Hash)` is not its open-state accessor.
 
 | Audited actor/state family | Collection/state contract; evidence boundary |
@@ -2976,7 +2976,7 @@ Historical **unopened-chest save premises** found by auditing `plans/rounds/`:
 
 | Earlier record | Raw-Hash premise / corrected disposition |
 |---|---|
-| `r5-gifts.md:227–234`, `chest-song-storms-kak` | Says ranch manual01's chest Hash12902291359202819102 is unset. Fresh read of the immutable source: raw=false **but `IsTreasureBoxOpen.12902291359202819102=true`**. That copied slot is already open; this particular follow-up's save selection is invalid and needs a different source/target before reuse. This does not retract Kareem's actual song grants/use in other reported tests. No output/user was rewritten. |
+| `r5-gifts.md:227–234`, `chest-song-storms-kak` | Ranch manual01 target12902291359202819102 reads raw=false **but named open=true**. Its raw-based selection was invalid. Section19's “In game” already records replacing that follow-up with new-game `chest-ocarina-storms` because the ranch chest was open. The fresh named read corroborates that history; no new game rerun is needed and no observed song success is retracted. No output/user was rewritten. |
 | `r7-gifts.md:87–109`, `treasure-red` | `build_treasure.py:16` asserts raw prize16881481538337649070 unset. The same original ranch manual01 now reads named open=false AND native first-clear=false; the named first-clear condition was already checked by that builder. Raw evidence is redundant, not its once-only proof. |
 | `r10-agetravel.md:165–168`, three controlled child door tests | `build_player_doors.py:19–22` selected a Graveyard chest using `not Save.is_set(Hash)`. Claude rechecked chosen9622128545943056087 in main-Jabu manual01: named open=false, Mido named-open true controls. **Accepted reviewer evidence; not rerun here.** Those tests stand. |
 

@@ -204,3 +204,42 @@ Proof and CLI logs are external (`cli-smoke-proof.json`); no game was started.
 All requested source/data changes are complete. The full four-command gates still
 must pass under the shared lock before any ready/handoff post. No checkpoint above
 is an in-game success or a completed full-gate claim.
+
+## Commit ledger / review boundary
+
+| Commit | Scope |
+|---|---|
+| `d4d5621` | Item1 native dungeon state/handler trace and section44 |
+| `79e00ce` | Authorized section6-only superseding correction |
+| `cc805a9` | Actor-state distinction and historical unopened-chest premise audit |
+| `c029622` | Item2 three independently checked generic-key experiments |
+| `6499f5a` | Item3 external named-Forest prototype, diagnosis and acceptance limits |
+| `6f0b9a6` | Isolated shared seed-pipeline guard |
+| `bdcc5e0` | Isolated CLI guard and seven boundary regressions |
+| `174286c` | Item4 docs and actual public-CLI smoke proof |
+
+Only report/metadata documentation follows these source checkpoints. Source/tests are frozen
+for full gates. Later exact GameData-row inspection corrected the named chest-open Bool's
+reset metadata in section44 to **24/file0**, not8; its saved accessor/Hash mapping is unchanged.
+The short completed CLI smoke driver was removed; reusable read-only researchers/builders/
+artifact verifiers and the player's save observer remain external with their proof/log files.
+
+Claude clarified the external changes: his four launcher dry-runs created their user/save
+copies as expected; **a user folder alone is not a played test** (a hookshot_log.txt identifies
+a launch). He moved the invalid launcher into `ingame/superseded/`; leave it there. This
+track started no game/launcher or user-copy operation. Build-time absent-user assertions are
+historical, not conditions to rerun after these dry-runs. Claude's boot checks wait until the
+current test session has been closed for a few minutes; only failures will be relayed. No
+boot success is inferred from silence: boot covers startup only, and area files still need
+Kareem's actual play. Preserve every current mod/profile and do not rebuild them.
+
+Additional historical context: section19's existing “In game” record already says the ranch
+Kakariko chest was opened and the successful follow-up was replaced with new-game
+`chest-ocarina-storms`. The named-flag audit corroborates that history; it is not a new
+unresolved song failure or a request to rerun Kareem's reported success.
+
+Cross-track documentation request (posted on cs-r11): roadmap915–919's later tracker
+candidate still describes the raw Bool64 list as universal opened-check state. Future tracker
+work must dispatch by actor/check kind, including named chest Bools; reviewer/roadmap owner
+should correct that backlog statement. Only the explicitly authorized section6 and owned
+section44 were edited here.
