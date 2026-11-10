@@ -84,3 +84,27 @@ spoiler descriptions and play-note rendering. Six cases preserve the existing re
 directions and stable IDs; location hints name the right gift, area hints use Market/Graveyard.
 Only distribution weights changed in the throwaway harness; no new always/sometimes policy.
 Evidence `names-proof.json`. Names catalogue and production hint code intentionally unchanged.
+
+## Item 4: NUP cache-only patch coverage
+
+Extended the existing `gift` row of `tests/test_pack_nup_dump.py`, not a second build:
+the actual cache-only CLI output must contain both released placements and their emitted
+flow files, whose grant actors must match the written spoiler. It still compares every
+output file with the independent full-dump CLI build. Missing input errors still print the
+RomFS-relative path to add to `pack/resources.toml`. Existing wildcard flow coverage supplies
+both inputs; no resources manifest edit needed.
+
+`CLAWSHOT_WORKERS=1 OOT_ROMFS=E:/Games/Hookshot/romfs OOT_NUP="E:/Games/Hookshot/The Legend of Zelda Ocarina of TIme [04004860224DEC000].nup" uv run pytest tests/test_pack_nup_dump.py -k gift -m dump -q --basetemp <scratch>/cache-gift-focused`:
+**1 passed, 16 deselected, 101.49s**; no skip. This runs the real CLI twice and writes complete
+outputs: cache-only and independent full dump are byte-identical. Actual seed 7 has **224 shuffled
+checks**; bottle tutorial gives `Rupee (1)`, digging gives `Bottle with Milk`. Both actual written
+grant actors match those spoiler assignments. The cache was removed on exit; original NUP's
+size/mtime unchanged, checked by the fixture. Neither historical seed pack was rebuilt.
+
+## Item 5: scoped player status
+
+Updated only the owned release passages in README, settings, Discord kit and pack READ ME FIRST,
+plus one new subsection at the end of section 40. Both answer IDs accompany the release;
+players are told where the rewards are, that the shop skips bug catching, and that digging
+still displays a heart while granting the shuffled item. Expert/merchant/Skulltula exclusions
+and the limited normal-minigame acceptance are retained. Existing seed 8/10 packs untouched.

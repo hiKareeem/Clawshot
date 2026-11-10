@@ -1,6 +1,7 @@
 """Cache-only full seed generation must match the original dump in every resource-reading mode."""
 
 import hashlib
+import json
 import os
 from dataclasses import replace
 from pathlib import Path
@@ -8,10 +9,13 @@ from pathlib import Path
 import pytest
 
 from clawshot.__main__ import main as generate_main
+from clawshot.census.hints import flow_path
+from clawshot.formats import evfl, zsdic
 from clawshot.generate import Settings
 from clawshot.pack import check_version, version_digest
 from clawshot.pack.source import local_romfs
-from clawshot.patch import gamedata
+from clawshot.patch import gamedata, gifts
+from clawshot.patch.items import load as load_actors
 from clawshot.settings import CATALOG
 
 pytestmark = pytest.mark.dump
@@ -105,6 +109,24 @@ def test_cache_only_generates_and_writes_every_resource_mode(romfs, cached_romfs
     # The cache run is passed ONLY the cache directory. The independent full-dump run
     # is the oracle, catching even silent missing glob members (e.g. a language archive).
     actual = generate_and_write(cached_romfs, tmp_path / "cached", settings, capsys)
+    if mode == "gift":
+        # Prove that this real cache-only CLI build exercises both newly released patches,
+        # not merely that two builds silently omitted the same gift.
+        output = tmp_path / "cached"
+        placements = json.loads((output / "spoiler.json").read_text(encoding="utf-8"))["placements"]
+        dictionaries = zsdic.Dictionaries.from_romfs(cached_romfs)
+        actors = load_actors()
+        for check, flow, event in (
+            (gifts.MARKET_BOTTLE_CHECK, gifts.MARKET_BOTTLE_FLOW, "Event171"),
+            (gifts.DAMPE_CHECK, "Npc_Hylia_Dampe_001", "Event628"),
+        ):
+            assert check in placements, f"Cache-only Gift build omitted {check}"
+            path = flow_path(cached_romfs, flow)
+            assert f"romfs/{path}" in actual, f"Cache-only Gift build omitted patched {path}"
+            data = dictionaries.decompress(path, (output / "romfs" / path).read_bytes())
+            chart = evfl.read(data).flowchart
+            grant = next(node for node in chart.events if node.name == event)
+            assert grant.params["ActorName"] == actors.actor(placements[check]), check
     expected = generate_and_write(romfs, tmp_path / "reference", settings, capsys)
     missing = sorted(expected.keys() - actual.keys())
     extra = sorted(actual.keys() - expected.keys())
