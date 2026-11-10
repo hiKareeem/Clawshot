@@ -1084,3 +1084,40 @@ crates only with a per-pot D22 Bool set on collecting that pot's own drop, recov
 direct grant), and ideally a marked pot model (eight native models exist; contrast unchecked), as Kareem described
 Ship of Harkinian doing. No seed switch shipped.
 
+### Round 10 result (2026-11-10)
+
+All four tracks merged; main `809b421`. Last full review gates (track C, on top of A, B and D): 816 passed / 110
+skipped, dump 109 (with `OOT_NUP`).
+- A gifts: the seven frog checks, deterministic Bombchu Bowling (first win, second win, then filler) and the normal
+  shooting-gallery prizes are in `--shuffle Gift`. Held until Kareem's tests pass (D15): the Market Potion Shop
+  bottle (first build crashed on re-entry, R10-MARKET-BOTTLE; `market-bottle-fix-next` untested), Dampé's digging
+  reward, the first expert gallery wins (Rupees (20), Kareem's choice). Launchers in `work/r10-gifts-cs10a/ingame`.
+- B age travel: `free_time_travel` first-pull fix confirmed in game (R10-FIRST-PULL-FIXED). `door_of_time` =
+  closed (default, D35) | song_only | open, with logic; the three door modes are untested in game
+  (`work/r10-agetravel-cs10b/ingame`, `door-checklist.md`; watch the early Zelda escape with an open door). Adult
+  songs now need the Ocarina of Time (from the item-bar age table, not an in-game test); seeds 8 and 10 re-checked
+  beatable under it.
+- C `.nup`: Make reads a `.nup` dump or a romfs folder; a55uka's reader vendored (MIT, `NOTICE`). The cache list is
+  data (`pack/resources.toml`) and a dump test builds every shuffle kind and setting from the cache alone (16 rows,
+  door modes included), naming any missing input.
+- D pots: docs only, see "Round 10 Track D result".
+- From play: the Goron City sign-puzzle solution chest is shuffled, its failure chest stays vanilla (`1432705`;
+  165 of 184 chests shuffled). Test launchers enable Hookshot's cheat Teleport (`c3a5c0a`).
+
+### After round 10 (candidates, not started)
+
+- Going public (Kareem, 2026-11-10: "the right move once we clean things up"; his commit email stays as is). One
+  docs track: README rewritten for newcomers (it still says "Day-1 spike" and "private tester packs"),
+  `CONTRIBUTING.md` (MIT inbound, no game files or game-derived output, AI use disclosed, no unlicensed sources, how
+  to run the gates), issue templates and a PR checklist, `docs/logic.md` for porters (world data, rule language,
+  location IDs; an Archipelago port also needs a client that delivers items during play, which a RomFS mod cannot
+  do), another randomizer author's name removed from this file. Then Kareem flips visibility; `main` protected;
+  Greenferret added when he returns.
+- Keysanity (Kareem asked, 2026-11-10). `--dungeon-items anywhere` exists in the fill and the settings string but has
+  never run in game, and the remake has one small-key actor and one boss-key actor for every dungeon
+  (`Item_Dungeon_SmallKey`, `Item_Dungeon_BossKey`). [INFERENCE] a key counts for the dungeon Link stands in, so a
+  key outside its own dungeon would be credited wrongly or lost. Exploration: an in-game test (a small key in a
+  Kokiri Forest chest and one in a Deku Tree chest: which count moves), a trace of where key counts are saved and
+  whether an event can add to a named dungeon's count; until proven, `anywhere` should refuse to build.
+- A fresh public seed pack from merged main (seed 10's zip predates round 10; `.nup` support needs a new pack).
+
