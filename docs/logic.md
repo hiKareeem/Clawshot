@@ -54,7 +54,7 @@ once; the remaining predicate reads items, events, age and time. Implementation:
 | `Kokiri_Sword`, `'Kokiri Sword'` | Item identifier; quoted names can also name events. Identifier normalization follows the compiler, not a new port-specific naming scheme. |
 | `(Progressive_Hookshot, 2)` | Required count. Counts can also refer to a setting. |
 | `is_child`, `can_use(Bow)`, `can_play(Song_of_Time)` | Helpers resolved from helper data and remake overrides, not hard-coded N64 assumptions. |
-| `open_forest == 'open'`, `'Forest' in skipped_trials` | Setting comparisons/membership; tables use their declared data shape. |
+| `open_forest == 'open'`, `'Deku Tree' in dungeon_shortcuts` | Setting comparisons/membership; tables use their declared data shape. |
 | `age == 'child'`, `at_day`, `at_night` | Age/time predicates; time semantics depend on settings. |
 | `here(rule)`, `at('Region', rule)` | Region-scoped subrules represented as persistent events; not arbitrary teleports. |
 | `has_bottle`, `has_stones(n)`, `has_medallions(n)` | Built-in inventory predicates. The specification lists all supported built-ins. |

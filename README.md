@@ -38,8 +38,9 @@ swap alone has been observed, not every threshold.
 Gold Skulltula tokens, cows, dungeon completion rewards, pots, crates and loose rupees are not
 shuffled. Keysanity (dungeon items outside their own dungeon) has no in-game acceptance; do not use
 it for a playthrough. Progressive items, entrance shuffle and Archipelago are not supported.
-See [settings and restrictions](docs/settings.md) for the detailed reference. The evidence record is
-[the roadmap's results](plans/00-roadmap.md) and [the playtest answers](plans/playtest/answers.md).
+See [settings and restrictions](https://github.com/hiKareeem/Clawshot/blob/main/docs/settings.md) for the detailed reference.
+Evidence: [recorded results](https://github.com/hiKareeem/Clawshot/blob/main/plans/00-roadmap.md)
+and [playtest answers](https://github.com/hiKareeem/Clawshot/blob/main/plans/playtest/answers.md).
 
 ### Known issues
 
@@ -95,8 +96,8 @@ same seed, settings, generator source and world data, not just the same version 
 
 The output has `romfs/`, `play-note.md` (directions and warnings) and `spoiler.json` (all placements).
 Load it using the [seed-pack guide's runtime instructions](docs/seed-pack.md); generation does not
-start the game. More options: [settings](docs/settings.md). For logic ports and trackers:
-[logic reference](docs/logic.md).
+start the game. More options: [settings](https://github.com/hiKareeem/Clawshot/blob/main/docs/settings.md).
+For logic ports and trackers: [logic reference](https://github.com/hiKareeem/Clawshot/blob/main/docs/logic.md).
 
 ## Development and contributions
 
@@ -105,7 +106,8 @@ output; Kareem performs the in-game checks. A behavior change is not called work
 he has observed it; built and untested work is labelled above. Contributions from people are welcome.
 Kareem and his co-owner decide scope and merge changes.
 
-Read [CONTRIBUTING.md](CONTRIBUTING.md) for licensing, source restrictions, checks and evidence to
+Read [CONTRIBUTING.md](https://github.com/hiKareeem/Clawshot/blob/main/CONTRIBUTING.md)
+for licensing, source restrictions, checks and evidence to
 include. Start with a small, single-topic change, or discuss it on Discord. Do not submit game files
 or anything generated from them, including in issues and attachments.
 

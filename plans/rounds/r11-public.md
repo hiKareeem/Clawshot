@@ -36,9 +36,9 @@ Initially flagged stale/private Discord drafts outside ownership. Claude subsequ
 `docs/discord/server-kit.md` here: update as public-test drafts in a separate commit, retain
 own-dump/no-game-files/no-piracy rules and permanent invite. `docs/seed-pack.md` remains cs11c's.
 
-**Kareem/reviewer: update AGENTS.md's overlay proof line to the current mods log
-(`mods: <file> <- <path>`).**
-AGENTS.md is deliberately unchanged, as instructed. The orchestration file already records the new rule.
+Resolved by Claude on main: AGENTS.md now uses the mods log proof, preserves hard-rule numbers,
+and moves maintainers' round workflow to orchestration. Rebased on main as explicitly directed;
+no agent-owned AGENTS.md edit. Read the new rules, orchestration and `plans/README.md`.
 
 ## Verification
 
@@ -72,8 +72,8 @@ no source was changed. No live tracker/client/network IDs are invented.
 
 ## 5. Public-tree housekeeping and scan
 
-Commit `b0d932a` replaces both occurrences of the specified other author's name in the roadmap
-with anonymous wording. It changes only those two lines; history and commit identities are untouched.
+The isolated roadmap housekeeping commit replaces both occurrences of the specified other author's
+name with anonymous wording. Only those two lines changed; no history rewrite or identity edits.
 
 Scanned the tracked-file inventory plus non-ignored working-tree paths, including hidden `.github`
 files. File-pattern scan found no game containers/resources, saves/keys, generated seed manifests,
@@ -112,3 +112,27 @@ invite, own-dump/no-piracy/no-game-file rules, NUP preflight nuance, current mod
 save warning, relevant report fields/log excerpts and evidence-bounded announcement matching README.
 Removed the obsolete private/do-not-repost claims and unqualified all-version reproducibility.
 No Discord API or message-send action was used.
+
+## Reviewer follow-up: shared contributor rules
+
+Rebased the seven documentation commits on main without conflicts at Claude's instruction.
+CONTRIBUTING now explicitly directs agent-assisted contributors to AGENTS.md as the shared rule
+authority instead of duplicating identity/determinism/logic/failure contracts. Ordinary contributors
+need not join the maintainers' planning or gate-lock workflow. Inbound licensing, public issue safety,
+required commands and practical gameplay checklist remain in the contributor guide.
+
+## Document/pack smoke
+
+Parsed both actual YAML issue forms with PyYAML in an isolated evaluation environment (no project
+dependency change): nine/seven unique field IDs, required input/textarea fields and safety checkboxes
+validated; Discord configuration parsed with blank issues disabled. Initial repository-link check:
+six Markdown documents, 41 local links, all present. GitHub-hosted form rendering was not exercised.
+
+Actual `clawshot.pack.source_files` snapshot contains 187 files, byte-identical README/seed guide.
+It intentionally ships neither plans nor the new repository-only references. Printed missing pack
+targets: CONTRIBUTING, settings, logic and the two evidence files. Fixed README's repository-only
+references to full URLs under the observed origin (`hiKareeem/Clawshot`), retaining local runtime-guide,
+NOTICE and LICENSE links shipped in packs. No pack code or allowlist expansion, game read or generation.
+
+A rule-language example edit briefly landed at the wrong row; the edit response exposed the
+misplaced table row/prose, then a fresh read supplied exact anchors for correction before checks.
