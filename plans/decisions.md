@@ -131,6 +131,16 @@
   make it less 'default' that's fine"; pick by Claude): no font file is bundled; titles use a Palatino-family stack
   and rows a Candara/Optima-family humanist stack, both installed with Windows and macOS, with Linux equivalents and
   generic fallbacks. Bundling an open font (SIL OFL) stays open: rule 7's licence list does not name the OFL.
+- **D38 The next public release is the UI, not another seed pack** (Kareem, 2026-11-10: "no rush on another public
+  test, it'd actually be better for testing I think if we got the UI functional and provide that, a lot of
+  non-technical people are in the scene currently"; "People don't mind playing broken seeds early, though ours are
+  all beatable"). Seed packs stay for pinned seeds. Generating needs only the player's dump (a romfs folder or a
+  `.nup`); Hookshot is optional and only drives Play, so emulator players use the same app. A tracker becomes a tab
+  of that UI, reading the seed's own save folder (Kareem, on keys: "was thinking about the tracker because I'm not
+  sure there's a way to see what keys you have for what dungeons in game without visiting them"); keys per dungeon
+  are its first job. Defaults chosen by Claude, which Kareem can overturn: a small zip whose start script fetches a
+  pinned uv on first run rather than a standalone executable; Play gives each seed a save folder of its own;
+  published as a GitHub release once the repository is public.
 
 ## Open (only Kareem and his co-owner decide)
 
