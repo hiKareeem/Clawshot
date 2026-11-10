@@ -2677,6 +2677,22 @@ its own shipped source; merged Sheik text/floor labels legitimately change that 
 the private pack after merges. Kareem's reported Lichii LayeredFS result is documented in the tester
 guides with save-slot backup/New Game warnings; Ryujinx and Atmosphere layouts remain untested.
 
+## 40. Round 10: gift checks (cs10a)
+
+Build e0f3ccfa; native traces, checks and player checklists: `plans/rounds/r10-gifts.md`.
+External decoded data and outputs stay under `E:/OOTRemake/work/r10-gifts-cs10a/`.
+
+### Released frogs
+
+Kareem confirmed the complete seven-check experiment (`answers.md` R8-FROGS, 2026-11-09).
+Round10 removes the holds and fixes each of the five song pool contributions at OoTR's
+`Rupees (20)`, per the round spec. Their census actor fields stay empty: native rewards
+still vary5/10/15/20/30 by prior song count. Shuffled callers always use their specialized
+grant, even when assigned20 again; unshuffled behavior stays native. Storms and bug-game
+first/retry wins retain their two independent heart checks and native saved completion.
+No new flag, growth change or repeat reward change. Actual Chest+Gift seed7 builds all
+seven into218 shuffled checks/28 spheres; focused persisted-state and pool tests pass.
+
 ## 43. Round 10: pots, crates and ground rupees (cs10d, exploration)
 
 Read-only native dump/build `e0f3ccfa`; full per-area counts, evidence, commands and

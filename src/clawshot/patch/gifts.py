@@ -765,6 +765,11 @@ def seed_checks(
             continue
         if name in ANCHORS and not free:
             continue
+        # Native frog songs pay variable rupees, not a literal actor. Round 10's approved
+        # pool contribution is fixed at 20; even an unchanged assignment must specialize it.
+        if all(s.call == FROG_SONG_CALL for s in steps[name]) and loc.vanilla == "Rupees (20)":
+            out.append(name)
+            continue
         if {actors.aliases.get(s.vanilla_item, s.vanilla_item) for s in steps[name]} != {
             actors.actors.get(loc.vanilla)
         }:
@@ -799,12 +804,15 @@ def seed_step(
     """The seed's patch step for gifts: placements (location -> logic item) in, the flow and GameDataList
     transforms out, for moved gifts and once-gate normalization (``vanilla``: check -> its logic item)."""
     gifts, definitions = list(gifts), list(definitions)
+    steps = check_steps(gifts, definitions)
 
     def step(placements: Mapping[str, str]) -> dict[str, Callable[[bytes], bytes]]:
         moved = {
             name: actors.actor(placements[name])
             for name in shuffled
-            if placements[name] != vanilla[name] or rules[name].once
+            if placements[name] != vanilla[name]
+            or rules[name].once
+            or any(s.call == FROG_SONG_CALL for s in steps[name])
         }
         return file_changes(plan(moved, gifts, definitions, rules), files)
 

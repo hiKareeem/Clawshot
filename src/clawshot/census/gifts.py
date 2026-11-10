@@ -20,8 +20,8 @@ The game loads some flows in a newer version, ``<flow>.<version>.bfevfl.zs``, as
 
 The five frog-song call sites are variable rupee prizes, not pouch actors. They are censused at
 their stable ``TeachNewMusic`` calls with empty ``param`` and ``vanilla_item``; the native
-first-song sequence pays 5/10/15/20/30 by prior song count. They remain excluded from seed pools
-until a fixed-item policy and in-game acceptance exist (section 35).
+first-song sequence pays 5/10/15/20/30 by prior song count. Round 10 admits them to the
+seed pool as Rupees (20), after Kareem's R8-FROGS acceptance (section 40).
 """
 
 from collections.abc import Iterable, Mapping

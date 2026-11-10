@@ -102,3 +102,64 @@ def test_song_specialization_refuses_a_stale_completion_flag():
     step = Gift(FLOW + "/Event172", "npc_gift", FLOW, "f", (), "Event172", FROG_SONG_CALL, "", "", "")
     with pytest.raises(gifts.GiftPatchError, match="not a native frog-song call"):
         gifts.patch_flowchart(chart, FLOW, [gifts.GiftChange(gifts.Rule("Song", "swap"), (step,), "Item_New")])
+
+
+def test_same_pool_rupee_assignment_still_replaces_variable_native_payment():
+    from clawshot.census.definitions import Definition
+    from clawshot.patch.items import load
+
+    chart = song_chart()
+    census = find_gifts({FLOW: chart}, {FLOW: "song.bfevfl"})
+    definitions = [Definition(s.id, s.kind, "", s.event, "", s.event) for s in census]
+    rules = {s.event: gifts.Rule(s.event, "swap") for s in census}
+    vanilla = {s.event: "Rupees (20)" for s in census}
+    step = gifts.seed_step(list(vanilla), census, definitions, rules, load(), vanilla, {FLOW: "song.bfevfl"})
+    data = evfl.write(evfl.EventFlowFile(FLOW, flowchart=chart))
+    changed = evfl.read(step(vanilla)["song.bfevfl"](data)).flowchart
+    state, rewards = {}, []
+    for event in FROG_SONG_FLAGS:
+        run(changed, event, state, rewards)
+    assert rewards == ["TBox_Rupee_Red"] * 5
+    assert state["SongCount"] == 5
+    assert state.get("rupees", 0) == 0
+
+
+def test_all_seven_frogs_join_gift_selection_with_five_twenty_rupee_pool_items():
+    from collections import Counter
+
+    from clawshot.census.definitions import load as definitions
+    from clawshot.generate import Settings, prepare
+    from clawshot.patch.items import load as actors
+    from clawshot.world.load import load_spec
+
+    _, world = prepare(load_spec(), Settings(shuffle=gifts.GIFT_TYPES))
+    census = find_gifts({FLOW: song_chart()}, {FLOW: "song.bfevfl"})
+    for event in ("Event384", "Event161", "Event75"):
+        census.append(
+            Gift(
+                f"{FLOW}/{event}",
+                "npc_gift",
+                FLOW,
+                "f",
+                (),
+                event,
+                "Wrap:Give",
+                "ActorName",
+                "Obj_Heart_Piece",
+                "ZoraRiver",
+            )
+        )
+    selected = gifts.seed_checks(world, census, definitions(), gifts.load(), actors())
+    assert set(selected) == {
+        "ZR Frogs Zeldas Lullaby",
+        "ZR Frogs Eponas Song",
+        "ZR Frogs Sarias Song",
+        "ZR Frogs Suns Song",
+        "ZR Frogs Song of Time",
+        "ZR Frogs in the Rain",
+        "ZR Frogs Ocarina Game",
+    }
+    assert Counter(world.locations[n].vanilla for n in selected) == {
+        "Rupees (20)": 5,
+        "Piece of Heart": 2,
+    }
