@@ -99,6 +99,9 @@ class Jobs:
             self.request = request
             self.source = source
             self.out = out
+            # The suggested Documents/Clawshot parent is the only auto-created parent.
+            # output_path validated its identity and all protected roots before this point.
+            out.parent.mkdir(parents=True, exist_ok=True)
             self.stage = Path(mkdtemp(prefix=".clawshot-job-", dir=out.parent))
             self.started = time.monotonic()
             self.state = {

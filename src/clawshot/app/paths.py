@@ -1,5 +1,6 @@
 """Read-only source detection and conservative output boundaries; never launch a runtime."""
 
+import os
 from dataclasses import asdict
 from pathlib import Path
 
@@ -11,6 +12,27 @@ except ImportError:
     from clawshot.app._hookshot import detect as _detect_hookshot
 
 SOURCE_ROOT = Path(__file__).resolve().parents[3]
+
+
+def default_output_root() -> Path:
+    """User Documents, including Windows' redirected known folder; no creation during discovery."""
+    home = Path.home()
+    documents = home / "Documents"
+    if os.name == "nt":
+        import ctypes
+
+        buffer = ctypes.create_unicode_buffer(32768)
+        if ctypes.windll.shell32.SHGetFolderPathW(None, 5, None, 0, buffer) == 0:
+            documents = Path(buffer.value)
+    elif os.name == "posix":
+        config = Path(os.environ.get("XDG_CONFIG_HOME", home / ".config")) / "user-dirs.dirs"
+        if config.is_file():
+            for line in config.read_text(encoding="utf-8").splitlines():
+                if line.startswith('XDG_DOCUMENTS_DIR="') and line.endswith('"'):
+                    value = line.partition("=")[2].strip('"').replace("$HOME", str(home))
+                    if Path(value).is_absolute():
+                        documents = Path(value)
+    return documents / "Clawshot"
 
 
 def absolute_path(value: str, label: str) -> Path:
@@ -49,8 +71,8 @@ def output_path(value: str, source: Path, hookshot: Path | None = None) -> Path:
     out = absolute_path(value, "Output")
     if out.exists():
         raise ValueError(f"Output already exists; choose a new folder: {out}")
-    if not out.parent.is_dir():
-        raise ValueError("Output's parent folder must already exist")
+    if not out.parent.is_dir() and out.parent != default_output_root():
+        raise ValueError("Choose an existing output parent folder")
     # A conventional romfs folder's parent is the installation, not a scratch output root.
     protected = [source, SOURCE_ROOT]
     if source.is_file() or source.name.lower() == "romfs":

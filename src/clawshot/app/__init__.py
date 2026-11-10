@@ -2,7 +2,7 @@
 
 from clawshot.app.jobs import STAGES, GenerationRequest, Jobs
 from clawshot.app.paths import detect_dump, detect_hookshot
-from clawshot.app.schema import schema, settings_payload, validate
+from clawshot.app.schema import input_schema, presets, schema, settings_payload, validate
 
 __all__ = [
     "STAGES",
@@ -10,6 +10,8 @@ __all__ = [
     "Jobs",
     "detect_dump",
     "detect_hookshot",
+    "input_schema",
+    "presets",
     "schema",
     "settings_payload",
     "validate",

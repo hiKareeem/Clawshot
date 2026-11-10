@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Clawshot — Seed generator</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <header class="top-band">
+      <div class="wordmark">
+        Clawshot <span id="version">Local generator</span>
+      </div>
+      <nav aria-label="Screens">
+        <kbd>Q</kbd
+        ><button data-screen="game" class="selected" aria-current="page">
+          Game</button
+        ><button data-screen="settings">Settings</button
+        ><button data-screen="generate">Generate</button><kbd>E</kbd>
+      </nav>
+      <span class="local-badge">Local · no game files shared</span>
+    </header>
+    <div class="workspace">
+      <main class="main-panel">
+        <div id="alert" class="alert" role="alert" hidden></div>
+        <section id="game" class="screen">
+          <div class="heading">
+            <h1>Your game</h1>
+            <p>Choose your own game files; the dump stays unchanged.</p>
+          </div>
+          <h2 class="section-title">Game files</h2>
+          <div class="menu-row path-row" data-interface="hookshot">
+            <label for="hookshot">Hookshot folder</label>
+            <div class="value-cell">
+              <input
+                id="hookshot"
+                data-path
+                placeholder="Browse or paste a folder path"
+                autocomplete="off"
+                spellcheck="false"
+              /><button data-browse="hookshot">Browse…</button
+              ><button id="check-hookshot">Detect</button>
+            </div>
+          </div>
+          <div class="menu-row path-row" data-interface="dump">
+            <label for="dump">Game dump</label>
+            <div class="value-cell">
+              <input
+                id="dump"
+                data-path
+                placeholder="Romfs folder or .nup file"
+                autocomplete="off"
+                spellcheck="false"
+              /><button id="browse-dump">Browse…</button
+              ><button id="check-dump">Check</button>
+            </div>
+          </div>
+          <h2 class="section-title">Detected versions</h2>
+          <div class="menu-row" data-interface="hookshot">
+            <span class="row-label">Hookshot</span>
+            <div
+              id="hookshot-status"
+              class="value-cell detection"
+              aria-live="polite"
+            >
+              No runtime selected
+            </div>
+          </div>
+          <div class="menu-row" data-interface="dump">
+            <span class="row-label">Game build</span>
+            <div
+              id="dump-status"
+              class="value-cell detection"
+              aria-live="polite"
+            >
+              Waiting for a game dump
+            </div>
+          </div>
+          <div class="screen-actions">
+            <span class="muted">Hookshot is optional for emulator users.</span
+            ><button class="primary" data-next="settings">Settings →</button>
+          </div>
+        </section>
+        <section id="settings" class="screen" hidden>
+          <div class="heading">
+            <h1>Settings</h1>
+            <p>Choose what to shuffle, or replay a settings string.</p>
+          </div>
+          <div class="settings-toolbar">
+            <div id="presets" class="preset-actions"></div>
+          </div>
+          <div id="settings-groups"></div>
+          <h2 class="section-title">Share settings</h2>
+          <div class="menu-row path-row" data-interface="settings-string">
+            <label for="settings-string">Settings string</label>
+            <div class="value-cell">
+              <input
+                id="settings-string"
+                value="CS1"
+                spellcheck="false"
+                autocomplete="off"
+              /><button id="apply-string">Apply</button
+              ><button id="copy-string">Copy</button>
+            </div>
+          </div>
+          <p class="help" id="settings-state" aria-live="polite">
+            The same generator version and seed are needed for replay.
+          </p>
+          <div class="screen-actions">
+            <button data-next="game">← Game</button
+            ><button class="primary" data-next="generate">Generate →</button>
+          </div>
+        </section>
+        <section id="generate" class="screen" hidden>
+          <div class="heading">
+            <h1 id="generate-title">Generate a seed</h1>
+            <p id="generate-subtitle">
+              Every seed must pass the beatability search before it is written.
+            </p>
+          </div>
+          <div id="generation-inputs">
+            <div class="menu-row" data-interface="seed">
+              <label for="seed">Seed number</label>
+              <div class="value-cell">
+                <input id="seed" type="number" step="1" value="11" /><button
+                  id="random-seed"
+                >
+                  Random
+                </button>
+              </div>
+            </div>
+            <div class="menu-row path-row" data-interface="output">
+              <label for="output">Output folder</label>
+              <div class="value-cell">
+                <input
+                  id="output"
+                  data-path
+                  placeholder="Choose where to keep the new seed"
+                  spellcheck="false"
+                /><button data-browse="output">Browse…</button>
+              </div>
+            </div>
+          </div>
+          <h2 class="section-title">Generation</h2>
+          <div
+            class="progress-track"
+            role="progressbar"
+            aria-label="Generation stages"
+            aria-valuemin="0"
+            aria-valuemax="6"
+            aria-valuenow="0"
+          >
+            <div id="progress-fill"></div>
+          </div>
+          <div class="steps" id="stages" aria-live="polite"></div>
+          <div class="screen-actions">
+            <span id="job-state">Your current game stays as it is.</span>
+            <div>
+              <button id="cancel-job" hidden>Cancel</button
+              ><button class="primary" id="start-job">Generate seed</button>
+            </div>
+          </div>
+        </section>
+      </main>
+      <aside class="side-panel">
+        <section class="description-panel" aria-live="polite">
+          <h2 id="description-title">Your game</h2>
+          <p id="description-text">
+            Choose a Hookshot folder to find its game files automatically, or
+            choose your dump directly.
+          </p>
+          <p id="description-note" class="description-note">
+            No game is started by this UI.
+          </p>
+          <div id="result" hidden>
+            <h3>Seed ready</h3>
+            <p id="result-summary"></p>
+            <code id="result-path"></code>
+            <div class="result-actions">
+              <button id="open-folder">Open folder</button
+              ><button id="read-note">Read play note</button
+              ><button id="play-steps">How to play</button
+              ><button id="reveal-spoiler">Reveal spoiler…</button>
+            </div>
+            <p class="help">
+              The play note includes item locations and hints, as well as
+              age-locked item precautions.
+            </p>
+          </div>
+        </section>
+        <div
+          id="key-hints"
+          class="key-hints"
+          aria-label="Keyboard controls"
+        ></div>
+        <p class="legal">Unofficial · Not affiliated with Nintendo</p>
+      </aside>
+    </div>
+    <dialog id="dump-dialog">
+      <div class="dialog-heading">
+        <h2>Choose game files</h2>
+        <button id="close-dump">Close</button>
+      </div>
+      <p>Choose the extracted romfs folder or your full .nup game dump.</p>
+      <div class="result-actions">
+        <button data-browse="dump-folder">Romfs folder…</button
+        ><button data-browse="dump-file">.nup file…</button>
+      </div>
+    </dialog>
+    <dialog id="document-dialog">
+      <div class="dialog-heading">
+        <h2 id="document-title"></h2>
+        <button id="close-document">Close</button>
+      </div>
+      <pre id="document-text"></pre>
+    </dialog>
+    <dialog id="play-dialog">
+      <div class="dialog-heading">
+        <h2>Play your seed</h2>
+        <button id="close-play">Close</button>
+      </div>
+      <h3>Hookshot 2.0.12+</h3>
+      <p>
+        Quit the game before changing mods. Put exactly one mod under a
+        dedicated mods root:
+      </p>
+      <pre>mods / seed-name / seed-name / romfs / …</pre>
+      <p>
+        Set HOS_MODS to the dedicated <code>mods/seed-name</code> folder. Clear
+        HOS_FS_OVERLAY; never set it. Use real folders, not links. Button icons
+        in seed text are the game's own.
+      </p>
+      <p>
+        <strong>Back up your saves first.</strong> Manual mod loading uses the
+        main save; a new game overwrites the playthrough. Prefer an isolated
+        user folder. This UI does not start the game.
+      </p>
+      <h3>Emulator</h3>
+      <p>
+        Install the generated folder as a RomFS / LayeredFS mod for this game's
+        title in your emulator's mod directory. Enable it in Add-ons. Back up
+        your saves before New Game.
+      </p>
+      <p>
+        See <code>docs/seed-pack.md</code> for runtime-specific paths and
+        seed-pack Play with isolated saves.
+      </p>
+    </dialog>
+  </body>
+</html>

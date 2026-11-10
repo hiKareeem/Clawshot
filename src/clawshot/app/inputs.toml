@@ -1,0 +1,50 @@
+[game]
+label = "Your game"
+help = "Choose a Hookshot folder to find its game files automatically, or choose your own dump directly. Files are read only."
+note = "No game is started by this UI. Hookshot is optional for emulator users."
+[settings]
+label = "Settings"
+help = "Choose the shuffled checks and world settings. Recommended uses the public test seeds' five shuffle kinds; Defaults restores the generator defaults."
+note = "Unavailable options remain visible so their current limits are clear."
+[generate]
+label = "Generate a seed"
+help = "Generation runs in one separate process. Existing output folders are never replaced; cancellation removes only this job's private staging files."
+note = "The same seed, settings, generator version and world data reproduce the same output."
+[hookshot]
+label = "Hookshot folder"
+help = "Choose the installation containing bin/hookshot.exe. Its version marker is read without running the executable. A detected romfs folder or .nup file fills the game-dump field automatically."
+note = "Manual Hookshot mod loading uses the main saves. Back them up before starting a new game."
+[dump]
+label = "Game dump"
+help = "Choose your extracted romfs folder or full .nup game dump. Clawshot verifies the supported build fingerprint before reading the generator's working files."
+note = "The source is read only. No game data is included with Clawshot."
+[seed]
+label = "Seed number"
+help = "Enter a whole number or choose Random. Random chooses a number locally; generation itself remains deterministic for that number."
+note = "The seed alone is not enough for replay: keep the settings string and generator version too."
+[output]
+label = "Output folder"
+help = "Choose where to keep the new seed. Browse chooses a parent and adds seed-<number>. The suggested Documents/Clawshot parent is created only when generation starts. You can also paste a path."
+note = "Existing seeds are never rewritten. Choose a new name for each output, outside the game and source folders."
+[settings-string]
+label = "Settings string"
+help = "Copy this CS1 string to share your settings. Paste a string and choose Apply to update every control. Changing a control updates the string after validation."
+note = "The same seed, generator version and world data are also required for replay."
+[stage-validate]
+label = "Check game and settings"
+help = "Validate settings and source paths, then verify the known supported game fingerprint."
+[stage-source]
+label = "Read your game files"
+help = "Read the extracted romfs directly, or prepare a private disposable working set from the .nup. The source stays unchanged."
+[stage-prepare]
+label = "Prepare supported checks"
+help = "Prepare the supported gift checks and their physical restrictions, using the generator's existing public APIs."
+[stage-generate]
+label = "Place items and prove beatability"
+help = "Run the real seed pipeline: census, item placement, beatability search and patch plan. A failed fill's original error is shown rather than hidden."
+[stage-write]
+label = "Write and verify the mod"
+help = "Write changed resources, read-back checks, spoiler and play note into this job's private staging folder."
+[stage-publish]
+label = "Finish the new seed folder"
+help = "Reserve a new destination and publish the completed output. A concurrently created output is refused, never overwritten."

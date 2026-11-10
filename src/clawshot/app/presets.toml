@@ -1,0 +1,11 @@
+# Recommended shuffle kinds requested by Kareem through Claude, Round 11 UI review.
+[defaults]
+label = "Defaults"
+help = "Vanilla-like generator defaults; chests only."
+[defaults.values]
+
+[recommended]
+label = "Recommended"
+help = "The public test seeds' shuffle kinds; other settings use generator defaults."
+[recommended.values]
+shuffle = ["Chest", "Shop", "Gift", "Scrub", "BossHeart"]

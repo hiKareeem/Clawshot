@@ -1,0 +1,863 @@
+"use strict";
+
+const $ = (id) => document.getElementById(id);
+const base = location.pathname;
+const token = base.split("/")[2];
+const screens = ["game", "settings", "generate"];
+let metadata = [],
+  values = {},
+  inputs = {},
+  initialStages = [];
+let inactive = {};
+let settingsString = "CS1",
+  valid = false,
+  syncing = false,
+  revision = 0,
+  timer,
+  pollTimer;
+let busy = false,
+  resultShown = false,
+  activeScreen = "game";
+let outputRoot = "",
+  outputCustom = false,
+  dialogsAvailable = false;
+
+function element(tag, className = "", text) {
+  const el = document.createElement(tag);
+  if (className) el.className = className;
+  if (text !== undefined) el.textContent = text;
+  return el;
+}
+function error(message) {
+  $("alert").textContent = message;
+  $("alert").hidden = !message;
+}
+async function api(route, body) {
+  const response = await fetch(base + "api/" + route, {
+    method: body === undefined ? "GET" : "POST",
+    credentials: "omit",
+    cache: "no-store",
+    headers: {
+      "X-Clawshot-Token": token,
+      ...(body === undefined ? {} : { "Content-Type": "application/json" }),
+    },
+    ...(body === undefined ? {} : { body: JSON.stringify(body) }),
+  });
+  const data = await response.json();
+  if (!response.ok)
+    throw new Error(data.error || "Local server request failed");
+  return data;
+}
+
+// All contextual setting labels and descriptions come from the application schema.
+function bindHelp(el, info) {
+  if (!info) return;
+  el.dataset.helpTitle = info.label;
+  el.dataset.help = info.help;
+  el.dataset.helpNote = info.note || "";
+}
+function describe(el) {
+  if (!el?.dataset.help) return;
+  $("description-title").textContent = el.dataset.helpTitle;
+  $("description-text").textContent = el.dataset.help;
+  let note = el.dataset.helpNote;
+  if (el.dataset.interface === "dump")
+    note = $("dump-status").textContent + ". " + note;
+  if (el.dataset.interface === "hookshot")
+    note = $("hookshot-status").textContent + ". " + note;
+  $("description-note").textContent = note;
+  $("description-note").hidden = !note;
+}
+function show(name, focusTab = false) {
+  if (!screens.includes(name)) name = "game";
+  activeScreen = name;
+  document
+    .querySelectorAll(".screen")
+    .forEach((el) => (el.hidden = el.id !== name));
+  document.querySelectorAll("[data-screen]").forEach((el) => {
+    const selected = el.dataset.screen === name;
+    el.classList.toggle("selected", selected);
+    if (selected) el.setAttribute("aria-current", "page");
+    else el.removeAttribute("aria-current");
+  });
+  $("result").hidden = name !== "generate" || !resultShown;
+  bindHelp($(name), inputs[name]);
+  describe($(name));
+  history.replaceState(null, "", "#" + name);
+  document.querySelector(".main-panel").scrollTop = 0;
+  if (focusTab) document.querySelector(`[data-screen=${name}]`).focus();
+  updateHints();
+}
+function updateHints() {
+  const hints = $("key-hints");
+  hints.replaceChildren();
+  const add = (keys, label) => {
+    const span = element("span");
+    for (const key of keys) span.append(element("kbd", "", key));
+    span.append(document.createTextNode(label));
+    hints.append(span);
+  };
+  if (document.querySelector("dialog[open]")) {
+    add(["Esc"], "Back");
+    return;
+  }
+  const focused = document.activeElement;
+  const editing = focused?.matches("input:not([type=checkbox]), textarea");
+  const usable =
+    focused?.getClientRects().length &&
+    !focused.disabled &&
+    focused.getAttribute("aria-disabled") !== "true";
+  if (focused?.matches("textarea")) add(["Tab"], "Next field");
+  else add(["↑", "↓"], "Move");
+  if (editing) {
+    add(["Esc"], "Back");
+    return;
+  }
+  if (usable && focused.matches("select, .shuffle-card, .switch-control"))
+    add(["←", "→"], "Change");
+  add(["Q", "E"], "Tabs");
+  if (usable && focused.matches(".shuffle-card, .switch-control"))
+    add(["Enter"], "Toggle");
+  else if (usable && focused.matches("summary"))
+    add(["Enter"], focused.parentElement.open ? "Close" : "Open");
+  else if (usable && focused.matches("button"))
+    add(["Enter"], focused.dataset.keyAction || "Open");
+}
+function navigable() {
+  return [
+    ...$(activeScreen).querySelectorAll(
+      "input, select, textarea, button, summary, [data-nav]",
+    ),
+  ].filter(
+    (el) =>
+      !el.hidden &&
+      !el.disabled &&
+      el.tabIndex >= 0 &&
+      el.getClientRects().length,
+  );
+}
+function changeValue(target, direction) {
+  if (target.matches("select")) {
+    const options = [...target.options].filter((option) => !option.disabled);
+    const index = options.findIndex((option) => option.value === target.value);
+    target.value =
+      options[(index + direction + options.length) % options.length].value;
+    target.dispatchEvent(new Event("change", { bubbles: true }));
+    return true;
+  }
+  const id = target.dataset.control;
+  if (id) {
+    const input = $(id);
+    if (input.disabled) return true;
+    input.checked = direction === 0 ? !input.checked : direction > 0;
+    input.dispatchEvent(new Event("change", { bubbles: true }));
+    return true;
+  }
+  return false;
+}
+document.addEventListener("keydown", (event) => {
+  if (
+    event.ctrlKey ||
+    event.altKey ||
+    event.metaKey ||
+    document.querySelector("dialog[open]")
+  )
+    return;
+  const target = event.target;
+  const editing = target.matches("input:not([type=checkbox]), textarea");
+  if (event.key === "Escape" && editing) {
+    event.preventDefault();
+    target.blur();
+    document.querySelector(`[data-screen=${activeScreen}]`).focus();
+    return;
+  }
+  if (!editing && ["q", "e"].includes(event.key.toLowerCase())) {
+    event.preventDefault();
+    const delta = event.key.toLowerCase() === "q" ? -1 : 1;
+    show(
+      screens[
+        (screens.indexOf(activeScreen) + delta + screens.length) %
+          screens.length
+      ],
+      true,
+    );
+    return;
+  }
+  if (
+    ["ArrowUp", "ArrowDown"].includes(event.key) &&
+    !target.matches("textarea")
+  ) {
+    const items = navigable();
+    if (!items.length) return;
+    event.preventDefault();
+    const current = items.indexOf(target),
+      delta = event.key === "ArrowDown" ? 1 : -1;
+    const next =
+      current < 0
+        ? delta > 0
+          ? 0
+          : items.length - 1
+        : (current + delta + items.length) % items.length;
+    items[next].focus();
+    items[next].scrollIntoView({ block: "nearest" });
+    return;
+  }
+  if (!editing && ["ArrowLeft", "ArrowRight"].includes(event.key)) {
+    if (changeValue(target, event.key === "ArrowRight" ? 1 : -1))
+      event.preventDefault();
+  }
+  if (
+    event.key === "Enter" &&
+    target.matches(".shuffle-card, .switch-control")
+  ) {
+    event.preventDefault();
+    changeValue(target, 0);
+  }
+});
+document.addEventListener("focusin", (event) => {
+  describe(event.target.closest("[data-help]"));
+  updateHints();
+});
+document.addEventListener("pointerover", (event) =>
+  describe(event.target.closest("[data-help]")),
+);
+
+function control(info) {
+  const cards = info.display === "cards";
+  const full = cards || info.kind === "multi" || info.kind === "json";
+  const field = element(
+    "div",
+    "field" + (full ? " full" : "") + (cards ? " cards-field" : " menu-row"),
+  );
+  bindHelp(field, info);
+  field.dataset.setting = info.key;
+  const label = element("label", "", info.label);
+  label.htmlFor = "setting-" + info.key;
+  field.append(label);
+  const valueCell = cards ? null : element("div", "value-cell");
+  let input;
+  if (info.kind === "multi") {
+    input = element("div", "options" + (cards ? " cards-grid" : ""));
+    input.setAttribute("role", "group");
+    input.setAttribute("aria-label", info.label);
+    info.options.forEach((choice, index) => {
+      const wrap = element("label", cards ? "shuffle-card" : "check-label");
+      const check = document.createElement("input");
+      check.type = "checkbox";
+      check.id = `option-${info.key}-${index}`;
+      check.value = choice.value;
+      check.checked = values[info.key].includes(choice.value);
+      check.disabled = choice.disabled;
+      check.dataset.unavailable = String(choice.disabled);
+      if (cards) {
+        check.hidden = true;
+        wrap.tabIndex = 0;
+        wrap.dataset.nav = "";
+        wrap.dataset.control = check.id;
+        wrap.setAttribute("role", "checkbox");
+        wrap.setAttribute("aria-disabled", String(choice.disabled));
+        const name = element("strong", "", choice.label),
+          status = element("span", "choice-status");
+        wrap.append(check, name, status);
+        const update = () => {
+          wrap.classList.toggle("checked", check.checked);
+          wrap.classList.toggle("unavailable", choice.disabled);
+          wrap.setAttribute("aria-checked", String(check.checked));
+          status.textContent = choice.disabled
+            ? "Not available yet"
+            : check.checked
+              ? info.status_labels?.on || "On"
+              : info.status_labels?.off || "Off";
+        };
+        check.addEventListener("change", update);
+        update();
+      } else wrap.append(check, document.createTextNode(choice.label));
+      bindHelp(wrap, {
+        label: choice.label,
+        help: choice.help,
+        note: choice.reason || "",
+      });
+      input.append(wrap);
+    });
+  } else if (info.kind === "choice") {
+    input = document.createElement("select");
+    valueCell.classList.add("choice");
+    for (const choice of info.options) {
+      const option = element("option", "", choice.label);
+      option.value = choice.value;
+      option.disabled = choice.disabled;
+      option.title = choice.reason;
+      input.append(option);
+    }
+    input.value = values[info.key];
+    field.dataset.helpNote = info.options
+      .filter((option) => option.reason)
+      .map((option) => option.label + ": " + option.reason)
+      .join(" ");
+  } else if (info.kind === "boolean") {
+    input = document.createElement("input");
+    input.type = "checkbox";
+    input.checked = values[info.key];
+    input.hidden = true;
+    const toggle = element("div", "switch-control");
+    toggle.tabIndex = 0;
+    toggle.dataset.nav = "";
+    toggle.dataset.control = "setting-" + info.key;
+    toggle.setAttribute("role", "switch");
+    toggle.setAttribute("aria-label", info.label);
+    const off = element("button", "", "Off"),
+      on = element("button", "", "On");
+    off.tabIndex = on.tabIndex = -1;
+    const update = () => {
+      off.classList.toggle("chosen", !input.checked);
+      on.classList.toggle("chosen", input.checked);
+      toggle.setAttribute("aria-checked", String(input.checked));
+    };
+    off.addEventListener("click", () => {
+      input.checked = false;
+      input.dispatchEvent(new Event("change", { bubbles: true }));
+      toggle.focus();
+    });
+    on.addEventListener("click", () => {
+      input.checked = true;
+      input.dispatchEvent(new Event("change", { bubbles: true }));
+      toggle.focus();
+    });
+    input.addEventListener("change", update);
+    update();
+    toggle.append(input, off, on);
+    valueCell.append(toggle);
+  } else if (info.kind === "json") {
+    input = document.createElement("textarea");
+    input.value = JSON.stringify(values[info.key], null, 2);
+    input.spellcheck = false;
+  } else {
+    input = document.createElement("input");
+    input.type = info.kind === "integer" ? "number" : "text";
+    input.value = values[info.key] ?? "";
+    if (info.kind === "integer") {
+      input.min = info.min;
+      input.max = info.max;
+      input.step = 1;
+    }
+  }
+  input.id = "setting-" + info.key;
+  input.addEventListener("change", () => syncControls(info));
+  if (["json", "nullable-text", "integer"].includes(info.kind))
+    input.addEventListener("input", () => {
+      valid = false;
+      $("start-job").disabled = true;
+      clearTimeout(timer);
+      timer = setTimeout(() => syncControls(info), 350);
+    });
+  if (cards) field.append(input);
+  else {
+    if (info.kind === "integer") {
+      const decrease = element("button", "", "−"),
+        increase = element("button", "", "+");
+      decrease.dataset.keyAction = "Decrease";
+      increase.dataset.keyAction = "Increase";
+      decrease.setAttribute("aria-label", "Decrease " + info.label);
+      increase.setAttribute("aria-label", "Increase " + info.label);
+      const step = (direction) => {
+        input.value = Math.max(
+          info.min,
+          Math.min(info.max, Number(input.value) + direction),
+        );
+        input.dispatchEvent(new Event("change", { bubbles: true }));
+      };
+      decrease.addEventListener("click", () => step(-1));
+      increase.addEventListener("click", () => step(1));
+      valueCell.classList.add("number");
+      valueCell.append(decrease, input, increase);
+    } else if (info.kind !== "boolean") valueCell.append(input);
+    field.append(valueCell);
+  }
+  field.dataset.baseNote = field.dataset.helpNote || "";
+  return field;
+}
+function applyDependencies() {
+  for (const info of metadata) {
+    const field = document.querySelector(`[data-setting="${info.key}"]`),
+      reason = inactive[info.key];
+    field.classList.toggle("inactive", Boolean(reason));
+    field.setAttribute("aria-disabled", String(Boolean(reason)));
+    field.tabIndex = reason ? 0 : -1;
+    if (reason) field.dataset.nav = "";
+    else delete field.dataset.nav;
+    field.dataset.helpNote = [reason, field.dataset.baseNote]
+      .filter(Boolean)
+      .join(" ");
+    field.querySelectorAll("input,select,textarea,button").forEach((el) => {
+      el.disabled = Boolean(reason) || el.dataset.unavailable === "true";
+    });
+    field
+      .querySelectorAll(".switch-control")
+      .forEach((el) => (el.tabIndex = reason ? -1 : 0));
+  }
+  updateHints();
+}
+function renderSettings() {
+  $("settings-groups").replaceChildren();
+  const groups = [...new Set(metadata.map((info) => info.group))];
+  groups.sort((a, b) => Number(a === "Advanced") - Number(b === "Advanced"));
+  for (const group of groups) {
+    const section = element(
+      group === "Advanced" ? "details" : "div",
+      "settings-section",
+    );
+    section.append(
+      element(
+        group === "Advanced" ? "summary" : "h2",
+        group === "Advanced" ? "" : "section-title",
+        group,
+      ),
+    );
+    const grid = element("div", "field-grid");
+    metadata
+      .filter((info) => info.group === group)
+      .forEach((info) => grid.append(control(info)));
+    section.append(grid);
+    $("settings-groups").append(section);
+  }
+  applyDependencies();
+}
+function readValues() {
+  const result = {};
+  for (const info of metadata) {
+    const input = $("setting-" + info.key);
+    if (info.kind === "multi")
+      result[info.key] = [...input.querySelectorAll("input:checked")].map(
+        (el) => el.value,
+      );
+    else if (info.kind === "boolean") result[info.key] = input.checked;
+    else if (info.kind === "integer") {
+      result[info.key] = Number(input.value);
+      if (!input.value || !Number.isSafeInteger(result[info.key]))
+        throw new Error(info.label + " needs a whole number");
+    } else if (info.kind === "json") {
+      try {
+        result[info.key] = JSON.parse(input.value);
+      } catch {
+        throw new Error(info.label + " is not valid JSON");
+      }
+    } else result[info.key] = input.value || null;
+  }
+  return result;
+}
+async function syncControls(changed) {
+  clearTimeout(timer);
+  const current = ++revision;
+  valid = false;
+  syncing = true;
+  $("start-job").disabled = true;
+  try {
+    const next = readValues();
+    for (const [target, keys] of Object.entries(changed?.clears || {}))
+      for (const key of keys) delete next[target][key];
+    const data = await api("settings", { values: next });
+    if (current !== revision) return;
+    values = data.values;
+    inactive = data.inactive;
+    applyDependencies();
+    settingsString = data.settings_string;
+    $("settings-string").value = settingsString;
+    for (const target of Object.keys(changed?.clears || {}))
+      $("setting-" + target).value = JSON.stringify(values[target], null, 2);
+    valid = true;
+    $("settings-state").textContent =
+      "Settings validated · string is up to date";
+    error("");
+  } catch (e) {
+    if (current === revision) {
+      $("settings-state").textContent =
+        "Not applied — fix the setting before generating";
+      error(e.message);
+    }
+  } finally {
+    if (current === revision) {
+      syncing = false;
+      $("start-job").disabled = !valid || busy;
+    }
+  }
+}
+async function applyString() {
+  clearTimeout(timer);
+  const current = ++revision;
+  valid = false;
+  syncing = true;
+  $("start-job").disabled = true;
+  try {
+    const data = await api("settings", {
+      settings_string: $("settings-string").value,
+    });
+    if (current !== revision) return;
+    values = data.values;
+    inactive = data.inactive;
+    settingsString = data.settings_string;
+    $("settings-string").value = settingsString;
+    renderSettings();
+    valid = true;
+    $("settings-state").textContent = "Settings string applied to all controls";
+    error("");
+  } catch (e) {
+    if (current === revision) error(e.message);
+  } finally {
+    if (current === revision) {
+      syncing = false;
+      $("start-job").disabled = !valid || busy;
+    }
+  }
+}
+function suggestOutput() {
+  if (!outputCustom && outputRoot)
+    $("output").value =
+      outputRoot +
+      (outputRoot.includes("\\") ? "\\" : "/") +
+      "seed-" +
+      $("seed").value;
+}
+async function browse(kind) {
+  $("dump-dialog").close();
+  document
+    .querySelectorAll("[data-browse], #browse-dump")
+    .forEach((el) => (el.disabled = true));
+  try {
+    const data = await api("browse", { kind, seed: Number($("seed").value) });
+    if (!data.path) return;
+    const field = kind.startsWith("dump-") ? "dump" : kind;
+    $(field).value = data.path;
+    if (field === "output") outputCustom = true;
+    else await detect(field);
+  } catch (e) {
+    error(e.message);
+  } finally {
+    document
+      .querySelectorAll("[data-browse], #browse-dump")
+      .forEach((el) => (el.disabled = !dialogsAvailable));
+  }
+}
+async function detect(kind) {
+  const button = $(kind === "dump" ? "check-dump" : "check-hookshot"),
+    status = $(kind + "-status");
+  button.disabled = true;
+  status.textContent = "Checking…";
+  status.className = "value-cell detection";
+  try {
+    const data = await api("detect", { [kind]: $(kind).value }),
+      info = data[kind];
+    status.className = "value-cell detection good";
+    if (kind === "dump") {
+      $("dump").value = info.path;
+      status.textContent = "Verified " + info.kind + " · build " + info.build;
+    } else {
+      $("hookshot").value = info.folder;
+      status.textContent =
+        "Hookshot " +
+        (info.version || "unknown version") +
+        (info.reason ? " · " + info.reason : " · mods supported");
+      if (info.reason) status.className = "value-cell detection bad";
+      $("dump").value = info.romfs || info.nups[0] || "";
+      if ($("dump").value) await detect("dump");
+    }
+    error("");
+  } catch (e) {
+    status.className = "value-cell detection bad";
+    status.textContent = e.message;
+  } finally {
+    button.disabled = false;
+    describe(document.querySelector(`[data-interface=${kind}]`));
+  }
+}
+function renderJob(state) {
+  busy = ["running", "cancelling"].includes(state.status);
+  resultShown = state.status === "succeeded";
+  $("start-job").textContent = resultShown
+    ? "Make another seed"
+    : "Generate seed";
+  $("start-job").dataset.keyAction = resultShown ? "Edit" : "Generate";
+  const stages = state.stages.length ? state.stages : initialStages;
+  $("stages").replaceChildren();
+  const names = {
+    pending: "Waiting",
+    active: "Working",
+    done: "✓ Done",
+    failed: "Failed",
+    cancelled: "Cancelled",
+  };
+  for (const stage of stages) {
+    const row = element("div", "progress-step " + stage.status);
+    bindHelp(row, inputs["stage-" + stage.key]);
+    const value = element("div", "stage-value"),
+      time = element(
+        "time",
+        "",
+        stage.status === "pending"
+          ? "—"
+          : Math.floor(stage.seconds / 60) +
+              ":" +
+              String(Math.floor(stage.seconds % 60)).padStart(2, "0"),
+      );
+    value.append(element("span", "", names[stage.status]), time);
+    row.append(element("span", "stage-label", stage.label), value);
+    $("stages").append(row);
+  }
+  const done = stages.filter((stage) => stage.status === "done").length;
+  $("progress-fill").style.width = (100 * done) / stages.length + "%";
+  document.querySelector(".progress-track").setAttribute("aria-valuenow", done);
+  $("start-job").disabled = busy || !valid || syncing;
+  $("cancel-job").hidden = !busy;
+  $("cancel-job").disabled = state.status === "cancelling";
+  $("generation-inputs")
+    .querySelectorAll("input, button")
+    .forEach(
+      (el) =>
+        (el.disabled =
+          busy || (el.matches("[data-browse]") && !dialogsAvailable)),
+    );
+  $("job-state").textContent = busy
+    ? "Working locally · " + Math.floor(state.seconds) + "s"
+    : state.status === "cancelled"
+      ? "Cancelled. Existing seeds were left alone."
+      : state.status === "succeeded"
+        ? "Complete. Previous seeds are unchanged."
+        : "Your current game stays as it is.";
+  $("result").hidden = activeScreen !== "generate" || !resultShown;
+  if (state.error) error(state.error.type + ": " + state.error.message);
+  if (state.result) {
+    const count = (number, noun) =>
+      number + " " + noun + (number === 1 ? "" : "s");
+    $("result-summary").textContent =
+      "Seed " +
+      state.result.seed +
+      " · " +
+      count(state.result.shuffled, "shuffled check") +
+      " · " +
+      count(state.result.resources, "mod file");
+    $("result-path").textContent = state.result.output;
+  }
+  updateHints();
+}
+async function refreshJob() {
+  clearTimeout(pollTimer);
+  try {
+    renderJob(await api("job"));
+    if (busy) pollTimer = setTimeout(refreshJob, 500);
+  } catch (e) {
+    error(
+      e.message + ". Check the local server terminal; reload to reconnect.",
+    );
+  }
+}
+async function normalizePath(input) {
+  const original = input.value;
+  if (!original) return;
+  const data = await api("normalize-path", { path: original });
+  if (input.value === original) input.value = data.path;
+}
+async function startJob() {
+  if (resultShown) {
+    renderJob({
+      status: "idle",
+      stages: [],
+      result: null,
+      error: null,
+      seconds: 0,
+    });
+    return;
+  }
+  if (!valid || syncing) {
+    error("Apply or correct your settings before generating");
+    return;
+  }
+  const seed = Number($("seed").value);
+  if (!$("seed").value || !Number.isSafeInteger(seed)) {
+    error("Seed needs a whole number in the exact integer range");
+    return;
+  }
+  $("start-job").disabled = true;
+  error("");
+  try {
+    for (const input of document.querySelectorAll("[data-path]"))
+      await normalizePath(input);
+    renderJob(
+      await api("generate", {
+        dump: $("dump").value,
+        hookshot: $("hookshot").value,
+        output: $("output").value,
+        seed,
+        settings: settingsString,
+      }),
+    );
+    refreshJob();
+  } catch (e) {
+    error(e.message);
+    $("start-job").disabled = !valid;
+  }
+}
+function openDialog(id) {
+  $(id).showModal();
+  updateHints();
+}
+function closeDialog(id) {
+  $(id).close();
+  updateHints();
+}
+async function documentView(file) {
+  const confirmed =
+    file !== "spoiler" ||
+    confirm(
+      "Reveal the spoiler? This shows all shuffled item locations and hints.",
+    );
+  if (!confirmed) return;
+  try {
+    const data = await api("result", { file, confirmed });
+    $("document-title").textContent = data.name;
+    $("document-text").textContent = data.text;
+    openDialog("document-dialog");
+  } catch (e) {
+    error(e.message);
+  }
+}
+
+document
+  .querySelectorAll("[data-screen]")
+  .forEach((el) => el.addEventListener("click", () => show(el.dataset.screen)));
+document
+  .querySelectorAll("[data-next]")
+  .forEach((el) => el.addEventListener("click", () => show(el.dataset.next)));
+$("check-dump").addEventListener("click", () => detect("dump"));
+$("check-hookshot").addEventListener("click", () => detect("hookshot"));
+$("browse-dump").addEventListener("click", () => openDialog("dump-dialog"));
+$("close-dump").addEventListener("click", () => closeDialog("dump-dialog"));
+document
+  .querySelectorAll("[data-browse]")
+  .forEach((el) =>
+    el.addEventListener("click", () => browse(el.dataset.browse)),
+  );
+document.querySelectorAll("[data-path]").forEach((input) =>
+  input.addEventListener("change", async () => {
+    try {
+      await normalizePath(input);
+    } catch (e) {
+      error(e.message);
+    }
+  }),
+);
+for (const [id, action] of Object.entries({
+  "check-hookshot": "Detect",
+  "check-dump": "Check",
+  "random-seed": "Randomize",
+  "copy-string": "Copy",
+  "apply-string": "Apply",
+  "cancel-job": "Cancel",
+  "reveal-spoiler": "Reveal",
+}))
+  $(id).dataset.keyAction = action;
+$("output").addEventListener("input", () => (outputCustom = true));
+$("seed").addEventListener("input", suggestOutput);
+$("random-seed").addEventListener("click", () => {
+  const number = new Uint32Array(1);
+  crypto.getRandomValues(number);
+  $("seed").value = String(number[0]);
+  suggestOutput();
+});
+$("apply-string").addEventListener("click", applyString);
+$("copy-string").addEventListener("click", async () => {
+  try {
+    await navigator.clipboard.writeText($("settings-string").value);
+    $("settings-state").textContent = "Settings string copied";
+  } catch {
+    $("settings-string").focus();
+    $("settings-string").select();
+    if (document.execCommand("copy"))
+      $("settings-state").textContent = "Settings string copied";
+    else
+      $("settings-state").textContent =
+        "String selected — press Ctrl+C or Command+C to copy";
+  }
+});
+$("settings-string").addEventListener("input", () => {
+  clearTimeout(timer);
+  ++revision;
+  valid = false;
+  $("start-job").disabled = true;
+  $("settings-state").textContent = "String edited — Apply to update controls";
+});
+$("start-job").addEventListener("click", startJob);
+$("cancel-job").addEventListener("click", async () => {
+  try {
+    renderJob(await api("cancel", {}));
+    refreshJob();
+  } catch (e) {
+    error(e.message);
+  }
+});
+$("open-folder").addEventListener("click", async () => {
+  try {
+    await api("open", { target: "folder" });
+  } catch (e) {
+    error(e.message);
+  }
+});
+$("read-note").addEventListener("click", () => documentView("note"));
+$("reveal-spoiler").addEventListener("click", () => documentView("spoiler"));
+$("close-document").addEventListener("click", () =>
+  closeDialog("document-dialog"),
+);
+$("play-steps").addEventListener("click", () => openDialog("play-dialog"));
+$("close-play").addEventListener("click", () => closeDialog("play-dialog"));
+document
+  .querySelectorAll("dialog")
+  .forEach((dialog) => dialog.addEventListener("close", updateHints));
+window.addEventListener("beforeunload", (event) => {
+  if (busy) {
+    event.preventDefault();
+    event.returnValue = "";
+  }
+});
+
+(async () => {
+  try {
+    const data = await api("schema");
+    metadata = data.schema;
+    values = data.values;
+    settingsString = data.settings_string;
+    inputs = data.inputs;
+    inactive = data.inactive;
+    initialStages = data.stages;
+    outputRoot = data.output_root;
+    dialogsAvailable = data.dialogs_available;
+    document.querySelectorAll("[data-browse], #browse-dump").forEach((el) => {
+      el.disabled = !dialogsAvailable;
+      if (!dialogsAvailable)
+        el.title = "Disabled in --no-open; paste a path instead";
+    });
+    $("open-folder").disabled = !data.open_available;
+    suggestOutput();
+    document
+      .querySelectorAll("[data-interface]")
+      .forEach((el) => bindHelp(el, inputs[el.dataset.interface]));
+    for (const preset of data.presets) {
+      const button = element("button", "", preset.label);
+      button.dataset.preset = preset.id;
+      bindHelp(button, preset);
+      button.dataset.keyAction = "Apply";
+      button.addEventListener("click", async () => {
+        $("settings-string").value = preset.settings_string;
+        await applyString();
+        if (valid)
+          $("settings-state").textContent = preset.label + " preset applied";
+      });
+      $("presets").append(button);
+    }
+    $("version").textContent = "v" + data.version;
+    renderSettings();
+    valid = true;
+    show(location.hash.slice(1));
+    await refreshJob();
+    document.documentElement.dataset.ready = "true";
+  } catch (e) {
+    error(e.message);
+  }
+})();

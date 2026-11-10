@@ -9,6 +9,9 @@ dependencies = [
     "zstandard>=0.23",
 ]
 
+[project.optional-dependencies]
+ui = ["pywebview>=6.1"]
+
 [dependency-groups]
 dev = [
     "pytest>=8",

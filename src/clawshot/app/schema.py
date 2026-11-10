@@ -6,13 +6,15 @@ from pathlib import Path
 
 from clawshot.generate import FillError, Settings, hints, prepare
 from clawshot.generate.fill import DUNGEON_ITEM_CHOICES
-from clawshot.patch import gamedata
+from clawshot.patch import gamedata, gifts
 from clawshot.settings import CATALOG
 from clawshot.world.load import WorldError, load_spec
 
+METADATA_PATH = Path(__file__).with_name("settings.toml")
+
 
 def schema() -> list[dict]:
-    metadata = tomllib.loads(Path(__file__).with_name("settings.toml").read_text(encoding="utf-8"))
+    metadata = tomllib.loads(METADATA_PATH.read_text(encoding="utf-8"))
     names = {field.name for field in fields(Settings)}
     if names != metadata.keys():
         raise ValueError(
@@ -35,6 +37,27 @@ def schema() -> list[dict]:
         info.update(
             key=field.name, default=defaults[field.name], choices=choices.get(field.name, info.get("choices", []))
         )
+        labels = info.pop("labels", {})
+        unavailable = info.pop("unavailable", {})
+        choice_help = info.pop("choice_help", {})
+        if set(choice_help) != set(info["choices"]) or any(not text.strip() for text in choice_help.values()):
+            raise ValueError(f"Choice help missing/stale for {field.name}")
+        for condition in info.get("enabled_when", []):
+            operations = {"contains", "equals", "greater_than"} & condition.keys()
+            if condition.get("key") not in names or len(operations) != 1 or not condition.get("reason"):
+                raise ValueError(f"Invalid dependency metadata for {field.name}")
+        if set(labels) != set(info["choices"]):
+            raise ValueError(f"Choice labels missing/stale for {field.name}: {set(info['choices']) ^ set(labels)}")
+        info["options"] = [
+            {
+                "value": choice,
+                "label": labels[choice],
+                "help": choice_help[choice],
+                "disabled": choice in unavailable,
+                "reason": unavailable.get(choice, ""),
+            }
+            for choice in info["choices"]
+        ]
         result.append(info)
     return result
 
@@ -57,6 +80,13 @@ def validate(values: dict | None = None, *, text: str | None = None, spec: dict 
     if unknown := values.keys() - known.keys():
         raise ValueError(f"unknown settings: {sorted(unknown)}")
     merged = defaults | values
+    shuffle = merged.get("shuffle")
+    if (
+        isinstance(shuffle, (list, tuple))
+        and all(isinstance(kind, str) for kind in shuffle)
+        and set(gifts.GIFT_TYPES).issubset(shuffle)
+    ):
+        merged["shuffle"] = [kind for kind in shuffle if kind not in gifts.GIFT_TYPES] + [gifts.SHUFFLE]
     for key, info in known.items():
         value = merged[key]
         kind = info["kind"]
@@ -68,13 +98,13 @@ def validate(values: dict | None = None, *, text: str | None = None, spec: dict 
             raise ValueError(f"{info['label']} must be one of {info['choices']}")
         if kind == "multi" and (not isinstance(value, (list, tuple)) or any(v not in info["choices"] for v in value)):
             raise ValueError(f"{info['label']} must select from {info['choices']}")
+        selected = value if kind == "multi" else [value] if kind == "choice" else []
+        for option in info["options"]:
+            if option["disabled"] and option["value"] in selected:
+                raise ValueError(f"{option['label']}: {option['reason']}")
     settings = Settings(**merged)
     if settings.areas and not settings.goal:
         raise ValueError("Playtest areas require a goal")
-    if "Token" in settings.shuffle:
-        raise ValueError("Token shuffle is unavailable: per-enemy grants and saved persistence are unverified")
-    if settings.dungeon_items == "anywhere":
-        raise ValueError("Dungeon items anywhere is held: named-dungeon grants require in-game verification")
     try:
         prepare(load_spec() if spec is None else spec, settings)
     except (FillError, WorldError) as error:
@@ -83,4 +113,36 @@ def validate(values: dict | None = None, *, text: str | None = None, spec: dict 
 
 
 def settings_payload(settings: Settings) -> dict:
-    return {"values": asdict(settings), "settings_string": settings.to_string()}
+    values = asdict(settings)
+    inactive = {}
+    for info in schema():
+        for condition in info.get("enabled_when", []):
+            value = values[condition["key"]]
+            if "contains" in condition:
+                enabled = condition["contains"] in value
+            elif "equals" in condition:
+                enabled = value == condition["equals"]
+            else:
+                enabled = value > condition["greater_than"]
+            if not enabled:
+                inactive[info["key"]] = condition["reason"]
+                break
+    return {"values": values, "settings_string": settings.to_string(), "inactive": inactive}
+
+
+def presets(*, spec: dict | None = None) -> list[dict]:
+    data = tomllib.loads(Path(__file__).with_name("presets.toml").read_text(encoding="utf-8"))
+    return [
+        {
+            "id": key,
+            "label": info["label"],
+            "help": info["help"],
+            **settings_payload(validate(info["values"], spec=spec)),
+        }
+        for key, info in data.items()
+    ]
+
+
+def input_schema() -> dict:
+    """Descriptions for application inputs and job stages, without a front-end dependency."""
+    return tomllib.loads(Path(__file__).with_name("inputs.toml").read_text(encoding="utf-8"))
