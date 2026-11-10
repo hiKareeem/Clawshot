@@ -2676,3 +2676,73 @@ The earlier exact-r8-full pack proof is branch-local. Each future pack computes 
 its own shipped source; merged Sheik text/floor labels legitimately change that digest. Claude rebuilds
 the private pack after merges. Kareem's reported Lichii LayeredFS result is documented in the tester
 guides with save-slot backup/New Game warnings; Ryujinx and Atmosphere layouts remain untested.
+
+## 43. Round 10: pots, crates and ground rupees (cs10d, exploration)
+
+Read-only native dump/build `e0f3ccfa`; full per-area counts, evidence, commands and
+acceptance boundary: `plans/rounds/r10-pots.md`. Reproducers and decoded/native resources
+stay under `E:/OOTRemake/work/r10-pots-cs10d/`, never in this repository.
+
+The non-DreamWorld census finds530 ordinary pot Hashes,50 breakable-crate Hashes and112
+ordinary ground rupees (81green,25blue,4red,2purple;170 age copies). These are placement
+identities, not530/50 once-only logical checks. Pots/crates at the same physical site
+usually have distinct child/adult Hashes. The `_Dream` pot variant also appears12 times
+in the ordinary Ganondorf room, outside the excluded DreamWorld directory.
+
+Ordinary pots inherit the resource-supply DropParam. `Dynamic.Drop__DropActor` and
+`Drop__DropTable` are native instance String128 selectors; `Drop__DropTableOverWrite`
+is not instance-settable. Pot selectors:101 actor-only,250 table-only,2 both,177 neither.
+The default and before-boss tables choose resources conditionally/probabilistically;
+some explicitly spawn multiple objects. They are not one fixed N64 vanilla pool item.
+The50 crates are38 `Obj_BrokenBox_A_01`,6 `_03`,1 `_02`,5 `_06`; the last two variants
+have no ordinary DropRef. Puzzle/movable crates, flying/archery/spinning/skull pots,
+scenery, silver puzzles, diving rupees, shop displays and event representations stay out.
+
+All499 flagged pots and44 flagged crates use reset88/save0, not permanent reset24.
+Thirty-one pots and6 crates lack a Bool64bitKey under their placement Hash. The112
+ordinary ground rupees are reset24/save0, native DropItem/NoRespawn. Three Deku Tree
+rupees nevertheless have scrub-completion Presence gates; two lake rupees have native
+AI bindings. A saved Hash is not a certificate of an ungated region or a generic grant.
+
+The inspected pot/common-breakable AI requests object death, while DropItem handles
+pickup physics/rotation. No explicit collected-spawned-drop identity channel was found
+there; the engine death/drop component has not been reverse-engineered. **[INFERENCE]**
+Retiring the pot on destruction can lose an uncollected shuffled item; renewing a supply
+pot can duplicate an upgrade. Changing reset88 to24 would not solve collection tracking.
+
+The conservative candidate destination palette is the existing D27/D33 five native
+pickups: Heart Container, Piece of Heart, Deku Shield, Hylian Shield and red20-rupee pickup.
+Existing floor/boss observations do not certify these as pot drops or every floor surface.
+Piece-of-Heart-specific pickup AI makes its generated-drop persistence an explicit test.
+Inventory-only major actors and the known-crashing Fire Arrows are not inferred safe.
+
+**Reviewed scope (Claude, Round10): no Pot or Rupee seed switch this round.** Four isolated
+experiments under `work/r10-pots-cs10d/ingame/`, each a new `-next` overlay with copied
+approved save launcher and a separate user:
+
+- Reset88 supply pot15406610986108637956 in the child House of Twins -> Piece of Heart.
+- No-placement-Hash-save Forest2F Bow-room pot18069611988256927347 -> Piece of Heart.
+  Its intact native room graph requires empty arrows, the ordinary partner pot dead,
+  no arrow bundle nearby, camera/player clearance and1200-frame delay. It also has an
+  AutogenGameData destruction latch: absent placement Hash does **not** mean no native state.
+- Child-only Kokiri training-enclosure blue rupee16647730239269178270 -> Piece of Heart.
+- East Hyrule Field bomb-grotto blue rupee5620885265123329978 -> Hylian Shield, both ages.
+
+`ingame/checklist.md` specifies source save/slot, directions, required overlay logs,
+actual inventory/counter checks, area return and Save/Continue. Both pot experiments
+also have independent `-uncollected` test users for drop-loss/recovery/duplicate checks.
+`check_saves.py` reads only these isolated users. Native groups/flags/respawn graphs,
+positions and identities remain unchanged; the Forest target's old arrow table becomes
+native `None` alongside its explicit replacement drop. No game/launcher was run by the agent.
+
+Actual common-writer readback/inverse-tree/allocation proof passes for all four outputs;
+an independent interpreter reproduces their bytes and verifies the exact permitted
+resource-entry deltas. Source-backup SHA256 maps remain unchanged. This is data proof,
+not a gameplay result. **Kareem: run the four experiments and separate pot recovery paths;
+report the grant, repeat/change/loss after returns and Save/Continue, with overlay logs.**
+
+MIT OoT Randomizer526b4c8d has341 non-MQ Pot,74 Crate,6 SmallCrate and155 Freestanding
+rows (not155 rupees). Counts, ages, geometry and vanilla rewards differ materially.
+Future checks use **remake names and the actual region's access rule**, like `extra_*`
+chests; record an N64 name only for an exact mapping. No ordinal/nearest-position join,
+unverified rule, new saved flag or shuffle setting is introduced by this exploration.
