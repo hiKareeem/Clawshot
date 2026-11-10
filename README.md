@@ -39,12 +39,17 @@ that proves the model, not that every route has been verified in the game.
 
 **Implemented, not yet accepted in game:** deterministic first/second Bombchu Bowling prizes and
 the child shooting-gallery prize are enabled with gift shuffle but await their player checks; the
-adult gallery prize passed its check. The Market Potion Shop bottle swap (its first version
-crashed on re-entry; the fixed one passed) and Dampé's digging reward passed their in-game tests on
-2026-11-10 and stay **held unchanged** in this build until the change that releases them lands.
-First expert gallery rewards are built but held until their tests pass. The Door of Time's song-only and open modes each passed
-a first in-game check (the door and the first sword pull); returning to child afterwards is untested. Merchant gift experiments and some Skulltula House rewards also remain held; the 10-token
-swap alone has been observed, not every threshold.
+adult gallery prize passed its check.
+
+**New with Gift shuffle:** the child Market Potion Shop bottle tutorial and Dampé's graveyard
+digging prize now give shuffled rewards. Both passed their in-game checks on 2026-11-10
+(`R10-MARKET-BOTTLE-FIX`, `R10-DIGGING`). The shop's corrected swap passed re-entry and shopping;
+Dampé still shows a heart prize but gives the shuffled item.
+
+First expert gallery rewards, merchant experiments and some Skulltula House rewards stay
+unchanged until their tests pass; the 10-token swap alone has been observed, not every threshold.
+The Door of Time's song-only and open modes each passed a first in-game check (the door and
+first sword pull); returning to child afterwards is untested.
 
 Gold Skulltula tokens, cows, dungeon completion rewards, pots, crates and loose rupees are not
 shuffled. Keysanity (dungeon items outside their own dungeon) has no in-game acceptance; do not use

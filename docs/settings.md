@@ -57,11 +57,13 @@ upgrades. The adult gallery prize passed its in-game check (R10-MINIGAMES-ADULT)
 prizes and the child gallery prize are implementation-tested and their in-game checks are still
 pending. Rental weapons do not become inventory rewards.
 
-The Market Potion Shop's free child bottle is modeled in logic. Its shuffled version (the first
-crashed on re-entry; the corrected one passed its in-game test, R10-MARKET-BOTTLE-FIX) and Dampé's
-digging swap (passed, R10-DIGGING) are still **held** in this build until the change that releases
-them lands. Both first-expert gallery rewards are built but held until tested. Expert checks
-contribute Rupees (20) when released; later expert wins retain native 30/70-rupee payouts.
+With `Gift` selected, the child Market Potion Shop bottle tutorial and Dampé's graveyard
+digging prize give shuffled rewards. Both passed their in-game checks on 2026-11-10
+(`R10-MARKET-BOTTLE-FIX`, `R10-DIGGING`). Accept the shop owner's offer by day; the shuffled
+gift skips the bug-catching lesson. Without `Gift`, the free bottle and lesson stay unchanged,
+and logic still counts that bottle. Digging still shows a heart prize but awards the shuffled item.
+Both first-expert gallery rewards stay unchanged until tested. They contribute Rupees (20)
+when released; later expert wins keep the usual 30/70-rupee payouts.
 
 Merchant sale experiments (Medigoron, Granny, desert carpet) remain held. The Skulltula House's
 10-token swap passed, with the 20-token preview observed; that does not certify the later thresholds.

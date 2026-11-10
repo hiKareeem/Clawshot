@@ -108,3 +108,8 @@ plus one new subsection at the end of section 40. Both answer IDs accompany the 
 players are told where the rewards are, that the shop skips bug catching, and that digging
 still displays a heart while granting the shuffled item. Expert/merchant/Skulltula exclusions
 and the limited normal-minigame acceptance are retained. Existing seed 8/10 packs untouched.
+
+`CLAWSHOT_WORKERS=1 uv run pytest tests/test_pack.py -q`: **13 passed**.
+Actual `pack.source_files()` plus the builder's READ ME FIRST template source: **189 files**;
+both answer IDs are present in the shipped README and player instructions. This is a
+source-snapshot smoke only, not a rebuilt historical pack or a game run.

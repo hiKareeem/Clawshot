@@ -57,6 +57,10 @@ KNOWN ISSUES
   inventory slot).
 - Bombchu Bowling: your first two wins give the seed's two prizes; later wins
   give the game's usual small prizes.
+- With Gift shuffle, the child Market Potion Shop bottle tutorial and Dampe's
+  graveyard digging prize give shuffled rewards. Both passed their in-game checks
+  (R10-MARKET-BOTTLE-FIX, R10-DIGGING). The shop gift skips the bug-catching lesson;
+  digging still shows a heart prize but gives the shuffled item.
 - Hookshot can crash in the Castle Town guard house. That is a Hookshot bug
   (github.com/NotRexed/Hookshot/issues/1112), not the seed: reload and carry on.
 

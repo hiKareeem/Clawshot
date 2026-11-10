@@ -2763,6 +2763,26 @@ native IsValid bits show exactlyone bottle both before/after, no extra bottle or
 New `market-bottle-fix-next` and fresh isolated profile only; old output/evidence untouched.
 Shuffle remains held until re-entry/talk/Save-Continue succeeds (round file/checklist).
 
+### Round 11: release of the two tested gifts (cs11e)
+
+Kareem confirmed the corrected bottle checklist (`answers.md` R10-MARKET-BOTTLE-FIX,
+2026-11-10): decline/accept, bug removed, relaxed merchant, re-entry/talk/shopping,
+Save and Continue, unchanged bottles. It supersedes R10-MARKET-BOTTLE's re-entry crash.
+R10-DIGGING confirms Boomerang from the displayed heart prize, saved completion and normal
+later digs; Save and Continue was not reported for digging. Both logs name the tested mod flow.
+
+Released only `Market Potion Shop Bottle` and `Graveyard Dampe Gravedigging Tour` under D15.
+Before removing the holds, the current common writer's Boomerang flows matched the tested
+mods byte-for-byte, compressed and decompressed; the real Gift setup closure matches too.
+No patch code changed. Detailed paths, SHA256s, sizes and verification: `rounds/r11-release.md`.
+With Gift, the bottle is a pool item rather than a guaranteed early fixed bottle; without
+Gift, section 40's free child bottle/access model remains. Existing names/directions and
+random/item/Way of the Hero hints cover both locations.
+
+Expert galleries, merchant experiments and unreleased Skulltula House rewards stay held.
+Normal adult gallery has only the reported first-win acceptance (R10-MINIGAMES-ADULT);
+bowling/child gallery remain enabled but pending R10-MINIGAMES-CHILD. No other release.
+
 ## 41. Round 10: age travel and Door of Time (cs10b)
 
 Build `e0f3ccfa`; native read-only probes and exact evidence: `plans/rounds/r10-agetravel.md`,

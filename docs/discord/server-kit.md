@@ -138,9 +138,13 @@ What has in-game evidence:
 
 Enabled but still awaiting dedicated in-game checks: deterministic bowling prizes and the child
 shooting-gallery prize (the adult one passed). Four kinds of one-time Deku Scrub sale are enabled; not every shuffled
-sale has recorded acceptance. Passed their in-game tests on 2026-11-10 and waiting for the change
-that releases them: the Market bottle swap and Dampé's digging reward. Built but held unchanged:
-first expert gallery rewards, merchant experiments and some Skulltula House rewards.
+sale has recorded acceptance.
+
+With Gift shuffle, the child Market Potion Shop bottle tutorial and Dampé's graveyard digging
+prize now give shuffled rewards. Both passed their in-game checks on 2026-11-10
+(`R10-MARKET-BOTTLE-FIX`, `R10-DIGGING`); the corrected shop swap passed re-entry and shopping.
+Digging still shows a heart prize but gives the shuffled item. First expert gallery rewards,
+merchant experiments and some Skulltula House rewards stay unchanged until tested.
 The Door of Time's song-only and open modes passed a first check each.
 
 Tokens, cows, dungeon completion rewards, pots, crates and loose rupees are not shuffled. Keysanity,
