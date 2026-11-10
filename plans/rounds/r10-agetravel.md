@@ -139,3 +139,71 @@ Added `HOS_OOT_CHEATS=1` beside `HOOKSHOT_NO_UPDATE_CHECK=1` to the unplayed
 The first-pull checklist now restricts use to Teleport and the clock, with no inventory,
 age or flag cheats unless a step explicitly says so. Static isolation/settings checks
 pass; no launcher/game was started and no played overlay was rebuilt or changed.
+
+### Real CLI smoke and replay
+
+Under the gate lock, `smoke_seeds.py` ran the actual public CLI for seed7 with
+`--door-of-time song_only` and `open`, explicitly `--logic free_time_travel=true`.
+Both succeeded, each writing 164 shuffled checks / 23 spoiler collection spheres.
+Replaying song-only from its emitted CS1 with `PYTHONHASHSEED=713` produced an
+identical complete output folder: **86 file hashes match**, including metadata.
+Proof: `work/r10-agetravel-cs10b/seed-cli-proof.json`. This explicit free-travel
+smoke does not change its default-off policy. A first shell timed out waiting for
+the shared lock without starting the CLI; the replacement removed that queue deadline.
+
+### Child-copy deliverables (not yet in-game accepted)
+
+`work/r10-agetravel-cs10b/ingame/` now contains four isolated launchers:
+
+- `Test - first-pull-fixed-next.bat` / `first-pull-checklist.md`:
+  `2026-11-09_1022-main-adult-first`, older **child autosave slot02**, not adult manual01.
+- `Test - door-closed-child-next.bat`, `Test - door-song_only-child-next.bat`,
+  `Test - door-open-child-next.bat` / shared `door-checklist.md`:
+  `2026-11-08_2140-main-jabu`, **manual slot01**. Source flags confirm child, Forest/Fire
+  stones only, Fairy Ocarina, no Time ocarina or Time song.
+
+The controlled door copies share only one experimental reward swap: verified-uncollected
+Graveyard Heart Piece Grave Chest (`9622128545943056087`) gives Song of Time. All resulting
+resources re-read successfully and their final size-table entries validate; closed writes
+3 resources, song-only/open 5 each. Backup checksums for all 14 files stayed unchanged.
+No save editing or inventory cheats. These are isolated mechanics experiments, not
+randomized beatable seeds; free travel remains disabled on them.
+
+All four built launchers statically verified: real `bin\hookshot.exe`, missing-binary stop,
+update disabled, cheats enabled, unique test users, correct immutable backup. Three new
+door user directories do not exist yet (launchers unplayed). Both checklist headers
+restrict cheats to Teleport/clock. **Kareem must supply the in-game behavior plus overlay
+OpenFile log lines; no game was started by this track.**
+
+### Released seeds: corrected adult-instrument rule
+
+Read-only audit completed under the gate lock, importing generation from
+`E:/OOTRemake/Clawshot/src` (main), not this worktree. Seed8 uses its retained
+`work/r8-full/seed-full-8/spoiler.json`; seed10 was regenerated entirely in memory
+from main with seed8's CS1. Only the three age-aware song helpers are corrected
+for the independent search; all native fixed placements are retained.
+
+| Seed | Beatable | Strict return guarantee | Collection spheres | Ocarina of Time placement |
+| --- | --- | --- | --- | --- |
+| 8 | yes | passes | 24 | Market Bombchu Bowling Second Prize |
+| 10 | yes | passes | 20 | HF Ocarina of Time Item |
+
+Both searches collect the Time ocarina. Neither fails on an adult song/check;
+there is no first failing Ocarina-of-Time blocker to report. The rule's evidence
+is native item-bar/PouchTable age metadata, **not an in-game Fairy-as-adult test**.
+Seed8 spoiler SHA256 remains
+`1f4359cc1f7c73ab695bbc6c65709a4467d99326198f57eb5e6ad137e1caa8e2`.
+No seed folder was written. Full proof: `work/r10-agetravel-cs10b/released-seed-proof.json`.
+Results posted in cs-r10 as a separate note.
+
+### Follow-through verification
+
+- Migrated adult instrument fixtures and all-mode regression: **102 passed** (26.52s).
+- The next whole format gate printed two synthetic `LocationList.py` fixtures under an
+  unintended worktree temp root. Cause: Windows backslashes in `PYTEST_ADDOPTS` were
+  consumed by pytest's shell-style option parser. Changed the external gate driver's
+  basetemp to an absolute `E:/...` path and print it before each pytest run. Removed
+  only that self-created synthetic temp tree; its 44 dangling Windows directory
+  symlinks needed non-recursive `rmdir`, not Git Bash's file unlink.
+- The focused 102-test pass is retained; the corrected four-command gate starts at
+  format/lint and does not repeat that already-passing focused run.
