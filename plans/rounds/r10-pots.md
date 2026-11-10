@@ -130,3 +130,48 @@ Posted cs-r10: reset88/unsaved containers differ from reset24 ground rupees; des
 is not pickup completion; counts/age variants do not establish N64 check identity. Proposed
 controlled experiments and explicit blockers instead of unproved seed switches. All four
 full gates remain required before ready/handoff; this item1 commit is a research checkpoint.
+
+## Item 2: native grant and persistence contracts
+
+`native_contracts.py` extracted seven native AI graphs; `decode.py` ran the already-installed,
+unmodified external `ainb` decoder in `work/r7-play-cs7f/decoder-venv`. No GPL implementation
+was read/copied and no dependency was added. All graphs/decoded JSON remain under this
+track's external `ai/` folder. This is native-data evidence, not an engine or gameplay run.
+
+- All499 flagged pots and44 flagged crates use reset88/file0 (`SupplyObject` in ordinary
+  supply variants). All112 ordinary ground rupees use reset24/file0 and `NoRespawn`.
+  No pot or crate in this census has a permanent reset24 pickup flag.
+- Thirty-one pots lack any Bool64bitKey entry:10 explicit `_Respawn` pots,12 `_Dream`
+  pots in the Ganondorf room and9 ordinary pots in CrumblingGanonCastle. Six crates
+  have no flag (`_02`/`_06`, no native DropRef); their scene logic has other jobs.
+  No flag is allocated or changed by this exploration.
+- `Obj_Pot.root` calls `OneShotDeathRequestDeath` with reason10 when broken/thrown.
+  `Obj_Common_LiftableBreakable.root` likewise requests object death. `DropItem.root`
+  handles drop physics/rotation. The inspected graphs do **not** expose a pot Hash ->
+  collected-child-drop flag channel. The death/drop component's engine implementation
+  has not been reverse-engineered; absence of a graph node is not proof it cannot exist.
+- **[INFERENCE]** Reusing reset88 destruction as check completion risks either renewable
+  shuffled upgrades or losing an item left uncollected. Making destruction permanent
+  could make the loss irreversible. It does not prove collection and must not be presented
+  as a once-only oracle.
+- Native ground-rupee replacement is data-expressible: change only Gyaml, retain its permanent
+  Hash/Phive identity and every age copy. The D27/D33 five-item palette is the conservative
+  candidate: Heart Container, Piece of Heart, Deku Shield, Hylian Shield, red20-rupee pickup.
+  Shields/red rupees have freestanding gameplay evidence (sections11/27); that does **not**
+  certify a spawned pot drop, every ground surface, or every replacement callback.
+- `Obj_Heart_Piece` has its own `OneShotHeartPieceTakenDeadAfter` rather than the ordinary
+  DropItem graph. A spawned piece without a shipped placement flag is therefore a useful
+  **experiment**, not proof of a saved pot check. Inventory-only `Item_*` majors and the
+  known-crashing Fire Arrows remain outside the candidate palette.
+
+**Reviewer direction (Claude, this conversation):** agreed exploration outcome. Commit census
+and native contracts; build isolated `-next` save-copy experiments, not Pot/Rupee seed switches.
+Test one reset88 supply pot, one never-saved pot, one Kokiri ground rupee and one early-child
+ground rupee elsewhere. Observe collection, leave/return, Save/Continue, repeat destruction,
+and recovery when a pot drop is left uncollected. Kareem runs every game check.
+
+Future logic policy is also explicit: remake names and the region's actual access rule, as with
+`extra_*` chests; retain an N64 mapping only where exact. Count/ordinal mismatches do not justify
+forcing OoTR names or using a more permissive N64 room rule. No product question is silently
+decided by a physical-position guess. Posted the original boundary on cs-r10; this reviewer
+direction supersedes that proposal.
