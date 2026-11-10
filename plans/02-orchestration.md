@@ -41,6 +41,36 @@ skill). This file is the project's own version; where it differs from Overread, 
    Merge from the review worktree's commit first and check `main` moved before removing anything; a failed
    `worktree remove` (a locked folder) must stop the cleanup, not leave the branch deleted and the merge undone.
 
+## Rules for agents in a round
+
+(Moved here from `AGENTS.md` on 2026-11-10: that file now holds only the rules every contributor's agent needs.
+These are the maintainers' own; a round prompt points here.)
+
+- Kareem owns the project, with a co-owner. Product calls are theirs: write the question into your round file, in
+  **bold**, instead of deciding it.
+- One agent per track, each in its own git worktree and branch (`r<N>/<track>`), set up by Claude before you
+  start. The round's section in `plans/00-roadmap.md` lists what each track owns; don't edit another track's
+  files. The main checkout (`E:\OOTRemake\Clawshot`) only receives merges.
+- **Don't merge.** Commit on your branch; Claude reviews it and merges it to `main`. Rebase on `main` only when
+  Claude says it moved. Never push. Never `git stash` (all worktrees share one stash).
+- **Your round file** is `plans/rounds/r<N>-<track>.md`, yours alone: what you built, how it was checked (commands
+  and their results), choices you made provisionally, and questions for Kareem in **bold**. Never edit
+  `plans/decisions.md`; Claude moves decisions there at review.
+- **Cross-track requests** go in your round file and as a plain post:
+  `~/go/bin/bermuda thread post --thread cs-r<N> --as <your track name> "<text>"`. No @-mentions (they deliver
+  into another agent's pane), no other bermuda command than `thread post` and `thread log --thread cs-r<N>`, and
+  never set `BERMUDA_THREAD_AGENT`. Never message another agent through herdr. Claude reads the thread and
+  answers by steering you.
+- **In-game checks are Kareem's.** Never start `hookshot.exe` from E:\Games\Hookshot or touch that folder. Write
+  what he should do and see into your round file. (A Hookshot build track may boot its own test build headless;
+  its prompt says how.)
+- The dump is `OOT_ROMFS=E:/Games/Hookshot/romfs`; research scripts and decoded game data live under
+  `E:\OOTRemake\work`, never in a worktree; Hookshot changes go through the `hiKareeem/Hookshot` fork (checkout at
+  `E:\OOTRemake\Hookshot`).
+- Paths: give native programs (python, uv, git) Windows paths such as `E:/OOTRemake/...`, never Git Bash's `/e/...`.
+  Delete only what you created in this session.
+- Finish with a handoff: what is on your branch (commit ids), what was checked, what is left.
+
 ## Gates
 
 ```sh
