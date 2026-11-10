@@ -68,3 +68,19 @@ diagnostic: spheres contain the bottle source, Boomerang count 1, Bottle count 0
 Boomerang false. Corrected only the test to check item counts, then one rerun passed.
 The one-worker seeds 1–50 sweep for defaults and the actual read-only seed-8 settings is queued
 behind Claude's loader-review lock. No sweep result is claimed yet.
+
+## Item 3: names, hints and play note
+
+No catalogue or hint-policy edits needed. Existing `tests/test_names.py` covers both stable
+identities: `Npc_Hylia_020_Shop_Child/Event171` and `Npc_Hylia_Dampe_001/Event628`.
+`CLAWSHOT_WORKERS=1 uv run pytest tests/test_names.py -q`: **1 passed**.
+A throwaway in-memory fault probe removed each row independently from the test's catalogue
+view; the existing permanent test rejected both missing rows with the exact missing identity.
+No repository or game-data file was removed.
+
+`uv run python <scratch>/smoke_names.py`: exit 0. Synthetic placements with the two real
+location identities exercised actual random-location, item and Way of the Hero selection,
+spoiler descriptions and play-note rendering. Six cases preserve the existing readable names,
+directions and stable IDs; location hints name the right gift, area hints use Market/Graveyard.
+Only distribution weights changed in the throwaway harness; no new always/sometimes policy.
+Evidence `names-proof.json`. Names catalogue and production hint code intentionally unchanged.
