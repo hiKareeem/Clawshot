@@ -1195,19 +1195,22 @@ Toolkit (decided by Claude, 2026-11-10; Kareem can overturn): a local web front 
 with no build step, served by a standard-library HTTP server on 127.0.0.1 and shown in an app window through
 `pywebview` (BSD-3-Clause, optional extra `ui`) or, without it, the default browser. Reasons: rule 7 excludes Qt
 (PySide6 is LGPL), HTML and CSS can follow HookshotBuilder's look closely and are what a UI contributor most likely
-knows, and it runs on Windows, Linux, macOS and Steam Deck. HookshotBuilder is WPF on Windows, with a PySide6 port
-and a tkinter Linux builder in its repository (GPL-3.0): take the look from Kareem's screenshot and from facts,
-never its code, XAML, images or logo.
+knows, and it runs on Windows, Linux, macOS and Steam Deck. Hookshot's own builder is WPF on Windows, with a PySide6
+port and a tkinter Linux builder in its repository (GPL-3.0): the look comes from Kareem's screenshots, never from
+Hookshot's code, XAML, images or logo.
 1. `clawshot.app`, no UI code: a schema of every setting (key, label, kind, choices, default, help, group) built from
    `Settings` and `data/settings.toml`, so no front end hard-codes a setting; validation; the settings string both
    ways; detection of a dump (romfs folder or `.nup`) and of a Hookshot folder and version; a generation job that
    runs off the UI thread with progress stages, cancel and the fill's error text. Unit tests on synthetic worlds.
-2. `python -m clawshot.ui`: one window in HookshotBuilder's manner (dark slate page, raised rounded cards with
-   hairline borders, a blue primary button and progress bar, green ticks on finished steps, a step list with timings,
-   a title with a muted subtitle). Three screens: Game (dump, Hookshot folder, detected versions), Settings (groups
-   from the schema, a settings-string field kept in step both ways), Generate (seed number, output folder, progress
-   steps, then a result card: open the folder, the play note, how to play in Hookshot or an emulator; the spoiler
-   behind a confirmation). System font stack, every asset local, no network request.
+2. `python -m clawshot.ui`: one window in the manner of Hookshot's in-game menu (Kareem, 2026-11-10, after the first
+   renders in the builder's slate look: "match the in-game menus a bit ... style close and remain clean overall"). A
+   tan top band with tabs (Game, Settings, Generate), a dark-brown panel of label-and-value rows, amber section
+   headers and focus, a description panel that shows the focused row's help text from the schema, a cards grid for
+   what to shuffle, a key-hint bar; keyboard and mouse. Flat colours and CSS only: nothing from the game's art or
+   fonts, no code or image from Hookshot (GPL-3.0); system font stacks; every asset local, no network request. The
+   look's brief with Kareem's reference pictures is `E:/OOTRemake/work/rounds/r11/ui-look.md`. Paths are picked with
+   a Browse dialog; a detected Hookshot folder fills in the dump; unavailable options are shown dimmed with their
+   reason; plain titles, no slogans.
 3. Safety: 127.0.0.1 only, a random port and a per-run token on every call, no cross-origin access, only the UI's own
    static files served, paths validated.
 4. Tests through the HTTP server on a synthetic world; the schema test fails for a setting without metadata. Review

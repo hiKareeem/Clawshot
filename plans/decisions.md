@@ -116,6 +116,17 @@
 - **D35 Door of Time setting, default closed** (Kareem, 2026-11-09: "closed to match SoH"). `door_of_time` =
   closed (vanilla: the three Spiritual Stones, the Ocarina of Time and the Song of Time) | song_only | open, built in
   round 10; `free_time_travel` stays a separate option.
+- **D36 The repository goes public, `plans/` included** (Kareem, 2026-11-10: "going public is the right move once
+  we clean things up"; "keep plans public"; his commit email stays). Write and admin access stay with Kareem and his
+  co-owner; others read and send pull requests. Before the flip: round 11 track A (README, `CONTRIBUTING.md`,
+  templates, `docs/logic.md`), `AGENTS.md` reduced to the rules every contributor's agent needs (`51dfed2`), `main`
+  protected. `plans/` stays as the maintainers' working notes (`plans/README.md`): the logic data cites it.
+- **D37 A UI base: local web front end, styled after Hookshot's in-game menu.** Toolkit proposed by Claude,
+  2026-11-10 (Kareem can overturn): HTML, CSS and JavaScript with no build step, a standard-library server on
+  127.0.0.1, shown through `pywebview` (BSD-3-Clause, optional extra) or the browser; Qt is excluded by rule 7
+  (PySide6 is LGPL). Look decided by Kareem the same day: follow the in-game menus as Hookshot's own menu does, kept
+  clean. Flat colours only: nothing from the game's art or fonts, no code or image from Hookshot (GPL-3.0). Every
+  setting comes from one schema, so front ends hard-code none.
 
 ## Open (only Kareem and his co-owner decide)
 
