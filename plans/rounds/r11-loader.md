@@ -79,6 +79,33 @@ format10/lint pass. The initial actual baseline/RomFS/NUP smoke already passed (
 Those first two archives predate this stricter clearing correction and are superseded:
 fresh final source packs/Make/dry-Play will exercise actual removal before the full gates.
 
+## Item 3: completed actual two-source smoke (no game)
+
+Final `smoke.py` completed exit0 in244.67s after e3fbb96. Ran the real public publisher
+once from RomFS and once from the NUP, then actual Windows PowerShell setup.ps1 -Action
+make on each fresh extraction (first-setup path, answers via stdin). Both Make outputs
+verify; both real runtime Play --dry-run commands exit0. No batch or game was started.
+New artifacts are `romfs-unset-pack-next.zip`/`nup-unset-pack-next.zip` and respective
+`*-unset-make-next` folders under this track's scratch; earlier packs remain untouched.
+
+Each ZIP has193 source-only entries. Each seed has137 files, identical across input
+routes and identical to the publisher oracle from the exact pre-track source (`87c03da^`,
+archived and run separately). Complete output SHA256:
+`68a95611e704adf8d016ada69729593dcdb19e14aa6635cd9195a5fb1c24d76b`.
+This track changes no generator/resource/output digest.
+
+Independent Hookshot-rule walks of both actually made pack folders find **only seed**,
+even with an intentionally added hidden interrupted-cache folder and disabled mod folder.
+Dry plans print only bin/hookshot.exe, per-pack --user, update suppression, HOS_MODS=pack,
+and explicit HOS_FS_OVERLAY removal despite deliberately inherited wrong values.
+All seed bytes AND mtimes stay unchanged; neither user nor hookshot_log.txt is created.
+Evidence: `pack-smoke-unset-proof.json` and six `*-unset-{publisher,make,dry-play}.log`
+files. This is launch-plan/source-generation proof, not an invented gameplay result.
+
+The final four-command gate runner follows this successful smoke, serially, using
+CLAWSHOT_WORKERS=1 and a separate atomic gate.lock acquisition/finally release for each
+full pytest command. Native gates also set OOT_NUP to exercise the full cache matrix.
+
 ## Player acceptance boundary
 
 **Kareem: after Claude reviews/rebuilds a fresh pack, Make, then Play only after quitting the
