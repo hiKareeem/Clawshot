@@ -2,13 +2,13 @@
 
 import argparse
 import json
-import mmap
 import os
 import subprocess
 import sys
 from pathlib import Path
 
 from clawshot.pack import PackError, check_version, generate, tree_digest
+from clawshot.pack.hookshot import detect
 
 
 def configuration(root: Path) -> tuple[dict, Path, Path | None]:
@@ -45,20 +45,6 @@ def make(root: Path) -> None:
     print("Read seed/play-note.md. Hookshot: Play seed.bat. Emulator: docs/seed-pack.md (Emulator / console loading).")
 
 
-def check_mods_support(exe: Path) -> None:
-    """Check the actual binary's loader capability without executing it or trusting a version label."""
-    markers = (b"HOS_MODS\0", b"mods: %s: %d RomFS files\0")
-    with exe.open("rb") as stream:
-        if exe.stat().st_size:
-            with mmap.mmap(stream.fileno(), 0, access=mmap.ACCESS_READ) as image:
-                if all(image.find(marker) >= 0 for marker in markers):
-                    return
-    raise PackError(
-        "cannot confirm Hookshot mods support in bin/hookshot.exe; update/rebuild Hookshot "
-        "(2.0.12+ recommended); Play will not start a possibly vanilla game"
-    )
-
-
 def check_mod_layout(root: Path) -> None:
     """Require exactly seed, using v2.0.13 discovery facts (host/mods.c), never linked folders."""
     mods = []
@@ -89,13 +75,15 @@ def play(root: Path, *, dry_run: bool = False) -> int:
     if not (hookshot / "bin/hookshot.exe").is_file():
         raise PackError(f"missing {hookshot / 'bin/hookshot.exe'}; never use the folder-root launcher")
     verify(root, manifest)
-    check_mods_support(hookshot / "bin/hookshot.exe")
+    installation = detect(hookshot)
+    if installation.reason:
+        raise PackError(installation.reason)
     check_mod_layout(root)
     user = root / "user"
     if user.resolve() != user or (root / "seed").resolve() != root / "seed":
         raise PackError("pack user/seed folder must not be a link")
     overrides = {"HOOKSHOT_NO_UPDATE_CHECK": "1", "HOS_FS_OVERLAY": "", "HOS_MODS": str(root)}
-    command = [str(hookshot / "bin/hookshot.exe"), "--user", str(user)]
+    command = [str(installation.exe), "--user", str(user)]
     if dry_run:
         print(
             json.dumps(

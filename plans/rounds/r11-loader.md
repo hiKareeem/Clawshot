@@ -40,8 +40,21 @@ README request posted on cs-r11: replace overlay loading with HOS_MODS and retai
 ## Added reviewer request (after item 1)
 
 Provide one read-only public Hookshot detector for cs11d: executable, optional version,
-RomFS, adjacent NUPs, mods support and reason seed Play cannot start. Play will use the same
+RomFS, adjacent NUPs, mods support and reason seed Play cannot start. Play uses the same
 check. Post the committed symbol/return fields immediately. No Hookshot source code is copied.
+
+### Shared detector delivered
+
+`clawshot.pack.hookshot.detect(folder: Path | str) -> HookshotInfo` is read-only.
+Frozen dataclass fields: `folder: Path`, `exe: Path` (always the expected bin path),
+`version: str | None`, `romfs: Path | None`, `nups: tuple[Path, ...]` (sorted sibling
+files, case-insensitive extension), `supports_mods: bool`, `reason: str` (empty if playable).
+Version supports the installed `version=...`/`builder=...` file and a plain one-line value.
+Play imports this function: one binary-capability policy, no execution or fallback.
+Focused detector/loader/existing pack checks: **33 passed,0.46s**, format/lint passed.
+Actual read-only detection reports v2.0.13, bin executable, RomFS, one adjacent NUP,
+supports_mods=true and empty reason. No file byte/mtime changes in synthetic detection.
+The first actual detection exposed the key/value version format; corrected parsing before commit.
 
 ## Player acceptance boundary
 
