@@ -224,3 +224,27 @@ Synthetic archive/no-overwrite/determinism test passed. Actual command built `re
 Rebased r11/ui cleanly onto main e06f839 when Claude reported keys/two released gifts/D38,17 commits replayed, and posted it on cs-r11. **The main checkout and Kareem's uncommitted README there were not touched.** README changes are only this worktree's requested UI get-started section. UI-owned prose/tests have no pinned full check count;64 matches are SHA256 lengths. Per Claude, the full Gift seed is now300 checks; old captures here explicitly use two-check synthetic fixtures and do not claim a full total.
 
 README now leads with download/unzip/double-click, dump-only Generate, optional Hookshot Play, emulator backup/copy, persistent seeds and sharing. UI docs and the zip's five-line READ ME agree on those actions, app-local startup, OS config paths, supported/untested platforms and no game download. Gamepad/Steam Deck input and the future Tracker tab remain explicitly not done. No tracker or dump-health scope was silently added.
+
+Item8 packaged-document check: built the rebased documented artifact at `E:/OOTRemake/work/r11-ui-cs11d/release-final/Clawshot-0.1.0.zip`,581180 bytes, SHA256 `dffb18f544aa12db50e0d360976fc9ba008089fc915fb14a0cc3cfcb6aa055b2`. Read back its player README and exact five-line READ ME; startup, dump-only generation, save separation and emulator backup agree. No publication/push claimed. Agent-only smoke scripts removed after proof; screenshots/logs/zip remain outside the repository. Full format/lint/synthetic/dump gates now run serially with one worker and the shared gate directory owned/released per pytest group.
+
+Current rebased commit inventory (onto e06f839): base `4124f7b 74d94b6 159cba8 0dca46d 403a924 475d7dc`; Play/guard/library/review `8978669 8cccc5c f92a7ac 09026fe`; emulator/start/first-run `6be77a7 46e4211 1e5eb01`; sharing/note/names/release `51ad386 8731f46 8b7c58e dc5ff86`; first-player docs `b1c0f6a`. Earlier hashes in chronological notes identify the pre-rebase checkpoints, not the current branch heads. No merge, push, stash or main-checkout edit.
+
+Final rebased artifact runtime proof: extracted release-final into a separate external folder and ran its own locked/offline environment with --no-open. The actual shipped project served v0.1.0; dump is the first Game input, Recommended is selected, Gift/song card is enabled, and the versioned share string loads. `shots/final-rebased-settings.png` visually inspected; no JS errors. A throwaway harness expression chained .catch onto print's undefined return; printed that cause and resumed only screenshot/close with a fresh observation, no product edit. Every owned browser/service is closed.
+
+For Kareem's current mod-loader acceptance, also retain the `mods: <changed file> <- <this seed path>` log entry specified by the round's launcher instructions, alongside any `fs: OpenFile(...): from the overlay` entry and the matching in-game reward. Log mounting alone is not a gameplay acceptance claim.
+
+## Final UI release handoff (rebased e06f839)
+
+All eight ordered release items plus the PC-wide guard, durable portable library, metadata-only/newest-first catalog review and exclusive emulator copy are implemented on r11/ui. Current implementation/docs head is b1c0f6a; the following report-only commit closes the handoff. The commit inventory above lists every rebased feature checkpoint.
+
+Final four full gates, source frozen after rebase, `CLAWSHOT_WORKERS=1` and each pytest group exclusively acquiring/releasing gate.lock:
+- `uv run ruff format --check`: **299 files already formatted**.
+- `uv run ruff check`: **all checks passed**.
+- `uv run pytest`: **931 passed,110 skipped in1220.77s**.
+- `OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump`: **93 passed,16 skipped,932 deselected in734.94s**. Optional OOT_NUP was not supplied; these16 fixture-dependent skips are disclosed, not NUP runtime certification.
+
+Gate JSON: `E:/OOTRemake/work/r11-ui-cs11d/release-gates.json`; all returncodes0. Lock released through finally after each group; no whole gate overlapped. The wrapper and all private smoke scripts are removed after proof. Tool background completion did not auto-deliver; recovered its completed output through wait, with no test rerun. A non-polling owned-process wait initially saw the Windows venv redirector plus its base interpreter; printed that chain, then waited on only the owned parent.
+
+Deliverable: release-final/Clawshot-0.1.0.zip and SHA256 above; actual rebased/extracted offline UI smoke passed. No dump/game bytes/fonts/keys are shipped. Nothing was pushed, merged, published, or changed in the main checkout. The README edit is only this worktree.
+
+**Remaining external acceptance:** Kareem's real Play/in-game/save isolation check using the six-line checklist; NUP file-picker and browser/Tk visuals; Linux/macOS UI runtime. The `.command` versus Open With Terminal macOS question remains for the owners (current docs explicitly use Terminal and mark macOS untested). Gamepad/Steam Deck input, Tracker tab and dump-health notice remain outside this release, not scaffolds or claimed completed features. Owner's real pywebview responsiveness/folder-picker evidence remains recorded above.
