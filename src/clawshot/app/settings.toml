@@ -1,0 +1,110 @@
+# Presentation only. Defaults and validation remain in Settings/data/settings.toml.
+[shuffle]
+label = "Shuffle checks"
+kind = "multi"
+choices = ["Chest", "Shop", "Gift", "Scrub", "BossHeart", "Freestanding", "Token"]
+group = "Items"
+help = "Chests by default. Boss hearts and floor hearts use native pickups only; Token is unavailable. Held gift checks stay vanilla."
+[dungeon_items]
+label = "Dungeon items"
+kind = "choice"
+choices = ["own_dungeon", "anywhere"]
+group = "Items"
+help = "Keys, maps and compasses stay in their own dungeon. Anywhere is held until named-dungeon grants pass in game."
+[songs]
+label = "Song placement"
+kind = "choice"
+choices = ["song", "anywhere"]
+group = "Items"
+help = "Keep songs on song checks, or allow them among other supported checks."
+[forest]
+label = "Kokiri Forest"
+kind = "choice"
+choices = ["closed", "closed_deku", "open"]
+group = "World"
+help = "Closed is vanilla-like; closed_deku opens the bridge; open also bypasses Mido."
+[door_of_time]
+label = "Door of Time"
+kind = "choice"
+choices = ["closed", "song_only", "open"]
+group = "World"
+help = "Closed needs stones, Time ocarina and song. Early-door modes still require the strict adult-return proof. In-game acceptance pending."
+[fast_start]
+label = "Fast start"
+kind = "multi"
+choices = ["intro", "saria", "deku_tree", "kaepora"]
+group = "World"
+help = "Skippable opening scenes. Forest control uses the separate forest setting. Empty disables all skips."
+[shop_prices]
+label = "Shop prices"
+kind = "choice"
+choices = ["vanilla", "affordable"]
+group = "Prices"
+help = "Affordable makes selected shuffled shelves cost 10 rupees."
+[shop_slots]
+label = "Shuffled shelves per shop"
+kind = "integer"
+min = 0
+max = 8
+group = "Prices"
+help = "First N native shelves in each ordinary shop; other stock stays vanilla."
+[scrub_prices]
+label = "Scrub prices"
+kind = "choice"
+choices = ["vanilla", "fixed"]
+group = "Prices"
+help = "Price policy for the supported saved once-sales, not repeat vendors."
+[scrub_price]
+label = "Fixed scrub fee"
+kind = "integer"
+min = 0
+max = 1000
+group = "Prices"
+help = "Rupees charged when scrub prices are fixed."
+[cheap_deku_shield]
+label = "Affordable Deku Shield"
+kind = "boolean"
+group = "Prices"
+help = "Kokiri shop's Deku Shield costs 10, even with shops unshuffled."
+[hints]
+label = "Gossip Stones"
+kind = "choice"
+choices = ["always", "mask"]
+group = "Hints"
+help = "Speak without the Mask of Truth, or retain the native mask requirement."
+[hint_distribution]
+label = "Hint distribution"
+kind = "choice"
+choices = ["balanced"]
+group = "Hints"
+help = "Named distribution from data/hints.toml."
+[logic]
+label = "Logic overrides (JSON object)"
+kind = "json"
+group = "Advanced"
+help = "Advanced world overrides, for example {\"free_time_travel\": true}. Free travel is experimental and off by default. N64 tricks remain refused."
+[areas]
+label = "Playtest areas (JSON array)"
+kind = "json"
+group = "Advanced"
+help = "Banc area names for a slice. Requires a goal. Empty selects the whole world."
+[goal]
+label = "Playtest goal"
+kind = "nullable-text"
+group = "Advanced"
+help = "Rule for a slice, not a change to the whole-world goal. Leave empty normally."
+[item_location_types]
+label = "Item destination restrictions (JSON object)"
+kind = "json"
+group = "Advanced"
+help = "Map item names to arrays of allowed check types; effective seed strings may contain derived restrictions."
+[exclusive_location_types]
+label = "Exclusive check types (JSON array)"
+kind = "json"
+group = "Advanced"
+help = "Check types accepting only items explicitly held to them. Normally derived by gift setup."
+[location_type_items]
+label = "Native pickup palettes (JSON object)"
+kind = "json"
+group = "Advanced"
+help = "Map check types to arrays of native item names. Physical patches still enforce their supported palette."
