@@ -2762,3 +2762,18 @@ rows (not155 rupees). Counts, ages, geometry and vanilla rewards differ material
 Future checks use **remake names and the actual region's access rule**, like `extra_*`
 chests; record an N64 name only for an exact mapping. No ordinal/nearest-position join,
 unverified rule, new saved flag or shuffle setting is introduced by this exploration.
+
+### Market Potion Shop bottle tutorial
+
+The actual child merchant is020, not the tentative046 in R9-SEED8-MARKET. Existing census
+`Npc_Hylia_020_Shop_Child/Event171` now groups as remake-only `Market Potion Shop Bottle`.
+Fixed logic adds its free empty Bottle as child at the existing daytime Potion Shop region.
+The default AISchedule selects the offer without an item, fee or quest gate. Acceptance grants
+the bottle; native saved Present/Started/Cleared Bools record the tutorial. None is item ownership.
+The subsequent bug-capture path consumes selected bottle contents and refills with Red Potion.
+
+A changed reward retains the offer/refusal, bypasses bottle-only staging/capture/consumption,
+grants through the native generic wrapper, then sets those existing completion flags and
+completes the tutorial quest. Completed entry visits route to unchanged shopping. Native same-
+Bottle and unshuffled tutorials stay unchanged. The swap remains held under D15 until Kareem
+tests the isolated backup-copy launcher/checklist in the round file. No save-layout growth.

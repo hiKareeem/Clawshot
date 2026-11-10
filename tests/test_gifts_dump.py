@@ -44,6 +44,8 @@ def _intended(fc: evfl.Flowchart, flow: str, changes) -> set[int]:
             out.add(index["Event24"])  # Initialized dispatch keeps the uncollected offer past native cutoffs.
         if change.rule.purchase and change.check == "GC Medigoron" and flow == change.steps[0].flow:
             out |= {index["Event6"], index["Event19"]}
+        if change.check == gifts.MARKET_BOTTLE_CHECK and flow == gifts.MARKET_BOTTLE_FLOW:
+            out.add(index["Event6"])
         for ref in change.rule.skip:
             if ref.split("/")[0] == flow:
                 i = index[ref.split("/")[1]]
@@ -89,6 +91,16 @@ def test_dump_each_changed_flow_round_trips_and_differs_only_where_intended(romf
             gate = after.events[after.entry_point(root.name).main_event]
             assert gate.cases == [(0, evfl.NONE), (1, root.main_event)]
             assert gate.params == {"GameDataName": granny.flag, "Index": -1}
+            root.main_event = after.entry_point(root.name).main_event
+        bottle = next((c for c in changes if c.check == gifts.MARKET_BOTTLE_CHECK), None)
+        if bottle and flow == gifts.MARKET_BOTTLE_FLOW:
+            from copy import deepcopy
+
+            expected_entries = deepcopy(expected_entries)
+            root = next(e for e in expected_entries if e.name == "Item_Bottle_TutorialEvent_Talk")
+            gate = after.events[after.entry_point(root.name).main_event]
+            assert gate.params == {"GameDataName": gifts.MARKET_BOTTLE_FLAG, "Index": -1}
+            assert gate.cases == [(0, before.entry_point("Talk").main_event), (1, root.main_event)]
             root.main_event = after.entry_point(root.name).main_event
         assert expected_entries == after.entry_points[: len(before.entry_points)], flow
         specialized = [s for c in changes for s in c.steps if s.flow == flow and s.call == FROG_SONG_CALL]

@@ -66,6 +66,11 @@ SHOPKEEPER_FLOW = "Npc_Kokiri_001_Shop_Child"
 SHOPKEEPER_STEPS = tuple(f"{SHOPKEEPER_FLOW}/{event}" for event in ("Event116", "Event117"))
 SHOPKEEPER_REGION = "KF Kokiri Shop"
 
+MARKET_BOTTLE_CHECK = "Market Potion Shop Bottle"
+MARKET_BOTTLE_FLOW = "Npc_Hylia_020_Shop_Child"
+MARKET_BOTTLE_STEP = f"{MARKET_BOTTLE_FLOW}/Event171"
+MARKET_BOTTLE_FLAG = "Npc_Hylia_020_Shop_Item_Bottle_Present"
+
 # Sale calls need their flag inside the success branch, not after a wrapper that can refuse.
 MERCHANT_SHOPS = {
     "GC Medigoron": ("SimpleShopRoot_Npc_Goron_Medigoron_Adult", "Event119"),
@@ -178,6 +183,7 @@ def check_steps(gifts: Iterable[Gift], definitions: Iterable[Definition]) -> dic
     """World check name -> its census gift steps, including the remake-only shopkeeper, in census order."""
     name_of = {d.id: d.oot_randomizer_name for d in definitions if isinstance(d.id, str) and d.oot_randomizer_name}
     name_of.update({step: SHOPKEEPER_CHECK for step in SHOPKEEPER_STEPS})
+    name_of[MARKET_BOTTLE_STEP] = MARKET_BOTTLE_CHECK
     out: dict[str, list[Gift]] = {}
     for gift in gifts:
         if gift.id in name_of:
@@ -552,6 +558,36 @@ def _purchase(fc: evfl.Flowchart, flow: str, change: GiftChange) -> None:
     _completion_gate(fc, specialized, change.flag, _index(fc, flow, prefix + cancel))
 
 
+def _market_bottle(fc: evfl.Flowchart, change: GiftChange) -> None:
+    """A shuffled tutorial reward must not require, consume or animate a bottle it no longer gives."""
+    (step,) = change.steps
+    grant = fc.events[_index(fc, fc.name, step.event)]
+    accept = fc.events[_index(fc, fc.name, "Event6")]
+    root = fc.entry_point("Item_Bottle_TutorialEvent_Talk")
+    if (
+        step.id != MARKET_BOTTLE_STEP
+        or not isinstance(grant, evfl.SubFlowEvent)
+        or (grant.flowchart, grant.entry_point, grant.next)
+        != ("Dm_SY_GetInEvent", "GetInEvent_NotTurn_FixedCamera_WarpLink", evfl.NONE)
+        or not isinstance(accept, evfl.ActionEvent)
+        or accept.next != _index(fc, fc.name, "Event10")
+        or root.main_event != _index(fc, fc.name, "Event27")
+    ):
+        raise GiftPatchError(f"{step.id}: stale bottle tutorial dispatch: {grant!r}, {accept!r}, {root!r}")
+    # Keep the native offer/refusal, but replace its bottle-only staging/bug-capture tail.
+    accept.next = _index(fc, fc.name, step.event)
+    grant.entry_point = "GetInEvent_NotTurn_NotNpc"
+    grant.params = {"ActorName": change.item, "IsNpcEventStarter": False}
+    grant.next = _index(fc, fc.name, "Event76")  # native tutorial quest completion
+    for flag in (
+        "Market_Item_Bottle_TutorialEvent_Cleared",
+        "Market_Item_Bottle_TutorialEvent_Started",
+        MARKET_BOTTLE_FLAG,
+    ):
+        _set_flag_after(fc, step, flag)
+    _completion_gate(fc, root.name, MARKET_BOTTLE_FLAG, fc.entry_point("Talk").main_event)
+
+
 def patch_flowchart(fc: evfl.Flowchart, flow: str, changes: Sequence[GiftChange]) -> None:
     """Apply ``changes``' edits that fall in ``flow`` to its flowchart, in place."""
     for change in changes:
@@ -561,6 +597,8 @@ def patch_flowchart(fc: evfl.Flowchart, flow: str, changes: Sequence[GiftChange]
                 _set_item(fc, step, change.item)
                 if (change.new_flag or change.rule.once) and not change.rule.purchase:
                     _set_flag_after(fc, step, change.flag)
+                if change.check == MARKET_BOTTLE_CHECK:
+                    _market_bottle(fc, change)
         for ref in change.rule.given:
             if ref.split("/")[0] == flow:
                 _read_flag(fc, flow, ref, vanilla, change.flag)

@@ -56,3 +56,12 @@ keep_vanilla = "Round 8: newly censused native potion sale; success-only swap aw
 rule = "has_bottle and (Progressive_Wallet and ('Odd Potion Access' or ((selected_adult_trade_item == 'Odd Potion' or selected_adult_trade_item == 'Poachers Saw' or selected_adult_trade_item == 'Broken Sword' or selected_adult_trade_item == 'Prescription' or selected_adult_trade_item == 'Eyeball Frog' or selected_adult_trade_item == 'Eyedrops' or selected_adult_trade_item == 'Claim Check') and not adult_trade_shuffle)))"
 was = "Progressive_Wallet and ('Odd Potion Access' or ((selected_adult_trade_item == 'Odd Potion' or selected_adult_trade_item == 'Poachers Saw' or selected_adult_trade_item == 'Broken Sword' or selected_adult_trade_item == 'Prescription' or selected_adult_trade_item == 'Eyeball Frog' or selected_adult_trade_item == 'Eyedrops' or selected_adult_trade_item == 'Claim Check') and not adult_trade_shuffle))"
 source = "cs8d, build e0f3ccfa: Npc_Hylia_053_Adult/Event12 GetInEventInBottle_BlueBottleShop, bottle2 and price100. Event11 checks100 rupees, Event15 an empty bottle; Event3 quest unlock and Odd Mushroom trade remain untouched. Retain OoTR Overworld.json:1966 trade prerequisites and add native bottle requirement."
+
+[locations."Market Potion Shop Bottle"]
+new = true
+region = "Market Potion Shop"
+type = "NPC"
+vanilla = "Bottle"
+rule = "is_child"
+keep_vanilla = "D15: shuffled tutorial bypass awaits Kareem's isolated bottle test"
+source = "cs10a, build e0f3ccfa: Npc_Hylia_020_Shop_Child/Event171 grants Item_Bottle after accepting Item_Bottle_TutorialEvent_Talk; no item, rupee or story prerequisite. Default AISchedule selects this entry until tutorial completion. Native Present/Started/Cleared Bools are reset8/save0. R9-SEED8-MARKET confirms the vanilla free bottle; shop access retains its child/day exit rule."

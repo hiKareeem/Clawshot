@@ -404,3 +404,7 @@ gate = "MiniGame_FrogTenors_TimeSong; first-only TeachNewMusic path; variable na
 class = "more"
 gate = "none: a repeatable sale"
 reason = "a sale inside SimpleShop (the call returns without giving on cancel or too few rupees): a once flag must be set inside the shared purchase path; OoT Randomizer shuffles it only with shuffle_expensive_merchants/shuffle_beans"
+
+[check."Market Potion Shop Bottle"]
+class = "swap"
+gate = "Npc_Hylia_020_Shop_Item_Bottle_Present; shuffled acceptance finishes the bottle-only tutorial"

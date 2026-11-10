@@ -34,3 +34,47 @@ Checks:
 
 No new family beyond the accepted frogs is claimed in-game certified. Questions for Kareem
 will be recorded here in **bold**, without stopping the reachable work.
+
+## Item 2: Market Potion Shop bottle
+
+Native probe confirms the section15 identity, not the tentative046 name in the playtest answer:
+`Npc_Hylia_020_Shop_Child/Event171`, already censused but unlinked. Now named
+`Market Potion Shop Bottle`, with explicit remake-only grouping (no fake OoTR name), directions,
+and a new child check at `Market Potion Shop`. It supplies a fifth native bottle in fixed logic;
+no owned bottle, item, payment or story prerequisite. Existing child/day shop entrance remains.
+
+Default AISchedule calls `Item_Bottle_TutorialEvent_Talk`. Choice acceptance reaches171,
+then native fork writes `Npc_Hylia_020_Shop_Item_Bottle_Present` (Hash1617407101).
+Started970426237 and Cleared1298325109 are also defaultfalse/reset8/save0.
+Native continuation requires catching a bug, removes the selected bottle contents at59 and
+fills it with Red Potion at172; a literal non-bottle swap would strand that tutorial.
+
+Provisional engineering choice: changed rewards retain the native offer/refusal but route
+acceptance directly to the generic grant, then set the three existing completion Bools and
+run the native quest-completion action. The entry checks Present before any staging and
+routes completed visits to ordinary Talk. No bottle removal, fake bottle grant, bug requirement,
+new saved Bool, NPC pack/schedule edit or shelf edit. Unchanged/unshuffled Bottle stays native.
+**Kareem: accept this short shuffled tutorial bypass only after the isolated check below.**
+D15 holds the new shuffled check until that result; the vanilla early bottle is modeled now.
+
+Output: `ingame/market-bottle-next`, launcher `Test - market-bottle-next.bat`, checklist
+`bottle-check.md` under this track's external folder. Uses its own absent user; copies only
+the read-only2026-11-07_llr-tower-before-pickup backup at launch. All six source slots:
+child, Present/Started/Cleared false, Boomerang absent; slot01 is the manual checkpoint.
+No save copied or launcher executed. Static launcher: bin executable only, updater off,
+missing-exe/backup/copy-failure stop, isolated user/log, outward-only backup copy.
+
+Checks:
+- Synthetic bottle/gift/catalogue: **24 passed**; child without bottle can collect the fixed
+  bottle, adult cannot; refusal consumes nothing, accepted generic gift saves completion,
+  restored-state revisit gives no duplicate; stale dispatch refuses.
+- Focused native `tests/test_gifts_dump.py -k \"round_trips or every_step\" -m dump`:
+  **2 passed,3 deselected**,10.47s.
+- Actual common writer `build_bottle.py`: **two resources**, flow99536 ->100240,
+  allocation99824 ->100528. Exact inverse restores the entire native flow; actual serialized
+  dispatch interpreted refusal/accept/revisit and no selected-bottle action. Proof:
+  `bottle-proof.json`. Runtime presentation/shopping/Save-Continue still require Kareem.
+
+Diagnostics: an inline minigame-summary probe failed before reading files with Python's
+comprehension assignment-expression restriction; printed SyntaxError. Replace with an external
+straight-line researcher, not an unchanged rerun. No production behavior failed.
