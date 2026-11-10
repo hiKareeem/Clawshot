@@ -3,38 +3,20 @@
 import sys
 import threading
 
-from clawshot.app.paths import absolute_path, detect_dump
-from clawshot.pack import tree_digest
+from clawshot.app.library import verified_seed
+from clawshot.app.paths import absolute_path
 from clawshot.pack.runtime import RUNNING_GAME, launch_plan, start_game
 
 
 def play_plan(result: dict | None, hookshot: str) -> dict:
-    if result is None:
-        raise ValueError("Generate a seed first, then press Play.")
+    seed = verified_seed(result)
     if not isinstance(hookshot, str) or not hookshot.strip():
         raise ValueError("Choose and check your Hookshot folder on Game, then press Play.")
-    try:
-        root = absolute_path(result["output"], "Seed output")
-        digest = tree_digest(root / "seed")
-    except (OSError, ValueError) as error:
-        raise ValueError(
-            "The seed files are missing, linked or unreadable. Generate a new seed, then press Play."
-        ) from error
-    if not (root / "seed/romfs").is_dir():
-        raise ValueError("The seed folder is missing. Generate a new seed, then press Play.")
-    if digest != result["output_sha256"]:
-        raise ValueError("This seed's files have changed. Generate a new seed before pressing Play.")
-    try:
-        detect_dump(result["dump"])
-    except (OSError, ValueError) as error:
-        raise ValueError(
-            "Check your game files again on Game, then generate a new seed before pressing Play."
-        ) from error
     try:
         installation = absolute_path(hookshot, "Hookshot", allow_links=True)
     except (OSError, ValueError) as error:
         raise ValueError("Choose and check your Hookshot folder on Game, then press Play again.") from error
-    return launch_plan(root, installation)
+    return launch_plan(seed.parent, installation)
 
 
 class Player:

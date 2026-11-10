@@ -5,7 +5,7 @@ import threading
 
 from clawshot.app.paths import absolute_path, default_output_root
 
-KINDS = {"dump-folder", "dump-file", "hookshot", "output"}
+KINDS = {"dump-folder", "dump-file", "hookshot", "output", "seeds"}
 
 
 class BrowserDialogs:

@@ -754,3 +754,20 @@ dialog p {
 .value-cell.number input {
   text-align: center;
 }
+.seed-entry {
+  margin-top: 14px;
+  padding: 14px;
+  border: 1px solid var(--border);
+  background: var(--description);
+}
+.seed-entry h3 {
+  margin: 0 0 8px;
+  font-family: var(--serif);
+  font-size: 18px;
+}
+.seed-folder {
+  display: block;
+  overflow-wrap: anywhere;
+  font-family: var(--sans);
+  font-size: 13px;
+}

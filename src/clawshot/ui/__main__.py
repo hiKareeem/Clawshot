@@ -4,15 +4,16 @@ import argparse
 import multiprocessing
 import webbrowser
 
+from clawshot.app.preferences import Preferences, user_preferences_path
 from clawshot.ui.dialogs import BrowserDialogs, webview_chooser
-from clawshot.ui.server import LocalServer, serve_in_thread
+from clawshot.ui.server import Application, LocalServer, serve_in_thread
 
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--no-open", action="store_true", help="print a local URL; never open a window/browser")
     args = parser.parse_args(argv)
-    server = LocalServer()
+    server = LocalServer(Application(preferences=Preferences(user_preferences_path())))
     print(f"Clawshot UI: {server.url}", flush=True)
     print("Local only. Keep this terminal running; Ctrl+C stops it and cancels its worker.", flush=True)
     try:

@@ -26,6 +26,9 @@ let playAvailable = false,
   hookshotCanPlay = false,
   playState = { running: false },
   resultOutput = "";
+let openAvailable = false,
+  libraryActions = [],
+  lastLibraryOutput = "";
 
 function element(tag, className = "", text) {
   const el = document.createElement(tag);
@@ -129,17 +132,21 @@ function updateHints() {
     add(["Enter"], focused.dataset.keyAction || "Open");
 }
 function navigable() {
-  return [
-    ...$(activeScreen).querySelectorAll(
-      "input, select, textarea, button, summary, [data-nav]",
-    ),
-  ].filter(
-    (el) =>
-      !el.hidden &&
-      !el.disabled &&
-      el.tabIndex >= 0 &&
-      el.getClientRects().length,
-  );
+  const areas = [$(activeScreen)];
+  if (activeScreen === "generate" && resultShown) areas.push($("result"));
+  return areas
+    .flatMap((area) => [
+      ...area.querySelectorAll(
+        "input, select, textarea, button, summary, [data-nav]",
+      ),
+    ])
+    .filter(
+      (el) =>
+        !el.hidden &&
+        !el.disabled &&
+        el.tabIndex >= 0 &&
+        el.getClientRects().length,
+    );
 }
 function changeValue(target, direction) {
   if (target.matches("select")) {
@@ -522,6 +529,95 @@ function suggestOutput() {
       "seed-" +
       $("seed").value;
 }
+function preferenceWarning(message) {
+  $("preferences-warning").textContent = message || "";
+  $("preferences-warning").hidden = !message;
+}
+function updateLibraryActions() {
+  for (const { button, kind, entry } of libraryActions) {
+    button.disabled =
+      kind === "play"
+        ? busy ||
+          playState.running ||
+          !entry.playable ||
+          !playAvailable ||
+          !hookshotCanPlay
+        : kind === "open"
+          ? !openAvailable
+          : kind === "note"
+            ? !entry.note_available
+            : busy || !entry.playable;
+  }
+}
+async function selectSavedSeed(output) {
+  renderJob(await api("select-seed", { output }));
+}
+async function refreshSeeds() {
+  try {
+    const data = await api("seeds");
+    preferenceWarning(data.warning);
+    $("seed-list").replaceChildren();
+    libraryActions = [];
+    for (const entry of data.seeds) {
+      const card = element("article", "seed-entry"),
+        title = entry.seed === undefined ? entry.name : "Seed " + entry.seed;
+      card.append(
+        element(
+          "h3",
+          "",
+          title + (entry.short_hash ? " · " + entry.short_hash : ""),
+        ),
+      );
+      card.append(element("code", "seed-folder", entry.output));
+      card.append(
+        element(
+          "p",
+          "help",
+          entry.playable
+            ? "Clawshot " + entry.clawshot_version + " · ready to play"
+            : entry.reason,
+        ),
+      );
+      const actions = element("div", "result-actions");
+      const add = (label, kind, action) => {
+        const button = element("button", "", label);
+        button.dataset.keyAction = label;
+        button.addEventListener("click", async () => {
+          error("");
+          try {
+            await action();
+          } catch (e) {
+            error(e.message);
+          }
+        });
+        libraryActions.push({ button, kind, entry });
+        actions.append(button);
+      };
+      add("View seed", "view", () => selectSavedSeed(entry.output));
+      add("Play", "play", async () => {
+        await selectSavedSeed(entry.output);
+        $("play-seed").click();
+      });
+      add("Open folder", "open", () =>
+        api("open", { target: "folder", output: entry.output }),
+      );
+      add("Read play note", "note", () => documentView("note", entry.output));
+      card.append(actions);
+      bindHelp(card, {
+        ...inputs.seeds,
+        label: title,
+        note: entry.reason || "Hash: " + entry.short_hash,
+      });
+      $("seed-list").append(card);
+    }
+    $("seed-library-status").textContent = data.seeds.length
+      ? "Saved seeds are checked before Play. Find seeds opens another folder."
+      : "No saved seeds found. Generate one, or choose Find seeds.";
+    updateLibraryActions();
+  } catch (e) {
+    error(e.message);
+  }
+}
 async function browse(kind) {
   $("dump-dialog").close();
   document
@@ -530,6 +626,11 @@ async function browse(kind) {
   try {
     const data = await api("browse", { kind, seed: Number($("seed").value) });
     if (!data.path) return;
+    preferenceWarning(data.warning);
+    if (kind === "seeds") {
+      await refreshSeeds();
+      return;
+    }
     const field = kind.startsWith("dump-") ? "dump" : kind;
     $(field).value = data.path;
     if (field === "output") outputCustom = true;
@@ -542,7 +643,7 @@ async function browse(kind) {
       .forEach((el) => (el.disabled = !dialogsAvailable));
   }
 }
-async function detect(kind) {
+async function detect(kind, fillDump = true) {
   if (kind === "hookshot") hookshotCanPlay = false;
   const button = $(kind === "dump" ? "check-dump" : "check-hookshot"),
     status = $(kind + "-status");
@@ -552,6 +653,7 @@ async function detect(kind) {
   try {
     const data = await api("detect", { [kind]: $(kind).value }),
       info = data[kind];
+    preferenceWarning(data.warning);
     status.className = "value-cell detection good";
     if (kind === "dump") {
       $("dump").value = info.path;
@@ -564,8 +666,10 @@ async function detect(kind) {
         (info.version || "unknown version") +
         (info.reason ? " · " + info.reason : " · mods supported");
       if (info.reason) status.className = "value-cell detection bad";
-      $("dump").value = info.romfs || info.nups[0] || "";
-      if ($("dump").value) await detect("dump");
+      if (fillDump) {
+        $("dump").value = info.romfs || info.nups[0] || "";
+        if ($("dump").value) await detect("dump");
+      }
     }
     error("");
   } catch (e) {
@@ -575,6 +679,7 @@ async function detect(kind) {
     button.disabled = false;
     describe(document.querySelector(`[data-interface=${kind}]`));
     renderPlay();
+    updateLibraryActions();
   }
 }
 function renderPlay() {
@@ -600,9 +705,18 @@ function renderPlay() {
 }
 function renderJob(state) {
   busy = ["running", "cancelling"].includes(state.status);
-  resultShown = state.status === "succeeded";
+  resultShown = ["succeeded", "loaded"].includes(state.status);
   playState = state.play || { running: false };
   resultOutput = state.result?.output || "";
+  const loaded = state.status === "loaded";
+  $("generation-inputs").hidden = loaded;
+  $("job-progress").hidden = loaded;
+  $("generate-title").textContent = loaded
+    ? "Saved seed " + state.result.seed
+    : "Generate a seed";
+  $("generate-subtitle").textContent = loaded
+    ? "Ready to play. Your current settings are unchanged."
+    : "Each seed is checked to make sure you can finish before it is written.";
   $("start-job").textContent = resultShown
     ? "Make another seed"
     : "Generate seed";
@@ -652,7 +766,9 @@ function renderJob(state) {
       ? "Cancelled. Existing seeds were left alone."
       : state.status === "succeeded"
         ? "Complete. Previous seeds are unchanged."
-        : "Your current game stays as it is.";
+        : loaded
+          ? "Loaded from My seeds."
+          : "Your current game stays as it is.";
   $("result").hidden = activeScreen !== "generate" || !resultShown;
   if (state.error) error(state.error.type + ": " + state.error.message);
   if (state.result) {
@@ -668,6 +784,11 @@ function renderJob(state) {
     $("result-path").textContent = state.result.output;
   }
   renderPlay();
+  updateLibraryActions();
+  if (state.status === "succeeded" && resultOutput !== lastLibraryOutput) {
+    lastLibraryOutput = resultOutput;
+    refreshSeeds();
+  }
   updateHints();
 }
 async function refreshJob() {
@@ -690,13 +811,11 @@ async function normalizePath(input) {
 }
 async function startJob() {
   if (resultShown) {
-    renderJob({
-      status: "idle",
-      stages: [],
-      result: null,
-      error: null,
-      seconds: 0,
-    });
+    try {
+      renderJob(await api("select-seed", { output: null }));
+    } catch (e) {
+      error(e.message);
+    }
     return;
   }
   if (!valid || syncing) {
@@ -736,7 +855,7 @@ function closeDialog(id) {
   $(id).close();
   updateHints();
 }
-async function documentView(file) {
+async function documentView(file, output) {
   const confirmed =
     file !== "spoiler" ||
     confirm(
@@ -744,7 +863,11 @@ async function documentView(file) {
     );
   if (!confirmed) return;
   try {
-    const data = await api("result", { file, confirmed });
+    const data = await api("result", {
+      file,
+      confirmed,
+      ...(output ? { output } : {}),
+    });
     $("document-title").textContent = data.name;
     $("document-text").textContent = data.text;
     openDialog("document-dialog");
@@ -818,6 +941,7 @@ $("settings-string").addEventListener("input", () => {
   $("settings-state").textContent = "String edited — Apply to update controls";
 });
 $("start-job").addEventListener("click", startJob);
+$("refresh-seeds").addEventListener("click", refreshSeeds);
 $("play-seed").dataset.keyAction = "Play";
 $("play-seed").addEventListener("click", async () => {
   $("play-seed").disabled = true;
@@ -833,6 +957,7 @@ $("play-seed").addEventListener("click", async () => {
 $("hookshot").addEventListener("input", () => {
   hookshotCanPlay = false;
   renderPlay();
+  updateLibraryActions();
 });
 $("cancel-job").addEventListener("click", async () => {
   try {
@@ -880,7 +1005,11 @@ window.addEventListener("beforeunload", (event) => {
       if (!dialogsAvailable)
         el.title = "Disabled in --no-open; paste a path instead";
     });
-    $("open-folder").disabled = !data.open_available;
+    openAvailable = data.open_available;
+    $("open-folder").disabled = !openAvailable;
+    preferenceWarning(data.preferences_warning);
+    $("dump").value = data.paths.dump || "";
+    $("hookshot").value = data.paths.hookshot || "";
     playAvailable = data.play_available;
     playUnavailableReason = data.play_unavailable_reason;
     suggestOutput();
@@ -905,6 +1034,10 @@ window.addEventListener("beforeunload", (event) => {
     valid = true;
     show(location.hash.slice(1));
     await refreshJob();
+    await refreshSeeds();
+    const hadDump = Boolean($("dump").value);
+    if ($("hookshot").value) await detect("hookshot", !hadDump);
+    if (hadDump) await detect("dump");
     document.documentElement.dataset.ready = "true";
   } catch (e) {
     error(e.message);

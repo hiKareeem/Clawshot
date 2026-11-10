@@ -23,7 +23,9 @@ from clawshot.app import (
     settings_payload,
     validate,
 )
+from clawshot.app.library import SeedLibrary
 from clawshot.app.paths import absolute_path, default_output_root
+from clawshot.app.preferences import Preferences
 
 ASSETS = Path(__file__).with_name("static")
 STATIC = {
@@ -35,13 +37,39 @@ MAX_BODY = 65536
 
 
 class Application:
-    def __init__(self, jobs=None, *, spec=None, chooser=None, allow_open=False, allow_play=False):
+    def __init__(self, jobs=None, *, spec=None, chooser=None, allow_open=False, allow_play=False, preferences=None):
         self.jobs = jobs if jobs is not None else Jobs()
         self.spec = spec
         self.chooser = chooser
         self.allow_open = allow_open
         self.allow_play = allow_play
         self.player = Player()
+        self.preferences = preferences if preferences is not None else Preferences()
+        self.library = SeedLibrary(self.preferences)
+        self.selected = None
+        self.editing = False
+
+    def remember_completed(self):
+        state = self.jobs.snapshot()
+        if state["status"] == "succeeded" and state["result"]:
+            parent = Path(state["result"]["output"]).parent
+            if parent != default_output_root() and str(parent) not in self.preferences.snapshot().get("seed_roots", []):
+                self.library.add_folder(str(parent))
+
+    def job_view(self):
+        self.remember_completed()
+        state = self.jobs.snapshot()
+        if self.selected is not None:
+            state = {"status": "loaded", "result": self.selected, "stages": [], "error": None, "seconds": 0}
+        elif self.editing and state["status"] not in ("running", "cancelling"):
+            state = {"status": "idle", "result": None, "stages": [], "error": None, "seconds": 0}
+        return state | {"play": self.player.snapshot()}
+
+    def result_for(self, body):
+        self.remember_completed()
+        if body.get("output") is not None:
+            return self.library.get(body["output"])
+        return self.selected if self.selected is not None else self.jobs.snapshot()["result"]
 
     def call(self, method, route, body):
         if method == "GET" and route == "schema":
@@ -49,6 +77,8 @@ class Application:
                 "schema": schema(),
                 "version": version("clawshot"),
                 "output_root": str(default_output_root()),
+                "paths": self.preferences.snapshot(),
+                "preferences_warning": self.preferences.warning,
                 "dialogs_available": self.chooser is not None,
                 "open_available": self.allow_open,
                 "play_available": self.allow_play and sys.platform == "win32",
@@ -63,7 +93,27 @@ class Application:
                 **settings_payload(validate({}, spec=self.spec)),
             }
         if method == "GET" and route == "job":
-            return self.jobs.snapshot() | {"play": self.player.snapshot()}
+            return self.job_view()
+        if method == "GET" and route == "seeds":
+            self.remember_completed()
+            return {
+                "seeds": self.library.entries(),
+                "folders": [str(path) for path in self.library.folders()],
+                "warning": self.preferences.warning,
+            }
+        if method == "POST" and route == "select-seed":
+            if self.jobs.snapshot()["status"] in ("running", "cancelling"):
+                raise ValueError("Wait for the current seed to finish, or Cancel it before choosing another.")
+            if body.get("output") is None:
+                self.selected = None
+                self.editing = True
+            else:
+                entry = self.library.get(body["output"])
+                if not entry["playable"]:
+                    raise ValueError(entry["reason"])
+                self.selected = entry
+                self.editing = False
+            return self.job_view()
         if method == "POST" and route == "settings":
             return settings_payload(validate(body.get("values"), text=body.get("settings_string"), spec=self.spec))
         if method == "POST" and route == "normalize-path":
@@ -75,7 +125,7 @@ class Application:
             if self.chooser is None:
                 raise ValueError("Path dialogs are disabled in --no-open and tests; paste a path instead")
             kind = body.get("kind")
-            if kind not in ("dump-folder", "dump-file", "hookshot", "output"):
+            if kind not in ("dump-folder", "dump-file", "hookshot", "output", "seeds"):
                 raise ValueError("Unknown path chooser")
             seed = body.get("seed", 0)
             if type(seed) is not int or not -(2**53 - 1) <= seed <= 2**53 - 1:
@@ -89,31 +139,40 @@ class Application:
                 elif not selected.is_dir():
                     raise ValueError("Choose an existing folder")
                 path = str(selected / f"seed-{seed}") if kind == "output" else str(selected)
-            return {"path": path}
+                if kind == "seeds":
+                    self.library.add_folder(path)
+            return {"path": path, "warning": self.preferences.warning}
         if method == "POST" and route == "detect":
             result = {}
             if body.get("dump"):
                 result["dump"] = detect_dump(body["dump"])
+                self.preferences.remember("dump", result["dump"]["path"])
             if body.get("hookshot"):
                 result["hookshot"] = detect_hookshot(body["hookshot"])
+                self.preferences.remember("hookshot", result["hookshot"]["folder"])
             if not result:
                 raise ValueError("Enter a dump or Hookshot path")
+            result["warning"] = self.preferences.warning
             return result
         if method == "POST" and route == "generate":
             request = GenerationRequest(**body)
             validate(text=request.settings, spec=self.spec)
-            return self.jobs.start(request)
+            state = self.jobs.start(request)
+            self.selected = None
+            self.editing = False
+            return state
         if method == "POST" and route == "cancel":
             return self.jobs.cancel()
         if method == "POST" and route == "play":
             if not self.allow_play:
                 raise ValueError("Play is disabled in --no-open. Open Clawshot normally to play.")
-            return self.player.start(self.jobs.snapshot()["result"], body.get("hookshot"))
+            return self.player.start(self.result_for(body), body.get("hookshot"))
         if method == "POST" and route in ("result", "open"):
-            result = self.jobs.snapshot()["result"]
+            result = self.result_for(body)
             if result is None:
                 raise ValueError("No completed seed is available")
-            root = absolute_path(str(Path(result["output"]) / "seed"), "Result")
+            base = absolute_path(result["output"], "Result")
+            root = absolute_path(str(base / "seed"), "Seed files") if (base / "seed").is_dir() else base
             if route == "open":
                 if not self.allow_open:
                     raise ValueError("Opening folders is disabled in --no-open and tests")
@@ -132,7 +191,7 @@ class Application:
                 raise ValueError("Unknown result document")
             if choice == "spoiler" and body.get("confirmed") is not True:
                 raise ValueError("Confirm revealing the spoiler first")
-            path = absolute_path(str(root / names[choice]), "Result document")
+            path = absolute_path(str(base / "seed" / names[choice]), "Result document")
             return {"text": path.read_text(encoding="utf-8"), "name": names[choice]}
         raise LookupError("Unknown endpoint")
 

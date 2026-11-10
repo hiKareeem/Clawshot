@@ -42,12 +42,20 @@ their HTTP endpoints. Normal sessions enable these actions; Play also requires W
   Play uses `output/user` for this seed's saves and `output/hookshot_log.txt` for its log, never
   your normal Hookshot saves. Quit a running seed before starting another. Changed seed files are
   refused; generate a new seed instead of repairing an output in place.
+- **My seeds:** finished seeds remain available after restarting Clawshot. The default output
+  folder and folders opened with Find seeds are remembered in your user configuration folder.
+  Each entry offers Play, Open folder and its play note, with a short hash. Missing seed information
+  or changed files are shown as not playable, with a reason; existing outputs are never repaired.
+  A finished seed does not need the original dump to remain at its old path.
 
 The new output layout is `output/seed/romfs` with the note and spoiler beside romfs. Play shares
 the pack's checked launch code: only `bin/hookshot.exe`, exactly that seed as the one mod under
 `HOS_MODS=output`, no `HOS_FS_OVERLAY` variable, and the update check off. Older outputs are never
 moved or rewritten. Emulator players get three loading steps and a main-save backup warning;
 Clawshot does not start an emulator. See [seed-pack instructions](seed-pack.md) for manual loading.
+Each new output includes `clawshot-seed.json` with its seed number, settings, file digest,
+Clawshot version and supported game build. Play checks this record and the seed contents, not
+the old dump path. Saves and logs are outside the hashed seed folder.
 
 Before starting a game, both UI and pack Play check the PC-wide process list. Any running
 `hookshot.exe` refuses with “Hookshot is already running. Quit it, then press Play.”
@@ -82,6 +90,8 @@ The Generate action fits without scrolling at 1280×860.
 | Source detection, native paths, protected output boundaries | `src/clawshot/app/paths.py` |
 | One-worker generation lifecycle, cancellation and publication | `src/clawshot/app/jobs.py` |
 | Read-only verified Play plan and one running seed | `src/clawshot/app/play.py` |
+| Durable manifest and known-folder seed catalog | `src/clawshot/app/library.py` |
+| Atomic user-config path preferences | `src/clawshot/app/preferences.py` |
 | Shared mod/save/environment plan and process start | `src/clawshot/pack/runtime.py` |
 | Loopback transport and fixed asset allowlist | `src/clawshot/ui/server.py` |
 | Normal/headless startup and click-only native dialogs | `src/clawshot/ui/__main__.py`, `dialogs.py` |
@@ -133,7 +143,7 @@ on 2026-11-10. This does not confirm its NUP file picker, browser/Tk picker or t
 
 Not implemented in the current checkout:
 - gamepad/Steam Deck controller navigation (keyboard/mouse only);
-- emulator copying, double-click bootstrap and remembered paths (the next ordered release items);
+- emulator copying and double-click bootstrap (the next ordered release items);
 - a bundled executable/installer or bundled fonts;
 - native Play acceptance or Linux/macOS UI runtime certification.
 

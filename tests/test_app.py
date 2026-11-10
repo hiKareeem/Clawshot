@@ -59,7 +59,13 @@ def synthetic_run(request, stage, report):
     result = SeedOutput(seed, Links({}, {}, []), Plan(changes, [], []))
     report("write")
     written = write_seed(result, request.dump, stage / "seed")
-    return {"seed": seed.seed, "shuffled": len(seed.shuffled), "resources": len(written), "spheres": len(seed.spheres)}
+    return {
+        "seed": seed.seed,
+        "shuffled": len(seed.shuffled),
+        "resources": len(written),
+        "spheres": len(seed.spheres),
+        "settings_string": seed.settings.to_string(),
+    }
 
 
 def slow_run(request, stage, report):

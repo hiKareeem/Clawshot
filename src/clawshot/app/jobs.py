@@ -10,6 +10,7 @@ from multiprocessing.connection import wait
 from pathlib import Path
 from tempfile import mkdtemp
 
+from clawshot.app.library import write_manifest
 from clawshot.app.paths import absolute_path, detect_dump, output_path
 from clawshot.app.schema import validate
 from clawshot.pack import tree_digest
@@ -145,13 +146,11 @@ class Jobs:
         out.mkdir()
         try:
             seed.rename(out / "seed")
+            record = write_manifest(out, result | {"output_sha256": digest})
         except BaseException:
             shutil.rmtree(out)
             raise
-        self.state.update(
-            status="succeeded",
-            result=result | {"output": str(out), "output_sha256": digest, "dump": str(self.source)},
-        )
+        self.state.update(status="succeeded", result=result | record | {"output": str(out)})
         self._finish_stage("done")
 
     def _finish_stage(self, status):
