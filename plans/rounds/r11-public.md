@@ -44,3 +44,11 @@ AGENTS.md is deliberately unchanged, as instructed. The orchestration file alrea
 
 The requested three checks and document/issue-form/public-tree smoke results will be recorded after
 all five ordered items. No full suite, dump test, seed sweep or gate lock is needed for this track.
+
+## 2. Contributor guide
+
+Added `CONTRIBUTING.md`: MIT inbound licensing; permissive-only dependencies/reuse; no GPL,
+unlicensed or NX2navi material; game-free issues/attachments and synthetic fixtures; disclosed AI
+assistance; scoped PRs; deterministic data/identity contracts; standard gate commands and native
+coverage; isolated player checks with current mods-loading proof. Kareem/co-owner retain merge
+and product decisions. No behavior or licensing policy changed.
