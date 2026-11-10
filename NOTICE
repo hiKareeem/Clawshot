@@ -35,7 +35,8 @@ Commit 1041167c31ec80c9bb0a84c90e09e70be962fe75 (branch main).
 a55uka/nup (https://github.com/a55uka/nup), MIT License, Copyright (c) 2026 a55uka.
 Commit a4840f06c94ddeb414eea5b33c9704ffe995f11c (branch meow).
 - src/clawshot/pack/_nup/{format,read}.py: tools/nup/nup/{format,read}.py, unchanged except two
-  tooling-guard comment lines per file. No upstream writer, CLI or extraction code is vendored.
+  tooling-guard comment lines per file. The upstream pack.py, cli.py and access.py modules are not vendored;
+  format.py retains its original record-packing primitives, unused by Clawshot.
 - Full upstream permission notice: src/clawshot/pack/_nup/LICENSE.txt, included in source packs.
   The PyPI package named "nup" is unrelated; no dependency on it is introduced.
 
