@@ -195,3 +195,14 @@ Menus and play notes use the remake's names, such as Echo Gem, Fairy Bow and Lon
 `data/item_names.toml` is display-only: logic/actor/placement identities do not change. Spoiler
 JSON keeps those logical names and includes the corresponding display-name map. Runtime game
 text takes precedence for hints; unknown items keep their existing name.
+
+## Build a UI release
+
+```sh
+uv run python -m clawshot.ui.release --out E:/Clawshot-releases
+```
+
+This builds `Clawshot-<project version>.zip` without reading a dump or generating a seed. It
+contains source, local UI assets, the starters/PowerShell helper, lock file, licences/notices and
+a five-line READ ME. The positive source allowlist excludes tools, caches, tests and game/output
+files. The shell script is executable in the zip; an existing release is never replaced.
