@@ -2693,6 +2693,72 @@ first/retry wins retain their two independent heart checks and native saved comp
 No new flag, growth change or repeat reward change. Actual Chest+Gift seed7 builds all
 seven into218 shuffled checks/28 spheres; focused persisted-state and pool tests pass.
 
+### Market Potion Shop bottle tutorial
+
+The actual child merchant is020, not the tentative046 in R9-SEED8-MARKET. Existing census
+`Npc_Hylia_020_Shop_Child/Event171` now groups as remake-only `Market Potion Shop Bottle`.
+Fixed logic adds its free empty Bottle as child at the existing daytime Potion Shop region.
+The default AISchedule selects the offer without an item, fee or quest gate. Acceptance grants
+the bottle; native saved Present/Started/Cleared Bools record the tutorial. None is item ownership.
+The subsequent bug-capture path consumes selected bottle contents and refills with Red Potion.
+
+A changed reward retains the offer/refusal, bypasses bottle-only staging/capture/consumption,
+grants through the native generic wrapper, then sets those existing completion flags and
+completes the tutorial quest. Completed entry visits route to unchanged shopping. Native same-
+Bottle and unshuffled tutorials stay unchanged. The swap remains held under D15 until Kareem
+tests the isolated backup-copy launcher/checklist in the round file. No save-layout growth.
+
+### Deterministic bowling and gallery tiers
+
+Gift/NPC shuffle dispatches native bowling First Prize on win1, Second Prize on win2,
+then the existing red-rupee filler. Native opening (Dodongo quest), rental, fee, failures,
+count and difficulty remain. The second grant also writes the native third/heart-marker
+completion Bool. No extra shuffled/fixed Bombchu payout or phantom Bomb item in this mode.
+Unshuffled routing remains native.
+
+The two ownership-dependent grants of each supported upgrade now normalize to fixed native
+medium tiers: Bomb Bag30, Bullet Bag40, Quiver40 (`PouchActorInfo.AfterExpansionMaxNum`).
+Bomb Bag30 supplies the bag ability; bullet bags and quivers do not supply rental weapon
+ownership. Their native normal-win saved flags remain; both normal galleries join Gift.
+
+Native expert modes repeat30/70 rupees (`Event202`/`Event599`) after the normal reward,
+without first-win state or a literal item actor. Kareem selected fixed Rupees (20) for each
+first-expert pool item (2026-11-09, via Claude). Census records these variable native calls
+honestly; two remake-only checks use the normal-clear prerequisite and one D22 saved Bool each:
+`Clawshot.Gift.MiniGame_HitTarget.Event202` (Hash1800298829) and `.Event599` (Hash2333016720),
+defaultfalse/reset8/save0. Only Event445/449's expert branch gets the new query; false grants
+the assignment through `GetInEvent_NotTurn_NotNpc`, then saves completion and rejoins native
+post-reward talk without opening the rupee UI. True uses the original expert talk/UI/call/close
+path, unchanged30/70. Normal wins/failures do not consume expert state; same20 assignments
+still specialize. Both checks remain D15-held pending Kareem's isolated test. No existing
+output was rebuilt; new `gallery-expert-next`, two users/launchers and `expert-check.md`.
+
+### Dampé digging event check
+
+Active `.110` Event628, already in the raw census, is the real pouch grant through
+`GetInEvent_NotTurn_NotNpc_Dampe`; native Event82 staging and Event301 cleanup are preserved.
+Linked it to the existing digging check and moved its unchanged child/night/Time Flows rule
+into gift overrides, typed NPC, held under D15 pending the isolated test.
+The saved native completion Bool is `GraveYard_DiggingHoleTour_Drop_HeartPiece`
+(Hash3037888117,false/reset8/save0). Main routes read it, but the shortcut can structurally
+reenter the grant. A completion query now guards only the reward branch at Event449's fork,
+and Event628 writes completion immediately after its grant. The parallel native cleanup
+still runs on both paths. No new saved flag, floor-major actor, lottery or fee change.
+Actual writer/inverse/serialized once-and-cleanup proofs and player checklist are in the round file.
+
+### Market finalization correction after Kareem's re-entry crash
+
+The old bypass gave Boomerang but omitted native post-catch Insect_Delete and
+Shop_Bottle_Insect_Appeared, plus Wait/schedule-select/arrival-reset actions. The copied
+save has Present/Started/Cleared true and Boomerang stock1, but both missing flags false;
+this matches the observed remaining bug/frightened merchant. The corrected path reproduces
+all five native final-state flags and those three native actions before quest completion,
+without bottle removal/refill. Exact FATAL native callee is not established.
+Kareem confirms the Bug ->Empty content difference was his own release, not the bypass:
+native IsValid bits show exactlyone bottle both before/after, no extra bottle or potion.
+New `market-bottle-fix-next` and fresh isolated profile only; old output/evidence untouched.
+Shuffle remains held until re-entry/talk/Save-Continue succeeds (round file/checklist).
+
 ## 43. Round 10: pots, crates and ground rupees (cs10d, exploration)
 
 Read-only native dump/build `e0f3ccfa`; full per-area counts, evidence, commands and
@@ -2762,69 +2828,3 @@ rows (not155 rupees). Counts, ages, geometry and vanilla rewards differ material
 Future checks use **remake names and the actual region's access rule**, like `extra_*`
 chests; record an N64 name only for an exact mapping. No ordinal/nearest-position join,
 unverified rule, new saved flag or shuffle setting is introduced by this exploration.
-
-### Market Potion Shop bottle tutorial
-
-The actual child merchant is020, not the tentative046 in R9-SEED8-MARKET. Existing census
-`Npc_Hylia_020_Shop_Child/Event171` now groups as remake-only `Market Potion Shop Bottle`.
-Fixed logic adds its free empty Bottle as child at the existing daytime Potion Shop region.
-The default AISchedule selects the offer without an item, fee or quest gate. Acceptance grants
-the bottle; native saved Present/Started/Cleared Bools record the tutorial. None is item ownership.
-The subsequent bug-capture path consumes selected bottle contents and refills with Red Potion.
-
-A changed reward retains the offer/refusal, bypasses bottle-only staging/capture/consumption,
-grants through the native generic wrapper, then sets those existing completion flags and
-completes the tutorial quest. Completed entry visits route to unchanged shopping. Native same-
-Bottle and unshuffled tutorials stay unchanged. The swap remains held under D15 until Kareem
-tests the isolated backup-copy launcher/checklist in the round file. No save-layout growth.
-
-### Deterministic bowling and gallery tiers
-
-Gift/NPC shuffle dispatches native bowling First Prize on win1, Second Prize on win2,
-then the existing red-rupee filler. Native opening (Dodongo quest), rental, fee, failures,
-count and difficulty remain. The second grant also writes the native third/heart-marker
-completion Bool. No extra shuffled/fixed Bombchu payout or phantom Bomb item in this mode.
-Unshuffled routing remains native.
-
-The two ownership-dependent grants of each supported upgrade now normalize to fixed native
-medium tiers: Bomb Bag30, Bullet Bag40, Quiver40 (`PouchActorInfo.AfterExpansionMaxNum`).
-Bomb Bag30 supplies the bag ability; bullet bags and quivers do not supply rental weapon
-ownership. Their native normal-win saved flags remain; both normal galleries join Gift.
-
-Native expert modes repeat30/70 rupees (`Event202`/`Event599`) after the normal reward,
-without first-win state or a literal item actor. Kareem selected fixed Rupees (20) for each
-first-expert pool item (2026-11-09, via Claude). Census records these variable native calls
-honestly; two remake-only checks use the normal-clear prerequisite and one D22 saved Bool each:
-`Clawshot.Gift.MiniGame_HitTarget.Event202` (Hash1800298829) and `.Event599` (Hash2333016720),
-defaultfalse/reset8/save0. Only Event445/449's expert branch gets the new query; false grants
-the assignment through `GetInEvent_NotTurn_NotNpc`, then saves completion and rejoins native
-post-reward talk without opening the rupee UI. True uses the original expert talk/UI/call/close
-path, unchanged30/70. Normal wins/failures do not consume expert state; same20 assignments
-still specialize. Both checks remain D15-held pending Kareem's isolated test. No existing
-output was rebuilt; new `gallery-expert-next`, two users/launchers and `expert-check.md`.
-
-### Dampé digging event check
-
-Active `.110` Event628, already in the raw census, is the real pouch grant through
-`GetInEvent_NotTurn_NotNpc_Dampe`; native Event82 staging and Event301 cleanup are preserved.
-Linked it to the existing digging check and moved its unchanged child/night/Time Flows rule
-into gift overrides, typed NPC, held under D15 pending the isolated test.
-The saved native completion Bool is `GraveYard_DiggingHoleTour_Drop_HeartPiece`
-(Hash3037888117,false/reset8/save0). Main routes read it, but the shortcut can structurally
-reenter the grant. A completion query now guards only the reward branch at Event449's fork,
-and Event628 writes completion immediately after its grant. The parallel native cleanup
-still runs on both paths. No new saved flag, floor-major actor, lottery or fee change.
-Actual writer/inverse/serialized once-and-cleanup proofs and player checklist are in the round file.
-
-### Market finalization correction after Kareem's re-entry crash
-
-The old bypass gave Boomerang but omitted native post-catch Insect_Delete and
-Shop_Bottle_Insect_Appeared, plus Wait/schedule-select/arrival-reset actions. The copied
-save has Present/Started/Cleared true and Boomerang stock1, but both missing flags false;
-this matches the observed remaining bug/frightened merchant. The corrected path reproduces
-all five native final-state flags and those three native actions before quest completion,
-without bottle removal/refill. Exact FATAL native callee is not established.
-Kareem confirms the Bug ->Empty content difference was his own release, not the bypass:
-native IsValid bits show exactlyone bottle both before/after, no extra bottle or potion.
-New `market-bottle-fix-next` and fresh isolated profile only; old output/evidence untouched.
-Shuffle remains held until re-entry/talk/Save-Continue succeeds (round file/checklist).
