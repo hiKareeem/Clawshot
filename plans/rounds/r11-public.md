@@ -52,3 +52,11 @@ unlicensed or NX2navi material; game-free issues/attachments and synthetic fixtu
 assistance; scoped PRs; deterministic data/identity contracts; standard gate commands and native
 coverage; isolated player checks with current mods-loading proof. Kareem/co-owner retain merge
 and product decisions. No behavior or licensing policy changed.
+
+## 3. Issue forms and PR checklist
+
+Added bug and logic question forms with revision/seed/full-CS1/runtime/state/evidence fields,
+required no-game-data acknowledgement, reviewed log excerpts and explicit inference limits.
+Blank issues are disabled; the contact link uses the permanent Discord invite. The PR checklist
+covers MIT rights, provenance, AI trailers, determinism, checks, docs and gameplay acceptance.
+Forms do not request saves, generated spoilers or mods.

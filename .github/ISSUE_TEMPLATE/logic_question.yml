@@ -1,0 +1,58 @@
+name: Logic question
+description: Report a remake access rule or a possible impossible seed.
+title: "[Logic] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Describe one route or requirement. Separate what you observed in the remake from N64 behavior or inference.
+        Never upload a dump, decoded resource, generated mod, save or spoiler file. Mark item-location spoilers.
+        Questions and setup help are also welcome at https://discord.gg/7R5ZXPcJqn.
+  - type: input
+    id: revision
+    attributes:
+      label: Clawshot commit or pack identifier
+    validations:
+      required: true
+  - type: textarea
+    id: seed_settings
+    attributes:
+      label: Seed, complete settings string and explicit overrides
+      description: If not about a seed, say so. Otherwise include the full CS1 string.
+      render: text
+    validations:
+      required: true
+  - type: input
+    id: runtime
+    attributes:
+      label: Runtime/version and game build
+    validations:
+      required: true
+  - type: textarea
+    id: route
+    attributes:
+      label: Location, route and starting state
+      description: Age, usable inventory, story stage, time and where Link stands. Which item or rule seems to block progress?
+    validations:
+      required: true
+  - type: textarea
+    id: question
+    attributes:
+      label: Expected access versus observed result
+      description: Exact steps and result, or a clear question if not yet tested. Include repeat/reload limits. Do not claim a failed attempt proves impossibility.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence and remaining uncertainty
+      description: State whether played in the remake, read from data, inferred or untested. Cite relevant source paths or factual guide URLs without copying text. For a mod test include reviewed loading/error log excerpts, not game resources.
+    validations:
+      required: true
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Safe to publish
+      options:
+        - label: This report and its attachments contain no game files, decoded data, generated output, saves or keys.
+          required: true

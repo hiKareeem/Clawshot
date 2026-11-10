@@ -1,0 +1,74 @@
+name: Bug report
+description: Report a setup, crash, reward or seed problem.
+title: "[Bug] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Public test builds are unfinished. Read [the contribution rules](https://github.com/hiKareeem/Clawshot/blob/main/CONTRIBUTING.md).
+        Never upload game files, keys, decoded data, generated mods, caches, saves or spoiler files.
+        Use a short reviewed text log excerpt; remove private paths and credentials.
+  - type: input
+    id: revision
+    attributes:
+      label: Clawshot revision or seed-pack name
+      description: Exact commit or pack identifier, not just the version label.
+    validations:
+      required: true
+  - type: input
+    id: seed
+    attributes:
+      label: Seed number
+      description: Say not applicable if failure happened before generation.
+    validations:
+      required: true
+  - type: textarea
+    id: settings
+    attributes:
+      label: Complete settings string
+      description: Paste the full CS1 string and any explicit overrides, or explain why unavailable.
+      render: text
+    validations:
+      required: true
+  - type: input
+    id: runtime
+    attributes:
+      label: Runtime, version and operating system
+      description: For example Hookshot or Lichii, exact version, OS; name the supported game update/build too.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Where and how to reproduce
+      description: Location, age, inventory/story state and exact steps. Mark item-location spoilers.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected result
+    validations:
+      required: true
+  - type: textarea
+    id: observed
+    attributes:
+      label: Observed result
+      description: Include whether Save and Continue or revisiting changed it, if already tried. Do not risk your main save to reproduce.
+    validations:
+      required: true
+  - type: textarea
+    id: log
+    attributes:
+      label: Relevant log excerpt
+      description: Hookshot uses hookshot_log.txt in the pack folder; emulators use their own log. Include the error and relevant mods-loading lines, or explain why no log exists. No resource dumps or save data.
+      render: text
+    validations:
+      required: true
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Safe to publish
+      options:
+        - label: This report and its attachments contain no game files, game-derived output, saves, keys or private credentials.
+          required: true
