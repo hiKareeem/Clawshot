@@ -32,12 +32,12 @@ The extensionless `~/go/bin/bermuda` command failed before reading the thread (e
 Read the installed executable directory: it contains `bermuda.exe`, not `bermuda`.
 Use `C:/Users/hi/go/bin/bermuda.exe` for the allowed post/log commands.
 
-The existing `docs/discord/server-kit.md` still says private/do not repost and has stale dump/loading
-claims. It is not in this track's owned list. Request reviewer authorization/owner correction; do not
-silently edit it. `docs/seed-pack.md` contains the old overlay route and evidence wording, owned by cs11c.
+Initially flagged stale/private Discord drafts outside ownership. Claude subsequently assigned
+`docs/discord/server-kit.md` here: update as public-test drafts in a separate commit, retain
+own-dump/no-game-files/no-piracy rules and permanent invite. `docs/seed-pack.md` remains cs11c's.
 
-**Kareem/reviewer: before changing visibility, approve or replace the stale Discord-kit drafts, and
-update AGENTS.md's overlay proof line to the current mods log (`mods: <file> <- <path>`).**
+**Kareem/reviewer: update AGENTS.md's overlay proof line to the current mods log
+(`mods: <file> <- <path>`).**
 AGENTS.md is deliberately unchanged, as instructed. The orchestration file already records the new rule.
 
 ## Verification
@@ -69,3 +69,37 @@ proof, all current spoiler top-level fields, and the additional live client/runt
 by a future multiworld integration. Each contract cites its specification or implementation path.
 Read the actual spoiler producer to confirm `locations`, nullable `opening_route`, warnings and hints;
 no source was changed. No live tracker/client/network IDs are invented.
+
+## 5. Public-tree housekeeping and scan
+
+Commit `b0d932a` replaces both occurrences of the specified other author's name in the roadmap
+with anonymous wording. It changes only those two lines; history and commit identities are untouched.
+
+Scanned the tracked-file inventory plus non-ignored working-tree paths, including hidden `.github`
+files. File-pattern scan found no game containers/resources, saves/keys, generated seed manifests,
+archives/logs, private-key files, `.env` files or RomFS/ExeFS/cache folders. Tracked inventory consists
+of source, TOML definitions/logic, synthetic test code, text documentation/licences and build metadata.
+Ignored local environments/tool caches are not release contents and were not treated as tracked data.
+
+Full-tree text searches (excluding Git internals and agent context files) covered attribution/contact
+markers, third-party GitHub sources, the requested author's exact name and credential-like strings:
+
+- Retain legal credits: OoTRandomizer and AmazingAmpharos, Testrunner, Zannick, Junglechief87,
+  LLCoolDave, KevinCathcart; Archipelago/Berserker66/CaitSith2/LegendaryLinux; a55uka. NOTICE and the
+  vendored MIT licence are intentionally not anonymized.
+- Hookshot/NotRexed, SkyboundTotk, OoT Randomizer, Archipelago and public factual guide citations are
+  provenance, not endorsement. `sloperina`/PracticeROM remains a facts-only cited research lead in
+  `plans/03-game-data.md` and `plans/rounds/r9-itembar.md`; no code from it is claimed.
+- NX2navi mentions are source-use prohibitions, not imported material. AI model/Claude/Hermes,
+  Kareem, Greenferret and thread/track handles occur in planning/history records; no blanket name purge.
+- Contact scan found the example Anthropic noreply trailer in the roadmap, no secret email credential.
+  Kareem's commit email is intentionally unchanged; no history rewrite or historical-secret audit.
+- Credential heuristic matched only `sk-` substrings in mask-guide URLs, not actual credentials.
+  No private-key block or token/password assignment was identified. This is a heuristic tree scan,
+  not a guarantee that all secrets or licensing issues are absent.
+
+Public-review considerations retained rather than erased: plans contain machine/scratch paths,
+native identifiers, research addresses and historical private-pack/overlay instructions. Those are
+not decoded game-file copies; current public entry points override obsolete instructions. The still
+stale pack guide is assigned to cs11c and must be integrated before publishing. The Discord drafts
+are corrected separately below. No unlicensed archive, NX2navi material, game source or dump was opened.
