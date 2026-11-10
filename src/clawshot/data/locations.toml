@@ -4870,9 +4870,9 @@ oot_randomizer_name = "Kak Granny Buy Blue Potion"
 id = "Npc_Hylia_Dampe_001/Event628"
 kind = "npc_gift"
 area = "Graveyard"
-name = "Npc_Hylia_Dampe_001 Event628 (Obj_Heart_Piece)"
+name = "Graveyard Dampe Gravedigging Tour"
 vanilla_item = "Obj_Heart_Piece"
-oot_randomizer_name = ""
+oot_randomizer_name = "Graveyard Dampe Gravedigging Tour"
 
 [[location]]
 id = "Npc_Hylia_RunningMan_Adult/Event125"

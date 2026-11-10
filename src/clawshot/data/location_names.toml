@@ -3142,3 +3142,11 @@ where = "As child, enter the Market Potion Shop by day and accept the owner's bo
 oot_randomizer_name = ""
 source = "Kareem R9-SEED8-MARKET, 2026-11-09; cs10a native Npc_Hylia_020_Shop_Child/Event171 and default AISchedule; section40."
 ids = ["Npc_Hylia_020_Shop_Child/Event171"]
+
+[[location]]
+location = "Graveyard Dampe Gravedigging Tour"
+name = "Graveyard: Dampe Digging Reward"
+where = "As child at night after meeting Zelda, lead Dampe to the graveyard's digging spots and pay for digs until the heart-prize result. The temporary heart prop is presentation; the event gives the shuffled reward once."
+oot_randomizer_name = "Graveyard Dampe Gravedigging Tour"
+source = "cs10a active Npc_Hylia_Dampe_001.110/Event628 grant, native saved completion and existing child_graveyard access rule; section40."
+ids = ["Npc_Hylia_Dampe_001/Event628"]

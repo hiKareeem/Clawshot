@@ -34,11 +34,6 @@ rule = "is_adult or (at_dampe_time and 'Time Flows')"
 was = "is_adult or at_dampe_time"
 source = "Dampé's hours need time to flow (Eurogamer 17 changes); data: Obj_Graveyard_Door_A_01 11317197928420415449 with CheckEventName Npc_Hylia_Dampe_001_Child_CheckRestrictedDoor. Shared rule: the adult part unchanged"
 
-[locations."Graveyard Dampe Gravedigging Tour"]
-rule = "is_child and (at_dampe_time and 'Time Flows')"
-was = "is_child and at_dampe_time"
-source = "night needs time to flow (Eurogamer 17 changes: the tour is reworked, Link leads Dampé to the spot); IGN Kakariko walkthrough and Nintendo Life heart pieces (#9): Dampé offers the tour at night, the heart piece comes up after paying for digs. Data: HeartPieceAnchor 10075158462075677237 with GraveYard_DiggingHoleTour_Drop_HeartPiece, Npc_Hylia_Dampe_001 in Graveyard_Child_Static"
-
 [locations."Graveyard GS Wall"]
 rule = "can_use(Boomerang) and ((at_night and 'Time Flows') or gold_skulls_ignore_daytime)"
 was = "can_use(Boomerang) and (at_night or gold_skulls_ignore_daytime)"
