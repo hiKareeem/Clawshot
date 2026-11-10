@@ -5,11 +5,7 @@ from dataclasses import asdict
 from pathlib import Path
 
 from clawshot.pack import BUILD, check_version
-
-try:
-    from clawshot.pack.hookshot import detect as _detect_hookshot
-except ImportError:
-    from clawshot.app._hookshot import detect as _detect_hookshot
+from clawshot.pack.hookshot import detect as _detect_hookshot
 
 SOURCE_ROOT = Path(__file__).resolve().parents[3]
 
@@ -56,7 +52,7 @@ def detect_dump(value: str) -> dict:
 
 
 def detect_hookshot(value: str) -> dict:
-    """JSON projection of pack's detector (temporary same-contract stand-in on this branch)."""
+    """JSON projection of the shared pack detector; never infer capability from a version."""
     path = absolute_path(value, "Hookshot")
     if not path.is_dir():
         raise ValueError("Hookshot folder does not exist")

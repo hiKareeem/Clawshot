@@ -87,3 +87,25 @@ Added `docs/ui.md` (launch modes, native/headless capabilities, settings/seed/lo
 Additional native headless key-event smoke passed: Q/E tabs, Up/Down focus, Left/Right card and select changes, Enter toggles, E left to the focused editor, Esc back; zero JS exceptions. Evidence: `E:/OOTRemake/work/r11-ui-cs11d/keyboard-final-proof.json`. Stopped both old --no-open servers before integration/gates; no native GUI, Explorer or game started.
 
 Main moved to D37 as Claude reported; rebase and the four full gates follow. Public `pack.hookshot` still has no main history at this checkpoint, so the specifically agreed isolated detector stand-in remains until Track C integration. This is not yet the final gate/handoff claim.
+
+## Base handoff: items 1–5 complete
+
+Full commands ran serially with `CLAWSHOT_WORKERS=1`; whole pytest, dump tests and the one native app smoke each acquired/released `E:/OOTRemake/work/rounds/r11/gate.lock` in a finally path, with no other gate overlapped:
+
+- `uv run ruff format --check`: 278 files already formatted.
+- `uv run ruff check`: all checks passed.
+- `uv run pytest`: **852 passed, 110 skipped in1197.85s**.
+- `OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump`: **93 passed, 16 skipped, 853 deselected in966.16s**. This run supplied romfs, not the optional NUP fixture.
+- Actual default `Jobs` generation, seed11/CS1, using the real dump and existing make_seed/write_seed: **succeeded**,165 shuffled checks,26 spheres,83 resources; all stages done, private staging removed, ZsDic SHA256/mtime unchanged. Output is a new untouched folder: `E:/OOTRemake/work/r11-ui-cs11d/real-app-seed-11-next-20261110-122355`. No launcher/game run. Native proof: `native-app-proof.json`; full logs/results: `E:/OOTRemake/work/r11-ui-cs11d/gates-20261110-104649/`.
+
+After these completed, followed Claude's integration instruction: rebased onto main containing loader e4fe456, imported `pack.hookshot.detect` directly, deleted `app/_hookshot.py` and its ImportError fallback. Capability is the HOS_MODS marker alone, not a version inference. The synthetic non-execution fixture now contains that marker; removed its incidental normalized-version assertion instead of re-pinning it. Real authenticated HTTP detection of the installed game returned200, version `v2.0.13`, supports_mods=true, empty reason and native romfs/NUP paths, without execution.
+
+Authorized post-rebase checks only: full format **281 formatted**, full lint passed; `CLAWSHOT_WORKERS=1 uv run pytest tests/test_app.py tests/test_app_schema.py tests/test_ui.py -q`: **36 passed in12.54s**. Full gates were not rerun after integration; Claude runs them in review as directed. Throwaway gate/native-smoke scripts removed after proof; logs, screenshots and the new native seed remain outside the repo.
+
+Updated platform facts from Claude: Make verified under Linux/WSL from folder and NUP with the Windows digest; UI generation expected on Linux/macOS, macOS untested; Play is Windows-only. Corrected stale Door of Time help to D35's first-check evidence and still-untested early child return.
+
+Provisional metadata choice (cs11d): removed copied check totals and the stale bottle/digging hold list instead of duplicating generator eligibility policy in the UI. Actual generation reports its check/resource totals. Gift additions therefore need no schema count edit. Per-choice coverage and specific gameplay evidence remain; no defaults or generator behavior changed.
+
+Final fast-start wording proof: `E:/OOTRemake/work/r11-ui-cs11d/shots/settings-menu-faststart-final.png`,1280×860, fresh --no-open process: Skip the opening intro / Skipped; other Skip… cards / Plays. Earlier approved -font Game/Settings/finished and menu idle/running captures remain valid. Browse/Open are enabled by both normal startup branches; their capability/HTTP path is tested using an injected chooser without a dialog. Native window/dialog visuals and in-game acceptance are not claimed.
+
+Rebased base commits, in order: `3fe5b26` app; `a104b44` menu UI; `ad8bb39` HTTP safety; `d183f31` synthetic HTTP generation; `7d60ff6` docs; this integration/handoff commit's exact head is posted on cs-r11. No merge/push, played output/save/dump changes or game start. Base intentionally has loading instructions, not a real Play/installer/gamepad. Kareem's new release direction supersedes those limits in the next work: after this base handoff, read `ui-next.md` and implement its ordered items on this branch.

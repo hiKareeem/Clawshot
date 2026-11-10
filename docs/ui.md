@@ -44,6 +44,11 @@ Manual Hookshot loading uses a dedicated `HOS_MODS` root containing exactly one 
 with `HOS_FS_OVERLAY` cleared, not set. Manual loading uses the main save folder: back it up before
 New Game. Seed-pack Play provides its own isolation; the UI's result is an ordinary mod folder.
 
+The pack's Make path was verified on Linux (WSL) with both a romfs folder and a `.nup`, producing
+the same digest as Windows (maintainer verification, round11). The UI shares that generator path,
+so generation is expected to work on Linux and macOS; macOS itself is untested. **Play is
+Windows-only**: it starts `bin/hookshot.exe`. Linux Make verification is not native-UI certification.
+
 ## Keyboard and layout
 
 Q/E changes tabs outside text editors. Up/Down moves focus; Left/Right changes a chooser, switch
@@ -85,6 +90,8 @@ The Generate action fits without scrolling at 1280×860.
 4. Group/display options are presentation metadata. Multi-choice cards can supply `status_labels`;
    fast start uses Skipped/Plays. `clears` identifies derived override keys to clear when a control
    changes, rather than hard-coding a field dependency in JavaScript.
+   Check totals belong to the generator's actual result, not schema prose or a second UI eligibility
+   algorithm: new Gift checks must not require editing a copied count or a held-check list here.
 5. Run the synthetic app/HTTP tests, then exercise the actual UI and any changed generator path.
    Keep seeds/game files outside the repository. Follow the project's full gates and in-game
    evidence rules for changes to gameplay.
@@ -112,7 +119,7 @@ This is the complete contributor UI base, not a desktop distribution. Not implem
 - gamepad/Steam Deck controller navigation (keyboard/mouse only);
 - one-click game launch, mod installation or save management;
 - a bundled executable/installer, persistent user configuration, or bundled fonts;
-- native-dialog visual acceptance or Linux/macOS runtime certification by this round's agent.
+- native-dialog visual acceptance or Linux/macOS UI runtime certification by this round's agent.
 
 Seed packs still use Make/Play; the UI is run from the source checkout or an installed Python
 package containing its static assets. Architecture and the local HTTP contract: [UI plan](../plans/05-ui.md).

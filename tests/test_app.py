@@ -147,12 +147,12 @@ def test_paths_refuse_existing_source_and_relative_output(tmp_path):
 
 def test_hookshot_detection_does_not_execute_binary(tmp_path):
     (tmp_path / "bin").mkdir()
-    (tmp_path / "bin/hookshot.exe").write_bytes(b"not executable")
+    (tmp_path / "bin/hookshot.exe").write_bytes(b"not executable HOS_MODS\0")
     (tmp_path / "hookshot_version.txt").write_text("version=v2.0.13\nbuilder=not-used\n")
     (tmp_path / "romfs").mkdir()
     (tmp_path / "own.nup").write_bytes(b"invented")
     result = detect_hookshot(str(tmp_path))
-    assert result["version"] == "2.0.13" and result["supports_mods"] and not result["reason"]
+    assert result["supports_mods"] and not result["reason"]
     assert Path(result["romfs"]) == tmp_path / "romfs"
     assert result["nups"] == [str(tmp_path / "own.nup")]
 
