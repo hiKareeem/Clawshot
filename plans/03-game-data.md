@@ -2878,3 +2878,37 @@ rows (not155 rupees). Counts, ages, geometry and vanilla rewards differ material
 Future checks use **remake names and the actual region's access rule**, like `extra_*`
 chests; record an N64 name only for an exact mapping. No ordinal/nearest-position join,
 unverified rule, new saved flag or shuffle setting is introduced by this exploration.
+
+## 42. Round 10: NUP input for source-only seed packs (cs10c)
+
+Implementation, exact commands/results and review boundary: `plans/rounds/r10-nup.md`.
+The player's original NUP and extracted RomFS are read-only; all local output is outside the repo.
+
+`python -m clawshot.pack --romfs` / `OOT_ROMFS` and Make's dump-path answer accept either a
+RomFS directory or full `.nup` filename. The generator itself retains its ordinary directory API.
+The reader is [a55uka/nup](https://github.com/a55uka/nup) at
+`a4840f06c94ddeb414eea5b33c9704ffe995f11c`, MIT; reader/format modules and the complete licence
+are vendored and attributed in `NOTICE`. PyPI's unrelated `nup` package is not used.
+
+Preflight reads the same four supported-version resources directly inside the newest complete
+base/update RomFS. Add-ons are not selected; ambiguous/incomplete/unsupported newer packages
+never borrow or fall back to older content. Upstream TOC/bounds checks precede tree indexing;
+every resource read verifies its actual SHA256 against its NUP record. No filename or display
+version is trusted as the supported-build oracle. Folder and NUP fingerprints must agree.
+
+Kareem's read-only NUP is25,020,741,061 bytes, one standalone update131072 with186,592 file
+records and601 directories. Its fingerprint is the existing supported signature
+`fc09c4af707a0ca092188cf014f6fdf3d40514def773f097b798f52f9f28bc93`.
+All1,239 selected generator inputs /25,821,037 bytes compare byte-identical with his extracted
+RomFS. The working set excludes ExeFS/models/textures/audio, not a full25GB extraction.
+
+NUP Make bootstraps frozen uv/Python/zstd for input preflight, then saves configuration and
+creates a unique pack-local `.romfs-*` cache only after version success. Folder preflight remains
+before uv. Cache removal occurs on normal completion or exception; force-killed remnants, like
+the generated seed, remain private game data. The positive ZIP allowlist includes source/licences
+only, never cache/seed resources. Existing seeds are verified, not overwritten; emulator Make
+still needs no Hookshot, and Play's bin-only/isolated-save safeguards are unchanged.
+
+Synthetic fixtures contain invented bytes only. The optional `OOT_NUP` + `OOT_ROMFS` dump oracle
+compares every cached resource and checks source size/mtime preservation. Actual publisher and
+PowerShell Make evidence is recorded in the round file; no game or launcher is run by the agent.
