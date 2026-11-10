@@ -1007,7 +1007,7 @@ All three tracks merged; main `90ef730`, gates 761 passed / 89 skipped, dump 88.
 - From play: the guard house crashes are Hookshot#1112 (commented with Kareem's OK); test pools now cap their workers
   (`c9e2e2b`).
 
-First public test seed (Kareem, 2026-11-09, after Ormas posted a ready-made rando in the Lichii server without
+First public test seed (Kareem, 2026-11-09, after another randomizer posted a ready-made rando in the Lichii server without
 trouble): seed 10 with seed 8's settings (Chest, Shop, Gift, Scrub, BossHeart), main `ceaada4`, pack
 `work/r9-packs/clawshot-seed-10.zip` (`READ ME FIRST.txt` with the Discord link). Chosen because Bombchu Bowling's
 random Second Prize holds a 1-rupee filler (seeds 9 to 16 checked; the First Prize stays the vanilla Bomb Bag).
@@ -1069,7 +1069,7 @@ Owns `plans/rounds/r10-pots.md`, section 43, any new `src/clawshot/patch/pots.py
    and floor heart pieces do, D33), and which items.
 3. If it can: a `Pot` (and rupee) shuffle type behind the settings string, logic from OoT Randomizer's pot and rupee
    locations, tests and a test output with a checklist. If not: a report of what blocks it. Another randomizer
-   (Ormas, Lichii Discord) shuffles pot drops; its zip has no licence: never open, read or use it.
+   (Lichii Discord) shuffles pot drops; its zip has no licence: never open, read or use it.
 
 ### Round 10 Track D result (merged `5653956`, docs only)
 
