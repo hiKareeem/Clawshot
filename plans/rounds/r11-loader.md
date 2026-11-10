@@ -134,3 +134,72 @@ current game. Require one seed mod, `mods: <file> <- <path>`, expected seed plac
 isolated New Game and later Continue. Controller icons in text will be the game's own.
 The agent never starts Play except its no-start dry run.** Source-pack smoke and report are
 complete; full-gate results below will establish readiness, not in-game certification.
+
+For the branch-local final smoke packs (digest above), not the older played seed8:
+
+1. Extract `romfs-unset-pack-next.zip` OR `nup-unset-pack-next.zip` into another fresh
+   folder; Make with the matching source and Hookshot folder; require Verified seed.
+2. After quitting the current game and Claude's review/boot check, Play and start a new
+   isolated game. If any cheat menu is enabled, use **Teleport and clock only**, never
+   inventory, age or flags. Check dialogue text uses Switch icons with normal controls.
+3. Enter Mido's house and face its four chests. Left to right: **Longshot, Piece of Heart,
+   Kokiri Sword, Boomerang** (read directly from the new actual spoiler/note). Prefer the
+   middle/right checks first; after child Longshot pickup, **Save and Continue** before
+   using other items. Confirm item notices/inventory and working Boomerang as child.
+4. Require log `mods: seed: 135 RomFS files` and one mod, plus
+   `mods: Banc/KokiriForest/KokiriForest_Child_Dynamic.bcett.byml.zs <- <this pack>/seed/romfs/...`
+   and the native-icons fallback line. Mods file proofs are capped at the first200 opens.
+5. Save, quit and Play again: Continue retains these pickups in **this pack's user**;
+   the main playthrough was never copied/reset. Attach this pack's hookshot_log.txt and
+   pack.json, never seed/cache/save/game bytes.
+
+An integrated rebuild can legitimately change assignments/digest; follow **its** note and
+spoiler instead of these branch-local four rewards. These steps remain Kareem's, unrun here.
+
+## Branch commit ledger
+
+| Commit | Scope |
+| --- | --- |
+| `87c03da` | Item1 urgent single-mod Play cutover, fail-closed support and dry run |
+| `67582d9` | Requested read-only shared Hookshot detector and synthetic tests |
+| `44f9147` | Item2 player summary, native icons and manual-mod/main-save warnings |
+| `e3fbb96` | Native-probe correction: remove inherited overlay variable entirely |
+| `0b87f63` | Item3 completed final RomFS/NUP publisher/Make/dry-Play proof |
+| `16bdc44` | Item4 source-cited upstream candidate and section45 |
+
+All commits remain on r11/loader; none merged or pushed. No dependency changes.
+Removed only completed session-created smoke.py and the duplicate external report draft;
+source archives, generated outputs and all evidence JSON/logs remain outside the repository.
+After successful completion removed only this session's external gates.py driver as well.
+All generated output/user/game/save-backup folders remain untouched.
+
+## Full gate evidence
+
+Both pytest gates use CLAWSHOT_WORKERS=1, absolute external forward-slash basetemps and
+exclusive r11/gate.lock ownership. No production/test changes during the final chain.
+All observed results are recorded below; an in-progress stage is not counted as a pass.
+
+| Complete command | Observed result |
+| --- | --- |
+| `uv run ruff format --check` |261 files already formatted; exit0 |
+| `uv run ruff check` |All checks passed; exit0 |
+| `CLAWSHOT_WORKERS=1 uv run pytest` |836 passed,110 skipped;1187.76s; exit0 |
+| `CLAWSHOT_WORKERS=1 OOT_ROMFS=E:/Games/Hookshot/romfs OOT_NUP=<full NUP path> uv run pytest -m dump` |109 passed,837 deselected;1981.21s; exit0 |
+
+All946 tests collected. Native109 includes the full NUP cache-only/full-RomFS matrix;
+no selected dump test skipped. No extra retry, narrowed seed range, relaxed oracle or test
+change during the gate chain. Runner wall times: synthetic1188.28s, dump1981.89s.
+Observed stdout records acquired/released for **each** lock and ALL FOUR GATES PASSED.
+Logs: `gate-{format,lint,synthetic,dump}.log`; command/exit/timing evidence: gate-results.json.
+
+## Final handoff
+
+Ready for Claude's code review on r11/loader: all four ordered track items plus the requested
+shared detector are committed and exercised. The final evidence-only commit follows the
+ledger above; its actual hash is posted on cs-r11 rather than self-referenced here.
+
+Remaining external work: review/merge, combine section44/45 and the public-doc/UI/keys changes,
+rebuild a **new** integrated pack and use its own digest/note. cs11d consumes the detector
+contract in67582d9 directly after integration. **Kareem's exact isolated New Game/Continue,
+placements and native-icons check above remains unrun by this agent.** No source/runtime
+change to Hookshot, PR, dependency edit, unauthorized rebase, merge or push was made here.
