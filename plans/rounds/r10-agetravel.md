@@ -109,3 +109,33 @@ rule: seed8's retained spoiler, seed10 regenerated in memory from main using tha
 actual generator spec, keeps all native fixed placements, then changes only the three song
 helpers for independent search/return-proof replay. No seed folder is written. Results and
 their separate thread post follow after the serialized run.
+
+### Native story-timing boundary to observe
+
+Early first pull still runs native DoorOfTime/Event93 (DoorOfTime Complete), not a new
+quest write. Read-only follow-through found HyruleField's escape trigger accepts DoorOfTime
+Step04 **or later** and unplayed escape history (`HyruleField_Child_Prefab_32f7`, node4).
+**[INFERENCE] An early first pull followed by child return may therefore bring the native
+escape/moat sequence forward, before all three stones; its first-pull quest completion is
+not separate from that trigger. Kareem: report this timing on the early-door copy, whether
+the native moat Ocarina/song check remains available exactly once, and whether later child
+stone quests/rewards still proceed.** No source changes to that unrequested story policy,
+extra quest/grant, or new NUP input are invented. Closed remains wholly native.
+
+### Full-gate failure diagnosed (before fixture migration)
+
+The serialized first full run passed format (242 files) and lint, then reported
+**19 failed, 765 passed, 91 skipped** (998.80s). Printed failures all exercise adult
+song/scarecrow routes with a Fairy Ocarina fixture. Updated the adult route inventories
+to Ocarina of Time, including neighboring adult-only fixtures; their key, wallet,
+traversal, reward and song assertions remain unchanged. Child Fairy fixtures remain.
+The instrument boundary regression now covers all three door modes. The next full run
+is after that printed-cause correction, not an unchanged retry.
+
+### New launcher rule (Claude, 2026-11-09)
+
+Added `HOS_OOT_CHEATS=1` beside `HOOKSHOT_NO_UPDATE_CHECK=1` to the unplayed
+`Test - first-pull-fixed-next.bat` and the future controlled-door launcher template.
+The first-pull checklist now restricts use to Teleport and the clock, with no inventory,
+age or flag cheats unless a step explicitly says so. Static isolation/settings checks
+pass; no launcher/game was started and no played overlay was rebuilt or changed.

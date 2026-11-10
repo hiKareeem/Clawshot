@@ -28,7 +28,7 @@ def test_ship_token_requires_scarecrow_not_longshot_alone():
     search = Search(world, ["Longshot"])
     token = world.locations["Shadow Temple GS Near Ship"]
     assert not search.can_access(token, ADULT)
-    search.collect("Fairy Ocarina")
+    search.collect("Ocarina of Time")
     search.collect("Scarecrow Song")
     assert search.can_access(token, ADULT)
 
@@ -69,7 +69,7 @@ def test_fifth_key_cannot_self_lock_in_the_spike_wall_room():
 
 def test_scarecrow_ledge_does_not_bypass_the_statue_bridge():
     world = shadow_world("Shadow Temple Beyond Boat")
-    search = Search(world, ["Longshot", "Fairy Ocarina", "Scarecrow Song"])
+    search = Search(world, ["Longshot", "Ocarina of Time", "Scarecrow Song"])
     assert not search.can_reach("Shadow Temple Before Boss", ADULT)
     search.collect("Bow")
     assert not search.can_reach("Shadow Temple Before Boss", ADULT)

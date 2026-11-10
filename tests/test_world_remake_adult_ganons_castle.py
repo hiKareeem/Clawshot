@@ -39,7 +39,7 @@ def test_forest_trial_rupees_do_not_bypass_the_new_traversal():
     search = Search(world, ["Silver Rupee (Ganons Castle Forest Trial)"] * 5)
     target = "Ganons Castle Forest Trial Ending"
     assert not search.can_reach(target, ADULT)
-    for item in ["Fairy Ocarina", "Song of Time", "Hover Boots"]:
+    for item in ["Ocarina of Time", "Song of Time", "Hover Boots"]:
         search.collect(item)
     assert not search.can_reach(target, ADULT)
     search.collect("Hookshot")
@@ -66,7 +66,7 @@ def test_shadow_trial_torch_accepts_an_arrow_through_the_lit_torch():
 
 def test_lullaby_rupee_does_not_invent_a_second_castle_key():
     world = castle_world("Ganons Castle Light Trial")
-    search = Search(world, ["Fairy Ocarina", "Zeldas Lullaby"])
+    search = Search(world, ["Ocarina of Time", "Zeldas Lullaby"])
     lullaby = world.locations["Ganons Castle Light Trial Lullaby Chest"]
     key = world.locations["Ganons Castle Light Trial Invisible Enemies Chest"]
     placement = {loc.name: loc.vanilla for loc in [lullaby, key]}

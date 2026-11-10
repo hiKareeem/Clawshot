@@ -17,7 +17,7 @@ def test_low_water_scarecrow_does_not_grant_fire_arrows():
     spec = load_spec()
     spec["start"] = "Lake Hylia"
     world = build_world(spec)
-    search = Search(world, ["Bow", "Longshot", "Fairy Ocarina", "Scarecrow Song"])
+    search = Search(world, ["Bow", "Longshot", "Ocarina of Time", "Scarecrow Song"])
     arrows = world.locations["LH Sun"]
     assert not search.can_access(arrows, ADULT)
     search.collect("Water Temple Clear")

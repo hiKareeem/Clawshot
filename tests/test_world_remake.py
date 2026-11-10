@@ -248,7 +248,7 @@ def test_only_dins_fairy_comes_without_dins_fire():
 def test_the_300_and_500_rupee_fairies_need_the_adult_wallet(region: str, location: str):
     """Their fees are past the starting wallet's 200; the Adult Wallet holds 500."""
     world = fountain(region)
-    search = Search(world, [*LULLABY, "Dins Fire"])
+    search = Search(world, ["Ocarina of Time", "Zeldas Lullaby", "Dins Fire"])
     assert not search.can_access(world.locations[location], ADULT)
     search.collect("Adult Wallet")
     assert search.can_access(world.locations[location], ADULT)

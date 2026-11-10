@@ -71,11 +71,11 @@ def test_heavy_block_chests_ask_for_the_cracked_wall(gtg_wolfos_room):
 
 def test_near_scarecrow_key_is_beyond_the_scarecrow_from_the_statue_floor(gtg_statue_room):
     chest = gtg_statue_room.locations["Gerudo Training Ground Near Scarecrow Chest"]
-    search = Search(gtg_statue_room, ["Bow", "Hookshot", "Fairy Ocarina", "Scarecrow Song"])
+    search = Search(gtg_statue_room, ["Bow", "Hookshot", "Ocarina of Time", "Scarecrow Song"])
     assert not search.can_access(chest, ADULT)
     search.collect("Longshot")
     assert search.can_access(chest, ADULT)
-    search = Search(gtg_statue_room, ["Longshot", "Fairy Ocarina", "Scarecrow Song"])
+    search = Search(gtg_statue_room, ["Longshot", "Ocarina of Time", "Scarecrow Song"])
     assert not search.can_access(chest, ADULT)  # the statue (Bow) opens the upper door
 
 

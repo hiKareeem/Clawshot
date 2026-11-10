@@ -50,7 +50,7 @@ def test_bow_route_does_not_gain_a_sixth_key_requirement():
 def test_east_garden_token_needs_scarecrow_even_from_falling_room():
     world = forest_world("Forest Temple Falling Room")
     token = world.locations["Forest Temple GS Raised Island Courtyard"]
-    search = Search(world, ["Hookshot", "Bow", "Bomb Bag", "Fairy Ocarina"])
+    search = Search(world, ["Hookshot", "Bow", "Bomb Bag", "Ocarina of Time"])
     search.update()
     assert not search.can_access(token, ADULT)
     search.collect("Scarecrow Song")

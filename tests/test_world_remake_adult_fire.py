@@ -4,7 +4,7 @@ import pytest
 
 from clawshot.world import ADULT, Search, build_world, load_spec
 
-GEAR = ["Goron Tunic", "Goron Bracelet", "Hookshot", "Bow", "Bomb Bag", "Fairy Ocarina", "Song of Time"]
+GEAR = ["Goron Tunic", "Goron Bracelet", "Hookshot", "Bow", "Bomb Bag", "Ocarina of Time", "Song of Time"]
 
 
 def fire_world(start="Fire Temple Lower"):
@@ -58,7 +58,7 @@ def test_hover_boots_do_not_replace_lowering_the_boss_pillar():
     world = fire_world("Fire Temple Upper")
     search = Search(world, ["Megaton Hammer", "Goron Tunic", "Bomb Bag", "Boss Key (Fire Temple)"])
     assert not search.can_reach("Volvagia Boss Room", ADULT)
-    search.collect("Fairy Ocarina")
+    search.collect("Ocarina of Time")
     search.collect("Song of Time")
     assert search.can_reach("Volvagia Boss Room", ADULT)
 

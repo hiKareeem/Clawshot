@@ -13,7 +13,7 @@ def test_visible_storm_grotto_needs_song_but_no_stone_of_agony(start, target):
     spec = load_spec()
     spec["start"] = start
     world = build_world(spec)
-    search = Search(world, ["Fairy Ocarina"])
+    search = Search(world, ["Ocarina of Time"])
     assert not search.can_reach(target, ADULT)
     search.collect("Song of Storms")
     assert search.can_reach(target, ADULT)

@@ -157,8 +157,9 @@ def test_world_door_modes_match_actual_inventory_requirements(mode, items, expec
     assert Settings.from_string(settings.to_string()) == settings
 
 
-def test_adult_fairy_ocarina_cannot_satisfy_the_new_early_pull_return_route():
-    _, world = prepare(load_spec(), Settings(door_of_time="song_only"))
+@pytest.mark.parametrize("mode", door.MODES)
+def test_adult_fairy_ocarina_cannot_play_saria_in_any_door_mode(mode):
+    _, world = prepare(load_spec(), Settings(door_of_time=mode))
     exit = next(exit for exit in world.regions["Lost Woods"].exits if exit.target == "LW Beyond Mido")
     assert exit.rule({"Ocarina": 1, "Sarias Song": 1}, CHILD, 3)
     assert not exit.rule({"Ocarina": 1, "Sarias Song": 1}, ADULT, 3)

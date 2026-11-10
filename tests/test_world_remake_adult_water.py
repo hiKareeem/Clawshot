@@ -4,7 +4,7 @@ import pytest
 
 from clawshot.world import ADULT, Search, build_world, load_spec
 
-GEAR = ["Hookshot", "Iron Boots", "Zora Tunic", "Fairy Ocarina", "Zeldas Lullaby"]
+GEAR = ["Hookshot", "Iron Boots", "Zora Tunic", "Ocarina of Time", "Zeldas Lullaby"]
 
 
 def water_world(start="Water Temple Lobby"):
@@ -55,7 +55,7 @@ def test_ruto_cracked_wall_token_is_not_on_the_longshot_route():
 
 def test_river_exit_needs_longshot_not_song_of_time():
     world = water_world("Water Temple Dark Link Region")
-    search = Search(world, ["Hookshot", "Fairy Ocarina", "Song of Time"])
+    search = Search(world, ["Hookshot", "Ocarina of Time", "Song of Time"])
     assert not search.can_reach("Water Temple River", ADULT)
     search.collect("Longshot")
     assert search.can_reach("Water Temple River", ADULT)

@@ -128,7 +128,7 @@ def test_remake_overrides(world):
 def test_three_keys_reach_dark_link(keys, expected):
     world = load_world()
     world.start = "Water Temple Lobby"
-    gear = ["Hookshot", "Iron Boots", "Zora Tunic", "Fairy Ocarina", "Zeldas Lullaby"]
+    gear = ["Hookshot", "Iron Boots", "Zora Tunic", "Ocarina of Time", "Zeldas Lullaby"]
     search = Search(world, gear + ["Small Key (Water Temple)"] * keys)
     assert search.can_access(world.locations["Water Temple Longshot Chest"], ADULT) is expected
 
