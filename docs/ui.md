@@ -1,5 +1,6 @@
 # Local UI
 
+Download the **Clawshot-\<version\>.zip** attached to a UI test release (not the generic source zip).
 Unzip the whole Clawshot folder, then double-click **Clawshot.bat** on Windows.
 Linux uses executable **clawshot.sh**. On macOS, open clawshot.sh with Terminal; macOS is untested.
 Keep its terminal open while playing with the menu. Nothing requires administrator access.
@@ -9,6 +10,9 @@ announces a one-time download of pinned uv0.13.7 from its official GitHub releas
 embedded SHA-256 before extracting/executing, and keeps it inside `.tools`. It changes no PATH,
 profile or system install. No internet or a blocked download gives the manual release link.
 Dependencies come from `uv.lock` with `--frozen --no-dev`; Windows also selects the optional UI extra.
+The first start may also fetch Python and these dependencies; it never fetches a game.
+
+Optional terminal commands for a source checkout:
 
 ```sh
 uv run python -m clawshot.ui                  # browser, when the optional UI extra is absent
@@ -25,14 +29,16 @@ Tk, paste a path instead. No Qt/PySide dependency is added by Clawshot.
 
 Keep the terminal running. Ctrl+C stops the server and cancels generation. Closing a browser tab
 alone does not stop the server; closing the pywebview window does. A game already launched is not
-terminated by UI shutdown. `--no-open` **disables Browse, Open seed folder and Play**, including
-their HTTP endpoints. Normal sessions enable these actions; Play also requires Windows.
+terminated by UI shutdown. `--no-open` **disables Browse, Open seed folder, emulator copying and Play**,
+including their HTTP endpoints. Normal sessions enable them; Play also requires Windows.
 
 ## Using it
 
 On a fresh page, Recommended and a random seed are already selected, with a new output under
 Documents. Choose and check your dump, then go straight to Generate; no settings changes or
 Hookshot installation are required. Checked input paths are remembered in your user configuration.
+Saved folders live in `%APPDATA%/Clawshot/paths.json` on Windows, `~/Library/Application Support/Clawshot/paths.json`
+on macOS, and `$XDG_CONFIG_HOME/clawshot/paths.json` (or `~/.config/clawshot/paths.json`) on Linux.
 
 - **Game:** your own romfs folder or `.nup` is the only required input. Hookshot is optional and
   needed only for Play; emulator players can skip it. Detecting Hookshot can fill an empty dump
@@ -116,6 +122,9 @@ The Generate action fits without scrolling at 1280×860.
 | Read-only verified Play plan and one running seed | `src/clawshot/app/play.py` |
 | Durable manifest and known-folder seed catalog | `src/clawshot/app/library.py` |
 | Atomic user-config path preferences | `src/clawshot/app/preferences.py` |
+| Exclusive real-folder emulator export | `src/clawshot/app/emulator.py` |
+| Generator-version-bound player share strings | `src/clawshot/app/sharing.py` |
+| Game-free source-release allowlist and archive command | `src/clawshot/ui/release.py` |
 | Shared mod/save/environment plan and process start | `src/clawshot/pack/runtime.py` |
 | Loopback transport and fixed asset allowlist | `src/clawshot/ui/server.py` |
 | Normal/headless startup and click-only native dialogs | `src/clawshot/ui/__main__.py`, `dialogs.py` |
@@ -167,6 +176,7 @@ on 2026-11-10. This does not confirm its NUP file picker, browser/Tk picker or t
 
 Not implemented in the current checkout:
 - gamepad/Steam Deck controller navigation (keyboard/mouse only);
+- the planned Tracker tab (not a separate tracker application);
 - literal macOS Finder double-click association (open the shell script with Terminal; macOS untested);
 - a bundled executable/installer or bundled fonts;
 - native Play acceptance or Linux/macOS UI runtime certification.

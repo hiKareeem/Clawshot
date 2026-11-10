@@ -16,6 +16,28 @@ inspired by OoT Randomizer and Ship of Harkinian's randomizer.
 files, keys or generated mods. You must generate the mod locally from your own dump. Never share
 that output. Clawshot is not affiliated with or endorsed by Nintendo.
 
+## Get started with the UI
+
+1. Download **Clawshot-\<version\>.zip** from a [UI test release](https://github.com/hiKareeem/Clawshot/releases),
+   not GitHub's generic source-code zip. Unzip the whole folder outside your game and Hookshot folders.
+2. **Windows:** double-click **Clawshot.bat**. **Linux:** run **clawshot.sh**.
+   **macOS:** open clawshot.sh with Terminal; macOS is untested.
+   The first start may download the checked app-local uv tool, Python and locked dependencies; no administrator access.
+3. On **Game**, Browse to your own supported **romfs folder or .nup** and Check it.
+   Hookshot is optional: it is only needed for the Play button.
+4. Go to **Generate**. Recommended settings, a random seed and a new Documents folder are ready;
+   leave them alone for a first seed. Wait for **Seed ready** and read its play note.
+5. **Hookshot:** choose/check its folder on Game, quit any already running Hookshot, then press **Play**.
+   This seed has its own saves; normal Hookshot saves are not used.
+   **Emulator instead:** back up your normal saves, then **Copy to my emulator**, choose this game's
+   mod folder and enable only that seed. Existing copies are never replaced.
+
+Keep the terminal open. **My seeds** finds your earlier seeds after a restart. Copy the number,
+settings and short hash to share a seed recipe, never the generated game files.
+[The UI guide](docs/ui.md) covers loading, saves, shared seeds and troubleshooting.
+Keyboard/mouse only: **gamepad and Steam Deck controller input are not done**. The planned tracker
+will be a UI tab, not a separate tool; it is not in this release.
+
 ## At a glance
 
 - **Shuffled now:** chests, shop shelves, NPC gifts and songs, one-time Deku Scrub sales.
@@ -23,8 +45,8 @@ that output. Clawshot is not affiliated with or endorsed by Nintendo.
 - **Not shuffled yet:** Gold Skulltula tokens, cows, dungeon rewards, pots, crates, loose rupees,
   or keys outside their dungeon.
 
-Choose the kinds you want; the default shuffles chests only. Some checks stay unchanged pending
-in-game tests; the evidence and limits are below.
+Choose the kinds you want. The UI starts with Recommended; the generator's Defaults shuffle chests
+only. Some checks stay unchanged pending in-game tests; the evidence and limits are below.
 
 ## Status
 
@@ -67,11 +89,11 @@ and [playtest answers](https://github.com/hiKareeem/Clawshot/blob/main/plans/pla
 ### Known issues
 
 - **After receiving an item Link cannot use at his current age, Save and Continue before using
-  other items.** A child Bow pickup jammed the item bar on both Hookshot and Lichii; changing areas
+  other items.** A child Fairy Bow pickup jammed the item bar on both Hookshot and Lichii; changing areas
   did not fix it. Other item families carry precautionary warnings. Read this seed's `play-note.md`.
 - Chest ocarinas show no model despite working; songs can show an ocarina stand-in rather than a
   normal item model. Only some songs have been individually played from chests.
-- **Hookshot 2.0.12 and later: use a current pack's `Play seed.bat`,** which loads the seed as a
+- **Hookshot 2.0.12 and later: use Clawshot's Play or a current pack's `Play seed.bat`,** which loads the seed as a
   Hookshot mod. Packs built before 2026-11-10 used Hookshot's older overlay loading
   (`HOS_FS_OVERLAY`), which now crashes at start-up; rebuild the pack from current source.
   While a seed is loaded, button icons in text show Switch buttons instead of your controller's.
@@ -117,7 +139,7 @@ uv run python -m clawshot --help
 uv run python -m clawshot --romfs C:/Games/OoT/romfs --seed 7 --out C:/Clawshot/seed-7
 ```
 
-The generator CLI takes an extracted RomFS folder. For `.nup` input use the seed-pack workflow.
+The generator CLI takes an extracted RomFS folder. For `.nup` input use the UI or seed-pack workflow.
 A default seed shuffles chests. To print settings without opening the dump, then replay them:
 
 ```sh
