@@ -42,8 +42,8 @@ no agent-owned AGENTS.md edit. Read the new rules, orchestration and `plans/READ
 
 ## Verification
 
-The requested three checks and document/issue-form/public-tree smoke results will be recorded after
-all five ordered items. No full suite, dump test, seed sweep or gate lock is needed for this track.
+The three requested commands passed on the final rebased documentation tree; results are below.
+No full suite, dump test, seed sweep or gate lock was run or taken for this track.
 
 ## 2. Contributor guide
 
@@ -136,3 +136,52 @@ NOTICE and LICENSE links shipped in packs. No pack code or allowlist expansion, 
 
 A rule-language example edit briefly landed at the wrong row; the edit response exposed the
 misplaced table row/prose, then a fresh read supplied exact anchors for correction before checks.
+
+## Final verification and handoff
+
+| Command | Result |
+|---|---|
+| `uv run ruff format --check` | 263 files already formatted; exit 0 |
+| `uv run ruff check` | All checks passed; exit 0 |
+| `CLAWSHOT_WORKERS=1 uv run pytest -q tests/test_pack.py` | 13 passed in 0.29s; exit 0 |
+
+Commands ran serially without a gate lock as requested. Tasklist before the first check chain found
+no Hookshot process; no game was started. The earlier pre-rebase chain also passed (262 formatted,
+lint passed, 13 tests in 0.78s); final results above supersede it. uv's initial cross-filesystem
+hardlink warning fell back to copying dependencies successfully; no source/dependency edit followed.
+
+Final document smoke passed: six Markdown documents, 35 local links present, six hosted-repository
+URLs resolved against corresponding checkout files, and all four local README links included by the
+actual 187-file source-pack snapshot. YAML files parse; no project dependency was added. Remote URL
+availability and GitHub's hosted form rendering are explicitly not verified; the repository is still
+awaiting the owner's visibility change. No dump, generated seed or game startup was needed.
+
+### Rebased commits on `r11/public`
+
+| Commit | Scope |
+|---|---|
+| `9dc554f` | Newcomer README and preserved settings reference |
+| `182cf3b` | Contributor licensing/safety/evidence guide |
+| `847bb63` | Issue forms, Discord contact and PR checklist |
+| `bfd7e8d` | Sourced logic/porting/spoiler guide |
+| `4304413` | Two-line roadmap name removal, isolated |
+| `9da29db` | Public-tree scan report |
+| `215a6e7` | Separately authorized Discord draft update |
+| `0110184` | Main's revised AGENTS linkage and pack-safe repository references |
+
+The final evidence-only commit follows this ledger; its ID is supplied in the handoff/thread.
+Only documents/templates are changed. AGENTS.md and plans/README.md updates came from the authorized
+main rebase, not this track; decisions.md, source, tests, dependency files and cs11c's seed guide
+remain unedited here. No merge, push, stash, history rewrite, output rewrite or unrelated deletion.
+
+### Left for review and publication
+
+- Claude reviews/merges these commits and integrates cs11c's current mod-loading guide/templates
+  before building a new public pack. This worktree's inherited pack guide still has old overlay text;
+  ownership was respected, and the new README/Discord drafts explicitly reject old launchers.
+- Keep keysanity unavailable for play pending cs11b's evidence; this track claims neither its guard
+  nor a new UI is implemented. Later accepted features need their own public status update.
+- Kareem controls visibility, branch protection, collaborator access and which Discord drafts he
+  posts. Nothing was posted to Discord. The shared AGENTS proof correction is already resolved.
+- Existing gameplay questions/held checks remain as listed in README/settings, not new requests to
+  repeat completed experiments. This documentation-only work adds no new in-game acceptance task.
