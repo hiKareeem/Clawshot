@@ -269,3 +269,13 @@ re-entry/talking, normal repeat20/50, and expert repeat30/70 after Save/Continue
 the three overlay log lines. **Kareem's in-game results remain required; neither new expert
 check nor the bottle/digging holds are released by synthetic/native data proof.**
 
+## Launcher policy update from Claude
+
+Added `set HOS_OOT_CHEATS=1` immediately after `HOOKSHOT_NO_UPDATE_CHECK=1` in the
+four explicitly unplayed launchers (bottle-fix, both normal-minigame users, digging) and both
+new expert launchers. All four active checklists now start with Teleport/clock only; no
+inventory, age or flag cheats unless explicitly authorized by a step. Played bottle-next
+launcher/output/user untouched; no overlay rebuild. Assignment-only `cmd.exe` smoke of each
+launcher's safe prefix produced `POLICY:1:1` from inherited zeroes, six of six; no launcher,
+save-copy condition or game invocation executed. Checklist headers checked, four of four.
+
