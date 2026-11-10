@@ -135,3 +135,9 @@ Final format283/lint passed; the seven focused app/schema/Play/UI/loader/detecto
 Actual headless surface rerun succeeded: real synthetic generation into the new layout, note/spoiler controls, disabled Play plus HTTP400 under --no-open, emulator fallback, cancellation, original FillError, no JS exception and no off-origin request. Generate button bottom668.58px and result bottom773.58px at1280×860. Captures: `shots/generate-running-play-next.png`, `shots/generate-finished-play-next.png`, `shots/generate-emulator-play-next.png`; proof `synthetic-play-proof.json`, all under the existing external scratch. Test-only fixture binary is non-executable; no real game can be launched by this screenshot harness.
 
 Docs/API plan now describe the shared Play boundary and new layout. Six-line owner checklist will accompany the first-run handoff once the double-click starts exist. Next is the newly inserted emulator-copy item, then the original items2/3.
+
+### Priority Play review 1: PC-wide guard
+
+Added the process-list guard to the shared starter, so pack and UI both refuse any existing hookshot.exe, not only their own child. Exact player refusal: **Hookshot is already running. Quit it, then press Play.** System tasklist runs hidden, no dependency; exact case-insensitive name matching ignores HookshotBuilder and unrelated suffix names. Query failure refuses safely. Guard precedes user-folder creation, log opening and native process creation. Pure plans remain inspectable.
+
+Fake-lister tests plus the existing loader plans:16 passed in0.30s; real native lister smoke observed no running Hookshot and did not start a game. The first lint pass printed SIM112 for environment-name casing; changed SystemRoot to SYSTEMROOT, then format/lint passed. CSV's informational no-match row is not a process. Next ordered reviews are durable manifests/My seeds and removing the original-dump dependency; emulator copy then startup remains queued.

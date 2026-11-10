@@ -49,6 +49,10 @@ the pack's checked launch code: only `bin/hookshot.exe`, exactly that seed as th
 moved or rewritten. Emulator players get three loading steps and a main-save backup warning;
 Clawshot does not start an emulator. See [seed-pack instructions](seed-pack.md) for manual loading.
 
+Before starting a game, both UI and pack Play check the PC-wide process list. Any running
+`hookshot.exe` refuses with “Hookshot is already running. Quit it, then press Play.”
+This happens before creating the save folder, opening the log or starting another process.
+
 The pack's Make path was verified on Linux (WSL) with both a romfs folder and a `.nup`, producing
 the same digest as Windows (maintainer verification, round11). The UI shares that generator path,
 so generation is expected to work on Linux and macOS; macOS itself is untested. **Play is

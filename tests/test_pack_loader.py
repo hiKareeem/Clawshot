@@ -93,3 +93,33 @@ def test_linked_mod_paths_are_rejected(made_pack, tmp_path, target):
         runtime.play(root)
     assert not (root / "user").exists()
     assert not (root / "hookshot_log.txt").exists()
+
+
+@pytest.mark.parametrize(
+    "names, expected",
+    [
+        (["hookshot.exe"], True),
+        (["HOOKSHOT.EXE", "other.exe"], True),
+        (["HookshotBuilder.exe"], False),
+        (["myhookshot.exe"], False),
+        ([], False),
+    ],
+)
+def test_pc_wide_hookshot_name_detection_with_fake_lister(names, expected):
+    assert runtime.hookshot_running(lambda: names) is expected
+
+
+def test_global_running_game_refuses_before_saves_log_or_process(made_pack, monkeypatch):
+    root, exe = made_pack
+    plan = runtime.launch_plan(root, exe.parent.parent)
+    before = {p: (p.read_bytes(), p.stat().st_mtime_ns) for p in root.rglob("*") if p.is_file()}
+
+    def forbidden(*args, **kwargs):
+        raise AssertionError("No test may launch a game")
+
+    monkeypatch.setattr(runtime.subprocess, "Popen", forbidden)
+    with pytest.raises(PackError) as caught:
+        runtime.start_game(plan, process_lister=lambda: ["hookshot.exe"])
+    assert str(caught.value) == "Hookshot is already running. Quit it, then press Play."
+    assert not (root / "user").exists() and not (root / "hookshot_log.txt").exists()
+    assert before == {p: (p.read_bytes(), p.stat().st_mtime_ns) for p in root.rglob("*") if p.is_file()}

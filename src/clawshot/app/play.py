@@ -5,7 +5,7 @@ import threading
 
 from clawshot.app.paths import absolute_path, detect_dump
 from clawshot.pack import tree_digest
-from clawshot.pack.runtime import launch_plan, start_game
+from clawshot.pack.runtime import RUNNING_GAME, launch_plan, start_game
 
 
 def play_plan(result: dict | None, hookshot: str) -> dict:
@@ -48,7 +48,7 @@ class Player:
             raise ValueError("Play needs Windows. Open the seed folder and load romfs as a mod in your emulator.")
         with self.lock:
             if self.process is not None and self.process.poll() is None:
-                raise ValueError("A seed is already running. Quit that Hookshot game before pressing Play again.")
+                raise ValueError(RUNNING_GAME)
             plan = play_plan(result, hookshot)
             try:
                 self.process = start_game(plan)

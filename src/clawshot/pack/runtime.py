@@ -1,6 +1,7 @@
 """Shared checked Hookshot launching and the extracted pack's Make/Play entry point."""
 
 import argparse
+import csv
 import json
 import os
 import subprocess
@@ -9,6 +10,31 @@ from pathlib import Path
 
 from clawshot.pack import PackError, check_version, generate, tree_digest
 from clawshot.pack.hookshot import detect
+
+RUNNING_GAME = "Hookshot is already running. Quit it, then press Play."
+
+
+def running_process_names() -> tuple[str, ...]:
+    """Read the Windows process list without opening a console or adding a dependency."""
+    if sys.platform != "win32":
+        return ()
+    tasklist = Path(os.environ.get("SYSTEMROOT", r"C:\Windows")) / "System32/tasklist.exe"
+    try:
+        result = subprocess.run(
+            [str(tasklist), "/FI", "IMAGENAME eq hookshot.exe", "/FO", "CSV", "/NH"],
+            capture_output=True,
+            check=True,
+            creationflags=subprocess.CREATE_NO_WINDOW,
+        )
+    except (OSError, subprocess.CalledProcessError) as error:
+        raise PackError("Clawshot could not check running programs. Close Hookshot and try Play again.") from error
+    rows = csv.reader(result.stdout.decode("utf-8", errors="replace").splitlines())
+    return tuple(row[0] for row in rows if len(row) > 1)
+
+
+def hookshot_running(process_lister=None) -> bool:
+    lister = running_process_names if process_lister is None else process_lister
+    return any(name.casefold() == "hookshot.exe" for name in lister())
 
 
 def configuration(root: Path) -> tuple[dict, Path, Path | None]:
@@ -98,8 +124,10 @@ def launch_plan(root: Path, hookshot: Path) -> dict:
     }
 
 
-def start_game(plan: dict) -> subprocess.Popen:
+def start_game(plan: dict, *, process_lister=None) -> subprocess.Popen:
     """Execute a checked plan. Tests inspect launch_plan instead; never invoke this on a real game."""
+    if hookshot_running(process_lister):
+        raise PackError(RUNNING_GAME)
     if sys.platform != "win32":
         raise PackError("Play needs Windows. Open the seed folder and load romfs as a mod in your emulator.")
     Path(plan["user"]).mkdir(exist_ok=True)
