@@ -33,6 +33,7 @@ let openAvailable = false,
 let emulatorFolder = "",
   edenFolder = "",
   copyAvailable = false;
+let noteOutput = "";
 
 function element(tag, className = "", text) {
   const el = document.createElement(tag);
@@ -820,6 +821,7 @@ function renderJob(state) {
     $("result-settings").value = state.result.share_string;
     $("result-hash").value = state.result.short_hash;
     $("result-path").textContent = state.result.output;
+    if (noteOutput !== resultOutput) loadPlayNote(resultOutput);
   }
   renderPlay();
   updateLibraryActions();
@@ -893,6 +895,68 @@ function closeDialog(id) {
   $(id).close();
   updateHints();
 }
+function renderNote(text, target) {
+  target.replaceChildren();
+  let paragraph = [],
+    table = null,
+    ageSection = false,
+    ageCount = 0;
+  const flush = () => {
+    if (paragraph.length) target.append(element("p", "", paragraph.join(" ")));
+    paragraph = [];
+  };
+  for (const line of text.split(/\r?\n/)) {
+    const heading = line.match(/^(#{1,6}) (.*)$/);
+    if (heading) {
+      flush();
+      table = null;
+      ageSection = heading[2].startsWith("Age-locked items:");
+      target.append(
+        element(heading[1].length === 1 ? "h3" : "h4", "", heading[2]),
+      );
+    } else if (line.startsWith("|")) {
+      flush();
+      const cells = line
+        .trim()
+        .slice(1, -1)
+        .split(/(?<!\\)\|/)
+        .map((cell) => cell.trim().replace(/\\\|/g, "|"));
+      if (cells.every((cell) => /^:?-+:?$/.test(cell))) continue;
+      const header = table === null;
+      if (header) {
+        table = element("table");
+        target.append(table);
+      }
+      const row = element("tr");
+      for (const cell of cells)
+        row.append(element(header ? "th" : "td", "", cell));
+      table.append(row);
+      if (ageSection && !header) ++ageCount;
+    } else {
+      table = null;
+      if (!line.trim()) flush();
+      else paragraph.push(line);
+    }
+  }
+  flush();
+  return ageCount;
+}
+async function loadPlayNote(output) {
+  noteOutput = output;
+  $("play-note-body").textContent = "Reading play note…";
+  try {
+    const data = await api("result", { file: "note", output });
+    if (resultOutput !== output) return;
+    const count = renderNote(data.text, $("play-note-body"));
+    $("play-note-summary").textContent =
+      count +
+      " listed pickups can be reached at an unusable age. Save and Continue if you take one.";
+  } catch (e) {
+    if (resultOutput === output)
+      $("play-note-body").textContent =
+        "Play note could not be read: " + e.message;
+  }
+}
 async function documentView(file, output) {
   const confirmed =
     file !== "spoiler" ||
@@ -908,6 +972,9 @@ async function documentView(file, output) {
     });
     $("document-title").textContent = data.name;
     $("document-text").textContent = data.text;
+    $("document-text").hidden = file === "note";
+    $("document-note").hidden = file !== "note";
+    if (file === "note") renderNote(data.text, $("document-note"));
     openDialog("document-dialog");
   } catch (e) {
     error(e.message);

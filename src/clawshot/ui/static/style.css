@@ -804,3 +804,24 @@ dialog p {
   width: 100%;
   margin: 6px 0 14px;
 }
+.note-body {
+  font-size: 14px;
+  line-height: 1.5;
+  overflow-x: auto;
+}
+.note-body h3,
+.note-body h4 {
+  font-family: var(--serif);
+}
+.note-body table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 12px;
+}
+.note-body th,
+.note-body td {
+  border-bottom: 1px solid var(--border);
+  padding: 6px;
+  text-align: left;
+  vertical-align: top;
+}

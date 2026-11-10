@@ -181,3 +181,10 @@ number and settings together; another Clawshot version is refused before generat
 Player strings begin `Clawshot-<version>:`; the existing CS1 codec remains the internal app/CLI format.
 The short hash comes from the finished files, not the number alone. Same version, number, settings
 and supported game files are required to reproduce it; timestamps and output paths are not hashed.
+
+## Play note and spoilers
+
+The result panel reads the seed's play note as text, headings and tables, including its opening
+route and age-locked pickup count/Save and Continue advice. Read play note opens a larger view.
+The note itself includes reward locations and hints. Raw spoiler JSON stays behind explicit
+confirmation. Note contents are rendered as text nodes, never executed as HTML or remote content.
