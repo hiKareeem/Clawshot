@@ -60,3 +60,12 @@ required no-game-data acknowledgement, reviewed log excerpts and explicit infere
 Blank issues are disabled; the contact link uses the permanent Discord invite. The PR checklist
 covers MIT rights, provenance, AI trailers, determinism, checks, docs and gameplay acceptance.
 Forms do not request saves, generated spoilers or mods.
+
+## 4. Logic porting reference
+
+Added `docs/logic.md`: file map, override precedence/provenance, rule syntax and failure behavior,
+item/settings semantics, physical versus model/display identity, chronological search and first-pull
+proof, all current spoiler top-level fields, and the additional live client/runtime delivery needed
+by a future multiworld integration. Each contract cites its specification or implementation path.
+Read the actual spoiler producer to confirm `locations`, nullable `opening_route`, warnings and hints;
+no source was changed. No live tracker/client/network IDs are invented.
