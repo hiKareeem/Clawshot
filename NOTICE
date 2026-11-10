@@ -32,5 +32,12 @@ Commit 1041167c31ec80c9bb0a84c90e09e70be962fe75 (branch main).
 - src/clawshot/generate/fill.py: the swap of an unplaceable item into a location filled earlier, from Fill.py
   (fill_restrictive, swap=True); safe swaps only.
 
+a55uka/nup (https://github.com/a55uka/nup), MIT License, Copyright (c) 2026 a55uka.
+Commit a4840f06c94ddeb414eea5b33c9704ffe995f11c (branch meow).
+- src/clawshot/pack/_nup/{format,read}.py: tools/nup/nup/{format,read}.py, unchanged except two
+  tooling-guard comment lines per file. No upstream writer, CLI or extraction code is vendored.
+- Full upstream permission notice: src/clawshot/pack/_nup/LICENSE.txt, included in source packs.
+  The PyPI package named "nup" is unrelated; no dependency on it is introduced.
+
 The Legend of Zelda and Ocarina of Time are trademarks of Nintendo. Clawshot is an unofficial fan project, not
 affiliated with or endorsed by Nintendo, and contains no part of the game.
