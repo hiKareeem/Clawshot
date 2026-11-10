@@ -13,15 +13,14 @@ new = true
 region = "GC Grotto"
 type = "Chest"
 vanilla = "Rupee (1)"
-rule = "False"
-source = "Appearing chest uses GoronCity_SecretHole_AppearTreasureBox and a sign puzzle; exact trigger/second-reward dependency unmodeled. r4-logic-child.md Goron City and read-only Banc event-neighbor probe."
-keep_vanilla = "Appearing chest uses GoronCity_SecretHole_AppearTreasureBox and a sign puzzle; exact trigger/second-reward dependency unmodeled. r4-logic-child.md Goron City and read-only Banc event-neighbor probe."
+rule = "False"  # never holds a check: keep_vanilla chests stay out of logic (test_patch_chests)
+source = "Sign-puzzle failure chest (GoronCity_SecretHole_AppearTreasureBox). Kareem in game, 2026-11-09: any wrong sign at any point spawns this left chest, and the puzzle stays locked until Link leaves Goron City and returns."
+keep_vanilla = "The sign puzzle's failure chest stays its green rupee (Kareem, 2026-11-09), so no player has to fail the puzzle on purpose to collect a check; only the solution chest is shuffled."
 
 [locations."Goron City Chest (TBox_Rupee_Purple) #2"]
 new = true
 region = "GC Grotto"
 type = "Chest"
 vanilla = "Rupees (50)"
-rule = "False"
-source = "Appearing chest uses GoronCity_SecretHole_AppearTreasureBox2 and a sign puzzle; exact trigger/second-reward dependency unmodeled. r4-logic-child.md Goron City and read-only Banc event-neighbor probe."
-keep_vanilla = "Appearing chest uses GoronCity_SecretHole_AppearTreasureBox2 and a sign puzzle; exact trigger/second-reward dependency unmodeled. r4-logic-child.md Goron City and read-only Banc event-neighbor probe."
+rule = "True"
+source = "Sign-puzzle solution chest (GoronCity_SecretHole_AppearTreasureBox2). Kareem in game, 2026-11-09: reading the signs in the correct order spawns this right chest; a wrong sign gives the left green-rupee chest and locks the puzzle until Link leaves Goron City and returns, then it can be retried. The puzzle needs no item; reaching the grotto is the region's rule."

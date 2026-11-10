@@ -66,6 +66,8 @@ The 9 checks already asked on 2026-11-08 remain pending and absent from all rout
 
 ## XC07 — Goron City Chest (TBox_Rupee_Green)
 
+**Answered (Kareem, 2026-11-09):** any wrong sign at any point spawns this left green-rupee chest; the puzzle then stays locked until Link leaves Goron City and returns. Kept vanilla and out of logic on purpose (failure chest), so nobody must fail to collect a check.
+
 - **Where/when:** adult at Goron grotto; child comparison if normal entrance permits. Session [7](session-7.md); Hash `9159710900681116662`, Banc position (-52.2, 94.8, 32.0).
 - **Do/watch:** In City grotto, before following its signs, is the green chest present? Solve the sign puzzle one step at a time; which exact action makes green appear? Can it pay without purple, and does it remain open after reload?
 - **Unlock target:** `src/clawshot/data/world/remake/extra_goron_city.toml` → `[locations."Goron City Chest (TBox_Rupee_Green)"]` (`rule` and `keep_vanilla`).
@@ -73,6 +75,8 @@ The 9 checks already asked on 2026-11-08 remain pending and absent from all rout
 - **Source:** `r5/seeds:plans/rounds/r5-seeds.md`, “Excluded checks”; `r5/seeds:src/clawshot/data/world/remake/extra_goron_city.toml`; branch census-readable name mapped to this Hash. No OoTR name is fabricated.
 
 ## XC08 — Goron City Chest (TBox_Rupee_Purple) #2
+
+**Answered (Kareem, 2026-11-09):** the correct sign order spawns this right purple-rupee chest; retry after leaving Goron City if a wrong sign was read. Now a shuffled chest (rule `True` in `GC Grotto`).
 
 - **Where/when:** adult at same sign puzzle; preserved unclaimed control. Session [7](session-7.md); Hash `10944569637726152230`, Banc position (-52.2, 94.8, 26.3).
 - **Do/watch:** At the same grotto, when does purple appear: same solution, another solution, or only after green? Note action/order, age and first/repeat payout. Use the same visit as the green check, but record this chest separately.

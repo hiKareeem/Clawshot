@@ -51,7 +51,8 @@ def test_vanilla_placement_is_beatable(world):
     search.collect_spheres(placements)
     assert search.won()
     assert search.holds("Time Travel") and search.can_reach("Ganondorf Boss Room", ADULT)
-    # Only the twenty explicitly documented, unreachable keep-vanilla checks are exempt. D17's reachable
+    # Only the nineteen explicitly documented keep-vanilla checks are exempt (the Goron City sign puzzle's failure
+    # chest is reachable but deliberately never holds a check). D17's reachable
     # Treasure Chest Game boxes/reward are not exempt; neither is any shuffled or merely unreachable chest.
     excluded = {n for n, loc in world.locations.items() if loc.keep_vanilla and loc.rule.test is False}
     assert excluded == {
@@ -62,7 +63,6 @@ def test_vanilla_placement_is_beatable(world):
         "Gerudo Valley Chest (TBox_Rupee_Red) [Adult]",
         "Gerudo Valley Chest (TBox_Rupee_Red) [Child]",
         "Goron City Chest (TBox_Rupee_Green)",
-        "Goron City Chest (TBox_Rupee_Purple) #2",
         "Graveyard Chest (TBox_Rupee_Blue)",
         "Graveyard Chest (TBox_Rupee_Red)",
         "Hyrule Field Chest (Item_ScrubBusinessSeed)",
