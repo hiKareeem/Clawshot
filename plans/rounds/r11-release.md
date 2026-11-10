@@ -53,3 +53,18 @@ this matrix. Every dump run here sets both `OOT_ROMFS` and `OOT_NUP`; the actual
 listed in `E:/Games/Hookshot/` is `The Legend of Zelda Ocarina of TIme [04004860224DEC000].nup`.
 No NUP test skip is acceptable for the handoff. Claude will review/gate/merge keys and release
 together at this branch's handoff head; base unchanged, no rebase.
+
+## Item 2: logic regression (sweep queued)
+
+The existing placement/search model already grants the placed reward, not an implicit bottle;
+no logic-code change is needed. New `tests/test_gifts_release.py` exercises the actual remake
+bottle source with a synthetic bottle-gated probe: unshuffled gives a Bottle and opens it;
+shuffled Boomerang gives no Bottle and cannot open it. Both released checks enter the pool;
+expert galleries, three merchant experiments and the 40-token reward remain excluded.
+`CLAWSHOT_WORKERS=1 uv run pytest tests/test_gifts_release.py -q`: **3 passed**.
+
+First test draft misused `Search.holds`, which checks events, for an inventory item. Printed
+diagnostic: spheres contain the bottle source, Boomerang count 1, Bottle count 0, event-held
+Boomerang false. Corrected only the test to check item counts, then one rerun passed.
+The one-worker seeds 1–50 sweep for defaults and the actual read-only seed-8 settings is queued
+behind Claude's loader-review lock. No sweep result is claimed yet.
