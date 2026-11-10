@@ -175,3 +175,97 @@ Future logic policy is also explicit: remake names and the region's actual acces
 forcing OoTR names or using a more permissive N64 room rule. No product question is silently
 decided by a physical-position guess. Posted the original boundary on cs-r10; this reviewer
 direction supersedes that proposal.
+
+## Item 3: reviewed experiments, no seed switches
+
+The reviewer explicitly accepted the exploration/report branch in this conversation.
+No `patch/pots.py`, census kind, permanent test, generated logic, Settings/CS1/CLI option,
+fill rule or seed pipeline hook is added. Reusable research/build/check scripts remain
+external; they are not an unimplemented production API. Existing seeds are unchanged.
+
+### Actual outputs (built, not played)
+
+All paths below are under `E:/OOTRemake/work/r10-pots-cs10d/ingame/`.
+
+| New overlay | Existing physical target | Replacement | Copied backup / load slot |
+|---|---|---|---|
+| `pot-supply-piece-next` | child Twins-house supply pot15406610986108637956 | Piece of Heart | `2026-11-07_llr-tower-before-pickup` / manual01 |
+| `pot-unsaved-piece-next` | Forest2F Bow-room respawn pot18069611988256927347 | Piece of Heart | `2026-11-09_1347-main-after-forest` / autosave00 |
+| `rupee-kokiri-piece-next` | child-only boulder-enclosure blue16647730239269178270 | Piece of Heart | early ranch / manual01 |
+| `rupee-field-hylian-next` | east Field bomb-grotto separate blue5620885265123329978 | Hylian Shield | `2026-11-08_2140-main-jabu` / manual01 |
+
+Each has `Test - <overlay>.bat`, copied/adapted from the approved talon launcher, own
+initially absent `user-<overlay>`, bin executable only, updater disabled and missing-exe,
+source-save and overlay stops. Both pots also have `Test - <overlay>-uncollected.bat`,
+using a second independent profile but the same overlay. **Six launchers, six separate
+users; none executed/created by the agent.** Logs go inside their individual users.
+
+`ingame/checklist.md` has the complete routes, required source slots, collection,
+area leave/return, repeat break, Save/quit/Continue and independent uncollected-recovery
+procedures. **Kareem: run those four experiments after quitting the played game; report
+the actual reward/counter/inventory, repeat/change/loss, and overlay-open logs.** The
+read-only `ingame/check_saves.py` examines only these six isolated profiles afterwards.
+
+Save selection is evidence-based: all six relevant early saves leave the chosen supply
+pot and child-only maze rupee unset; all six main-Jabu slots leave the Field rupee unset
+and lack Hylian Shield. That child has Bomb Bag plus Bracelet, so the bomb-cover test
+does not require late travel or Storms. The initially considered DMT red lives in a
+Storms cave and was not used. The shared-age KF blue was already collected in manual01,
+so the uncollected child-only blue is selected instead; no save flag was cleared.
+
+The never-Hash-saved case cannot honestly be put in an early overworld location: none
+exists there in this census. Forest's original room17/Bow-chest target is on2F, using
+the completed-Forest/latest00 save, not earlier manual01. Its source has20 arrows.
+The unchanged `ForestTemple_Level_Room_06_Prefab_6d52` graph creates/respawns the target
+only with zero arrows, the ordinary partner dead, arrow bundle absent, camera/player
+clearance and1200-frame delay. It has a native **AutogenGameData destruction latch**.
+This corrects any inference that absence of a placement Hash means no other saved
+state. The checklist explicitly sets up the native gates, does not bypass them, and
+asks for the zero-arrow/ordinary-pot/route facts if it stays hidden. Its sensor still
+watches arrow bundles, not the replacement heart: simultaneous pieces are an explicit
+duplication question, not an accepted behavior.
+
+### File deltas and exercised oracle
+
+`uv run python .../build_experiments.py` completed through the real common writer.
+No overlay existed beforehand; no player folder, backup, game file or existing seed
+was rewritten. Exact tree inversions recover every entire original Banc, retaining
+Hash/Phive, transforms, native AI references/group tables, anchors/Presence and all
+other actors. Pots change only explicit drop selector (plus native table `None` for
+the Forest source); rupees change only Gyaml on all copies of their selected Hash.
+
+| Resource in its experiment | Raw before -> after | Allocation before -> after |
+|---|---|---|
+| Supply: Kokiri child Dynamic |510884 ->510916|511176 ->511208|
+| Unsaved: Forest Static |215192 ->215220|215464 ->215496|
+| KF rupee: Kokiri child Dynamic |510884 ->510904|511176 ->511176|
+| Field rupee: adult Dynamic |591144 ->591168|591432 ->591432|
+| Field rupee: child Dynamic |594868 ->594892|595144 ->595176|
+
+The common writer emits the resource table for both pot experiments and the Field
+experiment; no table is needed for the KF rupee. No GameDataList or actor pack is emitted.
+`experiment-proof.json` retains the baseline, sizes/compressed sizes, resource hashes
+and source-backup SHA256 maps. All source-backup hashes are unchanged after building.
+
+Independent actual-artifact smoke:
+`PYTHONHASHSEED=1010 uv run python .../verify_experiments.py` **passed** all four exact
+inverse trees, recomputed deterministic compressed bytes, allocation-only table deltas,
+six static launcher/absent-profile checks and unchanged backup hash maps.
+`uv run python .../ingame/check_saves.py` **completed** and reported all six users have
+no isolated saves yet; it creates nothing and starts nothing. Read actual launchers
+back as text; safe bin path, nested/flat backup sources, overlay and per-user logs agree.
+Retained `independent-proof.json`; no game, batch, dry-run, GUI or new save was run.
+
+### Integration and acceptance boundary
+
+Section43 is a small shared documentation-only checkpoint. It follows39 on this base;
+Claude inserts tracksA/B/C sections40–42 before43 at integration, without placeholders.
+No dependency files or other-track source are touched. Research checkpoints:
+`af54354` item1 and `1146193` item2, both on `r10/pots`.
+
+**Remaining external acceptance:** Kareem's grants, pot repetition/uncollected recovery,
+ground-pickup persistence and overlay logs. Grant/persistence tests in an interpreter
+cannot answer those native engine questions. Only after those results and review can
+future seed checks use remake names/actual region rules; no N64 ordinal links are forced.
+The full four-command gate evidence and final commit IDs follow once the serial locked
+run completes. No commit has been posted ready based only on the artifact smoke.
