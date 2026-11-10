@@ -59,9 +59,10 @@ and [playtest answers](https://github.com/hiKareeem/Clawshot/blob/main/plans/pla
   did not fix it. Other item families carry precautionary warnings. Read this seed's `play-note.md`.
 - Chest ocarinas show no model despite working; songs can show an ocarina stand-in rather than a
   normal item model. Only some songs have been individually played from chests.
-- **Hookshot 2.0.12+: do not use `HOS_FS_OVERLAY`.** Load the seed through the mods loader with that
-  variable cleared. The overlay route crashes at startup with the seed's resource size table.
-  Button icons in text use the game's own Switch icons while the seed is loaded.
+- **Hookshot 2.0.12 and later: use a current pack's `Play seed.bat`,** which loads the seed as a
+  Hookshot mod. Packs built before 2026-11-10 used Hookshot's older overlay loading
+  (`HOS_FS_OVERLAY`), which now crashes at start-up; rebuild the pack from current source.
+  While a seed is loaded, button icons in text show Switch buttons instead of your controller's.
 - A Market guard-house crash on Hookshot 2.0.11 matched the upstream
   [Hookshot issue #1112](https://github.com/NotRexed/Hookshot/issues/1112); no fix is claimed here.
 
