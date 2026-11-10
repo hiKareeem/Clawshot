@@ -11,6 +11,7 @@ if TYPE_CHECKING:
     from clawshot.generate import Seed
 
 CATALOG = Path(__file__).resolve().parents[1] / "data" / "location_names.toml"
+ITEM_CATALOG = CATALOG.parent / "item_names.toml"
 
 
 @dataclass(frozen=True)
@@ -44,6 +45,11 @@ def load(path: Path = CATALOG) -> dict[str, LocationName]:
             floor,
         )
     return result
+
+
+def item_names(path: Path = ITEM_CATALOG) -> dict[str, str]:
+    """The remake's name for each logic item whose name differs from the logic's; any other item shows its own."""
+    return tomllib.loads(path.read_text(encoding="utf-8"))["items"]
 
 
 def shops(seed: "Seed") -> dict[str, dict]:

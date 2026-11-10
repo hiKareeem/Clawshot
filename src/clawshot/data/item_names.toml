@@ -1,0 +1,19 @@
+# The remake's own name for each logic item (an items.toml or world.toml name) whose name differs from the
+# logic's. Shown in the spoiler beside the logic name, in the play note and in hints worded without the dump;
+# names are facts, read from Kareem's dump by clawshot.patch.text.item_names (each item's actor in
+# item_actors.toml, its English <key>_Name), 2026-11-10. Display only: the logic, placements, rules and actors keep
+# the logic names as keys. An item not listed shows its logic name. Loaded by clawshot.generate.names.
+
+[items]
+"Stone of Agony" = "Echo Gem"
+"Double Defense" = "Gift of Halved Damage"
+"Gerudo Membership Card" = "Gerudo Pass"
+"Claim Check" = "Biggoron Receipt"
+"Odd Potion" = "Odd Poultice"
+"Lens of Truth" = "Lenses of Truth"
+"Bow" = "Fairy Bow"
+"Slingshot" = "Fairy Slingshot"
+"Bottle" = "Empty Bottle"
+"Bottle with Milk" = "Lon Lon Milk"
+"Broken Sword" = "Broken Goron Sword"
+"Minuet of Forest" = "Minuet of the Forest"

@@ -145,7 +145,7 @@ DESERT_COLOSSUS = "the Desert Colossus"
 "Ganons Castle" = "Ganon's Castle"
 
 # Clawshot's wording. {area}, {item} and {location} are filled in; {item} is the game's own name for the item in the
-# seed's text (the logic's name in a spoiler built without the dump).
+# seed's text (in a spoiler built without the dump, the remake's name from item_names.toml, else the logic's).
 [wording]
 woth = "They say {area} holds something the hero cannot do without."
 barren = "They say searching {area} would only waste the hero's time."

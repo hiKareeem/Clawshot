@@ -188,3 +188,10 @@ The result panel reads the seed's play note as text, headings and tables, includ
 route and age-locked pickup count/Save and Continue advice. Read play note opens a larger view.
 The note itself includes reward locations and hints. Raw spoiler JSON stays behind explicit
 confirmation. Note contents are rendered as text nodes, never executed as HTML or remote content.
+
+## Remake item names
+
+Menus and play notes use the remake's names, such as Echo Gem, Fairy Bow and Lon Lon Milk.
+`data/item_names.toml` is display-only: logic/actor/placement identities do not change. Spoiler
+JSON keeps those logical names and includes the corresponding display-name map. Runtime game
+text takes precedence for hints; unknown items keep their existing name.

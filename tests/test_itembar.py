@@ -99,12 +99,11 @@ def test_spoiler_and_rendered_note_expose_the_warning_at_the_actual_destination(
     [warning] = log["age_locked_pickups"]
     assert warning["item"] == "Bow" and warning["location"] == "Crate | chest"
     note = play_note(seed, log)
-    # Parse the warning's table rather than pin prose or a randomized placement.
+    # Parse the warning's table by its ages and destination rather than pin prose, item wording or a placement.
     rows = [
-        line.removeprefix("| ").removesuffix(" |").split(" | ")
-        for line in note.splitlines()
-        if line.startswith("| Bow | adult | child |")
+        line.removeprefix("| ").removesuffix(" |").split(" | ") for line in note.splitlines() if line.startswith("| ")
     ]
-    assert len(rows) == 1
-    assert rows[0][3:] == [r"Crate \| chest", r"Crate \| chest", "Field"]
+    warnings = [row for row in rows if row[1:3] == ["adult", "child"]]
+    assert len(warnings) == 1
+    assert warnings[0][3:] == [r"Crate \| chest", r"Crate \| chest", "Field"]
     assert "Save and Continue" in note

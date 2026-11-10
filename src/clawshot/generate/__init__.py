@@ -148,8 +148,10 @@ def _required_items(seed: Seed, sources: tuple[str, ...], visits: Mapping[str, d
 def spoiler(seed: Seed, item_names: Mapping[str, str] | None = None) -> dict[str, Any]:
     """Keep world-keyed placements/spheres and add physical descriptions, a replayed opening witness and the hints.
 
-    ``item_names`` (logic item -> the game's name) words the hints as the stones say them; without it they use the
-    logic's names."""
+    Items keep their logic names everywhere; ``item_names`` in the log adds, for each placed item whose name differs,
+    the name the player sees: the remake's (``clawshot.generate.names.item_names``), or the game's where the
+    ``item_names`` argument (logic item -> the game's name) gives it. Hints word items with those same names, as the
+    stones say them."""
     items = seed.world.items
     spheres = [
         {name: seed.placements[name] for name in sphere if items[seed.placements[name]].progression}
@@ -203,7 +205,10 @@ def spoiler(seed: Seed, item_names: Mapping[str, str] | None = None) -> dict[str
             "region": route.region,
             "steps": [describe_step(step) for step in route.steps],
         }
-    names = item_names or {}
+    display = {**location_names.item_names(), **(item_names or {})}
+
+    def item_name(item: str) -> str:
+        return display.get(item, item)
 
     def location_name(name: str) -> str:
         return catalog[name].name if name in catalog else name
@@ -214,7 +219,7 @@ def spoiler(seed: Seed, item_names: Mapping[str, str] | None = None) -> dict[str
             "where": stone_hints.stone_place(hint.stone),
             "label": hint.label,
             "kind": hint.kind,
-            "text": stone_hints.text(hint, lambda item: names.get(item, item), location_name),
+            "text": stone_hints.text(hint, item_name, location_name),
             "area": stone_hints.area_name(hint.area) if hint.area else None,
             "location": hint.location,
             "item": hint.item,
@@ -227,6 +232,11 @@ def spoiler(seed: Seed, item_names: Mapping[str, str] | None = None) -> dict[str
         "settings": seed.settings.as_dict(),
         "settings_string": seed.settings.to_string(),
         "placements": {name: seed.placements[name] for name in seed.shuffled},
+        "item_names": {
+            item: display[item]
+            for item in sorted(display.keys() & set(seed.placements.values()))
+            if display[item] != item
+        },
         "locations": locations,
         "opening_route": opening_log,
         "age_locked_pickups": [asdict(pickup) for pickup in age_locked_pickups(seed)],
@@ -244,9 +254,15 @@ def _markdown_cell(text: str) -> str:
 
 
 def play_note(seed: Seed, log: Mapping[str, Any] | None = None) -> str:
-    """Render the logic-derived opening and every shuffled destination from one spoiler snapshot."""
+    """Render the logic-derived opening and every shuffled destination from one spoiler snapshot, naming items as the
+    player sees them (the log's ``item_names``)."""
     log = spoiler(seed) if log is None else log
     descriptions = log["locations"]
+    names = log["item_names"]
+
+    def shown(item: str) -> str:
+        return names.get(item, item)
+
     collected = {name: index for index, sphere in enumerate(seed.spheres, 1) for name in sphere}
     lines = [f"# Clawshot seed {seed.seed}", ""]
     lines.extend(
@@ -254,7 +270,8 @@ def play_note(seed: Seed, log: Mapping[str, Any] | None = None) -> str:
             "## Age-locked items: Save and Continue",
             "",
             "After obtaining an item Link's current age cannot use, Save and Continue before using other items.",
-            "Child Bow pickup has jammed the ZR item bar; changing areas did not fix it, but Save and Continue did.",
+            "Picking up the Fairy Bow as child has jammed the ZR item bar; changing areas did not fix it, but Save and"
+            " Continue did.",
             "Other age-locked items below are precautions, not individually confirmed failures.",
             "",
         ]
@@ -273,7 +290,7 @@ def play_note(seed: Seed, log: Mapping[str, Any] | None = None) -> str:
         for pickup in log["age_locked_pickups"]:
             description = descriptions[pickup["location"]]
             cells = (
-                pickup["item"],
+                shown(pickup["item"]),
                 pickup["usable_age"],
                 " / ".join(pickup["first_ages"]),
                 description["name"],
@@ -314,15 +331,16 @@ def play_note(seed: Seed, log: Mapping[str, Any] | None = None) -> str:
                 place += f" [{step['location']}]"
             needed = []
             for requirement in step["requires"]:
-                item = requirement["item"]
+                item = shown(requirement["item"])
                 if requirement["count"] != 1:
                     item += f" × {requirement['count']}"
                 references = ", ".join(str(indices[source]) for source in requirement["sources"])
                 needed.append(f"{item} (step {references})")
             sale = f"{step['price']} rupees; {step['opens']}" if "price" in step else "—"
             if "not_equipped" in step:
-                sale += f"; no {step['not_equipped']} equipped (unequip it if owned)"
-            cells = (index, action, place, step["item"] or "—", "; ".join(needed) or "None", sale)
+                sale += f"; no {shown(step['not_equipped'])} equipped (unequip it if owned)"
+            reward = shown(step["item"]) if step["item"] else "—"
+            cells = (index, action, place, reward, "; ".join(needed) or "None", sale)
             lines.append("| " + " | ".join(_markdown_cell(cell) for cell in cells) + " |")
 
         for index, step in enumerate(route["steps"], 1):
@@ -348,7 +366,7 @@ def play_note(seed: Seed, log: Mapping[str, Any] | None = None) -> str:
             description["name"],
             description["where"],
             name,
-            seed.placements[name],
+            shown(seed.placements[name]),
         )
         lines.append("| " + " | ".join(_markdown_cell(cell) for cell in cells) + " |")
     if log.get("hints"):
@@ -368,7 +386,8 @@ def play_note(seed: Seed, log: Mapping[str, Any] | None = None) -> str:
             ]
         )
         for hint in log["hints"]:
-            target = " — ".join(part for part in (hint["location"], hint["item"]) if part) or "—"
+            item = shown(hint["item"]) if hint["item"] else None
+            target = " — ".join(part for part in (hint["location"], item) if part) or "—"
             cells = (hint["stone"], hint["where"], hint["text"], hint["kind"], target)
             lines.append("| " + " | ".join(_markdown_cell(cell) for cell in cells) + " |")
     return "\n".join(lines) + "\n"
