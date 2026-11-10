@@ -41,3 +41,37 @@ First scratch hash probe passed bytes to `save.key`, which requires str: printed
 - Required shared edits will be isolated: early refusal in `patch.make_seed` and the public CLI; **no fill, Settings, CS1 or synthetic-anywhere removal**. TrackD can expose the setting but must surface generation refusal. TrackA README text requested: “Dungeon items remain own-dungeon. Anywhere is encoded for research but seed generation refuses it until named-dungeon grants pass in-game tests.” TrackC's pack generation inherits the same pipeline guard.
 - Experiments will preserve native actors/Hash/age copies and use the current template's real-folder one-mod layout; no existing output will be rebuilt. Named-grant prototype is experimental only and will not be registered in seed generation.
 - **Kareem: which counter changes after each controlled generic pickup, and can a named Forest grant from outside Forest open a Forest lock after Save/Continue?** The precise launchers/checklists and artifact proof follow in item order. No production success is claimed before your result.
+
+## Priority correction: chest-open save evidence
+
+Claude authorized an isolated section6 correction, keeping the old inference visibly superseded.
+Committed **79e00ce** (only that paragraph); section44 now documents the actor-family distinction
+and historical audit. `TreasureBox.module` uses named Struct `IsTreasureBoxOpen`, indexed by
+the decimal actor Hash; saved Bool name is `IsTreasureBoxOpen.<Hash>`. Raw Bool64 entry presence
+is metadata, not evidence that the actor uses it for its check. Ordinary ground rupees,
+recovery floor hearts, anchored floor pieces and boss hearts retain their audited raw-Hash
+NoRespawn contracts; scripted floor keys, chest gates and door gates are not interchangeable.
+Actual original ranch save still has Gohma's native heart Hash set, corroborating that distinction.
+
+Audited all round files for unopened/uncollected/chest-save/Hash checks, then read the exact
+external reproducers for the three implicated records. Results in section44:
+
+- r5-gifts227–234 `chest-song-storms-kak`: raw target12902291359202819102=false, but
+  **named open=true** in original ranch manual01. That particular follow-up source is invalid;
+  do not reuse it. No game run or prior observed song success is retracted.
+- r7-gifts87–109 `treasure-red`: builder asserts raw false but also checks the correct
+  native first-clear Bool. Fresh original-source read: named open=false, first-clear=false;
+  its source remains suitable without relying on the raw premise.
+- r10-agetravel165–168 controlled door copies: builder selected using raw `is_set`.
+  Claude's independent corrected named=false plus Mido=true controls establishes the chosen
+  grave chest is unopened; accepted without rerunning that reported check.
+
+r2-census466–470 already warned about the raw chest absence. r1-formats merely requests an
+unopened/new-game source; r6-settings and r8-getitem use new games. Other identified raw counts
+are metadata, not source-slot availability proof. No further raw-based unopened-chest premise
+found in the round files. Evidence retained externally in `historical-chest-flag-audit.json`.
+
+This caught my initial scratch selector too: it reported every late-Forest chest unopened.
+Printed the actual raw182-key list and true inventory/quest controls, traced the named Struct,
+then changed only the scratch source selector and reran it once. Item2 uses only explicit
+named false (None is not accepted), with the actual selected slot recorded below.

@@ -2954,6 +2954,39 @@ An overworld grant's exact result (lost, retained earlier target, or another beh
 not established by static tracing. Controlled player experiments are required; neither the
 fill's `anywhere` option nor a saved-flag prototype proves keysanity works in game.
 
+### Collection-state correction and historical test audit
+
+Section6's old blanket chest claim is superseded, not erased. Native `TreasureBox.module`
+reads/writes `IsTreasureBoxOpen`, indexed by `QueryGenericGetInstanceId.InstanceIDString`.
+The Struct child key is murmur3 of the **decimal actor Hash**, and its Value selects the saved
+Bool whose full name is `IsTreasureBoxOpen.<Hash>` (reset8/file0). The same unchanged Hash
+still identifies the check; `Save.is_set(Hash)` is not its open-state accessor.
+
+| Audited actor/state family | Collection/state contract; evidence boundary |
+|---|---|
+| Ordinary chests | Named `IsTreasureBoxOpen.<Hash>` Bool. Late Forest save has these true while the raw chest Hashes are false; the native graph confirms the reader/writer. |
+| Treasure Chest Game first prize | Its native flow also gates first clear on named `MiniGame_ChoiceTreasure_IsClear`; an unset raw prize Hash is not proof it is unclaimed. |
+| Ordinary placed ground rupees, recovery floor hearts, anchored floor Heart Pieces, boss hearts | Native saved placement-Hash Bool64 list, with NoRespawn/reset24/file0 contracts audited in rounds7–10 (`r7-drops`, `r8-freestanding`, `r10-pots`). Round2's actual saves show recovery hearts/rupees and Gohma's heart by raw Hash; the ranch backup still has Gohma's heart Hash set. Replacement callbacks and persistence remain per-experiment acceptance, not certified by table presence. Boss creation/story gates can coexist (Gohma's additional obtained Bool is documented in section27). |
+| Gold Skulltulas | Raw enemy Hash plus token-related Hash±2 in the observed round2 saves; special token collection callback still matters (sections22/27). |
+| Saved ordinary supply pots/crates | Raw reset88 destruction state, not permanent item collection; some respawn/scripted variants have no such entry. See section43. |
+| Scripted floor small keys, fortress keys, Ocarina/letter actors | Not covered by a universal raw-Hash rule; level/event-specific state (section36). Dungeon inventory itself uses the named DungeonInfo leaves above. |
+| Small-key locks | Named `IsChainLockDoorOpen` Struct indexed by the controller ID; separate from both inventory and a pickup's Hash. |
+
+Historical **unopened-chest save premises** found by auditing `plans/rounds/`:
+
+| Earlier record | Raw-Hash premise / corrected disposition |
+|---|---|
+| `r5-gifts.md:227–234`, `chest-song-storms-kak` | Says ranch manual01's chest Hash12902291359202819102 is unset. Fresh read of the immutable source: raw=false **but `IsTreasureBoxOpen.12902291359202819102=true`**. That copied slot is already open; this particular follow-up's save selection is invalid and needs a different source/target before reuse. This does not retract Kareem's actual song grants/use in other reported tests. No output/user was rewritten. |
+| `r7-gifts.md:87–109`, `treasure-red` | `build_treasure.py:16` asserts raw prize16881481538337649070 unset. The same original ranch manual01 now reads named open=false AND native first-clear=false; the named first-clear condition was already checked by that builder. Raw evidence is redundant, not its once-only proof. |
+| `r10-agetravel.md:165–168`, three controlled child door tests | `build_player_doors.py:19–22` selected a Graveyard chest using `not Save.is_set(Hash)`. Claude rechecked chosen9622128545943056087 in main-Jabu manual01: named open=false, Mido named-open true controls. **Accepted reviewer evidence; not rerun here.** Those tests stand. |
+
+`r2-census.md:466–470` had already explicitly warned that opened chests were absent from the raw
+list; the unresolved location is now explained by the named Struct. `r1-formats.md:164–166`
+only asks for a new game/an unopened save (no raw-Hash audit claim). `r6-settings.md:52–57`
+and `r8-getitem.md:88–113` use new games, not an old raw-Hash source selection. Metadata-only
+raw-entry counts in `r1-research`, `r2-census` and `r8-freestanding` do **not** establish
+unopened chests. No other unopened-chest raw-Hash save premise was found in the round-file audit.
+
 ## 45. Round 11: Hookshot 2.0.12+ seed loading and text icons (cs11c)
 
 R11-HOOKSHOT-2012 is Kareem/Claude's observed crash diagnosis, not an agent game run.
