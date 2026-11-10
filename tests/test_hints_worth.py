@@ -23,6 +23,7 @@ WORTH = (
     "Deku Nut Capacity",
     "Deku Stick Capacity",
     "Bullet Bag (40)",
+    "Quiver (40)",
     "Bottle",
     "Rutos Letter",
     "Odd Potion",
@@ -131,6 +132,7 @@ def test_item_hints_name_only_good_items_that_are_worth_naming(item_data, monkey
         "Deku Nut Capacity",
         "Deku Stick Capacity",
         "Bullet Bag (40)",
+        "Quiver (40)",
     }
     expected = set(WORTH) - excluded
     for number in range(50):

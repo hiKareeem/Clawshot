@@ -59,8 +59,8 @@ NOT_MAJOR_TYPES = frozenset({"Shop", "Event", "Drop", "Token", "Map", "Compass"}
 # Shop refills ("Buy ...") are type Shop in OoT Randomizer; the remake's own refill sizes are added as plain items.
 NOT_MAJOR_PREFIXES = ("Buy ", "Bombchus", "Heart Container", "Piece of Heart")
 # D29's non-progression permanent upgrades in the world's item data. Fixed wallet/strength/etc. tiers inherit
-# progression from their parent; these three do not. Hearts are recognized separately, including their variants.
-NAMED_UPGRADES = frozenset({"Deku Nut Capacity", "Deku Stick Capacity", "Bullet Bag (40)"})
+# progression from their parent; these do not. Hearts are recognized separately, including their variants.
+NAMED_UPGRADES = frozenset({"Deku Nut Capacity", "Deku Stick Capacity", "Bullet Bag (40)", "Quiver (40)"})
 UNNAMED_TYPES = frozenset({"Drop", "Event", "Shop", "Refill"})
 UNNAMED_PREFIXES = (
     "Buy ",
