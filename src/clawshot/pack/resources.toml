@@ -1,0 +1,22 @@
+# RomFS working set for local NUP generation. Identifiers only, never resource bytes.
+# Add new native read/patch inputs here; test_pack_nup_dump.py generates/writes its
+# complete mode matrix using ONLY this cache, then compares with folder generation.
+files = [
+    "Pack/ZsDic.pack.zs",
+    "GameData/GameDataList.Product.110.byml.zs",
+    "RSDB/EventSetting.Product.111.rstbl.byml.zs",
+    "RSDB/PouchActorInfo.Product.111.rstbl.byml.zs",
+    "Event/EventFlow/EventFlowFileEntry.Product.110.byml.zs",
+    "System/Resource/ResourceSizeTable.Product.111.Nin_Ounce_NVN2.rsizetable.zs",
+    "Logic/Market_Common_f252.logic.module.ainb", # Round10 Door of Time open mode (cs10b)
+]
+patterns = [
+    "Banc/*/*.bcett.byml.zs", # census reads all placements
+    "Event/EventFlow/*.bfevfl.zs", # gift census and patched flows
+    "Mals/*.Product.110.sarc.zs", # every language is patched
+    "Pack/Actor/Shop_Board_Bundle_*.pack.zs",
+]
+# Actor names are derived from item_actors.toml and shops.toml, not duplicated here.
+actor_pack = "Pack/Actor/{actor}.pack.zs"
+# Resolve every fast_start.toml skippable event's component and parents from EventSetting.
+fast_start_components = true

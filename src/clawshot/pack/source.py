@@ -4,6 +4,7 @@ import argparse
 import hashlib
 import struct
 import sys
+import tomllib
 from contextlib import contextmanager
 from pathlib import Path
 from tempfile import TemporaryDirectory
@@ -96,30 +97,23 @@ def fingerprint(read) -> str:
     return hashlib.sha256(hashes.encode("ascii")).hexdigest()
 
 
-def working_files(source: NupRomfs) -> set[str]:
-    """Bounded generator inputs, not a dump extraction (no models, textures, audio or ExeFS)."""
+def resource_spec() -> dict:
+    return tomllib.loads(Path(__file__).with_name("resources.toml").read_text(encoding="utf-8"))
+
+
+def working_files(source: NupRomfs, spec: dict) -> set[str]:
+    """Resolve the one cache definition against the NUP index and source catalogues."""
     from fnmatch import fnmatchcase
 
-    from clawshot.census.gifts import FLOW_VERSIONS
-    from clawshot.census.scan import BANC_GLOB
-    from clawshot.formats.rstb import TABLE_PATH
     from clawshot.patch import items, shops
 
     actors = set(items.load().actors.values())
     slots = shops.load()
     actors.update(slot.owner for slot in slots)
     actors.update(slot.vanilla_item for slot in slots)
-    wanted = set(VERSION_FILES) | {FLOW_VERSIONS, TABLE_PATH, shops.POUCH_TABLE}
-    wanted.update(f"Pack/Actor/{actor}.pack.zs" for actor in actors)
-    for path in source.files:
-        if (
-            fnmatchcase(path, BANC_GLOB)
-            or path.startswith("Event/EventFlow/")
-            and path.endswith(".bfevfl.zs")
-            or fnmatchcase(path, "Mals/*.Product.110.sarc.zs")
-            or fnmatchcase(path, "Pack/Actor/Shop_Board_Bundle_*.pack.zs")
-        ):
-            wanted.add(path)
+    wanted = set(spec["files"])
+    wanted.update(spec["actor_pack"].format(actor=actor) for actor in actors)
+    wanted.update(path for path in source.files if any(fnmatchcase(path, pattern) for pattern in spec["patterns"]))
     return wanted
 
 
@@ -136,6 +130,7 @@ def local_romfs(path: Path, parent: Path):
     check_version(path)  # before creating even an empty cache
     with open_nup(path) as source, TemporaryDirectory(prefix=".romfs-", dir=parent) as temporary:
         root = Path(temporary)
+        spec = resource_spec()
 
         def fetch(relative):
             target = root / relative
@@ -145,7 +140,7 @@ def local_romfs(path: Path, parent: Path):
                 target.write_bytes(data)
             return target
 
-        for relative in sorted(working_files(source)):
+        for relative in sorted(working_files(source, spec)):
             fetch(relative)
         dictionaries = zsdic.Dictionaries.from_romfs(root)
 
@@ -153,11 +148,12 @@ def local_romfs(path: Path, parent: Path):
             raw = fetch(relative).read_bytes()
             return byml.read(dictionaries.decompress(relative, raw) if relative.endswith(".zs") else raw)
 
-        event_settings = tree(gamedata.EVENT_SETTING_TABLE)
-        for setting in gamedata.load().values():
-            for event in setting.skippable:
-                relative = gamedata.component_list_path(event_settings, event)
-                gamedata._skip_setting_in_parents(tree, relative)
+        if spec["fast_start_components"]:
+            event_settings = tree(gamedata.EVENT_SETTING_TABLE)
+            for setting in gamedata.load().values():
+                for event in setting.skippable:
+                    relative = gamedata.component_list_path(event_settings, event)
+                    gamedata._skip_setting_in_parents(tree, relative)
         yield root
 
 

@@ -96,3 +96,61 @@ No failed positive command was repeated or narrowed. `pack-proof.json` and indiv
 Final scoped format/lint passed (9 files); focused pack suites now26 passed in0.43s after adding the
 malformed-zstd-frame error regression. The optional dump oracle also covers complete cache equality and
 unchanged NUP size/mtime. Full-gate source/tests are frozen; no source/test edit during the gate chain.
+
+## Shared-file integration and player acceptance
+
+Committed in item order: `f5a6249` is isolated NOTICE attribution; `2d8c41a` is the complete owned
+item1 implementation/tests/docs; `4116069` is isolated section42. These are checkpoints, not a
+ready claim before the full gates. Section42 currently follows39; reviewer inserts A's40 and B's41
+before it, then D's43, preserving all tracks' findings without invented placeholders.
+
+Posted a plain cross-track request on cs-r10: the new Door of Time patch may read native module
+bytes outside the current generator working set. Track B/reviewer should supply its exact additional
+RomFS read/patch paths for cache inclusion and an integrated NUP replay. A module-name reference
+alone does not require extracting that module. Current NUP/folder equivalence proves this branch's
+source snapshot, not an unmerged future generator. No other track's files are edited here.
+
+Removed only the two completed session-created throwaway smoke drivers after retaining their
+source/pack proof JSON and logs; new zips/extractions/seeds remain untouched outside the repo.
+
+**Kareem: after review, extract `seed8-nup-next.zip` into another new external folder. Run Make,
+give the full NUP filename and your Hookshot folder, require Verified seed, then Play only after
+quitting the current game. Start a new isolated game; Mido's house from the doorway must show
+far-left Magic Jar, middle-left Bow, middle-right Kokiri Sword, far-right Boomerang. After the child
+Bow pickup, Save and Continue before using other items. Require the Kokiri Dynamic `from the overlay`
+log and normal item grants/use, then confirm Continue retains this pack's own progress. No main save
+copy/reset. This is the still-unperformed player check, not agent certification.**
+
+For a newly rebuilt merged-source pack, use its own spoiler/note and newly computed digest instead
+of this historical branch-local archive's placements. No existing played seed/output is regenerated.
+
+## Reviewer steer: self-checking cache definition and door inputs
+
+Claude requested a cache-only seed-generation oracle instead of trusting a hand-maintained list.
+Cancelled the superseded gate chain, then printed native process/lock diagnostics: no own Python,
+uv or pytest remained; gate.lock creation time exactly equalled the interrupted synthetic log's
+creation time. Removed that owned lock immediately. Format245/lint passed in that chain; interrupted
+pytest is NOT a pass, and fresh four-command gates will follow the expanded acceptance.
+
+All literal cache paths/patterns now live in `pack/resources.toml`, included as ordinary source data.
+The resolver derives actor names from existing item/shop catalogues and fast-start component/parent
+paths from EventSetting. Later tracks add an input path in that one file; no second Python path list.
+
+Claude supplied cs10b's20:43 input-path post. Existing patterns/fixed resources already cover both
+Market Bancs, DoorOfTime flow, GameDataList, ResourceSizeTable and dictionary pack. Added only
+`Logic/Market_Common_f252.logic.module.ainb`. This is source input coverage, not a Door of Time
+gameplay patch or a claim that the unmerged setting exists on this branch.
+
+Expanded `test_pack_nup_dump.py`: one temporary NUP cache; real CLI preparation/census/fill/search
+AND writer from that directory alone for Chest, Shop, Gift, Scrub, BossHeart and Freestanding.
+Additional full-kind rows cover every forest mode with all non-legacy fast starts, free travel,
+song placement, price policies, partial/zero shelves, both hint modes and skips off. Each complete
+output is compared path-for-path and SHA256-for-SHA256 with a separate original-RomFS generation,
+so even silently absent glob members fail. Missing file exceptions name the RomFS input and the
+cache data file; a deliberately empty cache tests that diagnostic. No generation fallback root.
+All three door modes enter the matrix automatically once Track B's `Settings.door_of_time` field
+exists after integration; this branch does not fake or skip tests for a nonexistent setting.
+
+Scoped format/lint passed; existing synthetic pack suites26 passed in0.45s. The new cache-only
+matrix runs under gate.lock with one worker. `docs/seed-pack.md` records its exact OOT_NUP command
+for each reviewer rebase. No production/test mutation after this matrix starts; only reporting/docs.

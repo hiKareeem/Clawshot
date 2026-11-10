@@ -123,3 +123,20 @@ patch must be shipped in a newly built pack with a newly computed digest.
 Acceptance still needs an invited tester/Kareem to play: Make succeeds, Play opens the isolated new game,
 the log reports `fs: OpenFile(...): from the overlay`, and the displayed seed placements agree.
 Agent verification never starts the game.
+
+### Maintaining the NUP working set
+
+`src/clawshot/pack/resources.toml` is the single cache definition: exact files, resource-family
+patterns, the supported item/shop pack template and fast-start component discovery. A patch that
+reads another native resource adds its path there, not another extraction branch in Python.
+
+```sh
+CLAWSHOT_WORKERS=1 OOT_ROMFS=<romfs> OOT_NUP=<game.nup> uv run pytest tests/test_pack_nup_dump.py -m dump
+```
+
+Run under the round's gate lock, serially. The dump matrix generates and writes complete seeds
+from the cache directory **alone**, then compares every output path and byte digest with a separate
+full-RomFS generation. It covers each enabled shuffle kind, all forest modes/fast-start skips,
+free travel, both hint modes, songs/prices/partial shops and (once present) all Door of Time modes.
+Missing inputs fail by RomFS path; missing glob members also fail output equality. Re-run after
+each integration/rebase so newly merged patch inputs cannot silently rely on the publisher's dump.

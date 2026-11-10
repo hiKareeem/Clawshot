@@ -1,28 +1,121 @@
-"""Optional NUP oracle: every cached generator input equals the extracted supported dump."""
+"""Cache-only full seed generation must match the original dump in every resource-reading mode."""
 
+import hashlib
 import os
+from dataclasses import replace
 from pathlib import Path
 
 import pytest
 
+from clawshot.__main__ import main as generate_main
+from clawshot.generate import Settings
 from clawshot.pack import check_version, version_digest
 from clawshot.pack.source import local_romfs
+from clawshot.patch import gamedata
+from clawshot.settings import CATALOG
 
 pytestmark = pytest.mark.dump
 
+# Token is explicitly disabled, not a supported generation route. Each supported kind
+# gets its own row with Chest (native fixed dungeon-key layouts are not shuffled otherwise).
+SHUFFLES = ("Chest", "Shop", "Gift", "Scrub", "BossHeart", "Freestanding")
 
-def test_nup_generator_working_set_matches_romfs(romfs, tmp_path):
+
+def resource_modes():
+    for kind in SHUFFLES:
+        yield kind.lower(), Settings(shuffle=tuple(dict.fromkeys(("Chest", kind))))
+    all_kinds = Settings(shuffle=SHUFFLES)
+    skips = tuple(name for name in gamedata.load() if name not in ("mido", "forest_exit"))
+    for forest in CATALOG["forest"]:
+        yield f"forest-{forest}", replace(all_kinds, forest=forest, fast_start=skips)
+    yield "free-travel", replace(all_kinds, logic={"free_time_travel": True})
+    yield (
+        "songs-prices",
+        replace(
+            all_kinds,
+            songs="anywhere",
+            shop_prices="affordable",
+            shop_slots=3,
+            scrub_prices="fixed",
+            scrub_price=201,
+            dungeon_items="anywhere",
+        ),
+    )
+    yield "mask-no-skips", replace(all_kinds, hints="mask", fast_start=(), cheap_deku_shield=False, shop_slots=0)
+    # Track B adds this field. Review rebases automatically exercise all door modes;
+    # before that integration there is no nonexistent setting to skip or pretend to test.
+    if "door_of_time" in Settings.__dataclass_fields__:
+        for door in ("closed", "song_only", "open"):
+            yield f"door-{door}", replace(all_kinds, door_of_time=door, logic={"free_time_travel": True})
+
+
+@pytest.fixture(scope="module")
+def cached_romfs(romfs, tmp_path_factory):
     if not os.environ.get("OOT_NUP"):
         pytest.skip("OOT_NUP is not set")
-    path = Path(os.environ["OOT_NUP"])
-    check_version(path)
-    assert version_digest(path) == version_digest(romfs)
-    before = path.stat()
-    with local_romfs(path, tmp_path) as cache:
-        for member in cache.rglob("*"):
-            if member.is_file():
-                relative = member.relative_to(cache)
-                assert member.read_bytes() == (romfs / relative).read_bytes(), relative
+    source = Path(os.environ["OOT_NUP"])
+    check_version(source)
+    assert version_digest(source) == version_digest(romfs)
+    before = source.stat()
+    parent = tmp_path_factory.mktemp("nup-working-set")
+    with local_romfs(source, parent) as cache:
+        yield cache
     assert not cache.exists()
-    after = path.stat()
+    after = source.stat()
     assert (after.st_size, after.st_mtime_ns) == (before.st_size, before.st_mtime_ns)
+
+
+def test_nup_generator_working_set_matches_romfs(romfs, cached_romfs):
+    for member in cached_romfs.rglob("*"):
+        if member.is_file():
+            relative = member.relative_to(cached_romfs)
+            assert member.read_bytes() == (romfs / relative).read_bytes(), relative
+
+
+def generate_and_write(source, output, settings, capsys):
+    """Use the real CLI setup, census, fill, search and writer; never a fallback root."""
+    try:
+        result = generate_main(
+            [
+                "--romfs",
+                str(source),
+                "--seed",
+                "7",
+                "--settings",
+                settings.to_string(),
+                "--out",
+                str(output),
+            ]
+        )
+    except FileNotFoundError as error:
+        missing = Path(error.filename).relative_to(source).as_posix()
+        raise AssertionError(f"NUP cache missing resource: {missing}; add its path to pack/resources.toml") from error
+    captured = capsys.readouterr()
+    assert result == 0, captured.out + captured.err
+    return {
+        path.relative_to(output).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
+        for path in output.rglob("*")
+        if path.is_file()
+    }
+
+
+@pytest.mark.parametrize(
+    "mode,settings", list(resource_modes()), ids=lambda value: value if isinstance(value, str) else ""
+)
+def test_cache_only_generates_and_writes_every_resource_mode(romfs, cached_romfs, tmp_path, capsys, mode, settings):
+    # The cache run is passed ONLY the cache directory. The independent full-dump run
+    # is the oracle, catching even silent missing glob members (e.g. a language archive).
+    actual = generate_and_write(cached_romfs, tmp_path / "cached", settings, capsys)
+    expected = generate_and_write(romfs, tmp_path / "reference", settings, capsys)
+    missing = sorted(expected.keys() - actual.keys())
+    extra = sorted(actual.keys() - expected.keys())
+    changed = sorted(name for name in actual.keys() & expected.keys() if actual[name] != expected[name])
+    assert actual == expected, f"{mode}: missing resources {missing}; extra {extra}; changed {changed}"
+
+
+def test_missing_cache_input_reports_its_romfs_path(tmp_path, capsys):
+    empty_cache = tmp_path / "empty-cache"
+    empty_cache.mkdir()
+    with pytest.raises(AssertionError, match="Pack/ZsDic.pack.zs"):
+        generate_and_write(empty_cache, tmp_path / "not-written", Settings(), capsys)
+    assert not (tmp_path / "not-written").exists()
