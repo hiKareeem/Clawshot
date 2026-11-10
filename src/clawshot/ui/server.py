@@ -6,6 +6,7 @@ import secrets
 import subprocess
 import sys
 import threading
+import time
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from importlib.metadata import version
 from pathlib import Path
@@ -74,6 +75,8 @@ class Application:
 
     def call(self, method, route, body):
         if method == "GET" and route == "schema":
+            choices = presets(spec=self.spec)
+            recommended = next(p for p in choices if p["id"] == "recommended")
             return {
                 "schema": schema(),
                 "version": version("clawshot"),
@@ -90,10 +93,10 @@ class Application:
                     if sys.platform != "win32"
                     else "Play is disabled in --no-open. Open Clawshot normally to play."
                 ),
-                "presets": presets(spec=self.spec),
+                "presets": choices,
                 "inputs": input_schema(),
                 "stages": [{"key": key, "label": label, "status": "pending", "seconds": 0} for key, label in STAGES],
-                **settings_payload(validate({}, spec=self.spec)),
+                **settings_payload(validate(text=recommended["settings_string"], spec=self.spec)),
             }
         if method == "GET" and route == "job":
             return self.job_view()
@@ -246,6 +249,24 @@ class Handler(BaseHTTPRequestHandler):
     def setup(self):
         super().setup()
         self.connection.settimeout(10)
+        self.body_consumed = False
+
+    def finish(self):
+        # Closing a rejected POST with unread bytes can reset TCP and discard its error response on Windows.
+        # Drain only a bounded amount for a bounded time; never trust a rejected Content-Length.
+        if getattr(self, "command", None) == "POST" and not self.body_consumed:
+            self.connection.settimeout(0.05)
+            deadline = time.monotonic() + 0.05
+            remaining = MAX_BODY + 1
+            try:
+                while remaining and time.monotonic() < deadline:
+                    chunk = self.rfile.read1(remaining)
+                    if not chunk:
+                        break
+                    remaining -= len(chunk)
+            except OSError:
+                pass  # Peer closed, or the bounded drain expired; the original error has already been sent.
+        super().finish()
 
     def log_message(self, *_):
         pass  # No token/path logging to external access logs.
@@ -306,6 +327,7 @@ class Handler(BaseHTTPRequestHandler):
                 if not 0 < length <= MAX_BODY:
                     raise ValueError("JSON body must be 1..65536 bytes")
                 raw = self.rfile.read(length)
+                self.body_consumed = len(raw) == length
                 body = json.loads(raw)
                 if not isinstance(body, dict):
                     raise ValueError("JSON body must be an object")

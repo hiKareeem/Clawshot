@@ -30,9 +30,14 @@ their HTTP endpoints. Normal sessions enable these actions; Play also requires W
 
 ## Using it
 
+On a fresh page, Recommended and a random seed are already selected, with a new output under
+Documents. Choose and check your dump, then go straight to Generate; no settings changes or
+Hookshot installation are required. Checked input paths are remembered in your user configuration.
+
 - **Game:** your own romfs folder or `.nup` is the only required input. Hookshot is optional and
-  needed only for Play; emulator players can skip it. Detecting Hookshot fills the dump from its
-  romfs or an adjacent NUP. Detection reads files, never starts the executable. The supported game
+  needed only for Play; emulator players can skip it. Detecting Hookshot can fill an empty dump
+  field from romfs or an adjacent NUP; it does not replace a dump you already chose.
+  Detection only reads files. The supported game
   check is the pack's `check_version`. Read-only input links/junctions resolve to their real paths;
   output folders still refuse links. Paths are displayed in the host OS's form.
 - **Settings:** Defaults restores generator defaults. Recommended selects Chest, Shop, Gift,

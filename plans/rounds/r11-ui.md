@@ -177,3 +177,20 @@ The added action exposed a24px desktop overflow; constrained the description pan
 Clawshot.bat and executable clawshot.sh find PATH uv, then versioned .tools/uv-0.13.7, otherwise download only a pinned official archive and verify its embedded SHA256 before extracting/running. Windows helper is scripts/start-windows.ps1; release must include it. Windows x64/arm64, Linux static-musl x64/arm64 and macOS x64/arm64 pins match https://github.com/astral-sh/uv/releases/download/0.13.7/sha256.sum (parent independently read the official file). No admin/install/PATH/profile change. Failure prints the manual link and stays readable. Windows selects the locked optional UI extra; other platforms use the browser dependency set.
 
 Static security/pin gates:10 passed in0.08s. Actual offline PATH smoke ran both real launchers in a disposable path containing spaces with a fake uv that only prints arguments: Windows and shell both exited0, passed the project path as one argument, --frozen --no-dev and --no-open; Windows also --extra ui. No .tools folder created, no download, real uv launch, native window or game. First smoke preflight printed multiple Get-Command matches; corrected only the harness to use the launcher's existing Select-Object -First1 behavior, then passed. This is not macOS or fresh-download runtime certification.
+
+### Release item 3: untouched first run
+
+Game leads with the only required dump; Hookshot is explicitly optional and its supplied Play-only explanation is visible. Game goes straight to Generate. Recommended is selected from the existing reviewed preset data, with a cryptographic random seed filled once per fresh page and the existing native Documents suggestion. Defaults remains generator defaults. Verified dump/Hookshot paths use the OS user config path; a rejected replacement does not overwrite the last good path. Checking optional Hookshot no longer replaces an already chosen dump. Wrong/incomplete game version now has plain next-step instructions.
+
+Proof: scoped first-run/app/schema/Play/HTTP **49 passed in22.17s**, lint passed. Hidden Chromium `shots/game-first-run.png` visually inspected: dump first, optional Hookshot, correct version check. With no settings/seed/output changes and no Hookshot, Generated synthetic seed654644505 to the actual Documents default and completed; Recommended aria-pressed=true, no JS errors. That session-owned synthetic output is removed after proof; no real game data or save touched.
+
+The first integrated run exposed a Windows TCP reset on an early rejected POST: declared Content-Length70000, actual body2 bytes, response read aborted with10053. Inspection showed unread rejection bytes at close. Added a bounded rejected-body drain (at most65537 bytes /50ms) after sending the original error; valid parsed requests skip it. Existing malformed-body regression then passed with the whole49-case group; no retry or tolerated-error change in the tests.
+
+### Six-line owner first-run / Play checklist
+
+1. Unzip the full build, double-click Clawshot.bat; the menu should open and show its version (first run may explain its checked uv download).
+2. Browse to your romfs or .nup and Check; expect the supported build, with the dump first and Hookshot marked optional.
+3. Leave Hookshot empty and settings untouched; Generate should use Recommended, a random number and Documents, then show Seed ready.
+4. On Game, choose/check your mod-capable Hookshot folder, quit every running Hookshot, then return to the result and press Play.
+5. Start a New Game and collect a shuffled pickup named in the play note; expect that reward and `fs: OpenFile(...): from the overlay` in this seed's hookshot_log.txt.
+6. Quit game/app, reopen My seeds and Play the same seed; expect its private save to remain and normal Hookshot saves unchanged.

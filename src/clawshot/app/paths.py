@@ -4,7 +4,7 @@ import os
 from dataclasses import asdict
 from pathlib import Path
 
-from clawshot.pack import BUILD, check_version
+from clawshot.pack import BUILD, PackError, check_version
 from clawshot.pack.hookshot import detect as _detect_hookshot
 
 SOURCE_ROOT = Path(__file__).resolve().parents[3]
@@ -51,7 +51,16 @@ def detect_dump(value: str) -> dict:
     path = absolute_path(value, "Dump", allow_links=True)
     if not path.is_dir() and (not path.is_file() or path.suffix.lower() != ".nup"):
         raise ValueError("Choose an extracted romfs folder or a .nup file")
-    check_version(path)
+    try:
+        check_version(path)
+    except PackError as error:
+        raise ValueError(
+            f"These game files are not the supported build {BUILD}. Choose the correct full game dump."
+        ) from error
+    except OSError as error:
+        raise ValueError(
+            "These game files are incomplete or cannot be read. Choose the full romfs folder or .nup."
+        ) from error
     return {"path": str(path), "kind": "romfs" if path.is_dir() else "nup", "build": BUILD, "supported": True}
 
 

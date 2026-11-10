@@ -28,22 +28,12 @@
         <section id="game" class="screen">
           <div class="heading">
             <h1>Your game</h1>
-            <p>Choose your own game files; the dump stays unchanged.</p>
+            <p>
+              Your game dump is all you need to make a seed. Hookshot is only
+              for Play.
+            </p>
           </div>
           <h2 class="section-title">Game files</h2>
-          <div class="menu-row path-row" data-interface="hookshot">
-            <label for="hookshot">Hookshot folder</label>
-            <div class="value-cell">
-              <input
-                id="hookshot"
-                data-path
-                placeholder="Browse or paste a folder path"
-                autocomplete="off"
-                spellcheck="false"
-              /><button data-browse="hookshot">Browse…</button
-              ><button id="check-hookshot">Detect</button>
-            </div>
-          </div>
           <div class="menu-row path-row" data-interface="dump">
             <label for="dump">Game dump</label>
             <div class="value-cell">
@@ -55,6 +45,19 @@
                 spellcheck="false"
               /><button id="browse-dump">Browse…</button
               ><button id="check-dump">Check</button>
+            </div>
+          </div>
+          <div class="menu-row path-row" data-interface="hookshot">
+            <label for="hookshot">Hookshot folder (optional)</label>
+            <div class="value-cell">
+              <input
+                id="hookshot"
+                data-path
+                placeholder="Browse or paste a folder path"
+                autocomplete="off"
+                spellcheck="false"
+              /><button data-browse="hookshot">Browse…</button
+              ><button id="check-hookshot">Detect</button>
             </div>
           </div>
           <h2 class="section-title">Detected versions</h2>
@@ -79,8 +82,11 @@
             </div>
           </div>
           <div class="screen-actions">
-            <span class="muted">Hookshot is optional for emulator users.</span
-            ><button class="primary" data-next="settings">Settings →</button>
+            <span class="muted"
+              >Only needed for the Play button. Emulator players can skip
+              it.</span
+            >
+            <button class="primary" data-next="generate">Generate →</button>
           </div>
         </section>
         <section id="settings" class="screen" hidden>
@@ -180,8 +186,7 @@
         <section class="description-panel" aria-live="polite">
           <h2 id="description-title">Your game</h2>
           <p id="description-text">
-            Choose a Hookshot folder to find its game files automatically, or
-            choose your dump directly.
+            Choose your game dump first. Hookshot is optional, only for Play.
           </p>
           <p id="description-note" class="description-note">
             Choose your game files. Only pressing Play starts Hookshot.

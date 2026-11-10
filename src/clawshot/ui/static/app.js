@@ -436,6 +436,14 @@ function renderSettings() {
     $("settings-groups").append(section);
   }
   applyDependencies();
+  markPreset();
+}
+function markPreset() {
+  for (const button of document.querySelectorAll("[data-preset]")) {
+    const selected = button.dataset.settings === settingsString;
+    button.classList.toggle("primary", selected);
+    button.setAttribute("aria-pressed", String(selected));
+  }
 }
 function readValues() {
   const result = {};
@@ -477,6 +485,7 @@ async function syncControls(changed) {
     applyDependencies();
     settingsString = data.settings_string;
     $("settings-string").value = settingsString;
+    markPreset();
     for (const target of Object.keys(changed?.clears || {}))
       $("setting-" + target).value = JSON.stringify(values[target], null, 2);
     valid = true;
@@ -680,7 +689,7 @@ async function detect(kind, fillDump = true) {
         (info.version || "unknown version") +
         (info.reason ? " · " + info.reason : " · mods supported");
       if (info.reason) status.className = "value-cell detection bad";
-      if (fillDump) {
+      if (fillDump && !$("dump").value.trim()) {
         $("dump").value = info.romfs || info.nups[0] || "";
         if ($("dump").value) await detect("dump");
       }
@@ -934,12 +943,13 @@ for (const [id, action] of Object.entries({
   $(id).dataset.keyAction = action;
 $("output").addEventListener("input", () => (outputCustom = true));
 $("seed").addEventListener("input", suggestOutput);
-$("random-seed").addEventListener("click", () => {
+function randomizeSeed() {
   const number = new Uint32Array(1);
   crypto.getRandomValues(number);
   $("seed").value = String(number[0]);
   suggestOutput();
-});
+}
+$("random-seed").addEventListener("click", randomizeSeed);
 $("apply-string").addEventListener("click", applyString);
 $("copy-string").addEventListener("click", async () => {
   try {
@@ -1070,13 +1080,14 @@ window.addEventListener("beforeunload", (event) => {
     copyAvailable = data.copy_available;
     playAvailable = data.play_available;
     playUnavailableReason = data.play_unavailable_reason;
-    suggestOutput();
+    randomizeSeed();
     document
       .querySelectorAll("[data-interface]")
       .forEach((el) => bindHelp(el, inputs[el.dataset.interface]));
     for (const preset of data.presets) {
       const button = element("button", "", preset.label);
       button.dataset.preset = preset.id;
+      button.dataset.settings = preset.settings_string;
       bindHelp(button, preset);
       button.dataset.keyAction = "Apply";
       button.addEventListener("click", async () => {
