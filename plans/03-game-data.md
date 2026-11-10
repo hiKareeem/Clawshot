@@ -2924,6 +2924,32 @@ Future checks use **remake names and the actual region's access rule**, like `ex
 chests; record an N64 name only for an exact mapping. No ordinal/nearest-position join,
 unverified rule, new saved flag or shuffle setting is introduced by this exploration.
 
+## 44. Round 11: dungeon items and keysanity (cs11b, exploration)
+
+Build `e0f3ccfa`; evidence and exact native addresses: `plans/rounds/r11-keys.md`.
+Read-only reproducers, decoded graphs, save audit and native disassembly stay under
+`E:/OOTRemake/work/r11-keys-cs11b/`, never in this repository.
+
+`GameDataList`'s `DungeonInfo` Struct selects14 dungeon Structs; `DungeonParam.TargetGameData`
+matches the selecting child keys. Each has saved reset8/file0 leaves:
+`SmallKeyNum` (remaining Int), `SmallKeyTotalNum` (acquired-total Int),
+`IsGetSmallKeyOnce`, `IsGetBossKey`, `IsGetMap`, `IsGetCompass` (Bools).
+All start0/false. These exist even for keyless dungeons; Kokiri's field rows have no
+TargetGameData. Names and flattened save hashes were checked against the actual Struct links.
+
+The four generic item actors carry no dungeon name. Chest special-item actions
+`GameSystemActor.EventGetDungeonSmallKey/BossKey/Map/Compass` take no dungeon argument.
+Their native handlers resolve a shared live component, not an argument selected by Clawshot's
+fill. Positive small-key grants update remaining, total and first-key state; spending decreases
+remaining only, with an underflow check. Boss/map/compass handlers set the component's Bools.
+`DoorChainLock.root` reads its remaining count and spends through the same native access path;
+durable door-open state is independently indexed by controller identity in `IsChainLockDoorOpen`.
+
+**[INFERENCE]** Generic grants credit the loaded dungeon, not the intended logic item.
+An overworld grant's exact result (lost, retained earlier target, or another behavior) is
+not established by static tracing. Controlled player experiments are required; neither the
+fill's `anywhere` option nor a saved-flag prototype proves keysanity works in game.
+
 ## 45. Round 11: Hookshot 2.0.12+ seed loading and text icons (cs11c)
 
 R11-HOOKSHOT-2012 is Kareem/Claude's observed crash diagnosis, not an agent game run.
