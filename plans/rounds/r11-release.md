@@ -113,3 +113,16 @@ and the limited normal-minigame acceptance are retained. Existing seed 8/10 pack
 Actual `pack.source_files()` plus the builder's READ ME FIRST template source: **189 files**;
 both answer IDs are present in the shipped README and player instructions. This is a
 source-snapshot smoke only, not a rebuilt historical pack or a game run.
+
+## Serialized final verification queue
+
+The first sweep wrapper was inspected only to reschedule it: its entire output contained
+16 one-minute gate-wait notices, no acquisition and no started check. Cancelled that own,
+still-queued wrapper without touching Claude's lock, then queued one deadline-free command:
+`uv run python <scratch>/run_locked.py sweep uv run python <scratch>/sweep.py && uv run python <scratch>/gates.py`.
+This guarantees sweep then four gates, never two own gate contenders. No executed check was
+repeated. Each command acquires `E:/OOTRemake/work/rounds/r11/gate.lock` with mkdir and
+releases its own directory in finally immediately at subprocess completion, including failure.
+All pytest workers are 1. Synthetic gates unset both dump variables; every dump invocation
+sets both actual read-only sources. Gate temporary files stay inside this track's scratch.
+Final results remain pending; implementation/test sources are frozen.
