@@ -63,8 +63,7 @@ region = "Market Potion Shop"
 type = "NPC"
 vanilla = "Bottle"
 rule = "is_child"
-keep_vanilla = "D15: shuffled tutorial bypass awaits Kareem's isolated bottle test"
-source = "cs10a, build e0f3ccfa: Npc_Hylia_020_Shop_Child/Event171 grants Item_Bottle after accepting Item_Bottle_TutorialEvent_Talk; no item, rupee or story prerequisite. Default AISchedule selects this entry until tutorial completion. Native Present/Started/Cleared Bools are reset8/save0. R9-SEED8-MARKET confirms the vanilla free bottle; shop access retains its child/day exit rule."
+source = "cs10a, build e0f3ccfa: Npc_Hylia_020_Shop_Child/Event171 grants Item_Bottle after accepting Item_Bottle_TutorialEvent_Talk; no item, rupee or story prerequisite. Default AISchedule selects this entry until tutorial completion. Native Present/Started/Cleared Bools are reset8/save0. R9-SEED8-MARKET confirms the vanilla free bottle; shop access retains its child/day exit rule. Released cs11e: Kareem confirmed R10-MARKET-BOTTLE-FIX, 2026-11-10; generator flow matches the tested corrected mod byte-for-byte (section 40)."
 
 [locations."Kak Shooting Gallery Reward"]
 vanilla = "Quiver (40)"
@@ -72,10 +71,9 @@ source = "cs10a build e0f3ccfa: MiniGame_HitTarget Event381/Event242 grant mediu
 
 [locations."Graveyard Dampe Gravedigging Tour"]
 type = "NPC"
-keep_vanilla = "D15: event-gift swap and native prop cleanup await Kareem's digging test"
 rule = "is_child and (at_dampe_time and 'Time Flows')"
 was = "is_child and at_dampe_time"
-source = "cs10a active Npc_Hylia_Dampe_001.110: Event628 -> GetInEvent_NotTurn_NotNpc_Dampe is the actual grant, Event82 only stages the native heart prop, Event301 removes it. Event357 sets saved GraveYard_DiggingHoleTour_Drop_HeartPiece; native primary routes query it. Existing child/night/Time Flows rule retained from cs4a: Eurogamer all-new-changes and IGN/Nintendo Life heart guides. Shuffled grant gets the same native saved gate at its fork, not a new physical pickup."
+source = "cs10a active Npc_Hylia_Dampe_001.110: Event628 -> GetInEvent_NotTurn_NotNpc_Dampe is the actual grant, Event82 only stages the native heart prop, Event301 removes it. Event357 sets saved GraveYard_DiggingHoleTour_Drop_HeartPiece; native primary routes query it. Existing child/night/Time Flows rule retained from cs4a: Eurogamer all-new-changes and IGN/Nintendo Life heart guides. Shuffled grant gets the same native saved gate at its fork, not a new physical pickup. Released cs11e: Kareem confirmed R10-DIGGING, 2026-11-10; generator flow matches the tested mod byte-for-byte (section 40)."
 
 
 [events."Market Shooting Gallery"."Market Gallery Normal Clear"]
