@@ -225,16 +225,17 @@ class = "swap"
 gate = "quest SubEvent_GhostShop Complete"
 
 [check."Market Bombchu Bowling Bombchus"]
-class = "swap"
-gate = "MiniGame_BombchuBowling_Clear{First,Second,Third}Time"
+class = "more"
+gate = "native unshuffled first win"
+reason = "Gift mode has two deterministic prizes then native filler; the unshuffled Bombchu payout is not a third shuffled check"
 
 [check."Market Bombchu Bowling First Prize"]
 class = "swap"
-gate = "MiniGame_BombchuBowling_Clear{First,Second,Third}Time"
+gate = "MiniGame_BombchuBowling_ClearFirstTime; shuffled first win"
 
 [check."Market Bombchu Bowling Second Prize"]
 class = "swap"
-gate = "MiniGame_BombchuBowling_Clear{First,Second,Third}Time"
+gate = "MiniGame_BombchuBowling_ClearSecondTime; native heart marker ClearThirdTime is set at this grant"
 
 [check."Market Lost Dog"]
 class = "swap"

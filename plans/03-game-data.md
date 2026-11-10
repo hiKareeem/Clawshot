@@ -2777,3 +2777,21 @@ grants through the native generic wrapper, then sets those existing completion f
 completes the tutorial quest. Completed entry visits route to unchanged shopping. Native same-
 Bottle and unshuffled tutorials stay unchanged. The swap remains held under D15 until Kareem
 tests the isolated backup-copy launcher/checklist in the round file. No save-layout growth.
+
+### Deterministic bowling and gallery tiers
+
+Gift/NPC shuffle dispatches native bowling First Prize on win1, Second Prize on win2,
+then the existing red-rupee filler. Native opening (Dodongo quest), rental, fee, failures,
+count and difficulty remain. The second grant also writes the native third/heart-marker
+completion Bool. No extra shuffled/fixed Bombchu payout or phantom Bomb item in this mode.
+Unshuffled routing remains native.
+
+The two ownership-dependent grants of each supported upgrade now normalize to fixed native
+medium tiers: Bomb Bag30, Bullet Bag40, Quiver40 (`PouchActorInfo.AfterExpansionMaxNum`).
+Bomb Bag30 supplies the bag ability; bullet bags and quivers do not supply rental weapon
+ownership. Their native normal-win saved flags remain; both normal galleries join Gift.
+
+Expert modes are native repeat30/70-rupee calls (`Event202`/`Event599`) after the normal
+reward, with no separate saved first-expert flag or literal item actor. A D22 new-Bool
+specialization is feasible, but its fixed pool item needs an owner choice; the round file
+records the question and exact unchanged expert behavior rather than inventing one.

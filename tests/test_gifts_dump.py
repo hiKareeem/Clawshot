@@ -46,6 +46,8 @@ def _intended(fc: evfl.Flowchart, flow: str, changes) -> set[int]:
             out |= {index["Event6"], index["Event19"]}
         if change.check == gifts.MARKET_BOTTLE_CHECK and flow == gifts.MARKET_BOTTLE_FLOW:
             out.add(index["Event6"])
+        if change.check in gifts.BOWLING_CHECKS and flow == gifts.BOWLING_FLOW:
+            out |= {index["Event73"], index["Event72"]}
         for ref in change.rule.skip:
             if ref.split("/")[0] == flow:
                 i = index[ref.split("/")[1]]

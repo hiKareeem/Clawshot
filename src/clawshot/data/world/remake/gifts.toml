@@ -65,3 +65,7 @@ vanilla = "Bottle"
 rule = "is_child"
 keep_vanilla = "D15: shuffled tutorial bypass awaits Kareem's isolated bottle test"
 source = "cs10a, build e0f3ccfa: Npc_Hylia_020_Shop_Child/Event171 grants Item_Bottle after accepting Item_Bottle_TutorialEvent_Talk; no item, rupee or story prerequisite. Default AISchedule selects this entry until tutorial completion. Native Present/Started/Cleared Bools are reset8/save0. R9-SEED8-MARKET confirms the vanilla free bottle; shop access retains its child/day exit rule."
+
+[locations."Kak Shooting Gallery Reward"]
+vanilla = "Quiver (40)"
+source = "cs10a build e0f3ccfa: MiniGame_HitTarget Event381/Event242 grant medium/large quiver after normal adult win, saved Kakariko_Get_Quiver flag. Normalize shuffled tier to medium40; this capacity upgrade does not grant Bow ownership. Existing adult/Bow region rule remains."

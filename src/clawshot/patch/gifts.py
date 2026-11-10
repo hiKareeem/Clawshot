@@ -71,6 +71,17 @@ MARKET_BOTTLE_FLOW = "Npc_Hylia_020_Shop_Child"
 MARKET_BOTTLE_STEP = f"{MARKET_BOTTLE_FLOW}/Event171"
 MARKET_BOTTLE_FLAG = "Npc_Hylia_020_Shop_Item_Bottle_Present"
 
+BOWLING_FLOW = "MiniGame_BombchuBowling"
+BOWLING_FIRST = "Market Bombchu Bowling First Prize"
+BOWLING_SECOND = "Market Bombchu Bowling Second Prize"
+BOWLING_CHECKS = (BOWLING_FIRST, BOWLING_SECOND)
+# Fix the native ownership-dependent upgrade tiers, not the weapon used by a rental minigame.
+TIERED_GIFTS = {
+    BOWLING_FIRST: ("Bomb Bag (30)", {"Item_BombBag_Medium", "Item_BombBag_Large"}),
+    "Market Shooting Gallery Reward": ("Bullet Bag (40)", {"Item_BulletBag_Medium", "Item_BulletBag_Large"}),
+    "Kak Shooting Gallery Reward": ("Quiver (40)", {"Item_Quiver_Medium", "Item_Quiver_Large"}),
+}
+
 # Sale calls need their flag inside the success branch, not after a wrapper that can refuse.
 MERCHANT_SHOPS = {
     "GC Medigoron": ("SimpleShopRoot_Npc_Goron_Medigoron_Adult", "Event119"),
@@ -588,8 +599,27 @@ def _market_bottle(fc: evfl.Flowchart, change: GiftChange) -> None:
     _completion_gate(fc, root.name, MARKET_BOTTLE_FLAG, fc.entry_point("Talk").main_event)
 
 
+def _bowling_order(fc: evfl.Flowchart) -> None:
+    """First win -> bag check, second -> heart check, later wins -> unchanged native filler."""
+    for event_name, flag, original, targets in (
+        ("Event73", "ClearFirstTime", ("Event72", "Event309"), ("Event72", "Event76")),
+        ("Event72", "ClearSecondTime", ("Event260", "Event76"), ("Event81", "Event143")),
+    ):
+        event = fc.events[_index(fc, fc.name, event_name)]
+        if (
+            not isinstance(event, evfl.SwitchEvent)
+            or fc.actors[event.actor].queries[event.query] != READ_QUERY
+            or event.params != {"GameDataName": f"MiniGame_BombchuBowling_{flag}", "Index": -1}
+            or event.cases != [(case, _index(fc, fc.name, name)) for case, name in enumerate(original)]
+        ):
+            raise GiftPatchError(f"{fc.name}: stale bowling prize order: {event!r}")
+        event.cases = [(case, _index(fc, fc.name, name)) for case, name in enumerate(targets)]
+
+
 def patch_flowchart(fc: evfl.Flowchart, flow: str, changes: Sequence[GiftChange]) -> None:
     """Apply ``changes``' edits that fall in ``flow`` to its flowchart, in place."""
+    if flow == BOWLING_FLOW and any(c.check in BOWLING_CHECKS for c in changes):
+        _bowling_order(fc)
     for change in changes:
         vanilla = {step.vanilla_item for step in change.steps}
         for step in change.steps:
@@ -599,6 +629,9 @@ def patch_flowchart(fc: evfl.Flowchart, flow: str, changes: Sequence[GiftChange]
                     _set_flag_after(fc, step, change.flag)
                 if change.check == MARKET_BOTTLE_CHECK:
                     _market_bottle(fc, change)
+                if change.check == BOWLING_SECOND:
+                    # Its native heart-marker flag remains correct when the reward moves to win two.
+                    _set_flag_after(fc, step, "MiniGame_BombchuBowling_ClearThirdTime")
         for ref in change.rule.given:
             if ref.split("/")[0] == flow:
                 _read_flag(fc, flow, ref, vanilla, change.flag)
@@ -808,6 +841,11 @@ def seed_checks(
         if all(s.call == FROG_SONG_CALL for s in steps[name]) and loc.vanilla == "Rupees (20)":
             out.append(name)
             continue
+        if name in TIERED_GIFTS:
+            item, native = TIERED_GIFTS[name]
+            if loc.vanilla == item and {s.vanilla_item for s in steps[name]} == native:
+                out.append(name)
+            continue
         if {actors.aliases.get(s.vanilla_item, s.vanilla_item) for s in steps[name]} != {
             actors.actors.get(loc.vanilla)
         }:
@@ -850,6 +888,8 @@ def seed_step(
             for name in shuffled
             if placements[name] != vanilla[name]
             or rules[name].once
+            or name in TIERED_GIFTS
+            or name in BOWLING_CHECKS
             or any(s.call == FROG_SONG_CALL for s in steps[name])
         }
         return file_changes(plan(moved, gifts, definitions, rules), files)
@@ -865,6 +905,15 @@ def seed_setup(
     actor list in ``data/settings.toml``), and the patch step to pass to ``make_seed``."""
     if SHUFFLE in settings.shuffle or "NPC" in settings.shuffle:
         spec = shopkeeper_spec(spec)
+        locations = dict(spec["locations"])
+        for name in ("Market Bombchu Bowling Bombchus", "Market Bombchu Bowling Bomb"):
+            if name not in locations:
+                continue
+            locations[name] = {
+                **locations[name],
+                "n64_only": "shuffled bowling has two prizes, then native repeat filler (Round 10)",
+            }
+        spec = {**spec, "locations": locations}
     settings = replace(
         settings,
         shuffle=tuple(dict.fromkeys(t for s in settings.shuffle for t in (GIFT_TYPES if s == SHUFFLE else (s,)))),
