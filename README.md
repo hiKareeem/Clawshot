@@ -44,6 +44,13 @@ all twelve songs in chests. Only Storms has been played from a chest; the other 
 and are inferred. Other gift-only items remain on gifts until individually observed in a chest; the sourced
 allowlist in `settings.toml` currently permits the Fairy Ocarina.
 
+`Gift` includes all seven frog checks (five song prizes contribute Rupees (20)), two deterministic
+Bombchu Bowling prizes (first win, second win, then native filler), and the normal child/adult
+shooting-gallery upgrades. Rental weapons are not inventory rewards. The Market Potion Shop's
+free child bottle is modeled in logic; its shuffled tutorial bypass and Dampé's digging swap
+remain held pending isolated in-game checks. Expert galleries remain native repeat rupees
+pending a fixed-pool decision (`plans/rounds/r10-gifts.md`).
+
 `--shuffle Chest BossHeart` adds the eight boss-heart checks (off by default), restricted to native heart,
 heart-piece, shield and red-rupee pickups. Boss pickup persistence and Heart Containers from chests still need
 Kareem's in-game acceptance. `--shuffle Token` remains unavailable; the native-token grant experiment is global,

@@ -322,8 +322,12 @@ at 10 even without Shop shuffle. Stock/release, refill and adult-only rules stay
 Flag sources, inference limits and pending player checks: `03-game-data.md` section 21.
 
 The overlay writer's `make_seed` supplies the remake's actual chest pool through census actor identities and
-`item_actors.toml`, not the untranslated N64 chest contents. Native shops use their catalog; gift checks join
-only when their fixed logic item matches the actor every grant step gives. Unresolved upgrade tiers stay vanilla.
+`item_actors.toml`, not the untranslated N64 chest contents. Native shops use their catalog.
+Gift checks require matching native actors, except the accepted variable frog-song prizes
+(fixed Rupees (20)) and the explicit minigame tier families normalized to fixed medium upgrades.
+Bowling's Bomb Bag30 counts as the bag ability; gallery Bullet Bag40/Quiver40 are capacity only,
+not Slingshot/Bow ownership. Unresolved upgrade tiers stay vanilla. Shuffled bowling removes
+the old extra native refill rows from the prepared world: two first-win prizes, then filler.
 
 `--shuffle Freestanding` (off) adds only the fourteen anchored floor Heart Pieces (round 8,
 scope confirmed by Claude). `patch.freestanding.restrict_spec` copies the spec and retypes those
@@ -367,6 +371,6 @@ at the checkout. Nothing in a translated file is edited by hand: the remake's di
 - Built-ins `has_item_goal`, `has_full_item_goal`, `has_all_item_goals`, `guarantee_hint`, `item_name`, `won`
   (hints and goals), and `has_all_notes_for_song`/`has_ocarina_buttons`/`region_has_shortcuts` with the settings
   that make them depend on the seed: errors if a live rule reaches them.
-- Upgrades other than the five tiered items (quivers, bomb bags, bullet bags beyond the one above, the second
-  magic meter): OoT Randomizer's rules only ask whether the base item is held, so they need no tiers, and none is
-  in a chest; the gifts that give them need `vanilla_fixed` once gifts are shuffled.
+- Upgrade tiers beyond the explicitly mapped families (Hookshot, strength, scales, wallets,
+  ocarinas and the medium minigame bags/quiver), including the second magic meter. Unmapped
+  ownership-dependent grants remain vanilla; medium capacity items have no new chest admission.
