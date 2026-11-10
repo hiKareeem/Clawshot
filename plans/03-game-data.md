@@ -2923,3 +2923,68 @@ rows (not155 rupees). Counts, ages, geometry and vanilla rewards differ material
 Future checks use **remake names and the actual region's access rule**, like `extra_*`
 chests; record an N64 name only for an exact mapping. No ordinal/nearest-position join,
 unverified rule, new saved flag or shuffle setting is introduced by this exploration.
+
+## 45. Round 11: Hookshot 2.0.12+ seed loading and text icons (cs11c)
+
+R11-HOOKSHOT-2012 is Kareem/Claude's observed crash diagnosis, not an agent game run.
+Read-only evidence: `work/save-backups/2026-11-10_0905-r10-tests-crash-on-start/`.
+`bootcheck-A-overlay-crash.log:67–68,87–101` loads the overlay size table, selects Xbox
+icons, then crashes reading guest0 with the External font path on the stack.
+`bootcheck-B-mods-ok.log:4–5,69,87,96` discovers one mod, loads its table, logs the game's
+own icons fallback and reaches the isolated save mount. No crash was reproduced here.
+
+### Pack cutover
+
+Play removes HOS_FS_OVERLAY from its child environment and sets HOS_MODS to the extracted
+pack root. `seed/romfs` stays where Make wrote it: no copies, moves or links. The pack root
+is not a mod; the seed child is. Discovery descends at most4 levels, ignores names starting
+`.`, `-` or `_`, and stops at a folder containing romfs/exefs. Hidden `.romfs-*` NUP caches
+cannot become mods. Play rejects a second discoverable mod, missing seed RomFS or traversed
+link before creating a user/log. The existing whole-seed digest remains mandatory.
+
+The shared read-only API is `clawshot.pack.hookshot.detect(folder) -> HookshotInfo`:
+folder, expected bin executable, optional version, optional RomFS, sorted adjacent NUPs,
+mods-support Boolean and refusal reason (empty when supported). Version labels are not
+capability evidence: inspect the binary's loader markers without executing it. Unknown/
+older binaries refuse, never fall back to overlay or the folder-root launcher. Make for
+emulators still needs no Hookshot. `play --dry-run` / CLAWSHOT_DRY_RUN=1 performs the same
+checks and prints overrides plus explicit environment removals without starting anything.
+
+Empty HOS_FS_OVERLAY is not equivalent to removal: a native no-game C-runtime probe
+returned a non-null empty string. Hookshot's filesystem branch tests only that pointer.
+The child environment therefore omits it entirely, even when inherited.
+
+### Why icons fall back; upstream candidate (report only)
+
+GPL-3.0 release source was read for facts only, never copied. Paths below are relative to
+`C:/Users/hi/AppData/Local/HookshotBuilder/versions/v2.0.13/HookshotBuilder/tools/`:
+
+- `host/mods.c:116–147,181–203`: discovery rules; indexed mod wins over prompt resources;
+  the font fallback can query whether a mod has a resource table.
+- `host/prompts.c:469–495,498–519`: any mod resource table disables the generated External
+  font; Hookshot's own prompt table is served only when no mod supplies that path.
+- `nx2/prompt_assets.py:86–111,952–957`: Hookshot's vanilla-derived table increases the
+  External font allocation for its larger controller-specific fonts.
+- `host/nn_fs.c:279–289`: filesystem overlays can replace a resolved path without the
+  mod index knowing about them, explaining the mismatch in the supplied crash log.
+
+Every seed needs its own table for grown resources. Do not delete it or substitute
+Hookshot's vanilla-derived prompt table: that would discard the seed's other allocations.
+Current supported cosmetic cost is the game's own Switch button icons in text; controls
+are unchanged. Manual mods use the main save folder: New Game overwrites that playthrough,
+unlike pack Play's isolated user folder. Player steps/warnings: `docs/seed-pack.md`.
+
+**[INFERENCE] Candidate upstream PR:** before serving the effective winning mod table,
+compose a private runtime copy that raises only the External font entry to at least the
+installed prompt-font requirement. Preserve an already-larger entry, every unrelated
+hashed/named entry and metadata. Then generated icons can stay enabled when no mod replaces
+the font itself. Cache against the winning table's content and required font allocation.
+Never mutate installed mods, dump or generated seed bytes; their digests must remain valid.
+Keep native fallback for mod-provided fonts, malformed/unknown tables or a failed merge.
+An overlay table must likewise be accounted for before using larger fonts, not guessed safe.
+
+Upstream verification would need synthetic table-preservation/priority/malformed cases,
+custom-font and already-large-allocation cases, then Claude's isolated headless boot and
+Kareem's in-game icon/placement/save checks. None of this proposed Hookshot behavior was
+implemented, built, booted or submitted by this track. Exact pack smoke/gate results and
+remaining player acceptance are recorded in `plans/rounds/r11-loader.md`.

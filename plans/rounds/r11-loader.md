@@ -106,10 +106,31 @@ The final four-command gate runner follows this successful smoke, serially, usin
 CLAWSHOT_WORKERS=1 and a separate atomic gate.lock acquisition/finally release for each
 full pytest command. Native gates also set OOT_NUP to exercise the full cache matrix.
 
+## Item 4: report-only upstream candidate
+
+Section45 cites the exact GPL release-source files/lines read for facts only:
+host/mods.c, host/prompts.c, host/nn_fs.c and nx2/prompt_assets.py in the v2.0.13 builder.
+Current mod-table fallback and overlay mismatch match the supplied crash/save-mount logs.
+
+Proposed Hookshot-only change: compose a private runtime table from the **winning mod
+table**, raise only the External font entry to the installed generated-font requirement,
+keep already-larger/unrelated/named entries intact, then allow generated text icons if
+no mod supplies its own font. Never substitute the vanilla-derived prompt table, alter
+seed bytes or mutate installed game/mod resources. Cache by actual winning-table content/
+font allocation; retain native fallback for custom fonts, malformed/unknown tables or merge
+failure. Effective overlays would need the same accounting before larger fonts are used.
+This is explicitly [INFERENCE], not an implemented or tested Hookshot fix; the report names
+upstream synthetic/boot/player acceptance. No Hookshot code copied, edited, built or booted.
+
+Section45 follows43 on this base; Claude inserts Track B's44 before45 at review. No invented
+placeholder section and no decisions.md/README edit. README requests were posted to A.
+Merged main's later docs/UI/keys changes require a **new** integrated source pack; these
+branch-local proofs never authorize rewriting an old/played seed or reusing its digest.
+
 ## Player acceptance boundary
 
 **Kareem: after Claude reviews/rebuilds a fresh pack, Make, then Play only after quitting the
 current game. Require one seed mod, `mods: <file> <- <path>`, expected seed placements,
 isolated New Game and later Continue. Controller icons in text will be the game's own.
-The agent never starts Play except its no-start dry run.** Full two-source smoke, documentation,
-upstream-candidate report and complete gates follow in item order.
+The agent never starts Play except its no-start dry run.** Source-pack smoke and report are
+complete; full-gate results below will establish readiness, not in-game certification.
