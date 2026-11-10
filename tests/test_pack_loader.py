@@ -18,7 +18,7 @@ def made_pack(tmp_path, monkeypatch):
     game = tmp_path / "game"
     exe = game / "bin/hookshot.exe"
     exe.parent.mkdir(parents=True)
-    exe.write_bytes(b"synthetic image\0HOS_MODS\0mods: %s: %d RomFS files\0")
+    exe.write_bytes(b"synthetic image\0HOS_MODS\0")
     (root / "pack.json").write_text(json.dumps({"format": 1, "seed": 8, "output_sha256": tree_digest(root / "seed")}))
     (root / "folders.json").write_text(json.dumps({"romfs": str(tmp_path / "dump"), "hookshot": str(game)}))
     monkeypatch.setattr(runtime, "check_version", lambda _: None)
@@ -58,11 +58,11 @@ def test_dry_play_isolated_single_mod_without_writes(made_pack, monkeypatch, cap
     assert not (root / "hookshot_log.txt").exists()
 
 
-@pytest.mark.parametrize("content", [b"old executable", b"HOS_MODS\0", b""])
+@pytest.mark.parametrize("content", [b"old executable", b"mods: %s: %d RomFS files\0", b""])
 def test_no_mod_support_refuses_before_user_or_log(made_pack, content):
     root, exe = made_pack
     exe.write_bytes(content)
-    with pytest.raises(PackError, match="mods support"):
+    with pytest.raises(PackError, match="cannot load mods"):
         runtime.play(root)
     assert not (root / "user").exists()
     assert not (root / "hookshot_log.txt").exists()

@@ -19,8 +19,8 @@ class HookshotInfo:
 def detect(folder: Path | str) -> HookshotInfo:
     """Inspect a game folder. Empty reason means the binary can load a seed through HOS_MODS.
 
-    Version is informational, not a capability claim. Unknown/custom binaries must retain
-    both loader markers to pass; no folder-root executable fallback. No dump is decoded.
+    Version is informational, not a capability claim. The HOS_MODS marker indicates mod
+    loading; diagnostic wording is irrelevant. No folder-root fallback or dump decoding.
     """
     folder = Path(folder).resolve()
     exe = folder / "bin/hookshot.exe"
@@ -45,14 +45,9 @@ def detect(folder: Path | str) -> HookshotInfo:
             with exe.open("rb") as stream:
                 if exe.stat().st_size:
                     with mmap.mmap(stream.fileno(), 0, access=mmap.ACCESS_READ) as image:
-                        supported = all(
-                            image.find(marker) >= 0 for marker in (b"HOS_MODS\0", b"mods: %s: %d RomFS files\0")
-                        )
+                        supported = image.find(b"HOS_MODS\0") >= 0
             if not supported:
-                reason = (
-                    "cannot confirm Hookshot mods support in bin/hookshot.exe; update/rebuild Hookshot "
-                    "(2.0.12+ recommended); Play will not start a possibly vanilla game"
-                )
+                reason = "This Hookshot build cannot load mods. Update Hookshot, then run Play again."
     except (OSError, UnicodeError, ValueError) as error:
         reason = f"cannot inspect Hookshot installation: {error}"
     return HookshotInfo(folder, exe, version, romfs if romfs.is_dir() else None, nups, supported, reason)

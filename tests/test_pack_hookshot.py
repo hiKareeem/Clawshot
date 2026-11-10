@@ -10,7 +10,7 @@ from clawshot.pack.hookshot import detect
 def test_binary_capability_not_version_label(tmp_path, version, supports):
     exe = tmp_path / "bin/hookshot.exe"
     exe.parent.mkdir()
-    exe.write_bytes(b"HOS_MODS\0mods: %s: %d RomFS files\0" if supports else b"old image")
+    exe.write_bytes(b"HOS_MODS\0" if supports else b"mods: %s: %d RomFS files\0")
     if version is not None:
         (tmp_path / "hookshot_version.txt").write_text(version, encoding="utf-8-sig")
     (tmp_path / "romfs").mkdir()

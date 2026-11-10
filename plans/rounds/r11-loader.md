@@ -17,11 +17,11 @@ Reject any visible traversed link or any second mod, including an unexpected use
 The existing digest rejects links within the seed; hidden NUP caches are never traversed.
 An independent synthetic walk exercises these rules on an actual made pack directory.
 
-Fail-closed support check reads the actual bin executable through read-only mmap for its
-HOS_MODS and mod-discovery diagnostic markers. It never trusts folder/version labels or starts
-the executable to probe it. Unknown/older binaries stop before user/log creation; no overlay
-fallback. Actual installed executable (470277120 bytes) has both markers at438474625/438474774.
-This is capability detection, not a cryptographic guarantee for arbitrary modified binaries.
+Support detection reads the actual bin executable through read-only mmap for HOS_MODS
+alone; log wording is not a compatibility contract. It never trusts folder/version labels
+or starts the executable to probe it. Builds without that marker stop before user/log
+creation; no overlay fallback. Actual installed v2.0.13 executable (470277120 bytes) has
+HOS_MODS at438474625. This is capability detection, not a cryptographic guarantee.
 
 Added Play --dry-run (also CLAWSHOT_DRY_RUN=1): all real checks, JSON launch plan, no process,
 user folder or log. It keeps the bin-only executable, updater suppression and isolated --user.
@@ -203,3 +203,40 @@ rebuild a **new** integrated pack and use its own digest/note. cs11d consumes th
 contract in67582d9 directly after integration. **Kareem's exact isolated New Game/Continue,
 placements and native-icons check above remains unrun by this agent.** No source/runtime
 change to Hookshot, PR, dependency edit, unauthorized rebase, merge or push was made here.
+
+## Review follow-up to 06d05b4
+
+Claude requested five changes; his subsequent version correction supersedes the original
+point2. Implemented:
+
+1. `detect()` gates only on HOS_MODS. Log format strings are not a compatibility contract;
+   removed the second marker from the decision rather than adding another public field.
+   Synthetic detection and actual runtime dry-Play fixtures now succeed with HOS_MODS alone.
+   A diagnostic string without HOS_MODS still refuses, independent of version labels.
+2. Requirement: a Hookshot that can load mods (tested on2.0.13), not an asserted first
+   supporting version. The overlay-crash statement correctly retains **2.0.12 and later**,
+   sourced by R11-HOOKSHOT-2012 and the supplied crash logs, as Claude clarified.
+3. READ ME FIRST uses the requested plain Play/update steps; its manual route is two lines
+   pointing to the technical guide and warning about main saves. Icons and Bowling use
+   the requested player-facing wording, without variables or the rental/table advice.
+4. The technical guide keeps its mod-layout, environment, digest and save-safety details,
+   but explains update/refusal in plain words. Section45 and this report agree with the
+   revised single-marker policy.
+5. Missing-support reason is exactly: “This Hookshot build cannot load mods. Update
+   Hookshot, then run Play again.”
+
+Tasklist found Kareem's Hookshot PID28256 running; all commands were serial and pytest
+explicitly used CLAWSHOT_WORKERS=1. Per Claude's requested review scope, **no full suite,
+dump test, source-pack regeneration, game/launcher start or rebase** was run. He runs
+full gates after rebasing on main. Existing pack outputs and saves remain untouched.
+
+| Review command | Observed result |
+| --- | --- |
+| `uv run ruff format --check` |261 files already formatted |
+| `uv run ruff check` |All checks passed |
+| `CLAWSHOT_WORKERS=1 uv run pytest tests/test_pack.py tests/test_pack_hookshot.py tests/test_pack_loader.py tests/test_pack_nup.py -q --basetemp E:/OOTRemake/work/r11-loader-cs11c/review-focused-next` |46 passed in0.91s |
+
+The dry-Play smoke in that focused run exercises the real checked launch-plan path with
+only HOS_MODS in the synthetic executable, without creating user/log files or starting it.
+The earlier full-gate table describes06d05b4, not a new full-gate run on these revisions.
+The follow-up commit's actual head is posted on cs-r11 for Claude's rebase/gate/merge.

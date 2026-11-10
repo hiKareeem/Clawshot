@@ -2945,9 +2945,10 @@ link before creating a user/log. The existing whole-seed digest remains mandator
 The shared read-only API is `clawshot.pack.hookshot.detect(folder) -> HookshotInfo`:
 folder, expected bin executable, optional version, optional RomFS, sorted adjacent NUPs,
 mods-support Boolean and refusal reason (empty when supported). Version labels are not
-capability evidence: inspect the binary's loader markers without executing it. Unknown/
-older binaries refuse, never fall back to overlay or the folder-root launcher. Make for
-emulators still needs no Hookshot. `play --dry-run` / CLAWSHOT_DRY_RUN=1 performs the same
+capability evidence: inspect only the binary's HOS_MODS marker without executing it.
+Diagnostic wording is irrelevant. Builds without mod loading refuse, never fall back to
+overlay or the folder-root launcher. Play requires a Hookshot that can load mods (tested
+on 2.0.13). Make for emulators still needs no Hookshot. `play --dry-run` / CLAWSHOT_DRY_RUN=1 performs the same
 checks and prints overrides plus explicit environment removals without starting anything.
 
 Empty HOS_FS_OVERLAY is not equivalent to removal: a native no-game C-runtime probe

@@ -22,8 +22,10 @@ player-facing summary (steps, known issues, the Discord link); this file has the
 5. Only after **Verified seed** appears, run `Play seed.bat`. It checks the digest again, then starts
    `<Hookshot>\bin\hookshot.exe` with `HOOKSHOT_NO_UPDATE_CHECK=1`, `HOS_FS_OVERLAY` cleared,
    `HOS_MODS=<pack>` (only `seed` is a mod) and `--user <pack>\user`.
-   Play checks the actual binary for mods support and refuses unknown/older builds rather than silently
-   starting vanilla. Hookshot 2.0.12+ is recommended. No seed copy or link is made.
+   Requires a Hookshot that can load mods (tested on 2.0.13).
+   If Play says your Hookshot is too old, update Hookshot, then run Play again.
+   Detection checks the game's binary for `HOS_MODS`, not version labels or log wording.
+   No seed copy or link is made.
    Only Play requires the bin executable. If no Hookshot folder was saved, Play stops and points to the
    emulator steps below. A missing bin executable is a hard stop: the folder-root launcher ignores save
    isolation and is never used.
@@ -54,8 +56,9 @@ which holds `romfs`. Names starting `.`, `-` or `_` are ignored.
 **The normal Hookshot launcher uses the main save folder. Back up the entire playthrough
 before a New Game: it overwrites that playthrough.** The pack's `user` folder does not isolate
 this route. Disabling/removing the mod does not restore saves. Never replace files while the
-game is running. Do not set `HOS_FS_OVERLAY`: on Hookshot 2.0.12+ it crashes at startup with
-Clawshot's size table. Confirm `mods: <file> <- <path>` in the game log (first 200 files).
+game is running. Do not set `HOS_FS_OVERLAY`: on Hookshot 2.0.12 and later, it crashes
+at startup with Clawshot's size table through that route. Confirm `mods: <file> <- <path>`
+in the game log (first 200 files).
 
 **Known cosmetic issue:** while a seed is loaded, button icons in text are the game's own
 Switch icons, not Hookshot's Xbox/PlayStation/Steam Deck replacements. Controls are unchanged.
