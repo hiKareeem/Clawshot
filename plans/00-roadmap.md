@@ -899,6 +899,9 @@ Round 10 candidates (seed 8 play, Kareem 2026-11-09):
   drop their `keep_vanilla` holds in `remake/gifts.toml`; the five song prizes enter the pool as Rupees (20), OoT
   Randomizer's vanilla item for them (the native prize varies 5 to 30). The Skulltula House previews passed too; the
   40 reward stays held until tested; merchants wait for Kareem's main save.
+- Dampé's gravedigging heart piece (Kareem asked, 2026-11-09): not in `--shuffle Gift` yet (logic has it, child at
+  night after Time Flows; the remake reworks the tour, Link leads Dampé to the spot). Trace its grant and add it as a
+  gift check if the flow allows a once-only swap.
 - Door of Time setting (Kareem, 2026-11-09: he expected door and pedestal open from the start, as Ship of Harkinian
   offers; free time travel alone still leaves the three Spiritual Stones, the Ocarina of Time and the Song of Time
   between child and adult). `door_of_time` = closed (vanilla) | song_only | open, through the `DoorOfTime` flow and
