@@ -8,12 +8,11 @@
 # - Event flow DoorOfTime (romfs EventFlow, decoded in E:/OOTRemake/work/r1-research/decoded/evfl_all.json) and the
 #   placement data (Market_Child_Static, read by E:/OOTRemake/work/r4-logic-child/actors.py).
 
-# The Door of Time is the vanilla one: the three Spiritual Stones, the Ocarina of Time and the Song of Time. OoT
-# Randomizer's default (`open_door_of_time = 'sot'`) asks only for the Song of Time; the remake has no such option
-# without a code hook, so the setting is not read here (its 'open' value would not open the door in the game).
-# Shared rule: the same door for both ages.
+# D35 (Kareem, round10): closed by default. Song-only keeps native ocarina play/learned-song
+# checks but bypasses both quest gates; open uses the native gate module at Ready and an
+# ungated child pedestal. Adult return/Prelude remain independent. Native trace: section41.
 
 [exits."Temple of Time"."Beyond Door of Time"]
-rule = "has_all_stones and (Ocarina, 2) and can_play(Song_of_Time)"
+rule = "door_of_time == 'open' or (can_play(Song_of_Time) and (door_of_time == 'song_only' or (has_all_stones and (Ocarina, 2))))"
 was = "can_open_door_of_time"
-source = "data: EventProxyRequestActor 11695057968283014044 (Market_Child_DoorOfTime_OpenDoor) links the stone altar Obj_TimeTemple_SpiritStoneBase_A_01 15955260055312345707, the three Obj_TimeTemple_SpiritStone_A_01/02/03 and Obj_TimeTemple_Door_A_01; flow DoorOfTime: CheckStoneNum counts the Fire and Water stone quests, the quest then moves on to the Ocarina of Time at the moat (DoorOfTime_GetOcarinaOfTime), and OpenDoor opens the door on the Song of Time (Dm_TimeTemple_0010); Nintendo Life walkthrough: with the Spiritual Stone of Water, collect the Ocarina of Time from the moat, learn the Song of Time and play it before the inscription. OoT Randomizer's 'stones_oot_sot' condition"
+source = "D35 (Kareem, 2026-11-09); section41: patch.door pairs these modes with native altar/flow gates and the physical door/pedestal. Closed retains the three stones, Time ocarina and playable Time song; song_only permits either child ocarina; open has no inventory prerequisite. No Forest-return or Prelude gate is bypassed."

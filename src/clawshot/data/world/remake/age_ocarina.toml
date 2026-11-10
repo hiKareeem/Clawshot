@@ -1,0 +1,17 @@
+# Early sword pulls can carry Fairy Ocarina into adulthood. Native PouchTable permits
+# Fairy only as child, Time as both (section37 / r9-itembar); section41 adds early-door modes.
+# An abstract Ocarina count of one must not let an adult play Saria through Mido.
+[helpers."can_play(song)"]
+was = "(Ocarina or can_oi) and song and (not shuffle_individual_ocarina_notes or has_all_notes_for_song(song))"
+rule = "((Ocarina and (is_child or (Ocarina, 2))) or can_oi) and song and (not shuffle_individual_ocarina_notes or has_all_notes_for_song(song))"
+source = "Native UI/Pouch/PouchTable/PouchTable.game__ui__PouchTable.bgyml IsUsableChild/IsUsableAdult; r9-itembar table, section37; early Door of Time modes expose the adult Fairy-only boundary (cs10b)."
+
+[helpers."can_play_ocarina(song)"]
+was = "Ocarina and song and (not shuffle_individual_ocarina_notes or has_all_notes_for_song(song))"
+rule = "Ocarina and (is_child or (Ocarina, 2)) and song and (not shuffle_individual_ocarina_notes or has_all_notes_for_song(song))"
+source = "Same native instrument ages as can_play; no age permissions or inventory grant is patched."
+
+[helpers."can_play_item(song)"]
+was = "(Ocarina or can_oi_with_item) and song and (not shuffle_individual_ocarina_notes or has_all_notes_for_song(song))"
+rule = "((Ocarina and (is_child or (Ocarina, 2))) or can_oi_with_item) and song and (not shuffle_individual_ocarina_notes or has_all_notes_for_song(song))"
+source = "Same native instrument ages as can_play; unverified N64 ocarina-item tricks remain disabled."

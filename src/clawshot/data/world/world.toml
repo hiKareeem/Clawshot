@@ -59,6 +59,8 @@ overrides = "remake.toml"
 progressive_items = false
 # Mido's child blocker only; the separate forest-exit gate is unchanged.
 skip_mido = false
+# D35: paired with patch.door, separate from free_time_travel.
+door_of_time = "closed"
 
 # Adult return pedestal: Market_Adult_Prefab_89da deletes its attention actor until the Forest quest is complete.
 # Dm_SY_BancChange_EscapeDungeon Event199 completes that quest after the Forest blue warp, not medal possession.
@@ -71,8 +73,8 @@ age_return_region = "Beyond Door of Time"
 age_return_guarantee = true
 age_pull_event = "Time Travel"
 
-# Default off pending Kareem's return/Prelude test. Paired with clawshot.patch.age.changes in seed output.
-# Opens the adult pedestal and hides only Temple Sheik until Forest completion; Prelude still needs that completion.
+# Default off: round9 return/Prelude passed, round10's complete first-arrival fix awaits play.
+# Keeps Temple Sheik through both first-arrival scenes, then hides him until Forest completion.
 free_time_travel = false
 
 # Return-kit fill constraint (reviewer, round 5): Forest's checked rules need Bow, strength, grapple and keys.
@@ -83,6 +85,10 @@ age_return_bypass_families = ["Progressive Strength Upgrade"]
 # Safe lower bound under that constraint: Door of Time requires Ocarina 2 + Time; child DC entrance needs
 # strength, whose unshuffled child gift requires Saria. No optional Bomb Bag, boots, wallet or child chest loot.
 age_return_fill_inventory = { "Ocarina" = 2, "Song of Time" = 1, "Sarias Song" = 1, "Progressive Strength Upgrade" = 1 }
+# Earlier doors cannot assume optional child strength/Saria/Time-ocarina pickups in that kit.
+# The proof remains independent; unshuffled child-only prerequisites can make early return impossible.
+age_return_door_inventory = { song_only = { "Ocarina" = 1, "Song of Time" = 1 }, open = {} }
+age_return_door_families = { song_only = ["Bow", "Progressive Hookshot", "Progressive Strength Upgrade", "Small Key (Forest Temple)", "Boss Key (Forest Temple)", "Sarias Song", "Ocarina"], open = ["Bow", "Progressive Hookshot", "Progressive Strength Upgrade", "Small Key (Forest Temple)", "Boss Key (Forest Temple)", "Sarias Song", "Ocarina"] }
 
 # Each progressive item's tiers, lowest first. Tier n is an item of its own that counts as n of the progressive
 # item, so OoT Randomizer's rules ("Hookshot" = Progressive_Hookshot, "Longshot" = (Progressive_Hookshot, 2))

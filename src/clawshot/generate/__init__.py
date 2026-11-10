@@ -73,6 +73,17 @@ def prepare(spec: Mapping[str, Any], settings: Settings) -> tuple[Settings, Worl
         if "skip_mido" in logic and logic["skip_mido"] != skipped:
             raise FillError("skip_mido logic must agree with the seed's forest setting")
         logic["skip_mido"] = skipped
+    if "door_of_time" in spec.get("settings", {}):
+        if "door_of_time" in logic and logic["door_of_time"] != settings.door_of_time:
+            raise FillError("door_of_time logic must agree with the seed's door_of_time setting")
+        logic["door_of_time"] = settings.door_of_time
+        for source, target in (
+            ("age_return_door_inventory", "age_return_fill_inventory"),
+            ("age_return_door_families", "age_return_fill_families"),
+        ):
+            modes = spec["settings"].get(source, {})
+            if source in spec["settings"]:
+                logic[target] = modes.get(settings.door_of_time, spec["settings"][target])
     if settings.dungeon_items == "anywhere" and "keysanity" in spec.get("settings", {}):
         if logic.get("keysanity") is False:
             raise FillError("dungeon_items = 'anywhere' needs the logic setting keysanity = true")
