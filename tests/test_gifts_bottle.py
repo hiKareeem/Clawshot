@@ -20,6 +20,14 @@ def chart():
             evfl.Actor("Player_Event", actions=["Accept"]),
             evfl.Actor("GameSystemActor", queries=["Choice"]),
             evfl.Actor("ChallengeSystemActor", actions=["Complete"]),
+            evfl.Actor(
+                FLOW,
+                actions=[
+                    "EventPlayAS",
+                    "EventTriggerAIScheduleSelectSchedule",
+                    "EventTriggerAIScheduleSetForceCancelEventContinueArrivalAS",
+                ],
+            ),
         ],
         [
             evfl.ActionEvent("Event27", 1, 0, 1),
@@ -34,6 +42,9 @@ def chart():
             ),
             evfl.ActionEvent("Event76", 3, 0),
             evfl.ActionEvent("Shop", 1, 0),
+            evfl.ActionEvent("Event65", 4, 0, params={"ASName": "Wait"}),
+            evfl.ActionEvent("Event63", 4, 1),
+            evfl.ActionEvent("Event62", 4, 2, params={"Value": False}),
         ],
         [evfl.EntryPoint(ENTRY, 0), evfl.EntryPoint("Talk", 6)],
     )
@@ -55,7 +66,7 @@ def change():
     return gifts.GiftChange(gifts.Rule(gifts.MARKET_BOTTLE_CHECK, "swap"), (step,), "Item_Boomerang")
 
 
-def run(fc, state, accept):
+def run(fc, state, accept, npc=None):
     index = fc.entry_point(ENTRY).main_event
     rewards = []
     while index != evfl.NONE:
@@ -69,6 +80,18 @@ def run(fc, state, accept):
         else:
             if fc.actors[event.actor].name == "GameDataActor":
                 state[event.params["GameDataName"]] = event.params["Value"]
+            elif npc is not None and fc.actors[event.actor].name == FLOW:
+                action = fc.actors[event.actor].actions[event.action]
+                if action == "EventPlayAS":
+                    npc["animation"] = event.params["ASName"]
+                elif action == "EventTriggerAIScheduleSelectSchedule":
+                    npc["schedule"] = (
+                        "shop"
+                        if state.get("Market_Item_Bottle_TutorialEvent_Shop_Bottle_Insect_Appeared")
+                        else "tutorial"
+                    )
+                else:
+                    npc["force_arrival"] = event.params["Value"]
             index = event.next
     return rewards
 
@@ -80,11 +103,15 @@ def test_accept_without_bottle_grants_once_then_saved_revisit_uses_shop():
     state = {}
     assert run(fc, state, False) == []
     assert state == {}
-    assert run(fc, state, True) == ["Item_Boomerang"]
+    npc = {"animation": "frightened", "schedule": "tutorial", "force_arrival": True}
+    assert run(fc, state, True, npc) == ["Item_Boomerang"]
+    assert npc == {"animation": "Wait", "schedule": "shop", "force_arrival": False}
     assert state == {
         gifts.MARKET_BOTTLE_FLAG: True,
         "Market_Item_Bottle_TutorialEvent_Started": True,
         "Market_Item_Bottle_TutorialEvent_Cleared": True,
+        "Market_Item_Bottle_TutorialEvent_Insect_Delete": True,
+        "Market_Item_Bottle_TutorialEvent_Shop_Bottle_Insect_Appeared": True,
     }
     saved = deepcopy(state)
     assert run(fc, saved, True) == []

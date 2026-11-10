@@ -2808,3 +2808,16 @@ reenter the grant. A completion query now guards only the reward branch at Event
 and Event628 writes completion immediately after its grant. The parallel native cleanup
 still runs on both paths. No new saved flag, floor-major actor, lottery or fee change.
 Actual writer/inverse/serialized once-and-cleanup proofs and player checklist are in the round file.
+
+### Market finalization correction after Kareem's re-entry crash
+
+The old bypass gave Boomerang but omitted native post-catch Insect_Delete and
+Shop_Bottle_Insect_Appeared, plus Wait/schedule-select/arrival-reset actions. The copied
+save has Present/Started/Cleared true and Boomerang stock1, but both missing flags false;
+this matches the observed remaining bug/frightened merchant. The corrected path reproduces
+all five native final-state flags and those three native actions before quest completion,
+without bottle removal/refill. Exact FATAL native callee is not established.
+Kareem confirms the Bug ->Empty content difference was his own release, not the bypass:
+native IsValid bits show exactlyone bottle both before/after, no extra bottle or potion.
+New `market-bottle-fix-next` and fresh isolated profile only; old output/evidence untouched.
+Shuffle remains held until re-entry/talk/Save-Continue succeeds (round file/checklist).

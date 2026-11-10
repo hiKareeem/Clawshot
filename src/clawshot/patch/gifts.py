@@ -592,9 +592,34 @@ def _market_bottle(fc: evfl.Flowchart, change: GiftChange) -> None:
     accept.next = _index(fc, fc.name, step.event)
     grant.entry_point = "GetInEvent_NotTurn_NotNpc"
     grant.params = {"ActorName": change.item, "IsNpcEventStarter": False}
-    grant.next = _index(fc, fc.name, "Event76")  # native tutorial quest completion
+    # Finish the native non-bottle state machine: bug removal, relaxed schedule and arrival AS.
+    continuation = _index(fc, fc.name, "Event76")  # native tutorial quest completion
+    for name, action in reversed(
+        (
+            ("Event65", "EventPlayAS"),
+            ("Event63", "EventTriggerAIScheduleSelectSchedule"),
+            ("Event62", "EventTriggerAIScheduleSetForceCancelEventContinueArrivalAS"),
+        )
+    ):
+        native = fc.events[_index(fc, fc.name, name)]
+        if (
+            not isinstance(native, evfl.ActionEvent)
+            or fc.actors[native.actor].name != MARKET_BOTTLE_FLOW
+            or fc.actors[native.actor].actions[native.action] != action
+            or (name == "Event65" and (native.params or {}).get("ASName") != "Wait")
+            or (name == "Event62" and native.params != {"Value": False})
+        ):
+            raise GiftPatchError(f"{step.id}: stale bottle schedule finalization: {native!r}")
+        event = deepcopy(native)
+        event.name = f"{NEW_EVENT_PREFIX}{len(fc.events)}"
+        event.next = continuation
+        fc.events.append(event)
+        continuation = len(fc.events) - 1
+    grant.next = continuation
     for flag in (
         "Market_Item_Bottle_TutorialEvent_Cleared",
+        "Market_Item_Bottle_TutorialEvent_Shop_Bottle_Insect_Appeared",
+        "Market_Item_Bottle_TutorialEvent_Insect_Delete",
         "Market_Item_Bottle_TutorialEvent_Started",
         MARKET_BOTTLE_FLAG,
     ):

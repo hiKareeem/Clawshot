@@ -184,3 +184,46 @@ allowing external presence. All staged overlays/users are treated as potentially
 Neither player outputs nor save backups were rewritten/deleted.
 
 All four full gates remain mandatory; no earlier checkpoint was posted ready.
+
+## Priority follow-up: Market re-entry crash
+
+Claude/Kareem reported the old `market-bottle-next` run: Boomerang granted; lesson/potion
+skipped; bug remained; after leaving/re-entering the merchant remained frightened and talk
+crashed. Read-only log confirms overlay merchant read417,7.4fps at3063, skipped indirect
+call0 at3078, FATAL indirect call1061fce5d8/lr8124948c at3079, backtrace3083.
+The precise native failing callee is unproved; incomplete tutorial finalization is demonstrated.
+
+Read all six copied saves and the original backup. Played manual01/autosave04:
+Present/Started/Cleared true, Boomerang IsGettrue/stock1; Insect_Delete and
+Shop_Bottle_Insect_Appeared false. Thus the reward and our three writes completed before
+the reported re-entry crash. Native post-catch Event134 sets Insect_Delete; Event45 sets
+Shop_Bottle_Insect_Appeared; Event65 Wait ->63 schedule-select ->62 force-cancel-arrival=false.
+The bug module creates on Started and deletes on Insect_Delete. The first conditional NPC
+schedule reads Shop_Bottle_Insect_Appeared and uses normal Talk/relaxed behavior. All five
+native completion flags and the native quest completion are now reproduced; no bottle step.
+
+Bottle evidence: native Struct entries identify five IsValid Bools and content Enums.
+Original manual01 and played manual01 each have exactlyone valid bottle
+(valid0xf39ce410 true, the other four false). Content0x7d48df76 changed Bug ->Empty.
+**Kareem clarified he emptied it himself before the test**; no extra bottle and no potion
+refill, as designed. No bottle-consumption fix is introduced. A conservative accepted-offer
+subflow audit covers324 nodes/eight flows: only Boomerang pouch-add, get-window/history and
+its cure check; **no bottle action**. Retain “every bottle/contents untouched” in the checklist.
+
+Cause-specific implementation clones the native Wait/schedule-select/arrival-reset actions
+after setting the two missing native flags alongside the original three, then quest completion.
+No new saved state, vanilla flow edit or bottle mutation. Synthetic native-state regression:
+**3 passed**; actual new common-writer output **two resources**, flow99536 ->101512,
+allocation99824 ->101808, full native inverse and final-state replay pass. Original played
+overlay SHA256 map unchanged (`bottle-fix-proof.json`); user/save evidence untouched.
+
+New output ONLY `ingame/market-bottle-fix-next`; new unrun launcher
+`Test - market-bottle-fix-next.bat` and `bottle-fix-check.md`, own fresh user copied from the
+original backup at launch. Checks cover bug removal, relaxed animation, re-entry/talk/shopping,
+Save/Continue and all bottle contents. **The old output is superseded and must not be reused.**
+Bottle remains held pending Kareem's full re-entry result; no runtime crash fix is claimed yet.
+
+Priority interruption: own gate job was cancelled while waiting for another holder. Its saved
+results contain only format244/lint passes; **no synthetic or dump run completed** and no
+other agent's lock was removed. Full four gates restart after the requested source follow-ups.
+Kareem also approved fixed20 for both first-expert gallery pool items; implementation follows.
