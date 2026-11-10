@@ -1071,3 +1071,16 @@ Owns `plans/rounds/r10-pots.md`, section 43, any new `src/clawshot/patch/pots.py
    locations, tests and a test output with a checklist. If not: a report of what blocks it. Another randomizer
    (Ormas, Lichii Discord) shuffles pot drops; its zip has no licence: never open, read or use it.
 
+### Round 10 Track D result (merged `5653956`, docs only)
+
+Pots (530), crates (50), ground rupees (112) and floor recovery hearts (25) censused (section 43,
+`plans/rounds/r10-pots.md`). Kareem's tests: ground rupees and their replacements grant cleanly (Kokiri Piece of
+Heart, grotto Hylian Shield); a pot's drop can be any native pickup, but a thrown pot drops where it breaks (a Piece
+of Heart stranded on a tree, lost), and the game records only the pot's destruction, not the drop's collection.
+Later-round candidates: (1) `Rupee` and `RecoveryHeart` shuffle types (all saved permanently, reset24, NoRespawn;
+names: remake positions and regions, OoT Randomizer names only where exact; Saria's house has separate child and
+adult hearts, so decide 7 or 14 checks); still to test: return and Save and Continue repeat steps. (2) Pots and
+crates only with a per-pot D22 Bool set on collecting that pot's own drop, recoverable delivery (placed position or
+direct grant), and ideally a marked pot model (eight native models exist; contrast unchecked), as Kareem described
+Ship of Harkinian doing. No seed switch shipped.
+
