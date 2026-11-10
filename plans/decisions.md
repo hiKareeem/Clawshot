@@ -113,6 +113,9 @@
   its stage filled before and the displaced item is placed next under the same rules: Archipelago's safe swap
   (`Fill.py`, MIT, credited in `NOTICE`). Only on failure, no RNG, each item name displaced at most twice. Result:
   every mode 200/200 seeds on the first attempt.
+- **D35 Door of Time setting, default closed** (Kareem, 2026-11-09: "closed to match SoH"). `door_of_time` =
+  closed (vanilla: the three Spiritual Stones, the Ocarina of Time and the Song of Time) | song_only | open, built in
+  round 10; `free_time_travel` stays a separate option.
 
 ## Open (only Kareem and his co-owner decide)
 

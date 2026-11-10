@@ -1013,3 +1013,61 @@ trouble): seed 10 with seed 8's settings (Chest, Shop, Gift, Scrub, BossHeart), 
 random Second Prize holds a 1-rupee filler (seeds 9 to 16 checked; the First Prize stays the vanilla Bomb Bag).
 Make replayed it end to end from a fresh extract: Verified seed 10, 10 wrong-age warnings in its play note.
 
+## Round 10 (M3 more gift checks; age-travel settings; `.nup` packs; pots exploration)
+
+Kareem agreed, 2026-11-09 ("please go ahead"); he plays seed 8 meanwhile, so one worker process at a time while
+`hookshot.exe` runs (`CLAWSHOT_WORKERS=1` on every gate run). Four tracks, Bermuda thread `cs-r10`, herdr-core, all on
+`openai-codex/gpt-6.1-sol`; Claude reviews. New sections of `plans/03-game-data.md`: 40 (A) to 43 (D), in number
+order. Shared files as before (small isolated commits, posted). No Hookshot build.
+
+### Track A: gift checks (`r10/gifts`)
+
+Owns `src/clawshot/patch/gifts.py`, `patch/gift_rules.toml`, `data/world/remake/gifts.toml`, `census/gifts.py`,
+`tests/test_gifts*`, `plans/rounds/r10-gifts.md`, section 40.
+1. Release the seven frog checks into `--shuffle Gift` (Kareem's experiment passed, answers.md R8-FROGS): drop their
+   holds; the five song prizes enter the pool as Rupees (20) (OoT Randomizer's item; the native prize varies).
+2. The Market Potion Shop's child bottle (answers.md R9-SEED8-MARKET; round 4 listed it as unclear,
+   `Npc_Hylia_020_Shop_Child`, entry `Item_Bottle_TutorialEvent_Talk`, section 15): trace its conditions and saved
+   gate, add it to the census and as a gift check (an early bottle in logic: child, its real conditions), a swap
+   patch, and a test on a save copy that has not had it, with a checklist.
+3. Bombchu Bowling, deterministic as OoT Randomizer: the first win gives First Prize, the second win Second Prize,
+   later wins the native filler; both shuffled under Gift (the opening stays `'Defeat King Dodongo'`). Then the
+   shooting galleries' normal and expert prizes (Kareem: an expert tier exists): the same if the flows allow, else
+   a report. Test outputs with checklists.
+4. Dampé's gravedigging heart piece (the remake reworks the tour): trace its grant and add it as a once-only check if
+   the flow allows.
+
+### Track B: age travel (`r10/agetravel`)
+
+Owns `src/clawshot/patch/age.py`, a new Door of Time patch module, their logic overrides and tests,
+`plans/rounds/r10-agetravel.md`, section 41.
+1. `free_time_travel` first-pull bug (answers.md R9-FIRST-PULL): Sheik's first adult scene plays without him. Keep the
+   placed Temple Sheik while `Dm_TimeTemple_0050` has not played, and from Forest completion until the Prelude; find
+   what the skipped dialogue sets (Kareem's test user `work/r9-sheik-cs9b/ingame/user-free-time-travel-next` holds the
+   save after the broken scene); a test from an older child autosave.
+2. D35: `door_of_time` = closed (default) | song_only | open. Trace the `DoorOfTime` flow and its gates (the stones,
+   the Ocarina of Time, the Song of Time); patch song_only and open; logic for each; the settings string and CLI;
+   test outputs per mode on a child save copy with fewer than three stones, with a checklist.
+
+### Track C: `.nup` dumps in seed packs (`r10/nup`)
+
+Owns `src/clawshot/pack/`, any NUP reader module, `docs/seed-pack.md`, the pack's `READ ME FIRST.txt`,
+`plans/rounds/r10-nup.md`, section 42.
+1. Make accepts a `.nup` file (the dump format Hookshot's builder, Lichii and EglantinePS5 read) as well as an
+   extracted romfs folder. Use a55uka's NUP reader (MIT; a dependency if published, else vendored with its licence and a
+   `NOTICE` entry). Version check first, from inside the `.nup`. Generation reads either source (a read-through layer,
+   or a pack-local cache of only the files it needs, on the tester's own disk and never in a zip). Tests with a
+   synthetic `.nup` fixture (no game data in the repository); a real read-only check against Kareem's `.nup` in
+   `E:/Games/Hookshot`. Docs and the readme updated.
+
+### Track D: pots and loose rupees (`r10/pots`, exploration)
+
+Owns `plans/rounds/r10-pots.md`, section 43, any new `src/clawshot/patch/pots.py` and its tests.
+1. Census the remake's pots, crates and loose (ground) rupees: actors, how a pot's drop is set, counts per area, and
+   OoT Randomizer's names for them where they exist.
+2. Find whether a pot or loose rupee can give a shuffled item through the game's own pickups (as round 8's boss hearts
+   and floor heart pieces do, D33), and which items.
+3. If it can: a `Pot` (and rupee) shuffle type behind the settings string, logic from OoT Randomizer's pot and rupee
+   locations, tests and a test output with a checklist. If not: a report of what blocks it. Another randomizer
+   (Ormas, Lichii Discord) shuffles pot drops; its zip has no licence: never open, read or use it.
+
