@@ -895,6 +895,10 @@ Round 10 candidates (seed 8 play, Kareem 2026-11-09):
   gives First Prize, the second win Second Prize, later wins the filler prizes; an in-game test. Same question for
   the shooting galleries' normal and expert prizes (Kareem: an expert tier exists).
 
+- Release the seven frog checks into `--shuffle Gift` (Kareem's frog experiment passed, 2026-11-09, answers.md R8-FROGS):
+  drop their `keep_vanilla` holds in `remake/gifts.toml`; the five song prizes enter the pool as Rupees (20), OoT
+  Randomizer's vanilla item for them (the native prize varies 5 to 30). The Skulltula House previews passed too; the
+  40 reward stays held until tested; merchants wait for Kareem's main save.
 - Door of Time setting (Kareem, 2026-11-09: he expected door and pedestal open from the start, as Ship of Harkinian
   offers; free time travel alone still leaves the three Spiritual Stones, the Ocarina of Time and the Song of Time
   between child and adult). `door_of_time` = closed (vanilla) | song_only | open, through the `DoorOfTime` flow and
