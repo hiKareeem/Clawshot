@@ -5,7 +5,7 @@ import threading
 
 from clawshot.app.paths import absolute_path, default_output_root
 
-KINDS = {"dump-folder", "dump-file", "hookshot", "output", "seeds"}
+KINDS = {"dump-folder", "dump-file", "hookshot", "output", "seeds", "emulator_mods"}
 
 
 class BrowserDialogs:
@@ -60,7 +60,9 @@ class BrowserDialogs:
                         initialdir=str(default_output_root().parent) if kind == "output" else None,
                     )
                 result["path"] = (
-                    str(absolute_path(value, "Selected path", allow_links=kind != "output")) if value else None
+                    str(absolute_path(value, "Selected path", allow_links=kind not in ("output", "emulator_mods")))
+                    if value
+                    else None
                 )
             except Exception as error:
                 result["error"] = f"Path chooser unavailable: {error}. Paste a path instead."
@@ -90,7 +92,7 @@ def webview_chooser(window, webview):
                 selected = window.create_file_dialog(folder_dialog, allow_multiple=False)
             if not selected:
                 return None
-            return str(absolute_path(selected[0], "Selected path", allow_links=kind != "output"))
+            return str(absolute_path(selected[0], "Selected path", allow_links=kind not in ("output", "emulator_mods")))
         finally:
             lock.release()
 

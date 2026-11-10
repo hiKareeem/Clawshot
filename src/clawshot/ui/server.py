@@ -23,9 +23,10 @@ from clawshot.app import (
     settings_payload,
     validate,
 )
+from clawshot.app.emulator import copy_to_emulator
 from clawshot.app.library import SeedLibrary
 from clawshot.app.paths import absolute_path, default_output_root
-from clawshot.app.preferences import Preferences
+from clawshot.app.preferences import Preferences, suggested_eden_folder
 
 ASSETS = Path(__file__).with_name("static")
 STATIC = {
@@ -80,6 +81,8 @@ class Application:
                 "paths": self.preferences.snapshot(),
                 "preferences_warning": self.preferences.warning,
                 "dialogs_available": self.chooser is not None,
+                "copy_available": self.chooser is not None,
+                "eden_folder": suggested_eden_folder(),
                 "open_available": self.allow_open,
                 "play_available": self.allow_play and sys.platform == "win32",
                 "play_unavailable_reason": (
@@ -125,14 +128,16 @@ class Application:
             if self.chooser is None:
                 raise ValueError("Path dialogs are disabled in --no-open and tests; paste a path instead")
             kind = body.get("kind")
-            if kind not in ("dump-folder", "dump-file", "hookshot", "output", "seeds"):
+            if kind not in ("dump-folder", "dump-file", "hookshot", "output", "seeds", "emulator_mods"):
                 raise ValueError("Unknown path chooser")
             seed = body.get("seed", 0)
             if type(seed) is not int or not -(2**53 - 1) <= seed <= 2**53 - 1:
                 raise ValueError("Seed must be an exact integer")
             path = self.chooser(kind)
             if path is not None:
-                selected = absolute_path(str(path), "Selected path", allow_links=kind != "output")
+                selected = absolute_path(
+                    str(path), "Selected path", allow_links=kind not in ("output", "emulator_mods")
+                )
                 if kind == "dump-file":
                     if not selected.is_file() or selected.suffix.lower() != ".nup":
                         raise ValueError("Choose a .nup file")
@@ -141,6 +146,8 @@ class Application:
                 path = str(selected / f"seed-{seed}") if kind == "output" else str(selected)
                 if kind == "seeds":
                     self.library.add_folder(path)
+                elif kind == "emulator_mods":
+                    self.preferences.remember("emulator_mods", path)
             return {"path": path, "warning": self.preferences.warning}
         if method == "POST" and route == "detect":
             result = {}
@@ -163,6 +170,22 @@ class Application:
             return state
         if method == "POST" and route == "cancel":
             return self.jobs.cancel()
+        if method == "POST" and route in ("choose-eden", "copy-emulator"):
+            if self.chooser is None:
+                raise ValueError("Emulator copying is disabled in --no-open. Open Clawshot normally to copy a seed.")
+            if route == "choose-eden":
+                folder = suggested_eden_folder()
+                if folder is None:
+                    raise ValueError("No Eden mod folder was found. Use Choose mod folder for your emulator.")
+                self.preferences.remember("emulator_mods", folder)
+                return {"path": folder, "warning": self.preferences.warning}
+            if body.get("confirmed") is not True:
+                raise ValueError("Back up your emulator's normal saves, then confirm copying this seed.")
+            saved = self.preferences.snapshot()
+            if not saved.get("emulator_mods"):
+                raise ValueError("Choose your emulator's mod folder for this game first.")
+            protected = (saved.get("dump"), saved.get("hookshot"), os.environ.get("OOT_ROMFS"))
+            return copy_to_emulator(self.result_for(body), saved["emulator_mods"], protected=protected)
         if method == "POST" and route == "play":
             if not self.allow_play:
                 raise ValueError("Play is disabled in --no-open. Open Clawshot normally to play.")

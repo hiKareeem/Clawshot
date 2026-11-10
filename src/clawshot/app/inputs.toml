@@ -56,3 +56,7 @@ note = "Quit a running Hookshot game before starting another seed. Play needs Wi
 label = "My seeds"
 help = "Open a folder containing seeds you made earlier. Clawshot checks their files before allowing Play; your original game dump is not needed to play them."
 note = "A seed with missing information or changed files is shown with a reason instead of being played."
+[emulator]
+label = "Copy to my emulator"
+help = "Choose your emulator's mod folder for this game once. Copy this seed there as real folders; an existing copy is never replaced."
+note = "Back up your emulator saves first: an emulator uses your normal saves. Enable only this seed in the emulator."

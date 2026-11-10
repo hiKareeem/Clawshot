@@ -193,6 +193,9 @@
             <div class="result-actions">
               <button id="play-seed" data-interface="play" hidden>Play</button>
               <button id="open-folder">Open seed folder</button>
+              <button id="copy-emulator" data-interface="emulator">
+                Copy to my emulator
+              </button>
               <button id="read-note">Read play note</button>
               <button id="reveal-spoiler">Reveal spoiler…</button>
             </div>
@@ -230,6 +233,26 @@
         <button data-browse="dump-folder">Romfs folder…</button
         ><button data-browse="dump-file">.nup file…</button>
       </div>
+    </dialog>
+    <dialog id="emulator-dialog">
+      <div class="dialog-heading">
+        <h2>Copy to my emulator</h2>
+        <button id="close-emulator">Back</button>
+      </div>
+      <p>
+        Back up your emulator saves first: your emulator uses your normal saves.
+      </p>
+      <p>
+        Choose the mod folder for this game. Clawshot remembers it, copies real
+        folders, and never replaces an existing seed.
+      </p>
+      <code id="emulator-folder" class="seed-folder"></code>
+      <div class="result-actions">
+        <button data-browse="emulator_mods">Choose mod folder…</button>
+        <button id="use-eden" hidden>Use Eden folder</button>
+        <button id="confirm-emulator" class="primary">Copy seed</button>
+      </div>
+      <p id="emulator-copy-status" role="status"></p>
     </dialog>
     <dialog id="document-dialog">
       <div class="dialog-heading">

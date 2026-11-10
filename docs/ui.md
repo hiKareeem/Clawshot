@@ -59,6 +59,13 @@ Each new output includes `clawshot-seed.json` with its seed number, settings, fi
 Clawshot version and supported game build. Play checks this record and the seed contents, not
 the old dump path. Saves and logs are outside the hashed seed folder.
 
+**Copy to my emulator** asks for your emulator's mod folder for this game once and remembers it.
+Back up your normal emulator saves before confirming. The copy is real files in
+`Clawshot-seed-<number>/romfs`; an existing copy is never overwritten, even for different settings
+with the same number. Enable only this seed in your emulator. Clawshot never starts the emulator.
+If the tested Eden/Lichii game folder exists, it is offered as an explicit choice, not assumed.
+Other emulators use only the folder picker. Copying is disabled in `--no-open`.
+
 Before starting a game, both UI and pack Play check the PC-wide process list. Any running
 `hookshot.exe` refuses with “Hookshot is already running. Quit it, then press Play.”
 This happens before creating the save folder, opening the log or starting another process.
@@ -145,7 +152,7 @@ on 2026-11-10. This does not confirm its NUP file picker, browser/Tk picker or t
 
 Not implemented in the current checkout:
 - gamepad/Steam Deck controller navigation (keyboard/mouse only);
-- emulator copying and double-click bootstrap (the next ordered release items);
+- double-click bootstrap (the next ordered release item);
 - a bundled executable/installer or bundled fonts;
 - native Play acceptance or Linux/macOS UI runtime certification.
 

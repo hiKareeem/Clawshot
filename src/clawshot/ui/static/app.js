@@ -29,6 +29,9 @@ let playAvailable = false,
 let openAvailable = false,
   libraryActions = [],
   lastLibraryOutput = "";
+let emulatorFolder = "",
+  edenFolder = "",
+  copyAvailable = false;
 
 function element(tag, className = "", text) {
   const el = document.createElement(tag);
@@ -637,6 +640,11 @@ async function browse(kind) {
       await refreshSeeds();
       return;
     }
+    if (kind === "emulator_mods") {
+      emulatorFolder = data.path;
+      renderEmulator();
+      return;
+    }
     const field = kind.startsWith("dump-") ? "dump" : kind;
     $(field).value = data.path;
     if (field === "output") outputCustom = true;
@@ -688,6 +696,13 @@ async function detect(kind, fillDump = true) {
     updateLibraryActions();
   }
 }
+function renderEmulator() {
+  $("emulator-folder").textContent =
+    emulatorFolder || "Choose your emulator's mod folder for this game.";
+  $("confirm-emulator").disabled = !emulatorFolder || !copyAvailable || busy;
+  $("use-eden").hidden = !edenFolder;
+  $("use-eden").textContent = "Use Eden folder: " + edenFolder;
+}
 function renderPlay() {
   const selected = Boolean($("hookshot").value.trim());
   $("play-seed").hidden = !selected;
@@ -695,6 +710,7 @@ function renderPlay() {
     !playAvailable || !hookshotCanPlay || busy || playState.running;
   $("save-isolation").hidden = !selected;
   $("emulator-steps").hidden = playAvailable && hookshotCanPlay;
+  $("copy-emulator").disabled = !copyAvailable || busy;
   $("play-status").textContent = playState.running
     ? "A seed is running. Quit that Hookshot game before starting another."
     : !selected
@@ -980,6 +996,39 @@ $("open-folder").addEventListener("click", async () => {
     error(e.message);
   }
 });
+$("copy-emulator").addEventListener("click", () => {
+  renderEmulator();
+  $("emulator-copy-status").textContent = "";
+  openDialog("emulator-dialog");
+});
+$("close-emulator").addEventListener("click", () =>
+  closeDialog("emulator-dialog"),
+);
+$("use-eden").addEventListener("click", async () => {
+  try {
+    const data = await api("choose-eden", {});
+    emulatorFolder = data.path;
+    preferenceWarning(data.warning);
+    renderEmulator();
+  } catch (e) {
+    $("emulator-copy-status").textContent = e.message;
+  }
+});
+$("confirm-emulator").addEventListener("click", async () => {
+  $("confirm-emulator").disabled = true;
+  try {
+    const data = await api("copy-emulator", {
+      output: resultOutput,
+      confirmed: true,
+    });
+    $("emulator-copy-status").textContent =
+      "Copied to " + data.path + ". " + data.warning;
+  } catch (e) {
+    $("emulator-copy-status").textContent = e.message;
+  } finally {
+    renderEmulator();
+  }
+});
 $("read-note").addEventListener("click", () => documentView("note"));
 $("reveal-spoiler").addEventListener("click", () => documentView("spoiler"));
 $("close-document").addEventListener("click", () =>
@@ -1016,6 +1065,9 @@ window.addEventListener("beforeunload", (event) => {
     preferenceWarning(data.preferences_warning);
     $("dump").value = data.paths.dump || "";
     $("hookshot").value = data.paths.hookshot || "";
+    emulatorFolder = data.paths.emulator_mods || "";
+    edenFolder = data.eden_folder || "";
+    copyAvailable = data.copy_available;
     playAvailable = data.play_available;
     playUnavailableReason = data.play_unavailable_reason;
     suggestOutput();
