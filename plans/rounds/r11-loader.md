@@ -67,6 +67,18 @@ Removed the summary's obsolete random-Bowling warning against Round10's implemen
 second deterministic rewards; no generation behavior changes. Player-facing summary reviewed
 directly; actual two-source source-pack/Make/dry-Play proof follows next.
 
+### Native environment correction before final smoke/gates
+
+A no-game native subprocess probe printed Python getenv='' and C-runtime getenv=b'' when
+the child environment contains an empty value. `host/nn_fs.c:279–289` tests only whether
+getenv returned non-null, so an empty value can still enter overlay lookup. Play now removes
+HOS_FS_OVERLAY entirely from its child environment; dry plans explicitly list it under
+`unset_environment` rather than setting an empty value. Focused33 tests pass in0.47s;
+format10/lint pass. The initial actual baseline/RomFS/NUP smoke already passed (260.36s,
+137 files,193 ZIP entries each, identical baseline digest68a95611e704adf8d016ada69729593dcdb19e14aa6635cd9195a5fb1c24d76b).
+Those first two archives predate this stricter clearing correction and are superseded:
+fresh final source packs/Make/dry-Play will exercise actual removal before the full gates.
+
 ## Player acceptance boundary
 
 **Kareem: after Claude reviews/rebuilds a fresh pack, Make, then Play only after quitting the

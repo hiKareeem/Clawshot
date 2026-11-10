@@ -82,7 +82,7 @@ def play(root: Path, *, dry_run: bool = False) -> int:
     user = root / "user"
     if user.resolve() != user or (root / "seed").resolve() != root / "seed":
         raise PackError("pack user/seed folder must not be a link")
-    overrides = {"HOOKSHOT_NO_UPDATE_CHECK": "1", "HOS_FS_OVERLAY": "", "HOS_MODS": str(root)}
+    overrides = {"HOOKSHOT_NO_UPDATE_CHECK": "1", "HOS_MODS": str(root)}
     command = [str(installation.exe), "--user", str(user)]
     if dry_run:
         print(
@@ -91,6 +91,7 @@ def play(root: Path, *, dry_run: bool = False) -> int:
                     "command": command,
                     "cwd": str(hookshot),
                     "environment": overrides,
+                    "unset_environment": ["HOS_FS_OVERLAY"],
                     "mod": str(root / "seed"),
                     "log": str(root / "hookshot_log.txt"),
                 },
@@ -100,6 +101,7 @@ def play(root: Path, *, dry_run: bool = False) -> int:
         return 0
     user.mkdir(exist_ok=True)
     env = dict(os.environ, **overrides)
+    env.pop("HOS_FS_OVERLAY", None)
     print(f"Seed {manifest['seed']}; isolated saves: {user}; log: {root / 'hookshot_log.txt'}", flush=True)
     with (root / "hookshot_log.txt").open("wb") as log:
         return subprocess.run(
