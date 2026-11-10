@@ -103,3 +103,12 @@ native identifiers, research addresses and historical private-pack/overlay instr
 not decoded game-file copies; current public entry points override obsolete instructions. The still
 stale pack guide is assigned to cs11c and must be integrated before publishing. The Discord drafts
 are corrected separately below. No unlicensed archive, NX2navi material, game source or dump was opened.
+
+## Additional assignment: public Discord drafts
+
+Claude explicitly assigned `docs/discord/server-kit.md` during this run. Kept it as drafts Kareem
+posts himself, never published messages. Updated public-test sharing (original zip only), permanent
+invite, own-dump/no-piracy/no-game-file rules, NUP preflight nuance, current mods loading and manual
+save warning, relevant report fields/log excerpts and evidence-bounded announcement matching README.
+Removed the obsolete private/do-not-repost claims and unqualified all-version reproducibility.
+No Discord API or message-send action was used.
