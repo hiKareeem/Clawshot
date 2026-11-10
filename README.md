@@ -85,11 +85,18 @@ before using other items. Child Bow pickup has jammed the ZR item bar; changing 
 search frontier (ties included). Other item families are precautionary warnings, not individually
 confirmed failures. Optional later pickups can differ from the search order; no data-only fix is enabled.
 
-`--logic free_time_travel=true` is an experimental, default-off option: it opens the adult pedestal
-before Forest clear and hides Temple Sheik until the normal Prelude scene can play. Forest rewards
-stay native; Prelude still requires Forest quest completion, not medallion ownership. In-game acceptance is
-pending (`plans/rounds/r9-sheik.md`). Seeds replace both of Sheik's vanilla Hookshot directions with
-the actual Hookshot location (English in all 16 language archives); slices without it omit the tool.
+`--door-of-time closed` (D35, default) requires the three Spiritual Stones, Ocarina of Time
+and playable Song of Time. `song_only` permits either child ocarina plus the learned song;
+`open` opens the door and first-pull pedestal without items. Reverse travel is a separate option.
+The early-pull return guarantee remains strict: unshuffled child-only prerequisites can make
+early-door seeds impossible unless free travel is selected.
+
+`--logic free_time_travel=true` is experimental and default-off. It opens the adult pedestal,
+keeps Temple Sheik through both first-arrival scenes, then hides him until Forest completion.
+Forest rewards stay native; Prelude requires Forest quest completion, not medallion ownership.
+The complete first-arrival fix and Door modes await in-game acceptance
+(`plans/rounds/r10-agetravel.md`). Seeds replace both vanilla Hookshot directions with its
+actual seed location (English in all 16 language archives); slices without it omit the tool.
 
 ## Stack
 

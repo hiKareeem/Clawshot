@@ -239,12 +239,29 @@ This includes the pull route's child prerequisites, not optional errands. Altern
 conservative intersection and rejection. Off retains temporal correctness but does not promise safety after
 an early pull. Child-only goals that never open travel need no return proof.
 
-`free_time_travel = false` by default. With it on, the search uses unrestricted shared inventory and skips the
-extra return proof; `make_seed` pairs that assumption with `patch.age`'s isolated pedestal/Temple-Sheik
-placement transform. Temple Sheik is absent before Forest completion, then available to the unchanged Prelude
-scene. `remake/sheik.toml` gates that check on adult Forest completion (not medal ownership), independently of
-free travel. No quest, reward, saved default or event-flow edit. In-game proof is pending (section38);
-no GameDataList return-unlock Bool exists.
+`free_time_travel = false` by default. With it on, the search shares inventory and skips the
+extra return proof; `make_seed` pairs that assumption with `patch.age`. Temple Sheik stays for
+the0050 introductory timeline AND0055 dialogue, disappears after0055, and returns for Forest
+completion/Prelude. A non-saved BoolExp supplies Presence; native Prelude deletion remains.
+`remake/sheik.toml` gates the check on adult Forest completion, not medal ownership.
+No quest/reward/saved default is forced. First-arrival gameplay acceptance remains pending.
+
+`Settings.door_of_time = closed | song_only | open` (D35, default closed) is separate.
+`prepare` derives its matching logic constant; contradictory `--logic door_of_time` is refused.
+The child-temple override requires stones + Ocarina2 + playable Time song when closed,
+either child ocarina + Time song for song_only, and no items for open. `patch.door` supplies
+the paired native transforms; closed emits nothing. Song-only removes both the altar's Step05
+reaction gate and the flow's quest-progress gate, retaining learned song, melody, scene history,
+opened flag and Step06 writes. Open changes the physical gate module's threshold to Ready
+without resizing its string pool, and reuses the ungated attention module for first/repeat pulls.
+No stone quest completion, inventory grant or first-adult scene is forged.
+
+The data-defined return kit's lower-bound inventory and staged families vary with door mode:
+earlier pulls cannot assume optional child Saria/strength/Time-ocarina finds. The independent
+first-pull oracle remains mandatory and may refuse combinations with unshuffled child-only
+prerequisites. No automatic free-travel or guarantee override. Native Fairy Ocarina is child-only
+(section37), so the sourced `age_ocarina.toml` helpers require Ocarina2 for adult song use;
+otherwise the new Fairy-only first-pull route would incorrectly pass adult Mido.
 
 **Time of day.** Without entrance shuffle OoT Randomizer assumes any time of day can be reached from wherever the
 player stands, and `at_day`/`at_night` are `True` (`RuleParser.at_day`: unless `world.ensure_tod_access`). Clawshot
