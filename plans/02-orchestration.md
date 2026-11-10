@@ -67,6 +67,10 @@ OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump
   never overlap two gate runs then (round 9: two overlapping 8-worker runs held the CPU at 100% and the game crashed
   twice, Hookshot#1112). From round 10, agents take a gate lock (`mkdir work/rounds/r<N>/gate.lock`, `rmdir` after) around
   full gate runs and sweeps.
+- Test launchers set `HOS_OOT_CHEATS=1` (from 2026-11-09): Hookshot's Insert menu then has Cheats > Teleport and the
+  clock, so Kareem can skip the walk to a test spot. Test copies only (never seed 8, a played seed or his main save);
+  checklists say to use only Teleport and the clock unless a step says otherwise (inventory, age or flag cheats would
+  muddy ownership and once-only checks).
 - **Never delete or rewrite an output folder a game may be reading.** The overlay is read file by file as Kareem
   moves; a file missing for a moment loads the vanilla one (round 7: a rebuild wiped `seed-shop-7c` for four minutes
   while he played it). A changed output goes to a new folder (`<name>-next`); Claude swaps it in after he quits.
