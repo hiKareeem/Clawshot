@@ -1,120 +1,117 @@
 # Clawshot
 
-An item randomizer for *The Legend of Zelda: Ocarina of Time* on Nintendo Switch 2 (program `0400486024DEC000`,
-update v131072, build `e0f3ccfa`), in the spirit of OoT Randomizer and Ship of Harkinian's randomizer.
+An unofficial item randomizer for *The Legend of Zelda: Ocarina of Time* on Nintendo Switch 2,
+inspired by OoT Randomizer and Ship of Harkinian's randomizer.
 
-**What it is:** a generator that reads the player's own copy of the game, places items by logic, and writes a mod
-folder in the layout emulators use (`<mod>/romfs/...`). Anything that loads romfs mods can run a seed: Switch 2
-emulators (including their PS5 builds), the [Hookshot](https://github.com/NotRexed/Hookshot) PC port
-(`HOS_FS_OVERLAY` today, its `mods` folder once that lands), and other native ports that read the game's files
-from disk. Features that need code changes come later and only where a runtime offers hooks.
+Clawshot reads **your own game dump**, moves items according to access rules, and writes a
+RomFS mod: a folder of changed game files loaded instead of the originals. The supported game is
+program `0400486024DEC000`, update v131072, build `e0f3ccfa`.
 
-**What it is not:** a copy of the game or any part of it. The repository holds code, logic and location
-definitions only. Nothing generated from the game is committed or shared; players run the generator on their own
-dump. Not affiliated with or endorsed by Nintendo.
+**This is not the game.** This repository contains code, logic and location definitions, not game
+files, keys or generated mods. You must generate the mod locally from your own dump. Never share
+that output. Clawshot is not affiliated with or endorsed by Nintendo.
 
 ## Status
 
-Day-1 spike done (see `plans/00-roadmap.md`, M0): the game's placement files decompress and parse (BYML v7, the
-same engine as Tears of the Kingdom), and chest contents are a single actor-name parameter. Writing files back and
-a swapped chest in game are next.
+**Public test builds, not a finished randomizer.** Seeds are being played and the remake's access
+rules are still being checked. Every generated seed must pass the logic search before it is written;
+that proves the model, not that every route has been verified in the game.
 
-## Private tester packs
+| Feature | Current evidence and limits |
+|---|---|
+| Chests | Changed chest rewards work in game. 165 of 184 ordinary chests are shuffled; unresolved routes and repeat rewards stay unchanged. The Goron City sign-puzzle solution is included, its failure chest is not. |
+| Shops | Shuffled native shop items and purchases work in game. Arbitrary major items cannot use a stand-in shelf display. |
+| NPC gifts and songs | Gift swaps and Great Fairy once-only rewards work in game, as does the Kokiri shopkeeper's extended gift window. All seven frog checks have passed their in-game experiment. Not every gift or item combination has been played. |
+| One-time Business Scrubs | Four sale families are enabled; repeat vendors stay unchanged. The implementation is tested, but the recorded results do not establish every shuffled sale in game. |
+| Boss hearts and floor Heart Pieces | Optional, off by default. A Hylian Shield worked at King Dodongo and the ranch tower. Only native floor pickups are allowed; other locations and pickup combinations are not all verified. |
+| Hints and convenience options | Gossip Stones speak hints without the Mask of Truth by default; this, fast start, the open-bridge forest option and 10-rupee Kokiri prices have in-game evidence. |
+| Free time travel | Experimental, off by default. Early adult return, the Prelude scene and the corrected first adult arrival have passed in-game checks. |
 
-Clawshot and seed packs remain private to invited testers. Packs include the generator's source/data,
-not game files or generated overlays. `python -m clawshot.pack --settings <CS1> --seed <n> --out <new.zip>`
-uses the publisher's `OOT_ROMFS` (or `--romfs`) to record a reference digest. Testers run Make locally against
-their own supported dump, then Play with an isolated save folder. See [seed-pack instructions](docs/seed-pack.md).
+**Implemented, not yet accepted in game:** deterministic first/second Bombchu Bowling prizes and
+normal shooting-gallery upgrades are enabled with gift shuffle but await their dedicated player
+checks. The Market Potion Shop bottle swap, Dampé's digging reward and first expert gallery rewards
+are built but **held unchanged** until their tests pass. The bottle swap's first test crashed on
+re-entry; its replacement fix is untested. Non-default Door of Time modes are built but untested
+in game. Merchant gift experiments and some Skulltula House rewards also remain held; the 10-token
+swap alone has been observed, not every threshold.
 
-## Settings strings
+Gold Skulltula tokens, cows, dungeon completion rewards, pots, crates and loose rupees are not
+shuffled. Keysanity (dungeon items outside their own dungeon) has no in-game acceptance; do not use
+it for a playthrough. Progressive items, entrance shuffle and Archipelago are not supported.
+See [settings and restrictions](docs/settings.md) for the detailed reference. The evidence record is
+[the roadmap's results](plans/00-roadmap.md) and [the playtest answers](plans/playtest/answers.md).
+
+### Known issues
+
+- **After receiving an item Link cannot use at his current age, Save and Continue before using
+  other items.** A child Bow pickup jammed the item bar on both Hookshot and Lichii; changing areas
+  did not fix it. Other item families carry precautionary warnings. Read this seed's `play-note.md`.
+- Chest ocarinas show no model despite working; songs can show an ocarina stand-in rather than a
+  normal item model. Only some songs have been individually played from chests.
+- **Hookshot 2.0.12+: do not use `HOS_FS_OVERLAY`.** Load the seed through the mods loader with that
+  variable cleared. The overlay route crashes at startup with the seed's resource size table.
+  Button icons in text use the game's own Switch icons while the seed is loaded.
+- A Market guard-house crash on Hookshot 2.0.11 matched the upstream
+  [Hookshot issue #1112](https://github.com/NotRexed/Hookshot/issues/1112); no fix is claimed here.
+
+## Play a seed pack
+
+Follow the **[seed-pack guide](docs/seed-pack.md)** for Make, version/digest checks, Hookshot loading
+and emulator loading. Packs contain the generator's source and settings, not a ready-made game mod.
+Make accepts a `.nup` dump or extracted RomFS and builds the seed on your PC. Install
+[uv](https://docs.astral.sh/uv/getting-started/installation/) first.
+
+Hookshot and Lichii have recorded loading/play results; other emulator and console layouts are
+**untested with Clawshot**. Use the current mod-loading instructions, not an older overlay launcher.
+Keep packs in separate new folders and preserve your saves. Emulator New Game replaces this game's
+save progress: back up the entire save folder first. The pack's isolated Hookshot saves do not
+isolate emulator saves, and manually installing a Hookshot mod uses its normal save folder.
+
+Questions, test packs and reports: **[Clawshot Discord](https://discord.gg/7R5ZXPcJqn)**.
+Never post a dump, generated mod, cache or save.
+
+## Run from source
+
+Use Python 3.12+ and uv. From a checkout, generate into a **new folder outside the repository and
+game dump**; never overwrite a seed that might be in use:
+
+```sh
+uv sync --frozen
+uv run python -m clawshot --help
+uv run python -m clawshot --romfs C:/Games/OoT/romfs --seed 7 --out C:/Clawshot/seed-7
+```
+
+The generator CLI takes an extracted RomFS folder. For `.nup` input use the seed-pack workflow.
+A default seed shuffles chests. To print settings without opening the dump, then replay them:
 
 ```sh
 uv run python -m clawshot --shuffle Chest Shop Gift --print-settings
-uv run python -m clawshot --romfs E:/Games/Hookshot/romfs --seed 7 --settings CS1 --out E:/OOTRemake/work/my-seed
+uv run python -m clawshot --romfs C:/Games/OoT/romfs --seed 7 --settings CS1 --out C:/Clawshot/seed-7-defaults
 ```
 
-`--print-settings` prints a shareable `CS1` string and exits without opening the dump. Pass it to `--settings`;
-explicit command-line options override its fields, and `--logic name=value` overrides individual logic values.
-`--skip` alone disables fast start. The spoiler records both settings and their replay string.
-Reproduction requires the same seed, generator version and world data. Generator defaults are in
-`src/clawshot/data/settings.toml`; logic defaults are in `src/clawshot/data/world/`.
+`CS1` alone means defaults; replace it with the **complete string printed by the first command**
+to replay that command's choices. Explicit options override the string. Reproduction needs the
+same seed, settings, generator source and world data, not just the same version label.
 
-With `--shuffle Chest Gift`, `--songs song` (default) keeps songs on song checks; `--songs anywhere` allows
-all twelve songs in chests. Only Storms has been played from a chest; the other eleven share its grant path
-and are inferred. Other gift-only items remain on gifts until individually observed in a chest; the sourced
-allowlist in `settings.toml` currently permits the Fairy Ocarina.
+The output has `romfs/`, `play-note.md` (directions and warnings) and `spoiler.json` (all placements).
+Load it using the [seed-pack guide's runtime instructions](docs/seed-pack.md); generation does not
+start the game. More options: [settings](docs/settings.md). For logic ports and trackers:
+[logic reference](docs/logic.md).
 
-`Gift` includes all seven frog checks (five song prizes contribute Rupees (20)), two deterministic
-Bombchu Bowling prizes (first win, second win, then native filler), and the normal child/adult
-shooting-gallery upgrades. Rental weapons are not inventory rewards. The Market Potion Shop's
-free child bottle is modeled in logic; its shuffled tutorial bypass and Dampé's digging swap
-remain held pending isolated in-game checks. First-expert gallery checks contribute Rupees (20)
-and use separate saved gates, but also remain held until tested; later expert wins stay native30/70.
+## Development and contributions
 
-`--shuffle Chest BossHeart` adds the eight boss-heart checks (off by default), restricted to native heart,
-heart-piece, shield and red-rupee pickups. Boss pickup persistence and Heart Containers from chests still need
-Kareem's in-game acceptance. `--shuffle Token` remains unavailable; the native-token grant experiment is global,
-not per-location tokensanity (`plans/rounds/r7-drops.md`).
+Kareem directs AI coding agents that implement Clawshot. Automated tests check formats, logic and
+output; Kareem performs the in-game checks. A behavior change is not called working in game until
+he has observed it; built and untested work is labelled above. Contributions from people are welcome.
+Kareem and his co-owner decide scope and merge changes.
 
-`--shuffle Chest Freestanding` adds the fourteen anchored, saved floor Heart Pieces (off by default),
-using the same five native pickups as BossHeart. Other anchors belong to chests, gifts or scrubs;
-loose rupees, refills, keys and silver-rupee puzzles remain vanilla. The isolated ranch shield
-Save/Continue test still needs Kareem's result (`plans/rounds/r8-freestanding.md`).
+Read [CONTRIBUTING.md](CONTRIBUTING.md) for licensing, source restrictions, checks and evidence to
+include. Start with a small, single-topic change, or discuss it on Discord. Do not submit game files
+or anything generated from them, including in issues and attachments.
 
-`--shop-prices vanilla` (default) keeps original slot prices; `affordable` makes every shuffled shop item
-exactly 10 rupees. `--cheap-deku-shield` (provisionally on) prices a Deku Shield in Kokiri shop at 10 even
-without Shop shuffle; `--no-cheap-deku-shield` disables it. Exact prices replace conditional discounts.
-The logic uses the patched wallet requirement, preserving stock releases, refill gates and adult-only offers.
+## Credits and licence
 
-`--shop-slots 0..8` selects that many shelves in each ordinary shop (default 8), in native slot-index order;
-remaining stock stays vanilla. Affordable pricing affects selected shelves only; the independent cheap-shield
-option still applies. Mask loans stay vanilla.
-
-`--shuffle Scrub --scrub-prices fixed --scrub-price 10` sets an exact fee for the four supported once-sales
-(0–1000 rupees); default `vanilla` retains their 40/100 fees. Repeat vendors stay vanilla. Logic and purchase
-notes use the chosen fee and native 200/500/1000 wallets. Both settings replay through `CS1`.
-
-`--forest closed` is the vanilla-like default (D24): Mido guards the Deku Tree and the bridge exit stays closed
-until Gohma. Advanced opt-ins: `closed_deku` opens only the bridge exit; `open` also bypasses Mido.
-Legacy `--skip mido` remains accepted as an alias for `--forest open`; it no longer selects a separate Mido-only
-generator mode. Explicit conflicting forest options are refused. Forest flags compose with shuffled gift save flags.
-
-**Wrong-age pickups:** if Link receives an item his current age cannot use, **Save and Continue**
-before using other items. Child Bow pickup has jammed the ZR item bar; changing areas did not fix it.
-`play-note.md` lists this seed's shuffled age-locked rewards reachable by the wrong age at their first
-search frontier (ties included). Other item families are precautionary warnings, not individually
-confirmed failures. Optional later pickups can differ from the search order; no data-only fix is enabled.
-
-`--door-of-time closed` (D35, default) requires the three Spiritual Stones, Ocarina of Time
-and playable Song of Time. `song_only` permits either child ocarina plus the learned song;
-`open` opens the door and first-pull pedestal without items. Reverse travel is a separate option.
-The early-pull return guarantee remains strict: unshuffled child-only prerequisites can make
-early-door seeds impossible unless free travel is selected.
-
-`--logic free_time_travel=true` is experimental and default-off. It opens the adult pedestal,
-keeps Temple Sheik through both first-arrival scenes, then hides him until Forest completion.
-Forest rewards stay native; Prelude requires Forest quest completion, not medallion ownership.
-The complete first-arrival fix and Door modes await in-game acceptance
-(`plans/rounds/r10-agetravel.md`). Seeds replace both vanilla Hookshot directions with its
-actual seed location (English in all 16 language archives); slices without it omit the tool.
-
-## Stack
-
-Python 3.12+ with uv. Reasons and alternatives: `plans/decisions.md`.
-
-## Layout (planned, built in M0)
-
-| Path | What |
-|---|---|
-| `src/clawshot/formats/` | BYML, SARC, zstd dictionaries, later EVFL, MSBT, resource size table |
-| `src/clawshot/census/` | finds item locations in the player's dump |
-| `src/clawshot/world/` | regions, locations, logic (data files + loader) |
-| `src/clawshot/generate/` | fill, spoiler log, overlay writer |
-| `tests/` | unit tests on synthetic fixtures; `-m dump` tests need `OOT_ROMFS` |
-| `plans/` | roadmap, architecture, decisions |
-
-## License
-
-MIT (`LICENSE`), like OoT Randomizer and Archipelago. Code ported from other projects is credited in `NOTICE`: OoT
-Randomizer's world, logic and fill (`526b4c8d`), and Archipelago's fill swap (`Fill.py` at `1041167c`,
-`generate/fill.py` `_swap`).
+Clawshot is [MIT licensed](LICENSE). [NOTICE](NOTICE) lists the pinned sources and licences:
+OoT Randomizer's world, rule language, search and fill; Archipelago's safe fill swap; and a55uka's
+NUP reader. Their work is credited without implying endorsement. Nintendo owns the game and its
+trademarks; no part of it is included here.
