@@ -2899,8 +2899,10 @@ version is trusted as the supported-build oracle. Folder and NUP fingerprints mu
 Kareem's read-only NUP is25,020,741,061 bytes, one standalone update131072 with186,592 file
 records and601 directories. Its fingerprint is the existing supported signature
 `fc09c4af707a0ca092188cf014f6fdf3d40514def773f097b798f52f9f28bc93`.
-All1,239 selected generator inputs /25,821,037 bytes compare byte-identical with his extracted
-RomFS. The working set excludes ExeFS/models/textures/audio, not a full25GB extraction.
+The initial1,239 selected generator inputs /25,821,037 bytes compare byte-identical with his
+extracted RomFS. The later data-defined cache also includes Track B's Door of Time input
+`Logic/Market_Common_f252.logic.module.ainb`; all its other named inputs are already covered.
+The working set excludes ExeFS/models/textures/audio, not a full25GB extraction.
 
 NUP Make bootstraps frozen uv/Python/zstd for input preflight, then saves configuration and
 creates a unique pack-local `.romfs-*` cache only after version success. Folder preflight remains
@@ -2909,6 +2911,15 @@ the generated seed, remain private game data. The positive ZIP allowlist include
 only, never cache/seed resources. Existing seeds are verified, not overwritten; emulator Make
 still needs no Hookshot, and Play's bin-only/isolated-save safeguards are unchanged.
 
-Synthetic fixtures contain invented bytes only. The optional `OOT_NUP` + `OOT_ROMFS` dump oracle
-compares every cached resource and checks source size/mtime preservation. Actual publisher and
-PowerShell Make evidence is recorded in the round file; no game or launcher is run by the agent.
+Cache selection lives in one data definition, `src/clawshot/pack/resources.toml`: exact paths,
+family patterns, supported item/shop actor-pack template and fast-start component discovery.
+The optional `OOT_NUP` + `OOT_ROMFS` dump oracle generates AND writes complete seeds from the
+cache directory alone for every enabled shuffle kind and resource-reading setting; an independent
+full-RomFS run must produce exactly the same output paths and byte digests. Missing file errors
+name the RomFS resource; silent missing glob members fail output equality. Forest modes, all
+fast starts, free travel, songs/prices/partial shops, mask mode and (once the setting exists)
+all three Door of Time modes are covered. Re-run after each integration/rebase.
+
+Synthetic fixtures contain invented bytes only. The native oracle also compares cached bytes
+and preserves NUP size/mtime. Actual publisher/PowerShell Make and observed matrix/gate results
+are recorded in the round file; no game or launcher is run by the agent.
