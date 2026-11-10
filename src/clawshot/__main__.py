@@ -25,7 +25,7 @@ from pathlib import Path
 from clawshot.generate import FillError, Settings
 from clawshot.generate import hints as hint_choices
 from clawshot.generate.fill import DUNGEON_ITEM_CHOICES
-from clawshot.patch import PatchError, gamedata, gifts, make_seed, write_seed
+from clawshot.patch import PatchError, check_dungeon_items, gamedata, gifts, make_seed, write_seed
 from clawshot.patch.items import ItemActorError
 from clawshot.patch.write import check_output_folder
 from clawshot.world.load import WorldError, load_spec
@@ -157,6 +157,7 @@ def main(argv: list[str] | None = None) -> int:
     if args.romfs is None or args.seed is None or args.out is None:
         parser.error("generation needs --romfs, --seed and --out")
     try:
+        check_dungeon_items(settings)
         check_output_folder(args.romfs, args.out)
         spec, steps = None, []
         if gifts.SHUFFLE in settings.shuffle or set(settings.shuffle).intersection(gifts.GIFT_TYPES):
