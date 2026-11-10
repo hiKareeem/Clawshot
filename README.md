@@ -41,8 +41,8 @@ that proves the model, not that every route has been verified in the game.
 normal shooting-gallery upgrades are enabled with gift shuffle but await their dedicated player
 checks. The Market Potion Shop bottle swap, Dampé's digging reward and first expert gallery rewards
 are built but **held unchanged** until their tests pass. The bottle swap's first test crashed on
-re-entry; its replacement fix is untested. Non-default Door of Time modes are built but untested
-in game. Merchant gift experiments and some Skulltula House rewards also remain held; the 10-token
+re-entry; its replacement fix is untested. The Door of Time's song-only and open modes each passed
+a first in-game check (the door and the first sword pull); returning to child afterwards is untested. Merchant gift experiments and some Skulltula House rewards also remain held; the 10-token
 swap alone has been observed, not every threshold.
 
 Gold Skulltula tokens, cows, dungeon completion rewards, pots, crates and loose rupees are not

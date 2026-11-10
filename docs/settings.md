@@ -111,8 +111,8 @@ The intro skip is on by default. `--skip intro saria deku_tree kaepora` selects 
 | Option | Requirement / effect |
 |---|---|
 | `--door-of-time closed` | Default, native: three Spiritual Stones, Ocarina of Time and playable Song of Time. |
-| `--door-of-time song_only` | Either child ocarina and the learned Song of Time. Built, untested in game. |
-| `--door-of-time open` | Opens the door and first-pull pedestal without items. Built, untested in game. |
+| `--door-of-time song_only` | Either child ocarina and the learned Song of Time. Passed a first in-game check with the Fairy Ocarina and two stones (R10-DOOR-SONG); the opening scene still shows all three stones. |
+| `--door-of-time open` | Opens the door and first-pull pedestal without items. Passed a first in-game check: open door, first pull and first-adult scenes (R10-DOOR-OPEN). |
 | `--logic free_time_travel=true` | Experimental, default off: adult return before Forest completion. |
 
 Door mode and reverse travel are independent. The default return guarantee proves an adult can

@@ -1096,8 +1096,8 @@ skipped, dump 109 (with `OOT_NUP`).
   bottle (first build crashed on re-entry, R10-MARKET-BOTTLE; `market-bottle-fix-next` untested), Dampé's digging
   reward, the first expert gallery wins (Rupees (20), Kareem's choice). Launchers in `work/r10-gifts-cs10a/ingame`.
 - B age travel: `free_time_travel` first-pull fix confirmed in game (R10-FIRST-PULL-FIXED). `door_of_time` =
-  closed (default, D35) | song_only | open, with logic; the three door modes are untested in game
-  (`work/r10-agetravel-cs10b/ingame`, `door-checklist.md`; watch the early Zelda escape with an open door). Adult
+  closed (default, D35) | song_only | open, with logic; all three passed a first in-game check on
+  2026-11-10 (answers.md R10-DOOR-*); the early Zelda escape after an early pull is still untested. Adult
   songs now need the Ocarina of Time (from the item-bar age table, not an in-game test); seeds 8 and 10 re-checked
   beatable under it.
 - C `.nup`: Make reads a `.nup` dump or a romfs folder; a55uka's reader vendored (MIT, `NOTICE`). The cache list is

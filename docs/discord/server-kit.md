@@ -140,7 +140,7 @@ Enabled but still awaiting dedicated in-game checks: deterministic bowling prize
 shooting-gallery upgrades. Four kinds of one-time Deku Scrub sale are enabled; not every shuffled
 sale has recorded acceptance. Built but held unchanged: the Market bottle swap, Dampé's digging
 reward, first expert gallery rewards, merchant experiments and some Skulltula House rewards.
-The bottle fix and non-default Door of Time modes are untested in game.
+The bottle fix is untested in game. The Door of Time's song-only and open modes passed a first check each.
 
 Tokens, cows, dungeon completion rewards, pots, crates and loose rupees are not shuffled. Keysanity,
 progressive items, entrance shuffle and Archipelago are not supported for play. See the

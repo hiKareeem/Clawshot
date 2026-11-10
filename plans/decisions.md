@@ -115,7 +115,8 @@
   every mode 200/200 seeds on the first attempt.
 - **D35 Door of Time setting, default closed** (Kareem, 2026-11-09: "closed to match SoH"). `door_of_time` =
   closed (vanilla: the three Spiritual Stones, the Ocarina of Time and the Song of Time) | song_only | open, built in
-  round 10; `free_time_travel` stays a separate option.
+  round 10; `free_time_travel` stays a separate option. All three modes passed a first in-game check on 2026-11-10
+  (answers.md R10-DOOR-CLOSED, R10-DOOR-SONG, R10-DOOR-OPEN); the return to child with an early door is untested.
 - **D36 The repository goes public, `plans/` included** (Kareem, 2026-11-10: "going public is the right move once
   we clean things up"; "keep plans public"; his commit email stays). Write and admin access stay with Kareem and his
   co-owner; others read and send pull requests. Before the flip: round 11 track A (README, `CONTRIBUTING.md`,
@@ -126,7 +127,10 @@
   127.0.0.1, shown through `pywebview` (BSD-3-Clause, optional extra) or the browser; Qt is excluded by rule 7
   (PySide6 is LGPL). Look decided by Kareem the same day: follow the in-game menus as Hookshot's own menu does, kept
   clean. Flat colours only: nothing from the game's art or fonts, no code or image from Hookshot (GPL-3.0). Every
-  setting comes from one schema, so front ends hard-code none.
+  setting comes from one schema, so front ends hard-code none. Fonts (Kareem, 2026-11-10: "if there's a pick to
+  make it less 'default' that's fine"; pick by Claude): no font file is bundled; titles use a Palatino-family stack
+  and rows a Candara/Optima-family humanist stack, both installed with Windows and macOS, with Linux equivalents and
+  generic fallbacks. Bundling an open font (SIL OFL) stays open: rule 7's licence list does not name the OFL.
 
 ## Open (only Kareem and his co-owner decide)
 
