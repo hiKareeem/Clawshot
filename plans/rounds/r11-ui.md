@@ -79,3 +79,11 @@ The first filtered-test command's nested cmd quoting passed `or` as a filename (
 Expanded the real-server suite to **15 passed in8.55s**, including an Event-held worker proving the HTTP server remains responsive while generation waits; actual synthetic fill/search/writer through Generate; consent-gated spoiler with a reachable Sword goal; existing-output byte/mtime preservation; cancellation cleanup; exact original FillError propagation; and a destination created by another owner while the worker runs (never overwritten or cleaned). No game fixtures or mock generation.
 
 Final font/browser proofs already recorded above cover all five screen/state captures, zero script/off-origin failures, exact complete progress width, native path presentation, cards/dependencies, clipboard and settings replay. The last review wording change is metadata-only: each fast-start card names "Skip…" and its two states are Skipped/Plays; no new default or scene patch. Native dialogs/Explorer/game still deliberately unstarted.
+
+## Item 5: contributor docs and API plan
+
+Added `docs/ui.md` (launch modes, native/headless capabilities, settings/seed/loading workflow, keyboard/layout, source ownership, schema extension, font/color tokens and explicit not-done list) and `plans/05-ui.md` (application/HTTP contracts, real generator sequence, process/cancellation/publication ownership, native-dialog boundary, frontend extension). No README edit: Track A owns it.
+
+Additional native headless key-event smoke passed: Q/E tabs, Up/Down focus, Left/Right card and select changes, Enter toggles, E left to the focused editor, Esc back; zero JS exceptions. Evidence: `E:/OOTRemake/work/r11-ui-cs11d/keyboard-final-proof.json`. Stopped both old --no-open servers before integration/gates; no native GUI, Explorer or game started.
+
+Main moved to D37 as Claude reported; rebase and the four full gates follow. Public `pack.hookshot` still has no main history at this checkpoint, so the specifically agreed isolated detector stand-in remains until Track C integration. This is not yet the final gate/handoff claim.

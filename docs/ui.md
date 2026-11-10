@@ -1,0 +1,118 @@
+# Local UI
+
+```sh
+uv run python -m clawshot.ui                  # browser, when the optional UI extra is absent
+uv run --extra ui python -m clawshot.ui       # pywebview app window
+uv run python -m clawshot.ui --no-open        # print a local URL; no window, browser or native dialogs
+```
+
+Python 3.12+, no JavaScript build step. The optional `ui` extra is pywebview (BSD-3-Clause).
+The page, scripts and styles are local; the interface makes no external requests. A pywebview
+window needs its platform web engine (WebView2 on Windows; native WebKit on macOS; an appropriate
+system GTK/WebKit installation on Linux). The browser route needs no pywebview dependency.
+The browser's click-only Browse dialogs use standard-library tkinter; if the OS does not provide
+Tk, paste a path instead. No Qt/PySide dependency is added by Clawshot.
+
+Keep the terminal running. Ctrl+C stops the server and cancels its worker. Closing a browser tab
+alone does not stop the server. Closing the pywebview window does. `--no-open` intentionally
+**disables Browse and Open folder**, including their HTTP endpoints; it does not merely avoid
+opening the initial page. Both actions are enabled in normal browser and pywebview sessions.
+
+## Using it
+
+- **Game:** Browse for Hookshot or your own romfs folder / `.nup`. Detecting Hookshot fills the
+  dump from its romfs or an adjacent NUP. Detection reads files, never starts the executable.
+  The supported-build fingerprint comes from `clawshot.pack.check_version`, not a folder name.
+  Hookshot is optional when using an emulator. Paths are displayed in the host OS's form.
+- **Settings:** Defaults restores generator defaults. Recommended selects Chest, Shop, Gift,
+  Scrub and BossHeart, with the remaining generator defaults. Every control and choice comes
+  from the app schema. Cards explain their coverage and actual gameplay evidence. Unavailable
+  choices remain visible with a reason. Ineffective dependent settings are dimmed, retaining
+  their values for later reactivation. Changes update the CS1 string; paste and Apply does the
+  reverse. Copy copies it, or selects it with keyboard-copy instructions if permission is denied.
+- **Generate:** choose a seed, or Random, and a **new** output folder. The suggestion is
+  `Documents/Clawshot/seed-<number>` (including redirected Windows/XDG Documents). Only that
+  suggested parent may be created automatically, and only when generation starts. Browse for
+  output chooses an existing parent and adds the seed name. Custom parents must already exist.
+  Existing seeds are never rewritten. Progress reflects real stage boundaries, not estimated
+  percentages within the fill. Cancellation removes only this job's private staging/cache.
+- **Result:** Open folder, read the play note, view loading instructions, or explicitly confirm
+  revealing the spoiler. The play note also contains item locations/hints. The UI does not start
+  Hookshot or an emulator. See [seed-pack instructions](seed-pack.md) for loading and save safety.
+
+Manual Hookshot loading uses a dedicated `HOS_MODS` root containing exactly one real-folder mod,
+with `HOS_FS_OVERLAY` cleared, not set. Manual loading uses the main save folder: back it up before
+New Game. Seed-pack Play provides its own isolation; the UI's result is an ordinary mod folder.
+
+## Keyboard and layout
+
+Q/E changes tabs outside text editors. Up/Down moves focus; Left/Right changes a chooser, switch
+or card; Enter activates the focused action or toggles a card/switch. Text fields retain normal
+text/caret input; Esc leaves an editor, and closes a dialog. The hint bar lists only actions that
+work for the current control. Disabled cards/rows remain focusable so their reasons can be read.
+Mouse hover and focus both update the description panel from schema help.
+
+The menu uses flat tan/brown colors, a label/value layout and system typography, based only on
+owner-supplied reference pictures. No game art, menu source, button icons, ornaments or font files
+are included. The desktop panel scrolls independently; small windows stack the description panel.
+The Generate action fits without scrolling at 1280×860.
+
+## Where to change things
+
+| Responsibility | File |
+|---|---|
+| Settings metadata, per-choice labels/help/availability/dependencies | `src/clawshot/app/settings.toml` |
+| Application input and stage descriptions | `src/clawshot/app/inputs.toml` |
+| Defaults/Recommended preset definitions | `src/clawshot/app/presets.toml` |
+| Canonical settings validation and metadata checks | `src/clawshot/app/schema.py` |
+| Source detection, native paths, protected output boundaries | `src/clawshot/app/paths.py` |
+| One-worker generation lifecycle, cancellation and publication | `src/clawshot/app/jobs.py` |
+| Loopback transport and fixed asset allowlist | `src/clawshot/ui/server.py` |
+| Normal/headless startup and click-only native dialogs | `src/clawshot/ui/__main__.py`, `dialogs.py` |
+| Tabs, rows, cards, key handling and contextual descriptions | `src/clawshot/ui/static/app.js`, `index.html` |
+| All palette/type tokens and layout rules | `src/clawshot/ui/static/style.css` |
+
+### Add a setting
+
+1. Add its real generator behavior/default/CS1 handling in the generator's conventions first.
+2. Add a matching table in app `settings.toml`: `label`, `kind`, `group`, `help`; choices need
+   both `labels` and `choice_help` entries. Bounds belong on integer fields. Schema generation
+   refuses missing/stale fields, labels or choice help; never add a second JS setting list.
+3. Use `unavailable` for a genuinely held choice, with a plain-language reason. It is also refused
+   by validation. Use `enabled_when` for a setting that currently has no effect: a list of
+   `{key, contains|equals|greater_than, reason}` conditions, all required. Inactive values are
+   preserved; they are not silently reset or removed from CS1.
+4. Group/display options are presentation metadata. Multi-choice cards can supply `status_labels`;
+   fast start uses Skipped/Plays. `clears` identifies derived override keys to clear when a control
+   changes, rather than hard-coding a field dependency in JavaScript.
+5. Run the synthetic app/HTTP tests, then exercise the actual UI and any changed generator path.
+   Keep seeds/game files outside the repository. Follow the project's full gates and in-game
+   evidence rules for changes to gameplay.
+
+### Restyle or change fonts
+
+All colors live in the `:root` block of `style.css`. The two font variables are `--serif`
+(titles/tabs/section headings/panel titles) and `--sans` (rows/values/body/hints). Change those
+stacks there; do not put font families on individual controls. Check row heights, long paths,
+disabled controls, keyboard focus, and 1280×860 idle/running/finished captures afterwards.
+The approved stacks prefer Palatino and Candara with platform fallbacks (decisions D36/D37).
+A future bundled font is a **licence decision for the maintainers**, not an automatic OFL addition:
+rule 7's accepted dependency licences do not currently list OFL. No font file is bundled today.
+
+## Verification and limits
+
+`tests/test_app.py`, `test_app_schema.py` and `test_ui.py` use invented worlds/resources. The HTTP
+suite exercises real generation/writing, held-worker responsiveness, cancellation, error text,
+publication races, security and spoiler consent. Its enabled-Browse case injects a synthetic
+chooser instead of opening a dialog: validation and filesystem non-mutation are tested; native
+window rendering is not. Headless screenshots must run the server with `--no-open`, use a fresh
+browser profile, and never trigger an OS dialog/window. Keep screenshots outside the repository.
+
+This is the complete contributor UI base, not a desktop distribution. Not implemented:
+- gamepad/Steam Deck controller navigation (keyboard/mouse only);
+- one-click game launch, mod installation or save management;
+- a bundled executable/installer, persistent user configuration, or bundled fonts;
+- native-dialog visual acceptance or Linux/macOS runtime certification by this round's agent.
+
+Seed packs still use Make/Play; the UI is run from the source checkout or an installed Python
+package containing its static assets. Architecture and the local HTTP contract: [UI plan](../plans/05-ui.md).
