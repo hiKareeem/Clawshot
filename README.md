@@ -37,9 +37,10 @@ that proves the model, not that every route has been verified in the game.
 | Hints and convenience options | Gossip Stones speak hints without the Mask of Truth by default; this, fast start, the forest option that opens only the exit bridge (`--forest closed_deku`) and 10-rupee Kokiri prices have in-game evidence. |
 | Free time travel | Experimental, off by default. Early adult return, the Prelude scene and the corrected first adult arrival have passed in-game checks. |
 
-**Implemented, not yet accepted in game:** deterministic first/second Bombchu Bowling prizes and
-the child shooting-gallery prize are enabled with gift shuffle but await their player checks; the
-adult gallery prize passed its check.
+**Confirmed with Gift shuffle:** the first two Bombchu Bowling wins and both normal
+shooting-gallery prizes give the seed's rewards (`R10-MINIGAMES-CHILD-JABU`,
+`R10-MINIGAMES-ADULT`). Later wins give the game's usual rupees. The first expert gallery
+wins are the only minigame checks not shuffled yet; their tests have not run.
 
 **New with Gift shuffle:** the child Market Potion Shop bottle tutorial and Dampé's graveyard
 digging prize now give shuffled rewards. Both passed their in-game checks on 2026-11-10

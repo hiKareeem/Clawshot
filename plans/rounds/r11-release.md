@@ -126,3 +126,22 @@ releases its own directory in finally immediately at subprocess completion, incl
 All pytest workers are 1. Synthetic gates unset both dump variables; every dump invocation
 sets both actual read-only sources. Gate temporary files stay inside this track's scratch.
 Final results remain pending; implementation/test sources are frozen.
+
+## Follow-up: accepted child minigames (Claude's priority steer)
+
+Before touching documents, inspected the own queued job: only 39 one-minute gate-wait
+notices, no lock acquisition or started sweep/gate. Cancelled that still-queued own wrapper
+to prevent a documentation-edit/gate race; Claude's lock remained untouched. No own full
+gate was running during these edits, and no executed check is repeated by rescheduling.
+
+Appended the supplied R10-MINIGAMES-CHILD-JABU row verbatim as the last answer row.
+README/settings/Discord now accept both bowling prizes and both normal galleries, citing
+that row and R10-MINIGAMES-ADULT; only first-expert minigame checks remain unshuffled/untested.
+Pack instructions say the alley still shows its original prizes but gives the seed's.
+Updated only this track's new section-40 summary to avoid contradicting the fresh answer.
+No patch, settings, pool, held expert/merchant/House check or played output changed.
+
+Verification: supplied row equals the last table row exactly and occurs once; **passed**.
+`CLAWSHOT_WORKERS=1 uv run pytest tests/test_pack.py -q`: **13 passed, 0.29s**.
+Requeue the same ordered sweep/four-gate command only after this docs commit; no full own
+gate has run yet. The complete dump gate still includes both `OOT_ROMFS` and `OOT_NUP`.

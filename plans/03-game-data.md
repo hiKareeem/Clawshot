@@ -2780,8 +2780,10 @@ Gift, section 40's free child bottle/access model remains. Existing names/direct
 random/item/Way of the Hero hints cover both locations.
 
 Expert galleries, merchant experiments and unreleased Skulltula House rewards stay held.
-Normal adult gallery has only the reported first-win acceptance (R10-MINIGAMES-ADULT);
-bowling/child gallery remain enabled but pending R10-MINIGAMES-CHILD. No other release.
+Kareem subsequently confirmed the two bowling prizes (Storms, Epona, then red-rupee filler)
+and child gallery (Echo Gem, then red rupee), R10-MINIGAMES-CHILD-JABU; together with
+R10-MINIGAMES-ADULT this accepts both normal galleries. Bowling still advertises its
+original prize. Save and Continue between wins was not reported. Experts remain untested.
 
 ## 41. Round 10: age travel and Door of Time (cs10b)
 

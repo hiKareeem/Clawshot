@@ -136,9 +136,10 @@ What has in-game evidence:
   is off by default; early return, Prelude
   and the corrected first adult arrival have passed checks.
 
-Enabled but still awaiting dedicated in-game checks: deterministic bowling prizes and the child
-shooting-gallery prize (the adult one passed). Four kinds of one-time Deku Scrub sale are enabled; not every shuffled
-sale has recorded acceptance.
+The two Bombchu Bowling prizes and both normal shooting-gallery prizes are confirmed in game
+(`R10-MINIGAMES-CHILD-JABU`, `R10-MINIGAMES-ADULT`). The first expert gallery wins are the only
+minigame checks not shuffled yet; their tests have not run. Four kinds of one-time Deku Scrub
+sale are enabled; not every shuffled sale has recorded acceptance.
 
 With Gift shuffle, the child Market Potion Shop bottle tutorial and Dampé's graveyard digging
 prize now give shuffled rewards. Both passed their in-game checks on 2026-11-10

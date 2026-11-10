@@ -51,11 +51,11 @@ Major items on the floor can crash. Heart Containers from chests have no recorde
 ### Gifts: enabled versus held
 
 `Gift` includes five frog song prizes contributing **Rupees (20)** each, the Storms prize and the
-bug game. All seven passed the frog experiment. It also includes two deterministic Bombchu Bowling
-prizes (first win, second win, then native filler) and the normal child/adult shooting-gallery
-upgrades. The adult gallery prize passed its in-game check (R10-MINIGAMES-ADULT); the bowling
-prizes and the child gallery prize are implementation-tested and their in-game checks are still
-pending. Rental weapons do not become inventory rewards.
+bug game. All seven passed the frog experiment. The two deterministic Bombchu Bowling
+prizes (first win, second win, then the usual rupees) and both normal shooting-gallery prizes
+are confirmed in game (`R10-MINIGAMES-CHILD-JABU`, `R10-MINIGAMES-ADULT`).
+Rental weapons do not become inventory rewards. The first expert gallery wins are the only
+minigame checks not shuffled yet; their tests have not run.
 
 With `Gift` selected, the child Market Potion Shop bottle tutorial and Dampé's graveyard
 digging prize give shuffled rewards. Both passed their in-game checks on 2026-11-10

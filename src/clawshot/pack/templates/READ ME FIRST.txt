@@ -56,7 +56,8 @@ KNOWN ISSUES
 - The Weird Egg and Zelda's Letter are not shuffled (the remake keeps them in one
   inventory slot).
 - Bombchu Bowling: your first two wins give the seed's two prizes; later wins
-  give the game's usual small prizes.
+  give the game's usual small prizes. The alley still shows its original prizes;
+  you get the seed's.
 - With Gift shuffle, the child Market Potion Shop bottle tutorial and Dampe's
   graveyard digging prize give shuffled rewards. Both passed their in-game checks
   (R10-MARKET-BOTTLE-FIX, R10-DIGGING). The shop gift skips the bug-catching lesson;
