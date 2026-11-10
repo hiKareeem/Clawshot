@@ -269,3 +269,218 @@ cannot answer those native engine questions. Only after those results and review
 future seed checks use remake names/actual region rules; no N64 ordinal links are forced.
 The full four-command gate evidence and final commit IDs follow once the serial locked
 run completes. No commit has been posted ready based only on the artifact smoke.
+
+### Gate runner diagnosis
+
+The first runner launch (`bash E:/.../gates.sh`) failed127 **before running a gate or
+acquiring the lock**. Printed `command -v bash` resolves to `C:\WINDOWS\system32/bash.exe`
+(WSL), whose `/bin/bash` cannot open this native Windows path. The external script
+exists and was read back. The cause-specific invocation explicitly uses
+`"C:/Program Files/Git/bin/bash.exe" E:/OOTRemake/work/r10-pots-cs10d/gates.sh`.
+Its native uv/pytest arguments retain Windows paths. No unchanged failed command is
+rerun, no gate result is inferred from that wrapper failure, and no lock was removed
+without ownership. The runner traps EXIT to release only the lock it successfully took.
+
+## Kareem's first results (Claude relay, this conversation)
+
+Ground experiment `rupee-kokiri-piece-next` **granted its Piece of Heart, no problem**;
+`rupee-field-hylian-next` **granted its Hylian Shield, no problem**. The supply-pot
+experiment **dropped its Piece of Heart**. These are accepted gameplay observations,
+not agent reruns. The hidden Forest pot was **not run**.
+
+**Supply-pot Run1 return result (further Claude relay):** this save's forest exit was
+closed, so Kareem crossed the separate loading screen into Lost Woods and returned,
+instead of leaving Kokiri Forest by its field exit. The broken target pot **did not
+respawn**, so it awarded no second piece on that route. **Save and Continue was not
+tried.** This is a specific loaded-area round trip, not proof of permanent completion
+or behavior after a full save reload.
+
+**Concrete thrown-pot hazard:** in the supply-pot uncollected run, Kareem threw the pot
+at a tree; the Piece of Heart remained floating on the trunk, above child Link's reach.
+Kareem confirms it was **unreachable and lost** in the uncollected run. A pot creates its
+item at its **break position**, not necessarily its original placement. Even a collection-
+correct once gate would not make thrown drops safe. Future delivery must be recoverable:
+for example spawn at the pot's **placed position**, with its own reachability checked,
+or grant directly, rather than using the thrown pot's landing/break position. Neither
+alternative is implemented or player-verified by this report.
+
+Claude reports `check_saves.py` found no slot with the target set or a new piece;
+the player probably did not save after collecting. That is **not evidence of a failed
+grant or absent persistence** and is not used to contradict the reported pickups.
+Claude's question about return/repeat steps is answered only by the Lost Woods route
+above; Save/Continue remains open. No negative save conclusion or unreported success is
+invented. Preserve played experiment outputs/users, never rebuild them.
+
+New report-only requests accepted: assess D22 collection-gated pot rewards plus a
+distinct native appearance, and census floor recovery hearts (Saria's house/roof first).
+No switch, save edit, model patch or new gameplay experiment is added by that request.
+
+## Report addition A: collection-gated reward and native marker
+
+**Assessment: the state-machine design is appropriate; a complete data-only connection
+from an individual spawned drop's successful collection to its pot's D22 Bool is not
+established.** Allocating the Bool alone does not provide that connection.
+
+Desired behavior, following Kareem's description of Ship of Harkinian (not a source-code
+port): while this stable pot check's saved Bool is false, show a recognizably marked pot
+and drop its shuffled item. Only successful collection of **that pot's item** sets the
+Bool. Later spawns look/behave natively and use the original drop selector/table. Native
+reset88 destruction remains separate; it must not consume the shuffled check.
+The observed Lost Woods round trip also shows why “leave and break it again” is not
+yet a recovery mechanism: that pot stayed broken. A false shuffled-item Bool must not
+be mistaken for a guarantee that the native pot will already respawn. If a loose reward
+is lost, recovery must account for this independent destruction state as well.
+
+The proven and missing pieces are distinct:
+
+- D22 already demonstrates saved Bool allocation, an older save loading it, and event
+  queries/writes retaining it. A per-check namespace can use the source file and actor
+  Hash, never a positional ordinal. This storage is feasible, not a new feature here.
+- Current pot `Drop__DropActor`/`Drop__DropTable` blackboard values are constant strings,
+  not conditional expressions or named completion-flag selectors. Neither reads a D22
+  Bool. A reviewed per-instance selector/graph would have to choose shuffled versus
+  original drop and native appearance from that Bool.
+- The generated item must carry its **source check identity** through breaking, being
+  thrown, saving/loading and collection. Setting a Bool on pot death is too early;
+  setting it on generic item ownership is wrong if the item came from another check.
+  Patching a shared pickup pack or shared get flow with one constant Bool makes all
+  uses of that actor one global check, not independent pots.
+- Native Heart Piece has `DropActorRespawnData.RespawnGmdHash` (u64, default0,
+  **IsInstanceParam=false**) and `OneShotHeartPieceTakenDeadAfter` (node7, no supplied
+  flag-name input). This is a useful native lead for collection-linked **64-bit** state,
+  not an exposed named-Bool write and not a validated `Dynamic.RespawnGmdHash` channel.
+  The latter would simply be inventing an instance parameter. Ordinary DropItem pickups
+  do not all share the heart-specific callback.
+- A new pickup-specific graph/actor variant might write a per-pot flag after successful
+  pickup; **[INFERENCE]** it needs a validated source-identity binding or safe per-check
+  registered actor variants, native collection-vs-other-death semantics, save/layout/
+  resource sizing and reload tests. None is supplied by the present constant-drop patch.
+  The native engine callback has not been proved unable to support such a future path.
+- Outstanding items need exactly-one recovery: do not spawn a second while the first
+  exists; if an uncollected item disappears or becomes unreachable on a tree, the next
+  visit must recover the same check without awarding it twice. The confirmed lost item
+  requires recoverable delivery (placed-position spawn or direct grant, for example),
+  not merely a completion Bool. A direct grant must set completion only after success;
+  a placed-position item still needs actual collection before setting it.
+
+### Native appearance assets
+
+The native packs resolve **eight different ModelInfo/Fmdb identities**,
+`Obj_Pot_A_01..08`, all in model project `Obj_Pot_A`. All eight ordinary variants use
+the same `Obj_Pot_A_01` PhysicsParam and pot AI, but retain their own ModelInfo and
+fracture/destruction appearance resources. The dump actually contains their eight
+`Model/Obj_Pot_A.Obj_Pot_A_0N.bfres.zs` files and corresponding fracture resources.
+Thus a native variant can be a **candidate** static mark without importing artwork.
+No model was rendered and no exact colour/visual contrast is certified from its name.
+
+An out-of-area variant (for example Forest02 against Kokiri01) is a candidate for
+Kareem's visual comparison, not a globally unique “uncollected” model: the eight variants
+already occur in vanilla areas. Do not replace an entire `_Respawn` Gyaml with an
+ordinary variant merely to recolour it; that can discard the original creation/persistence
+contract. Do not change a shared pot pack globally, which would mark vanilla pots too.
+A per-instance/registered variant retaining the original physics/AI plus the matching
+native visual assets, and a Bool-driven transition back after collection, still needs
+validated wiring and a player check. No such model/actor/graph patch is built this round.
+
+**Recommendation for review:** retain this design as the target, but block a pot seed
+switch on source-bound collection state, native-after-collection behavior, and thrown/
+uncollected recovery. Continue the current repeat/reload experiments before choosing
+an implementation. The floor-heart report below is independent of this pot problem.
+
+## Report addition B: placed recovery hearts, Saria first
+
+**Native contract: these are saved NoRespawn pickups, like ground rupees, not reset88
+supply pots. [INFERENCE] Their collected/dead state should persist rather than replenish
+on area return. Actual floor-heart collection/reload behavior is not yet player-proven.**
+Do not call metadata or an unread/newly unwritten save a gameplay result.
+
+Round8's `all-pickups.json` already inventories these actors; the new read-only
+`work/r10-pots-cs10d/floor_hearts.py` reproduces the current placement/flag/model audit.
+Scope is **placed** `Obj_Heart` and `Obj_Heart_InWater` in non-DreamWorld Banc files,
+not hearts dynamically generated by pots, enemies, grass or drop tables.
+
+| Native area | Ordinary hearts | Water hearts | Physical identities |
+|---|---:|---:|---:|
+| KokiriForest | 14 | 0 | 14 |
+| InsideTheDekuTree | 6 | 3 | 9 |
+| FireTemple | 2 | 0 | 2 |
+| Total | 22 | 3 | 25 |
+
+All25 have a placement-Hash `Bool64bitKey` with **ResetTypeValue24, SaveFileIndex0**.
+Both heart actors inherit `NoRespawn` and ordinary `DropItem.root`, not the pot supply
+AI and not Heart Piece's special `OneShotHeartPieceTakenDeadAfter` callback. Round8's
+warning still applies: replacement actors, underwater physics and collection/reload
+must be demonstrated, not certified by finding a flag alone.
+
+### Saria's house: separate child and adult identities
+
+Four ordinary hearts around **(-10,111.8,17.8)** form the house-floor cluster; three
+around **(-10,117.6,17)** form the roof cluster directly above. They occur in both
+`Banc/KokiriForest/KokiriForest_Child_Dynamic.bcett.byml.zs` and
+`Banc/KokiriForest/KokiriForest_Adult_Dynamic.bcett.byml.zs`, with **different Hashes
+and flags**. That is14 physical/saved identities at seven near-matching positions,
+not seven shared-age flag entries. No arbitrary list-index join is made.
+
+| Remake cluster / approximate x,z | Child Hash | Adult Hash |
+|---|---|---|
+| House / -10.08,18.83 | 8217415107461137996 | 11501932305561522817 |
+| House / -11.07,17.77 | 3211747475593407179 | 4751294038826612236 |
+| House / -9.95,16.74 | 9333984718219537434 | 13752432406165881016 |
+| House / -9.00,17.87 | 13766700305743331316 | 16890252572970412506 |
+| Roof / -9.12,17.64 | 9778104484775444655 | 12317452644253046635 |
+| Roof / -10.04,15.87 | 1135865174486388723 | 1214219023609128151 |
+| Roof / -11.31,17.48 | 12744945159394614918 | 15227875255265438204 |
+
+The MIT port data has exactly four `KF Sarias House Recovery Heart` rows
+(`world/kokiri_forest.toml:124-127`) and three `KF Top of Sarias Recovery Heart` rows
+(`:209-211`). The **cluster counts agree for each age**. It does not prove which
+geometric actor is N64's ordinal1/2/3/4, or that collecting in one age retires the other
+age's identity. These are reference-level correspondences, not an exact shuffle mapping.
+No logic rule or location row is added; later integration still uses remake names and
+the actual region's access rule, with any age-family product decision reviewed.
+
+**Kareem, if testing floor-heart persistence:** use an isolated disposable save with a
+known uncollected house/roof heart, take damage so the heart can actually be consumed,
+collect it, cross the Lost Woods loading screen and return; then Save and Continue,
+and return again. Record which heart returns/disappears and the age. A saved check can
+be corroborated by its exact table Hash only after confirming a save was written.
+Repeat for the roof and, separately, adult identity if available. No heart experiment
+or shuffle switch has been built by this report-only request.
+
+## Final verification and handoff
+
+The serialized gate runner finished successfully with `CLAWSHOT_WORKERS=1`, having
+acquired the shared gate lock and released it via its EXIT trap:
+
+| Command | Observed result |
+|---|---|
+| `uv run ruff format --check` | 239 files already formatted; exit0 |
+| `uv run ruff check` | All checks passed; exit0 |
+| `uv run pytest --basetemp E:/OOTRemake/work/r10-pots-cs10d/gate-synthetic-next` | 761 passed,89 skipped;1257.40s; exit0 |
+| `OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump --basetemp E:/OOTRemake/work/r10-pots-cs10d/gate-dump-next` | 88 passed,762 deselected;826.97s; exit0 |
+
+Runner emitted `ALL_GATES_EXIT=0`. The full logs remain outside the repo as
+`work/r10-pots-cs10d/gate-{format,lint,synthetic,dump}.log`.
+
+After the gate process ended, a single read-only runtime audit,
+`uv run python E:/OOTRemake/work/r10-pots-cs10d/floor_hearts.py`, completed in2.16s
+with `READ_ONLY_CENSUS_PASS`:25 identities/25 placements, all reset24/file0;
+22 ordinary and3 water hearts; area counts2/9/14; both native NoRespawn/DropItem
+contracts; zero AiGroup references for the14 Kokiri hearts; all eight referenced native
+pot model resource files exist. The current scan also places both heart clusters at
+the native `Land_Kokiri_House_{Inside,Outside}_B` house anchor
+(-10.241,111.732,18.278), consistent across the two age Bancs.
+Its detailed output is `work/r10-pots-cs10d/floor-heart-report.json`, outside the repo.
+It neither reads played saves nor rewrites overlays/users; this is metadata/runtime
+readback proof, not player collection/reload or rendered-model proof.
+
+Reviewed deliverable is the census, native-contract report, four independently verified
+isolated overlays/six launchers and player checklist, plus the additions above. No
+Pot/Rupee/RecoveryHeart switch, production location/logic integration, named pot Bool,
+new pickup callback or model replacement ships. No experiment is rebuilt after play.
+
+**Player evidence still open:** supply-pot Save/Continue, the hidden Forest pot,
+ground-rupee return/reload outcomes, and floor-heart collection/reload. A native visual
+mark also needs an actual contrast check. The observed Lost Woods no-respawn and
+confirmed thrown-item loss are already recorded, not rerun or discounted from saves.
+These limitations block any claim of safe pot seed support, not this exploration handoff.
