@@ -270,7 +270,21 @@ experiment researchers/builders/verifiers remain outside the repository.
 Ready for review of the isolated commits in the ledger plus this final evidence
 commit; no push or merge. No game executable or launcher was started by this track.
 The four current mods/profiles and superseded launcher remain untouched.
-**Kareem's remaining acceptance is in-game play of the three generic attribution
-experiments and the fixed named-Forest prototype, using their exact checklists.**
-Until that evidence exists, named-dungeon attribution/caches/door consumption remain
-**[INFERENCE]**, not working keysanity; production anywhere generation stays refused.
+The acceptance requests above are historical: Kareem's subsequent results are now in
+section44's **In game** table and the six `R11-KEY-*` rows in `playtest/answers.md`.
+Named Forest overworld grants and native spending passed; the redirected big-chest entry
+failed before opening. Production anywhere generation remains refused.
+
+## Results publication after merge (`r11/keys-results`)
+
+Claude merged the old `r11/keys` work and gift release into main, then authorized this new
+docs-only branch. Recorded all six cases from the external `work/rounds/r11/keys-results.md`,
+including exact player quotations/save values, the failed named big-chest case and the
+current-dungeon standing map display. Section44 and the keysanity candidate distinguish
+played plain-key/door evidence from remaining anywhere requirements. The Tracker candidate
+uses kind-specific opened state and D38's seed-owned-save UI tab; the earlier roadmap
+request is resolved. `README.md`, source/tests and `decisions.md` were not touched.
+
+No format/lint/pytest rerun for this docs-only update, per Claude. His merged-main review
+results (846 passed/110 skipped; dump109 passed with nup tests) are reviewer-reported,
+not new runs by this track. Static diagnosis and later experiment work remain external.

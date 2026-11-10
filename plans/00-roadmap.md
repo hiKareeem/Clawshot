@@ -912,14 +912,16 @@ Round 10 candidates (seed 8 play, Kareem 2026-11-09):
   has not played, or after Forest completion until the Prelude), check flags the skipped dialogue sets, and retest
   from an older child autosave; the pedestal may stay blocked until he leaves after that first scene.
 
-Later-round candidate (Kareem, 2026-11-09, seed 8: "we need a check/item tracker"): a check and item tracker. The
-save already records collected checks and owned items (`src/clawshot/save.py`), by kind of check: an opened chest
-is the named flag `IsTreasureBoxOpen.<Hash>`, loose pickups (ground rupees, floor hearts, boss hearts) are in the
-Bool64bitKey list of actor Hashes, gifts have their own event flags (section 44, round 11; reading a chest from the
-raw list gave false "unopened" results). So a local page can read the seed's spoiler and the newest autosave and
-show collected checks by area, items owned,
-and how many checks are in logic now, without naming unfound items. Updates at each autosave. Optional export of a
-PopTracker/EmoTracker-style pack later.
+Later-round candidate (Kareem, 2026-11-09, seed8: "we need a check/item tracker"): **D38 makes
+this a Tracker tab of the UI**, reading the **seed's own save folder**, not an independent page
+watching the player's main autosave. Resolve collected state by actor/check kind: chests use
+named `IsTreasureBoxOpen.<Hash>` Bools; ordinary loose pickups use their saved placement-Hash
+Bool64 state; gifts and scripted actors use their audited event/state flags (section44).
+A universal raw-Hash test falsely labels opened chests unclaimed. Read the seed's spoiler and
+save to show checks by area, owned items and remaining keys per dungeon (its first job), and
+checks currently in logic without naming unfound items. Update on saves; PopTracker/EmoTracker
+export remains a later option. D38 and section44 distinguish this from the native current-
+dungeon-only map/key display.
 
 ### Settings backlog (Ship of Harkinian's lists, shown by Kareem 2026-11-09)
 
@@ -1116,12 +1118,18 @@ skipped, dump 109 (with `OOT_NUP`).
   location IDs; an Archipelago port also needs a client that delivers items during play, which a RomFS mod cannot
   do), another randomizer author's name removed from this file. Then Kareem flips visibility; `main` protected;
   Greenferret added when he returns.
-- Keysanity (Kareem asked, 2026-11-10). `--dungeon-items anywhere` exists in the fill and the settings string but has
-  never run in game, and the remake has one small-key actor and one boss-key actor for every dungeon
-  (`Item_Dungeon_SmallKey`, `Item_Dungeon_BossKey`). [INFERENCE] a key counts for the dungeon Link stands in, so a
-  key outside its own dungeon would be credited wrongly or lost. Exploration: an in-game test (a small key in a
-  Kokiri Forest chest and one in a Deku Tree chest: which count moves), a trace of where key counts are saved and
-  whether an event can add to a named dungeon's count; until proven, `anywhere` should refuse to build.
+- Keysanity (Kareem, 2026-11-10; section44 and R11-KEY-* answers). Played: a generic key
+  outside a dungeon is lost; in keyless Deku or keyed Fire it credits that dungeon, including
+  a native big chest and persistence on reload. The default own-dungeon mode therefore has
+  plain-key evidence for both chest sizes. Named Forest writes from child/adult overworld
+  small chests persist and open a native Forest lock; the later native key still counts.
+  The named big-chest redirect in Deku **failed before opening**, not a generic-big-key failure.
+  `--dungeon-items anywhere` remains refused by CLI/seed pipeline; settings/fill retain it.
+  It still needs **(1)** a working named big-chest path plus the cross-dungeon pickup test,
+  **(2)** pickup text identifying the target (English in every language, English dungeon names
+  read from the dump at generation, never shipped), **(3)** the D38 Tracker tab reading the
+  seed's own save. Arbitrary source binding and other named dungeon-item families remain
+  outside these small-key proofs; no production keysanity release is claimed.
 - A fresh public seed pack from merged main (seed 10's zip predates round 10; `.nup` support needs a new pack).
 
 ## Round 11 (going public; Hookshot 2.0.12+ loading; keysanity exploration; a UI base)

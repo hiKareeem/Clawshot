@@ -2971,10 +2971,12 @@ remaining only, with an underflow check. Boss/map/compass handlers set the compo
 `DoorChainLock.root` reads its remaining count and spends through the same native access path;
 durable door-open state is independently indexed by controller identity in `IsChainLockDoorOpen`.
 
-**[INFERENCE]** Generic grants credit the loaded dungeon, not the intended logic item.
-An overworld grant's exact result (lost, retained earlier target, or another behavior) is
-not established by static tracing. Controlled player experiments are required; neither the
-fill's `anywhere` option nor a saved-flag prototype proves keysanity works in game.
+**Played small-key attribution (Kareem, 2026-11-10):** a generic overworld key is lost;
+inside keyless Deku or keyed Fire it credits the standing dungeon. Named Forest writes from
+child/adult overworld small chests reach Forest, and the native Forest lock spends that key.
+The named big-chest redirect failed before opening; neither these experiments nor the fill's
+`anywhere` option establish production-wide keysanity. Boss/map/compass handler targeting
+remains static evidence, not acceptance of those shuffled named items.
 
 ### Collection-state correction and historical test audit
 
@@ -3009,20 +3011,47 @@ and `r8-getitem.md:88–113` use new games, not an old raw-Hash source selection
 raw-entry counts in `r1-research`, `r2-census` and `r8-freestanding` do **not** establish
 unopened chests. No other unopened-chest raw-Hash save premise was found in the round-file audit.
 
+### In game (Kareem via Claude, 2026-11-10)
+
+Exact player quotations, save slots and backup/log references are recorded as
+R11-KEY-OVERWORLD, R11-KEY-NAMED-FOREST, R11-KEY-KEYLESS, R11-KEY-DOOR,
+R11-KEY-FIRE and R11-KEY-NAMED-BIGCHEST in `playtest/answers.md`.
+Counts below are remaining/acquired-total; first-key means `IsGetSmallKeyOnce`.
+
+| Case | Observed result / saved state | Evidence |
+|---|---|---|
+| Plain key, overworld small chest | Chest open; remaining/total/first-key unchanged in all14 dungeons: key lost. | Mido,12:35/12:36; R11-KEY-OVERWORLD |
+| Plain key, keyless dungeon big chest | Deku0/0/false→1/1/true; map false, all13 other dungeons unchanged. No indicator popup. | Deku map chest,13:10/13:11; R11-KEY-KEYLESS |
+| Plain key, keyed dungeon non-key big chest | Fire0/7→1/8; chest open; all13 other dungeons unchanged. Both map displays increment; persists after reload. | Hammer chest,14:16/14:17; R11-KEY-FIRE |
+| Named key, overworld small chest (child/adult) | Child Forest0/0/false→1/1/true; adult likewise1/1/true after Goron chest. Generic text does not identify Forest. | Mido12:41 and Goron13:29; R11-KEY-NAMED-FOREST / DOOR |
+| Named key used on native door | Forest1/1 after Goron;1/2 after the door and native tree key: one spent, native key subsequently counted; only Forest changed across14. | Door opened,13:27–13:33; R11-KEY-DOOR |
+| Named key, big chest inside another dungeon | **Failed:** prompt appears but chest does not open; no grant. Source Forest/Deku0/0/false, map false; no post-pickup attribution result. | Rewired Deku row/cloned big entry,14:02–14:04; R11-KEY-NAMED-BIGCHEST |
+
+**Display correction:** Kareem's own Fire game with the map and2 keys showed
+"Map only shows Fire Temple, can't switch, 2 Small Keys shown next to the map screen and by
+the map on the game UI." Keys have a **standing current-dungeon display**, beside both
+the on-screen map and pause map; no other-dungeon selector. The door run had no Forest map.
+The earlier pickup-only interpretation is withdrawn; **[INFERENCE]** map ownership gates
+the display, not separately tested. Per-dungeon counts belong in the UI's Tracker tab,
+reading the **seed's own save** (D38), not a new in-game roster.
+
 ### Experiments and seed-output boundary
 
-Three isolated generic-small-key outputs (Kokiri, keyless Deku, Fire) and one named Forest
-small-key prototype are built outside the repository; exact source slots, launchers,
-permitted cheats, mod-log proof and pending player observations are in `r11-keys.md`.
-The named prototype changes only an experimental Mido-wrapper grant path, credits the
-existing Forest remaining/total/first-key leaves, and is **not registered in generation**.
-It does not establish arbitrary source binding, boss keys, maps, compasses or native lock
-consumption. All gameplay acceptance remains pending.
+Own-dungeon plain-key attribution now has played evidence for both chest sizes, including
+a keyed dungeon/reload. The named prototype credits the existing Forest leaves and is
+spendable, but is **not registered in generation**. The failed big-chest binding does not
+show that generic big chests cannot grant keys: Deku and Fire are positive controls.
+Its entry lookup, native preload, cloned topology and allocation check out statically;
+**[INFERENCE, medium confidence]** bypassing native player participation/EventTransition
+caused startup rejection; the exact guard is unknown. No data-only pass is gameplay proof.
 
-`patch.check_dungeon_items` now refuses `dungeon_items="anywhere"` before dump access in
-both the public CLI and `patch.make_seed`, explaining that generic actors carry no target
-and named grants lack in-game acceptance. `Settings`, CS1 encoding/printing and the pure
-fill's synthetic anywhere mode remain intact; own-dungeon generation is unchanged.
+`anywhere` still needs **(1)** a working named big-chest path and the cross-dungeon pickup
+test, **(2)** pickup text naming the target dungeon (English in every language; native
+English dungeon names read from the dump at generation, never shipped), **(3)** the Tracker.
+Arbitrary per-source binding and other named dungeon-item families are not certified here.
+`patch.check_dungeon_items` still refuses `dungeon_items="anywhere"` before dump access in
+both CLI and `patch.make_seed`; its existing explanatory message is unchanged by this
+docs-only results update. Settings/CS1 and pure fill's synthetic anywhere mode remain intact.
 
 ## 45. Round 11: Hookshot 2.0.12+ seed loading and text icons (cs11c)
 
