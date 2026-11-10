@@ -2,13 +2,17 @@
 
 import http.client
 import json
+import multiprocessing
 from contextlib import contextmanager
+from functools import partial
 from pathlib import Path
 
 import pytest
-from test_app import synthetic_run, synthetic_spec
+from test_app import app_source as app_source
+from test_app import synthetic_run, synthetic_spec, wait_job
 
 from clawshot.app import Jobs
+from clawshot.generate import FillError, Settings, generate
 from clawshot.ui.server import Application, LocalServer, serve_in_thread
 
 
@@ -158,3 +162,101 @@ def test_normalized_paths_and_protected_outputs_refuse_without_staging(tmp_path)
         )
         assert request(server, "job")[2]["status"] == "idle"
         assert not list(source.iterdir()) and not list(tmp_path.glob(".clawshot-job-*"))
+
+
+def held_generation(release, job, stage, report):
+    report("validate")
+    if not release.wait(10):
+        raise RuntimeError("synthetic generation was not released")
+    return synthetic_run(job, stage, report)
+
+
+def test_http_generation_stays_responsive_and_spoiler_needs_consent(app_source, tmp_path):
+    release = multiprocessing.get_context("spawn").Event()
+    app = Application(Jobs(partial(held_generation, release)), spec=synthetic_spec())
+    output = tmp_path / "made"
+    with running_server(app) as server:
+        status, _, settings = request(server, "settings", {"values": {"forest": "open"}})
+        assert status == 200
+        restored = request(server, "settings", {"settings_string": settings["settings_string"]})[2]
+        assert restored["values"] == settings["values"]
+        body = {"dump": str(app_source), "output": str(output), "seed": 7, "settings": settings["settings_string"]}
+        assert request(server, "generate", body)[0] == 200
+        assert request(server, "job")[2]["status"] == "running"
+        assert request(server, "schema")[0] == 200  # blocked worker cannot block the UI server
+        assert not output.exists()
+        release.set()
+        state = wait_job(app.jobs)
+        assert state["status"] == "succeeded", state
+        assert request(server, "job")[2]["result"]["output"] == str(output)
+        assert request(server, "result", {"file": "spoiler"})[0] == 400
+        status, _, document = request(server, "result", {"file": "spoiler", "confirmed": True})
+        assert status == 200
+        spoiler = json.loads(document["text"])
+        assert spoiler["seed"] == 7
+        assert sorted(spoiler["placements"].values()) == ["Rupees (5)", "Sword"]
+        assert any("Sword" in sphere.values() for sphere in spoiler["spheres"])
+        assert request(server, "result", {"file": "../source"})[0] == 400
+        before = {p: (p.read_bytes(), p.stat().st_mtime_ns) for p in output.rglob("*") if p.is_file()}
+        assert request(server, "generate", body)[0] == 400
+        assert before == {p: (p.read_bytes(), p.stat().st_mtime_ns) for p in output.rglob("*") if p.is_file()}
+
+
+def test_http_cancellation_removes_only_its_private_staging(app_source, tmp_path):
+    release = multiprocessing.get_context("spawn").Event()
+    app = Application(Jobs(partial(held_generation, release)), spec=synthetic_spec())
+    output = tmp_path / "cancelled"
+    with running_server(app) as server:
+        assert (
+            request(server, "generate", {"dump": str(app_source), "output": str(output), "seed": 7, "settings": "CS1"})[
+                0
+            ]
+            == 200
+        )
+        assert request(server, "job")[2]["status"] == "running"
+        assert request(server, "cancel", {})[0] == 200
+        assert wait_job(app.jobs)["status"] == "cancelled"
+        assert request(server, "result", {"file": "spoiler", "confirmed": True})[0] == 400
+        assert not output.exists() and not list(tmp_path.glob(".clawshot-job-*"))
+        assert (app_source / "Pack/ZsDic.pack.zs").is_file()
+
+
+def test_http_failed_fill_keeps_original_error_and_writes_nothing(app_source, tmp_path):
+    impossible = synthetic_spec()
+    impossible["goal"] = "False"
+    with pytest.raises(FillError) as expected:
+        generate(impossible, -1, Settings())
+    output = tmp_path / "impossible"
+    with running_server() as server:
+        assert (
+            request(
+                server, "generate", {"dump": str(app_source), "output": str(output), "seed": -1, "settings": "CS1"}
+            )[0]
+            == 200
+        )
+        state = wait_job(server.app.jobs)
+        assert state["status"] == "failed", state
+        assert state["error"] == {"type": "FillError", "message": str(expected.value)}
+        assert not output.exists() and not list(tmp_path.glob(".clawshot-job-*"))
+
+
+def test_concurrent_output_creation_is_not_overwritten_or_cleaned(app_source, tmp_path):
+    release = multiprocessing.get_context("spawn").Event()
+    app = Application(Jobs(partial(held_generation, release)), spec=synthetic_spec())
+    output = tmp_path / "concurrent"
+    with running_server(app) as server:
+        assert (
+            request(server, "generate", {"dump": str(app_source), "output": str(output), "seed": 7, "settings": "CS1"})[
+                0
+            ]
+            == 200
+        )
+        output.mkdir()
+        marker = output / "played"
+        marker.write_bytes(b"created by another owner")
+        release.set()
+        state = wait_job(app.jobs)
+        assert state["status"] == "failed" and state["result"] is None, state
+        assert marker.read_bytes() == b"created by another owner"
+        assert sorted(p.name for p in output.iterdir()) == ["played"]
+        assert not list(tmp_path.glob(".clawshot-job-*"))
