@@ -39,3 +39,17 @@ backslash Windows path. Inspected `C:/Users/hi/go/bin/bermuda.exe`, then used th
 successfully with only `thread post`. No other Bermuda command or agent-terminal command used.
 
 Item commits are checkpoints, not ready claims; the four full gates remain required at handoff.
+
+## Priority integration repair: NUP matrix after the keys guard
+
+Claude approved this separate commit while item 2 waits for his loader-review gate lock.
+The inherited `songs-prices` cache row requested `dungeon_items="anywhere"` even though the
+keys guard now rejects that output before reading the dump. Removed only that override:
+own-dungeon still exercises exactly the same resource inputs, songs, prices and full output
+comparison. Settings/fill keysanity and its refusal tests are unchanged.
+
+Claude explained the missed integration: the keys-track dump gate lacked `OOT_NUP`, skipping
+this matrix. Every dump run here sets both `OOT_ROMFS` and `OOT_NUP`; the actual read-only NUP
+listed in `E:/Games/Hookshot/` is `The Legend of Zelda Ocarina of TIme [04004860224DEC000].nup`.
+No NUP test skip is acceptable for the handoff. Claude will review/gate/merge keys and release
+together at this branch's handoff head; base unchanged, no rebase.

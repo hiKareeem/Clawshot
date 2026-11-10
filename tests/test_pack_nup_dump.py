@@ -38,7 +38,6 @@ def resource_modes():
             shop_slots=3,
             scrub_prices="fixed",
             scrub_price=201,
-            dungeon_items="anywhere",
         ),
     )
     yield "mask-no-skips", replace(all_kinds, hints="mask", fast_start=(), cheap_deku_shield=False, shop_slots=0)
