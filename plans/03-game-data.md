@@ -196,12 +196,16 @@ gives Din's Fire [inference, needs an in-game look].
 to an entry. `MetaData` names the save files (`slot_%02d/progress.sav`, `option.sav`, `slot_%02d/caption.sav`,
 `account.sav`).
 
-- **Placement checks are keyed by the actor `Hash`.** `Bool64bitKey` entries use a 64-bit key; 3686 of them equal
+- **Placement flag entries (metadata, not a universal collection oracle).** `Bool64bitKey` entries use a 64-bit key; 3686 of them equal
   a Banc actor `Hash`, including all 194 chests and 6 trap chests, all 100 Gold Skulltulas, all 13
   `Obj_Heart_Piece`, all 85 silver rupees and all 51 business scrubs. Checks use `ResetTypeValue` 24 (permanent);
   pots, rocks and grass use 88 plus an `ExtraByte`; scrubs 280. The other 7971 keys match no Banc `Hash` (1308 of
-  them sit at ±2 from one); their source is open. So a chest's opened flag is its `Hash`, and changing only
-  `Drop__DropActor` keeps it. A chest at a new `Hash` would need a new `GameDataList` entry [inference].
+  them sit at ±2 from one); their source is open.
+  **Superseded in round11 (cs11b; section44):** ~~So a chest's opened flag is its `Hash`, and changing only
+  `Drop__DropActor` keeps it. A chest at a new `Hash` would need a new `GameDataList` entry [inference].~~
+  Ordinary chests instead read the named Struct Bool `IsTreasureBoxOpen.<decimal actor Hash>`.
+  A raw Bool64 entry's existence does not establish that a check uses it; section44 distinguishes
+  audited pickup/actor contracts and lists earlier chest-save checks needing re-verification.
 - **Event checks** have `HavePlayedEvent.<EventSetting row>`: all 2380 rows have such a `Bool`. Flows also gate
   repeats on their own named flags (`..._GetReward10`, `GreatFairy_AlreadyAppeared`, `HeartPieceAnchor_GameDataPath`
   values).
