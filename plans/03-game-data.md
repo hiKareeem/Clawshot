@@ -2759,6 +2759,56 @@ native IsValid bits show exactlyone bottle both before/after, no extra bottle or
 New `market-bottle-fix-next` and fresh isolated profile only; old output/evidence untouched.
 Shuffle remains held until re-entry/talk/Save-Continue succeeds (round file/checklist).
 
+## 41. Round 10: age travel and Door of Time (cs10b)
+
+Build `e0f3ccfa`; native read-only probes and exact evidence: `plans/rounds/r10-agetravel.md`,
+`E:/OOTRemake/work/r10-agetravel-cs10b/`. Kareem confirmed round9's pre-Forest return and
+post-Forest Prelude, but reported a missing Sheik in the first adult arrival (answers R9-FIRST-PULL).
+
+First arrival runs `Dm_TimeTemple_0050` **then** `Dm_TimeTemple_0055` (AllSage Event9/Event0).
+Both need placed Temple Sheik. Free travel now uses a non-saved BoolExp for his Presence:
+**not HavePlayedEvent.Dm_TimeTemple_0055 or SageOfForest_IsCompleted_Exp**. Waiting for0055
+preserves dialogue after0050's timeline; native Prelude completion still deletes him afterwards.
+The new expression is reset0/save-1; no saved layout/default or native expression changes.
+Native postfix0=Bool,10=BoolExp,5=NOT,4=OR; Mido/door predicates supply precedents.
+
+The timeline has no item/quest/GameData writes. Dialogue0055's Ready/Event252 sets
+`HrlField_HasEnteredFirstTime_Adult`; Event137 increments Notes NPC-talk count. AllSage's
+following chain sets the first-adult/Navi shield-history flags and SageOfLight Complete,
+AllSage Step01 and Forest Step01. The broken-scene user's adult saves retain both event
+histories, HrlField true and those quest steps; no missing item grant or save repair inferred.
+
+Actual standalone writer emits adult Banc, GameData and size table. Exact inverse-tree,
+byte-order, non-saved-expression and allocation checks pass. New isolated child-autosave
+launcher/checklist is in the round report. **First-scene visibility/dialogue and immediate
+return after it still require Kareem; no agent game run.** Free travel remains default-off.
+
+### Door modes and instrument ages
+
+D35's `door_of_time` is closed (default), song_only or open; reverse travel is independent.
+Closed is the unchanged native patch path. Song-only changes the altar's non-saved invalid
+expression from `Step_DoorOfTime != Step05 or opened` to `opened`, and bypasses DoorOfTime
+Event60's after-Step04 query. The opening entry additionally requires the learned Time song;
+native ocarina input, recommended melody, opened/history checks, scene, saved opened flag
+and Step06 progression remain. Either child ocarina can play; no stone quest is completed.
+
+Open changes the exact native `Logic/Market_Common_f252.logic.module.ainb` threshold literal
+Step06 to Ready, with NUL padding and unchanged bytes/offsets/length elsewhere. Native
+is-after/is-equal outputs then open the gate without advancing a quest. Independent external
+AINB decoding shows exactly one changed field (node8's ChallengeStepName); no GPL implementation
+is copied. The common module also displays the altar stones when open; these are visual actors,
+not inventory grants. The child pedestal reuses the existing ungated attention module and
+first-pull request; native Draw still selects first-arrival or repeat travel from scene history.
+All native scenes, stone grants/quests, adult return and Prelude stay separate.
+
+The earlier door exposes an existing logic mismatch: translated `can_play` allowed Fairy
+Ocarina as adult. **Source is the item-bar/PouchTable age metadata audited in section37,
+NOT an in-game Fairy-as-adult test.** Fairy is child-only there; Time is both-age.
+Sourced helper overrides apply in EVERY door mode, requiring Ocarina2 for adult song use.
+The return kit's data-defined mandatory inventory/staged families follow each door mode:
+early pulls cannot assume optional child Saria, strength or Time ocarina. D20's actual
+first-pull proof remains strict; no silent free-travel/guarantee override or retry increase.
+
 ## 43. Round 10: pots, crates and ground rupees (cs10d, exploration)
 
 Read-only native dump/build `e0f3ccfa`; full per-area counts, evidence, commands and
@@ -2828,53 +2878,3 @@ rows (not155 rupees). Counts, ages, geometry and vanilla rewards differ material
 Future checks use **remake names and the actual region's access rule**, like `extra_*`
 chests; record an N64 name only for an exact mapping. No ordinal/nearest-position join,
 unverified rule, new saved flag or shuffle setting is introduced by this exploration.
-
-## 41. Round 10: age travel and Door of Time (cs10b)
-
-Build `e0f3ccfa`; native read-only probes and exact evidence: `plans/rounds/r10-agetravel.md`,
-`E:/OOTRemake/work/r10-agetravel-cs10b/`. Kareem confirmed round9's pre-Forest return and
-post-Forest Prelude, but reported a missing Sheik in the first adult arrival (answers R9-FIRST-PULL).
-
-First arrival runs `Dm_TimeTemple_0050` **then** `Dm_TimeTemple_0055` (AllSage Event9/Event0).
-Both need placed Temple Sheik. Free travel now uses a non-saved BoolExp for his Presence:
-**not HavePlayedEvent.Dm_TimeTemple_0055 or SageOfForest_IsCompleted_Exp**. Waiting for0055
-preserves dialogue after0050's timeline; native Prelude completion still deletes him afterwards.
-The new expression is reset0/save-1; no saved layout/default or native expression changes.
-Native postfix0=Bool,10=BoolExp,5=NOT,4=OR; Mido/door predicates supply precedents.
-
-The timeline has no item/quest/GameData writes. Dialogue0055's Ready/Event252 sets
-`HrlField_HasEnteredFirstTime_Adult`; Event137 increments Notes NPC-talk count. AllSage's
-following chain sets the first-adult/Navi shield-history flags and SageOfLight Complete,
-AllSage Step01 and Forest Step01. The broken-scene user's adult saves retain both event
-histories, HrlField true and those quest steps; no missing item grant or save repair inferred.
-
-Actual standalone writer emits adult Banc, GameData and size table. Exact inverse-tree,
-byte-order, non-saved-expression and allocation checks pass. New isolated child-autosave
-launcher/checklist is in the round report. **First-scene visibility/dialogue and immediate
-return after it still require Kareem; no agent game run.** Free travel remains default-off.
-
-### Door modes and instrument ages
-
-D35's `door_of_time` is closed (default), song_only or open; reverse travel is independent.
-Closed is the unchanged native patch path. Song-only changes the altar's non-saved invalid
-expression from `Step_DoorOfTime != Step05 or opened` to `opened`, and bypasses DoorOfTime
-Event60's after-Step04 query. The opening entry additionally requires the learned Time song;
-native ocarina input, recommended melody, opened/history checks, scene, saved opened flag
-and Step06 progression remain. Either child ocarina can play; no stone quest is completed.
-
-Open changes the exact native `Logic/Market_Common_f252.logic.module.ainb` threshold literal
-Step06 to Ready, with NUL padding and unchanged bytes/offsets/length elsewhere. Native
-is-after/is-equal outputs then open the gate without advancing a quest. Independent external
-AINB decoding shows exactly one changed field (node8's ChallengeStepName); no GPL implementation
-is copied. The common module also displays the altar stones when open; these are visual actors,
-not inventory grants. The child pedestal reuses the existing ungated attention module and
-first-pull request; native Draw still selects first-arrival or repeat travel from scene history.
-All native scenes, stone grants/quests, adult return and Prelude stay separate.
-
-The earlier door exposes an existing logic mismatch: translated `can_play` allowed Fairy
-Ocarina as adult. **Source is the item-bar/PouchTable age metadata audited in section37,
-NOT an in-game Fairy-as-adult test.** Fairy is child-only there; Time is both-age.
-Sourced helper overrides apply in EVERY door mode, requiring Ocarina2 for adult song use.
-The return kit's data-defined mandatory inventory/staged families follow each door mode:
-early pulls cannot assume optional child Saria, strength or Time ocarina. D20's actual
-first-pull proof remains strict; no silent free-travel/guarantee override or retry increase.
