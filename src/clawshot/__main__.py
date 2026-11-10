@@ -64,6 +64,11 @@ def main(argv: list[str] | None = None) -> int:
         help="closed: vanilla; closed_deku: exit only; open: exit and Mido",
     )
     parser.add_argument(
+        "--door-of-time",
+        choices=("closed", "song_only", "open"),
+        help="closed: stones, Ocarina of Time and Time song (default); song_only: either ocarina; open: no items",
+    )
+    parser.add_argument(
         "--songs", choices=("song", "anywhere"), help="song locations only (default), or all songs anywhere"
     )
     parser.add_argument(
@@ -114,6 +119,7 @@ def main(argv: list[str] | None = None) -> int:
             ("scrub_price", "scrub_price"),
             ("cheap_deku_shield", "cheap_deku_shield"),
             ("forest", "forest"),
+            ("door_of_time", "door_of_time"),
             ("hints", "hints"),
             ("hint_distribution", "hint_distribution"),
         ):
@@ -136,6 +142,10 @@ def main(argv: list[str] | None = None) -> int:
             for name in ("open_forest", "skip_mido"):
                 if name not in explicit_logic:
                     logic.pop(name, None)  # derived fields in an effective spoiler string must be rebuilt
+        if args.door_of_time is not None:
+            explicit_logic = {pair.partition("=")[0] for pair in args.logic}
+            if "door_of_time" not in explicit_logic:
+                logic.pop("door_of_time", None)
         settings = replace(settings, **overrides, logic=logic)
         if settings.areas and not settings.goal:
             parser.error("--areas needs --goal (the world's goal lies outside most slices)")
