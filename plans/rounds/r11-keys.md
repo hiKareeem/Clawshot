@@ -126,3 +126,51 @@ paths share the observed counter updater; no “small chest is different” succ
 **Kareem: run the three independent launchers only after Claude boot-checks them and after
 quitting the played game. Report exact counters, model/text, reload result and mod lines.**
 No game, launcher, copy-user operation or boot-check was executed by this track.
+
+## Item 3: named Forest small-key grant prototype (external only)
+
+Built **`named-forest-key-fixed-next`** under the same real one-mod layout, with its own
+template launcher and `ingame/named-key-checklist.md`. Source is early1630 **autosave04**;
+the same genuinely unopened Mido far-right chest gives the generic small-key display actor.
+No production `patch/keys.py`, pipeline hook, new setting, EventSetting row, GameData row,
+saved default or inventory cheat is introduced.
+
+Technical prototype in reusable external `prototype.py`: the existing
+`KokiriForest_TreasureBox_NaviChatOff` row already enters Small/Success_MidoHouse.
+Only that entry's targets redirect to cloned small-chest/GetPouchContent paths; original
+shared entries/events remain intact. On a small-key grant in the cloned path, existing
+GameData actions increment **DungeonInfo.ForestTemple.SmallKeyTotalNum and SmallKeyNum**,
+setting existing **IsGetSmallKeyOnce** when the prior remaining count is0. The generic
+current-dungeon pouch grant is skipped for that branch; non-key contents still take the
+original pouch action. Native chest identity/opening, display and cleanup remain.
+All four Mido chests share this wrapper; only the one experimental key qualifies in this
+output. This is explicitly **not a source-bound general keysanity implementation**.
+
+Five resources: both Kokiri Bancs (same item2 deltas), Small flow74808→135384
+(allocation75088→135664), GetPouchContent65880→126408
+(66160→126704), common size table unchanged length. Entire native flows invert exactly
+after restoring the one entry's targets and trimming appended nodes/entries/operation names.
+Existing saved metadata for all three named leaves is checked before writing.
+
+`verify_prototype.py` read the actual serialized payout dispatch:
+zero keys→remaining1/total1/once true; existing2/5→3/6 without another first-key write;
+non-key→exactly the native pouch action with no dungeon-state change. No current-dungeon
+pouch action occurs on either key path. It independently rebuilt the exact compressed flow
+bytes, inversed both complete Banc trees, recomputed the exact size table, checked immutable
+backup SHA256 maps and exact template/one-real-mod/no-reparse/absent-user layout: **passed**.
+These are data/interpreter checks, **not the native engine or an in-game grant**.
+
+First smoke caught reversed boolean cases: printed SmallKey=true taking the original pouch
+action with remaining0/total0. Existing project's native boolean-query convention is0=true,
+1=false (`tests/test_gifts_*`); corrected only that dispatch and built into a NEW
+`named-forest-key-fixed-next`, then the cause-aimed smoke passed. The old
+**`named-forest-key-next` is invalid; do not run it**. Its unplayed files are preserved,
+not overwritten or silently presented as successful.
+
+**[INFERENCE]** Named GameData writes should credit Forest independently of Link's current
+area, but native dungeon caches, actor context, display, saved once behavior and actual lock
+consumption remain unplayed. **Kareem: use only the fixed-next launcher's named-key checklist;
+report saved Forest1/1/once, no other dungeon change, Save/Continue/no repeat, and later native
+Forest door consumption if normal progression in that disposable child copy reaches it.**
+The latter long-path check can remain pending without pretending stored numbers prove it.
+No boss-key/map/compass prototype is claimed. The seed-generation guard remains required.
