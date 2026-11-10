@@ -2987,6 +2987,21 @@ and `r8-getitem.md:88–113` use new games, not an old raw-Hash source selection
 raw-entry counts in `r1-research`, `r2-census` and `r8-freestanding` do **not** establish
 unopened chests. No other unopened-chest raw-Hash save premise was found in the round-file audit.
 
+### Experiments and seed-output boundary
+
+Three isolated generic-small-key outputs (Kokiri, keyless Deku, Fire) and one named Forest
+small-key prototype are built outside the repository; exact source slots, launchers,
+permitted cheats, mod-log proof and pending player observations are in `r11-keys.md`.
+The named prototype changes only an experimental Mido-wrapper grant path, credits the
+existing Forest remaining/total/first-key leaves, and is **not registered in generation**.
+It does not establish arbitrary source binding, boss keys, maps, compasses or native lock
+consumption. All gameplay acceptance remains pending.
+
+`patch.check_dungeon_items` now refuses `dungeon_items="anywhere"` before dump access in
+both the public CLI and `patch.make_seed`, explaining that generic actors carry no target
+and named grants lack in-game acceptance. `Settings`, CS1 encoding/printing and the pure
+fill's synthetic anywhere mode remain intact; own-dungeon generation is unchanged.
+
 ## 45. Round 11: Hookshot 2.0.12+ seed loading and text icons (cs11c)
 
 R11-HOOKSHOT-2012 is Kareem/Claude's observed crash diagnosis, not an agent game run.

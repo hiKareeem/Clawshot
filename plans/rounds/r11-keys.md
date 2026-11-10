@@ -174,3 +174,33 @@ report saved Forest1/1/once, no other dungeon change, Save/Continue/no repeat, a
 Forest door consumption if normal progression in that disposable child copy reaches it.**
 The latter long-path check can remain pending without pretending stored numbers prove it.
 No boss-key/map/compass prototype is claimed. The seed-generation guard remains required.
+
+## Item 4: refuse unverified game output, retain the fill mode
+
+Added `patch.check_dungeon_items(settings)` and call it at the start of `make_seed`
+and before CLI gift setup/output checks. Anywhere generation raises PatchError with
+the reason: generic key/map/compass actors have no target dungeon, named grants lack
+in-game acceptance, use own_dungeon. CLI reports it with exit1, not a traceback.
+Settings/CS1/print-settings and the pure assumed fill are intentionally unchanged.
+No experimental prototype is imported by production code.
+
+Failing-before single-file regression printed `make_seed` reaching census/dictionary
+access (`missing-romfs/Pack/ZsDic.pack.zs`) instead of rejecting anywhere. After the
+cause-specific boundary guard, `CLAWSHOT_WORKERS=1 uv run pytest tests/test_keys.py -q
+--tb=short --basetemp E:/OOTRemake/work/r11-keys-cs11b/keys-after-next`: **7 passed**.
+Covers direct pipeline, explicit CLI, encoded CS1, Gift pre-read refusal, no output
+creation, research settings printing and explicit own-dungeon override on replay.
+Scoped format (3 files) and lint passed. Python references request again found no
+language server; literal callsite search confirms the CLI is the production caller.
+
+Actual public CLI smoke (not just tests), `smoke_cli.py`, serial/CLAWSHOT_WORKERS=1:
+- Explicit anywhere + Chest/Gift: exit1 with the attribution/in-game reason; no folder.
+- Replayed anywhere + Gift CS1: same refusal before gift scanning; no folder.
+- Fresh default-own seed7, Kokiri/Lost Woods/Deku slice, Gohma goal: exit0,
+  **12 shuffled checks,4 spheres,28 resources**, spoiler and play-note written to
+  `own-slice-next`; emitted settings remain own_dungeon.
+Proof and CLI logs are external (`cli-smoke-proof.json`); no game was started.
+
+All requested source/data changes are complete. The full four-command gates still
+must pass under the shared lock before any ready/handoff post. No checkpoint above
+is an in-game success or a completed full-gate claim.
