@@ -201,9 +201,8 @@ Actual public CLI smoke (not just tests), `smoke_cli.py`, serial/CLAWSHOT_WORKER
   `own-slice-next`; emitted settings remain own_dungeon.
 Proof and CLI logs are external (`cli-smoke-proof.json`); no game was started.
 
-All requested source/data changes are complete. The full four-command gates still
-must pass under the shared lock before any ready/handoff post. No checkpoint above
-is an in-game success or a completed full-gate claim.
+All requested source/data changes are complete. The four-command gates have now passed;
+exact results are recorded below. No checkpoint or full-gate pass above is an in-game success.
 
 ## Commit ledger / review boundary
 
@@ -217,6 +216,7 @@ is an in-game success or a completed full-gate claim.
 | `6f0b9a6` | Isolated shared seed-pipeline guard |
 | `bdcc5e0` | Isolated CLI guard and seven boundary regressions |
 | `174286c` | Item4 docs and actual public-CLI smoke proof |
+| `f1bedbc` | Exact chest reset metadata and reviewer dry-run/superseded-launcher boundaries |
 
 Only report/metadata documentation follows these source checkpoints. Source/tests are frozen
 for full gates. Later exact GameData-row inspection corrected the named chest-open Bool's
@@ -243,3 +243,34 @@ candidate still describes the raw Bool64 list as universal opened-check state. F
 work must dispatch by actor/check kind, including named chest Bools; reviewer/roadmap owner
 should correct that backlog statement. Only the explicitly authorized section6 and owned
 section44 were edited here.
+
+## Final verification and handoff
+
+All four required gates passed on the frozen source/tests, with one worker. The full
+synthetic run acquired `E:/OOTRemake/work/rounds/r11/gate.lock` by mkdir at10:33:38
+and released it by rmdir at10:53:38. The separate dump run acquired it at10:53:38
+and released it at11:05:06. The waiting runner retried occupied-lock mkdir once per
+minute; neither full test run overlapped another holder.
+
+| Command | Observed result |
+|---|---|
+| `uv run ruff format --check` | exit0;259 files already formatted |
+| `uv run ruff check` | exit0;all checks passed |
+| `CLAWSHOT_WORKERS=1 uv run pytest` | exit0;823 passed,110 skipped |
+| `CLAWSHOT_WORKERS=1 OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump` | exit0;93 passed,16 skipped,824 deselected |
+
+Both pytest commands also used new external `--basetemp` directories:
+`gate-synthetic-final-next` and `gate-dump-final-next` under the track scratch.
+Synthetic OOT_ROMFS was unset; OOT_NUP/PYTEST_ADDOPTS were unset for both.
+Exact command/environment/exit records are in external `gate-final-results.json`;
+complete captured output is in `gate-{format,lint,synthetic,dump}-final.log`.
+The completed one-shot gate coordinator was removed; logs/proof and reusable
+experiment researchers/builders/verifiers remain outside the repository.
+
+Ready for review of the isolated commits in the ledger plus this final evidence
+commit; no push or merge. No game executable or launcher was started by this track.
+The four current mods/profiles and superseded launcher remain untouched.
+**Kareem's remaining acceptance is in-game play of the three generic attribution
+experiments and the fixed named-Forest prototype, using their exact checklists.**
+Until that evidence exists, named-dungeon attribution/caches/door consumption remain
+**[INFERENCE]**, not working keysanity; production anywhere generation stays refused.
