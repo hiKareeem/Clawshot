@@ -913,8 +913,11 @@ Round 10 candidates (seed 8 play, Kareem 2026-11-09):
   from an older child autosave; the pedestal may stay blocked until he leaves after that first scene.
 
 Later-round candidate (Kareem, 2026-11-09, seed 8: "we need a check/item tracker"): a check and item tracker. The
-save already records opened checks (the Bool64bitKey list of actor Hashes, `src/clawshot/save.py`) and owned items,
-so a local page can read the seed's spoiler and the newest autosave and show collected checks by area, items owned,
+save already records collected checks and owned items (`src/clawshot/save.py`), by kind of check: an opened chest
+is the named flag `IsTreasureBoxOpen.<Hash>`, loose pickups (ground rupees, floor hearts, boss hearts) are in the
+Bool64bitKey list of actor Hashes, gifts have their own event flags (section 44, round 11; reading a chest from the
+raw list gave false "unopened" results). So a local page can read the seed's spoiler and the newest autosave and
+show collected checks by area, items owned,
 and how many checks are in logic now, without naming unfound items. Updates at each autosave. Optional export of a
 PopTracker/EmoTracker-style pack later.
 
