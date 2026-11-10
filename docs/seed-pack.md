@@ -20,7 +20,10 @@ player-facing summary (steps, known issues, the Discord link); this file has the
    and the included source/settings/seed. The complete output, including spoiler and play note, must match
    the reference digest. An existing seed is verified, **never regenerated or overwritten**.
 5. Only after **Verified seed** appears, run `Play seed.bat`. It checks the digest again, then starts
-   `<Hookshot>\bin\hookshot.exe` with `HOOKSHOT_NO_UPDATE_CHECK=1`, the pack's overlay and `--user <pack>\user`.
+   `<Hookshot>\bin\hookshot.exe` with `HOOKSHOT_NO_UPDATE_CHECK=1`, `HOS_FS_OVERLAY` cleared,
+   `HOS_MODS=<pack>` (only `seed` is a mod) and `--user <pack>\user`.
+   Play checks the actual binary for mods support and refuses unknown/older builds rather than silently
+   starting vanilla. Hookshot 2.0.12+ is recommended. No seed copy or link is made.
    Only Play requires the bin executable. If no Hookshot folder was saved, Play stops and points to the
    emulator steps below. A missing bin executable is a hard stop: the folder-root launcher ignores save
    isolation and is never used.
@@ -37,8 +40,8 @@ Version/digest failure: stop and report the actual/expected fingerprints in help
 To change stored paths, close the game, remove only this pack's `folders.json`, and run Make again.
 A partial or altered `seed` folder is not repaired in place: extract the original zip into a **new** folder.
 Keep the old folder and its saves. Avoid multiple simultaneous games using the same pack.
-Do not point Hookshot's separate mods loader at another randomizer overlay: the digest checks this pack,
-not unrelated installed mods. The pack does not update Hookshot or touch your game directory.
+Do not add other mods inside this pack: Play requires exactly one discoverable mod, `seed\romfs`.
+Hidden `.romfs-*` caches are not mods. The pack does not update Hookshot or touch your game directory.
 
 ### NUP input
 
@@ -121,8 +124,10 @@ and frozen dependency versions; `0.1.0` alone is not a unique source revision. A
 patch must be shipped in a newly built pack with a newly computed digest.
 
 Acceptance still needs an invited tester/Kareem to play: Make succeeds, Play opens the isolated new game,
-the log reports `fs: OpenFile(...): from the overlay`, and the displayed seed placements agree.
-Agent verification never starts the game.
+the log reports `mods: <file> <- <path>`, and the displayed seed placements agree.
+Agent verification uses `python -m clawshot.pack.runtime play --root <pack> --dry-run` only:
+the same checks print the command, environment, mod and log paths without starting anything or creating
+the user/log. `CLAWSHOT_DRY_RUN=1` also enables this through the normal Play entry point.
 
 ### Maintaining the NUP working set
 
