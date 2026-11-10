@@ -11,6 +11,7 @@ scrub_prices = "vanilla" # supported shuffled once-sales only; repeat vendors re
 scrub_price = 10 # rupees when scrub_prices = fixed; 0..1000 (largest native wallet)
 cheap_deku_shield = true # provisional, Round 6: 36 guaranteed forest rupees, near-total cost in seed 22
 forest = "closed" # D24, Kareem: defaults close to vanilla; closed_deku/open are opt-in advanced choices
+door_of_time = "closed" # D35, Kareem: closed | song_only (either ocarina) | open; free travel is separate
 hints = "always" # D26, Kareem: stones speak without the Mask of Truth (OoT Randomizer's default); "mask" as vanilla
 hint_distribution = "balanced" # Round 7: data/hints.toml; OoT Randomizer's default distribution
 

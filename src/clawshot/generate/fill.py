@@ -88,6 +88,7 @@ class Settings:
     scrub_price: int = DEFAULTS["scrub_price"]
     cheap_deku_shield: bool = DEFAULTS["cheap_deku_shield"]
     forest: str = DEFAULTS["forest"]
+    door_of_time: str = DEFAULTS["door_of_time"]
     hints: str = DEFAULTS["hints"]
     hint_distribution: str = DEFAULTS["hint_distribution"]
 
@@ -135,6 +136,8 @@ class Settings:
             raise ValueError("cheap_deku_shield must be a boolean")
         if not isinstance(self.forest, str) or self.forest not in CATALOG["forest"]:
             raise ValueError("forest must be 'closed', 'closed_deku' or 'open'")
+        if self.door_of_time not in ("closed", "song_only", "open"):
+            raise ValueError("door_of_time must be 'closed', 'song_only' or 'open'")
         if self.hints not in hint_choices.MODES:
             raise ValueError(f"hints must be one of {hint_choices.MODES}")
         if self.hint_distribution not in hint_choices.distributions():
@@ -160,6 +163,7 @@ class Settings:
             "scrub_price": self.scrub_price,
             "cheap_deku_shield": self.cheap_deku_shield,
             "forest": self.forest,
+            "door_of_time": self.door_of_time,
             "hints": self.hints,
             "hint_distribution": self.hint_distribution,
         }
