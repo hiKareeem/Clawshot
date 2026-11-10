@@ -64,24 +64,22 @@ From the repository root, use the locked dependencies and run:
 uv sync --frozen
 uv run ruff format --check
 uv run ruff check
-CLAWSHOT_WORKERS=1 uv run pytest
+uv run pytest
 ```
 
-The environment prefix above is for a POSIX/Git Bash shell. In PowerShell use
-`$env:CLAWSHOT_WORKERS = '1'` before `uv run pytest`. Without a dump, native-data tests skip.
+The test pool caps itself at three workers. On a busy machine, optionally set `CLAWSHOT_WORKERS=1`
+before running tests to use one worker instead. Without a dump, native-data tests skip.
 For format or census changes, also check your own read-only supported dump (path is an example):
 
 ```sh
-CLAWSHOT_WORKERS=1 OOT_ROMFS=C:/Games/OoT/romfs uv run pytest -m dump
+OOT_ROMFS=C:/Games/OoT/romfs uv run pytest -m dump
 ```
 
-In PowerShell set `$env:OOT_ROMFS = 'C:/Games/OoT/romfs'` before that pytest command.
+The environment prefix above is for a POSIX/Git Bash shell. In PowerShell set
+`$env:OOT_ROMFS = 'C:/Games/OoT/romfs'` before that pytest command.
 NUP/cache changes also need the matrix documented in [seed packs](docs/seed-pack.md).
 Record exact commands, results and skipped coverage; never call a skipped native check a pass.
-Use one worker on a shared playtest PC and avoid overlapping heavy runs. The maintainers' parallel
-agent workflow, including its gate lock, is separate: [orchestration](plans/02-orchestration.md).
-It is not required for ordinary contributions. Diagnose failures under [AGENTS.md](AGENTS.md), rule 9;
-do not weaken a test or reduce coverage to hide one.
+Diagnose failures under [AGENTS.md](AGENTS.md), rule 9; do not weaken a test or reduce coverage to hide one.
 
 ## In-game evidence for behavior changes
 

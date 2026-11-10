@@ -11,6 +11,16 @@ program `0400486024DEC000`, update v131072, build `e0f3ccfa`.
 files, keys or generated mods. You must generate the mod locally from your own dump. Never share
 that output. Clawshot is not affiliated with or endorsed by Nintendo.
 
+## At a glance
+
+- **Shuffled now:** chests, shop shelves, NPC gifts and songs, one-time Deku Scrub sales.
+- **Optional:** boss Heart Containers and floor Heart Pieces.
+- **Not shuffled yet:** Gold Skulltula tokens, cows, dungeon rewards, pots, crates, loose rupees,
+  or keys outside their dungeon.
+
+Choose the kinds you want; the default shuffles chests only. Some checks stay unchanged pending
+in-game tests; the evidence and limits are below.
+
 ## Status
 
 **Public test builds, not a finished randomizer.** Seeds are being played and the remake's access
@@ -22,9 +32,9 @@ that proves the model, not that every route has been verified in the game.
 | Chests | Changed chest rewards work in game. 165 of 184 ordinary chests are shuffled; unresolved routes and repeat rewards stay unchanged. The Goron City sign-puzzle solution is included, its failure chest is not. |
 | Shops | Shuffled native shop items and purchases work in game. Arbitrary major items cannot use a stand-in shelf display. |
 | NPC gifts and songs | Gift swaps and Great Fairy once-only rewards work in game, as does the Kokiri shopkeeper's extended gift window. All seven frog checks have passed their in-game experiment. Not every gift or item combination has been played. |
-| One-time Business Scrubs | Four sale families are enabled; repeat vendors stay unchanged. The implementation is tested, but the recorded results do not establish every shuffled sale in game. |
+| One-time Business Scrubs | Four kinds of one-time Deku Scrub sale are enabled; repeat vendors stay unchanged. The implementation is tested, but the recorded results do not establish every shuffled sale in game. |
 | Boss hearts and floor Heart Pieces | Optional, off by default. A Hylian Shield worked at King Dodongo and the ranch tower. Only native floor pickups are allowed; other locations and pickup combinations are not all verified. |
-| Hints and convenience options | Gossip Stones speak hints without the Mask of Truth by default; this, fast start, the open-bridge forest option and 10-rupee Kokiri prices have in-game evidence. |
+| Hints and convenience options | Gossip Stones speak hints without the Mask of Truth by default; this, fast start, the forest option that opens only the exit bridge (`--forest closed_deku`) and 10-rupee Kokiri prices have in-game evidence. |
 | Free time travel | Experimental, off by default. Early adult return, the Prelude scene and the corrected first adult arrival have passed in-game checks. |
 
 **Implemented, not yet accepted in game:** deterministic first/second Bombchu Bowling prizes and
@@ -57,10 +67,22 @@ and [playtest answers](https://github.com/hiKareeem/Clawshot/blob/main/plans/pla
 
 ## Play a seed pack
 
-Follow the **[seed-pack guide](docs/seed-pack.md)** for Make, version/digest checks, Hookshot loading
-and emulator loading. Packs contain the generator's source and settings, not a ready-made game mod.
-Make accepts a `.nup` dump or extracted RomFS and builds the seed on your PC. Install
-[uv](https://docs.astral.sh/uv/getting-started/installation/) first.
+1. Install [uv](https://docs.astral.sh/uv/getting-started/installation/).
+2. Unzip the seed pack into **its own new folder outside your game dump and Hookshot**.
+   Do not extract over another pack.
+3. Run **`Make seed.bat`** and give it your own supported **`.nup` file or extracted RomFS folder**.
+   For Hookshot, also give its installation folder (the one containing `bin`); for an emulator,
+   leave that answer blank. Wait for **Verified seed** before playing.
+4. **Hookshot:** run **`Play seed.bat`** and start a **new game** the first time. Later plays
+   continue this pack's isolated saves.
+5. **Emulator, instead of Play:** **back up this game's entire emulator save folder first**.
+   Copy the generated `seed/romfs` into the emulator's per-game mod folder as `<mod name>/romfs`,
+   enable the mod and start a new game. For Lichii, the destination is
+   `%APPDATA%\eden\load\0400486024DEC000\<mod name>\romfs`; enable it in **Properties > Add-ons**.
+
+See the **[seed-pack guide](docs/seed-pack.md)** for detailed setup, version/digest checks and
+runtime troubleshooting. Packs contain the generator's source and settings, not a ready-made game
+mod; Make builds it locally from your dump.
 
 Hookshot and Lichii have recorded loading/play results; other emulator and console layouts are
 **untested with Clawshot**. Use the current mod-loading instructions, not an older overlay launcher.

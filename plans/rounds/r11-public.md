@@ -193,3 +193,38 @@ the scan reports only material that should not be public at all, with no such ma
 by its stated checks. The UI is work in progress elsewhere, not absent from the project plan;
 README remains silent until its merge. This follow-up changes only this report, not source,
 player instructions or the previously checked documentation/template behavior. No checks rerun.
+
+## Review revisions: newcomer clarity and contributor commands
+
+Applied all five review requests, rebasing on main first without conflicts:
+
+1. README now starts with an At a glance list: current shuffle kinds, optional boss/floor hearts,
+   and kinds not shuffled yet, including keys outside their dungeon. The evidence table remains.
+2. Play a seed pack now starts with five standalone numbered steps: install uv, extract separately,
+   Make with own dump/optional runtime path, Hookshot Play/new game, or emulator backup/mod/new game.
+   Includes Lichii's actual destination and Add-ons switch before the detailed guide/cautions.
+3. Replaced the bridge/scrub jargon with the exit-bridge forest option (`--forest closed_deku`)
+   and four kinds of one-time Deku Scrub sale, consistently in README, settings and Discord drafts.
+4. CONTRIBUTING defaults to `uv run pytest`, explains the pool's three-worker cap, and mentions
+   `CLAWSHOT_WORKERS=1` once as an optional busy-machine override. Removed the shared-playtest-PC
+   wording and maintainer-only lock procedure from the public check instructions.
+5. Re-ran all three requested checks after the rebase and document changes:
+
+| Command | Result |
+|---|---|
+| `uv run ruff format --check` | 263 files already formatted; exit 0 |
+| `uv run ruff check` | All checks passed; exit 0 |
+| `CLAWSHOT_WORKERS=1 uv run pytest -q tests/test_pack.py` | 13 passed in 0.23s; exit 0 |
+
+Throwaway document smoke passed: six Markdown files, all 34 current local links resolve, actual
+source-pack snapshot contains the exact revised README and every local link it needs. No game,
+full suite, dump test, sweep, gate lock, project dependency change or source/test edit.
+One initial edit was not executed due to a provider error; a fresh read confirmed unchanged
+README before the successful edit. No failed verification command was rerun unchanged.
+
+Earlier commit IDs above are historical, before this final requested rebase. Current rebased
+commits preceding this review-fix commit are:
+`07925ae`, `efd4112`, `f0f5d73`, `e8db1d4`, `4e4f4e2`, `04b572c`, `093efe8`,
+`58cf587`, `c594c41`, `2cd900b`. The review-fix commit ID is supplied in the thread/handoff.
+No new product decisions or gameplay claims. Ready for the requested merge review; runtime-guide
+integration and owner publication actions remain with their existing owners.

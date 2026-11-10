@@ -36,7 +36,7 @@ frog experiment (R8-FROGS), not a guarantee about every upgrade family.
 | `Chest` | 165 of 184 ordinary chests; changed chest grants work in game. Includes the sign-puzzle solution chest, not its failure chest. Unresolved/repeat chests stay unchanged. Treasure Chest Game reward swap is built but untested and held; its 11 game boxes stay unchanged. |
 | `Shop` | Ordinary shop shelves, native-display items only; slot swaps, restock and Castle Town purchases have in-game evidence. Refill goods stay in shops. Mask loans stay unchanged. |
 | `Gift` | Eligible NPC and song gifts, including Great Fairies, Kokiri shopkeeper and all seven frog checks. These families have in-game evidence, not every individual swap. The shopkeeper's late window passed. See the unaccepted checks below. |
-| `Scrub` | Four supported one-time sale families; repeat vendors unchanged. Implementation tested; not every sale has recorded in-game acceptance. |
+| `Scrub` | Four kinds of one-time Deku Scrub sale; repeat vendors unchanged. Implementation tested; not every sale has recorded in-game acceptance. |
 | `BossHeart` | Eight boss-heart checks, off by default. Limited to the five native floor pickups below. King Dodongo's Hylian Shield grant/no-respawn was observed; not every combination. |
 | `Freestanding` | Fourteen anchored floor Heart Pieces, off by default; same five-pickup palette. Ranch tower Hylian Shield collected/equipped with its saved Hash set; other surfaces, underwater pickup and complete reload coverage are not all verified. |
 

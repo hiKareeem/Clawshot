@@ -131,12 +131,13 @@ What has in-game evidence:
   have passed experiments, not every possible reward combination.
 - Optional boss-heart and floor-heart-piece replacements use only native floor pickups; a Hylian Shield
   was observed at King Dodongo and the ranch tower. Other locations/pickups are not all verified.
-- Gossip Stone hints without the mask, fast start, the open-bridge forest option and cheap Kokiri
-  prices have been observed. Experimental free time travel is off by default; early return, Prelude
+- Gossip Stone hints without the mask, fast start, the forest option that opens only the exit bridge
+  (`--forest closed_deku`) and cheap Kokiri prices have been observed. Experimental free time travel
+  is off by default; early return, Prelude
   and the corrected first adult arrival have passed checks.
 
 Enabled but still awaiting dedicated in-game checks: deterministic bowling prizes and normal
-shooting-gallery upgrades. Four one-time Business Scrub sale families are enabled; not every shuffled
+shooting-gallery upgrades. Four kinds of one-time Deku Scrub sale are enabled; not every shuffled
 sale has recorded acceptance. Built but held unchanged: the Market bottle swap, Dampé's digging
 reward, first expert gallery rewards, merchant experiments and some Skulltula House rewards.
 The bottle fix and non-default Door of Time modes are untested in game.
