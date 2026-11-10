@@ -82,6 +82,9 @@ TIERED_GIFTS = {
     "Kak Shooting Gallery Reward": ("Quiver (40)", {"Item_Quiver_Medium", "Item_Quiver_Large"}),
 }
 
+DAMPE_CHECK = "Graveyard Dampe Gravedigging Tour"
+DAMPE_FLAG = "GraveYard_DiggingHoleTour_Drop_HeartPiece"
+
 # Sale calls need their flag inside the success branch, not after a wrapper that can refuse.
 MERCHANT_SHOPS = {
     "GC Medigoron": ("SimpleShopRoot_Npc_Goron_Medigoron_Adult", "Event119"),
@@ -616,6 +619,36 @@ def _bowling_order(fc: evfl.Flowchart) -> None:
         event.cases = [(case, _index(fc, fc.name, name)) for case, name in enumerate(targets)]
 
 
+def _dampe_reward(fc: evfl.Flowchart, step: Gift) -> None:
+    """Reuse the native completion flag around the real gift, not the temporary floor prop."""
+    index = _index(fc, fc.name, step.event)
+    grant = fc.events[index]
+    fork = fc.events[_index(fc, fc.name, "Event449")]
+    inbound = [e.name for e in fc.events if index in _successors(e)]
+    if (
+        not isinstance(grant, evfl.SubFlowEvent)
+        or (grant.flowchart, grant.entry_point, grant.next)
+        != ("Dm_SY_GetInEvent", "GetInEvent_NotTurn_NotNpc_Dampe", evfl.NONE)
+        or not isinstance(fork, evfl.ForkEvent)
+        or fork.forks[0] != index
+        or inbound != ["Event449"]
+        or any(e.main_event == index for e in fc.entry_points)
+    ):
+        raise GiftPatchError(f"{step.id}: stale digging reward fork: {grant!r}, {fork!r}, {inbound!r}")
+    _set_flag_after(fc, step, DAMPE_FLAG)
+    actor = _game_data_actor(fc, fc.name)
+    fork.forks[0] = len(fc.events)
+    fc.events.append(
+        evfl.SwitchEvent(
+            f"{NEW_EVENT_PREFIX}{len(fc.events)}",
+            actor,
+            _slot(fc.actors[actor].queries, READ_QUERY),
+            [(0, evfl.NONE), (1, index)],
+            {"GameDataName": DAMPE_FLAG, "Index": -1},
+        )
+    )
+
+
 def patch_flowchart(fc: evfl.Flowchart, flow: str, changes: Sequence[GiftChange]) -> None:
     """Apply ``changes``' edits that fall in ``flow`` to its flowchart, in place."""
     if flow == BOWLING_FLOW and any(c.check in BOWLING_CHECKS for c in changes):
@@ -632,6 +665,8 @@ def patch_flowchart(fc: evfl.Flowchart, flow: str, changes: Sequence[GiftChange]
                 if change.check == BOWLING_SECOND:
                     # Its native heart-marker flag remains correct when the reward moves to win two.
                     _set_flag_after(fc, step, "MiniGame_BombchuBowling_ClearThirdTime")
+                if change.check == DAMPE_CHECK:
+                    _dampe_reward(fc, step)
         for ref in change.rule.given:
             if ref.split("/")[0] == flow:
                 _read_flag(fc, flow, ref, vanilla, change.flag)

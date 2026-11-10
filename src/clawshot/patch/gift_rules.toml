@@ -409,3 +409,7 @@ reason = "a sale inside SimpleShop (the call returns without giving on cancel or
 [check."Market Potion Shop Bottle"]
 class = "swap"
 gate = "Npc_Hylia_020_Shop_Item_Bottle_Present; shuffled acceptance finishes the bottle-only tutorial"
+
+[check."Graveyard Dampe Gravedigging Tour"]
+class = "swap"
+gate = "GraveYard_DiggingHoleTour_Drop_HeartPiece; guard Event449's Event628 grant and save immediately after"

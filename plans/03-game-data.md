@@ -2795,3 +2795,16 @@ Expert modes are native repeat30/70-rupee calls (`Event202`/`Event599`) after th
 reward, with no separate saved first-expert flag or literal item actor. A D22 new-Bool
 specialization is feasible, but its fixed pool item needs an owner choice; the round file
 records the question and exact unchanged expert behavior rather than inventing one.
+
+### Dampé digging event check
+
+Active `.110` Event628, already in the raw census, is the real pouch grant through
+`GetInEvent_NotTurn_NotNpc_Dampe`; native Event82 staging and Event301 cleanup are preserved.
+Linked it to the existing digging check and moved its unchanged child/night/Time Flows rule
+into gift overrides, typed NPC, held under D15 pending the isolated test.
+The saved native completion Bool is `GraveYard_DiggingHoleTour_Drop_HeartPiece`
+(Hash3037888117,false/reset8/save0). Main routes read it, but the shortcut can structurally
+reenter the grant. A completion query now guards only the reward branch at Event449's fork,
+and Event628 writes completion immediately after its grant. The parallel native cleanup
+still runs on both paths. No new saved flag, floor-major actor, lottery or fee change.
+Actual writer/inverse/serialized once-and-cleanup proofs and player checklist are in the round file.

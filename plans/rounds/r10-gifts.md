@@ -131,3 +131,56 @@ main-dodongo backup; adult the after-forest backup. All six source slots in each
 bowling/gallery once flags false; rewards selected are unowned (child Storms/Epona/Agony,
 adult Epona). Unique users/logs, bin executable only, missing-exe/backup/copy-failure stops.
 No save copy or game execution by the agent. Expert output remains native pending policy.
+
+Shared consumer follow-up `557a8d0`: the new normal Quiver40 joins D29's named permanent
+upgrades without becoming a major-item hint; **13 hint-worth tests passed**.
+
+## Item 4: Dampé digging's real event grant
+
+Active file is `Npc_Hylia_Dampe_001.110.bfevfl.zs`. Existing uncatalogued census Event628
+calls `GetInEvent_NotTurn_NotNpc_Dampe`, then GetPouchContent: the actual pouch grant.
+Event82's temporary heart staging and Event301 cleanup remain native, not a crashing major
+floor-actor swap. The native saved completion is
+`GraveYard_DiggingHoleTour_Drop_HeartPiece` (Hash3037888117,false/reset8/save0).
+Main talk/check routes already read it; the shortcut entry can still structurally reach
+the reward with completion true. Added a guard to the reward branch of Event449's fork
+and an immediate completion write after628; the parallel prop-cleanup branch and original
+later completion write remain. No new Bool, lottery/fee/route/digging modification.
+
+Linked Event628 to the existing OoTR digging check, retyped it NPC (not a placed Collectable),
+moved its exact child/night/Time Flows rule from child_graveyard into the owned gift overrides
+(no duplicate override), and added player directions/rule. D15 holds the shuffle pending the
+controlled test, but its native fixed reward/access remain in logic.
+
+- Focused digging/gift/catalogue tests: **23 passed**. Synthetic serialized fork proves one
+  grant, saved direct-retry denial, cleanup still runs, unsafe extra incoming entry refuses.
+- Focused generic native gift oracle: **2 passed,3 deselected**,12.69s.
+- Actual common writer `build_digging.py`: **two resources**, active flow305112 ->305688,
+  allocation305392 ->305968. Full inverse recovers every original field. Native serialized
+  fork replay gives Boomerang once, then none, with cleanup on both paths; no GameData emitted.
+- Dedicated real-writer/saved-Bool/native-fork oracle: **1 passed**,8.85s.
+
+Output `ingame/digging-next`; unrun `Test - digging-next.bat`, own user, `digging-check.md`.
+Copies main-dodongo backup outward once at launch. All six source slots: child, met Zelda,
+completion false, Boomerang absent. **Kareem: check notice/model/use, no extra permanent Heart
+Piece or lingering prop, native repeat rupees, map marker and Save/Continue; require the .110
+flow and size-table overlay logs.** Retaining native presentation is not an in-game certification.
+
+## Integrated runtime proof before gates
+
+Actual public CLI seed7 `--shuffle Chest Gift` and separate-interpreter effective-CS1 replay:
+both **exit0,221 checks,21 spheres,122 resources**. Complete outputs: **124/124 files
+SHA256-identical**. Read each actual written frog, bowling and gallery grant against its
+spoiler assignment; all agree. Bottle/digging stay held and their native flows are not emitted;
+the old extra bowling refill rows are absent. Proof `final-seed-proof.json`; CLI logs
+`final-seed-original.log` / `final-seed-replay.log`.
+
+The first smoke's final static assertion incorrectly required every test user still to be
+absent. Printed cause: `user-market-bottle-next` now exists externally, with save/temp/log;
+the current game PID differs from the initial snapshot. No agent launched/copied it and no
+gameplay acceptance is inferred. Did not rerun generation or touch that output/user. A targeted
+read-only verifier retained the byte/reward proof and checks unique isolated user paths while
+allowing external presence. All staged overlays/users are treated as potentially played.
+Neither player outputs nor save backups were rewritten/deleted.
+
+All four full gates remain mandatory; no earlier checkpoint was posted ready.
