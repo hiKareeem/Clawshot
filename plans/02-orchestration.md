@@ -67,6 +67,19 @@ OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump
   never overlap two gate runs then (round 9: two overlapping 8-worker runs held the CPU at 100% and the game crashed
   twice, Hookshot#1112). From round 10, agents take a gate lock (`mkdir work/rounds/r<N>/gate.lock`, `rmdir` after) around
   full gate runs and sweeps.
+- **Outputs load as a mod, not through `HOS_FS_OVERLAY`** (from 2026-11-10, Hookshot v2.0.12+; answers.md
+  R11-HOOKSHOT-2012). A size table served through `HOS_FS_OVERLAY` crashes the game at start, because Hookshot's
+  controller-icon font no longer fits it. Launchers clear `HOS_FS_OVERLAY` and set `HOS_MODS` to a folder that holds
+  exactly one mod: `work/<round>/ingame/mods/<name>/<name>/romfs/...` with `HOS_MODS=...\mods\<name>` (real folders;
+  Hookshot leaves linked folders out, the mods root itself is not a mod, and names starting `.`, `-` or `_` are
+  skipped). Copy `E:/OOTRemake/tools/test-launcher-template.bat`, never an older launcher. The log's proof that a
+  changed file loaded is `mods: <file> <- <path>` (the first 200 files), no longer `from the overlay`; with a seed
+  loaded, button icons in text are the game's own. Launchers from before this date under `work/` still set the
+  overlay; Claude converts one when Kareem needs it.
+- **Claude boot-checks a test before Kareem runs it** (from 2026-11-10): `E:/OOTRemake/tools/bootcheck.sh <label>
+  'HOS_MODS=...'` starts his `bin\hookshot.exe` with `HOS_HEADLESS=1` (no window), no audio and a scratch user
+  folder, waits for a crash line or the save mount, and ends only the process it started. Only while his game is
+  closed; agents never run it.
 - Test launchers set `HOS_OOT_CHEATS=1` (from 2026-11-09): Hookshot's Insert menu then has Cheats > Teleport and the
   clock, so Kareem can skip the walk to a test spot. Test copies only (never seed 8, a played seed or his main save);
   checklists say to use only Teleport and the clock unless a step says otherwise (inventory, age or flag cheats would
