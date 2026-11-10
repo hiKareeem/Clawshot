@@ -1,0 +1,58 @@
+CLAWSHOT TEST SEED - read this first
+====================================
+
+Clawshot is an item randomizer for The Legend of Zelda: Ocarina of Time on Switch 2.
+It runs on the Hookshot PC recomp, and on Switch 2 emulators (tested on Lichii).
+This is an early test build: expect bugs, and please report them.
+
+This zip has NO game files. It builds the seed on your PC from your own copy of
+the game, and checks that you got exactly the same seed as everyone else.
+The seed number and settings are in pack.json.
+
+WHAT'S SHUFFLED
+- Chests, shop shelves, NPC gifts, songs (among the song spots), one-time Deku
+  Scrub sales and boss Heart Containers.
+- Every seed is checked beatable by the generator before it is released.
+- Gossip Stones give hints, without the Mask of Truth.
+- The forest is closed, as in the normal game.
+
+YOU NEED
+- Windows, and your own dump of the game at update v131072 (build e0f3ccfa), as an
+  extracted romfs folder. If you use Hookshot, it is the "romfs" folder inside your
+  Hookshot folder.
+- uv, which runs Clawshot's Python code:
+  https://docs.astral.sh/uv/getting-started/installation/
+  (The first build needs internet to fetch Python and Clawshot's libraries.)
+
+STEPS
+1. Unzip into its own new folder, outside your game and Hookshot folders.
+2. Run "Make seed.bat". Give it your romfs folder, and your Hookshot folder (the one
+   containing "bin"), or leave Hookshot empty if you play on an emulator. It checks
+   your game version first, then builds the seed into the "seed" folder.
+   Wait for "Verified seed".
+3. Hookshot: run "Play seed.bat" and start a NEW GAME. It uses its own save folder,
+   so your normal saves are never touched.
+   Emulator: back up your saves for this game first (a new game overwrites them),
+   then follow "Emulator / console loading" in docs\seed-pack.md.
+4. seed\play-note.md explains how the seed opens. seed\spoiler.json lists every item;
+   only open it if you are stuck.
+
+KNOWN ISSUES
+- Getting an item your current age can't use (the Bow as child, for example) can
+  jam your item buttons. Save and Continue fixes it. play-note.md lists the places
+  in your seed where that can happen.
+- Ocarinas from chests show no model, and songs from chests show an ocarina.
+  Both work normally.
+- The Weird Egg and Zelda's Letter are not shuffled (the remake keeps them in one
+  inventory slot).
+- Bombchu Bowling's prizes are random in the remake for now, so a shuffled item
+  there can take more than one win.
+- Hookshot can crash in the Castle Town guard house. That is a Hookshot bug
+  (github.com/NotRexed/Hookshot/issues/1112), not the seed: reload and carry on.
+
+REPORTS, QUESTIONS, NEW SEEDS
+Discord: https://discord.gg/6cfTkFp5D
+Please include where you were, what happened, pack.json, and your log
+(Hookshot: hookshot_log.txt in this folder; emulator: its own log).
+
+Share this zip, never the generated "seed" folder: that one contains game files.

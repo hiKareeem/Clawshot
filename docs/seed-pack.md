@@ -1,8 +1,9 @@
-# Private seed packs
+# Seed packs
 
-Repository and packs are private to invited testers. Do not repost the zip or its source.
+Packs are public test builds: share the zip, never a generated `seed` folder (that one holds game files).
 Code is included, not hidden. No game files, decoded data, generated overlay, save or spoiler
-is distributed; the zip records only the reference seed's SHA256 digest.
+is distributed; the zip records only the reference seed's SHA256 digest. `READ ME FIRST.txt` is the
+player-facing summary (steps, known issues, the Discord link); this file has the details.
 
 ## Tester (Windows, Hookshot)
 

@@ -106,7 +106,7 @@ def build(romfs: Path, seed: int, settings: str, out: Path) -> dict:
         if out.is_relative_to(protected) or protected.is_relative_to(out):
             raise PackError(f"pack output overlaps protected folder: {protected}")
     files = source_files()
-    for name in ("Make seed.bat", "Play seed.bat", "setup.ps1"):
+    for name in ("Make seed.bat", "Play seed.bat", "setup.ps1", "READ ME FIRST.txt"):
         files[name] = (ASSETS / name).read_bytes()
     with tempfile.TemporaryDirectory(prefix="clawshot-pack-") as temporary:
         root = Path(temporary)
