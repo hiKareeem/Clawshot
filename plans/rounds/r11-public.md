@@ -98,11 +98,11 @@ markers, third-party GitHub sources, the requested author's exact name and crede
   No private-key block or token/password assignment was identified. This is a heuristic tree scan,
   not a guarantee that all secrets or licensing issues are absent.
 
-Public-review considerations retained rather than erased: plans contain machine/scratch paths,
-native identifiers, research addresses and historical private-pack/overlay instructions. Those are
-not decoded game-file copies; current public entry points override obsolete instructions. The still
-stale pack guide is assigned to cs11c and must be integrated before publishing. The Discord drafts
-are corrected separately below. No unlicensed archive, NX2navi material, game source or dump was opened.
+D36 confirms `plans/` stays public as the maintainers' working notes, including its machine paths,
+research identifiers and historical instructions. Those are not publication blockers; no move,
+stripping or general name purge is proposed. The scan identified no material that must remain
+non-public, within the heuristic limits above. Current player instructions still need cs11c's
+loading-guide integration. No unlicensed archive, NX2navi material, game source or dump was opened.
 
 ## Additional assignment: public Discord drafts
 
@@ -179,9 +179,17 @@ remain unedited here. No merge, push, stash, history rewrite, output rewrite or 
 - Claude reviews/merges these commits and integrates cs11c's current mod-loading guide/templates
   before building a new public pack. This worktree's inherited pack guide still has old overlay text;
   ownership was respected, and the new README/Discord drafts explicitly reject old launchers.
-- Keep keysanity unavailable for play pending cs11b's evidence; this track claims neither its guard
-  nor a new UI is implemented. Later accepted features need their own public status update.
+- Keep keysanity unavailable for play pending cs11b's evidence. Under D37 a local web UI is being
+  built by track D; README deliberately says nothing about it until it merges.
 - Kareem controls visibility, branch protection, collaborator access and which Discord drafts he
   posts. Nothing was posted to Discord. The shared AGENTS proof correction is already resolved.
 - Existing gameplay questions/held checks remain as listed in README/settings, not new requests to
   repeat completed experiments. This documentation-only work adds no new in-game acceptance task.
+
+## Confirmed publication decisions
+
+Read D36/D37 from main's `plans/decisions.md` after Claude's follow-up. Plans remain public;
+the scan reports only material that should not be public at all, with no such material identified
+by its stated checks. The UI is work in progress elsewhere, not absent from the project plan;
+README remains silent until its merge. This follow-up changes only this report, not source,
+player instructions or the previously checked documentation/template behavior. No checks rerun.
