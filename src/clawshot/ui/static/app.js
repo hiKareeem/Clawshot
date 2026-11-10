@@ -574,10 +574,16 @@ async function refreshSeeds() {
           "p",
           "help",
           entry.playable
-            ? "Clawshot " + entry.clawshot_version + " · ready to play"
+            ? "Clawshot " +
+                entry.clawshot_version +
+                " · checked when you Play or View"
             : entry.reason,
         ),
       );
+      if (!entry.playable) {
+        $("seed-list").append(card);
+        continue;
+      }
       const actions = element("div", "result-actions");
       const add = (label, kind, action) => {
         const button = element("button", "", label);

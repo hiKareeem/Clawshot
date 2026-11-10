@@ -68,7 +68,7 @@ class Application:
     def result_for(self, body):
         self.remember_completed()
         if body.get("output") is not None:
-            return self.library.get(body["output"])
+            return self.library.get(body["output"], verify=False)
         return self.selected if self.selected is not None else self.jobs.snapshot()["result"]
 
     def call(self, method, route, body):

@@ -44,9 +44,11 @@ their HTTP endpoints. Normal sessions enable these actions; Play also requires W
   refused; generate a new seed instead of repairing an output in place.
 - **My seeds:** finished seeds remain available after restarting Clawshot. The default output
   folder and folders opened with Find seeds are remembered in your user configuration folder.
-  Each entry offers Play, Open folder and its play note, with a short hash. Missing seed information
-  or changed files are shown as not playable, with a reason; existing outputs are never repaired.
-  A finished seed does not need the original dump to remain at its old path.
+  Each entry offers Play, Open folder and its play note, with a short hash. Only folders with
+  seed information or an older seed/romfs or romfs layout appear; unrelated folders are ignored.
+  Older seeds get a calm regeneration message. Newest information files appear first.
+  Listing reads only the small information file; View and Play check the seed's actual digest.
+  Changed files are refused then, without repairing them. Finished seeds do not need the old dump path.
 
 The new output layout is `output/seed/romfs` with the note and spoiler beside romfs. Play shares
 the pack's checked launch code: only `bin/hookshot.exe`, exactly that seed as the one mod under

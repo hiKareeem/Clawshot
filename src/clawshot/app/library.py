@@ -30,7 +30,7 @@ def write_manifest(root: Path, result: dict) -> dict:
     return record
 
 
-def inspect_seed(root: Path) -> dict:
+def inspect_seed(root: Path, *, verify: bool = True) -> dict:
     root = Path(root)
     entry = {
         "output": str(root),
@@ -49,7 +49,7 @@ def inspect_seed(root: Path) -> dict:
             raise ValueError("Move this seed outside the Clawshot source folder, then open it again.")
         path = root / MANIFEST
         if not path.is_file():
-            raise ValueError("No Clawshot seed information file. Generate a new seed with Clawshot.")
+            raise ValueError("Made by an older Clawshot: generate it again to play it from here")
         if path.is_symlink() or path.stat().st_size > 65536:
             raise ValueError("This seed's information file is not usable. Generate a new seed.")
         record = json.loads(path.read_text(encoding="utf-8"))
@@ -73,11 +73,12 @@ def inspect_seed(root: Path) -> dict:
         entry.update({key: record[key] for key in FIELDS}, short_hash=digest[:12].upper())
         if record["game_build"] != BUILD:
             raise ValueError("This seed was made for a different game version. Use the Clawshot version that made it.")
-        seed = absolute_path(str(root / "seed"), "Seed files")
-        if not (seed / "romfs").is_dir():
-            raise ValueError("This seed's romfs folder is missing. Generate a new seed.")
-        if tree_digest(seed) != digest:
-            raise ValueError("This seed's files have changed. Generate a new seed before playing.")
+        if verify:
+            seed = absolute_path(str(root / "seed"), "Seed files")
+            if not (seed / "romfs").is_dir():
+                raise ValueError("This seed's romfs folder is missing. Generate a new seed.")
+            if tree_digest(seed) != digest:
+                raise ValueError("This seed's files have changed. Generate a new seed before playing.")
         entry["playable"] = True
     except json.JSONDecodeError:
         entry["reason"] = "This seed's information file is damaged. Generate a new seed."
@@ -94,6 +95,18 @@ def verified_seed(result: dict | None) -> Path:
     if not entry["playable"]:
         raise ValueError(entry["reason"])
     return Path(entry["output"]) / "seed"
+
+
+def _looks_like_seed(folder: Path) -> bool:
+    return (folder / MANIFEST).is_file() or (folder / "seed/romfs").is_dir() or (folder / "romfs").is_dir()
+
+
+def _newest_first(folder: Path) -> tuple[int, str]:
+    try:
+        modified = (folder / MANIFEST).stat().st_mtime_ns
+    except OSError:
+        modified = 0
+    return -modified, str(folder).casefold()
 
 
 class SeedLibrary:
@@ -120,23 +133,19 @@ class SeedLibrary:
                 folder = absolute_path(str(folder), "Seed folder", allow_links=True)
                 if not folder.exists():
                     continue
-                if any((folder / name).exists() for name in (MANIFEST, "seed", "romfs")):
+                if _looks_like_seed(folder):
                     found.add(folder)
                 else:
-                    found.update(
-                        child
-                        for child in folder.iterdir()
-                        if child.is_dir() and not child.name.startswith((".", "-", "_"))
-                    )
-            except (OSError, ValueError, RuntimeError):
-                found.add(folder)
-        return sorted(found, key=lambda path: str(path).casefold())
+                    found.update(child for child in folder.iterdir() if child.is_dir() and _looks_like_seed(child))
+            except (OSError, ValueError):
+                continue
+        return sorted(found, key=_newest_first)
 
     def entries(self) -> list[dict]:
-        return [inspect_seed(path) for path in self.candidates()]
+        return [inspect_seed(path, verify=False) for path in self.candidates()]
 
-    def get(self, value: str) -> dict:
+    def get(self, value: str, *, verify: bool = True) -> dict:
         requested = absolute_path(value, "Seed folder", allow_links=True)
         if requested not in self.candidates():
             raise ValueError("Choose a seed from My seeds, or open the folder containing it first.")
-        return inspect_seed(requested)
+        return inspect_seed(requested, verify=verify)
