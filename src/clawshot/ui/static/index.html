@@ -128,6 +128,9 @@
             </p>
           </div>
           <div id="generation-inputs">
+            <div class="result-actions">
+              <button id="enter-shared">Enter a shared seed</button>
+            </div>
             <div class="menu-row" data-interface="seed">
               <label for="seed">Seed number</label>
               <div class="value-cell">
@@ -195,6 +198,31 @@
             <h3>Seed ready</h3>
             <p id="result-summary"></p>
             <code id="result-path"></code>
+            <div class="share-line">
+              <label for="result-number">Seed</label
+              ><input id="result-number" readonly /><button
+                data-copy="result-number"
+              >
+                Copy
+              </button>
+            </div>
+            <div class="share-line">
+              <label for="result-settings">Settings</label
+              ><input id="result-settings" readonly /><button
+                data-copy="result-settings"
+              >
+                Copy
+              </button>
+            </div>
+            <div class="share-line">
+              <label for="result-hash">Hash</label
+              ><input id="result-hash" readonly /><button
+                data-copy="result-hash"
+              >
+                Copy
+              </button>
+            </div>
+            <p id="share-status" class="help" role="status"></p>
             <div class="result-actions">
               <button id="play-seed" data-interface="play" hidden>Play</button>
               <button id="open-folder">Open seed folder</button>
@@ -238,6 +266,22 @@
         <button data-browse="dump-folder">Romfs folder…</button
         ><button data-browse="dump-file">.nup file…</button>
       </div>
+    </dialog>
+    <dialog id="shared-dialog">
+      <div class="dialog-heading">
+        <h2>Enter a shared seed</h2>
+        <button id="close-shared">Back</button>
+      </div>
+      <p>
+        Use the same Clawshot version and supported game version for the same
+        hash.
+      </p>
+      <label for="shared-number">Seed number</label
+      ><input id="shared-number" type="number" step="1" />
+      <label for="shared-settings">Settings string</label
+      ><input id="shared-settings" spellcheck="false" />
+      <button id="apply-shared" class="primary">Use shared seed</button>
+      <p id="shared-error" role="alert"></p>
     </dialog>
     <dialog id="emulator-dialog">
       <div class="dialog-heading">

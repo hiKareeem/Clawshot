@@ -194,3 +194,9 @@ The first integrated run exposed a Windows TCP reset on an early rejected POST: 
 4. On Game, choose/check your mod-capable Hookshot folder, quit every running Hookshot, then return to the result and press Play.
 5. Start a New Game and collect a shuffled pickup named in the play note; expect that reward and `fs: OpenFile(...): from the overlay` in this seed's hookshot_log.txt.
 6. Quit game/app, reopen My seeds and Play the same seed; expect its private save to remain and normal Hookshot saves unchanged.
+
+### Release item 4: version-bound sharing
+
+Player strings wrap the existing CS1 as Clawshot-version:CS1; internal app/CLI codec is unchanged. All UI Apply/Copy/preset paths use the version-bound form, including initial Recommended; Enter a shared seed validates number and version before changing the form. Results expose number/settings/12-hex digest prefix with Copy and keyboard fallback. No raw input is interpreted as another version. Metadata/output files are unchanged.
+
+Proof:26 sharing/library/HTTP tests passed in18.71s; real synthetic replay to two distinct output paths produced identical complete file maps/digests. Wrong-version and unversioned imports start no work. Hidden Chromium refused Clawshot99.0, accepted the current Recommended string as seed88, generated, and copied hash26BA34541566 with no JS errors. `shots/shared-seed-result.png` visually inspected. Source strings retain generator logic identities; item6's naming work is still staged separately for its ordered commit.

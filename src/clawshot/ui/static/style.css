@@ -774,3 +774,33 @@ dialog p {
   font-family: var(--sans);
   font-size: 13px;
 }
+.share-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+.share-line label {
+  min-width: 52px;
+}
+.share-line input {
+  flex: 1;
+  min-width: 0;
+}
+.share-line input,
+#shared-dialog input {
+  color: var(--fg);
+  background: var(--panel);
+  border: 1px solid var(--border);
+  font: inherit;
+  padding: 7px;
+}
+#shared-dialog label {
+  display: block;
+  margin-top: 14px;
+}
+#shared-dialog input {
+  display: block;
+  width: 100%;
+  margin: 6px 0 14px;
+}

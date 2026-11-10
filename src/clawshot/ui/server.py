@@ -21,13 +21,13 @@ from clawshot.app import (
     input_schema,
     presets,
     schema,
-    settings_payload,
     validate,
 )
 from clawshot.app.emulator import copy_to_emulator
 from clawshot.app.library import SeedLibrary
 from clawshot.app.paths import absolute_path, default_output_root
 from clawshot.app.preferences import Preferences, suggested_eden_folder
+from clawshot.app.sharing import import_settings, player_settings, share_settings
 
 ASSETS = Path(__file__).with_name("static")
 STATIC = {
@@ -65,6 +65,15 @@ class Application:
             state = {"status": "loaded", "result": self.selected, "stages": [], "error": None, "seconds": 0}
         elif self.editing and state["status"] not in ("running", "cancelling"):
             state = {"status": "idle", "result": None, "stages": [], "error": None, "seconds": 0}
+        if state["result"] is not None:
+            result = state["result"]
+            state = state | {
+                "result": result
+                | {
+                    "share_string": share_settings(result["settings_string"], result["clawshot_version"]),
+                    "short_hash": result["output_sha256"][:12].upper(),
+                }
+            }
         return state | {"play": self.player.snapshot()}
 
     def result_for(self, body):
@@ -93,10 +102,10 @@ class Application:
                     if sys.platform != "win32"
                     else "Play is disabled in --no-open. Open Clawshot normally to play."
                 ),
-                "presets": choices,
+                "presets": [p | {"share_string": share_settings(p["settings_string"])} for p in choices],
                 "inputs": input_schema(),
                 "stages": [{"key": key, "label": label, "status": "pending", "seconds": 0} for key, label in STAGES],
-                **settings_payload(validate(text=recommended["settings_string"], spec=self.spec)),
+                **player_settings(validate(text=recommended["settings_string"], spec=self.spec)),
             }
         if method == "GET" and route == "job":
             return self.job_view()
@@ -121,7 +130,14 @@ class Application:
                 self.editing = False
             return self.job_view()
         if method == "POST" and route == "settings":
-            return settings_payload(validate(body.get("values"), text=body.get("settings_string"), spec=self.spec))
+            return player_settings(validate(body.get("values"), text=body.get("settings_string"), spec=self.spec))
+        if method == "POST" and route in ("import-settings", "shared-seed"):
+            if route == "shared-seed":
+                number = body.get("seed")
+                if type(number) is not int or not -(2**53 - 1) <= number <= 2**53 - 1:
+                    raise ValueError("Enter an exact whole seed number.")
+            payload = player_settings(import_settings(body.get("settings_string"), spec=self.spec))
+            return payload | ({"seed": number} if route == "shared-seed" else {})
         if method == "POST" and route == "normalize-path":
             kind = body.get("kind", "output")
             if kind not in ("dump", "hookshot", "output"):

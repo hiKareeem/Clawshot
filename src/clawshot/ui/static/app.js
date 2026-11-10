@@ -15,6 +15,7 @@ let settingsString = "CS1",
   revision = 0,
   timer,
   pollTimer;
+let shareString = "";
 let busy = false,
   resultShown = false,
   activeScreen = "game";
@@ -436,6 +437,7 @@ function renderSettings() {
     $("settings-groups").append(section);
   }
   applyDependencies();
+  $("settings-string").value = shareString;
   markPreset();
 }
 function markPreset() {
@@ -484,7 +486,8 @@ async function syncControls(changed) {
     inactive = data.inactive;
     applyDependencies();
     settingsString = data.settings_string;
-    $("settings-string").value = settingsString;
+    shareString = data.share_string;
+    $("settings-string").value = shareString;
     markPreset();
     for (const target of Object.keys(changed?.clears || {}))
       $("setting-" + target).value = JSON.stringify(values[target], null, 2);
@@ -512,14 +515,15 @@ async function applyString() {
   syncing = true;
   $("start-job").disabled = true;
   try {
-    const data = await api("settings", {
+    const data = await api("import-settings", {
       settings_string: $("settings-string").value,
     });
     if (current !== revision) return;
     values = data.values;
     inactive = data.inactive;
     settingsString = data.settings_string;
-    $("settings-string").value = settingsString;
+    shareString = data.share_string;
+    $("settings-string").value = shareString;
     renderSettings();
     valid = true;
     $("settings-state").textContent = "Settings string applied to all controls";
@@ -812,6 +816,9 @@ function renderJob(state) {
       count(state.result.shuffled, "shuffled check") +
       " · " +
       count(state.result.resources, "mod file");
+    $("result-number").value = state.result.seed;
+    $("result-settings").value = state.result.share_string;
+    $("result-hash").value = state.result.short_hash;
     $("result-path").textContent = state.result.output;
   }
   renderPlay();
@@ -951,20 +958,58 @@ function randomizeSeed() {
 }
 $("random-seed").addEventListener("click", randomizeSeed);
 $("apply-string").addEventListener("click", applyString);
-$("copy-string").addEventListener("click", async () => {
+async function copyField(id, status) {
+  const input = $(id);
   try {
-    await navigator.clipboard.writeText($("settings-string").value);
-    $("settings-state").textContent = "Settings string copied";
+    await navigator.clipboard.writeText(input.value);
+    $(status).textContent = "Copied";
   } catch {
-    $("settings-string").focus();
-    $("settings-string").select();
-    if (document.execCommand("copy"))
-      $("settings-state").textContent = "Settings string copied";
-    else
-      $("settings-state").textContent =
-        "String selected — press Ctrl+C or Command+C to copy";
+    input.focus();
+    input.select();
+    $(status).textContent = "Selected — press Ctrl+C or Command+C to copy";
+  }
+}
+document
+  .querySelectorAll("[data-copy]")
+  .forEach((button) =>
+    button.addEventListener("click", () =>
+      copyField(button.dataset.copy, "share-status"),
+    ),
+  );
+$("enter-shared").addEventListener("click", () => openDialog("shared-dialog"));
+$("close-shared").addEventListener("click", () => closeDialog("shared-dialog"));
+$("apply-shared").addEventListener("click", async () => {
+  try {
+    if (
+      !$("shared-number").value ||
+      !Number.isSafeInteger(Number($("shared-number").value))
+    )
+      throw new Error("Enter a whole seed number.");
+    const data = await api("shared-seed", {
+      seed: Number($("shared-number").value),
+      settings_string: $("shared-settings").value,
+    });
+    clearTimeout(timer);
+    ++revision;
+    values = data.values;
+    inactive = data.inactive;
+    settingsString = data.settings_string;
+    shareString = data.share_string;
+    $("seed").value = String(data.seed);
+    renderSettings();
+    valid = true;
+    syncing = false;
+    suggestOutput();
+    renderJob(await api("select-seed", { output: null }));
+    closeDialog("shared-dialog");
+    error("");
+  } catch (e) {
+    $("shared-error").textContent = e.message;
   }
 });
+$("copy-string").addEventListener("click", () =>
+  copyField("settings-string", "settings-state"),
+);
 $("settings-string").addEventListener("input", () => {
   clearTimeout(timer);
   ++revision;
@@ -1060,6 +1105,7 @@ window.addEventListener("beforeunload", (event) => {
     metadata = data.schema;
     values = data.values;
     settingsString = data.settings_string;
+    shareString = data.share_string;
     inputs = data.inputs;
     inactive = data.inactive;
     initialStages = data.stages;
@@ -1091,7 +1137,7 @@ window.addEventListener("beforeunload", (event) => {
       bindHelp(button, preset);
       button.dataset.keyAction = "Apply";
       button.addEventListener("click", async () => {
-        $("settings-string").value = preset.settings_string;
+        $("settings-string").value = preset.share_string;
         await applyString();
         if (valid)
           $("settings-state").textContent = preset.label + " preset applied";

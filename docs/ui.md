@@ -44,7 +44,7 @@ Hookshot installation are required. Checked input paths are remembered in your u
   Scrub and BossHeart, with the remaining generator defaults. Every control and choice comes
   from the app schema. Cards explain their coverage and actual gameplay evidence. Unavailable
   choices remain visible with a reason. Ineffective dependent settings are dimmed, retaining
-  their values for later reactivation. Changes update the CS1 string; paste and Apply does the
+  their values for later reactivation. Changes update the versioned share string; paste and Apply does the
   reverse. Copy copies it, or selects it with keyboard-copy instructions if permission is denied.
 - **Generate:** choose a seed, or Random, and a **new** output folder. The suggestion is
   `Documents/Clawshot/seed-<number>` (including redirected Windows/XDG Documents). Only that
@@ -173,3 +173,11 @@ Not implemented in the current checkout:
 
 Seed packs still use Make/Play; the UI is run from the source checkout or an installed Python
 package containing its static assets. Architecture and the local HTTP contract: [UI plan](../plans/05-ui.md).
+
+## Sharing
+
+Copy the result's number, settings and short hash. Enter a shared seed on Generate applies its
+number and settings together; another Clawshot version is refused before generating anything.
+Player strings begin `Clawshot-<version>:`; the existing CS1 codec remains the internal app/CLI format.
+The short hash comes from the finished files, not the number alone. Same version, number, settings
+and supported game files are required to reproduce it; timestamps and output paths are not hashed.
