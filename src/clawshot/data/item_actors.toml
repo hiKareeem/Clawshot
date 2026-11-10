@@ -31,6 +31,9 @@
 "Deku Shield" = { actor = "TBox_Shield_Deku", source = "Bottom of the Well Fire Keese Chest" }
 "Hylian Shield" = { actor = "TBox_Shield_Hylian", source = "Graveyard Shield Grave Chest" }
 "Bomb Bag" = { actor = "Item_BombBag_Small", source = "Dodongos Cavern Bomb Bag Chest" }
+"Bomb Bag (30)" = { actor = "Item_BombBag_Medium", source = "MiniGame_BombchuBowling Event304; fixed native medium tier, section40" }
+"Bullet Bag (40)" = { actor = "Item_BulletBag_Medium", source = "MiniGame_HitTarget Event241; fixed native medium tier, not Slingshot ownership" }
+"Quiver (40)" = { actor = "Item_Quiver_Medium", source = "MiniGame_HitTarget Event381; fixed native medium tier, not Bow ownership" }
 "Piece of Heart" = { actor = "Obj_Heart_Piece", source = "GF Chest, Graveyard Heart Piece Grave Chest, Graveyard Dampe Race Freestanding PoH, ZD Chest" }
 
 "Rupee (1)" = { actor = "TBox_Rupee_Green", source = "KF Midos Bottom Left Chest" }

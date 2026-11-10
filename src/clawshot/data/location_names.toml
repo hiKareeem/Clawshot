@@ -2527,26 +2527,26 @@ ids = ["LostWood_ScrubForestStageElder_TrueMaskFirst/Event2", "LostWood_ScrubFor
 
 [[location]]
 location = "Market Bombchu Bowling Second Prize"
-name = "Bombchu Bowling Third Win"
-where = "Hyrule Castle Town Market (child, after Dodongo's Cavern), Bombchu Bowling Alley: the third game cleared, the expert course"
+name = "Bombchu Bowling Second Prize"
+where = "Child Market, Bombchu Bowling after Dodongo's Cavern: with Gift shuffle, the second win. Unshuffled, the native heart prize is the third win."
 oot_randomizer_name = "Market Bombchu Bowling Second Prize"
-source = "https://zeldacentral.com/games/ocarina-of-time-remake/changes-from-the-original/#bombchu-bowling; https://www.ign.com/wikis/ocarina-of-time-remake/All_Heart_Piece_Locations; prize order also in flow MiniGame_BombchuBowling GetPrise (src/clawshot/data/world/remake/child_market.toml); data: census gift step(s) MiniGame_BombchuBowling/Event143 (src/clawshot/data/locations.toml; gift_rules.toml class swap; plans/03-game-data.md section 19)"
+source = "cs10a native MiniGame_BombchuBowling Event73/Event72 dispatch normalized for Gift; Event143 grant and native saved count/heart marker; section40. Original native order recorded in child_market.toml."
 ids = ["MiniGame_BombchuBowling/Event143"]
 
 [[location]]
 location = "Market Bombchu Bowling First Prize"
-name = "Bombchu Bowling Second Win"
-where = "Hyrule Castle Town Market (child, after Dodongo's Cavern), Bombchu Bowling Alley: the second game cleared"
+name = "Bombchu Bowling First Prize"
+where = "Child Market, Bombchu Bowling after Dodongo's Cavern: with Gift shuffle, the first win. Unshuffled, the native bomb-bag upgrade is the second win."
 oot_randomizer_name = "Market Bombchu Bowling First Prize"
-source = "https://zeldacentral.com/games/ocarina-of-time-remake/mini-games/#bombchu-bowling; https://www.eurogamer.net/all-heart-pieces-locations-zelda-ocarina-of-time#section-12; prize order also in flow MiniGame_BombchuBowling GetPrise (src/clawshot/data/world/remake/child_market.toml); data: census gift step(s) MiniGame_BombchuBowling/Event304, MiniGame_BombchuBowling/Event306 (src/clawshot/data/locations.toml; gift_rules.toml class swap; plans/03-game-data.md section 19)"
+source = "cs10a native MiniGame_BombchuBowling Event73/Event72 dispatch normalized for Gift; Event304/Event306 grants both give the assigned fixed item; section40. Opening and rental equipment remain native."
 ids = ["MiniGame_BombchuBowling/Event304", "MiniGame_BombchuBowling/Event306"]
 
 [[location]]
 location = "Market Bombchu Bowling Bombchus"
-name = "Bombchu Bowling First Win"
-where = "Hyrule Castle Town Market (child, after Dodongo's Cavern), Bombchu Bowling Alley: the first game cleared"
+name = "Bombchu Bowling Vanilla Bombchus"
+where = "Child Market, Bombchu Bowling: native unshuffled first-win Bombchus. With Gift shuffle this is not a third check; only First Prize and Second Prize are shuffled."
 oot_randomizer_name = "Market Bombchu Bowling Bombchus"
-source = "https://zeldacentral.com/games/ocarina-of-time-remake/mini-games/#bombchu-bowling; https://zeldacentral.com/games/ocarina-of-time-remake/walkthrough/bombchu-bowling-and-spin-attack/; prize order also in flow MiniGame_BombchuBowling GetPrise (src/clawshot/data/world/remake/child_market.toml); data: census gift step(s) MiniGame_BombchuBowling/Event309 (src/clawshot/data/locations.toml; gift_rules.toml class swap; plans/03-game-data.md section 19)"
+source = "Native MiniGame_BombchuBowling Event309; round10 Gift mode removes this extra payout from logic and keeps later native filler; section40."
 ids = ["MiniGame_BombchuBowling/Event309"]
 
 [[location]]

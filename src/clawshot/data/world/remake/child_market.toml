@@ -72,9 +72,10 @@ source = "Eurogamer, 'all new changes': time does not flow until Link has met Ze
 # Dodongo's own rule asks for explosives anyway).
 
 [locations."Market Bombchu Bowling First Prize"]
+vanilla = "Bomb Bag (30)"
 rule = "has_explosives and 'Defeat King Dodongo'"
 was = "has_explosives"
-source = "flow MiniGame_BombchuBowling, AfterWakeUp: Get_StoneOfFire_IsCompleted_Exp (the Stone of Fire quest enum at 'Complete', after BossBattle and EscapeDungeon) gates the offer, otherwise the lady refuses; Start: EventPlayerSetItemForMiniGame (10 rental items, ExplainRentalItem); GetPrise: second clear gives Item_BombBag_Medium (Item_BombBag_Large if held); Nintendo Life heart piece guide: bowling opens after Dodongo Cavern"
+source = "Native MiniGame_BombchuBowling rents10 Bombchus and opens only after Get_StoneOfFire quest completion. Unshuffled order is Bombchus, upgrade, heart; Gift shuffle normalizes First Prize to win1, Second Prize to win2, then native red-rupee filler (cs10a section40). Fixed native medium Bomb Bag contributes30 capacity; existing explosives/King Dodongo rule stays."
 
 [locations."Market Bombchu Bowling Second Prize"]
 rule = "has_explosives and 'Defeat King Dodongo'"

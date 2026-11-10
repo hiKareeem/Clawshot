@@ -98,5 +98,8 @@ age_return_fill_inventory = { "Ocarina" = 2, "Song of Time" = 1, "Sarias Song" =
 [items]
 # The Lost Woods target game's prize is a bigger bullet bag: OoT Randomizer gives a progressive Slingshot there.
 "Bullet Bag (40)" = { class = "normal" }
+# Native minigame upgrades (cs10a, section40): bags are not rental weapon ownership.
+"Bomb Bag (30)" = { class = "progression", alias = ["Bomb Bag", 1] }
+"Quiver (40)" = { class = "normal" }
 "Scrub Business Seed" = { class = "normal" } # D12: remake-only filler
 "Magic Jar" = { class = "normal" } # census Tbox_MagicJar_Large; no ability added
