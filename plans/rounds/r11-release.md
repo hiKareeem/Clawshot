@@ -145,3 +145,68 @@ Verification: supplied row equals the last table row exactly and occurs once; **
 `CLAWSHOT_WORKERS=1 uv run pytest tests/test_pack.py -q`: **13 passed, 0.29s**.
 Requeue the same ordered sweep/four-gate command only after this docs commit; no full own
 gate has run yet. The complete dump gate still includes both `OOT_ROMFS` and `OOT_NUP`.
+
+## Item 2 completed: one locked seeds 1–50 sweep
+
+Final ordered job completed with exit 0. Ran one worker, no pool, one sweep at a time.
+Prepared the same kind-specific world, actual census chest pool and restrictions as the CLI,
+then called `generate` and independently `check_beatable` for each result. Seed-8 settings
+came from its read-only historical spoiler; neither its output nor its pack was rebuilt.
+Before counts use a private copy restoring exactly these two old holds, not another worktree.
+
+| Settings | Seeds beatable | Checks before | Checks after | Gifts before | Gifts after | Sphere range |
+| --- | ---: | ---: | ---: | ---: | ---: | --- |
+| Defaults | 50/50 (1–50) | 165 | 165 | 0 | 0 | 22–34 |
+| Seed 8's exact CS1 | 50/50 (1–50) | 298 | 300 | 57 | 59 | 17–27 |
+
+The only added names are the bottle tutorial and digging reward; no removed checks.
+Sweep subprocess: **851.55s**, exit 0. Proof: scratch `sweep-proof.json`, `sweep.log`,
+`sweep-result.json`, and the exact original CS1 in `seed8-settings.txt`.
+The passing bottle regression preserves fixed early-bottle logic without Gift and proves
+that a shuffled Boomerang at the merchant does not unlock a bottle-dependent check.
+
+## Complete final gates and handoff
+
+Ran all four full required commands after `187d1a2`, including its player template change.
+Every command acquired/released the shared gate directory independently; no overlapping
+full gates/sweep and no other holder's directory removed. Every subprocess returned 0.
+Synthetic run had both dump variables unset. Dump run set:
+`OOT_ROMFS=E:/Games/Hookshot/romfs` and
+`OOT_NUP=E:/Games/Hookshot/The Legend of Zelda Ocarina of TIme [04004860224DEC000].nup`.
+All pytest runs used `CLAWSHOT_WORKERS=1`; temporary game data stayed under scratch.
+
+| Full command | Observed result |
+| --- | --- |
+| `uv run ruff format --check` | 271 files already formatted; exit 0 |
+| `uv run ruff check` | All checks passed; exit 0 |
+| `uv run pytest` | 846 passed, 110 skipped; 1187.35s; exit 0 |
+| `uv run pytest -m dump` (both source variables above) | 109 passed, 847 deselected, no skips; 2574.07s; exit 0 |
+
+**No skip of the NUP tests:** all 17 rows in `test_pack_nup_dump.py` passed, including every
+resource mode and both newly released gift patches. The keys-guard matrix repair is included.
+Retained `gate-results.json`, four command logs and per-command result JSON under scratch.
+After proof, removed only the six throwaway Python harnesses created by this session.
+Evidence JSON/logs and scratch outputs remain; no pre-existing or played artifact deleted.
+Only this round-file evidence changes after the fully gated source/template head.
+
+### Branch commits (in order)
+
+| Commit | Work |
+| --- | --- |
+| `5c02eb5` | Two matching tested gifts released; exact Boomerang-flow comparison |
+| `3ccbae4` | Approved isolated NUP cache-test repair after the keys guard |
+| `bcfae67` | Bottle dependency and unrelated-experiment exclusion regression |
+| `4a1c273` | Existing names regression and actual hints/play-note evidence |
+| `e2cf231` | Cache-only CLI checks both emitted grants against the spoiler |
+| `deddec9` | Scoped gift-release status and section 40 |
+| `880cbc9` | Serialized verification-queue provenance |
+| `187d1a2` | Verbatim child-Jabu answer, accepted normal minigames, alley-display note |
+| This final evidence commit | Completed sweep/gates and review handoff |
+
+Ready for Claude's combined keys/release review and gate/merge at this branch head; base
+unchanged, no rebase, merge or push. No patch code changed; no new game test was staged or
+run. Kareem's exact accepted files, original builders, live outputs and saves stayed read-only.
+No remaining Track E implementation or verification blocker. First-expert gallery tests,
+merchant experiments, unreleased Skulltula House checks and keysanity's in-game experiments
+remain outside this release. Digging Save and Continue, adult-gallery repeat/reload and
+Save and Continue between bowling wins remain unreported observations, not inferred passes.
