@@ -117,6 +117,9 @@ def make_seed(
         from clawshot.patch.age import changes as age_changes
 
         changes += (age_changes(out.placements, free_time_travel=True),)
+    from clawshot.patch import door
+
+    changes += (door.changes(out.placements, mode=settings.door_of_time),)
     item_names: dict[str, str] = {}
     if out.hints:
         item_names, hint_changes = hint_step(romfs, out, table)
@@ -131,6 +134,7 @@ def make_seed(
     # GameData defaults compose before gift flag additions; only cutscene component files are prebuilt.
     event_settings = {s.name: replace(s, game_data={}) for s in chosen if s.skippable}
     fast_files = tuple(gamedata.build(romfs, list(event_settings), event_settings)) if event_settings else ()
+    fast_files += tuple(door.build(romfs, mode=settings.door_of_time))
     plan = make_plan(out, links, table, chest_events.load())
     return SeedOutput(out, links, plan, changes, fast_files, item_names)
 
