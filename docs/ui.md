@@ -1,5 +1,15 @@
 # Local UI
 
+Unzip the whole Clawshot folder, then double-click **Clawshot.bat** on Windows.
+Linux uses executable **clawshot.sh**. On macOS, open clawshot.sh with Terminal; macOS is untested.
+Keep its terminal open while playing with the menu. Nothing requires administrator access.
+
+The starter first uses uv already on your PATH or in the app's `.tools` folder. If missing, it
+announces a one-time download of pinned uv0.13.7 from its official GitHub release, checks the
+embedded SHA-256 before extracting/executing, and keeps it inside `.tools`. It changes no PATH,
+profile or system install. No internet or a blocked download gives the manual release link.
+Dependencies come from `uv.lock` with `--frozen --no-dev`; Windows also selects the optional UI extra.
+
 ```sh
 uv run python -m clawshot.ui                  # browser, when the optional UI extra is absent
 uv run --extra ui python -m clawshot.ui       # pywebview app window
@@ -152,7 +162,7 @@ on 2026-11-10. This does not confirm its NUP file picker, browser/Tk picker or t
 
 Not implemented in the current checkout:
 - gamepad/Steam Deck controller navigation (keyboard/mouse only);
-- double-click bootstrap (the next ordered release item);
+- literal macOS Finder double-click association (open the shell script with Terminal; macOS untested);
 - a bundled executable/installer or bundled fonts;
 - native Play acceptance or Linux/macOS UI runtime certification.
 
