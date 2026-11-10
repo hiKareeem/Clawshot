@@ -279,3 +279,42 @@ launcher/output/user untouched; no overlay rebuild. Assignment-only `cmd.exe` sm
 launcher's safe prefix produced `POLICY:1:1` from inherited zeroes, six of six; no launcher,
 save-copy condition or game invocation executed. Checklist headers checked, four of four.
 
+## Review handoff commits
+
+| Work | Commits |
+| --- | --- |
+| Release seven frogs | `128f380` |
+| Market bottle naming and implementation | `f76ce2e`, `8e85e64` |
+| Fixed minigame metadata, deterministic routing, upgrade hints | `cb1e311`, `a9f66e5`, `557a8d0` |
+| Dampé location link and once-only real grant | `c6ed9df`, `111c713` |
+| Integrated gift documentation | `bc490a7` |
+| Market native finalization correction | `df08a3f` |
+| Approved held first-expert checks | `78a53eb` |
+| Unplayed launcher cheat policy record | `541ec3d` |
+
+No merge or push. Shared-file changes remain small scoped commits for Claude to review.
+Product policy still requiring play evidence: keep bottle, digging and both new expert
+checks held until their exact isolated checklist passes; do not infer approval from tests.
+
+## Final required gates
+
+`gates.py` ran the exact four required commands with `CLAWSHOT_WORKERS=1`; synthetic run
+had OOT_ROMFS unset, dump run used the read-only `E:/Games/Hookshot/romfs`.
+
+| Command | Observed result |
+| --- | --- |
+| `uv run ruff format --check` | 245 files already formatted; exit0 |
+| `uv run ruff check` | All checks passed; exit0 |
+| `uv run pytest` | 778 passed,91 skipped; 966.66s; exit0 |
+| `OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump` | 90 passed,779 deselected; 592.60s; exit0 |
+
+Waited for the existing gate directory with60s retries, acquired it for synthetic and
+released immediately at completion; independently acquired/released for dump. Both releases
+exit0. No overlap or removal of another holder's lock. Logs and command/exit/duration records
+are `gate-{format,lint,synthetic,dump}.log` and `gate-results.json` under the research root.
+All source behavior above is now gate-verified; only this final evidence/handoff text follows.
+
+Ready for Claude's code review, not an in-game certification. Remaining work is Kareem's
+isolated bottle-fix, digging and first-expert checklists; normal minigame launchers are also
+available. No held check was released, game started, save backup edited, or played output rebuilt.
+
