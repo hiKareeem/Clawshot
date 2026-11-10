@@ -323,8 +323,8 @@ Flag sources, inference limits and pending player checks: `03-game-data.md` sect
 
 The overlay writer's `make_seed` supplies the remake's actual chest pool through census actor identities and
 `item_actors.toml`, not the untranslated N64 chest contents. Native shops use their catalog.
-Gift checks require matching native actors, except the accepted variable frog-song prizes
-(fixed Rupees (20)) and the explicit minigame tier families normalized to fixed medium upgrades.
+Gift checks require matching native actors, except accepted variable frog-song and first-expert
+gallery prizes (fixed Rupees (20)) and explicit minigame tier families normalized to medium upgrades.
 Bowling's Bomb Bag30 counts as the bag ability; gallery Bullet Bag40/Quiver40 are capacity only,
 not Slingshot/Bow ownership. Unresolved upgrade tiers stay vanilla. Shuffled bowling removes
 the old extra native refill rows from the prepared world: two first-win prizes, then filler.

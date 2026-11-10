@@ -31,6 +31,8 @@ from clawshot.census.gifts import (
     FLOW_VERSIONS,
     FROG_SONG_CALL,
     FROG_SONG_FLAGS,
+    GALLERY_EXPERT_CALL,
+    GALLERY_EXPERT_RUPEES,
     Gift,
     _successors,
     flow_files,
@@ -84,6 +86,16 @@ TIERED_GIFTS = {
 
 DAMPE_CHECK = "Graveyard Dampe Gravedigging Tour"
 DAMPE_FLAG = "GraveYard_DiggingHoleTour_Drop_HeartPiece"
+
+GALLERY_EXPERT_CHECKS = {
+    "Event202": "Market Shooting Gallery Expert Reward",
+    "Event599": "Kak Shooting Gallery Expert Reward",
+}
+GALLERY_EXPERT_ROUTES = {
+    "Event202": ("Event445", "Event448", "Event411"),
+    "Event599": ("Event449", "Event452", "Event413"),
+}
+VARIABLE_RUPEE_CALLS = (FROG_SONG_CALL, GALLERY_EXPERT_CALL)
 
 # Sale calls need their flag inside the success branch, not after a wrapper that can refuse.
 MERCHANT_SHOPS = {
@@ -181,7 +193,7 @@ class GiftChange:
     @property
     def flag(self) -> str | None:
         """The flag the check's "given" reads read, or None when it has none."""
-        if not (self.rule.given or self.rule.writes or self.rule.once or self.rule.purchase):
+        if not (self.rule.given or self.rule.writes or self.rule.once or self.rule.purchase or self.expert):
             return None
         return self.rule.flag or FLAG_PREFIX + self.steps[0].id.replace("/", ".")
 
@@ -189,8 +201,14 @@ class GiftChange:
     def new_flag(self) -> str | None:
         """The flag the patch adds to GameDataList and sets after each step, or None."""
         return (
-            self.flag if (self.rule.given or self.rule.once or self.rule.purchase) and self.rule.flag is None else None
+            self.flag
+            if (self.rule.given or self.rule.once or self.rule.purchase or self.expert) and self.rule.flag is None
+            else None
         )
+
+    @property
+    def expert(self) -> bool:
+        return any(s.call == GALLERY_EXPERT_CALL for s in self.steps)
 
 
 def check_steps(gifts: Iterable[Gift], definitions: Iterable[Definition]) -> dict[str, tuple[Gift, ...]]:
@@ -198,6 +216,7 @@ def check_steps(gifts: Iterable[Gift], definitions: Iterable[Definition]) -> dic
     name_of = {d.id: d.oot_randomizer_name for d in definitions if isinstance(d.id, str) and d.oot_randomizer_name}
     name_of.update({step: SHOPKEEPER_CHECK for step in SHOPKEEPER_STEPS})
     name_of[MARKET_BOTTLE_STEP] = MARKET_BOTTLE_CHECK
+    name_of.update({f"MiniGame_HitTarget/{event}": name for event, name in GALLERY_EXPERT_CHECKS.items()})
     out: dict[str, list[Gift]] = {}
     for gift in gifts:
         if gift.id in name_of:
@@ -332,9 +351,57 @@ def _frog_song(fc: evfl.Flowchart, step: Gift, item: str) -> None:
     call.entry_point = _clone_entry(fc, "TeachNewMusic", {start.name: grant})
 
 
+def _gallery_expert(fc: evfl.Flowchart, step: Gift, item: str) -> None:
+    """First expert win grants one saved gift; later wins keep the untouched native 30/70 path."""
+    repeat = fc.events[_index(fc, fc.name, step.event)]
+    mode_name, native_start, close_name = GALLERY_EXPERT_ROUTES[step.event]
+    mode = fc.events[_index(fc, fc.name, mode_name)]
+    close = fc.events[_index(fc, fc.name, close_name)]
+    if (
+        fc.name != "MiniGame_HitTarget"
+        or not isinstance(repeat, evfl.SubFlowEvent)
+        or (repeat.flowchart or fc.name, repeat.entry_point) != ("MiniGame_HitTarget", "GetRupy_HitTarget")
+        or repeat.params != {"GetRupee": GALLERY_EXPERT_RUPEES[step.event]}
+        or repeat.next != _index(fc, fc.name, close_name)
+        or not isinstance(mode, evfl.SwitchEvent)
+        or fc.actors[mode.actor].queries[mode.query] != READ_QUERY
+        or mode.params != {"GameDataName": "MiniGame_HitTarget_IsHardMode", "Index": -1}
+        or dict(mode.cases).get(0) != _index(fc, fc.name, native_start)
+        or not isinstance(close, evfl.ActionEvent)
+        or fc.actors[close.actor].actions[close.action] != "EventCloseRupeeDisplay"
+    ):
+        raise GiftPatchError(f"{step.id}: stale expert reward dispatch: {repeat!r}, {mode!r}, {close!r}")
+    flag = FLAG_PREFIX + step.id.replace("/", ".")
+    grant_index = len(fc.events)
+    grant = evfl.SubFlowEvent(
+        f"{NEW_EVENT_PREFIX}{grant_index}",
+        "Dm_SY_GetInEvent",
+        "GetInEvent_NotTurn_NotNpc",
+        close.next,
+        {"ActorName": item, "IsNpcEventStarter": False},
+    )
+    fc.events.append(grant)
+    _set_flag_after(fc, replace(step, event=grant.name), flag)
+    actor = _game_data_actor(fc, fc.name)
+    gate_index = len(fc.events)
+    fc.events.append(
+        evfl.SwitchEvent(
+            f"{NEW_EVENT_PREFIX}{gate_index}",
+            actor,
+            _slot(fc.actors[actor].queries, READ_QUERY),
+            [(0, _index(fc, fc.name, native_start)), (1, grant_index)],
+            {"GameDataName": flag, "Index": -1},
+        )
+    )
+    mode.cases = [(case, gate_index if case == 0 else target) for case, target in mode.cases]
+
+
 def _set_item(fc: evfl.Flowchart, step: Gift, item: str) -> None:
     if step.call == FROG_SONG_CALL:
         _frog_song(fc, step, item)
+        return
+    if step.call == GALLERY_EXPERT_CALL:
+        _gallery_expert(fc, step, item)
         return
     event = fc.events[_index(fc, step.flow, step.event)]
     params = getattr(event, "params", None) or {}
@@ -683,7 +750,7 @@ def patch_flowchart(fc: evfl.Flowchart, flow: str, changes: Sequence[GiftChange]
         for step in change.steps:
             if step.flow == flow:
                 _set_item(fc, step, change.item)
-                if (change.new_flag or change.rule.once) and not change.rule.purchase:
+                if (change.new_flag or change.rule.once) and not change.rule.purchase and not change.expert:
                     _set_flag_after(fc, step, change.flag)
                 if change.check == MARKET_BOTTLE_CHECK:
                     _market_bottle(fc, change)
@@ -896,9 +963,8 @@ def seed_checks(
             continue
         if name in ANCHORS and not free:
             continue
-        # Native frog songs pay variable rupees, not a literal actor. Round 10's approved
-        # pool contribution is fixed at 20; even an unchanged assignment must specialize it.
-        if all(s.call == FROG_SONG_CALL for s in steps[name]) and loc.vanilla == "Rupees (20)":
+        # Accepted variable-rupee families contribute fixed20, and always specialize same-item assignments.
+        if all(s.call in VARIABLE_RUPEE_CALLS for s in steps[name]) and loc.vanilla == "Rupees (20)":
             out.append(name)
             continue
         if name in TIERED_GIFTS:
@@ -950,7 +1016,7 @@ def seed_step(
             or rules[name].once
             or name in TIERED_GIFTS
             or name in BOWLING_CHECKS
-            or any(s.call == FROG_SONG_CALL for s in steps[name])
+            or any(s.call in VARIABLE_RUPEE_CALLS for s in steps[name])
         }
         return file_changes(plan(moved, gifts, definitions, rules), files)
 

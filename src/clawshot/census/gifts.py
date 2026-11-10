@@ -58,6 +58,9 @@ FROG_SONG_FLAGS = {
     "Event223": "MiniGame_FrogTenors_TimeSong",
 }
 
+GALLERY_EXPERT_CALL = "MiniGame_HitTarget:GetRupy_HitTarget"
+GALLERY_EXPERT_RUPEES = {"Event202": 30, "Event599": 70}
+
 # Flows left out (see the module docstring): business scrub sales, and the DreamWorld boss rush.
 EXCLUDED_FLOWS = frozenset(
     {
@@ -222,6 +225,25 @@ def find_gifts(
                         tuple(sorted(entries_of.get(i, ()))),
                         event.name,
                         FROG_SONG_CALL,
+                        "",
+                        "",
+                        areas.get(flow, ""),
+                    )
+                )
+            if flow == "MiniGame_HitTarget" and event.name in GALLERY_EXPERT_RUPEES:
+                if callee != ("MiniGame_HitTarget", "GetRupy_HitTarget") or event.params != {
+                    "GetRupee": GALLERY_EXPERT_RUPEES[event.name]
+                }:
+                    raise GiftError(f"{flow}/{event.name}: native expert rupee reward changed: {event!r}")
+                out.append(
+                    Gift(
+                        f"{flow}/{event.name}",
+                        NPC_GIFT,
+                        flow,
+                        files[flow],
+                        tuple(sorted(entries_of.get(i, ()))),
+                        event.name,
+                        GALLERY_EXPERT_CALL,
                         "",
                         "",
                         areas.get(flow, ""),

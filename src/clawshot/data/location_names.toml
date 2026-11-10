@@ -3150,3 +3150,19 @@ where = "As child at night after meeting Zelda, lead Dampe to the graveyard's di
 oot_randomizer_name = "Graveyard Dampe Gravedigging Tour"
 source = "cs10a active Npc_Hylia_Dampe_001.110/Event628 grant, native saved completion and existing child_graveyard access rule; section40."
 ids = ["Npc_Hylia_Dampe_001/Event628"]
+
+[[location]]
+location = "Market Shooting Gallery Expert Reward"
+name = "Market Slingshot Gallery Expert"
+where = "Child Market, daytime Shooting Gallery: win the normal course to unlock expert, then get a perfect expert win. First expert win gives the shuffled item once; later expert wins retain native 30 rupees."
+oot_randomizer_name = ""
+source = "cs10a native MiniGame_HitTarget Event445 hard-mode branch, Event202 repeat30, normal HrlCity_Get_BulletBag gate; Kareem fixed20 pool approval, section40."
+ids = ["MiniGame_HitTarget/Event202"]
+
+[[location]]
+location = "Kak Shooting Gallery Expert Reward"
+name = "Kakariko Archery Gallery Expert"
+where = "Adult Kakariko Shooting Gallery, daytime with Bow: win the normal course, then get a perfect expert win. First expert win gives the shuffled item once; later expert wins retain native 70 rupees."
+oot_randomizer_name = ""
+source = "cs10a native MiniGame_HitTarget Event449 hard-mode branch, Event599 repeat70, normal Kakariko_Get_Quiver gate; Kareem fixed20 pool approval, section40."
+ids = ["MiniGame_HitTarget/Event599"]

@@ -5057,3 +5057,19 @@ area = "Market"
 name = "SubEvent_MaskSalesman Event365 (Obj_Rupee_Gold)"
 vanilla_item = "Obj_Rupee_Gold"
 oot_randomizer_name = ""
+
+[[location]]
+id = "MiniGame_HitTarget/Event202"
+kind = "npc_gift"
+area = ""
+name = "Market Shooting Gallery Expert Reward"
+vanilla_item = ""
+oot_randomizer_name = ""
+
+[[location]]
+id = "MiniGame_HitTarget/Event599"
+kind = "npc_gift"
+area = ""
+name = "Kak Shooting Gallery Expert Reward"
+vanilla_item = ""
+oot_randomizer_name = ""

@@ -50,6 +50,8 @@ def _intended(fc: evfl.Flowchart, flow: str, changes) -> set[int]:
             out |= {index["Event73"], index["Event72"]}
         if change.check == gifts.DAMPE_CHECK and flow == change.steps[0].flow:
             out.add(index["Event449"])
+        if change.expert and flow == change.steps[0].flow:
+            out |= {index[gifts.GALLERY_EXPERT_ROUTES[s.event][0]] for s in change.steps}
         for ref in change.rule.skip:
             if ref.split("/")[0] == flow:
                 i = index[ref.split("/")[1]]
@@ -150,9 +152,23 @@ def test_dump_every_step_gives_the_new_item_and_given_reads_read_the_flag(romfs,
                     and trees[step.flow].actors[e.actor].actions[e.action] == "EventTriggerIncreaseRupee"
                     for i in indices
                 ), step.id
+            elif change.expert:
+                fc = trees[step.flow]
+                mode = next(e for e in fc.events if e.name == gifts.GALLERY_EXPERT_ROUTES[step.event][0])
+                gate = fc.events[dict(mode.cases)[0]]
+                assert gate.params == {"GameDataName": change.flag, "Index": -1}
+                grant = fc.events[dict(gate.cases)[1]]
+                assert grant.params == {"ActorName": NEW_ITEM, "IsNpcEventStarter": False}
+                assert event.params == {"GetRupee": gifts.GALLERY_EXPERT_RUPEES[step.event]}
+                assert fc.events[dict(gate.cases)[0]].name == gifts.GALLERY_EXPERT_ROUTES[step.event][1]
+                assert fc.events[grant.next].params == {
+                    "GameDataName": change.flag,
+                    "Index": -1,
+                    "Value": True,
+                }
             else:
                 assert event.params[step.param] == NEW_ITEM, step.id
-            if (change.new_flag or change.rule.once) and not change.rule.purchase:
+            if (change.new_flag or change.rule.once) and not change.rule.purchase and not change.expert:
                 added = trees[step.flow].events[event.next]
                 assert added.params == {"GameDataName": change.flag, "Index": -1, "Value": True}, step.id
         for ref in change.rule.given:

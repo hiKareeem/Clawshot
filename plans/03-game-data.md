@@ -2791,10 +2791,17 @@ medium tiers: Bomb Bag30, Bullet Bag40, Quiver40 (`PouchActorInfo.AfterExpansion
 Bomb Bag30 supplies the bag ability; bullet bags and quivers do not supply rental weapon
 ownership. Their native normal-win saved flags remain; both normal galleries join Gift.
 
-Expert modes are native repeat30/70-rupee calls (`Event202`/`Event599`) after the normal
-reward, with no separate saved first-expert flag or literal item actor. A D22 new-Bool
-specialization is feasible, but its fixed pool item needs an owner choice; the round file
-records the question and exact unchanged expert behavior rather than inventing one.
+Native expert modes repeat30/70 rupees (`Event202`/`Event599`) after the normal reward,
+without first-win state or a literal item actor. Kareem selected fixed Rupees (20) for each
+first-expert pool item (2026-11-09, via Claude). Census records these variable native calls
+honestly; two remake-only checks use the normal-clear prerequisite and one D22 saved Bool each:
+`Clawshot.Gift.MiniGame_HitTarget.Event202` (Hash1800298829) and `.Event599` (Hash2333016720),
+defaultfalse/reset8/save0. Only Event445/449's expert branch gets the new query; false grants
+the assignment through `GetInEvent_NotTurn_NotNpc`, then saves completion and rejoins native
+post-reward talk without opening the rupee UI. True uses the original expert talk/UI/call/close
+path, unchanged30/70. Normal wins/failures do not consume expert state; same20 assignments
+still specialize. Both checks remain D15-held pending Kareem's isolated test. No existing
+output was rebuilt; new `gallery-expert-next`, two users/launchers and `expert-check.md`.
 
 ### Dampé digging event check
 

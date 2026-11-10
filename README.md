@@ -48,8 +48,8 @@ allowlist in `settings.toml` currently permits the Fairy Ocarina.
 Bombchu Bowling prizes (first win, second win, then native filler), and the normal child/adult
 shooting-gallery upgrades. Rental weapons are not inventory rewards. The Market Potion Shop's
 free child bottle is modeled in logic; its shuffled tutorial bypass and Dampé's digging swap
-remain held pending isolated in-game checks. Expert galleries remain native repeat rupees
-pending a fixed-pool decision (`plans/rounds/r10-gifts.md`).
+remain held pending isolated in-game checks. First-expert gallery checks contribute Rupees (20)
+and use separate saved gates, but also remain held until tested; later expert wins stay native30/70.
 
 `--shuffle Chest BossHeart` adds the eight boss-heart checks (off by default), restricted to native heart,
 heart-piece, shield and red-rupee pickups. Boss pickup persistence and Heart Containers from chests still need

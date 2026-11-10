@@ -413,3 +413,11 @@ gate = "Npc_Hylia_020_Shop_Item_Bottle_Present; shuffled acceptance finishes the
 [check."Graveyard Dampe Gravedigging Tour"]
 class = "swap"
 gate = "GraveYard_DiggingHoleTour_Drop_HeartPiece; guard Event449's Event628 grant and save immediately after"
+
+[check."Market Shooting Gallery Expert Reward"]
+class = "swap"
+gate = "Clawshot.Gift.MiniGame_HitTarget.Event202; first expert win only, native repeat30 retained"
+
+[check."Kak Shooting Gallery Expert Reward"]
+class = "swap"
+gate = "Clawshot.Gift.MiniGame_HitTarget.Event599; first expert win only, native repeat70 retained"

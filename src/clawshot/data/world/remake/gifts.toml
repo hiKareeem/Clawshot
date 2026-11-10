@@ -77,3 +77,31 @@ rule = "is_child and (at_dampe_time and 'Time Flows')"
 was = "is_child and at_dampe_time"
 source = "cs10a active Npc_Hylia_Dampe_001.110: Event628 -> GetInEvent_NotTurn_NotNpc_Dampe is the actual grant, Event82 only stages the native heart prop, Event301 removes it. Event357 sets saved GraveYard_DiggingHoleTour_Drop_HeartPiece; native primary routes query it. Existing child/night/Time Flows rule retained from cs4a: Eurogamer all-new-changes and IGN/Nintendo Life heart guides. Shuffled grant gets the same native saved gate at its fork, not a new physical pickup."
 
+
+[events."Market Shooting Gallery"."Market Gallery Normal Clear"]
+new = true
+rule = "is_child"
+source = "cs10a native MiniGame_HitTarget: Child_Reward sets HrlCity_Get_BulletBag on a normal perfect win, then expert selection becomes available. Rental Slingshot; no owned weapon prerequisite."
+
+[events."Kak Shooting Gallery"."Kak Gallery Normal Clear"]
+new = true
+rule = "is_adult and Bow"
+source = "cs10a native MiniGame_HitTarget: Adult_Reward sets Kakariko_Get_Quiver on a normal perfect win, then expert selection becomes available. Retain normal adult/Bow access from Overworld.json:1923."
+
+[locations."Market Shooting Gallery Expert Reward"]
+new = true
+region = "Market Shooting Gallery"
+type = "NPC"
+vanilla = "Rupees (20)"
+rule = "is_child and 'Market Gallery Normal Clear'"
+keep_vanilla = "D15: new saved first-expert gift awaits Kareem's isolated test"
+source = "Kareem approved Rupees (20) pool, 2026-11-09 via Claude. Native MiniGame_HitTarget/Event202 is repeat30 after normal completion and IsHardMode; specialization adds one D22 saved Bool, later expert wins remain30. Normal perfect score required before the native expert offer."
+
+[locations."Kak Shooting Gallery Expert Reward"]
+new = true
+region = "Kak Shooting Gallery"
+type = "NPC"
+vanilla = "Rupees (20)"
+rule = "is_adult and Bow and 'Kak Gallery Normal Clear'"
+keep_vanilla = "D15: new saved first-expert gift awaits Kareem's isolated test"
+source = "Kareem approved Rupees (20) pool, 2026-11-09 via Claude. Native MiniGame_HitTarget/Event599 is repeat70 after normal completion and IsHardMode; specialization adds one D22 saved Bool, later expert wins remain70. Normal adult/Bow access retained."

@@ -98,17 +98,15 @@ chest-verified. Added small shared actor/world/catalogue metadata; no general fi
 Normal gallery saved flags remain HrlCity_Get_BulletBag and Kakariko_Get_Quiver
 (reset8/save0); native failure/fee/rental/normal-repeat rewards are unchanged.
 
-### Expert gallery report / owner question
+### Original expert gallery report (choice resolved below)
 
 The flows have expert mode, but **not a first-expert check**. After normal completion,
 Event445/449 dispatch IsHardMode to repeat30 rupees (child Event202) or70 (adult Event599)
 through `GetRupy_HitTarget`. Neither is a literal item actor or an independent saved first-win
 flag. A separate check is technically feasible using D22's new saved Bool and a specialized
-grant; a fixed pool contribution still needs a product choice (as frogs explicitly received20).
-**Kareem/co-owner: should each first-expert win contribute fixed Rupees (20), or retain the
-native30/70 amounts through a broader numeric-reward item representation?** No invented
-actor or silent replacement of30/70 by20. Posted this gap to cs-r10; expert stays native in
-the current output. This is a bounded report, not a claim the engine cannot support it.
+grant; a fixed pool contribution needed a product choice. Kareem subsequently chose Rupees (20)
+for each first-expert check, via Claude. The follow-up below implements it; the original
+`minigames-next` overlay stays untouched/native for expert rewards.
 
 ### Exercised acceptance
 
@@ -227,3 +225,47 @@ Priority interruption: own gate job was cancelled while waiting for another hold
 results contain only format244/lint passes; **no synthetic or dump run completed** and no
 other agent's lock was removed. Full four gates restart after the requested source follow-ups.
 Kareem also approved fixed20 for both first-expert gallery pool items; implementation follows.
+
+## Approved follow-up: first expert gallery checks
+
+Kareem proposed/selected fixed Rupees (20) for both pools, forwarded by Claude. New stable
+IDs are `MiniGame_HitTarget/Event202` (Market child) and `/Event599` (Kakariko adult).
+Raw census records native variable calls, not invented literal actors or OoTR locations.
+Added remake-only NPC checks, catalogue directions and normal-clear logic events. Child
+uses its existing child/rental access; adult retains adult/Bow access. Both are D15-held.
+
+D22 saved Bools: `Clawshot.Gift.MiniGame_HitTarget.Event202` Hash1800298829 and
+`.Event599` Hash2333016720, defaultfalse/ResetTypeValue8/SaveFileIndex0. Each gate is inside
+its existing hard-mode reward dispatch, not the normal/failure path. First expert grants
+through the existing ordinary get wrapper, saves immediately, then resumes common native
+post-reward talk. It skips the old rupee-introduction talk/UI as well as the30/70 payout;
+later expert wins execute the original complete talk/open/rupee/close path. Normal and
+failure behavior remain unchanged. Same20 assignments must still specialize.
+
+Checks:
+- New synthetic serialized transitions: **4 passed**. Failed/normal rounds do not consume
+  first expert; child/adult independent saved flags; repeat30/70; no first-win rupee UI;
+  same20 normalized rather than native30/70; hold exclusion and fixed20 eligibility after
+  explicit hold removal; stale native dispatch refuses with values.
+- Native generic whole-gift inverse/grant/GameDataList oracle: **3 passed,2 deselected**,
+  12.12s. Two expert dispatches are the only additional original nodes allowed to change.
+- Actual common writer emitted **three resources** into NEW `ingame/gallery-expert-next`:
+  flow32594 compressed bytes, GameDataList302351, RSTB1376558. Read-back native inverse
+  restores the entire chart. Actual serialized replay: normal40 -> first Storms/Epona ->
+  saved repeat30/70; normal repeats remain red20/purple50. New saved Bool metadata printed
+  and checked; `expert-proof.json` records the output, states and UI action sequence.
+- First smoke harness assumed str hashing, `ResetType` and a shared normal-return boundary;
+  printed failures showed bytes API, `ResetTypeValue` and native `End_noReset`. Corrected
+  verifier only and resumed read-only; the already-written overlay was never rebuilt.
+- First focused synthetic run caught an incidental canonical20 actor alias assumption
+  (`TBox_Rupee_Red`, not Obj). Reward observation now checks20 semantically;4 pass.
+
+Unrun launchers: `Test - gallery-expert-child-next.bat` and
+`Test - gallery-expert-adult-next.bat`, unique `user-gallery-expert-*-next` folders.
+They copy the same original read-only child Dodongo/adult after-Forest backups used by the
+earlier normal-gallery checks, only at first player launch. `expert-check.md` requires
+normal unlock, an expert failure, first reward/model/notice/usability, no native extra payout,
+re-entry/talking, normal repeat20/50, and expert repeat30/70 after Save/Continue. All require
+the three overlay log lines. **Kareem's in-game results remain required; neither new expert
+check nor the bottle/digging holds are released by synthetic/native data proof.**
+
