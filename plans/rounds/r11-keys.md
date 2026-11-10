@@ -75,3 +75,54 @@ This caught my initial scratch selector too: it reported every late-Forest chest
 Printed the actual raw182-key list and true inventory/quest controls, traced the named Struct,
 then changed only the scratch source selector and reran it once. Item2 uses only explicit
 named false (None is not accepted), with the actual selected slot recorded below.
+
+## Item 2: three built, unplayed generic-key experiments
+
+`build_experiments.py` used the real common writer after the corrected named-open source
+selection. All lab items are annotated “Small Key (Forest Temple)”; this intent is **not**
+encoded in the generic actor. No flow, GameData, actor pack, position, spawn gate or save edit.
+
+Under `E:/OOTRemake/work/r11-keys-cs11b/ingame/`, each name below has
+`mods/<name>/<name>/romfs`, `Test - <name>.bat` and a distinct `user-<name>` destination.
+Launchers are copies of the current central template with only NAME/ROUND/SAVES/SLOT changed,
+CRLF preserved. Bin executable, updater off, cheats on, overlay cleared, exact one real mod.
+
+| Name | Physical chest / native reward | Source / selected slot |
+|---|---|---|
+| `generic-overworld-next` | Mido far-right9725242744547055868 / blue rupee | `2026-11-07_1630`, **autosave04**, child |
+| `generic-keyless-next` | Deku2F vine-wall map8579518566955184384 / map | same backup, **autosave02**, child |
+| `generic-other-dungeon-next` | Fire1F second Flare Dancer8757492004108970488 / red rupee | `2026-11-09_1347-main-after-forest`, **autosave00**, adult |
+
+All selected named chest-open flags are explicitly false, not None. Both child checkpoints
+have no sword/Mido unlock; the checklist authorizes only Teleport to shorten access, never
+inventory/age/flag cheats. Fire's target normally needs late Fire access: use Teleport to the
+specified arena and beat its Flare Dancer with the owned Hookshot; do not fake Hammer/keys
+or spawn flags. If that Teleport target/native appearance cannot be reached, report the
+actual obstruction; the experiment remains pending rather than quietly substituting a chest.
+Before/after counters, no other key pickup/spend, save/reload, repeat denial and exact
+`mods: <file> <- <path>` proof are specified in `ingame/checklist.md`.
+
+| Resource | Raw before→after | Allocation before→after |
+|---|---|---|
+| Overworld adult Dynamic |516036→516084|516328→516360|
+| Overworld child Dynamic |510884→510932|511176→511208|
+| Keyless Deku Static |109808→109812|110088 retained|
+| Other-dungeon Fire Static |266440 unchanged|266728 retained|
+
+Only the overworld case emits a size table (length unchanged); the others each emit one
+Banc. Exact inversions restore the whole original tree after reverting only the selected
+Drop__DropActor in every age copy. Independent `verify_experiments.py` recomputed serialized
+and compressed bytes, exact size-table deltas, original save SHA256 maps, one-mod/no-reparse
+layout and exact current-template substitutions: **three of three passed**.
+`ingame/check_saves.py` ran read-only, reporting zero saves in all three isolated users.
+It reads every dungeon's remaining/total/once and boss/map/compass leaves plus named chest-open
+state after Kareem plays; it creates no profile or save. Proof JSONs are external.
+
+Additional grant-path trace: small chests call GetPouchContent's pouch grant, not the big
+chest's explicit special action. Native call search found the pouch's +1 path at
+`0x033ac518..0x033ac530`: same live component resolution then `0x03283160`. Thus both
+paths share the observed counter updater; no “small chest is different” success is assumed.
+
+**Kareem: run the three independent launchers only after Claude boot-checks them and after
+quitting the played game. Report exact counters, model/text, reload result and mod lines.**
+No game, launcher, copy-user operation or boot-check was executed by this track.
