@@ -130,7 +130,10 @@ def presence_expression(data: bytes) -> bytes:
             ],
         }
     )
-    return byml.dump(document)
+    result = byml.dump(document)
+    if (difference := byml.difference(document.root, byml.read(result))) is not None:
+        raise PatchError(f"free travel: written presence expression does not read back: {difference}")
+    return result
 
 
 def changes(_placements: Mapping[str, str], *, free_time_travel: bool = False) -> FileChanges:

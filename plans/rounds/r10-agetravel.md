@@ -28,3 +28,84 @@ Launcher is a copy/adaptation of the approved talon-boomerang pattern: bin execu
 ## Coordination
 
 Posted scope on cs-r10. The 0055 completion boundary is a provisional technical choice preserving the complete first-arrival chain; it does not broaden Prelude access. Item2 follows after the item1 checkpoint. Full four-command gates remain required before any readiness claim.
+
+## Item 2: Door of Time modes
+
+Implemented `Settings.door_of_time` and `--door-of-time closed|song_only|open`, with closed
+default (D35). Existing CS1 canonical codec records it; explicit CLI mode clears stale derived
+door logic from an effective replay. Contradictory explicit logic is refused. Free travel is
+separate and remains off by default.
+
+Native trace found TWO song-opening gates: altar ReplaceEventParam's invalid expression
+`Market_Child_TimeTempleDoor_OcarinaReacts` = not DoorOfTime Step05 OR opened, then
+DoorOfTime/Event60's after-Step04 expression. Song-only changes the former to opened only
+and bypasses the latter, additionally requiring learned `IsGet.Item_Melody_TimeSong`.
+Native sequence melody4, recommended-melody result, opened/history guards, opening scene,
+proxy event signal, opened Bool and Step06 write remain. No stone quest/reward/default is forged.
+
+Open uses a seven-byte, zero-padded **data string** substitution in the exact native common
+door AINB: Step06→Ready. Its original is-after/is-equal outputs open/skip-animation for the
+door. No pointer, instruction, file length or allocation changes. SHA256 validates the exact
+native input; no generic AINB writer/size formula/dependency added. External unmodified AINB
+decoder reports exactly one tree delta: node8 Parameters/Inputs/String1 DefaultValue.
+The same common signal shows the altar's visual stones too; these are not owned stones.
+Child pedestal uses the existing ungated attention module and primary Draw request, whose
+own history branch still selects first-pull versus repeat travel. All actors/links/transforms
+and the native first-adult/Rauru/era/Forest/Prelude flows stay native.
+
+### Correct logic, including the newly exposed instrument boundary
+
+The door override matches each physical mode. Early modes use data-defined return-kit
+inventories and staged families: song-only guarantees only Ocarina1/Time song at the pull;
+open guarantees no inventory. Optional child Saria, strength and Time ocarina are not assumed.
+Adult instruments/Saria can be staged from shuffled adult checks; unshuffled child-only
+prerequisites can make the strict D20 first-pull guarantee impossible. No automatic free
+travel, relaxed goal or increased retry bound is introduced.
+
+Existing translated `can_play` wrongly admitted Fairy Ocarina as adult. Section37's item-bar
+age catalogue says Fairy child-only, Time both-age; early Fairy-only pulls expose this at
+adult Mido. Sourced helper overrides therefore require Ocarina2 for adult song use in EVERY
+door mode, including closed, as Claude explicitly directed. **This source is native
+PouchTable metadata, NOT an in-game Fairy-as-adult observation.** The three canonical song
+helpers all share the age restriction; no item permission or inventory grant is patched.
+
+### Exercised checks
+
+- `CLAWSHOT_WORKERS=1 uv run pytest tests/test_door.py -q --tb=short`: **18 passed**.
+  Covers mode/item/age boundaries, learned song, wrong melody, durable once/history guards,
+  unrelated-flow preservation, stale contract refusal, CS1 replay and CLI override/conflict.
+- `CLAWSHOT_WORKERS=1 OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest tests/test_door_dump.py
+  -m dump -q -s --basetemp .../door-focused-next`: **2 passed**.
+  Actual native serialized flow behavior; exact inverse flow/Banc/module/GameData diffs;
+  age-presence plus altar-expression composition and final allocations.
+- Actual standalone CLI song_only: **3 resources**, flow90104→90360/allocation90384→90640,
+  GameData1462888→1462868 (allocation1463176 retained), common size table.
+- Actual standalone CLI open: **2 resources**, child Banc259184 unchanged length,
+  allocation259464 retained; native module7651 unchanged length/allocation8056 retained.
+- Scoped format/lint pass. One printed test-import I001 was corrected by moving the sibling
+  helper import into the prescribed import group. External pack probe encountered a native
+  `AI` member where it expected BYML; printed magic identifies that unsupported selection,
+  then the separate ocarina-only probe completed without retrying that failed stage.
+
+### Isolated shared checkpoints
+
+- `2b889c2`: Settings/defaults only; no fill algorithm edit.
+- `876956f`: CLI only.
+- `890074c`: owned door/instrument logic, world return-mode data and `prepare` derivation.
+- `b0e28f5`: common seed pipeline only.
+
+All posted as checkpoints, not ready before the complete gates. README/world-format changes
+are separate. Section41 appends after39 on this base; reviewer inserts40 before41.
+
+### Coordination / additional reviewer request
+
+Posted the settled NUP inputs as a short separate cs-r10 note: adult/child Market Static,
+DoorOfTime flow, raw `Logic/Market_Common_f252.logic.module.ainb`, GameDataList, size table
+and ZsDic pack. The reused SpiritTemple module is referenced only, not read/copied.
+
+Claude requested two read-only released-seed checks with the corrected all-mode instrument
+rule: seed8's retained spoiler, seed10 regenerated in memory from main using that same CS1.
+`check_released.py` explicitly imports main's source, disables bytecode writes, captures the
+actual generator spec, keeps all native fixed placements, then changes only the three song
+helpers for independent search/return-proof replay. No seed folder is written. Results and
+their separate thread post follow after the serialized run.

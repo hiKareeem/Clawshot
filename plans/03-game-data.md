@@ -2852,3 +2852,29 @@ Actual standalone writer emits adult Banc, GameData and size table. Exact invers
 byte-order, non-saved-expression and allocation checks pass. New isolated child-autosave
 launcher/checklist is in the round report. **First-scene visibility/dialogue and immediate
 return after it still require Kareem; no agent game run.** Free travel remains default-off.
+
+### Door modes and instrument ages
+
+D35's `door_of_time` is closed (default), song_only or open; reverse travel is independent.
+Closed is the unchanged native patch path. Song-only changes the altar's non-saved invalid
+expression from `Step_DoorOfTime != Step05 or opened` to `opened`, and bypasses DoorOfTime
+Event60's after-Step04 query. The opening entry additionally requires the learned Time song;
+native ocarina input, recommended melody, opened/history checks, scene, saved opened flag
+and Step06 progression remain. Either child ocarina can play; no stone quest is completed.
+
+Open changes the exact native `Logic/Market_Common_f252.logic.module.ainb` threshold literal
+Step06 to Ready, with NUL padding and unchanged bytes/offsets/length elsewhere. Native
+is-after/is-equal outputs then open the gate without advancing a quest. Independent external
+AINB decoding shows exactly one changed field (node8's ChallengeStepName); no GPL implementation
+is copied. The common module also displays the altar stones when open; these are visual actors,
+not inventory grants. The child pedestal reuses the existing ungated attention module and
+first-pull request; native Draw still selects first-arrival or repeat travel from scene history.
+All native scenes, stone grants/quests, adult return and Prelude stay separate.
+
+The earlier door exposes an existing logic mismatch: translated `can_play` allowed Fairy
+Ocarina as adult. **Source is the item-bar/PouchTable age metadata audited in section37,
+NOT an in-game Fairy-as-adult test.** Fairy is child-only there; Time is both-age.
+Sourced helper overrides apply in EVERY door mode, requiring Ocarina2 for adult song use.
+The return kit's data-defined mandatory inventory/staged families follow each door mode:
+early pulls cannot assume optional child Saria, strength or Time ocarina. D20's actual
+first-pull proof remains strict; no silent free-travel/guarantee override or retry increase.
