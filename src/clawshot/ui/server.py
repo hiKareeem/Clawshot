@@ -193,7 +193,8 @@ class Handler(BaseHTTPRequestHandler):
         if not route.startswith("api/"):
             self.reply(404, {"error": "Not found"})
             return
-        if not secrets.compare_digest(self.headers.get("X-Clawshot-Token", ""), server.token):
+        supplied_token = self.headers.get("X-Clawshot-Token", "")
+        if not supplied_token.isascii() or not secrets.compare_digest(supplied_token, server.token):
             self.reply(403, {"error": "Local UI token required"})
             return
         try:

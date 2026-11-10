@@ -65,3 +65,11 @@ The first hint assertion printed the focused card and stale hints; the next diag
 Effective spoiler CS1 strings expand Gift into the engine's four gift kinds. The app now collapses that complete group back to the player-facing Gift choice before validation/replay; the generator still expands/rebuilds its own policy. This fixes a real imported-spoiler-string boundary without changing the generator codec or any public source file.
 
 Focused checks: app/schema **21 passed** (missing setting/choice metadata, effective-Gift replay, dependency activation and retained values included); real HTTP safety **11 passed**. Earlier incidental error-wording checks were removed rather than re-pinned. All source/generator/pack APIs remain unchanged. Final full gates and docs still required.
+
+## Item 3: local transport and path safety
+
+Loopback-only random port; per-run random token in every static URL and an additional token header on every API call; exact Host/Origin and cross-site checks; no CORS access; no-store/no-referrer/nosniff/CSP headers. Only the three named local assets are served. JSON bodies are bounded and typed. Source/output paths are absolute, local, link-free, protected from overlap and existing output reuse; result reads accept only the note/spoiler names and spoiler needs explicit confirmation. No game-start endpoint.
+
+Real HTTP boundary suite: **11 passed in5.80s**. Covers missing/wrong/non-ASCII tokens, hostile Host/Origin/fetch-site, static traversal and arbitrary-file refusal, malformed/oversized/non-finite JSON, headless native-action refusal, enabled chooser validation without a dialog, normalized paths and pre-staging output protection. An added malformed-token case reproduced a real `compare_digest` TypeError/closed connection; ASCII preflight now rejects it with403. The failing case remains as a regression. Removed an extra nested-array fixture because it duplicated the already-covered non-object refusal.
+
+The first filtered-test command's nested cmd quoting passed `or` as a filename (no tests ran); ran the explicit single file instead to print the actual header failure. No unchanged failing retry, no skip or weakened oracle. Safety checkpoint is committed separately; synthetic HTTP generation tests follow as item4.
