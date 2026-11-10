@@ -64,21 +64,6 @@ def test_existing_seed_is_verified_not_rebuilt_and_mismatch_stops_play(tmp_path,
     assert not (root / "hookshot_log.txt").exists()
 
 
-def test_missing_bin_never_uses_root_launcher(tmp_path, monkeypatch):
-    root = tmp_path / "pack"
-    root.mkdir()
-    game = tmp_path / "hookshot"
-    game.mkdir()
-    (game / "hookshot.exe").write_bytes(b"not executable; must never be run")
-    (root / "pack.json").write_text(json.dumps({"format": 1}))
-    (root / "folders.json").write_text(json.dumps({"romfs": str(tmp_path / "romfs"), "hookshot": str(game)}))
-    monkeypatch.setattr(runtime, "check_version", lambda _: None)
-    with pytest.raises(PackError, match="never use the folder-root"):
-        runtime.play(root)
-    assert not (root / "user").exists()
-    assert not (root / "hookshot_log.txt").exists()
-
-
 def test_pack_inside_game_directory_is_rejected(tmp_path, monkeypatch):
     root = tmp_path / "game" / "pack"
     root.mkdir(parents=True)

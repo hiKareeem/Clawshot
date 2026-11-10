@@ -166,12 +166,12 @@ def test_job_writes_beatable_synthetic_seed_and_preserves_source(app_source, tmp
         state = wait_job(jobs)
         assert state["status"] == "succeeded", state
         assert all(row["status"] == "done" for row in state["stages"]), state
-        log = json.loads((out / "spoiler.json").read_text())
+        log = json.loads((out / "seed/spoiler.json").read_text())
         assert sorted(log["placements"].values()) == ["Rupees (5)", "Sword"]
         assert any("Sword" in sphere.values() for sphere in log["spheres"])
         assert state["result"]["resources"] == 1
         dictionaries = zsdic.Dictionaries.from_romfs(app_source)
-        written = byml.read(dictionaries.decompress(RESOURCE, (out / "romfs" / RESOURCE).read_bytes()))
+        written = byml.read(dictionaries.decompress(RESOURCE, (out / "seed/romfs" / RESOURCE).read_bytes()))
         for actor, name in zip(written["Actors"], ("First", "Second"), strict=True):
             expected = "Item_Sword" if log["placements"][name] == "Sword" else "TBox_Rupee_Blue"
             assert actor["Dynamic"]["Drop__DropActor"] == expected

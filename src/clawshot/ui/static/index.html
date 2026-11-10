@@ -171,22 +171,32 @@
             choose your dump directly.
           </p>
           <p id="description-note" class="description-note">
-            No game is started by this UI.
+            Choose your game files. Only pressing Play starts Hookshot.
           </p>
           <div id="result" hidden>
             <h3>Seed ready</h3>
             <p id="result-summary"></p>
             <code id="result-path"></code>
             <div class="result-actions">
-              <button id="open-folder">Open folder</button
-              ><button id="read-note">Read play note</button
-              ><button id="play-steps">How to play</button
-              ><button id="reveal-spoiler">Reveal spoiler…</button>
+              <button id="play-seed" data-interface="play" hidden>Play</button>
+              <button id="open-folder">Open seed folder</button>
+              <button id="read-note">Read play note</button>
+              <button id="reveal-spoiler">Reveal spoiler…</button>
             </div>
-            <p class="help">
-              The play note includes item locations and hints, as well as
-              age-locked item precautions.
+            <p id="play-status" class="help" aria-live="polite"></p>
+            <p id="play-paths" class="help"></p>
+            <p id="save-isolation" class="help">
+              Hookshot Play keeps saves inside this seed's output folder. Your
+              normal saves are never touched.
             </p>
+            <div id="emulator-steps" class="help">
+              <p>Back up your emulator saves before starting a New Game.</p>
+              <p>Add the seed folder's romfs as a mod for this game.</p>
+              <p>
+                Enable only this seed in your emulator's Add-ons or Mods menu.
+              </p>
+            </div>
+            <p class="help">The play note includes item locations and hints.</p>
           </div>
         </section>
         <div
@@ -214,38 +224,6 @@
         <button id="close-document">Close</button>
       </div>
       <pre id="document-text"></pre>
-    </dialog>
-    <dialog id="play-dialog">
-      <div class="dialog-heading">
-        <h2>Play your seed</h2>
-        <button id="close-play">Close</button>
-      </div>
-      <h3>Hookshot 2.0.12+</h3>
-      <p>
-        Quit the game before changing mods. Put exactly one mod under a
-        dedicated mods root:
-      </p>
-      <pre>mods / seed-name / seed-name / romfs / …</pre>
-      <p>
-        Set HOS_MODS to the dedicated <code>mods/seed-name</code> folder. Clear
-        HOS_FS_OVERLAY; never set it. Use real folders, not links. Button icons
-        in seed text are the game's own.
-      </p>
-      <p>
-        <strong>Back up your saves first.</strong> Manual mod loading uses the
-        main save; a new game overwrites the playthrough. Prefer an isolated
-        user folder. This UI does not start the game.
-      </p>
-      <h3>Emulator</h3>
-      <p>
-        Install the generated folder as a RomFS / LayeredFS mod for this game's
-        title in your emulator's mod directory. Enable it in Add-ons. Back up
-        your saves before New Game.
-      </p>
-      <p>
-        See <code>docs/seed-pack.md</code> for runtime-specific paths and
-        seed-pack Play with isolated saves.
-      </p>
     </dialog>
   </body>
 </html>

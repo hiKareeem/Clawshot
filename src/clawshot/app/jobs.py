@@ -12,12 +12,13 @@ from tempfile import mkdtemp
 
 from clawshot.app.paths import absolute_path, detect_dump, output_path
 from clawshot.app.schema import validate
+from clawshot.pack import tree_digest
 
 STAGES = (
     ("validate", "Check game and settings"),
     ("source", "Read your game files"),
     ("prepare", "Prepare supported checks"),
-    ("generate", "Place items and prove beatability"),
+    ("generate", "Place items and check you can finish"),
     ("write", "Write and verify the mod"),
     ("publish", "Finish the new seed folder"),
 )
@@ -35,8 +36,8 @@ class GenerationRequest:
     def paths(self) -> tuple[Path, Path]:
         if type(self.seed) is not int or not -(2**53 - 1) <= self.seed <= 2**53 - 1:
             raise ValueError("Seed must be an integer within JavaScript's exact integer range")
-        source = absolute_path(self.dump, "Dump")
-        hookshot = absolute_path(self.hookshot, "Hookshot") if self.hookshot else None
+        source = absolute_path(self.dump, "Dump", allow_links=True)
+        hookshot = absolute_path(self.hookshot, "Hookshot", allow_links=True) if self.hookshot else None
         return source, output_path(self.output, source, hookshot)
 
 
@@ -139,15 +140,18 @@ class Jobs:
         # Reserve an absent destination with exclusive mkdir: POSIX rename may replace an empty directory.
         # Only this freshly reserved directory is cleaned on failure. Cancellation and publication serialize.
         _, out = self.request.paths()
+        seed = self.stage / "seed"
+        digest = tree_digest(seed)
         out.mkdir()
         try:
-            seed = self.stage / "seed"
-            for name in ("romfs", "play-note.md", "spoiler.json"):
-                (seed / name).rename(out / name)
+            seed.rename(out / "seed")
         except BaseException:
             shutil.rmtree(out)
             raise
-        self.state.update(status="succeeded", result=result | {"output": str(out)})
+        self.state.update(
+            status="succeeded",
+            result=result | {"output": str(out), "output_sha256": digest, "dump": str(self.source)},
+        )
         self._finish_stage("done")
 
     def _finish_stage(self, status):

@@ -59,7 +59,9 @@ class BrowserDialogs:
                         mustexist=True,
                         initialdir=str(default_output_root().parent) if kind == "output" else None,
                     )
-                result["path"] = str(absolute_path(value, "Selected path")) if value else None
+                result["path"] = (
+                    str(absolute_path(value, "Selected path", allow_links=kind != "output")) if value else None
+                )
             except Exception as error:
                 result["error"] = f"Path chooser unavailable: {error}. Paste a path instead."
             finally:
@@ -70,6 +72,9 @@ class BrowserDialogs:
 
 def webview_chooser(window, webview):
     lock = threading.Lock()
+    dialog_types = getattr(webview, "FileDialog", None)
+    open_dialog = dialog_types.OPEN if dialog_types is not None else webview.OPEN_DIALOG
+    folder_dialog = dialog_types.FOLDER if dialog_types is not None else webview.FOLDER_DIALOG
 
     def choose(kind):
         if kind not in KINDS:
@@ -79,13 +84,13 @@ def webview_chooser(window, webview):
         try:
             if kind == "dump-file":
                 selected = window.create_file_dialog(
-                    webview.OPEN_DIALOG, allow_multiple=False, file_types=("NUP game dump (*.nup)",)
+                    open_dialog, allow_multiple=False, file_types=("NUP game dump (*.nup)",)
                 )
             else:
-                selected = window.create_file_dialog(webview.FOLDER_DIALOG, allow_multiple=False)
+                selected = window.create_file_dialog(folder_dialog, allow_multiple=False)
             if not selected:
                 return None
-            return str(absolute_path(selected[0], "Selected path"))
+            return str(absolute_path(selected[0], "Selected path", allow_links=kind != "output"))
         finally:
             lock.release()
 

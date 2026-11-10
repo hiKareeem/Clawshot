@@ -6,32 +6,32 @@ display = "cards"
 status_labels = { on = "Shuffled", off = "Vanilla" }
 choices = ["Chest", "Shop", "Gift", "Scrub", "BossHeart", "Freestanding", "Token"]
 group = "Items"
-help = "Choose which kinds of checks share the item pool. Focus a card for its coverage and current playtest limits."
+help = "Choose where you want to find shuffled rewards. Point at a card to see what it includes and what has been tried in game."
 [dungeon_items]
 label = "Dungeon items"
 kind = "choice"
 choices = ["own_dungeon", "anywhere"]
 group = "Items"
-help = "Keys, maps and compasses stay in their own dungeon. Anywhere is held until named-dungeon grants pass in game."
+help = "Keys, maps and compasses stay in their own dungeon. Finding keys in other dungeons is not available yet."
 [songs]
 label = "Song placement"
 kind = "choice"
 choices = ["song", "anywhere"]
 group = "Items"
-help = "Keep songs on song checks, or allow them among other supported checks."
+help = "Find songs at the usual song rewards, or mix them into the other places you shuffle."
 [forest]
 label = "Kokiri Forest"
 kind = "choice"
 choices = ["closed", "closed_deku", "open"]
 group = "World"
-help = "Closed is vanilla-like; closed_deku opens the bridge; open also bypasses Mido."
+help = "Leave Mido and the forest bridge closed, open just the bridge, or open both."
 clears = { logic = ["open_forest", "skip_mido"] }
 [door_of_time]
 label = "Door of Time"
 kind = "choice"
 choices = ["closed", "song_only", "open"]
 group = "World"
-help = "Closed needs stones, Time ocarina and song. Early-door modes still require the strict adult-return proof. In-game acceptance pending."
+help = "Choose whether the door needs the Spiritual Stones, Ocarina of Time and Song of Time, just the song and an ocarina, or nothing. All three door modes have passed a first in-game check."
 clears = { logic = ["door_of_time"] }
 [fast_start]
 label = "Fast start"
@@ -40,13 +40,13 @@ choices = ["intro", "saria", "deku_tree", "kaepora"]
 display = "cards"
 status_labels = { on = "Skipped", off = "Plays" }
 group = "World"
-help = "Skippable opening scenes. Forest control uses the separate forest setting. Empty disables all skips."
+help = "Choose which opening scenes to skip. Skipped shortens the opening; Plays leaves the usual scene. Forest access has its own setting."
 [shop_prices]
 label = "Shop prices"
 kind = "choice"
 choices = ["vanilla", "affordable"]
 group = "Prices"
-help = "Affordable makes selected shuffled shelves cost 10 rupees."
+help = "Make the shop shelves you shuffle cost 10 rupees each."
 enabled_when = [{ key = "shuffle", contains = "Shop", reason = "Shuffle shop shelves to change their prices." }, { key = "shop_slots", greater_than = 0, reason = "Select at least one shuffled shelf per shop to change its price." }]
 [shop_slots]
 label = "Shuffled shelves per shop"
@@ -54,14 +54,14 @@ kind = "integer"
 min = 0
 max = 8
 group = "Prices"
-help = "First N native shelves in each ordinary shop; other stock stays vanilla."
+help = "Choose how many shelves in each ordinary shop can hold shuffled items. Other wares stay as usual."
 enabled_when = [{ key = "shuffle", contains = "Shop", reason = "Shuffle shop shelves to choose how many shelves change." }]
 [scrub_prices]
 label = "Scrub prices"
 kind = "choice"
 choices = ["vanilla", "fixed"]
 group = "Prices"
-help = "Price policy for the supported saved once-sales, not repeat vendors."
+help = "Keep the usual fees or set one price for the one-time scrub sales you shuffle. Repeat vendors do not change."
 enabled_when = [{ key = "shuffle", contains = "Scrub", reason = "Shuffle one-time scrub sales to change their prices." }]
 [scrub_price]
 label = "Fixed scrub fee"
@@ -69,55 +69,55 @@ kind = "integer"
 min = 0
 max = 1000
 group = "Prices"
-help = "Rupees charged when scrub prices are fixed."
+help = "The price for the one-time scrub sales you shuffle when Fixed fee is selected."
 enabled_when = [{ key = "shuffle", contains = "Scrub", reason = "Shuffle one-time scrub sales to set a fee." }, { key = "scrub_prices", equals = "fixed", reason = "Choose Fixed fee for scrub prices to use this amount." }]
 [cheap_deku_shield]
 label = "Affordable Deku Shield"
 kind = "boolean"
 group = "Prices"
-help = "Kokiri shop's Deku Shield costs 10, even with shops unshuffled."
+help = "Buy the Deku Shield at Kokiri Shop for 10 rupees, even if you leave shop items unchanged."
 [hints]
 label = "Gossip Stones"
 kind = "choice"
 choices = ["always", "mask"]
 group = "Hints"
-help = "Speak without the Mask of Truth, or retain the native mask requirement."
+help = "Let Gossip Stones speak without the Mask of Truth, or require you to wear it."
 [hint_distribution]
 label = "Hint distribution"
 kind = "choice"
 choices = ["balanced"]
 group = "Hints"
-help = "Named distribution from data/hints.toml."
+help = "Choose how helpful the Gossip Stone clues are."
 [logic]
 label = "Logic overrides (JSON object)"
 kind = "json"
 group = "Advanced"
-help = "Advanced world overrides, for example {\"free_time_travel\": true}. Free travel is experimental and off by default. N64 tricks remain refused."
+help = "Advanced: change which routes the generator assumes you can use. Leave this alone for normal play. Free back-and-forth time travel is experimental, and untested tricks are not allowed."
 [areas]
 label = "Playtest areas (JSON array)"
 kind = "json"
 group = "Advanced"
-help = "Banc area names for a slice. Requires a goal. Empty selects the whole world."
+help = "Advanced: list game-file area codes for a short playtest and set a goal too. Leave empty to include the whole game."
 [goal]
 label = "Playtest goal"
 kind = "nullable-text"
 group = "Advanced"
-help = "Rule for a slice, not a change to the whole-world goal. Leave empty normally."
+help = "Set the finish condition for a short playtest. Leave blank for a normal whole-game seed."
 [item_location_types]
 label = "Item destination restrictions (JSON object)"
 kind = "json"
 group = "Advanced"
-help = "Map item names to arrays of allowed check types; effective seed strings may contain derived restrictions."
+help = "Advanced: limit where particular items can appear. Usually filled in automatically; leave these values alone for normal play."
 [exclusive_location_types]
 label = "Exclusive check types (JSON array)"
 kind = "json"
 group = "Advanced"
-help = "Check types accepting only items explicitly held to them. Normally derived by gift setup."
+help = "Advanced: reserve the listed kinds of reward spots for specially assigned items. Leave automatic values alone for normal play."
 [location_type_items]
-label = "Native pickup palettes (JSON object)"
+label = "Pickup replacements (JSON object)"
 kind = "json"
 group = "Advanced"
-help = "Map check types to arrays of native item names. Physical patches still enforce their supported palette."
+help = "Advanced: choose which items floor drops and boss hearts can become. The game can handle only certain replacements."
 
 [shuffle.labels]
 Chest = "Chests"
@@ -128,12 +128,12 @@ BossHeart = "Boss heart containers"
 Freestanding = "Floor heart pieces"
 Token = "Gold Skulltula tokens"
 [shuffle.unavailable]
-Token = "Not available yet: individual Skulltulas cannot give saved, one-time randomized rewards reliably."
+Token = "Not available yet: Skulltulas still add a token instead of giving a different item."
 [dungeon_items.labels]
 own_dungeon = "Own dungeon"
 anywhere = "Anywhere"
 [dungeon_items.unavailable]
-anywhere = "Not available yet: a key found outside its dungeon has not been shown to unlock the intended dungeon."
+anywhere = "Not available yet: keys found outside their dungeon are not counted for the right dungeon yet."
 [songs.labels]
 song = "Song checks only"
 anywhere = "Anywhere supported"
@@ -168,42 +168,42 @@ useless = "Useless hints"
 # plans/03-game-data.md sections 19, 21, 23, 34, 36, 40.
 # Check totals come from generation, not duplicated metadata that goes stale with new checks.
 [shuffle.choice_help]
-Chest = "Chests across the remake. Chest swaps, including large rewards in small chests, have been checked in game. Trap chests and the Treasure Chest Game's ordinary boxes stay vanilla."
-Shop = "Shelves in ordinary shops. Only items with native shop displays are used. Kokiri purchases and affordable prices have been checked in game; mask loans stay vanilla."
-Gift = "Supported NPC gifts and songs, including Great Fairies, frogs and minigame prizes. Fairy once-only rewards and the supported frog checks have been played. The current generator decides which gifts can move; unsupported checks stay vanilla."
-Scrub = "Saved, one-time scrub sales; repeat vendors stay vanilla. Price and reward changes pass data checks, but the isolated shuffled-purchase gameplay check is still pending."
-BossHeart = "Boss heart pickups, limited to hearts, heart pieces, shields or a red rupee. King Dodongo's replacement shield was collected without an extra heart and did not return in Kareem's test."
-Freestanding = "Saved floor heart-piece pickups, limited to the same native pickups as boss hearts. The ranch tower's replacement shield was collected and equipped with no extra heart piece in Kareem's test."
-Token = "Gold Skulltulas still give their original tokens. A replacement test counted as a token instead of giving the requested item, so tokens cannot be shuffled yet."
+Chest = "Chests across the remake. Finding a different item in a chest, including a large reward in a small chest, has been tried in game. Trap chests and the Treasure Chest Game's ordinary boxes stay as usual."
+Shop = "Shelves in ordinary shops, using items the shop can display properly. Kokiri purchases and affordable prices have been tried in game. Mask loans stay as usual."
+Gift = "Gifts from characters and song rewards, including Great Fairies, frogs and minigames. Fairy rewards that can be collected only once and the supported frog rewards have been tried in game. Other gifts stay as usual."
+Scrub = "One-time Deku Scrub purchases. Repeat vendors do not change. Buying a shuffled reward has not yet been checked in game."
+BossHeart = "Heart containers after bosses can become hearts, heart pieces, shields or a red rupee. King Dodongo's replacement shield was collected without adding a heart and did not return in Kareem's test."
+Freestanding = "Heart pieces lying around the world can become the same items as boss hearts. The ranch tower's replacement shield was collected and equipped without adding a heart piece in Kareem's test."
+Token = "Gold Skulltulas still give their original tokens. A test with a different reward added a token instead, so these rewards cannot be shuffled yet."
 [dungeon_items.choice_help]
-own_dungeon = "Keep each dungeon's keys, maps and compasses in that dungeon."
-anywhere = "Allow dungeon items outside their own dungeon once the intended-dungeon key grant works in game; this mode is not available yet."
+own_dungeon = "Find a dungeon's keys, maps and compasses only inside that dungeon."
+anywhere = "Find keys, maps and compasses outside their original dungeon once this option is ready."
 [songs.choice_help]
-song = "Keep songs on the supported song checks."
-anywhere = "Allow songs among supported shuffled checks. Storms and Minuet have been used from chests; other songs share the same grant path."
+song = "Find songs only at the usual song rewards."
+anywhere = "Songs can appear in the other places you shuffle. Song of Storms and Minuet of the Forest have been played after finding them in chests."
 [forest.choice_help]
-closed = "Keep Mido's sword-and-shield check and the bridge closed until Gohma, like the original route."
-closed_deku = "Open only the forest bridge; Mido still guards the Deku Tree. This bridge behavior has been checked in game."
-open = "Open the bridge and bypass Mido's sword-and-shield check."
+closed = "Mido needs your sword and shield, and the forest bridge opens after Gohma, like the usual route."
+closed_deku = "Open the forest bridge immediately. Mido still needs your sword and shield before you enter the Deku Tree. The bridge change has been tried in game."
+open = "Open the forest bridge immediately and let you past Mido without showing a sword and shield."
 [door_of_time.choice_help]
-closed = "Require all three stones, Ocarina of Time and the playable Song of Time."
-song_only = "Allow either child ocarina and the learned Song of Time to open the door. Its first in-game door check passed; returning to child with an early door is untested."
-open = "Open the door without the stones or song. Its first in-game door check passed; returning to child with an early door is untested. The strict adult-return proof still applies."
+closed = "Open the door with the Spiritual Stones, Ocarina of Time and Song of Time, like the usual route. Its first in-game check passed."
+song_only = "Open the door with the learned Song of Time and either ocarina, without the stones. Its first in-game check passed; returning to child after an early visit is untested."
+open = "The door starts open without the stones or song. Its first in-game check passed; returning to child after an early visit is untested."
 [fast_start.choice_help]
-intro = "Allow the new game's opening introduction to be skipped. The intro skip has been checked in game."
-saria = "Allow Saria's opening scene to be skipped; this does not grant an item or change forest access."
-deku_tree = "Allow the Deku Tree's opening talk to be skipped; its entrance requirements are unchanged."
-kaepora = "Allow the selected Kaepora introductions to be skipped; routes and item requirements are unchanged."
+intro = "Skip the new game's opening introduction. This skip has been tried in game."
+saria = "Skip Saria's opening scene. This does not give an item or change forest access."
+deku_tree = "Skip the Deku Tree's opening talk. Getting into the tree still has the same requirements."
+kaepora = "Skip the selected Kaepora introductions. Routes and item requirements stay the same."
 [shop_prices.choice_help]
-vanilla = "Keep native prices on shuffled shop shelves."
-affordable = "Charge exactly 10 rupees on each selected shuffled shelf; other shelves keep their prices."
+vanilla = "Keep the usual prices on the shop shelves you shuffle."
+affordable = "Pay 10 rupees for each shelf you shuffle. Other shelves keep their usual prices."
 [scrub_prices.choice_help]
-vanilla = "Keep the supported once-sale scrubs' native 40/100-rupee fees."
-fixed = "Use the fixed scrub fee for supported shuffled once-sales, without changing repeat vendors."
+vanilla = "Keep the usual 40- or 100-rupee fees for the one-time scrub sales."
+fixed = "Pay your chosen fixed fee at the one-time scrub sales you shuffle. Repeat vendors do not change."
 [hints.choice_help]
-always = "Allow Gossip Stones to speak without the Mask of Truth."
-mask = "Keep the native requirement: child Link must wear the Mask of Truth to read a stone."
+always = "Gossip Stones speak without the Mask of Truth."
+mask = "Wear the Mask of Truth as a child to hear a Gossip Stone."
 [hint_distribution.choice_help]
-balanced = "Use a balanced mix of useful location, region and item hints."
-strong = "Use the generator's stronger hint distribution."
-useless = "Use the generator's deliberately unhelpful hint distribution."
+balanced = "A mix of clues about useful items, areas and routes."
+strong = "More helpful clues about useful items."
+useless = "Clues deliberately chosen not to help you find useful items."

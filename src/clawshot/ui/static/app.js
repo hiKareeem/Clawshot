@@ -21,6 +21,11 @@ let busy = false,
 let outputRoot = "",
   outputCustom = false,
   dialogsAvailable = false;
+let playAvailable = false,
+  playUnavailableReason = "",
+  hookshotCanPlay = false,
+  playState = { running: false },
+  resultOutput = "";
 
 function element(tag, className = "", text) {
   const el = document.createElement(tag);
@@ -538,6 +543,7 @@ async function browse(kind) {
   }
 }
 async function detect(kind) {
+  if (kind === "hookshot") hookshotCanPlay = false;
   const button = $(kind === "dump" ? "check-dump" : "check-hookshot"),
     status = $(kind + "-status");
   button.disabled = true;
@@ -551,6 +557,7 @@ async function detect(kind) {
       $("dump").value = info.path;
       status.textContent = "Verified " + info.kind + " · build " + info.build;
     } else {
+      hookshotCanPlay = info.supports_mods && !info.reason;
       $("hookshot").value = info.folder;
       status.textContent =
         "Hookshot " +
@@ -567,11 +574,35 @@ async function detect(kind) {
   } finally {
     button.disabled = false;
     describe(document.querySelector(`[data-interface=${kind}]`));
+    renderPlay();
   }
+}
+function renderPlay() {
+  const selected = Boolean($("hookshot").value.trim());
+  $("play-seed").hidden = !selected;
+  $("play-seed").disabled =
+    !playAvailable || !hookshotCanPlay || busy || playState.running;
+  $("save-isolation").hidden = !selected;
+  $("emulator-steps").hidden = playAvailable && hookshotCanPlay;
+  $("play-status").textContent = playState.running
+    ? "A seed is running. Quit that Hookshot game before starting another."
+    : !selected
+      ? "Using an emulator? Open the seed folder and follow these steps."
+      : !playAvailable
+        ? playUnavailableReason
+        : !hookshotCanPlay
+          ? "Choose Check beside your Hookshot folder on Game to enable Play."
+          : "Ready to play in Hookshot with separate saves for this seed.";
+  $("play-paths").textContent =
+    playState.output === resultOutput && playState.user
+      ? "Seed saves: " + playState.user + " · Log: " + playState.log
+      : "";
 }
 function renderJob(state) {
   busy = ["running", "cancelling"].includes(state.status);
   resultShown = state.status === "succeeded";
+  playState = state.play || { running: false };
+  resultOutput = state.result?.output || "";
   $("start-job").textContent = resultShown
     ? "Make another seed"
     : "Generate seed";
@@ -636,13 +667,15 @@ function renderJob(state) {
       count(state.result.resources, "mod file");
     $("result-path").textContent = state.result.output;
   }
+  renderPlay();
   updateHints();
 }
 async function refreshJob() {
   clearTimeout(pollTimer);
   try {
     renderJob(await api("job"));
-    if (busy) pollTimer = setTimeout(refreshJob, 500);
+    if (busy || playState.running)
+      pollTimer = setTimeout(refreshJob, busy ? 500 : 1000);
   } catch (e) {
     error(
       e.message + ". Check the local server terminal; reload to reconnect.",
@@ -652,7 +685,7 @@ async function refreshJob() {
 async function normalizePath(input) {
   const original = input.value;
   if (!original) return;
-  const data = await api("normalize-path", { path: original });
+  const data = await api("normalize-path", { path: original, kind: input.id });
   if (input.value === original) input.value = data.path;
 }
 async function startJob() {
@@ -785,6 +818,22 @@ $("settings-string").addEventListener("input", () => {
   $("settings-state").textContent = "String edited — Apply to update controls";
 });
 $("start-job").addEventListener("click", startJob);
+$("play-seed").dataset.keyAction = "Play";
+$("play-seed").addEventListener("click", async () => {
+  $("play-seed").disabled = true;
+  error("");
+  try {
+    playState = await api("play", { hookshot: $("hookshot").value });
+    await refreshJob();
+  } catch (e) {
+    error(e.message);
+    renderPlay();
+  }
+});
+$("hookshot").addEventListener("input", () => {
+  hookshotCanPlay = false;
+  renderPlay();
+});
 $("cancel-job").addEventListener("click", async () => {
   try {
     renderJob(await api("cancel", {}));
@@ -805,8 +854,6 @@ $("reveal-spoiler").addEventListener("click", () => documentView("spoiler"));
 $("close-document").addEventListener("click", () =>
   closeDialog("document-dialog"),
 );
-$("play-steps").addEventListener("click", () => openDialog("play-dialog"));
-$("close-play").addEventListener("click", () => closeDialog("play-dialog"));
 document
   .querySelectorAll("dialog")
   .forEach((dialog) => dialog.addEventListener("close", updateHints));
@@ -834,6 +881,8 @@ window.addEventListener("beforeunload", (event) => {
         el.title = "Disabled in --no-open; paste a path instead";
     });
     $("open-folder").disabled = !data.open_available;
+    playAvailable = data.play_available;
+    playUnavailableReason = data.play_unavailable_reason;
     suggestOutput();
     document
       .querySelectorAll("[data-interface]")

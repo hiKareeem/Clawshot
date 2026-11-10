@@ -112,9 +112,10 @@ def test_invalid_request_bodies_cannot_start_work(raw, headers):
 def test_no_open_rejects_native_dialogs_and_has_no_completed_folder_to_open():
     with running_server() as server:
         config = request(server, "schema")[2]
-        assert not config["dialogs_available"] and not config["open_available"]
+        assert not config["dialogs_available"] and not config["open_available"] and not config["play_available"]
         assert request(server, "browse", {"kind": "dump-folder"})[0] == 400
         assert request(server, "open", {"target": "folder"})[0] == 400
+        assert request(server, "play", {"hookshot": "not-a-game-path"})[0] == 400
         assert request(server, "job")[2]["status"] == "idle"
 
 

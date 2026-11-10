@@ -13,17 +13,18 @@ system GTK/WebKit installation on Linux). The browser route needs no pywebview d
 The browser's click-only Browse dialogs use standard-library tkinter; if the OS does not provide
 Tk, paste a path instead. No Qt/PySide dependency is added by Clawshot.
 
-Keep the terminal running. Ctrl+C stops the server and cancels its worker. Closing a browser tab
-alone does not stop the server. Closing the pywebview window does. `--no-open` intentionally
-**disables Browse and Open folder**, including their HTTP endpoints; it does not merely avoid
-opening the initial page. Both actions are enabled in normal browser and pywebview sessions.
+Keep the terminal running. Ctrl+C stops the server and cancels generation. Closing a browser tab
+alone does not stop the server; closing the pywebview window does. A game already launched is not
+terminated by UI shutdown. `--no-open` **disables Browse, Open seed folder and Play**, including
+their HTTP endpoints. Normal sessions enable these actions; Play also requires Windows.
 
 ## Using it
 
-- **Game:** Browse for Hookshot or your own romfs folder / `.nup`. Detecting Hookshot fills the
-  dump from its romfs or an adjacent NUP. Detection reads files, never starts the executable.
-  The supported-build fingerprint comes from `clawshot.pack.check_version`, not a folder name.
-  Hookshot is optional when using an emulator. Paths are displayed in the host OS's form.
+- **Game:** your own romfs folder or `.nup` is the only required input. Hookshot is optional and
+  needed only for Play; emulator players can skip it. Detecting Hookshot fills the dump from its
+  romfs or an adjacent NUP. Detection reads files, never starts the executable. The supported game
+  check is the pack's `check_version`. Read-only input links/junctions resolve to their real paths;
+  output folders still refuse links. Paths are displayed in the host OS's form.
 - **Settings:** Defaults restores generator defaults. Recommended selects Chest, Shop, Gift,
   Scrub and BossHeart, with the remaining generator defaults. Every control and choice comes
   from the app schema. Cards explain their coverage and actual gameplay evidence. Unavailable
@@ -36,13 +37,17 @@ opening the initial page. Both actions are enabled in normal browser and pywebvi
   output chooses an existing parent and adds the seed name. Custom parents must already exist.
   Existing seeds are never rewritten. Progress reflects real stage boundaries, not estimated
   percentages within the fill. Cancellation removes only this job's private staging/cache.
-- **Result:** Open folder, read the play note, view loading instructions, or explicitly confirm
-  revealing the spoiler. The play note also contains item locations/hints. The UI does not start
-  Hookshot or an emulator. See [seed-pack instructions](seed-pack.md) for loading and save safety.
+- **Result:** Play in a detected mod-capable Hookshot, Open seed folder, read the play note, or
+  explicitly confirm revealing the spoiler. The play note also contains item locations/hints.
+  Play uses `output/user` for this seed's saves and `output/hookshot_log.txt` for its log, never
+  your normal Hookshot saves. Quit a running seed before starting another. Changed seed files are
+  refused; generate a new seed instead of repairing an output in place.
 
-Manual Hookshot loading uses a dedicated `HOS_MODS` root containing exactly one real-folder mod,
-with `HOS_FS_OVERLAY` cleared, not set. Manual loading uses the main save folder: back it up before
-New Game. Seed-pack Play provides its own isolation; the UI's result is an ordinary mod folder.
+The new output layout is `output/seed/romfs` with the note and spoiler beside romfs. Play shares
+the pack's checked launch code: only `bin/hookshot.exe`, exactly that seed as the one mod under
+`HOS_MODS=output`, no `HOS_FS_OVERLAY` variable, and the update check off. Older outputs are never
+moved or rewritten. Emulator players get three loading steps and a main-save backup warning;
+Clawshot does not start an emulator. See [seed-pack instructions](seed-pack.md) for manual loading.
 
 The pack's Make path was verified on Linux (WSL) with both a romfs folder and a `.nup`, producing
 the same digest as Windows (maintainer verification, round11). The UI shares that generator path,
@@ -72,6 +77,8 @@ The Generate action fits without scrolling at 1280×860.
 | Canonical settings validation and metadata checks | `src/clawshot/app/schema.py` |
 | Source detection, native paths, protected output boundaries | `src/clawshot/app/paths.py` |
 | One-worker generation lifecycle, cancellation and publication | `src/clawshot/app/jobs.py` |
+| Read-only verified Play plan and one running seed | `src/clawshot/app/play.py` |
+| Shared mod/save/environment plan and process start | `src/clawshot/pack/runtime.py` |
 | Loopback transport and fixed asset allowlist | `src/clawshot/ui/server.py` |
 | Normal/headless startup and click-only native dialogs | `src/clawshot/ui/__main__.py`, `dialogs.py` |
 | Tabs, rows, cards, key handling and contextual descriptions | `src/clawshot/ui/static/app.js`, `index.html` |
@@ -108,18 +115,23 @@ rule 7's accepted dependency licences do not currently list OFL. No font file is
 
 ## Verification and limits
 
-`tests/test_app.py`, `test_app_schema.py` and `test_ui.py` use invented worlds/resources. The HTTP
-suite exercises real generation/writing, held-worker responsiveness, cancellation, error text,
-publication races, security and spoiler consent. Its enabled-Browse case injects a synthetic
-chooser instead of opening a dialog: validation and filesystem non-mutation are tested; native
-window rendering is not. Headless screenshots must run the server with `--no-open`, use a fresh
-browser profile, and never trigger an OS dialog/window. Keep screenshots outside the repository.
+`tests/test_app.py`, `test_app_schema.py`, `test_app_play.py` and `test_ui.py` use invented
+worlds/resources. The HTTP suite exercises real generation/writing, worker responsiveness,
+cancellation, original fill errors, publication races, security and spoiler consent. Play tests
+compare read-only plans, digest refusal, one-mod discovery, private saves, and input/output links;
+they never launch a game. Dialog adapter smoke uses a synthetic picker, not an OS dialog.
+The adapter prefers [pywebview FileDialog enums](https://pywebview.flowrl.com/api/) with the requested
+legacy-constant fallback. Headless screenshots use `--no-open` and a fresh browser profile; no
+OS dialog/window may be triggered. Keep screenshots outside the repository.
 
-This is the complete contributor UI base, not a desktop distribution. Not implemented:
+Kareem confirmed a real pywebview window was responsive and Browse opened a normal folder picker
+on 2026-11-10. This does not confirm its NUP file picker, browser/Tk picker or the new native Play.
+
+Not implemented in the current checkout:
 - gamepad/Steam Deck controller navigation (keyboard/mouse only);
-- one-click game launch, mod installation or save management;
-- a bundled executable/installer, persistent user configuration, or bundled fonts;
-- native-dialog visual acceptance or Linux/macOS UI runtime certification by this round's agent.
+- emulator copying, double-click bootstrap and remembered paths (the next ordered release items);
+- a bundled executable/installer or bundled fonts;
+- native Play acceptance or Linux/macOS UI runtime certification.
 
 Seed packs still use Make/Play; the UI is run from the source checkout or an installed Python
 package containing its static assets. Architecture and the local HTTP contract: [UI plan](../plans/05-ui.md).

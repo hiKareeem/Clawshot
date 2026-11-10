@@ -28,23 +28,27 @@ def default_output_root() -> Path:
                     value = line.partition("=")[2].strip('"').replace("$HOME", str(home))
                     if Path(value).is_absolute():
                         documents = Path(value)
-    return documents / "Clawshot"
+    return (documents / "Clawshot").resolve()
 
 
-def absolute_path(value: str, label: str) -> Path:
+def absolute_path(value: str, label: str, *, allow_links: bool = False) -> Path:
     if not isinstance(value, str) or not value.strip() or "\0" in value:
         raise ValueError(f"{label} needs an absolute path")
     path = Path(value.strip())
     if not path.is_absolute() or str(path).startswith(("\\\\", "//")):
         raise ValueError(f"{label} needs an absolute local path (no network share)")
-    for part in (path, *path.parents):
-        if part.is_symlink() or part.is_junction():
-            raise ValueError(f"{label} must not traverse links: {part}")
-    return path.resolve()
+    if not allow_links:
+        for part in (path, *path.parents):
+            if part.is_symlink() or part.is_junction():
+                raise ValueError(f"{label} must not traverse links: {part}")
+    try:
+        return path.resolve()
+    except RuntimeError as error:
+        raise ValueError(f"{label} contains a looping link; choose the real folder instead") from error
 
 
 def detect_dump(value: str) -> dict:
-    path = absolute_path(value, "Dump")
+    path = absolute_path(value, "Dump", allow_links=True)
     if not path.is_dir() and (not path.is_file() or path.suffix.lower() != ".nup"):
         raise ValueError("Choose an extracted romfs folder or a .nup file")
     check_version(path)
@@ -53,7 +57,7 @@ def detect_dump(value: str) -> dict:
 
 def detect_hookshot(value: str) -> dict:
     """JSON projection of the shared pack detector; never infer capability from a version."""
-    path = absolute_path(value, "Hookshot")
+    path = absolute_path(value, "Hookshot", allow_links=True)
     if not path.is_dir():
         raise ValueError("Hookshot folder does not exist")
     result = asdict(_detect_hookshot(path))

@@ -1,4 +1,4 @@
-"""Make/Play implementation used only inside an extracted private pack."""
+"""Shared checked Hookshot launching and the extracted pack's Make/Play entry point."""
 
 import argparse
 import json
@@ -51,7 +51,7 @@ def check_mod_layout(root: Path) -> None:
 
     def walk(folder: Path, depth: int) -> None:
         if folder.is_symlink() or folder.is_junction():
-            raise PackError(f"pack mod search contains a link: {folder}")
+            raise PackError(f"The mod folder contains a link: {folder}. Use a normal folder and generate again.")
         if depth and any((folder / name).exists() for name in ("romfs", "exefs")):
             mods.append(folder)
             return
@@ -62,7 +62,52 @@ def check_mod_layout(root: Path) -> None:
 
     walk(root, 0)
     if mods != [root / "seed"] or not (root / "seed/romfs").is_dir():
-        raise PackError(f"pack must expose exactly one mod, seed/romfs; found: {mods}; use a fresh extraction")
+        raise PackError(
+            "The output must expose exactly one mod, seed/romfs. Generate a new seed in a fresh output folder."
+        )
+
+
+def launch_plan(root: Path, hookshot: Path) -> dict:
+    """Read-only plan shared by pack Play and the UI; root contains exactly seed/romfs."""
+    root = Path(root).absolute()
+    hookshot = Path(hookshot).resolve()
+    if not root.is_dir():
+        raise PackError("The seed folder is missing. Generate a new seed, then try Play again.")
+    if root.resolve() != root:
+        raise PackError("The seed folder must not be a link. Use its real folder and generate again.")
+    if root.is_relative_to(hookshot) or hookshot.is_relative_to(root):
+        raise PackError("Keep seed outputs outside Hookshot. Choose a new output folder and generate again.")
+    installation = detect(hookshot)
+    if installation.reason:
+        if not installation.exe.is_file():
+            raise PackError(installation.reason + ". Choose the Hookshot folder containing bin, then try Play again.")
+        raise PackError(installation.reason)
+    check_mod_layout(root)
+    user = root / "user"
+    log = root / "hookshot_log.txt"
+    if any(path.resolve() != path for path in (user, log, root / "seed")):
+        raise PackError("The seed, saves or log path is a link. Generate a new seed in a fresh output folder.")
+    return {
+        "command": [str(installation.exe), "--user", str(user)],
+        "cwd": str(hookshot),
+        "environment": {"HOOKSHOT_NO_UPDATE_CHECK": "1", "HOS_MODS": str(root)},
+        "unset_environment": ["HOS_FS_OVERLAY"],
+        "mod": str(root / "seed"),
+        "user": str(user),
+        "log": str(log),
+    }
+
+
+def start_game(plan: dict) -> subprocess.Popen:
+    """Execute a checked plan. Tests inspect launch_plan instead; never invoke this on a real game."""
+    if sys.platform != "win32":
+        raise PackError("Play needs Windows. Open the seed folder and load romfs as a mod in your emulator.")
+    Path(plan["user"]).mkdir(exist_ok=True)
+    env = dict(os.environ, **plan["environment"])
+    for key in plan["unset_environment"]:
+        env.pop(key, None)
+    with Path(plan["log"]).open("wb") as log:
+        return subprocess.Popen(plan["command"], cwd=plan["cwd"], env=env, stderr=log)
 
 
 def play(root: Path, *, dry_run: bool = False) -> int:
@@ -72,45 +117,13 @@ def play(root: Path, *, dry_run: bool = False) -> int:
             "no Hookshot folder configured; for emulator loading, follow docs/seed-pack.md "
             "(Emulator / console loading); do not run Play"
         )
-    if not (hookshot / "bin/hookshot.exe").is_file():
-        raise PackError(f"missing {hookshot / 'bin/hookshot.exe'}; never use the folder-root launcher")
     verify(root, manifest)
-    installation = detect(hookshot)
-    if installation.reason:
-        raise PackError(installation.reason)
-    check_mod_layout(root)
-    user = root / "user"
-    if user.resolve() != user or (root / "seed").resolve() != root / "seed":
-        raise PackError("pack user/seed folder must not be a link")
-    overrides = {"HOOKSHOT_NO_UPDATE_CHECK": "1", "HOS_MODS": str(root)}
-    command = [str(installation.exe), "--user", str(user)]
+    plan = launch_plan(root, hookshot)
     if dry_run:
-        print(
-            json.dumps(
-                {
-                    "command": command,
-                    "cwd": str(hookshot),
-                    "environment": overrides,
-                    "unset_environment": ["HOS_FS_OVERLAY"],
-                    "mod": str(root / "seed"),
-                    "log": str(root / "hookshot_log.txt"),
-                },
-                indent=2,
-            )
-        )
+        print(json.dumps(plan, indent=2))
         return 0
-    user.mkdir(exist_ok=True)
-    env = dict(os.environ, **overrides)
-    env.pop("HOS_FS_OVERLAY", None)
-    print(f"Seed {manifest['seed']}; isolated saves: {user}; log: {root / 'hookshot_log.txt'}", flush=True)
-    with (root / "hookshot_log.txt").open("wb") as log:
-        return subprocess.run(
-            command,
-            cwd=hookshot,
-            env=env,
-            stderr=log,
-            check=False,
-        ).returncode
+    print(f"Seed {manifest['seed']}; isolated saves: {plan['user']}; log: {plan['log']}", flush=True)
+    return start_game(plan).wait()
 
 
 def main(argv: list[str] | None = None) -> int:

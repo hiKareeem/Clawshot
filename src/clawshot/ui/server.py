@@ -1,4 +1,4 @@
-"""Small token-authenticated loopback transport; no game launch and no arbitrary file server."""
+"""Token-authenticated loopback transport; native actions require explicit normal-session capability."""
 
 import json
 import os
@@ -14,6 +14,7 @@ from clawshot.app import (
     STAGES,
     GenerationRequest,
     Jobs,
+    Player,
     detect_dump,
     detect_hookshot,
     input_schema,
@@ -34,11 +35,13 @@ MAX_BODY = 65536
 
 
 class Application:
-    def __init__(self, jobs=None, *, spec=None, chooser=None, allow_open=False):
+    def __init__(self, jobs=None, *, spec=None, chooser=None, allow_open=False, allow_play=False):
         self.jobs = jobs if jobs is not None else Jobs()
         self.spec = spec
         self.chooser = chooser
         self.allow_open = allow_open
+        self.allow_play = allow_play
+        self.player = Player()
 
     def call(self, method, route, body):
         if method == "GET" and route == "schema":
@@ -48,17 +51,26 @@ class Application:
                 "output_root": str(default_output_root()),
                 "dialogs_available": self.chooser is not None,
                 "open_available": self.allow_open,
+                "play_available": self.allow_play and sys.platform == "win32",
+                "play_unavailable_reason": (
+                    "Play needs Windows. Use the emulator steps below."
+                    if sys.platform != "win32"
+                    else "Play is disabled in --no-open. Open Clawshot normally to play."
+                ),
                 "presets": presets(spec=self.spec),
                 "inputs": input_schema(),
                 "stages": [{"key": key, "label": label, "status": "pending", "seconds": 0} for key, label in STAGES],
                 **settings_payload(validate({}, spec=self.spec)),
             }
         if method == "GET" and route == "job":
-            return self.jobs.snapshot()
+            return self.jobs.snapshot() | {"play": self.player.snapshot()}
         if method == "POST" and route == "settings":
             return settings_payload(validate(body.get("values"), text=body.get("settings_string"), spec=self.spec))
         if method == "POST" and route == "normalize-path":
-            return {"path": str(absolute_path(body.get("path"), "Path"))}
+            kind = body.get("kind", "output")
+            if kind not in ("dump", "hookshot", "output"):
+                raise ValueError("Choose a game, Hookshot or output path.")
+            return {"path": str(absolute_path(body.get("path"), "Path", allow_links=kind != "output"))}
         if method == "POST" and route == "browse":
             if self.chooser is None:
                 raise ValueError("Path dialogs are disabled in --no-open and tests; paste a path instead")
@@ -70,7 +82,7 @@ class Application:
                 raise ValueError("Seed must be an exact integer")
             path = self.chooser(kind)
             if path is not None:
-                selected = absolute_path(str(path), "Selected path")
+                selected = absolute_path(str(path), "Selected path", allow_links=kind != "output")
                 if kind == "dump-file":
                     if not selected.is_file() or selected.suffix.lower() != ".nup":
                         raise ValueError("Choose a .nup file")
@@ -93,11 +105,15 @@ class Application:
             return self.jobs.start(request)
         if method == "POST" and route == "cancel":
             return self.jobs.cancel()
+        if method == "POST" and route == "play":
+            if not self.allow_play:
+                raise ValueError("Play is disabled in --no-open. Open Clawshot normally to play.")
+            return self.player.start(self.jobs.snapshot()["result"], body.get("hookshot"))
         if method == "POST" and route in ("result", "open"):
             result = self.jobs.snapshot()["result"]
             if result is None:
                 raise ValueError("No completed seed is available")
-            root = absolute_path(result["output"], "Result")
+            root = absolute_path(str(Path(result["output"]) / "seed"), "Result")
             if route == "open":
                 if not self.allow_open:
                     raise ValueError("Opening folders is disabled in --no-open and tests")

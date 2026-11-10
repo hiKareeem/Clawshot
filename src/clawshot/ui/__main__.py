@@ -25,6 +25,7 @@ def main(argv=None):
                 dialogs = BrowserDialogs()
                 server.app.chooser = dialogs.choose
                 server.app.allow_open = True
+                server.app.allow_play = True
                 thread = serve_in_thread(server)
                 try:
                     webbrowser.open(server.url)
@@ -38,6 +39,7 @@ def main(argv=None):
                     window = webview.create_window("Clawshot", server.url, width=1120, height=860, min_size=(620, 600))
                     server.app.chooser = webview_chooser(window, webview)
                     server.app.allow_open = True
+                    server.app.allow_play = True
                     webview.start()
                 finally:
                     server.shutdown()
