@@ -1,8 +1,8 @@
-"""Default-off free time travel: open the adult pedestal and clear pre-Forest Temple Sheik.
+"""Default-off free time travel, preserving both parts of Sheik's first adult scene.
 
-The ungated native pedestal module retains the adult-to-child request. Only Temple Sheik's placement
-gains Forest-completion Presence, so he appears for the original Prelude scene, then disappears through
-his untouched native completion gate. Quest progress, rewards and event flows stay native (section 38).
+The pedestal is ungated. Temple Sheik remains until Dm_TimeTemple_0055 (the dialogue after
+the 0050 timeline) finishes, then returns for Forest completion and the native Prelude scene.
+Only a non-saved expression is added; quest progress, rewards and scene flows stay native.
 """
 
 import argparse
@@ -11,9 +11,11 @@ from collections.abc import Mapping
 from pathlib import Path
 
 from clawshot.formats import byml
+from clawshot.patch.gamedata import GAME_DATA_LIST
 from clawshot.patch.plan import PatchError, Plan
 from clawshot.patch.write import FileChanges, WrittenFile
 from clawshot.patch.write import write as write_patch
+from clawshot.save import key
 
 PLACEMENT = "Banc/Market/Market_Adult_Static.bcett.byml.zs"
 GROUP_HASH = 2075259738076588912
@@ -33,6 +35,8 @@ SHEIK_GROUP_HASH = 6012439728933042438
 SHEIK_LOGIC = "Logic/Module/Market_Adult_Prefab/Market_Adult_Prefab_7f43.logic.module.ain"
 SHEIK_ID = "Npc_Hylia_Sheik_Adult_4b5b"
 FOREST_COMPLETE = "SageOfForest_IsCompleted_Exp"
+FIRST_SCENE = "HavePlayedEvent.Dm_TimeTemple_0055"
+SHEIK_PRESENCE = "Clawshot.TempleSheik.Presence"
 
 
 def patch_tree(tree: dict) -> None:
@@ -75,7 +79,7 @@ def patch_tree(tree: dict) -> None:
     group["Logic"] = UNGATED_LOGIC
     for ref in refs:
         ref["Id"] = BINDINGS[ref["Id"]][2]
-    sheiks[0]["Presence"] = {"FlagName": FOREST_COMPLETE, "IsCheckLazy": False, "IsNegation": False}
+    sheiks[0]["Presence"] = {"FlagName": SHEIK_PRESENCE, "IsCheckLazy": False, "IsNegation": False}
 
 
 def transform(data: bytes) -> bytes:
@@ -88,9 +92,50 @@ def transform(data: bytes) -> bytes:
     return result
 
 
+def presence_expression(data: bytes) -> bytes:
+    """Add `not first dialogue complete or Forest complete`, without changing the save layout.
+
+    Native BoolExp is postfix: 0 reads Bool, 10 reads BoolExp, 5 negates, 4 ORs.
+    See section 41's native Mido and DoorOfTime expression precedents.
+    """
+    document = byml.load(data)
+    rows = document.root["Data"]
+    expected = {
+        "Bool": (FIRST_SCENE, {"DefaultValue": False, "ResetTypeValue": byml.I32(8), "SaveFileIndex": byml.I32(0)}),
+        "BoolExp": (
+            FOREST_COMPLETE,
+            {
+                "ResetTypeValue": byml.I32(0),
+                "SaveFileIndex": byml.I32(-1),
+                "Values": [[byml.U64(1), byml.U64(key("Step_SageOfForest"))], [byml.U64(2), byml.U64(key("Complete"))]],
+            },
+        ),
+    }
+    for kind, (name, fields) in expected.items():
+        found = [row for row in rows[kind] if row.get("Hash") == key(name)]
+        if len(found) != 1 or any(found[0].get(k) != v for k, v in fields.items()):
+            raise PatchError(f"free travel: changed {name} expression input: {found!r}")
+    if any(row.get("Hash") == key(SHEIK_PRESENCE) for entries in rows.values() for row in entries):
+        raise PatchError(f"free travel: expression hash collision for {SHEIK_PRESENCE}")
+    rows["BoolExp"].append(
+        {
+            "Hash": byml.U32(key(SHEIK_PRESENCE)),
+            "ResetTypeValue": byml.I32(0),
+            "SaveFileIndex": byml.I32(-1),
+            "Values": [
+                [byml.U64(0), byml.U64(key(FIRST_SCENE))],
+                [byml.U64(5)],
+                [byml.U64(10), byml.U64(key(FOREST_COMPLETE))],
+                [byml.U64(4)],
+            ],
+        }
+    )
+    return byml.dump(document)
+
+
 def changes(_placements: Mapping[str, str], *, free_time_travel: bool = False) -> FileChanges:
     """A seed PatchStep (bind the keyword to its matching logic setting); common writer handles sizes/compression."""
-    return {PLACEMENT: transform} if free_time_travel else {}
+    return {PLACEMENT: transform, GAME_DATA_LIST: presence_expression} if free_time_travel else {}
 
 
 def write(romfs: str | Path, out: str | Path, *, free_time_travel: bool = False) -> list[WrittenFile]:

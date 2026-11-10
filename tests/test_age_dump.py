@@ -22,7 +22,7 @@ def test_free_travel_preserves_prelude_and_changes_only_pedestal_and_sheik(romfs
         ref["Id"] = age.BINDINGS[ref["Id"]][2]
     [sheik] = [actor for actor in expected["Actors"] if actor["Hash"] == age.SHEIK_HASH]
     sheik["Presence"] = {
-        "FlagName": "SageOfForest_IsCompleted_Exp",
+        "FlagName": age.SHEIK_PRESENCE,
         "IsCheckLazy": False,
         "IsNegation": False,
     }
@@ -42,5 +42,17 @@ def test_free_travel_preserves_prelude_and_changes_only_pedestal_and_sheik(romfs
     if need > entry:
         table = rstb.read(dictionaries.decompress(rstb.TABLE_PATH, (out / "romfs" / rstb.TABLE_PATH).read_bytes()))
         assert table.get(age.PLACEMENT) == need
-    assert {file.path for file in written} == {age.PLACEMENT} | ({rstb.TABLE_PATH} if need > entry else set())
+    game_path = age.GAME_DATA_LIST
+    native_game = byml.load(dictionaries.decompress(game_path, (romfs / game_path).read_bytes()))
+    patched_game = byml.load(dictionaries.decompress(game_path, (out / "romfs" / game_path).read_bytes()))
+    assert patched_game.byte_order == native_game.byte_order
+    added = patched_game.root["Data"]["BoolExp"].pop()
+    from clawshot.save import key
+
+    assert added["Hash"] == key(age.SHEIK_PRESENCE)
+    assert added["SaveFileIndex"] == -1  # No new saved value or layout adjustment.
+    assert byml.same(native_game.root, patched_game.root)
+    assert {file.path for file in written} == {age.PLACEMENT, game_path, rstb.TABLE_PATH}
+    for file in written:
+        assert file.new_entry >= rstb.required_size(file.path, file.new_size) if file.entry else True
     print(f"adult pedestal: {len(old_data)} -> {len(new_data)}; size entry {entry} -> {max(entry, need)}")

@@ -53,7 +53,7 @@ def test_rebinding_preserves_actors_hashes_paths_and_unrelated_groups():
     for ref in group["References"]:
         ref["Id"] = age.BINDINGS[ref["Id"]][2]
     expected["Actors"][2]["Presence"] = {
-        "FlagName": "SageOfForest_IsCompleted_Exp",
+        "FlagName": age.SHEIK_PRESENCE,
         "IsCheckLazy": False,
         "IsNegation": False,
     }
@@ -99,3 +99,76 @@ def test_changed_sheik_contract_rejects_before_pedestal_mutation(changed):
     with pytest.raises(PatchError):
         age.patch_tree(tree)
     assert byml.same(tree, before)
+
+
+def expression_data():
+    from clawshot.save import key
+
+    return {
+        "Data": {
+            "Bool": [
+                {
+                    "Hash": byml.U32(key(age.FIRST_SCENE)),
+                    "DefaultValue": False,
+                    "ResetTypeValue": byml.I32(8),
+                    "SaveFileIndex": byml.I32(0),
+                },
+            ],
+            "BoolExp": [
+                {
+                    "Hash": byml.U32(key(age.FOREST_COMPLETE)),
+                    "ResetTypeValue": byml.I32(0),
+                    "SaveFileIndex": byml.I32(-1),
+                    "Values": [
+                        [byml.U64(1), byml.U64(key("Step_SageOfForest"))],
+                        [byml.U64(2), byml.U64(key("Complete"))],
+                    ],
+                },
+            ],
+        },
+        "MetaData": {"SyntheticSaveLayout": byml.I32(987)},
+    }
+
+
+@pytest.mark.parametrize(
+    "first_complete,forest_complete,present",
+    [
+        (False, False, True),  # Includes the 0050 -> 0055 boundary: dialogue still needs the actor.
+        (True, False, False),  # Finished introduction must not obstruct early return.
+        (False, True, True),
+        (True, True, True),  # Native Prelude completion still controls deletion, not this expression.
+    ],
+)
+def test_sheik_presence_keeps_first_dialogue_then_forest_scene(first_complete, forest_complete, present):
+    from clawshot.save import key
+
+    original = expression_data()
+    result = byml.load(age.presence_expression(byml.write(original, byte_order="big")))
+    assert result.byte_order == "big"
+    added = result.root["Data"]["BoolExp"].pop()
+    assert byml.same(result.root, original)  # No saved defaults, metadata or other expressions changed.
+    values = {key(age.FIRST_SCENE): first_complete, key(age.FOREST_COMPLETE): forest_complete}
+    stack = []
+    for instruction in added["Values"]:
+        op = instruction[0]
+        if op in (0, 10):
+            stack.append(values[instruction[1]])
+        elif op == 5:
+            stack.append(not stack.pop())
+        elif op == 4:
+            right, left = stack.pop(), stack.pop()
+            stack.append(left or right)
+        else:
+            pytest.fail(f"unexpected expression opcode {instruction!r}")
+    assert stack == [present]
+
+
+def test_presence_expression_refuses_collision_and_stale_inputs():
+    data = byml.write(expression_data())
+    patched = age.presence_expression(data)
+    with pytest.raises(PatchError, match="collision"):
+        age.presence_expression(patched)
+    tree = expression_data()
+    tree["Data"]["Bool"][0]["SaveFileIndex"] = byml.I32(-1)
+    with pytest.raises(PatchError, match="expression input"):
+        age.presence_expression(byml.write(tree))
