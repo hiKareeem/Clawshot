@@ -51,7 +51,7 @@ KNOWN ISSUES
   (github.com/NotRexed/Hookshot/issues/1112), not the seed: reload and carry on.
 
 REPORTS, QUESTIONS, NEW SEEDS
-Discord: https://discord.gg/6cfTkFp5D
+Discord: https://discord.gg/7R5ZXPcJqn
 Please include where you were, what happened, pack.json, and your log
 (Hookshot: hookshot_log.txt in this folder; emulator: its own log).
 
