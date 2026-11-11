@@ -1,6 +1,8 @@
 # Round 12: physical dungeon-area constraints (cs12c)
 
-Base: main `9f86b3a`; branch `r12/areas`. Scope requested by Kareem, 2026-11-11.
+Initial base: main `9f86b3a`; rebased without conflicts onto main `cd81449` at
+Claude's request after PR #3 merged. Branch `r12/areas`; scope requested by
+Kareem, 2026-11-11.
 
 ## Incident and decision
 
@@ -160,7 +162,7 @@ No event, cutscene, story flag, save or game output was changed by this research
 - All four full gates passed serially through the shared gate lock; both sweeps passed below.
   Initial `mkdir` and the required 60-second retry reported an existing lock.
 
-### Full gate commands
+### Full gate commands before the rebase
 
 All pytest commands use `CLAWSHOT_WORKERS=1`. `TEMP`, `TMP`, `TMPDIR` point to
 `E:/OOTRemake/work/r12-dungeon-areas-cs12c/tmp`; decoded fixtures/output never go
@@ -183,6 +185,27 @@ Logs: scratch `gates-0.log` through `gates-3.log`; all four exit codes are recor
 in `gates-commands.json`. The final community-recipe regression passed in the dump
 gate. The synthetic run's 128 skipped cases are not claimed as native passes;
 the separate dump run selected and passed all 126 dump-marked cases.
+
+### Post-rebase integration verification (`cd81449`)
+
+`git rebase main` replayed all eight commits without conflicts. The new base does
+not change fill, world or item data. Its relevant output-side changes are the
+supported-input error wording and ignoring macOS metadata in folder digests.
+
+- With the same ROMFS/temporary-directory environment above:
+  `CLAWSHOT_WORKERS=1 uv run pytest tests/test_generate_dungeon_areas.py -q`:
+  **7 passed in 22.39 s**, including the actual community-recipe dump regression.
+- `CLAWSHOT_WORKERS=1 uv run python E:/OOTRemake/work/r12-dungeon-areas-cs12c/rebase_smoke.py`:
+  actual full-string seed-11 generation/write completed in **52.09 s**, into
+  fresh `seed11-rebased-cd81449/` under the scratch root. Independently read back
+  all four child/adult hand-chest copies; actor contents match the plan.
+  Rewards remain Rupees (20) and Bombs (5); the full output digest remains
+  `04edec972126b9b9ba0f67e1cadb001f191813118ce0fb47ece88a9677a94f91`.
+  `rebase-smoke.json` records the result.
+
+The full-suite and 100-seed sweep results above precede the rebase; they were not
+rerun afterward. Post-rebase proof is the focused native regression file and the
+fresh full output/readback smoke. No new full-gate or sweep worker was started.
 
 ### Locked 50 + 50 seed sweep
 
@@ -256,20 +279,22 @@ this track adds placement safety, not a new grant implementation.
 
 ## Handoff
 
-Branch commits before the final gate-evidence/handoff commit:
+Rewritten branch commits before this rebase-handoff update:
 
-- `c2dd8da`: incident and scope record.
-- `44eca0e`: physical-area helper, regression coverage, one settings-doc sentence.
-- `416f8de`: Spirit story effects and limits.
-- `e6ca93e`: exhaustive own-dungeon destination audit.
-- `4c4667a`: both sweeps and changed-output counts.
-- `03e00ff`: seed-11 regression uses its actual community shuffle recipe and dump pool.
-- `fca617b`: direct world/census join and index-faithful Spirit timeline proof.
+- `2052857`: incident and scope record.
+- `b77f1f7`: physical-area helper, regression coverage, one settings-doc sentence.
+- `f878469`: Spirit story effects and limits.
+- `0ebe866`: exhaustive own-dungeon destination audit.
+- `b935dd8`: both sweeps and changed-output counts.
+- `cdf2001`: seed-11 regression uses its actual community shuffle recipe and dump pool.
+- `97f5c49`: direct world/census join and index-faithful Spirit timeline proof.
+- `116f396`: original passing full-gate evidence and handoff.
 
-All three jobs and all four mandatory gate commands are complete. Final sequence
-released its lock and completion was posted at 15:30. Per Claude's 14:09 gate
-order, `review-pr3` runs next exclusively; cs12c has no pending lock requester
-and will not acquire the lock again before `review-pr3 gates done`.
+All three original jobs and all four mandatory gate commands completed; their
+sequence released its lock and completion was posted at 15:30. Claude then
+reported `review-pr3 gates done`, PR #3 merged and normal one-full-run-at-a-time
+gate use restored. The requested rebase is now complete and verified above;
+cs12c has no pending worker or lock requester.
 
 Integration surface: one private helper plus the final return in `allowed()`,
 one separate regression file, one conditional sentence in `docs/settings.md`,
