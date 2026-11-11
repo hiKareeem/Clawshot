@@ -25,7 +25,7 @@ windows, bootchecks, merges, pushes, dependency/version changes or terminal-cont
 
 ## Gate 1
 
-**Built and checked; unplayed. Claude must boot-check before handing it to Kareem.**
+**PASSED. Staging/checklist record below; played evidence follows under “Played result”.**
 
 Launcher (copied from the current central template, ASCII/CRLF):
 `E:/OOTRemake/work/r12-keys-cs12b/ingame/Key gate 1 - Midos house then Deku Tree map chest.bat`.
@@ -250,7 +250,7 @@ next step; the failed mod remains frozen. No new mod is handed over by this prop
 ## Gate 2b: authorized registration/control experiment
 
 Claude superseded the growth-only proposal to save Kareem a separate play.
-**Built and independently checked; unplayed. Boot-check required before handing over.**
+**PASSED. Staging/checklist record below; exact played evidence follows.**
 
 Launcher:
 `E:/OOTRemake/work/r12-keys-cs12b/ingame/Key gate 2b - Midos house then Deku Tree map chest.bat`.
@@ -325,6 +325,89 @@ Actual **CLAWSHOT_DRY_RUN=1** exit0; correct bin/user/HOS_MODS, copied backup ha
 match, no hookshot_log. Proof: `gate2b-build.json`, `gate2b-verification.json`.
 No native startup claim follows from these data checks; Claude/Kareem supply that result.
 
+### Played result: Gate 2b PASSED
+
+Accepted Claude/Kareem report,12:52–12:56, Hookshot2.1.0, fresh slot04 copy.
+Mido's registered named small wrapper opened normally. Main:
+**“Small Key (Forest Temple)”**. Screenshot caption exactly two lines:
+**“Opens one locked door.”** / **“Dungeon: Forest Temple”**.
+Key held overhead; **“indicator comes up but does not increment”** in Kokiri Forest,
+expected for a Forest credit. Deku's played big control opened with normal generic
+text and no key indicator.
+
+All14 comparison: after Mido Forest0/0/false→1/1/true; after Deku2/2/true;
+Deku0/0/false/map false, every other dungeon unchanged. Chests remain open after
+Save and Quit; no crash line. Snapshots:
+`save-backups/2026-11-11_12*-r12-keygate2b-1..6`;
+checker `work/r12-keygate1-check/gate2b_saves.py`.
+No rerun to confirm reported facts.
+
+**Cause confirmed by this controlled play:** missing analyzed-event registration
+prevented the original custom startup. Registered small startup and Forest text now
+have played acceptance, and the native big control proves both grown tables usable.
+The custom big destination still needs its own registration/startup proof (2c).
+
+## Gate 2c: registered big destination, registered small positive control
+
+Authorized only after2b passed. **Built and independently checked; UNPLAYED.**
+Claude reported normal game exit13:04, no Hookshot process; snapshots7–8 changed
+option.sav only. Accepted without rerunning that observation. Build and verifier then
+ran serially, one process each; no gate lock taken for these focused artifact checks.
+
+Launcher:
+`E:/OOTRemake/work/r12-keys-cs12b/ingame/Key gate 2c - Midos house then Deku Tree map chest.bat`.
+Fresh real one-mod/user `key-gate2c-registered-both-sizes-next`, same original1630
+backup and **slot_04**, not either played profile. Gate2b Mido's actor binding and
+both small analyzed/settings records are retained exactly; its full startup/content
+graph is unchanged after normalizing unrelated shared-flow indices.
+
+### Player checklist
+
+1. Quit any other game. After Claude's boot check, run **Key gate 2c** above and
+   Continue the fresh original autosave04 copy. Only Teleport/clock cheats.
+2. Enter **Mido's house**, open the **far-right small chest**, same as2b.
+   This is the **positive control**. Report prompt/interact sound, Link/chest animation,
+   whether it opens, item model, exact main/caption and normal window close/movement.
+   Expected **“Small Key (Forest Temple)”** then **“Opens one locked door.”** /
+   **“Dungeon: Forest Temple”** on two caption lines.
+3. Report key number on the **on-screen map** and **pause map** separately, or none;
+   the Kokiri pickup indicator can appear without incrementing, as in2b.
+   **Save and Quit, then Continue.** Expected Forest1/1/true, all others unchanged.
+4. Teleport to **Inside the Deku Tree (Entrance)**. Climb the lobby ladder to the
+   second-floor ledge and **big map chest beside the vine wall**. Open only it.
+   This is now the **registered custom big wrapper**, not2b's generic control.
+   Report sound, Link/chest animation, whether it opens, exact two messages, wrapping,
+   item model, cleanup and restored movement. Both messages must name **Forest Temple**,
+   exactly as Mido; no extra generic “this area” caption should appear.
+5. Report key numbers beside **both maps**, or absence. It should give a Forest key,
+   not a Deku map/key. **Save and Quit, then Continue.** Expected Forest2/2/true,
+   Deku0/0/false/map false, all13 other dungeons unchanged. Opened flags must persist
+   with no second reward. Do not walk back through Mido's blocked route.
+6. Report any failure/partial animation, wrong text/target, repeat, crash or lost control.
+   No door is attempted in this child checkpoint; report “not attempted”.
+   If the big path fails, stop after recording it; no other chests or key pickups.
+
+### Actual artifact proof
+
+`build_gate2c.py` and independent `verify_gate2c.py`: **PASS**,26 resources.
+Four new EventSetting IDs have four matching analyzed records and exact declared
+sub-flow/child dependency closure. All native actor trees, flow entries/events and
+registry rows invert exactly. Mido Banc bytes and its selected row/metadata equal2b;
+its complete startup/content graph equals played2b. All16 English message archives
+equal played2b bytes. Big source/destination rows copy their native lifecycle/camera
+settings and add the corresponding analyzed records. The original common helper is
+unchanged; no standing-dungeon or second pouch payout is introduced.
+
+EventSetting509212→509904/allocation509480→510184.
+Analyzed247276→247716/allocation247560→248008.
+Exact entire table, dictionary compression, every new entry's sub-flow indices and
+runtime ID closure passed. Mido keeps its played alias; only the newly selected big
+source uses the bounded production alias. One real mod, exact current central template,
+ASCII/CRLF and no links. Actual **CLAWSHOT_DRY_RUN=1** exit0; correct bin/user/HOS_MODS,
+copied saves match read-only backup hashes, no hookshot_log.
+Proofs: `gate2c-build.json`, `gate2c-verification.json`.
+Old mods/users remain untouched; no gate3/4 is built before Claude posts2c's result.
+
 ## Generator implementation (still refused for players)
 
 - Model:8 explicit native target IDs, no copied names. An off-dungeon small key remains
@@ -390,13 +473,17 @@ Posted to Claude; no unrelated logic/default cutover was invented.
 
 ## Commit ledger
 
-| Commit before requested rebase | Scope |
+Rebased successfully onto requested main `9f86b3a`; earlier thread hashes are superseded.
+
+| Commit on the requested base | Scope |
 |---|---|
-| `7685b1b` | Gate1 scratch proof and plain checklist record |
-| `9089d2b` | Small-key model/fill and age-copy/source binding constraints |
-| `f9804b0` | New-label operation and dump-resolved English pickup pair |
-| `35d3e16` | Source wrapper compiler, shared helper, guarded pipeline, allocation formula |
-| `16dd52b` | Cause-directed analyzed-event registration/dependency closure for authorized2b; cache input and consumer coverage |
+| `066c361` | Gate1 scratch proof and plain checklist record |
+| `1820f44` | Small-key model/fill and age-copy/source binding constraints |
+| `1f0da7b` | New-label operation and dump-resolved English pickup pair |
+| `81af742` | Source wrapper compiler, shared helper, guarded pipeline, allocation formula |
+| `f94371d` | Cause-directed analyzed-event registration/dependency closure for authorized2b; cache input and consumer coverage |
+| `19ccbf2` | Gate1/2 results,2b checklist, artifact evidence and public refusal reference |
+| `32da483` | Bound production source event IDs to the actor's String64 field |
 
 Registration addition: named event IDs now get source-modelled analyzed records,
 preserving all native records/fields and carrying SubFlowList/ChildEventList closure.
@@ -404,6 +491,14 @@ The NUP working set includes that native registry. The synthetic event consumer 
 requires both registration and declared cross-flow/child dependencies before execution.
 Its six existing routing cases passed after this change; a missing-source-registration
 case was then added for the full suite. This is still a startup hypothesis until2b is played.
+
+Production-name boundary: the dump's chest GetEventName blackboard parameter is
+String64. Longer source-family/target concatenations could overflow it, so new source
+IDs use a deterministic12-hex SHA256 source digest plus target, with collision refusal.
+Binding records still retain the full source identity. A synthetic boundary case covers
+two long sources with the same prefix and the long Gerudo target; IDs must remain
+distinct and below64 bytes. This is **not** a diagnosis of Gate2 (its62/50-byte IDs fit).
+All staged gate mods, including2b, remain frozen with their independently verified IDs.
 
 ## Questions
 
