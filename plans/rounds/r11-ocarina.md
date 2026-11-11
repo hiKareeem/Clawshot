@@ -34,7 +34,7 @@ Claude's comparison identifies only the reward parameter at Event378/Event241 as
 different from the successfully played Echo Gem child-gallery experiment.
 Recorded positive controls: `03-game-data.md` section 40 and
 `playtest/answers.md` R10-MINIGAMES-CHILD-JABU, R10-DIGGING,
-R10-MARKET-BOTTLE-FIX and R8-FROGS. Static subflow audit in progress.
+R10-MARKET-BOTTLE-FIX and R8-FROGS. Static subflow audit completed below.
 
 ## Provisional choices
 
@@ -147,12 +147,15 @@ subprocess;4 MiniGame_SmallKey;5/6/16 ReleaseMagic;7 Stone_Fire;8 Stone_Water;
 9/10 EarlyFadeOut;11 ClaimCheck;12 HeavyBoot;13 HoverBoot;14 Longshot;
 15 Sword_Biggoron. All arms rejoin OpenGetWindow_End.
 
-**Static limit:** these are integer-returning native queries. EVFL does not
-contain their actor-to-integer implementations. The declared type/category/
-guide columns below identify each item's inputs, **not an invented native
-result integer**. In particular, no numbered get-type branch or window default
-is asserted for either ocarina. Tutorial state can also suppress a guide.
-This audit does not certify every item/location combination in game.
+**Read-only actor-graph follow-up:** `PouchSystemActor.event.root.ainb`, extracted
+from its actor pack and decoded outside the repository, resolves the result
+labels that EVFL alone did not identify. Get types are Small=0, Medium=1,
+Large=2, Heart=3; categories are Weapon=0, Bow=1, Arrow=2, Shield=3, Armor=4,
+Material=5, KeyItem=6, Rupee=7, CureItem=8, HeadArmor=9, Boot=10, other=11.
+Thus the declared selectors below associate Small with DemoGet and the other
+three types with DemoGet_Smile. These are static metadata/graph associations,
+not observed runtime values. Tutorial and inventory state still affect execution;
+this audit does not certify every item/location combination in game.
 
 ### Per-item declared selectors
 
@@ -204,8 +207,43 @@ are those in `data/item_actors.toml`; dungeon rows enumerate all shared mappings
 | Bottle; Bottle with Milk | L | Material / Bottle | Bottle deal; bottle-window handling |
 | Broken Sword; Claim Check; Cojiro; Odd Potion; Poachers Saw; Pocket Egg; Prescription; Weird Egg; Zeldas Letter | L | Material / — | ordinary; dedicated ClaimCheck window exists |
 | Scrub Business Seed | S | Material / — | ordinary |
-| Dins Fire; Farores Wind; Nayrus Love | H | Material / DinFire, FaroreWind, NayruLove respectively | spell/MP handling; ReleaseMagic window entries exist, not an ordinary heart-container grant |
+| Dins Fire; Farores Wind; Nayrus Love | H | Material / DinFire, FaroreWind, NayruLove respectively | spell/MP handling, not an ordinary heart-container grant; only Din has an explicit window-name case |
 | Double Defense | H | KeyItem / — | FairyBlessDefenseDouble deal, not an ordinary heart-container grant |
+
+### Resolved window and heart dispatch
+
+The actor graph tests special-deal metadata first, then actor-name equality.
+This table plus the all-item selector table covers every mapped grant actor:
+all rows not matching an exception take the explicit default result0.
+
+| Window selector | Result and EVFL entry |
+|---|---|
+| HeartPiece special deal | 1, HeartPiece |
+| TokenGold special deal | 2, TokenGold |
+| Bottle special deal | 3, bottle subprocess |
+| GlassTruth special deal (Lens of Truth) | 16, ReleaseMagic |
+| Obj_MiniGame_SmallKey | 4, MiniGame_SmallKey; not the ordinary dungeon-key actor |
+| Item_DinFire | 5, ReleaseMagic |
+| Item_Arrow_Fire / Item_Arrow_Ice | 6, ReleaseMagic |
+| Item_Stone_Fire / Item_Stone_Water | 7 / 8, corresponding stone entry |
+| Item_Sword_Kokiri / Item_Gauntlet_Gold | 9 / 10, EarlyFadeOut |
+| Item_ClaimCheck | 11, ClaimCheck |
+| Item_HeavyBoot / Item_HoverBoot | 12 / 13, corresponding boot entry |
+| Item_Longshot | 14, Longshot |
+| Item_Sword_Biggoron | 15, Sword_Biggoron |
+| All other mapped items, including both ocarinas, songs, Echo Gem, Boomerang, Farore's Wind and Nayru's Love | 0, DefaultGetMessage |
+
+Max-life and heart-piece queries explicitly test special-deal values3 and9,
+respectively, returning0 for a match and1 otherwise. Fairy, recovery and autosave
+queries delegate to native Boolean predicates; their graph maps true to0 and
+false to1. Their native predicate bodies are not claimed decoded here.
+
+Reproduction: scratch `compact_ainb.py`, decoded
+`audit/ai/PouchSystemActor.event.root.json`, and `audit/ai/queries-compact.txt`.
+`inspect_event_members.py` also resolves Player_Event's binding to
+`Work/AI/Root/Event/Player.event.root.ain`; that root is not in the inspected
+Player_Event or Player_Base actor packs. This does not bind the crashing native
+routine to a specific EVFL action, and no speculative data repair follows.
 
 Performer audit: the two ocarinas are the **only two explicitly resolved Common
 performer roots**. Both also use GameActorAfter, Accessory, EquipmentCommon
@@ -237,9 +275,9 @@ is confirmed by both German and English reproductions. Fairy Ocarina is excluded
 precautionarily under the request: same distinctive equipment/presentation setup,
 no positive hand-over test.
 
-**[INFERENCE, medium confidence]** the exact crashing action is in show-item
-creation/use/cleanup rather than the pouch grant. The log alone does not name it;
-the native query case identities remain unresolved. No claim that a missing
+The initial exact-action uncertainty is narrowed by the native-address evidence
+below to a null ShowItem actor getter. The owning EVFL action and whether
+inventory had already been granted remain unresolved. No claim that a missing
 literal ocarina case is the cause.
 
 **Job 3 decision:** no small, evidenced EVFL data gap was found. Do not build a
@@ -355,3 +393,27 @@ It wrote **137 resources** in a new scratch folder:
 The original pack/output is untouched. Digest is for the unchanged current
 project version; Claude's version bump at merge will change output metadata.
 No game was started, so the new reward's in-game check remains Kareem's.
+
+### Additional Gift-only diagnostic (outside the requested sweep)
+
+An extra seed1 Gift-only whole-world build did not satisfy the existing
+beatability oracle. The printed diagnostic reaches only2 of5 Spirit Temple
+small keys and no Spirit boss key; precollecting fixed dungeon keys makes the
+same filled world beatable. The before-policy diagnostic reported the same
+Spirit key shortfall. This is not evidence that an unsafe hand-over should be
+allowed, and no key logic, seed oracle or retry policy was changed.
+
+The after-policy output places both ocarinas at the two direct-grant scenes:
+Time at LW Gift from Saria and Fairy at HF Ocarina of Time Item, both allowed.
+Scratch `gift-only-diagnostic.json` records the key counts, unreached progression
+and precollected-key result. The requested defaults/pack-settings sweeps and the
+real seed10 output above are unaffected.
+
+### Remaining in-game check
+
+**Kareem:** after Claude stages the rebuilt seed10 as the only seed mod, use the
+child Jabu backup `slot_01`, teleport to Market and win the Slingshot Gallery.
+Expected: Piece of Heart, completed hand-over and no crash. Capture both the
+in-game result and Hookshot's `mods: <file> <- <path>` proof for
+`Event/EventFlow/MiniGame_HitTarget.bfevfl.zs` from the staged rebuilt output.
+The agent has not performed this check or changed the game/save folders.
