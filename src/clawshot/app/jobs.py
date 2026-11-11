@@ -11,7 +11,7 @@ from pathlib import Path
 from tempfile import mkdtemp
 
 from clawshot.app.library import write_manifest
-from clawshot.app.paths import absolute_path, detect_dump, output_path
+from clawshot.app.paths import absolute_path, detect_dump, dump_root, output_path
 from clawshot.app.schema import validate
 from clawshot.pack import tree_digest
 
@@ -38,6 +38,8 @@ class GenerationRequest:
         if type(self.seed) is not int or not -(2**53 - 1) <= self.seed <= 2**53 - 1:
             raise ValueError("Seed must be an integer within JavaScript's exact integer range")
         source = absolute_path(self.dump, "Dump", allow_links=True)
+        if source.is_dir():  # base/romfs typed inside a dump folder: generate from, and protect, the whole dump
+            source = dump_root(source)
         hookshot = absolute_path(self.hookshot, "Hookshot", allow_links=True) if self.hookshot else None
         return source, output_path(self.output, source, hookshot)
 

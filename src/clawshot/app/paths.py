@@ -48,7 +48,7 @@ def absolute_path(value: str, label: str, *, allow_links: bool = False) -> Path:
         raise ValueError(f"{label} contains a looping link; choose the real folder instead") from error
 
 
-def _dump_root(path: Path) -> Path:
+def dump_root(path: Path) -> Path:
     """A layer picked inside a base+updates dump folder (``base``, ``base/romfs``, ``updates/<n>[/romfs]``) means
     that dump folder, so the newest update is laid over the cart files instead of either being checked alone."""
     from clawshot.pack.source import dump_layers
@@ -75,7 +75,7 @@ def detect_dump(value: str) -> dict:
     if not path.is_dir() and (not path.is_file() or path.suffix.lower() != ".nup"):
         raise ValueError("Choose an extracted romfs folder or a .nup file")
     if path.is_dir():
-        path = _dump_root(path)
+        path = dump_root(path)
     try:
         check_version(path)
     except PackError as error:

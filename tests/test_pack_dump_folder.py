@@ -94,3 +94,16 @@ def test_finder_metadata_is_not_game_or_seed_content(tmp_path):
     assert tree_digest(tmp_path / "seed") == before
     _write(tmp_path / "dump/base/romfs", {"a.txt": b"a", ".DS_Store": b"x", "dir/._a.txt": b"x"})
     assert sorted(LayeredRomfs(tmp_path / "dump").files) == ["a.txt"]
+
+
+def test_generation_uses_and_protects_the_whole_dump_folder(tmp_path):
+    from clawshot.app import GenerationRequest
+
+    root = tmp_path / "dump"
+    _write(root / "base/romfs", {"a.txt": b"cart"})
+    _write(root / "updates/131072/romfs", {"a.txt": b"update"})
+    request = GenerationRequest(str(root / "base/romfs"), str(tmp_path / "seed-1"), 1, "CS1")
+    assert request.paths()[0] == root
+    inside = GenerationRequest(str(root / "base/romfs"), str(root / "seed-1"), 1, "CS1")
+    with pytest.raises(ValueError, match="protected"):
+        inside.paths()
