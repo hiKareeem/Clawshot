@@ -4,6 +4,7 @@ import pytest
 
 from clawshot.generate import Settings, generate
 from clawshot.generate.fill import allowed, check_beatable
+from clawshot.patch import gifts, make_seed
 from clawshot.world import build_world, load_spec, load_world
 
 
@@ -54,8 +55,11 @@ def test_spirit_hands_reject_all_current_dungeon_reward_families(chest):
         assert allowed(world, Settings(), "Spirit Temple Map Chest", item)
 
 
-def test_seed_eleven_keeps_spirit_dungeon_items_off_both_hands():
-    result = generate(load_spec(), 11, Settings())
+@pytest.mark.dump
+def test_community_seed_eleven_keeps_spirit_dungeon_items_off_both_hands(romfs):
+    settings = Settings(shuffle=("Chest", "Shop", "Gift", "Scrub", "BossHeart"))
+    spec, settings, step = gifts.seed_setup(romfs, load_spec(), settings)
+    result = make_seed(romfs, 11, settings, spec, extra_steps=(step,)).seed
     for chest in ("Spirit Temple Silver Gauntlets Chest", "Spirit Temple Mirror Shield Chest"):
         assert result.world.items[result.placements[chest]].dungeon is None, (chest, result.placements[chest])
     check_beatable(result.world, result.placements)
