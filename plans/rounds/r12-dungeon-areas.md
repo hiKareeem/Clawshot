@@ -25,8 +25,61 @@ No version/lockfile change; Claude bumps the version at merge because output cha
 
 ## Audit
 
-In progress: exhaustive world/census join, including boss rooms, Castle/Tower,
-Training Ground and Fortress/Hideout. Reproducers and decoded resources live only
+Static audit joined every dungeon region's classification with the committed census
+physical `area`, including all twelve dungeon files, remake-only regions and the
+Tower metadata override. Exactly two live own-dungeon destinations are outside
+their dungeon's Banc:
+
+| Dungeon | Location / actor Hash | Logical region | Physical area | Generic item attribution |
+|---|---|---|---|---|
+| Spirit Temple | Silver Gauntlets Chest / `2490063409521505179` | Spirit Temple Central Chamber | `DesertColossus` | Spirit small key, boss key, map or compass was permitted. Small key loss is played; no Spirit small-key counters changed. Boss/map/compass handlers use the same standing-dungeon resolution (section 44); map/compass loss here remains static inference. |
+| Spirit Temple | Mirror Shield Chest / `10012167258643363548` | Spirit Temple Beyond Anubis Room | `DesertColossus` | Same four families were permitted. Boss key loss is played despite its indicator; no Spirit boss-key flag changed. Small/map/compass attribution follows the same static handler evidence. |
+
+The actual inside Statue Room Hand Chest (`2203243501006528435`) is in
+`SpiritTemple`, not the exterior statue hands, and remains eligible.
+
+| Dungeon audited | Own physical area | Outside destinations |
+|---|---|---|
+| Deku Tree | `InsideTheDekuTree` | None |
+| Dodongo's Cavern | `DodongoCavern` | None |
+| Jabu-Jabu's Belly | `InsideJabuJabuBelly` | None |
+| Forest Temple | `ForestTemple` | None |
+| Fire Temple | `FireTemple` | None |
+| Water Temple | `WaterTemple` | None |
+| Shadow Temple | `ShadowTemple` | None |
+| Spirit Temple | `SpiritTemple` | Two above |
+| Bottom of the Well | `BottomOfTheWell` | None |
+| Ice Cavern | `IceCavern` | None |
+| Gerudo Training Ground | `GerudoTrainingGround` | None |
+| Ganon's Castle and Tower | `InsideGanonCastle` | None |
+| Gerudo Fortress / Thieves' Hideout | `GerudoFortress` | No shuffled key destinations: its four keys are unshuffled Collectable checks. |
+
+Boss rooms and blue warps are in their dungeon's own Banc, not separate outside
+areas. Untagged boss regions do not become generic own-dungeon destinations.
+Tower is explicitly tagged `Ganons Castle` and shares `InsideGanonCastle`, so its
+boss-key chest is correctly retained. BossHeart/Freestanding palettes exclude all
+four generic families. The unshuffled Well/Shadow floor keys stay where they are.
+
+`item_actors.toml` exposes exactly four generic current-dungeon actor families:
+`Item_Dungeon_SmallKey`, `Item_Dungeon_BossKey`, `Item_Dungeon_Map`,
+`Item_Dungeon_Compass`. The production chest pool disambiguates them using the
+logical dungeon (`patch/plan.py:remake_vanilla`, `patch/items.py:ItemActors.item`).
+Named Hideout keys, key rings and silver-rupee pseudo-dungeon items do not enter the
+supported shuffled pool. Treasure Chest Game's room keys remain unchanged under
+D17. Unqualified generic `Small Key`/`Boss Key`/`Map`/`Compass` logic entries have no
+dungeon but are not production pool entries. No vanilla dungeon item was found
+in a foreign-area check.
+
+Sources: `data/world/port.toml` (all dungeon/Banc mappings and boss rooms);
+`data/world/remake.toml` (both hand area overrides);
+`data/world/remake/extra_ganon_tower.toml`; `data/locations.toml` (physical areas);
+`data/item_actors.toml`; `plans/03-game-data.md` sections 18 and 44. Paths prefixed
+with `data/` above are under `src/clawshot/`.
+
+Static confidence: high on the complete two-location mismatch list and the
+standing-dungeon attribution mechanism; played certainty is limited to the reported
+small/boss keys. A direct index-faithful data-only probe is queued under the gate
+lock to validate the join and canonical region areas; decoded results stay only
 under `E:/OOTRemake/work/r12-dungeon-areas-cs12c/`.
 
 ## Silver Gauntlets story event (note only)
