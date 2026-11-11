@@ -778,3 +778,69 @@ complete native reflection table supplied the actual mapping.
   pass is claimed. Player refusal stays enabled. Kareem's Gate3 uses the frozen,
   already handed-over bytes, not this source-only correction.
 
+
+## Gate 3 played progress and same-copy continuation
+
+Accepted Claude/Kareem report, **14:25–14:46**; no game reconfirmation run.
+
+**Part B PASSED.** Goron center chest gave Small Key (Forest Temple); the entrance
+door opened with that key; the unchanged tree chest gave its normal key. Kareem
+also reloaded and took the tree key before opening the door: standing counter1→2.
+Claude's watcher missed the switch to B, so these are the preserved **part-b user's
+actual slots, not live snapshots**:
+
+- slot05/00: Goron open, Forest1/1; match.
+- slot01/02: door open, one spent; match.
+- slot04: tree open after the door; match.
+- slot03: tree-first reload, Goron and tree open, door closed, Forest2/2; correct.
+
+The last state exposed only an overstrict assertion in this track's external save
+oracle, not a game fault. Removed collection-order assertions: saved flags describe
+current grants/spend, not their timeline. The invariant is total=opened routed
+chest+opened native tree chest; remaining=total−opened entrance lock, with other
+all14 fields compared against source. After that fix, actual slot03 **PASS**,
+all14 match, Forest2/2/true, door false, no mismatches. No game or source save changed.
+
+**Part A steps1–3 PASSED.** Mido→Forest, Deku map→Fire; all14 match in automatic
+snapshots `save-backups/2026-11-11_14*-r12-keygate3a-1..8`. One Continue loaded an
+earlier autosave; counts always match the opened chests, no duplicate credit.
+
+**Part A steps4–8 blocked on equipment, not key routing.** This copy has no Kokiri
+Sword; Kareem could not pass the Slingshot-room Scrub with the Deku Shield alone.
+The earlier shield-only checklist was insufficient. No world-logic change is made
+in this track from that observation.
+
+### Superseded 3A2 proposal: CANCELLED before staging
+
+Claude first proposed a fresh `-part-a2` user and Sword-first launcher, then
+explicitly cancelled it: Kareem reports the Kokiri Sword chest **already open in
+every copy, with no sword available there**. Accepted as ground truth; no attempt
+to prove it closed or to replace the save. No 3A2 mod, launcher or profile was
+created. Only read-only rule/route research had begun. No new checkpoint is needed.
+
+### Current approved plan: SAME part-a copy, purchased Sticks
+
+Claude's replacement plan is now the adjacent **part-A `.md` checklist**:
+
+1. Continue **`user-key-gate3-mixed-targets-next-part-a`** at its existing state:
+   Mido Forest key, Deku map Fire key, Deku Shield already owned. Do not repeat
+   steps1–3 or reset/replace the profile.
+2. Buy **Deku Sticks at the Kokiri shop where Kareem got the shield**. No new gift
+   or shield acquisition is needed. If rupees are needed, open the still-closed
+   **untouched Mido chest beside the key-test chest** for its normal rupees; this is
+   an additional small non-key control. The latest plan permits that rupee visit,
+   superseding the earlier blanket no-return instruction. Do not Teleport to Kokiri
+   Forest or reopen the key-test chest.
+3. Teleport to **the Deku Tree entrance**, use Shield plus Sticks to get past the
+   Scrub, then take the unchanged Slingshot and verify use; side small chest→Fire,
+   compass big chest→Forest; Save/Quit/Continue and check persistence as before.
+4. Claude starts a fresh automatic watcher on **part-a**. No manual copying, new
+   mod, launcher, user, altered inventory, source save write or game start by this
+   track. Existing frozen Gate3 bytes remain in use.
+
+Rupees/Stick purchase/Slingshot must not change any dungeon's key/map/compass/boss
+fields. Remaining A expectations are unchanged: side small takes Fire1/1→2/2,
+compass big takes Forest1/1→2/2; all other all14 fields equal source. Actual Sticks
+passage and the remaining pickups/reload are still **pending**, not inferred PASS.
+Gate4 remains blocked; full gates still respect the review-pr3 queue.
+
