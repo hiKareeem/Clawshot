@@ -10,6 +10,7 @@ Branch: `r12/public`. Owner: cs12a (openai-codex/gpt-6.1-sol).
 - Provisional choice (cs12a): preserve historical round/decision records as history. Correct current architecture/UI statements contradicted by shipped code, as explicitly requested; do not revise decisions.
 - Provisional choice (cs12a): use plain player language in new help/report text. Keep existing developer API identifiers where they document a real contract; mechanical proofreading is not a technical-reference rewrite.
 - Required documents read directly or through the read-only audit: the roadmap/game-data/world-format documents received a full delegated proofreading pass, and player strings received a separate full census. All edits and commits belong to cs12a.
+- Kareem's README steer via Claude: add the exact Discord and Download badges on one line beneath the title, retain the existing Discord paragraph, and leave screenshots for Claude after merge. Applied during the final run; no tested code or fixtures changed.
 
 ## Findings
 
@@ -33,16 +34,21 @@ Seed-output changes are isolated: three closing parentheses in location `where` 
 
 | Commit | Job | Seed output changes? |
 |---|---|---|
-| `19a6f11` | 1: public text/current-state fixes and Detect guidance | No |
-| `ec24c52` | 1: isolated generated description/source-reference text | **Yes** |
-| `a5aa7c3` | 2: player issue forms and consistent reporting instructions | No |
-| `d0265dc` | 3: base-only dump hint, synthetic test and guide | No |
-| `7c1d18e` | 4: public pack wording and spoilers warning | No |
-| `df88a73` | 5: first-player troubleshooting and release known issues | No |
-| `7830592` | 1: full plan audit, current flag summary, logic-form UI string guidance | No |
-| `cfd0afa` | Round implementation record | No |
-| `1efa1e0` | Linux Play steer: platform help, schema/API docs, neutral log privacy | No |
-| `f9b8940` | Rebased commit record and conflict-resolution note | No |
+| `256b480` | 1: public text/current-state fixes and Detect guidance | No |
+| `3696d62` | 1: isolated generated description/source-reference text | **Yes** |
+| `3dd0460` | 2: player issue forms and consistent reporting instructions | No |
+| `3a4b52f` | 3: base-only dump hint, synthetic test and guide | No |
+| `c3344fb` | 4: public pack wording and spoilers warning | No |
+| `040ee8b` | 5: first-player troubleshooting and release known issues | No |
+| `52505a9` | 1: full plan audit, current flag summary, logic-form UI string guidance | No |
+| `6924ab9` | Round implementation record | No |
+| `7933a33` | Linux Play steer: platform help, schema/API docs, neutral log privacy | No |
+| `e53f426` | Rebased commit record and conflict-resolution note | No |
+| `7859f99` | Version wording aligned with PR #3 | No |
+| `d925391` | Small-key-only future help and provisional legacy-seed warning | No |
+| `47494d7` | Remove README warning; target legacy seeds in troubleshooting | No |
+| `222b4cb` | Exclusive PR #3 review gate queue record | No |
+| `ee23b59` | Requested README Discord and Download badges | No |
 
 ## Verification
 
@@ -62,7 +68,43 @@ Initial `git status --short --branch`: clean `r12/public`. Initial `tasklist /FI
 - Scratch correction: printed inherited `TEMP`/`TMP` and `tempfile.gettempdir()` showed `C:/Users/hi/AppData/Local/Temp`. Stopped only owned jobs and verified native pytest PID **45052** had exited. Its `.lock` identified the owned `pytest-271` directory; removed only that directory and released the owned gate lock. Further gates set `TEMP`, `TMP`, `TMPDIR` and `PYTEST_DEBUG_TEMPROOT` to `E:/OOTRemake/work/r12-public-cs12a/tmp`. No game folder was written or game started. This initial temporary-location deviation is recorded rather than hidden.
 - Claude's PR #3 steer: read local commit `cd7c1f7` (on `9f86b3a`), including source, picker and documentation changes. Its `check_romfs` remains the single base-game hint source, so job 3 automatically inherits “Version 1.0.0” / “Version 1.1.1” without a duplicated detector or message. New help uses the corrected Version 1.1.1 / update v131072 name. Wait for Claude's merge notice, then rebase and run final full gates with the corrected scratch environment.
 - Claude's gate-queue instruction: cs12c finishes its current sequence, then Claude's `review-pr3` gate runs exclusively. cs12a has no gate job running and will not acquire `gate.lock` until Claude posts `review-pr3 gates done` on `cs-r12`. Final rebase still awaits the separate PR #3 merge notice.
+- Claude posted `review-pr3 gates done` and merged PR #3 as `cd81449`. Rebased all 14 public-polish commits onto it. Only conflict: independent additions to `tests/test_pack_dump_folder.py`; kept the picker/Finder/protection scenarios and both base-only-update cases. `pack/source.py` merged automatically, preserving the shared diagnostic.
+- Post-rebase real headless UI smoke: inspected Settings' small-key-only help and the completed-seed card's “Choose Detect” instruction, with Play visibly disabled. Completed-seed/capability state was synthetic frontend state only; no generation, picker, executable launch or source-folder write. Owned tab and server closed.
+- Started the final external runner with `CLAWSHOT_WORKERS=1` and all four temporary-root variables set to the supplied scratch. It acquires one shared `gate.lock` for the smokes and entire four-command gate sequence, without releasing between commands.
+
+### Final acceptance on `cd81449`
+
+All four commands passed under one continuous shared lock with `CLAWSHOT_WORKERS=1`.
+`TEMP`, `TMP`, `TMPDIR` and `PYTEST_DEBUG_TEMPROOT` all pointed to
+`E:/OOTRemake/work/r12-public-cs12a/tmp`.
+
+| Command | Observed result |
+|---|---|
+| `uv run ruff format --check` | 304 files already formatted |
+| `uv run ruff check` | All checks passed |
+| `uv run pytest` | 978 passed, 127 skipped; 987.10 s |
+| `uv run pytest -m dump` | 125 passed, 980 deselected; 3003.83 s |
+
+Dump environment: `OOT_ROMFS=E:/Games/Hookshot/romfs`,
+`OOT_NUP=E:/Games/Hookshot/The Legend of Zelda Ocarina of Time [0400486024DEC000][v131072].nup`,
+`OOT_DUMP=E:/OOTRemake/work/pr1-check/dump`. The runner released `gate.lock` in its finalizer.
+Raw command logs remain at `E:/OOTRemake/work/r12-public-cs12a/final-gate-{1,2,3,4}.log`.
+
+Final smokes also passed: all three issue forms; the real generator and source-preflight CLI's
+shared Version 1.0.0 / Version 1.1.1 hint without creating output; Windows/Linux launch-plan paths
+and platform refusals without starting an executable; real note/spoiler rendering for all 373
+descriptions; 17 documents with zero broken local links or anchors. Pack success wording was
+checked at a synthetic publisher boundary, not presented as a real pack-build smoke.
+Both requested badge endpoints returned their expected labels (Download currently v0.1.1).
+Real post-rebase UI screenshots were inspected as recorded above; no screenshots were added
+to the repository.
+
+Removed the seven owned throwaway scripts/patch and the owned temporary test tree after proof.
+Kept text logs only. No game was started and no source game folder was written, moved or deleted.
+
 
 ## Questions / remaining work
 
-None requiring a product decision so far. Implementation and gates in progress.
+No cs12a implementation or verification work remains. Claude reviews and merges this branch with
+cs12c's hand-chest fix for 0.1.2, bumps the generator version for `3696d62`'s isolated seed-text
+changes, and adds README screenshots after merge. Project version and `uv.lock` remain untouched here.
