@@ -417,3 +417,28 @@ Expected: Piece of Heart, completed hand-over and no crash. Capture both the
 in-game result and Hookshot's `mods: <file> <- <path>` proof for
 `Event/EventFlow/MiniGame_HitTarget.bfevfl.zs` from the staged rebuilt output.
 The agent has not performed this check or changed the game/save folders.
+
+## Full gate verification
+
+Scratch `gates.py` runs each command under the shared round gate lock, releasing
+it in `finally`. One worker; fresh test temporary directories under this scratch.
+No synthetic gate inherits `OOT_ROMFS` or `OOT_NUP`.
+
+- `uv run --frozen ruff format --check`: passed, 300 files already formatted.
+- `uv run --frozen ruff check`: passed, all checks passed.
+- `CLAWSHOT_WORKERS=1 uv run --frozen pytest`: **944 passed, 110 skipped**,
+  1020.25 seconds.
+- `CLAWSHOT_WORKERS=1 uv run --frozen pytest -m dump`: **109 passed,
+  945 deselected**, 2175.66 seconds, with `OOT_ROMFS=E:/Games/Hookshot/romfs`
+  and `OOT_NUP=E:/Games/Hookshot/The Legend of Zelda Ocarina of TIme [04004860224DEC000].nup`.
+
+All four commands exited0; the shared gate lock was released after each.
+Gate logs: scratch `gate-1.log` through `gate-4.log`. No gate reruns were needed.
+
+## Branch commits
+
+- `cb28b2c`: item/subflow and delivery-route audit.
+- `97243da`: null ShowItem native crash-address correlation.
+- `d651c8c`: logic-aware placement restriction, regression tests, settings/world docs,
+  requested sweep and actual seed10 proof.
+- `8f9cf77`: resolved actor-graph dispatch, extra diagnostic and remaining game check.
