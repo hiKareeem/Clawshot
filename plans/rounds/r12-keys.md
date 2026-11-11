@@ -619,8 +619,12 @@ or production code was changed to satisfy that assertion.
 
 ### A: mixed targets, both sizes, reverse order and reload
 
-1. Same **Mido far-right small chest** as the played gates: Forest key.
-2. **Deku big map chest**: Fire key. Save and Quit/Continue; verify both stay open.
+1. **Walk from autosave04's starting position to Mido's house; NO Kokiri Forest
+   Teleport first.** Same far-right small chest: Forest key.
+2. **Deku big map chest**: Fire key. Save and Quit/Continue; verify the Deku chest
+   stays open. **Do not return to Mido's house:** Claude checks its persistence in
+   the automatic snapshots. These two route corrections are Claude's, from Gate1's
+   played Saria-farewell/Mido/Kokiri blockage; no reconfirmation run is needed.
 3. Normal wooden-shield setup if needed: unchanged shopkeeper gift after talking
    to the Deku Tree. Source shield IsGet=false/stock0; no inventory is edited.
 4. Unchanged **big Slingshot chest**821372075822700622: normal Slingshot, equip/fire it.
@@ -675,6 +679,12 @@ wrong named acquisition text, wrong saved target/delta or persistence failure.
 No game startup, message rendering, navigation or door behavior is claimed from
 read-back. Runtime load log plus Kareem's results remain required for Gate3.
 Gate4 is not built and anywhere player refusal remains enabled.
+
+Claude subsequently boot-checked Gate3 headless (`kg3`), Hookshot2.1.0:
+**526 log lines, no crash, save reached,28 files indexed/38 entries**, then handed
+both parts to Kareem. Accepted report, not rerun here. Automatic snapshots cover
+both parts. The adjacent part-A `.md` now incorporates his two route corrections
+above; mod bytes, launchers, source copies and part-B route remain unchanged.
 
 ### Repository gate snapshot and queue
 
