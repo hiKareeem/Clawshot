@@ -5,6 +5,7 @@ files = [
     "Pack/ZsDic.pack.zs",
     "GameData/GameDataList.Product.110.byml.zs",
     "RSDB/EventSetting.Product.111.rstbl.byml.zs",
+    "RSDB/GameAnalyzedEventInfo.Product.111.rstbl.byml.zs", # source-bound small-key event registration
     "RSDB/PouchActorInfo.Product.111.rstbl.byml.zs",
     "Event/EventFlow/EventFlowFileEntry.Product.110.byml.zs",
     "System/Resource/ResourceSizeTable.Product.111.Nin_Ounce_NVN2.rsizetable.zs",

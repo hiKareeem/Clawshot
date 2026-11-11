@@ -22,6 +22,7 @@ SMALL = "Dm_SY_TreasureboxSmall"
 BIG = "Dm_SY_Treasurebox"
 POUCH = "GetPouchContent"
 SETTINGS = "RSDB/EventSetting.Product.111.rstbl.byml.zs"
+ANALYZED = "RSDB/GameAnalyzedEventInfo.Product.111.rstbl.byml.zs"
 HELPER = "ClawshotGrantSmallKey"
 
 
@@ -132,7 +133,7 @@ class Binding:
 
 
 class _Compiler:
-    def __init__(self, documents: Mapping[str, evfl.EventFlowFile], rows: list[dict]):
+    def __init__(self, documents: Mapping[str, evfl.EventFlowFile], rows: list[dict], analyzed_rows: list[dict]):
         self.originals = documents
         self.documents = copy.deepcopy(dict(documents))
         self.original_rows = copy.deepcopy(rows)
@@ -140,6 +141,8 @@ class _Compiler:
         self.by_row = {row["__RowId"]: row for row in self.rows}
         if len(self.by_row) != len(self.rows):
             raise PatchError("duplicate EventSetting identifiers")
+        self.analyzed = {row["__RowId"]: row for row in analyzed_rows}
+        self.row_sources: dict[str, str] = {}
         self.entries: dict[tuple[str, str, str, str], str] = {}
         self.nodes: dict[tuple[str, int, str, str], int] = {}
         self.bindings: dict[tuple[str, str], Binding] = {}
@@ -168,6 +171,7 @@ class _Compiler:
         row.update(__RowId=name, FlowchartFileName=f"Work/Event/EventFlow/{flow}.evfc", EntryPointName=entry)
         self.rows.append(row)
         self.by_row[name] = row
+        self.row_sources[name] = source
 
     def destination(self, size: str, target: str, entry: str | None = None) -> str:
         flow = BIG if size == "Big" else SMALL
@@ -301,6 +305,44 @@ class _Compiler:
             elif params.get("MessageId") == "EventFlowMsg/Dm_SY_Get:GetCaption":
                 params["MessageId"] = caption
 
+    def analyzed_row(self, row: dict) -> dict:
+        source = self.row_sources[row["__RowId"]]
+        if source not in self.analyzed:
+            raise PatchError(f"small-key source event {source!r} has no analyzed-event registration")
+        result = copy.deepcopy(self.analyzed[source])
+        result["__RowId"] = row["__RowId"]
+        subflows = set(result.get("SubFlowList", ()))
+        # Replaced chest transitions must preload the new child ID, not only the native one.
+        children = set(result.get("ChildEventList", ())) - {BIG, SMALL, "InsideJabuJabuBelly_GetCompass"}
+        root = Path(row["FlowchartFileName"]).stem
+        pending = [(root, row["EntryPointName"])]
+        seen = set()
+        while pending:
+            flow, entry = pending.pop()
+            if (flow, entry) in seen:
+                continue
+            seen.add((flow, entry))
+            if flow != root:
+                subflows.add(flow)
+            if flow not in self.documents:
+                continue  # Native registration already carries these unchanged callees' transitive dependencies.
+            chart = self.chart(flow)
+            for index in sorted(_reachable(chart, chart.entry_point(entry).main_event)):
+                event = chart.events[index]
+                if isinstance(event, (evfl.SubFlowEvent, evfl.SubFlowSwitchEvent)):
+                    pending.append((event.flowchart or flow, event.entry_point))
+                elif isinstance(event, evfl.ActionEvent):
+                    actor = chart.actors[event.actor]
+                    if actor.name == "EventSystemActor" and actor.actions[event.action] == "EventTransition":
+                        name = (event.params or {}).get("EventName")
+                        if isinstance(name, str) and not isinstance(name, evfl.Argument):
+                            children.add(name)
+        if subflows or "SubFlowList" in result:
+            result["SubFlowList"] = sorted(subflows)
+        if children or "ChildEventList" in result:
+            result["ChildEventList"] = sorted(children)
+        return result
+
     def finish(self) -> FileChanges:
         changes = {}
         for name in sorted(self.touched):
@@ -324,6 +366,7 @@ class _Compiler:
             changes[flow_path(name)] = _append_flow(original, document)
         added = self.rows[len(self.original_rows) :]
         changes[SETTINGS] = _append_rows(added)
+        changes[ANALYZED] = _append_rows([self.analyzed_row(row) for row in added])
         return changes
 
 
@@ -372,12 +415,15 @@ def _append_rows(added: list[dict]):
 
 
 def compile_bindings(
-    documents: Mapping[str, evfl.EventFlowFile], rows: list[dict], requests: list[tuple[str, str]]
+    documents: Mapping[str, evfl.EventFlowFile],
+    rows: list[dict],
+    analyzed_rows: list[dict],
+    requests: list[tuple[str, str]],
 ) -> tuple[dict[tuple[str, str], Binding], FileChanges]:
     """Compile native source-event/target pairs; deterministic regardless of request order."""
     if not requests:
         return {}, {}
-    compiler = _Compiler(documents, rows)
+    compiler = _Compiler(documents, rows, analyzed_rows)
     for source, target in sorted(set(requests)):
         compiler.bind(source, target)
     return compiler.bindings, compiler.finish()
@@ -399,6 +445,7 @@ def changes(romfs: str | Path, plan: Plan, *, prior_changes: Sequence[FileChange
         return data
 
     rows = byml.read(read(SETTINGS))
+    analyzed_rows = byml.read(read(ANALYZED))
     _check_fields(byml.read(read("GameData/GameDataList.Product.110.byml.zs")), [change.named_key for change in routed])
     documents = {}
     # Source wrappers can call NaviChat; content calls remain within the three common flows.
@@ -423,7 +470,7 @@ def changes(romfs: str | Path, plan: Plan, *, prior_changes: Sequence[FileChange
     for name in sorted(needed):
         path = flow_path(name)
         documents[name] = evfl.read(read(path))
-    bindings, transforms = compile_bindings(documents, rows, requests)
+    bindings, transforms = compile_bindings(documents, rows, analyzed_rows, requests)
     replacements = {
         (change.id, change.files): bindings[request].event for change, request in zip(routed, requests, strict=True)
     }

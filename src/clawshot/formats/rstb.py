@@ -39,8 +39,10 @@ OWN_FORMULA: dict[str, tuple[int, int]] = {
     # ActorInfo: 1,934,492 raw -> 1,937,560; Round 7 same-shape model/heap field substitutions only.
     "RSDB/ActorInfo.Product.111.rstbl.byml": (32, 3064),
     # Round 12: EventSetting 509212 -> 509480; same +264 observed in 19/19
-    # non-ActorInfo RSDB tables. Only this table's append growth is enabled.
+    # non-ActorInfo RSDB tables; growth is enabled for these two event registries.
     "RSDB/EventSetting.Product.111.rstbl.byml": (32, 264),
+    # The matching analyzed-event registry: 247276 raw -> 247560 allocated.
+    "RSDB/GameAnalyzedEventInfo.Product.111.rstbl.byml": (32, 264),
 }
 
 

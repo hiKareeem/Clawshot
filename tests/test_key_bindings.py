@@ -86,10 +86,23 @@ def _sources():
     return documents, sorted(rows, key=lambda row: row["__RowId"])
 
 
+def _analysis(rows):
+    return [
+        {
+            "__RowId": row["__RowId"],
+            "SubFlowList": [] if row["__RowId"] == "InsideTheDekuTree_GetMap" else [keys.POUCH],
+            "ChildEventList": [keys.BIG] if row["__RowId"] == "InsideTheDekuTree_GetMap" else [],
+        }
+        for row in rows
+    ]
+
+
 class _Run:
-    def __init__(self, documents, rows):
+    def __init__(self, documents, rows, analyzed):
         self.documents = documents
         self.rows = {row["__RowId"]: row for row in rows}
+        self.analyzed = {row["__RowId"]: row for row in analyzed}
+        self.active = None
         self.state = {
             f"DungeonInfo.{target}.{field}": value
             for target in ("ForestTemple", "FireTemple", "InsideTheDekuTree")
@@ -101,9 +114,17 @@ class _Run:
     def event(self, name):
         row = self.rows[name]
         flow = row["FlowchartFileName"].split("/")[-1].removesuffix(".evfc")
+        analyzed = self.analyzed[name]
+        if self.active:
+            assert name in self.active[1]["ChildEventList"]
+        prior = self.active
+        self.active = (flow, analyzed)
         self.entry(flow, row["EntryPointName"], {})
+        self.active = prior
 
     def entry(self, flow, name, arguments):
+        if self.active and flow != self.active[0]:
+            assert flow in self.active[1]["SubFlowList"]
         chart = self.documents[flow].flowchart
         index = chart.entry_point(name).main_event
         while index != evfl.NONE:
@@ -147,7 +168,8 @@ class _Run:
 
 def _compile(requests):
     documents, rows = _sources()
-    bindings, transforms = keys.compile_bindings(documents, rows, requests)
+    analyzed = _analysis(rows)
+    bindings, transforms = keys.compile_bindings(documents, rows, analyzed, requests)
     written = {
         name: evfl.read(transforms[keys.flow_path(name)](evfl.write(document)))
         if keys.flow_path(name) in transforms
@@ -155,7 +177,8 @@ def _compile(requests):
         for name, document in documents.items()
     }
     new_rows = byml.read(transforms[keys.SETTINGS](byml.write(rows)))
-    return bindings, written, new_rows, transforms
+    new_analyzed = byml.read(transforms[keys.ANALYZED](byml.write(analyzed)))
+    return bindings, written, new_rows, new_analyzed, transforms
 
 
 @pytest.mark.parametrize("order", [(0, 1, 2, 3), (3, 0, 2, 1)])
@@ -166,8 +189,8 @@ def test_two_targets_both_sizes_do_not_cross_credit_or_replace_native_controls(o
         (keys.SMALL, "FireTemple"),
         (keys.BIG, "ForestTemple"),
     ]
-    bindings, documents, rows, _ = _compile(requests)
-    run = _Run(documents, rows)
+    bindings, documents, rows, analyzed, _ = _compile(requests)
+    run = _Run(documents, rows, analyzed)
     for i in order:
         source, target = requests[i]
         before = run.state.copy()
@@ -190,8 +213,8 @@ def test_two_targets_both_sizes_do_not_cross_credit_or_replace_native_controls(o
 
 def test_source_specific_before_and_after_behavior_survives_named_handoffs():
     requests = [("InsideTheDekuTree_GetMap", "ForestTemple"), ("KokiriForest_TreasureBox_NaviChatOff", "FireTemple")]
-    bindings, documents, rows, _ = _compile(requests)
-    run = _Run(documents, rows)
+    bindings, documents, rows, analyzed, _ = _compile(requests)
+    run = _Run(documents, rows, analyzed)
     for request in requests:
         run.event(bindings[request].event)
     assert run.state["MapFollowUp"] is True
@@ -203,8 +226,8 @@ def test_source_specific_before_and_after_behavior_survives_named_handoffs():
 
 def test_native_non_key_pouch_path_does_not_call_named_helper():
     request = (keys.SMALL, "ForestTemple")
-    _, documents, rows, _ = _compile([request])
-    run = _Run(documents, rows)
+    _, documents, rows, analyzed, _ = _compile([request])
+    run = _Run(documents, rows, analyzed)
     run.entry(keys.POUCH, "GetPouchContentByActorNameForTreasureBox", {"ActorName": "Rupee"})
     assert "EventTriggerAddOrRemovePouchContent" in run.trace
     assert run.messages == ["EventFlowMsg/Dm_SY_Get:GetMessage", "EventFlowMsg/Dm_SY_Get:GetCaption"]
@@ -213,12 +236,13 @@ def test_native_non_key_pouch_path_does_not_call_named_helper():
 
 def test_equivalent_sources_share_binding_and_request_order_is_deterministic():
     requests = [(keys.BIG, "FireTemple"), (keys.SMALL, "ForestTemple")]
-    a, _, _, transforms_a = _compile(requests)
-    b, _, _, transforms_b = _compile([*reversed(requests), requests[0]])
+    a, _, _, _, transforms_a = _compile(requests)
+    b, _, _, _, transforms_b = _compile([*reversed(requests), requests[0]])
     assert a == b
     docs, rows = _sources()
     originals = {keys.flow_path(name): evfl.write(document) for name, document in docs.items()}
     originals[keys.SETTINGS] = byml.write(rows)
+    originals[keys.ANALYZED] = byml.write(_analysis(rows))
     assert {path: transform(originals[path]) for path, transform in transforms_a.items()} == {
         path: transform(originals[path]) for path, transform in transforms_b.items()
     }
@@ -229,5 +253,12 @@ def test_existing_presentation_or_helper_collision_is_not_overwritten():
     documents[keys.POUCH].flowchart.entry_points.append(evfl.EntryPoint(keys.HELPER))
     before = copy.deepcopy(documents)
     with pytest.raises(ValueError, match="already exists"):
-        keys.compile_bindings(documents, rows, [(keys.BIG, "ForestTemple")])
+        keys.compile_bindings(documents, rows, _analysis(rows), [(keys.BIG, "ForestTemple")])
     assert documents == before
+
+
+def test_source_without_analyzed_registration_is_refused():
+    documents, rows = _sources()
+    analyzed = [row for row in _analysis(rows) if row["__RowId"] != "KokiriForest_TreasureBox_NaviChatOff"]
+    with pytest.raises(ValueError, match="no analyzed-event registration"):
+        keys.compile_bindings(documents, rows, analyzed, [("KokiriForest_TreasureBox_NaviChatOff", "ForestTemple")])
