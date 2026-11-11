@@ -464,8 +464,9 @@ The exact staged artifacts, two checklists and expected transitions are below.
   deliver those. Boss keys/maps/compasses remain own-dungeon; every fill/swap stage
   uses the same restriction. Hint classification uses that restriction too.
 - Bindings: deterministic source-family/target wrappers, separate named small/big
-  destinations, original story/Navi lifecycle and camera settings retained. One
-  argument-driven helper writes existing saved remaining/total/first fields; metadata
+  destinations, independent story/Navi lifecycle and camera settings retained; obsolete
+  item-only Navi comments omitted in named clones. One argument-driven helper writes
+  existing saved remaining/total/first fields; metadata
   validates those fields. No invented actor/Hash query, new saved state or global latch.
   Original flow entries/events and EventSetting rows invert exactly; owning cloned
   entries carry their sub-flow dependencies. Prior gift/text transforms compose first.
@@ -699,4 +700,81 @@ only this runner's stale lock was removed, and the interruption/queue was posted
 Logs: `full-format.log`, `full-lint.log`, `full-synthetic.log`, `full-dump.log`.
 Latest full gates/dump are deferred until Claude's explicit review-pr3 completion,
 not silently retried or allowed to leapfrog his queued review.
+
+
+## Production named-key Navi correction (Gate3 artifacts remain frozen)
+
+Claude requested this after Gate2c's misleading map comment. cs12b proposes the
+narrow correction: splice only audited item-acquisition balloon actions out of
+**named-key wrapper clones**, continuing at their original successor. Preserve
+all before/after story writes, independent story reactions, cameras, participation,
+cleanup and every original entry/action. Ordinary seeds and all staged Gate1–3
+mods/users/launchers are unchanged; this will need presentation-gameplay evidence.
+
+### Native audit and ordinary-seed exposure
+
+`audit_named_key_navi.py`:33 supported source families,16 native flowcharts,
+12 reachable `Npc_Navi.EventNaviRequestBallonMessage` sites. Do **not** delete all
+balloons: Nabooru's reaction is story-dependent, not reward-dependent.
+
+The global `BalloonMessageParamList` is a512-field Hash32Map, not an ordinal
+array. Its sorted order is **not** the action's Index. To resolve rather than
+guess: `resolve_navi_reflection.py` found one contiguous512-u32 field-key table in
+the installed read-only `image.bin`, offset66097232, stride4, with exactly the
+global map's complete unique key set. Slot354 resolves the played map comment;
+slot345 resolves the compass parameter. All12 indices were then resolved through
+`Pack/NaviBallonMess.pack.zs`, parent/item metadata and the game's USen message
+labels. No native data/text/table is copied into this repository.
+
+| Index | Acquisition classification |
+|---|---|
+|228|Hover Boots|
+|345|Deku compass|
+|354|Deku map|
+|361|Forest boss key|
+|474|Slingshot|
+|475|Boomerang|
+|476|Bow|
+|478|Ice Arrows|
+|479|Hammer|
+|480|Long Hookshot|
+|495|Bomb Bag|
+
+Index197 is the **independent Nabooru capture reaction** and remains. The curated
+11-index set in the compiler identifies existing supported-build API values, not
+an invented query or new saved state. No English game messages ship in that set.
+
+Ordinary-plan finding: both Deku map/compass overrides are `keep`, their original
+NaviChat wrappers request354/345 after the big-chest child returns, and their
+balloon parameter ConditionList is empty. Ordinary item replacements therefore
+retain the same item-related follow-up mechanism; the map case is already played.
+The33-source audit found no corresponding balloon call in the other map/compass
+source families within these16 graphs. That is not a claim about unrelated ambient
+Navi hints. No ordinary-source flow or event policy is changed here.
+
+External evidence: `named-key-navi-audit.json`, `navi-reflection-map.json`,
+`navi-followups-decoded.json`; the latter native decoded material stays **outside**
+the repository. A failed enum-name/hash-spelling probe was removed after the
+complete native reflection table supplied the actual mapping.
+
+### Cause-directed verification
+
+- Synthetic serialized consumer before fix: **1 failed/9 deselected**, exact
+  payload `[354,197] != [197]`, reproducing the false item comment while retaining
+  the separate story reaction.
+- After splice: focused `tests/test_key_bindings.py` **10 passed in0.20s**.
+  The regression also proves story writes before/after the omitted node persist,
+  the correct named grant/message remains, and the untouched original source
+  still requests both comments when used normally.
+- Focused format/check of `keys.py` and that test file: **PASS**.
+- `smoke_navi_wrappers.py`: actual native33-source compiler and common writer,
+  **35 resources** in a non-game emission probe, not an `ingame` mod or Gate4.
+  Read-back of all appended actions retains exactly the Nabooru197 balloon, no
+  old-item balloon. All original flow prefixes invert exactly, source-request
+  reversal is byte-identical and every emitted allocation is exact.
+  Frozen Gate3's entire resource SHA256 map matches before/after.
+  Proof: `navi-wrapper-emission-proof.json`.
+- No game was started, no global gate lock taken and no latest full-suite/dump
+  pass is claimed. Player refusal stays enabled. Kareem's Gate3 uses the frozen,
+  already handed-over bytes, not this source-only correction.
 

@@ -64,12 +64,16 @@ def _sources():
             evfl.Actor("Player_Event", actions=["EventTriggerParticipateEvent"]),
             evfl.Actor("EventSystemActor", actions=["EventTransition"]),
             evfl.Actor("GameDataActor", actions=["EventTriggerSetGameDataBool"]),
+            evfl.Actor("Npc_Navi", actions=["EventNaviRequestBallonMessage"]),
         ],
         [
             evfl.ActionEvent("Participate", 0, 0, 1),
             evfl.ActionEvent("Transition", 1, 0, evfl.NONE, {"EventName": keys.BIG, "SpecialEventActionType": 1}),
             evfl.SubFlowEvent("MapDemo", "", "PlayDemo", 3),
-            evfl.ActionEvent("MapFollowUp", 2, 0, evfl.NONE, {"GameDataName": "MapFollowUp", "Value": True}),
+            evfl.ActionEvent("MapFollowUp", 2, 0, 4, {"GameDataName": "MapFollowUp", "Value": True}),
+            evfl.ActionEvent("ItemBalloon", 3, 0, 5, {"Index": 354}),
+            evfl.ActionEvent("StoryAfter", 2, 0, 6, {"GameDataName": "StoryAfter", "Value": True}),
+            evfl.ActionEvent("StoryBalloon", 3, 0, evfl.NONE, {"Index": 197}),
         ],
         [evfl.EntryPoint("PlayDemo", 0), evfl.EntryPoint("Map", 2, [2])],
     )
@@ -115,6 +119,7 @@ class _Run:
         }
         self.state["MidoStart"] = False
         self.messages = []
+        self.balloons = []
         self.trace = []
 
     def event(self, name, arguments=None):
@@ -162,6 +167,8 @@ class _Run:
                 pass
             elif operation == "EventTalk":
                 self.messages.append(params["MessageId"])
+            elif operation == "EventNaviRequestBallonMessage":
+                self.balloons.append(params["Index"])
             elif operation == "EventTriggerSetGameDataBool":
                 self.state[params["GameDataName"]] = params["Value"]
             elif operation == "EventTriggerAddOrSubGameDataInt":
@@ -291,3 +298,18 @@ def test_default_small_source_keeps_its_reset_and_argument_bootstrap():
     assert run.state["MidoStart"] is False
     assert run.state["DungeonInfo.FireTemple.SmallKeyNum"] == 1
     assert run.state["DungeonInfo.InsideTheDekuTree.SmallKeyNum"] == 0
+
+
+def test_named_reward_omits_old_item_comment_but_preserves_story_and_native_comments():
+    request = ("InsideTheDekuTree_GetMap", "ForestTemple")
+    bindings, documents, rows, analyzed, _ = _compile([request])
+    run = _Run(documents, rows, analyzed)
+    run.event(bindings[request].event)
+    assert run.balloons == [197]
+    assert run.state["MapFollowUp"] is True
+    assert run.state["StoryAfter"] is True
+    assert run.state["DungeonInfo.ForestTemple.SmallKeyNum"] == 1
+    assert run.messages == list(labels("ForestTemple"))
+    run.balloons.clear()
+    run.event(request[0])
+    assert run.balloons == [354, 197]

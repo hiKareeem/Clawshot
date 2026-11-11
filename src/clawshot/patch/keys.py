@@ -25,6 +25,9 @@ POUCH = "GetPouchContent"
 SETTINGS = "RSDB/EventSetting.Product.111.rstbl.byml.zs"
 ANALYZED = "RSDB/GameAnalyzedEventInfo.Product.111.rstbl.byml.zs"
 HELPER = "ClawshotGrantSmallKey"
+# Acquisition-only balloons, not the independent Nabooru story reaction (197).
+# Supported-dump classification and index/parameter provenance: plans/rounds/r12-keys.md.
+_ITEM_NAVI_BALLOONS = frozenset({228, 345, 354, 361, 474, 475, 476, 478, 479, 480, 495})
 
 
 def flow_path(name: str) -> str:
@@ -241,6 +244,16 @@ class _Compiler:
             return self.nodes[key]
         chart = self.chart(flow)
         old = self.old_chart(flow).events[index]
+        if mode == "wrapper" and isinstance(old, evfl.ActionEvent):
+            actor = self.old_chart(flow).actors[old.actor]
+            if (
+                actor.name == "Npc_Navi"
+                and actor.actions[old.action] == "EventNaviRequestBallonMessage"
+                and (old.params or {}).get("Index") in _ITEM_NAVI_BALLOONS
+            ):
+                # Only the named reward changes: retain everything before and after its old-item comment.
+                self.nodes[key] = self.clone_node(flow, old.next, target, mode)
+                return self.nodes[key]
         event = copy.deepcopy(old)
         event.name = f"Clawshot_{target}_{mode}_{event.name}"
         new_index = len(chart.events)
