@@ -8,7 +8,7 @@ body:
         For problems with the UI, Generate or checking your game files, use **Clawshot itself** instead.
         Public test builds are unfinished. Read [the contribution rules](https://github.com/hiKareeem/Clawshot/blob/main/CONTRIBUTING.md).
         Attach only the whole `hookshot_log.txt` file, not screenshots or other files.
-        The log contains your folder paths, including your Windows user name, but no game data. Those paths will be public with your report.
+        The log contains your folder paths, including your user name, but no game data. Those paths will be public with your report.
         Never attach game files, seed folders, saves, keys, caches or spoiler files.
   - type: input
     id: version

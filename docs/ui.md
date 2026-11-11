@@ -246,16 +246,18 @@ refused: check your own dump and update, rather than renaming files or bypassing
 
 Use a current Hookshot with mod loading. Clawshot checks the program for that support, not just
 its version number. **2.0.14** has been played; seeds also start on **2.1.0**. On Game, choose the
-folder containing `bin/hookshot.exe` and press **Detect**. Update or repair Hookshot if refused.
-Hookshot is optional for generating a seed or copying it to an emulator.
+Hookshot Builder game folder containing `bin/hookshot.exe` on Windows or `bin/hookshot` on Linux,
+then press **Detect**. Update or repair Hookshot if refused. A Linux source-build folder without
+`bin/hookshot` is not enough. Hookshot is optional for generating a seed or copying it to an emulator.
 
 ### Why is Play missing or greyed out?
 
 Generate a seed, or choose **View seed** in My seeds. Play is hidden until a Hookshot folder is
-chosen. It needs Windows, a successful Hookshot **Detect**, and finished, unchanged seed files.
+chosen. It needs Windows or Linux, a successful Hookshot **Detect**, and finished, unchanged seed files.
 It is disabled while generating or while a seed launched by this UI runs; quit any running Hookshot
 before pressing Play. Sessions with desktop actions turned off also disable Play. Read the message
 beneath the buttons. Generate old or changed seeds into a new folder; keep the old folder and its saves.
+macOS has no Hookshot Play support; use the emulator steps instead.
 
 ### What is the hash, and what if mine differs?
 
@@ -267,9 +269,10 @@ files or bypass a failed check. For changed seed files, generate into a new fold
 
 ### Does it work on Linux or macOS?
 
-Linux's seed-pack Make was checked in WSL with matching Windows output; its UI has not been fully
-tested. Use `clawshot.sh`. **macOS is untested; a contributor is testing it.** Use `Clawshot.command`.
-Play starts Windows Hookshot only; Linux/macOS players can generate and copy to an emulator.
+On Linux, use `clawshot.sh`; Play supports a Linux Hookshot Builder game folder with `bin/hookshot`.
+Linux's seed-pack Make was checked in WSL with matching Windows output; Linux Play has not yet
+been accepted in game by the maintainers. **macOS is untested; a contributor is testing it.**
+Use `Clawshot.command` there; macOS has no Play, but can generate and copy to an emulator.
 Gamepad and Steam Deck controller navigation are not available yet.
 
 ### Can I use an emulator?
