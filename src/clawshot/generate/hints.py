@@ -174,7 +174,9 @@ class _Searches:
 
 
 def _restricted(seed: "Seed", item: str) -> bool:
-    return seed.settings.dungeon_items == "own_dungeon" and seed.world.items[item].dungeon is not None
+    from clawshot.generate.fill import is_restricted
+
+    return is_restricted(seed.world, seed.settings, item)
 
 
 def _major(seed: "Seed", item: str) -> bool:

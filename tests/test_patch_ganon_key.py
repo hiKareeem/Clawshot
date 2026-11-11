@@ -27,7 +27,7 @@ def test_ganon_boss_key_ownership_and_actor_disambiguation():
     key = "Boss Key (Ganons Castle)"
     assert allowed(world, Settings(), "Tower Chest", key)
     assert not allowed(world, Settings(), "Field Chest", key)
-    assert allowed(world, Settings(dungeon_items="anywhere"), "Field Chest", key)
+    assert not allowed(world, Settings(dungeon_items="anywhere"), "Field Chest", key)  # only small keys leave
     table = loads(
         '[items]\n"Boss Key (Ganons Castle)" = { actor = "Item_Dungeon_BossKey" }\n'
         '"Boss Key (Forest Temple)" = { actor = "Item_Dungeon_BossKey" }\n'

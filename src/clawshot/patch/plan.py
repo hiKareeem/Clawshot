@@ -7,6 +7,11 @@ get the same item). Each chest is an actor ``Hash`` in every file the census lis
 ``Dynamic.Drop__DropActor``, and loses its ``GetEventName`` when that override is tied to the vanilla item
 (``chest_events.toml``). A chest that keeps its item is left alone.
 
+With ``dungeon_items = "anywhere"`` a small key in a chest outside its dungeon's Banc area is a named key
+(:attr:`ChestChange.named_key`): the generic actor would credit the dungeon Link stands in, or nothing in the
+overworld, so the chest changes even when it already holds a small key, and ``clawshot.patch.keys`` binds a named
+grant to it (:attr:`ChestChange.key_event`). ``own_dungeon`` plans have no named keys.
+
 Chests only (D15): a shuffled location that is not a census chest (a Treasure Chest Game box, D17) stops the plan.
 """
 
@@ -16,8 +21,10 @@ from dataclasses import dataclass
 from clawshot.census.definitions import Definition
 from clawshot.census.scan import CHEST, Location
 from clawshot.generate import Seed
+from clawshot.generate.fill import SMALL_KEY
 from clawshot.patch.events import REMOVE, ChestEvent
 from clawshot.patch.items import ItemActors
+from clawshot.patch.key_targets import BY_ID, TARGETS
 from clawshot.world.model import World
 
 DROP_KEY = "Drop__DropActor"
@@ -31,7 +38,7 @@ class PatchError(ValueError):
 
 @dataclass(frozen=True)
 class ChestChange:
-    """One chest (one actor ``Hash``) whose item changes."""
+    """One chest (one actor ``Hash``) whose item changes, or whose small key now names another dungeon."""
 
     location: str  # the world location (OoT Randomizer's name)
     id: int  # the actor Hash
@@ -43,6 +50,20 @@ class ChestChange:
     new_actor: str  # Drop__DropActor after
     event: ChestEvent | None  # the GetEventName override this change removes
     kept_event: ChestEvent | None = None
+    named_key: str | None = None
+    """A small key outside its dungeon (``anywhere`` only): the target's native ID (``key_targets``)."""
+    key_event: str | None = None
+    """The ``GetEventName`` binding the named grant for :attr:`named_key`, written last."""
+
+    def __post_init__(self) -> None:
+        where = f"{self.location} (chest {self.id})"
+        if self.named_key is not None and self.named_key not in BY_ID:
+            raise PatchError(f"{where}: {self.named_key!r} is not a small-key target")
+        if self.key_event is not None:
+            if self.named_key is None:
+                raise PatchError(f"{where}: a key binding {self.key_event!r} needs a named key")
+            if not isinstance(self.key_event, str) or not self.key_event:
+                raise PatchError(f"{where}: the key binding must be an event name, not {self.key_event!r}")
 
     def as_dict(self) -> dict:
         out = {
@@ -61,6 +82,10 @@ class ChestChange:
             out["kept_event"] = self.kept_event.name
             if self.kept_event.story_state is not None:
                 out["story_state"] = self.kept_event.story_state
+        if self.named_key is not None:
+            out["named_key"] = self.named_key
+        if self.key_event is not None:
+            out["key_event"] = self.key_event
         return out
 
 
@@ -152,16 +177,48 @@ def remake_vanilla(world: World, links: Links, items: ItemActors) -> dict[str, s
     return out
 
 
+def _named_key(seed: Seed, location: str, item: str, area: str | None) -> str | None:
+    """With ``anywhere``: the target ID for ``item`` placed at ``location`` in the Banc folder ``area``, or None
+    where the generic actor already credits the right dungeon. Raises :class:`PatchError` for a dungeon item that
+    lies outside its dungeon with no grant to credit it from there.
+
+    A small key is named when it lies outside its target's area, judged by the physical Banc folder, as the game
+    credits it: the Spirit Temple's two hand chests stand in ``DesertColossus``, which credits no dungeon. Boss keys,
+    maps and compasses have no named grant; the fill keeps them in their dungeon's regions."""
+    world = seed.world
+    info = world.items[item]
+    if info.dungeon is None:
+        return None
+    target = TARGETS.get(info.dungeon) if info.type == SMALL_KEY else None
+    if target is not None:
+        return None if area == target.id else target.id
+    if world.regions[world.locations[location].region].dungeon != info.dungeon:
+        what = "small-key target" if info.type == SMALL_KEY else "named grant"
+        raise PatchError(f"{location}: {item} lies outside {info.dungeon}, which has no {what}")
+    return None
+
+
 def make_plan(seed: Seed, links: Links, items: ItemActors, events: Mapping[str, ChestEvent]) -> Plan:
-    """The changes that give every shuffled location its placed item."""
+    """The changes that give every shuffled location its placed item.
+
+    With ``anywhere`` a small key outside its dungeon's area is named (:func:`_named_key`); a chest already holding
+    the generic small key still changes for it. Other shuffled kinds have no named grant: a small key there must
+    lie in its own dungeon's area."""
+    anywhere = seed.settings.dungeon_items == "anywhere"
     changes, unchanged = [], []
     for name in seed.shuffled:
         if name not in links.chests:
-            continue  # Other shuffled kinds are handled by make_seed's registered patch steps.
+            # Other shuffled kinds are handled by make_seed's registered patch steps.
+            if anywhere:
+                item = seed.placements[name]
+                if _named_key(seed, name, item, seed.world.locations[name].area) is not None:
+                    raise PatchError(f"{name}: {item} outside its dungeon needs a named grant, which only chests have")
+            continue
         item = seed.placements[name]
         actor = items.actor(item)
         for chest in links.chests[name]:
-            if chest.vanilla_item == actor:
+            named_key = _named_key(seed, name, item, chest.area) if anywhere else None
+            if chest.vanilla_item == actor and named_key is None:
                 unchanged.append((name, chest.id))
                 continue
             event, kept_event = None, None
@@ -187,6 +244,7 @@ def make_plan(seed: Seed, links: Links, items: ItemActors, events: Mapping[str, 
                     new_actor=actor,
                     event=event,
                     kept_event=kept_event,
+                    named_key=named_key,
                 )
             )
     return Plan(changes, unchanged, list(links.vanilla_chests))
