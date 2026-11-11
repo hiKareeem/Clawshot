@@ -69,20 +69,67 @@ def test_wrong_build_dump_is_refused_before_any_cache_is_made(tmp_path):
     assert not list(parent.iterdir())
 
 
+def _cart_and_update(root):
+    """Synthetic: the cart has the 1.0.0 game data list, the update the 1.1.1 one; fingerprints are split between."""
+    _write(root / "base/romfs", {name: b"cart" for name in VERSION_FILES[::3]})
+    _write(root / "base/romfs", {"GameData/GameDataList.Product.100.byml.zs": b"cart list"})
+    _write(root / "updates/131072/romfs", {name: b"update" for name in VERSION_FILES[1:3]})
+    return root
+
+
 def test_a_layer_picked_inside_a_dump_folder_means_the_dump_folder(tmp_path, monkeypatch):
     from clawshot.app import paths
 
-    root = tmp_path / "dump"
-    _write(root / "base/romfs", {name: b"cart " + name.encode() for name in VERSION_FILES[::3]})
-    _write(root / "updates/131072/romfs", {name: b"update " + name.encode() for name in VERSION_FILES[1:3]})
-    monkeypatch.setattr(paths, "check_version", lambda path: version_digest(path))
+    root = _cart_and_update(tmp_path / "dump")
+    monkeypatch.setattr(paths, "check_version", version_digest)
     for picked in ("base/romfs", "base", "updates/131072/romfs", "updates/131072", "updates"):
-        assert paths.detect_dump(str(root / picked))["path"] == str(root)
-    lone = tmp_path / "cart/romfs"
+        found = paths.detect_dump(str(root / picked))
+        assert found["path"] == str(root) and found["version"] == "1.1.1" and found["update"] is None
+    lone = tmp_path / "lone/romfs"
     _write(lone, {name: b"cart" for name in VERSION_FILES[::3]})
-    with pytest.raises(ValueError, match="cart files plus the Version 1.1.1 update") as error:
+    _write(lone, {"GameData/GameDataList.Product.100.byml.zs": b"cart list"})
+    with pytest.raises(ValueError, match=r"Found Version 1\.0\.0 \(the cart files only\)") as error:
         paths.detect_dump(str(lone))
-    assert VERSION_FILES[1] in str(error.value) and VERSION_FILES[0] not in str(error.value)
+    assert "Update is a separate folder or .nup" in str(error.value)
+    _write(tmp_path / "upd/romfs", {name: b"update" for name in VERSION_FILES[1:3]})
+    with pytest.raises(ValueError, match="Found only Version 1.1.1 update files"):
+        paths.detect_dump(str(tmp_path / "upd/romfs"))
+
+
+def test_a_separate_update_folder_is_laid_over_the_cart_files(tmp_path, monkeypatch):
+    from clawshot.app import paths
+    from clawshot.pack.source import game_version, open_source
+
+    root = _cart_and_update(tmp_path / "dump")
+    cart, update = root / "base/romfs", root / "updates/131072/romfs"
+    assert version_digest(cart, update) == version_digest(root)  # same files, same fingerprint
+    with open_source(cart) as source:
+        assert game_version(source) == "1.0.0"
+    with open_source(cart, update) as source:
+        assert game_version(source) == "1.1.1" and source.read(VERSION_FILES[1]) == b"update"
+    monkeypatch.setattr(paths, "check_version", version_digest)
+    found = paths.detect_dump(str(cart), str(update))
+    assert found == found | {"path": str(cart), "update": str(update), "version": "1.1.1"}
+    with pytest.raises(ValueError, match="separately"):
+        paths.detect_dump(str(cart), str(cart))
+    with pytest.raises(ValueError, match="does not hold the Version 1.1.1 files"):
+        paths.detect_dump(str(cart), str(tmp_path / "dump/base"))
+
+
+def test_a_separate_update_is_protected_from_output(tmp_path):
+    from clawshot.app import GenerationRequest
+
+    root = _cart_and_update(tmp_path / "dump")
+    inside = GenerationRequest(
+        str(tmp_path / "elsewhere"),
+        str(root / "updates/131072/seed-1"),
+        1,
+        "CS1",
+        update=str(root / "updates/131072/romfs"),
+    )
+    (tmp_path / "elsewhere").mkdir()
+    with pytest.raises(ValueError, match="protected"):
+        inside.paths()
 
 
 def test_finder_metadata_is_not_game_or_seed_content(tmp_path):

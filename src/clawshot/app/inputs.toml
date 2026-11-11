@@ -18,6 +18,10 @@ note = "Choose the folder containing bin/hookshot.exe. Play keeps saves inside t
 label = "Game dump"
 help = "Choose the extracted romfs folder or full .nup for your copy of the game. Clawshot checks that it is the supported game version."
 note = "Your game files are only read. Clawshot does not include or download a game."
+[update]
+label = "Update"
+help = "Tick this when your update is kept apart from the game: its own romfs folder or .nup. Clawshot lays it over the game dump. Leave it off for a romfs with the update applied, a dump folder with base and updates inside, or a .nup that includes the update."
+note = "Clawshot needs Version 1.1.1: the Version 1.0.0 cart files plus the update. The update is only read."
 [seed]
 label = "Seed number"
 help = "Choose a whole number or press Random. The same number and settings make the same seed."

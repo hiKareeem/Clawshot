@@ -25,17 +25,17 @@ class PackError(ValueError):
     """A pack cannot be built or safely used."""
 
 
-def version_digest(romfs: Path) -> str:
+def version_digest(romfs: Path, update: Path | None = None) -> str:
     from clawshot.pack.source import dump_layers, fingerprint, open_source
 
-    if romfs.is_dir() and dump_layers(romfs) is None:
+    if update is None and romfs.is_dir() and dump_layers(romfs) is None:
         return fingerprint(lambda relative: (romfs / relative).read_bytes())
-    with open_source(romfs) as source:  # a .nup, or a base+update dump folder
+    with open_source(romfs, update) as source:  # a .nup, a base+update dump folder, or a separate update
         return fingerprint(source.read)
 
 
-def check_version(romfs: Path) -> None:
-    actual = version_digest(romfs)
+def check_version(romfs: Path, update: Path | None = None) -> None:
+    actual = version_digest(romfs, update)
     if actual != ROMFS_SHA256:
         raise PackError(f"RomFS does not match build {BUILD}: fingerprint {actual}, expected {ROMFS_SHA256}")
 

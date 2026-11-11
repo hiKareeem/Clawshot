@@ -267,3 +267,31 @@ def test_concurrent_output_creation_is_not_overwritten_or_cleaned(app_source, tm
         assert marker.read_bytes() == b"created by another owner"
         assert sorted(p.name for p in output.iterdir()) == ["played"]
         assert not list(tmp_path.glob(".clawshot-job-*"))
+
+
+def test_cancelled_check_answers_cancelled_and_remembers_nothing(tmp_path, monkeypatch):
+    from clawshot.app.preferences import Preferences
+    from clawshot.ui import server as ui_server
+
+    seen = []
+
+    def fake_detect(dump, update=None):
+        seen.append((dump, update))
+        return {"path": dump, "update": update, "kind": "romfs", "version": "1.1.1", "build": "b", "supported": True}
+
+    monkeypatch.setattr(ui_server, "detect_dump", fake_detect)
+    preferences = Preferences(tmp_path / "paths.json")
+    app = Application(Jobs(synthetic_run), spec=synthetic_spec(), preferences=preferences)
+    cart, update = str(tmp_path / "cart"), str(tmp_path / "update")
+    with running_server(app) as server:
+        assert request(server, "cancel-check", {"check": "x"})[0] == 400
+        assert request(server, "cancel-check", {"check": 7})[0] == 200
+        status, _, value = request(server, "detect", {"dump": cart, "update": update, "check": 7})
+        assert status == 400 and value["error"] == "Check cancelled."
+        assert "dump" not in preferences.snapshot()
+        status, _, value = request(server, "detect", {"dump": cart, "update": update, "check": 8})
+        assert status == 200 and value["dump"]["version"] == "1.1.1"
+        assert preferences.snapshot()["dump"] == cart and preferences.snapshot()["update"] == update
+        status, _, value = request(server, "detect", {"dump": cart, "check": 9})
+        assert status == 200 and preferences.snapshot()["update"] == ""  # unticked: no separate update
+    assert seen == [(cart, update), (cart, update), (cart, None)]

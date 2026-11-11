@@ -30,6 +30,8 @@ let playAvailable = false,
 let openAvailable = false,
   libraryActions = [],
   lastLibraryOutput = "";
+let checkSeq = 0,
+  activeCheck = null;
 let emulatorFolder = "",
   edenFolder = "",
   copyAvailable = false;
@@ -44,8 +46,9 @@ function error(message) {
   $("alert").textContent = message;
   $("alert").hidden = !message;
 }
-async function api(route, body) {
+async function api(route, body, signal) {
   const response = await fetch(base + "api/" + route, {
+    signal,
     method: body === undefined ? "GET" : "POST",
     credentials: "omit",
     cache: "no-store",
@@ -644,8 +647,9 @@ async function refreshSeeds() {
 }
 async function browse(kind) {
   $("dump-dialog").close();
+  $("update-dialog").close();
   document
-    .querySelectorAll("[data-browse], #browse-dump")
+    .querySelectorAll("[data-browse], #browse-dump, #browse-update")
     .forEach((el) => (el.disabled = true));
   try {
     const data = await api("browse", {
@@ -669,33 +673,67 @@ async function browse(kind) {
       renderEmulator();
       return;
     }
-    const field = kind.startsWith("dump-") ? "dump" : kind;
+    const field = kind.startsWith("dump-")
+      ? "dump"
+      : kind.startsWith("update-")
+        ? "update"
+        : kind;
     $(field).value = data.path;
     if (field === "output") outputCustom = true;
-    else await detect(field);
+    else if (field === "update") {
+      if ($("dump").value) await detect("dump");
+    } else await detect(field);
   } catch (e) {
     error(e.message);
   } finally {
     document
-      .querySelectorAll("[data-browse], #browse-dump")
+      .querySelectorAll("[data-browse], #browse-dump, #browse-update")
       .forEach((el) => (el.disabled = !dialogsAvailable));
   }
+}
+function renderUpdate() {
+  $("update-row").hidden = !$("update-separate").checked;
+}
+function separateUpdate() {
+  return $("update-separate").checked ? $("update").value : "";
+}
+// A check blocks the page behind a modal until it answers or is cancelled; a
+// cancelled check's late answer is ignored here and dropped by the server.
+function cancelCheck() {
+  if (!activeCheck) return;
+  const { check, controller } = activeCheck;
+  controller.abort();
+  api("cancel-check", { check }).catch(() => {});
 }
 async function detect(kind, fillDump = true) {
   if (kind === "hookshot") hookshotCanPlay = false;
   const button = $(kind === "dump" ? "check-dump" : "check-hookshot"),
     status = $(kind + "-status");
+  const check = ++checkSeq,
+    controller = new AbortController();
+  activeCheck = { check, controller };
+  if (!$("check-dialog").open) openDialog("check-dialog");
   button.disabled = true;
   status.textContent = "Checking…";
   status.className = "value-cell detection";
   try {
-    const data = await api("detect", { [kind]: $(kind).value }),
+    const body = { [kind]: $(kind).value, check };
+    if (kind === "dump" && separateUpdate()) body.update = separateUpdate();
+    const data = await api("detect", body, controller.signal),
       info = data[kind];
     preferenceWarning(data.warning);
     status.className = "value-cell detection good";
     if (kind === "dump") {
       $("dump").value = info.path;
-      status.textContent = "Verified " + info.kind + " · build " + info.build;
+      if (info.update) $("update").value = info.update;
+      status.textContent =
+        "Verified Version " +
+        info.version +
+        " · " +
+        info.kind +
+        (info.update ? " + separate update" : "") +
+        " · build " +
+        info.build;
     } else {
       hookshotCanPlay = info.supports_mods && !info.reason;
       $("hookshot").value = info.folder;
@@ -712,8 +750,16 @@ async function detect(kind, fillDump = true) {
     error("");
   } catch (e) {
     status.className = "value-cell detection bad";
-    status.textContent = e.message;
+    status.textContent = controller.signal.aborted
+      ? "Check cancelled. Press " +
+        (kind === "dump" ? "Check" : "Detect") +
+        " to try again."
+      : e.message;
   } finally {
+    if (activeCheck?.check === check) {
+      activeCheck = null;
+      closeDialog("check-dialog");
+    }
     button.disabled = false;
     describe(document.querySelector(`[data-interface=${kind}]`));
     renderPlay();
@@ -884,6 +930,7 @@ async function startJob() {
     renderJob(
       await api("generate", {
         dump: $("dump").value,
+        update: separateUpdate(),
         hookshot: $("hookshot").value,
         output: $("output").value,
         seed,
@@ -980,6 +1027,20 @@ $("check-dump").addEventListener("click", () => detect("dump"));
 $("check-hookshot").addEventListener("click", () => detect("hookshot"));
 $("browse-dump").addEventListener("click", () => openDialog("dump-dialog"));
 $("close-dump").addEventListener("click", () => closeDialog("dump-dialog"));
+$("browse-update").addEventListener("click", () => openDialog("update-dialog"));
+$("close-update").addEventListener("click", () =>
+  closeDialog("update-dialog"),
+);
+$("update-separate").addEventListener("change", () => {
+  renderUpdate();
+  if ($("dump").value && (!$("update-separate").checked || $("update").value))
+    detect("dump");
+});
+$("cancel-check").addEventListener("click", cancelCheck);
+$("check-dialog").addEventListener("cancel", (event) => {
+  event.preventDefault(); // Esc cancels the check; the dialog closes when it ends
+  cancelCheck();
+});
 document
   .querySelectorAll("[data-browse]")
   .forEach((el) =>
@@ -1167,7 +1228,7 @@ window.addEventListener("beforeunload", (event) => {
     initialStages = data.stages;
     outputRoot = data.output_root;
     dialogsAvailable = data.dialogs_available;
-    document.querySelectorAll("[data-browse], #browse-dump").forEach((el) => {
+    document.querySelectorAll("[data-browse], #browse-dump, #browse-update").forEach((el) => {
       el.disabled = !dialogsAvailable;
       if (!dialogsAvailable)
         el.title = "Disabled in --no-open; paste a path instead";
@@ -1176,6 +1237,9 @@ window.addEventListener("beforeunload", (event) => {
     $("open-folder").disabled = !openAvailable;
     preferenceWarning(data.preferences_warning);
     $("dump").value = data.paths.dump || "";
+    $("update").value = data.paths.update || "";
+    $("update-separate").checked = Boolean(data.paths.update);
+    renderUpdate();
     $("hookshot").value = data.paths.hookshot || "";
     emulatorFolder = data.paths.emulator_mods || "";
     edenFolder = data.eden_folder || "";
