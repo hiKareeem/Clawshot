@@ -211,10 +211,13 @@ Performer audit: the two ocarinas are the **only two explicitly resolved Common
 performer roots**. Both also use GameActorAfter, Accessory, EquipmentCommon
 blackboard and no AS/Animation bundle. Ordinary resolved items use PouchContent;
 the two hearts use PouchContentUtuwa; gold rupee uses the pickup/warp variant.
-The 32 Shop_* mappings have no standalone actor pack at the mapping's filename;
-their presentation performer is **unresolved**, not claimed to be PouchContent.
-Their PouchActorInfo rows do exist. Refill rows remain shop-restricted already;
-the absence of a standalone pack alone is not proof of a hand-over crash.
+All **33 Shop_* actor packs exist** and their resolved roots have EventMemberRef,
+shop AI/blackboard, GameActorDefault and item-shop AS, but no explicit
+EventPerformerRef. Their performer is **unresolved**, not claimed to be
+PouchContent or Common. An earlier scout/parent interpretation incorrectly
+called these missing packs; querying the export's `missing_pack` count gives
+zero. Their PouchActorInfo rows also exist. Refill rows remain shop-restricted;
+absence of an explicit performer field alone does not prove a hand-over crash.
 
 ### Played controls and verdict
 
@@ -243,3 +246,33 @@ literal ocarina case is the cause.
 speculative mod that changes playable ocarina components or guesses a new prop
 lifecycle. A RomFS-side repair is not proved impossible; it is simply not
 established by this audit. Proceed with the placement constraint.
+
+### Native crash-address correlation (read-only follow-up)
+
+The existing permissive inspection helper
+`work/r9-itembar-cs9a/native.py` reads the player's own NSO; ephemeral Capstone
+was used without changing dependencies. No Hookshot or NX2navi implementation
+was copied or used.
+
+`map_guest.py` matches the NSO text in `E:/Games/Hookshot/image.bin` at offset
+`0x20000` (rodata has the same offset). Thus the logged return address
+`0x829630ac` corresponds to main-relative `0x029430ac`, not `0x029630ac`.
+The instruction immediately before it calls `0x00974de0`; that function's first
+instruction is `ldr x8, [x0, #0x270]`. The logged x0 is zero and the reported
+read is guest `0x270`. This is a direct address/register match, not a guessed
+localized-text fault.
+
+The caller at `0x02943040` obtains a resource named **ShowItem**, invokes its
+virtual accessor, then passes the result to that getter **without a null
+check**. The ShowItem literal is at `0x03cfc180`. The logged x19 vtable also
+maps to the current image's `0x04a38f60`. **[INFERENCE, high confidence]** the
+missing show-item actor is the immediate cause. The EVFL action name owning
+this native routine is still unbound; creation, use versus cleanup timing is
+not certified, and inventory may already have been granted. Do not claim that
+the pouch grant was necessarily never reached.
+
+Reproducers and printed diagnostics are all in scratch:
+`map_guest.py`, `native_site.py`, `native_registry.py`; native helper commands
+`dis 2943030 e0`, `dis 974de0 80`, `xrefs 4a38f60`.
+An initial inspection incorrectly subtracted only `0x80000000`; the printed
+NSO/image segment matches established the corrected base before interpretation.
