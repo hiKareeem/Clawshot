@@ -33,7 +33,6 @@ let openAvailable = false,
 let emulatorFolder = "",
   edenFolder = "",
   copyAvailable = false;
-let noteOutput = "";
 
 function element(tag, className = "", text) {
   const el = document.createElement(tag);
@@ -624,7 +623,9 @@ async function refreshSeeds() {
       add("Open folder", "open", () =>
         api("open", { target: "folder", output: entry.output }),
       );
-      add("Read play note", "note", () => documentView("note", entry.output));
+      add("Play note (spoilers)", "note", () =>
+        documentView("note", entry.output),
+      );
       card.append(actions);
       bindHelp(card, {
         ...inputs.seeds,
@@ -821,7 +822,6 @@ function renderJob(state) {
     $("result-settings").value = state.result.share_string;
     $("result-hash").value = state.result.short_hash;
     $("result-path").textContent = state.result.output;
-    if (noteOutput !== resultOutput) loadPlayNote(resultOutput);
   }
   renderPlay();
   updateLibraryActions();
@@ -898,9 +898,7 @@ function closeDialog(id) {
 function renderNote(text, target) {
   target.replaceChildren();
   let paragraph = [],
-    table = null,
-    ageSection = false,
-    ageCount = 0;
+    table = null;
   const flush = () => {
     if (paragraph.length) target.append(element("p", "", paragraph.join(" ")));
     paragraph = [];
@@ -910,7 +908,6 @@ function renderNote(text, target) {
     if (heading) {
       flush();
       table = null;
-      ageSection = heading[2].startsWith("Age-locked items:");
       target.append(
         element(heading[1].length === 1 ? "h3" : "h4", "", heading[2]),
       );
@@ -931,7 +928,6 @@ function renderNote(text, target) {
       for (const cell of cells)
         row.append(element(header ? "th" : "td", "", cell));
       table.append(row);
-      if (ageSection && !header) ++ageCount;
     } else {
       table = null;
       if (!line.trim()) flush();
@@ -939,23 +935,6 @@ function renderNote(text, target) {
     }
   }
   flush();
-  return ageCount;
-}
-async function loadPlayNote(output) {
-  noteOutput = output;
-  $("play-note-body").textContent = "Reading play note…";
-  try {
-    const data = await api("result", { file: "note", output });
-    if (resultOutput !== output) return;
-    const count = renderNote(data.text, $("play-note-body"));
-    $("play-note-summary").textContent =
-      count +
-      " listed pickups can be reached at an unusable age. Save and Continue if you take one.";
-  } catch (e) {
-    if (resultOutput === output)
-      $("play-note-body").textContent =
-        "Play note could not be read: " + e.message;
-  }
 }
 async function documentView(file, output) {
   const confirmed =
@@ -970,7 +949,8 @@ async function documentView(file, output) {
       confirmed,
       ...(output ? { output } : {}),
     });
-    $("document-title").textContent = data.name;
+    $("document-title").textContent =
+      file === "note" ? "Play note (spoilers)" : data.name;
     $("document-text").textContent = data.text;
     $("document-text").hidden = file === "note";
     $("document-note").hidden = file !== "note";

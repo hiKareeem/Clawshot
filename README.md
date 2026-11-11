@@ -26,7 +26,8 @@ that output. Clawshot is not affiliated with or endorsed by Nintendo.
 3. On **Game**, Browse to your own supported **romfs folder or .nup** and Check it.
    Hookshot is optional: it is only needed for the Play button.
 4. Go to **Generate**. Recommended settings, a random seed and a new Documents folder are ready;
-   leave them alone for a first seed. Wait for **Seed ready** and read its play note.
+   leave them alone for a first seed. Wait for **Seed ready**. **Play note (spoilers)** is optional:
+   it reveals item locations and all shuffled rewards; it does not open automatically.
 5. **Hookshot:** choose/check its folder on Game, quit any already running Hookshot, then press **Play**.
    This seed has its own saves; normal Hookshot saves are not used.
    **Emulator instead:** back up your normal saves, then **Copy to my emulator**, choose this game's

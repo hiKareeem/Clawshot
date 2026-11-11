@@ -58,14 +58,14 @@ on macOS, and `$XDG_CONFIG_HOME/clawshot/paths.json` (or `~/.config/clawshot/pat
   output chooses an existing parent and adds the seed name. Custom parents must already exist.
   Existing seeds are never rewritten. Progress reflects real stage boundaries, not estimated
   percentages within the fill. Cancellation removes only this job's private staging/cache.
-- **Result:** Play in a detected mod-capable Hookshot, Open seed folder, read the play note, or
-  explicitly confirm revealing the spoiler. The play note also contains item locations/hints.
+- **Result:** Play in a detected mod-capable Hookshot, Open seed folder, explicitly open
+  **Play note (spoilers)**, or confirm revealing the raw spoiler JSON. Neither opens automatically.
   Play uses `output/user` for this seed's saves and `output/hookshot_log.txt` for its log, never
   your normal Hookshot saves. Quit a running seed before starting another. Changed seed files are
   refused; generate a new seed instead of repairing an output in place.
 - **My seeds:** finished seeds remain available after restarting Clawshot. The default output
   folder and folders opened with Find seeds are remembered in your user configuration folder.
-  Each entry offers Play, Open folder and its play note, with a short hash. Only folders with
+  Each entry offers Play, Open folder and **Play note (spoilers)**, with a short hash. Only folders with
   seed information or an older seed/romfs or romfs layout appear; unrelated folders are ignored.
   Older seeds get a calm regeneration message. Newest information files appear first.
   Listing reads only the small information file; View and Play check the seed's actual digest.
@@ -194,10 +194,12 @@ and supported game files are required to reproduce it; timestamps and output pat
 
 ## Play note and spoilers
 
-The result panel reads the seed's play note as text, headings and tables, including its opening
-route and age-locked pickup count/Save and Continue advice. Read play note opens a larger view.
-The note itself includes reward locations and hints. Raw spoiler JSON stays behind explicit
-confirmation. Note contents are rendered as text nodes, never executed as HTML or remote content.
+**Play note (spoilers)** is a full spoiler: its wrong-age table, opening route and All shuffled
+rewards table list items by place. Generate and View seed never open or preview it automatically.
+Choose the labeled action in the result or My seeds to open its equally labeled viewer.
+There is no spoiler-free note yet; that requires a later generator change. Raw spoiler JSON
+stays behind explicit confirmation. Note contents are rendered as text nodes, never executed
+as HTML or remote content.
 
 ## Remake item names
 
