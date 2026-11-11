@@ -446,14 +446,12 @@ door and spend the routed Forest key. Then climb the east vines/high branches to
 the untouched native tree key. No Hookshot or room Teleport; this exact grant/spend/
 native-key route already passed r11. Gate3 will compare all14 states at each stage.
 
-Four mixed pickups/native non-key control still need their source availability checked.
-A read-only inventory researcher is prepared; it writes no mod/profile/save. No gate3
-or4 mod exists yet.
-**Kareem/Claude: if no single existing checkpoint safely combines the mixed pickups
-and door, may Gate3 use ONE mod with two fresh users (child slot04 for the mixed
-pickup sequence; this original adult slot01 for the played door/native-key route),
-or would you prefer to supply a new adult checkpoint combining them?**
-No position is invented, and no new copy of a played profile will be reset.
+**Resolved by Claude:** ONE mod, two launchers, two fresh users from these existing
+backups; no new checkpoint. Part A uses child slot04 for both sizes/two targets and
+the unchanged Slingshot; part B uses adult manual slot01 for the existing Goron
+grant/Forest door/native tree-key route. Availability and all14 source fields were
+checked before building. Both source copies remain byte-identical to the backups.
+The exact staged artifacts, two checklists and expected transitions are below.
 
 ## Generator implementation (still refused for players)
 
@@ -531,13 +529,17 @@ Rebased successfully onto requested main `9f86b3a`; earlier thread hashes are su
 | `f94371d` | Cause-directed analyzed-event registration/dependency closure for authorized2b; cache input and consumer coverage |
 | `19ccbf2` | Gate1/2 results,2b checklist, artifact evidence and public refusal reference |
 | `32da483` | Bound production source event IDs to the actor's String64 field |
+| `4d7990c` | Record passed registered-small gate and verified registered-big handoff |
+| `b888fd7` | Record passed named-big gate and existing mixed-test door route |
+| `02e20c8` | Preserve the default small source's argument bootstrap;9 focused tests pass |
 
 Registration addition: named event IDs now get source-modelled analyzed records,
 preserving all native records/fields and carrying SubFlowList/ChildEventList closure.
 The NUP working set includes that native registry. The synthetic event consumer now
 requires both registration and declared cross-flow/child dependencies before execution.
 Its six existing routing cases passed after this change; a missing-source-registration
-case was then added for the full suite. This is still a startup hypothesis until2b is played.
+case was then added for the full suite. Gate2b subsequently confirmed registration
+as the startup cause; Gate2c confirmed the same treatment for the named big path.
 
 Production-name boundary: the dump's chest GetEventName blackboard parameter is
 String64. Longer source-family/target concatenations could overflow it, so new source
@@ -557,6 +559,134 @@ are the only sources currently authorized.
 
 `tasklist /FI "IMAGENAME eq hookshot.exe"` reported no matching process at research
 and before integration. Every pytest uses `CLAWSHOT_WORKERS=1`, regardless.
-Full suites/dump/sweeps acquire `E:/OOTRemake/work/rounds/r12/gate.lock` via mkdir,
-retry once a minute on contention and release via rmdir immediately on every exit.
-Full gate results and rebased commit IDs will be recorded below before repository handoff.
+Full suites/dump/sweeps acquire `E:/OOTRemake/work/rounds/r12/gate.lock` via mkdir.
+**Queue directive from Claude:** cs12c finishes its current sequence, then Claude's
+`review-pr3` gates run. This track will not acquire the lock until Claude posts
+`review-pr3 gates done`; focused single-file checks and the single-process Gate3
+build/readback need no lock. No automatic lock-waiting runner remains active here.
+
+## Gate 3: approved one-mod, two-user handoff
+
+Claude selected the two existing backups above. No new save or position is requested.
+Built with production source bindings after `02e20c8`, not by forcing the Mido
+source onto unrelated small chests. That fix preserves the default source's false
+Navi-off reset and its `IsMiniGame=False` argument bootstrap before the registered
+handoff. Mido's separate true bootstrap remains intact. Its regression file passed
+**9 tests in0.23s**; later focused format/check of the two changed files also passed.
+
+### Artifacts and actual non-game proof
+
+All paths below are under `E:/OOTRemake/work/r12-keys-cs12b/ingame/`.
+
+- ONE real mod root: `mods/key-gate3-mixed-targets-next/`, containing exactly the
+  same-named mod directory and no links. **28 resources**; no Forest Banc, saved
+  defaults, new GameData fields, game folder or source backup was written.
+- A launcher: **`Key gate 3A - Kokiri Forest and Deku Tree chests.bat`**.
+  Separate user: `user-key-gate3-mixed-targets-next-part-a`.
+  Original `2026-11-07_1630`, child slot04.
+- B launcher: **`Key gate 3B - Goron City maze chest then Forest Temple door.bat`**.
+  Separate user: `user-key-gate3-mixed-targets-next-part-b`.
+  Original `2026-11-09_1022-main-adult-first/save/5a3c9e1f0b7d24680000000000000001`,
+  adult manual slot01.
+- Each launcher has its own adjacent **same-name `.md` checklist**, in plain player
+  language. Both are the current central template with only name/source/slot/user
+  suffix substitutions, ASCII/CRLF.
+- `build_gate3.py`: PASS. All84 key/boss/map/compass fields exist in each source;
+  required chest/door flags are explicitly closed, Forest/Fire counts0/0.
+- Independent `verify_gate3.py`: **PASS**. Actual compressed bytes, every age Banc
+  inverse, original event/entry/actor-operation prefixes, original registry rows and
+  all old text/member bytes preserved. Nine matching new registry IDs; serialized
+  sub-flow indices and cross-flow/child dependency closure; five actual source
+  routes resolve the intended helper's literal target fields. Both named small/big
+  destinations used per target. All16 languages receive only four English labels.
+  Helper executed from written bytes for the actual mixed order and a nonzero
+  standing-dungeon baseline; all14 groups match, including unchanged standing Deku.
+- Exact complete resource-size table read-back passed:
+  EventSetting509212→510688, allocation509480→510952;
+  analyzed247276→248152, allocation247560→248424.
+- Both **actual `CLAWSHOT_DRY_RUN=1` launcher runs exit0**: correct executable,
+  separate users, same HOS_MODS. Each copied save tree matches its original backup
+  SHA256 map; no game log or game process was started.
+- Proofs outside the repository: `gate3-build.json`, `gate3-verification.json`.
+  `check_gate3_save.py A|B <snapshot/slot_NN/progress.sav>` is a read-only all14
+  oracle, deriving exact grants/spend from these chest/door flags; both copied
+  untouched baselines pass. It has not checked played Gate3 saves yet.
+
+The verifier initially mistook two small-chest presentation queries for additional
+payout queries. Printed graph values showed those were in `Dm_SY_TreasureboxSmall`,
+not `GetPouchContent`; scoping to the payout flow fixed the verifier. No mod byte
+or production code was changed to satisfy that assertion.
+
+### A: mixed targets, both sizes, reverse order and reload
+
+1. Same **Mido far-right small chest** as the played gates: Forest key.
+2. **Deku big map chest**: Fire key. Save and Quit/Continue; verify both stay open.
+3. Normal wooden-shield setup if needed: unchanged shopkeeper gift after talking
+   to the Deku Tree. Source shield IsGet=false/stock0; no inventory is edited.
+4. Unchanged **big Slingshot chest**821372075822700622: normal Slingshot, equip/fire it.
+5. **Slingshot-room small side chest**13027331340815880287: Fire key.
+6. Normal upper-floor route with Slingshot; **big compass chest**
+   9284193025315608699: Forest key. Save and Quit/Continue; check persistence and
+   Slingshot use again. Quit before B.
+
+Thus small chests give Forest→Fire and big chests Fire→Forest, with a reload between
+pairs, without resetting either fresh copy. Named main/caption must match the target
+each time. No map/compass grant, no new item from revisiting opened chests.
+
+| A stage | Forest remaining/total/once | Fire remaining/total/once |
+|---|---|---|
+| Source |0/0/false|0/0/false|
+| Mido small |1/1/true|0/0/false|
+| Map big + first reload |1/1/true|1/1/true|
+| Native Slingshot |1/1/true|1/1/true|
+| Side small |1/1/true|2/2/true|
+| Compass big + second reload |2/2/true|2/2/true|
+
+Every other field in all14 groups equals its source, including Deku counts/first,
+map and compass. The usual standing-area counter need not rise. Preserved old
+item-specific Navi comments remain a known cosmetic issue in this frozen gate;
+record separately from the key's actual acquisition main/caption. Production
+named-key follow-up correction remains required; ordinary seed behavior is not
+changed by this track.
+
+### B: routed grant, reload, exact door spend, native control
+
+1. Existing played Goron City top-floor west boulder-maze center pocket route:
+   chest1176975953041865014 gives the named Forest key. Save/reload, check it stays open.
+2. Existing played Forest entrance courtyard door1163369963105284964:
+   spend that key **before** taking the tree chest. Save/reload, check door persists.
+3. Existing east-vines/high-branches tree chest1171460703078800858:
+   unchanged native Forest key and generic message. Save/reload, check both chests
+   and door remain open. No Hookshot, no room Teleport, no second spend.
+
+| B stage | Forest remaining/total/once |
+|---|---|
+| Source |0/0/false|
+| Goron grant + reload |1/1/true|
+| Entrance lock + reload |0/1/true|
+| Native tree key + reload |1/2/true|
+
+All other all14 fields equal the adult source. Untouched tree key and physical lock
+are controls; their Banc was not emitted, and their original flow nodes remain unchanged.
+
+**Before handover:** post this artifact/checklist pair to `cs-r12`; Claude can use
+the read-only oracle or his existing snapshot checkers. Stop on failed opening,
+wrong named acquisition text, wrong saved target/delta or persistence failure.
+No game startup, message rendering, navigation or door behavior is claimed from
+read-back. Runtime load log plus Kareem's results remain required for Gate3.
+Gate4 is not built and anywhere player refusal remains enabled.
+
+### Repository gate snapshot and queue
+
+The serialized full runner obtained the lock at13:21 after waiting:
+format **PASS**, lint **PASS**, synthetic **1011 passed/130 skipped** in1231.46s.
+This began before the13:37 bootstrap fix, so it is **not** claimed as full-suite
+coverage of that later fix (focused9 tests and actual Gate3 smokes cover it).
+The dump suite began13:41 and the harness's3600s overall deadline killed the
+runner during `test_pack_nup_dump`; no assertion failure was printed. This is an
+**interrupted run, not PASS**. Process census showed no surviving test child;
+only this runner's stale lock was removed, and the interruption/queue was posted.
+Logs: `full-format.log`, `full-lint.log`, `full-synthetic.log`, `full-dump.log`.
+Latest full gates/dump are deferred until Claude's explicit review-pr3 completion,
+not silently retried or allowed to leapfrog his queued review.
+
