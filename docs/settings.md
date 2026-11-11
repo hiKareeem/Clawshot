@@ -80,6 +80,9 @@ but show no model; the Ocarina of Time plays songs. Din's Fire and Adult's Walle
 Other gift actors remain subject to the sourced chest allowlist and destination holds, not blanket
 permission for every gift to go in a chest. Authoritative restrictions: `data/settings.toml`.
 
+Shuffled ocarinas come from chests or story scenes, not ordinary gifts, minigame prizes,
+frog rewards, digging rewards or Deku Scrub purchases. This avoids a crash when receiving them.
+
 ## Shops and scrub prices
 
 | Option | Behavior |

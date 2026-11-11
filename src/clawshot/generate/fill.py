@@ -219,6 +219,8 @@ def is_restricted(world: World, settings: Settings, item: str) -> bool:
 
 def allowed(world: World, settings: Settings, location: str, item: str) -> bool:
     """Whether ``item`` may go to ``location`` at all, reachable or not."""
+    if item in world.locations[location].excluded_items:
+        return False
     if world.locations[location].type == "Shop":
         if item not in world.settings.get("native_shop_items", ()):
             return False
@@ -686,7 +688,10 @@ def fill(
         _fill_restrictive_fast(world, settings, rng, placements, locations, priority, shop_refills)
     else:
         _fill_restrictive_fast(world, settings, rng, placements, locations, priority)
-        _fast_fill(rng, placements, locations, rest)
+        if any(world.locations[name].excluded_items for name in locations):
+            _fill_restrictive_fast(world, settings, rng, placements, locations, rest)
+        else:
+            _fast_fill(rng, placements, locations, rest)
 
     if priority or rest:
         raise FillError(f"items left unplaced: {sorted(priority + rest)}")

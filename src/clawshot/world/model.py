@@ -43,7 +43,7 @@ class Location:
     is the remake's Banc folder the check lies in (its region's, unless the remake moved it).
     ``n64_only`` is the reason, with its evidence, when the check does not exist in the remake; ``keep_vanilla`` the
     reason a check of a shuffled type keeps its vanilla item; ``override`` the source of the remake overrides
-    applied to it (``remake.toml``)."""
+    applied to it (``remake.toml``). ``excluded_items`` forbids unsafe delivery combinations during fill."""
 
     name: str
     region: str
@@ -55,6 +55,7 @@ class Location:
     n64_only: str | None = None
     keep_vanilla: str | None = None
     override: str | None = None
+    excluded_items: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True)

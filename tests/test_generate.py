@@ -347,3 +347,28 @@ def test_ammo_fill_rejects_world_without_a_guaranteed_bag_destination():
     }
     with pytest.raises(FillError):
         generate(spec, 0, Settings(), attempts=1)
+
+
+def test_normal_filler_respects_location_item_exclusions_without_shop_shuffle():
+    spec = {
+        "start": "Root",
+        "goal": "True",
+        "items": {"Coin": {"class": "normal"}, "Gem": {"class": "normal"}},
+        "regions": [
+            {
+                "name": "Root",
+                "locations": {
+                    "Restricted": {
+                        "type": "Chest",
+                        "vanilla": "Coin",
+                        "rule": "True",
+                        "excluded_items": ["Coin"],
+                    },
+                    "Flexible": {"type": "Chest", "vanilla": "Gem", "rule": "True"},
+                },
+            }
+        ],
+    }
+    for number in range(10):
+        seed = generate(spec, number, Settings())
+        assert seed.placements == {"Restricted": "Gem", "Flexible": "Coin"}

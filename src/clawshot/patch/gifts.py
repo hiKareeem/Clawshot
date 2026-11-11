@@ -28,6 +28,7 @@ from typing import Any
 from clawshot.census import definitions as census_definitions
 from clawshot.census.definitions import Definition
 from clawshot.census.gifts import (
+    DIRECT,
     FLOW_VERSIONS,
     FROG_SONG_CALL,
     FROG_SONG_FLAGS,
@@ -980,15 +981,35 @@ def seed_checks(
     return out
 
 
-def restrict_spec(spec: Mapping[str, Any], shuffled: Iterable[str]) -> dict[str, Any]:
-    """A copy of the world spec in which every gift-type location outside ``shuffled`` keeps its vanilla item."""
+def restrict_spec(
+    spec: Mapping[str, Any], shuffled: Iterable[str], steps: Mapping[str, tuple[Gift, ...]] | None = None
+) -> dict[str, Any]:
+    """Keep unsupported gifts vanilla and exclude unsafe items at show-item hand-overs.
+
+    Direct pouch grants and the ordinary GetPouchContent wrapper do not create the
+    item actor. All other admitted gift wrappers, plus scrub sales, do (r11-ocarina).
+    """
     keep = set(shuffled)
+    steps = steps or {}
     locations = {}
     for name, info in spec["locations"].items():
         if info.get("type") in GIFT_TYPES and name not in keep and not info.get("keep_vanilla"):
             info = {
                 **info,
                 "keep_vanilla": "gift shuffle: not changeable yet (gift_rules.toml, plans/03-game-data.md section 19)",
+            }
+        hand_over = info.get("type") in ("Scrub", "GrottoScrub") or (
+            name in keep
+            and any(
+                step.call not in (DIRECT, "GetPouchContent:GetPouchContentByActorName") for step in steps.get(name, ())
+            )
+        )
+        if hand_over:
+            info = {
+                **info,
+                "excluded_items": tuple(
+                    dict.fromkeys((*info.get("excluded_items", ()), *CATALOG["hand_over"]["excluded_items"]))
+                ),
             }
         locations[name] = info
     return {**spec, "locations": locations}
@@ -1072,7 +1093,7 @@ def seed_setup(
         )
         return {**gift_step(placements), **hints}
 
-    return restrict_spec(spec, shuffled), settings, step
+    return restrict_spec(spec, shuffled, check_steps(census, definitions)), settings, step
 
 
 def held_items(

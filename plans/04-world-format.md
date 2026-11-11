@@ -102,6 +102,7 @@ source = "PouchActorInfo Item_DinFire: ExpansionAvility MPMaxUP, MPMax 24"
 | `n64_only` | the check does not exist in the remake; the reason gives the evidence. Neither shuffled nor placed; set only with evidence |
 | `area` | the census area, where the remake places the check outside its region's Banc folder (`Location.area`) |
 | `keep_vanilla` | the check keeps its vanilla item though its type is shuffled (D17: the Treasure Chest Game room boxes) |
+| `excluded_items` | Item names this location cannot deliver. The fill checks these before reachability and during swaps/filler; unlike a logic setting, a settings-string override cannot remove them. |
 | `[regions."<name>"]` | a region the translation lacks, with `area`, `dungeon`, `scene`, `hint`, `time_passes`, `provides_time` |
 | `[exits."<region>"."<target>"]`, `[events."<region>"."<event>"]` | `rule` with `was` (a change; `"False"` closes it) or with `new = true` (an addition) |
 | `[key_counts]` | the remake's number of a dungeon's small keys, where it has fewer than N64: a rule asking for more asks for that many |
@@ -288,7 +289,8 @@ resources under `<dir>/romfs/` plus `<dir>/spoiler.json`:
    shuffled locations.
 2. The fill (`generate/fill.py`, OoT Randomizer's assumed fill with `random.Random(seed)`), stage by stage. Each
    stage puts an item only where it can be reached holding the items a later stage places by reachability (never
-   junk, which the fast fill puts anywhere, and never the bomb and Bombchu packs before their own stage):
+   junk, whose delivery restrictions still apply without a reachability proof, and never the bomb and Bombchu
+   packs before their own stage):
    1. Own-dungeon items (`dungeon_items = "own_dungeon"`) of every dungeon the return kit does not draw from:
       small keys first, then boss keys, then maps and compasses (the remake's Fire Temple needs small keys in its
       three first chests; OoT Randomizer takes boss keys first).
@@ -337,6 +339,16 @@ Shop wallet predicates use the same effective-price decision as the overlay: `sh
 prices shuffled offers at 10; provisional default-on `cheap_deku_shield` prices the actual Kokiri shop shield
 at 10 even without Shop shuffle. Stock/release, refill and adult-only rules stay intact.
 Flag sources, inference limits and pending player checks: `03-game-data.md` section 21.
+
+Gift setup derives per-location `excluded_items` from the census grant wrappers:
+direct pouch-add and ordinary GetPouchContent scenes remain eligible; show-item
+hand-overs and Scrub sales exclude both ocarinas (`data/settings.toml`, source
+`rounds/r11-ocarina.md`). Time Ocarina joins the existing chest allowlist from
+R8-GETITEM's recorded usable chest pickup. This is a constraint inside fill and
+its safe swaps, not a repair after the beatability search. Native story grants
+remain possible when chests are not shuffled; existing song-only exclusivity
+still applies.
+
 
 The overlay writer's `make_seed` supplies the remake's actual chest pool through census actor identities and
 `item_actors.toml`, not the untranslated N64 chest contents. Native shops use their catalog.

@@ -79,7 +79,19 @@ def load_spec(directory: Path = DATA_DIR) -> dict[str, Any]:
 
 # Fields an override may set, besides ``source``. A location's ``rule`` needs ``was``; ``region`` moves it.
 _LOCATION_FIELDS = frozenset(
-    {"rule", "was", "new", "type", "vanilla", "vanilla_fixed", "n64_only", "area", "keep_vanilla", "region"}
+    {
+        "rule",
+        "was",
+        "new",
+        "type",
+        "vanilla",
+        "vanilla_fixed",
+        "n64_only",
+        "area",
+        "keep_vanilla",
+        "region",
+        "excluded_items",
+    }
 )
 _REGION_FIELDS = frozenset({"area", "dungeon", "scene", "hint", "time_passes", "provides_time", "new"})
 _RULE_FIELDS = frozenset({"rule", "was", "new"})
@@ -407,6 +419,11 @@ def build_world(spec: Mapping[str, Any], logic: Mapping[str, Any] | None = None)
                     vanilla = _fixed_vanilla(vanilla, info.get("vanilla_fixed"), progressive, where)
                 if vanilla is not None and vanilla not in items:
                     raise WorldError(f"{where}: vanilla item {vanilla!r} is not in the item table")
+                excluded_items = info.get("excluded_items", ())
+                if not isinstance(excluded_items, (list, tuple)) or not all(
+                    isinstance(item, str) for item in excluded_items
+                ):
+                    raise WorldError(f"{where}: excluded_items must be a list of item names")
                 location = Location(
                     name=location_name,
                     region=name,
@@ -418,6 +435,7 @@ def build_world(spec: Mapping[str, Any], logic: Mapping[str, Any] | None = None)
                     n64_only=info.get("n64_only"),
                     keep_vanilla=info.get("keep_vanilla"),
                     override=info.get("override"),
+                    excluded_items=tuple(excluded_items),
                 )
                 if location.type == HINT_STONE:
                     if vanilla is not None:

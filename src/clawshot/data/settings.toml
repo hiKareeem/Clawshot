@@ -35,6 +35,9 @@ source = "Round 6 Track B, Kareem's early-forest rupee count; GoodsList PriceOff
 [chest_verified.Item_Ocarina_Fairy]
 source = "Kareem, 2026-11-08, chest-ocarina-storms: Fairy Ocarina acquired from Mido chest and used; plans/03-game-data.md section 19"
 
+[chest_verified.Item_Ocarina_Time]
+source = "Kareem via Claude, 2026-11-09, R8-GETITEM: Ocarina of Time from Deku lobby map chest works and plays songs; plans/playtest/answers.md"
+
 [chest_verified.Item_Melody_StormSong]
 source = "Kareem, 2026-11-08, chest-ocarina-storms: Song of Storms learned from chest and played with chest Fairy Ocarina; plans/03-game-data.md section 19"
 
@@ -49,3 +52,7 @@ source = "Kareem via Claude, 2026-11-08, chest-gift-models: Adult's Wallet from 
 
 [songs_anywhere]
 source = "Claude, Round 6 review, 2026-11-08: all twelve Item_Melody_* share the pouch/IsGet grant path. Storms played and Minuet warped from a chest; the other ten are inferred, not individually verified. Opt-in only."
+
+[hand_over]
+excluded_items = ["Fairy Ocarina", "Ocarina of Time"]
+source = "Kareem/Claude, R11 seed10 gallery crash reproduced in German and English, Hookshot 2.0.14; Fairy shares the equipment/show-item mismatch. Direct story grants and chests remain allowed; plans/rounds/r11-ocarina.md"

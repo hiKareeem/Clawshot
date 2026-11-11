@@ -276,3 +276,82 @@ Reproducers and printed diagnostics are all in scratch:
 `dis 2943030 e0`, `dis 974de0 80`, `xrefs 4a38f60`.
 An initial inspection incorrectly subtracted only `0x80000000`; the printed
 NSO/image segment matches established the corrected base before interpretation.
+
+## Job 2: placement constraint and output proof
+
+Implemented by cs11f using existing fill machinery:
+
+- `Location.excluded_items` is immutable per-location metadata, loaded from the
+  spec and checked first in `fill.allowed`. It cannot be disabled through
+  `Settings.logic` or an effective CS1 string.
+- Gift setup derives the exclusion from actual census wrappers. Direct pouch-add
+  and ordinary GetPouchContent scenes remain eligible; the 45 show-item gift
+  checks and four enabled Scrub sales reject both ocarinas. Unknown future gift
+  wrappers are conservatively treated as hand-overs. Existing unrelated exclusions
+  are preserved.
+- The check applies to assumed fill, return-kit forward fill, palettes, priority
+  fill and safe swaps. Normal filler also uses restriction checks when remaining
+  locations have exclusions; it rejects an impossible fill instead of bypassing
+  them. No item is swapped after the beatability proof.
+- `Item_Ocarina_Time` gains the missing chest admission from the already recorded
+  R8-GETITEM result. The existing effective-settings rebuild removes the obsolete
+  gift-only hold when replaying seed 10's old CS1.
+- Regression cases cover both instruments and song modes, an ocarina-gated chest
+  that must remain reachable, both safe direct-grant wrapper families without
+  chests, both scrub types, and normal filler without Shop shuffle.
+- Player-visible restriction added only to `docs/settings.md`. World metadata
+  documented in `04-world-format.md`. No READ ME FIRST, project version,
+  `pyproject.toml` or `uv.lock` changes.
+
+Focused checks: the first changed-file run printed **32 passed** and one failure
+in an added normal-filler fixture. That fixture incorrectly required a single
+fill attempt; seed7 correctly rejected Coin after another normal item took its
+only legal slot. Removed the incidental one-attempt requirement, retaining the
+actual destination-safety assertion. Its cause-specific rerun: **1 passed**.
+The final full gate below covers the complete updated regression set.
+
+### Requested sweep (seeds 1–50, each mode)
+
+`CLAWSHOT_WORKERS=1 uv run --frozen python
+E:/OOTRemake/work/r11-ocarina-cs11f/sweep.py after` completed all **100 requested
+rows**, checking beatability and every shuffled placement against `allowed`.
+Zero ocarinas at excluded locations.
+
+| Mode | Beatable | Shuffled checks | Placements changed | Effective settings changed |
+|---|---|---|---|---|
+| Defaults | 50/50 | 165 | 0/50 | 0/50 |
+| Exact seed 10 pack settings | 50/50 | 300 | 50/50 | 50/50 |
+
+Output-change counts: **0 defaults, 50 pack-settings outputs**. Comparison uses
+complete native-pool placement/effective-settings snapshots, not 100 generated
+folder hashes. Changed placements/settings necessarily change spoiler bytes;
+unchanged defaults retain the same deterministic writer inputs and code path.
+Snapshots: scratch `before.json`, `after.json`. Both requested sweeps used one
+worker and released the gate lock in `finally`.
+
+The combined after-run subsequently stopped on an **extra, unrequested Gift-only
+whole-world diagnostic** before its output-build hook. The requested sweep is
+complete; it was not rerun. That extra mode and its existing fixed-dungeon-key
+limitations are diagnosed below, not hidden by weakening the beatability oracle.
+
+### Actual seed 10 output
+
+`build_seed10.py`, under `run_locked.py`, uses the real `gifts.seed_setup`,
+`make_seed`, `write_seed` and pack `tree_digest`, all from this worktree.
+It wrote **137 resources** in a new scratch folder:
+`E:/OOTRemake/work/r11-ocarina-cs11f/seed10-fixed/`.
+
+- Market gallery: **Piece of Heart** (`Obj_Heart_Piece`), not an ocarina.
+- Both serialized grant branches, Event378 and Event241, were read back and
+  match that actor.
+- Ocarina of Time: **KF Midos Top Right Chest**.
+- Fairy Ocarina: **Fire Temple Flare Dancer Chest**.
+- Seed 10: **300 checks, 20 spheres**, beatable.
+- New output SHA256:
+  `1e7ebdbbeb280ccd7ce7371a41474c602adfcb456a5b373403dcadfc4df4b6f8`.
+- Rebuilding through the effective CS1 produced a **byte-identical spoiler**.
+  Proof metadata: scratch `seed10-proof.json`.
+
+The original pack/output is untouched. Digest is for the unchanged current
+project version; Claude's version bump at merge will change output metadata.
+No game was started, so the new reward's in-game check remains Kareem's.
