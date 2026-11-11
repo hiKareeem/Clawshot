@@ -32,7 +32,7 @@ Tk, paste a path instead. No Qt/PySide dependency is added by Clawshot.
 Keep the terminal running. Ctrl+C stops the server and cancels generation. Closing a browser tab
 alone does not stop the server; closing the pywebview window does. A game already launched is not
 terminated by UI shutdown. `--no-open` **disables Browse, Open seed folder, emulator copying and Play**,
-including their HTTP endpoints. Normal sessions enable them; Play also requires Windows.
+including their HTTP endpoints. Normal sessions enable them; Play also requires Windows or Linux.
 
 ## Using it
 
@@ -77,7 +77,8 @@ on macOS, and `$XDG_CONFIG_HOME/clawshot/paths.json` (or `~/.config/clawshot/pat
   Changed files are refused then, without repairing them. Finished seeds do not need the old dump path.
 
 The new output layout is `output/seed/romfs` with the note and spoiler beside romfs. Play shares
-the pack's checked launch code: only `bin/hookshot.exe`, exactly that seed as the one mod under
+the pack's checked launch code: only the game in `bin` (`bin/hookshot.exe` on Windows,
+`bin/hookshot` on Linux; never the folder-root launcher), exactly that seed as the one mod under
 `HOS_MODS=output`, no `HOS_FS_OVERLAY` variable, and the update check off. Older outputs are never
 moved or rewritten. Emulator players get three loading steps and a main-save backup warning;
 Clawshot does not start an emulator. See [seed-pack instructions](seed-pack.md) for manual loading.
@@ -93,13 +94,18 @@ If the tested Eden/Lichii game folder exists, it is offered as an explicit choic
 Other emulators use only the folder picker. Copying is disabled in `--no-open`.
 
 Before starting a game, both UI and pack Play check the PC-wide process list. Any running
-`hookshot.exe` refuses with “Hookshot is already running. Quit it, then press Play.”
+`hookshot.exe` (Windows) or program file named `hookshot` (Linux, from `/proc/<pid>/exe`) refuses
+with “Hookshot is already running. Quit it, then press Play.”
 This happens before creating the save folder, opening the log or starting another process.
 
 The pack's Make path was verified on Linux (WSL) with both a romfs folder and a `.nup`, producing
 the same digest as Windows (maintainer verification, round11). The UI shares that generator path,
-so generation is expected to work on Linux and macOS; macOS itself is untested. **Play is
-Windows-only**: it starts `bin/hookshot.exe`. Linux Make verification is not native-UI certification.
+so generation is expected to work on Linux and macOS; macOS itself is untested. **Play starts
+`bin/hookshot.exe` on Windows and `bin/hookshot` on Linux**, the layout of a Hookshot Builder game
+folder. A Linux source build without `bin` is refused like any folder-root launcher, and a folder
+holding the other system's game is refused before anything is written. macOS has no Hookshot build,
+so Play stays off there. Linux Play is **built, not accepted by the maintainers in game**; Linux Make
+verification is not native-UI certification.
 
 ## Keyboard and layout
 

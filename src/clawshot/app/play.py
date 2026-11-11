@@ -1,11 +1,10 @@
 """Verified per-seed Play; planning is read-only and the pack owns native launch rules."""
 
-import sys
 import threading
 
 from clawshot.app.library import verified_seed
 from clawshot.app.paths import absolute_path
-from clawshot.pack.runtime import RUNNING_GAME, launch_plan, start_game
+from clawshot.pack.runtime import RUNNING_GAME, launch_plan, play_refusal, start_game
 
 
 def play_plan(result: dict | None, hookshot: str) -> dict:
@@ -26,8 +25,8 @@ class Player:
         self.paths = {}
 
     def start(self, result: dict | None, hookshot: str) -> dict:
-        if sys.platform != "win32":
-            raise ValueError("Play needs Windows. Open the seed folder and load romfs as a mod in your emulator.")
+        if refusal := play_refusal():
+            raise ValueError(refusal)
         with self.lock:
             if self.process is not None and self.process.poll() is None:
                 raise ValueError(RUNNING_GAME)

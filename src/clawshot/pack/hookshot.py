@@ -1,8 +1,22 @@
 """Read-only Hookshot installation detection; never probe by starting the game."""
 
 import mmap
+import sys
 from dataclasses import dataclass
 from pathlib import Path
+
+# Hookshot Builder game folders keep the game in bin: hookshot.exe on Windows, hookshot on Linux
+# (Hookshot readme, "In a game folder, hookshot is the launcher and the game itself is bin/hookshot").
+WINDOWS_GAME = "bin/hookshot.exe"
+LINUX_GAME = "bin/hookshot"
+
+
+def native_game(platform: str | None = None) -> str | None:
+    """The game binary this computer can start, relative to the game folder; None where Hookshot has no build."""
+    platform = sys.platform if platform is None else platform
+    if platform == "win32":
+        return WINDOWS_GAME
+    return LINUX_GAME if platform.startswith("linux") else None
 
 
 @dataclass(frozen=True)
@@ -23,7 +37,11 @@ def detect(folder: Path | str) -> HookshotInfo:
     loading; diagnostic wording is irrelevant. No folder-root fallback or dump decoding.
     """
     folder = Path(folder).resolve()
-    exe = folder / "bin/hookshot.exe"
+    # A folder holds one platform's build. With neither present, name the file this computer would need.
+    exe = next(
+        (path for name in (WINDOWS_GAME, LINUX_GAME) if (path := folder / name).is_file()),
+        folder / (native_game() or WINDOWS_GAME),
+    )
     version = None
     romfs = folder / "romfs"
     nups = ()
