@@ -76,10 +76,12 @@ Sources: `data/world/port.toml` (all dungeon/Banc mappings and boss rooms);
 `data/item_actors.toml`; `plans/03-game-data.md` sections 18 and 44. Paths prefixed
 with `data/` above are under `src/clawshot/`.
 
-Static confidence: high on the complete two-location mismatch list and the
-standing-dungeon attribution mechanism; played certainty is limited to the reported
-small/boss keys. A direct index-faithful data-only probe is queued under the gate
-lock to validate the join and canonical region areas; decoded results stay only
+Direct probe `uv run python E:/OOTRemake/work/r12-dungeon-areas-cs12c/evidence.py`
+validated **134** dungeon-tagged regions, one canonical own area for every dungeon,
+exactly the two mismatches above, and **zero** world/census physical-area
+disagreements. High confidence on the exhaustive mismatch list and the
+standing-dungeon handler mechanism; played certainty remains limited to the
+reported small/boss keys. `audit-results.json` and the read-only reproducer stay
 under `E:/OOTRemake/work/r12-dungeon-areas-cs12c/`.
 
 ## Silver Gauntlets story event (note only)
@@ -114,8 +116,26 @@ has its own later writers. Whether the Step07 request skips prerequisite staging
 is ignored after a later step requires the challenge handler/AINB or a controlled
 play check; it is not resolved by the EVFL action name “Progress”.
 
-Direct dump/index-faithful wrapper and timeline inspection is queued under the
-gate lock to supplement the older decode, without changing any event.
+The same focused direct probe read the actual dump with the current
+`clawshot.formats.evfl` parser: **18** reachable wrapper nodes, no duplicate event
+names, and no age branch or age setter. Event indices are preserved; the older
+decode's apparent duplicate labels were not reproduced by the current parser.
+
+It also decoded `Event/EventFlow/Dm_DesertColossus_0030.bfevfl.zs` and its `_Effect`
+and `_Env` subtimelines: respectively **150 / 33 / 20** clips. The main timeline's
+six `Player_Event.EventPlayASForTimeline` clips explicitly request child
+animations (`C01/C02/C07/C14/C15/C17-Player_Child-A-0`). The other actions are
+camera, dialogue/voice, character animation, fade, effects and environment palette;
+none explicitly writes game data, changes age, grants inventory or progresses a
+quest. **[INFERENCE, medium confidence]** the child animation requests explain the
+visual morph; this does not prove the animation handler cannot affect transient
+player presentation internally. No persistent age write was found in either the
+wrapper or these timelines.
+
+Decoded trees are external only (`story-results.json` in the scratch root).
+The initially queued probe was cancelled for Claude's 14:09 gate-order request;
+the final probe was a single focused data-only readback with **no lock acquisition**.
+No event, cutscene, story flag, save or game output was changed by this research.
 
 ## Verification
 
