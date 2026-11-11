@@ -36,6 +36,18 @@ STATIC = {
     "style.css": ("style.css", "text/css"),
 }
 MAX_BODY = 65536
+WINDOW_KEYS = ("x", "y", "width", "height")
+
+
+def browser_window(value):
+    """The page's own screen rectangle, used only to center a native dialog over it; anything odd means none."""
+    if not isinstance(value, dict) or set(value) != set(WINDOW_KEYS):
+        return None
+    if not all(type(value[key]) is int and -100000 <= value[key] <= 100000 for key in WINDOW_KEYS):
+        return None
+    if value["width"] <= 0 or value["height"] <= 0:
+        return None
+    return {key: value[key] for key in WINDOW_KEYS}
 
 
 class Application:
@@ -152,7 +164,7 @@ class Application:
             seed = body.get("seed", 0)
             if type(seed) is not int or not -(2**53 - 1) <= seed <= 2**53 - 1:
                 raise ValueError("Seed must be an exact integer")
-            path = self.chooser(kind)
+            path = self.chooser(kind, browser_window(body.get("window")))
             if path is not None:
                 selected = absolute_path(
                     str(path), "Selected path", allow_links=kind not in ("output", "emulator_mods")

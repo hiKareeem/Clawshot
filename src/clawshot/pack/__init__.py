@@ -19,6 +19,9 @@ VERSION_FILES = (
 ROMFS_SHA256 = "fc09c4af707a0ca092188cf014f6fdf3d40514def773f097b798f52f9f28bc93"
 ROOT = Path(__file__).resolve().parents[3]
 ASSETS = Path(__file__).with_name("templates")
+# Every pack unzips to this one folder, whatever its seed or version; the seed itself is in METADATA.
+PACK_FOLDER = "clawshot-randomizer"
+METADATA = "metadata.json"
 
 
 class PackError(ValueError):
@@ -40,12 +43,28 @@ def check_version(romfs: Path) -> None:
         raise PackError(f"RomFS does not match build {BUILD}: fingerprint {actual}, expected {ROMFS_SHA256}")
 
 
+MACOS_METADATA = {".DS_Store", ".AppleDouble", ".LSOverride", ".Spotlight-V100", ".Trashes", ".fseventsd", "__MACOSX"}
+
+
+def is_os_metadata(name: str) -> bool:
+    """Files macOS Finder writes into folders it opens (or zips): never game or seed content."""
+    return name in MACOS_METADATA or name.startswith("._") or name == "Icon\r"
+
+
+def ignore_os_metadata(_folder, names):
+    """``shutil.copytree`` ignore callback."""
+    return {name for name in names if is_os_metadata(name)}
+
+
 def tree_digest(root: Path) -> str:
-    """Hash sorted relative paths and file hashes, including spoiler/note; never filesystem metadata."""
+    """Hash sorted relative paths and file hashes, including spoiler/note; never filesystem metadata, including
+    the .DS_Store Finder adds when a seed folder is opened."""
     if not root.is_dir():
         raise PackError(f"seed folder missing: {root}; run Make seed.bat first")
     digest = hashlib.sha256()
     for path in sorted(root.rglob("*"), key=lambda p: p.relative_to(root).as_posix()):
+        if any(is_os_metadata(part) for part in path.relative_to(root).parts):
+            continue
         if path.is_symlink() or path.is_junction():
             raise PackError(f"seed contains a link: {path}")
         if path.is_file():
@@ -135,14 +154,14 @@ def build(romfs: Path, seed: int, settings: str, out: Path) -> dict:
             "settings": settings,
             "output_sha256": tree_digest(root / "seed"),
         }
-    files["pack.json"] = (json.dumps(manifest, indent=2) + "\n").encode("utf-8")
+    files[METADATA] = (json.dumps(manifest, indent=2) + "\n").encode("utf-8")
     out.parent.mkdir(parents=True, exist_ok=True)
     with (
         out.open("xb") as stream,
         zipfile.ZipFile(stream, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=9) as archive,
     ):
         for name, data in sorted(files.items()):
-            entry = zipfile.ZipInfo(name, date_time=(1980, 1, 1, 0, 0, 0))
+            entry = zipfile.ZipInfo(PACK_FOLDER + "/" + name, date_time=(1980, 1, 1, 0, 0, 0))
             entry.compress_type = zipfile.ZIP_DEFLATED
             entry.create_system = 3
             entry.external_attr = 0o100644 << 16

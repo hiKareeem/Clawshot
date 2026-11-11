@@ -123,8 +123,8 @@ def test_enabled_browse_validates_selection_without_opening_a_dialog(tmp_path):
     selected = tmp_path
     calls = []
 
-    def chooser(kind):
-        calls.append(kind)
+    def chooser(kind, window):
+        calls.append((kind, window))
         return selected
 
     app = Application(Jobs(synthetic_run), spec=synthetic_spec(), chooser=chooser, allow_open=True)
@@ -146,6 +146,12 @@ def test_enabled_browse_validates_selection_without_opening_a_dialog(tmp_path):
         selected.write_bytes(b"invented file selection, not a game container")
         status, _, value = request(server, "browse", {"kind": "dump-file"})
         assert status == 200 and Path(value["path"]) == selected
+        rectangle = {"x": -1440, "y": 25, "width": 1200, "height": 800}
+        assert request(server, "browse", {"kind": "dump-file", "window": rectangle})[0] == 200
+        assert calls[-1] == ("dump-file", rectangle)
+        for odd in ({"x": 1}, {**rectangle, "width": 0}, {**rectangle, "y": True}, {**rectangle, "x": 1.5}, "a"):
+            assert request(server, "browse", {"kind": "dump-file", "window": odd})[0] == 200
+            assert calls[-1] == ("dump-file", None)  # an odd rectangle only loses centering
 
 
 def test_normalized_paths_and_protected_outputs_refuse_without_staging(tmp_path):

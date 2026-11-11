@@ -19,7 +19,9 @@ def made_pack(tmp_path, monkeypatch):
     exe = game / "bin/hookshot.exe"
     exe.parent.mkdir(parents=True)
     exe.write_bytes(b"synthetic image\0HOS_MODS\0")
-    (root / "pack.json").write_text(json.dumps({"format": 1, "seed": 8, "output_sha256": tree_digest(root / "seed")}))
+    (root / "metadata.json").write_text(
+        json.dumps({"format": 1, "seed": 8, "output_sha256": tree_digest(root / "seed")})
+    )
     (root / "folders.json").write_text(json.dumps({"romfs": str(tmp_path / "dump"), "hookshot": str(game)}))
     monkeypatch.setattr(runtime, "check_version", lambda _: None)
     return root, exe

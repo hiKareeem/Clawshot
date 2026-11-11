@@ -67,7 +67,7 @@ def test_existing_seed_is_verified_not_rebuilt_and_mismatch_stops_play(tmp_path,
 def test_pack_inside_game_directory_is_rejected(tmp_path, monkeypatch):
     root = tmp_path / "game" / "pack"
     root.mkdir(parents=True)
-    (root / "pack.json").write_text(json.dumps({"format": 1}))
+    (root / "metadata.json").write_text(json.dumps({"format": 1}))
     (root / "folders.json").write_text(json.dumps({"romfs": str(tmp_path / "romfs"), "hookshot": str(root.parent)}))
     monkeypatch.setattr(runtime, "check_version", lambda _: None)
     with pytest.raises(PackError, match="outside your game folders"):
@@ -86,7 +86,7 @@ def configured_pack(tmp_path, monkeypatch):
     seed = root / "seed"
     seed.mkdir(parents=True)
     (seed / "note.md").write_bytes(b"verified local seed")
-    (root / "pack.json").write_text(json.dumps({"format": 1, "seed": 8, "output_sha256": tree_digest(seed)}))
+    (root / "metadata.json").write_text(json.dumps({"format": 1, "seed": 8, "output_sha256": tree_digest(seed)}))
     (root / "folders.json").write_text(json.dumps({"romfs": str(romfs)}))
     return root, romfs
 
@@ -142,3 +142,26 @@ def test_make_without_hookshot_still_rejects_romfs_overlap(configured_pack, nest
     with pytest.raises(PackError, match="outside your game folders"):
         runtime.make(root)
     assert (root / "seed" / "note.md").read_bytes() == b"verified local seed"
+
+
+def test_pack_zip_is_one_fixed_folder_with_the_seed_in_metadata(tmp_path, monkeypatch):
+    import zipfile
+
+    import clawshot.pack as pack
+
+    def fake_generate(_root, _romfs, _seed, _settings, out):
+        out.mkdir()
+        (out / "spoiler.json").write_text("{}")
+
+    monkeypatch.setattr(pack, "check_version", lambda _: None)
+    monkeypatch.setattr(pack, "generate", fake_generate)
+    romfs = tmp_path / "romfs"
+    romfs.mkdir()
+    manifest = build(romfs, 4242, "CS1", tmp_path / "seed-4242.zip")
+    with zipfile.ZipFile(tmp_path / "seed-4242.zip") as archive:
+        names = archive.namelist()
+        metadata = json.loads(archive.read("clawshot-randomizer/metadata.json"))
+    assert all(name.startswith("clawshot-randomizer/") for name in names)
+    assert "clawshot-randomizer/READ ME FIRST.txt" in names and "clawshot-randomizer/pack.json" not in names
+    assert metadata == manifest and metadata["seed"] == 4242
+    assert not any("seed/" in name or ".DS_Store" in name for name in names)

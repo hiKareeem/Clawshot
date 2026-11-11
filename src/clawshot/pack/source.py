@@ -11,7 +11,7 @@ from tempfile import TemporaryDirectory
 
 import zstandard
 
-from clawshot.pack import VERSION_FILES, PackError
+from clawshot.pack import VERSION_FILES, PackError, is_os_metadata
 from clawshot.pack._nup import format as F
 from clawshot.pack._nup.read import NupReader
 
@@ -99,7 +99,7 @@ class LayeredRomfs:
         self.files = {}
         for layer in layers:  # base first, so the update's copy wins
             for file in layer.rglob("*"):
-                if file.is_file():
+                if file.is_file() and not any(is_os_metadata(p) for p in file.relative_to(layer).parts):
                     self.files[file.relative_to(layer).as_posix()] = file
 
     def close(self):

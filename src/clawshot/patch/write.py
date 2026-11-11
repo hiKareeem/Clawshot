@@ -32,7 +32,7 @@ class WrittenFile:
 
 
 def check_romfs(romfs: Path) -> None:
-    """A plain error for a folder that is not the supported romfs (update v131072, the v1.1 update), instead of a
+    """A plain error for a folder that is not the supported romfs (Version 1.1.1, update v131072), instead of a
     traceback from the first missing file. The base game's romfs alone keeps the update's files at version 100."""
     if not romfs.is_dir():
         raise PatchError(f"romfs folder not found: {romfs}")
@@ -40,10 +40,10 @@ def check_romfs(romfs: Path) -> None:
         return
     base = (romfs / GAME_DATA_LIST.replace(".110.", ".100.")).is_file()
     hint = (
-        "this looks like the base game (v1.0) on its own; give the dump folder that holds both base/ and "
-        "updates/131072/, or a romfs with update v131072 (v1.1) laid over it"
+        "this looks like the base game (Version 1.0.0) on its own; give the dump folder that holds both base/ and "
+        "updates/131072/, or a romfs with update v131072 (Version 1.1.1) laid over it"
         if base
-        else "give the game's romfs folder at update v131072 (v1.1)"
+        else "give the game's romfs folder at update v131072 (Version 1.1.1)"
     )
     raise PatchError(f"{romfs} has no {GAME_DATA_LIST}: {hint}")
 

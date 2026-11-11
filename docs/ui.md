@@ -26,8 +26,9 @@ Python 3.12+, no JavaScript build step. The optional `ui` extra is pywebview (BS
 The page, scripts and styles are local; the interface makes no external requests. A pywebview
 window needs its platform web engine (WebView2 on Windows; native WebKit on macOS; an appropriate
 system GTK/WebKit installation on Linux). The browser route needs no pywebview dependency.
-The browser's click-only Browse dialogs use standard-library tkinter; if the OS does not provide
-Tk, paste a path instead. No Qt/PySide dependency is added by Clawshot.
+The browser's click-only Browse dialogs use standard-library tkinter, opened over the browser
+window, on Windows and Linux, and the system chooser through `osascript` on macOS; if neither is
+available, paste a path instead. No Qt/PySide dependency is added by Clawshot.
 
 Keep the terminal running. Ctrl+C stops the server and cancels generation. Closing a browser tab
 alone does not stop the server; closing the pywebview window does. A game already launched is not

@@ -27,3 +27,14 @@ build/
 
 # app-local bootstrap tools
 .tools/
+
+# macOS metadata (Finder, Spotlight, AppleDouble); never part of the repo or of anything Clawshot builds
+.DS_Store
+._*
+.AppleDouble
+.LSOverride
+.Spotlight-V100
+.Trashes
+.fseventsd
+__MACOSX/
+Icon?

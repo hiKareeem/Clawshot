@@ -11,6 +11,8 @@ player-facing summary (steps, known issues, the Discord link); this file has the
 2. Install [uv](https://docs.astral.sh/uv/getting-started/installation/). Internet is needed for
    Python and locked dependencies on the first build.
 3. Extract the zip into its **own new folder outside RomFS and Hookshot**, e.g. `C:\Clawshot\seed-8`.
+   Every pack unzips to one folder, `clawshot-randomizer`; its `metadata.json` holds the seed number,
+   settings and build.
    Extract every pack separately: each has its own `user` save folder. Do not extract over an old pack.
 4. Run `Make seed.bat`. It asks once for your **`.nup` file or extracted RomFS folder** and an
    **optional** Hookshot folder (the folder containing `bin`).
@@ -31,7 +33,7 @@ player-facing summary (steps, known issues, the Discord link); this file has the
    isolation and is never used.
    Start a **new game**; later plays continue this pack's saves. No main save is copied or reset.
 6. Read `seed/play-note.md`. `seed/spoiler.json` reveals all placements. Reports should attach
-   `<pack>/hookshot_log.txt` and `pack.json` (not saves, the overlay or your dump).
+   `<pack>/hookshot_log.txt` and `metadata.json` (not saves, the overlay or your dump).
 
 Dungeon check labels include their map floor (`1F`, `2F`, `B1`, ...), from the game's map metadata,
 not the old N64 room name or an estimated height. Some rooms span floors; each chest uses its own
@@ -104,7 +106,7 @@ the steps below instead of Play. Do not run Play for this route.
 4. To play normally, untick the mod in Add-ons. Restore your backed-up save if you want the pre-seed progress;
    disabling the mod alone does not restore saves.
 
-For reports, name the emulator/version and attach its own log plus `pack.json`;
+For reports, name the emulator/version and attach its own log plus `metadata.json`;
 the Hookshot log is not produced on this route.
 
 Other conventional layouts are **untested with Clawshot**:
@@ -130,8 +132,8 @@ repository and dump. No existing zip or seed folder is replaced.
 The builder positively selects Clawshot `.py`/`.toml` source and launcher templates, root build metadata,
 `uv.lock`, README, LICENSE, NOTICE and this guide. Plans, tests, `.git`, environments and generated files
 are excluded. It generates a reference from **that exact source snapshot** in a disposable external
-folder, hashes it, and discards it. Only `pack.json`'s digest survives, not filenames or resource bytes.
-The zip uses fixed timestamps and sorted entries. No new dependency; the vendored reader's MIT licence is included.
+folder, hashes it, and discards it. Only `metadata.json`'s digest survives, not filenames or resource bytes.
+The zip uses fixed timestamps and sorted entries, all under `clawshot-randomizer/`. No new dependency; the vendored reader's MIT licence is included.
 
 RomFS has no NSO build-ID header. Preflight identifies the known `e0f3ccfa` dump by a SHA256 fingerprint
 of four existing files (dictionary pack, GameDataList, EventSetting and child Kokiri Dynamic Banc),

@@ -23,7 +23,7 @@ def test_emulator_folder_is_remembered_and_copy_is_exclusive_and_independent(mad
     save.write_bytes(b"normal player save")
     config = tmp_path / "preferences/paths.json"
     first = Application(
-        Jobs(synthetic_run), spec=synthetic_spec(), preferences=Preferences(config), chooser=lambda _: mods
+        Jobs(synthetic_run), spec=synthetic_spec(), preferences=Preferences(config), chooser=lambda _kind, _window: mods
     )
     first.library.add_folder(str(root))
     with running_server(first) as server:
@@ -31,7 +31,7 @@ def test_emulator_folder_is_remembered_and_copy_is_exclusive_and_independent(mad
         assert request(server, "copy-emulator", {"output": str(root)})[0] == 400
         assert not (mods / "Clawshot-seed-7").exists()
 
-    def no_new_picker(_):
+    def no_new_picker(_kind, _window):
         raise AssertionError("remembered copying must not reopen the picker")
 
     second = Application(
