@@ -26,7 +26,7 @@ Permanent invite: **https://discord.gg/7R5ZXPcJqn**.
 2. No piracy talk, including "where do I get the game files".
 3. Public test packs may be shared as their original zip. Never share a generated seed folder,
    extracted cache, decoded game data, keys or saves.
-4. Reports and reviewed text log excerpts are welcome; remove private paths and credentials.
+4. Reports and logs are welcome. Attach only the whole game log; it contains folder paths and your user name, but no game data.
 5. Use spoiler tags for item locations, or keep them in the report thread.
 6. If something also breaks without Clawshot, it's probably Hookshot. Report it on Hookshot's GitHub.
 7. Be decent to each other.
@@ -36,17 +36,20 @@ Permanent invite: **https://discord.gg/7R5ZXPcJqn**.
 ## Pinned in #playtest-reports: report template
 
 ```
-Clawshot commit / seed pack:
-Seed number and complete CS1 settings string (plus explicit overrides):
-Runtime/version (Hookshot / Lichii / other) and game build:
-Where you were and what you did:
+Clawshot version (zip folder name, or Clawshot-<version>: at the start of the settings):
+Seed number and whole settings string:
+Hash (Generate's Seed ready panel, or beside the seed in My seeds):
+Hookshot version (first line of hookshot_log.txt), or emulator name/version:
+Operating system:
+Where you were (area, child/adult Link) and what Link was doing:
 What you expected:
 What happened:
-Reviewed log excerpt: Hookshot = pack-root hookshot_log.txt; emulator = its own log.
-Do not attach saves, spoiler.json, generated mods, caches, decoded data or your dump.
+Attach only the whole hookshot_log.txt: output folder, beside seed and user; pack folder for seed packs.
+Emulator players: attach only the emulator's log instead.
+Nothing else attached: never game files, seed folders, saves, keys, caches or spoilers.
 ```
 
-Include the relevant error and loading lines, not game-resource contents. Remove private paths and credentials.
+The Hookshot log contains your folder paths, including your user name, but no game data. Those paths will be public.
 
 ---
 
@@ -84,9 +87,9 @@ Steps:
 4. **Old overlay launchers crash on Hookshot 2.0.12+.** Use a newly built pack and the
    [current seed-pack guide](../seed-pack.md), not a zip or launcher from before the loading change.
    Button icons in text use the game's Switch icons while the seed is loaded.
-5. Read `seed/play-note.md` for directions and age warnings; `seed/spoiler.json` reveals all placements
-   and must stay local. Ask in #help for one location if you want less of a spoiler.
-   Reports need the seed/settings, revision or pack name, runtime/version, steps and a reviewed log excerpt.
+5. `seed/play-note.md` and `seed/spoiler.json` reveal item locations; open them only if you want spoilers,
+   and keep them local. Ask in #help for one location if you want less of a spoiler.
+   Reports need the seed/settings, hash, Clawshot version, runtime/version, OS, steps and the whole game log.
 
 For manual Hookshot mods-folder loading follow the guide: **it uses the normal save folder**.
 A new game there overwrites that playthrough; back up first. Pack save isolation does not apply.
@@ -110,8 +113,8 @@ No Hookshot installation is needed. Wait for Verified seed, then follow these st
 4. Untick the mod to play normally. Restore your backup if you want the old save progress;
    unticking does not undo changes to saves.
 
-For emulator reports, give its name/version and attach its own log plus `pack.json`;
-there is no Hookshot log when Play was not used.
+For emulator reports, give its name/version and attach only its own log;
+there is no Hookshot log when Play was not used. Paste the seed number and settings from `pack.json`.
 
 **Untested:** Ryujinx `mods/contents/0400486024dec000/<name>/romfs`;
 Atmosphere `atmosphere/contents/0400486024DEC000/romfs`. Those layouts are not confirmation that

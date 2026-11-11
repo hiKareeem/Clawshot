@@ -29,11 +29,14 @@ created by code in the test, never extracted from the game.
 Keep decoded research and generated output outside the repository. For the complete repository
 data/safety rules and allowed location definitions, see [AGENTS.md](AGENTS.md), rules 1–2.
 
-For a report, provide the seed number and settings string, exact source revision/pack metadata,
-steps, expected/observed result and a **reviewed plain-text log excerpt**. Remove private paths,
-usernames and credentials. Logs must not contain dumped game resources or decoded data. If uncertain,
-ask on Discord before attaching anything. Do not upload saves or `spoiler.json`; name only the relevant
-location/reward in the report, marking spoilers.
+For an in-game report, use the [in-game bug form](https://github.com/hiKareeem/Clawshot/issues/new?template=bug_report.yml):
+provide the Clawshot version, seed number, whole settings string, hash, runtime/version, OS, steps and
+expected/observed result. Attach only the whole `hookshot_log.txt` (or your emulator's log), nothing else.
+The Hookshot log contains your folder paths, including your user name, but no game data; those paths
+will be public. Play writes it in the chosen output folder, beside `seed` and `user`, one folder above
+the folder opened by **Open seed folder**. Never upload seed folders, saves, keys or `spoiler.json`.
+For UI, Generate or game-check errors, use [Clawshot itself](https://github.com/hiKareeem/Clawshot/issues/new?template=clawshot.yml)
+and paste the UI's error text without attachments. If uncertain, ask on Discord before posting.
 
 ## Preparing a change
 

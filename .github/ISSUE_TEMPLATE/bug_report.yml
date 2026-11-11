@@ -1,68 +1,83 @@
-name: Bug report
-description: Report a setup, crash, reward or seed problem.
-title: "[Bug] "
+name: In-game bug or crash
+description: Report a crash, wrong reward or problem while playing a Clawshot seed.
+title: "[Game] "
 body:
   - type: markdown
     attributes:
       value: |
+        For problems with the UI, Generate or checking your game files, use **Clawshot itself** instead.
         Public test builds are unfinished. Read [the contribution rules](https://github.com/hiKareeem/Clawshot/blob/main/CONTRIBUTING.md).
-        Never upload game files, keys, decoded data, generated mods, caches, saves or spoiler files.
-        Use a short reviewed text log excerpt; remove private paths and credentials.
+        Attach only the whole `hookshot_log.txt` file, not screenshots or other files.
+        The log contains your folder paths, including your Windows user name, but no game data. Those paths will be public with your report.
+        Never attach game files, seed folders, saves, keys, caches or spoiler files.
   - type: input
-    id: revision
+    id: version
     attributes:
-      label: Clawshot revision or seed-pack name
-      description: Exact commit or pack identifier, not just the version label.
+      label: Clawshot version
+      description: "Give the zip folder's name (for example Clawshot-0.1.1). The settings string also starts with Clawshot-<version>:. For a source checkout, include the commit."
     validations:
       required: true
   - type: input
     id: seed
     attributes:
       label: Seed number
-      description: Say not applicable if failure happened before generation.
+      description: Shown on Generate after Seed ready, or when you view the seed from My seeds.
     validations:
       required: true
   - type: textarea
     id: settings
     attributes:
-      label: Complete settings string
-      description: Paste the full CS1 string and any explicit overrides, or explain why unavailable.
+      label: Whole settings string
+      description: "Copy the whole Settings string from the finished seed on Generate, including its Clawshot-<version>: start. Do not shorten it. For a seed pack, paste its settings from pack.json."
       render: text
+    validations:
+      required: true
+  - type: input
+    id: hash
+    attributes:
+      label: Seed hash
+      description: Copy Hash from the finished seed on Generate, or the hash beside it in My seeds. For a seed pack, use the hash printed by Make seed.
     validations:
       required: true
   - type: input
     id: runtime
     attributes:
-      label: Runtime, version and operating system
-      description: For example Hookshot or Lichii, exact version, OS; name the supported game update/build too.
+      label: Hookshot version (or emulator name and version)
+      description: Copy the first line of hookshot_log.txt for Hookshot. If using an emulator instead, give its name and version.
+    validations:
+      required: true
+  - type: input
+    id: os
+    attributes:
+      label: Operating system
+      description: For example Windows 11, or your Linux/macOS version.
     validations:
       required: true
   - type: textarea
     id: steps
     attributes:
-      label: Where and how to reproduce
-      description: Location, age, inventory/story state and exact steps. Mark item-location spoilers.
+      label: Where were you, and what was Link doing?
+      description: Give the area, child or adult Link, what you were doing and the steps leading to the problem. Include relevant items and story progress. Mark item-location spoilers. Do not risk your saves to try again.
     validations:
       required: true
   - type: textarea
     id: expected
     attributes:
-      label: Expected result
+      label: What did you expect?
     validations:
       required: true
   - type: textarea
     id: observed
     attributes:
-      label: Observed result
-      description: Include whether Save and Continue or revisiting changed it, if already tried. Do not risk your main save to reproduce.
+      label: What happened?
+      description: Include any error text and whether Save and Continue or revisiting changed it, if already tried.
     validations:
       required: true
   - type: textarea
     id: log
     attributes:
-      label: Relevant log excerpt
-      description: Hookshot uses hookshot_log.txt in the pack folder; emulators use their own log. Include the error and relevant mods-loading lines, or explain why no log exists. No resource dumps or save data.
-      render: text
+      label: Attach the whole hookshot_log.txt file here
+      description: "Drag the file here, rather than pasting an excerpt. Play writes it in your chosen output folder, beside user and seed (usually Documents/Clawshot/seed-<number>/hookshot_log.txt). Open seed folder opens the inner seed folder: go up one folder to find the log. For a seed pack, it is beside Play seed.bat. Emulator players: attach only the emulator's own log instead. If there is no log, explain why."
     validations:
       required: true
   - type: checkboxes
@@ -70,5 +85,7 @@ body:
     attributes:
       label: Safe to publish
       options:
-        - label: This report and its attachments contain no game files, game-derived output, saves, keys or private credentials.
+        - label: I understand that the log contains my folder paths and user name, which will be public.
+          required: true
+        - label: I attached only the log, and nothing else — no game files, seed folders, saves, keys, caches, spoilers or private credentials.
           required: true
