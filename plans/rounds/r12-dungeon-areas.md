@@ -126,6 +126,10 @@ gate lock to supplement the older decode, without changing any event.
   **7 passed** (5.27 s). Synthetic outside checks cover small keys, boss keys, maps
   and compasses, an inside positive control, synthetic anywhere compatibility,
   actual Spirit hand restrictions and a beatable seed 11 using defaults.
+  The final seed-11 test was strengthened to a `dump` regression using the actual
+  community shuffle recipe (Chest/Shop/Gift/Scrub/BossHeart) through Gift setup and
+  `make_seed`, rather than a defaults-only seed. It asserts item attribution, not
+  incidental filler choices; the full dump gate below covers that final form.
 - `_in_dungeon_area()` is the only new fill helper. `allowed()` shares it across
   restrictive fill, return-kit placement, fill-time safe swaps and restricted filler.
   Existing area-less synthetic worlds keep their logical policy (`None == None`).
@@ -133,8 +137,32 @@ gate lock to supplement the older decode, without changing any event.
   no READ ME FIRST, project version, lockfile or settings schema changes.
 - Initial `tasklist /FI "IMAGENAME eq hookshot.exe"`: no game process. All pytest
   runs conservatively use `CLAWSHOT_WORKERS=1`.
-- Full gates and both 50-seed sweeps queued through the shared gate lock; initial
-  `mkdir` and the required 60-second retry both reported an existing lock.
+- Full gates are queued through the shared gate lock; both sweeps completed below.
+  Initial `mkdir` and the required 60-second retry reported an existing lock.
+
+### Locked 50 + 50 seed sweep
+
+`uv run python E:/OOTRemake/work/r12-dungeon-areas-cs12c/gate.py sweep`
+completed successfully, one process, shared lock released in `finally`.
+Seeds 1–50 for each settings set, actual census-derived chest pool and the same
+Gift/Scrub preparation as production; no output folder was written for the sweep.
+Each new fill passed its normal oracle plus a fresh `check_beatable` search, and
+every placed dungeon item was checked against the physical area invariant.
+
+| Settings | Beatable | Outside-area dungeon items | Changed outputs |
+|---|---:|---:|---:|
+| Defaults | 50/50 | 0 | 50/50 |
+| Community seed 11 full shared string | 50/50 | 0 | 50/50 |
+
+Comparison used the same code/data/settings with only the old logical-only
+`allowed()` predicate emulated, then the fixed predicate. All 100 placements and
+serialized spoilers differ; because `spoiler.json` is part of every output,
+all 100 output folders would change. This count is not a claim that 100 full
+mod folders were written. Full native seed 11 was actually written and read back.
+
+Reproducers/results: `sweep.py`, `sweep-0.log`, `sweep-results.json` and
+`sweep-commands.json` under the scratch root. Wrapper elapsed 1422.25 s includes
+three one-minute lock waits. No pool or second sweep ran concurrently.
 
 ### Community seed 11 output smoke
 
