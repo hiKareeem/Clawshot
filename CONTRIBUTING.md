@@ -54,6 +54,10 @@ location/reward in the report, marking spoilers.
    ```
 
    Human review, licensing and evidence requirements still apply. Do not feed prohibited sources to an AI.
+5. If your change alters what a seed's files contain for any settings (placements, patched files, play note or
+   spoiler), say so in the PR. Maintainers bump the version in `pyproject.toml` for every public build whose
+   output changed, because shared settings strings carry that version: two builds that share a version must make
+   the same seed.
 
 ## Checks
 
