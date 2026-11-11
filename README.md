@@ -90,9 +90,6 @@ and [playtest answers](https://github.com/hiKareeem/Clawshot/blob/main/plans/pla
 
 ### Known issues
 
-- **0.1.1 warning:** keys placed on Spirit Temple's outdoor hand chests can be lost.
-  The shared community seed 11 cannot be finished. Keep your seed folder and saves; wait for a
-  release with the fix before starting another seed.
 - **After receiving an item Link cannot use at his current age, Save and Continue before using
   other items.** A child Fairy Bow pickup jammed the item bar on both Hookshot and Lichii; changing areas
   did not fix it. Other item families carry precautionary warnings. This seed's `play-note.md` lists them but reveals item locations.

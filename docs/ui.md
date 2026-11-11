@@ -305,8 +305,13 @@ give the version, OS and whole UI error text (terminal error if it never opens).
 
 ### Known issues in 0.1.1
 
-- Keys on Spirit Temple's outdoor hand chests can be lost; community seed 11 cannot be finished.
-  Keep its folder and saves, and wait for a release with the fix before starting another seed.
+- **Seeds made with Clawshot 0.1.1 or earlier (including community seed 11) can be impossible to
+  finish:** keys placed on Spirit Temple's outdoor hand chests are lost. To check an old seed,
+  open its `seed/spoiler.json` (this reveals rewards) and find `Spirit Temple Silver Gauntlets Chest`
+  and `Spirit Temple Mirror Shield Chest` under `placements`. These are the Desert Colossus statue
+  hand chests at the child and adult exits. If either reward is a Small Key or Boss Key, generate
+  a fresh seed with a newer Clawshot and start a new game; keep the old folder and saves.
+  Newer versions never put a dungeon's keys in those two chests.
 - Ocarinas from chests have no visible model, but you still receive them.
 - Dampé's digging prize and Bombchu Bowling prizes show the original prize but give the seed's item.
 - After picking up an item Link's age cannot use, **Save and Continue before using other items**:
