@@ -1100,3 +1100,20 @@ Gerudo Proving Grounds long-name case before I build?** No mod/launcher/profile 
 been constructed. If the absolute25-character castle name is required instead,
 say so rather than silently treating this as proof of that different case.
 
+## Rebase onto merged main cd81449
+
+Claude reported review-pr3 gates complete/PR3 merged and released the normal
+shared-lock queue. Rebased all16 `r12/keys` commits onto main **cd81449** without
+conflicts; rebased tip **f26071b**. No version/uv.lock change.
+
+Post-rebase actual CLI smoke, explicit anywhere+Chest/Gift and encoded-CS1 replay:
+both **exit1**, ordered in-game acceptance refusal, **no output directory**.
+The public boundary survives integration. No Gate4 construction was performed.
+
+Latest four-command gates started with `CLAWSHOT_WORKERS=1`, cooperative
+`gate.lock` held across the entire sequence and waiting if another track owns it.
+Evidence directory: `work/r12-keys-cs12b/rebased-cd81449/`; earlier interrupted
+logs are preserved. No overall runner deadline, correcting the previous harness's
+3600-second interruption rather than blindly repeating that configuration.
+Full-suite/dump outcome is still **pending**, not inferred from the rebase/smoke.
+
