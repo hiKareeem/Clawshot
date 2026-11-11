@@ -19,9 +19,6 @@ VERSION_FILES = (
 ROMFS_SHA256 = "fc09c4af707a0ca092188cf014f6fdf3d40514def773f097b798f52f9f28bc93"
 ROOT = Path(__file__).resolve().parents[3]
 ASSETS = Path(__file__).with_name("templates")
-# Every pack unzips to this one folder, whatever its seed or version; the seed itself is in METADATA.
-PACK_FOLDER = "clawshot-randomizer"
-METADATA = "metadata.json"
 
 
 class PackError(ValueError):
@@ -154,14 +151,14 @@ def build(romfs: Path, seed: int, settings: str, out: Path) -> dict:
             "settings": settings,
             "output_sha256": tree_digest(root / "seed"),
         }
-    files[METADATA] = (json.dumps(manifest, indent=2) + "\n").encode("utf-8")
+    files["pack.json"] = (json.dumps(manifest, indent=2) + "\n").encode("utf-8")
     out.parent.mkdir(parents=True, exist_ok=True)
     with (
         out.open("xb") as stream,
         zipfile.ZipFile(stream, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=9) as archive,
     ):
         for name, data in sorted(files.items()):
-            entry = zipfile.ZipInfo(PACK_FOLDER + "/" + name, date_time=(1980, 1, 1, 0, 0, 0))
+            entry = zipfile.ZipInfo(name, date_time=(1980, 1, 1, 0, 0, 0))
             entry.compress_type = zipfile.ZIP_DEFLATED
             entry.create_system = 3
             entry.external_attr = 0o100644 << 16

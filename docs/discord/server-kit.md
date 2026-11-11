@@ -110,7 +110,7 @@ No Hookshot installation is needed. Wait for Verified seed, then follow these st
 4. Untick the mod to play normally. Restore your backup if you want the old save progress;
    unticking does not undo changes to saves.
 
-For emulator reports, give its name/version and attach its own log plus `metadata.json`;
+For emulator reports, give its name/version and attach its own log plus `pack.json`;
 there is no Hookshot log when Play was not used.
 
 **Untested:** Ryujinx `mods/contents/0400486024dec000/<name>/romfs`;

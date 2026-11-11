@@ -7,7 +7,7 @@ This is an early test build: expect bugs, and please report them.
 
 This zip has NO game files. It builds the seed on your PC from your own copy of
 the game, and checks that you got exactly the same seed as everyone else.
-The seed number and settings are in metadata.json.
+The seed number and settings are in pack.json.
 
 WHAT'S SHUFFLED
 - Chests, shop shelves, NPC gifts, songs (among the song spots), one-time Deku
@@ -67,7 +67,7 @@ KNOWN ISSUES
 
 REPORTS, QUESTIONS, NEW SEEDS
 Discord: https://discord.gg/7R5ZXPcJqn
-Please include where you were, what happened, metadata.json, and your log
+Please include where you were, what happened, pack.json, and your log
 (Hookshot: hookshot_log.txt in this folder; emulator: its own log).
 
 Share this zip, never the generated "seed" folder: that one contains game files.

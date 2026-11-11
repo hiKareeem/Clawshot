@@ -8,7 +8,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-from clawshot.pack import METADATA, PackError, check_version, generate, tree_digest
+from clawshot.pack import PackError, check_version, generate, tree_digest
 from clawshot.pack.hookshot import detect
 
 RUNNING_GAME = "Hookshot is already running. Quit it, then press Play."
@@ -38,7 +38,7 @@ def hookshot_running(process_lister=None) -> bool:
 
 
 def configuration(root: Path) -> tuple[dict, Path, Path | None]:
-    manifest = json.loads((root / METADATA).read_text(encoding="utf-8-sig"))
+    manifest = json.loads((root / "pack.json").read_text(encoding="utf-8-sig"))
     config = json.loads((root / "folders.json").read_text(encoding="utf-8-sig"))
     romfs = Path(config["romfs"]).resolve()
     check_version(romfs)

@@ -2,7 +2,7 @@ param([ValidateSet('make', 'play')][string]$Action = 'make')
 $ErrorActionPreference = 'Stop'
 try {
     $root = $PSScriptRoot
-    $manifest = Get-Content -LiteralPath (Join-Path $root 'metadata.json') -Raw | ConvertFrom-Json
+    $manifest = Get-Content -LiteralPath (Join-Path $root 'pack.json') -Raw | ConvertFrom-Json
     $configPath = Join-Path $root 'folders.json'
     if (Test-Path -LiteralPath $configPath) {
         $config = Get-Content -LiteralPath $configPath -Raw | ConvertFrom-Json
