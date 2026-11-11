@@ -1,5 +1,7 @@
 # Clawshot
 
+[![Discord](https://img.shields.io/badge/Discord-Join%20the%20server-5865F2?logo=discord&logoColor=white)](https://discord.gg/7R5ZXPcJqn) [![Download](https://img.shields.io/github/v/release/hiKareeem/Clawshot?label=Download&color=2ea44f)](https://github.com/hiKareeem/Clawshot/releases/latest)
+
 An unofficial item randomizer for *The Legend of Zelda: Ocarina of Time* on Nintendo Switch 2,
 inspired by OoT Randomizer and Ship of Harkinian's randomizer.
 
