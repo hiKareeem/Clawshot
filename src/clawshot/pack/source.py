@@ -15,6 +15,9 @@ from clawshot.pack import VERSION_FILES, PackError
 from clawshot.pack._nup import format as F
 from clawshot.pack._nup.read import NupReader
 
+# A game's update has its own title ID: the base's plus 0x800. Both share the application ID (the upper bits).
+APPLICATION_ID_MASK = ~0xFFF
+
 
 class NupRomfs:
     """Use the newest full base/update RomFS; never mix packages or fall back to an old build."""
@@ -23,7 +26,7 @@ class NupRomfs:
         self.reader = NupReader(str(path))
         try:
             packages = [p for p in self.reader.packages if p.kind in (F.KIND_BASE, F.KIND_UPDATE)]
-            if not packages or len({p.title_id for p in packages}) != 1:
+            if not packages or len({p.title_id & APPLICATION_ID_MASK for p in packages}) != 1:
                 raise PackError("NUP must contain one game's base/update packages")
             newest = max(p.version for p in packages)
             packages = [p for p in packages if p.version == newest]

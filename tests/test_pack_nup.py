@@ -14,7 +14,7 @@ from clawshot.pack.source import local_romfs, open_nup
 def write_nup(path, packages):
     """Build v1 records from the public format; all contents are invented by tests."""
     dirs, files, roots = [], [], []
-    for version, kind, contents in packages:
+    for version, kind, contents, *title in packages:
         root = {}
         for name, data in contents.items():
             node = root
@@ -36,7 +36,7 @@ def write_nup(path, packages):
             return index
 
         ri = directory("", {"romfs": root})
-        roots.append((version, kind, ri, ri + 1))
+        roots.append((version, kind, ri, ri + 1, title[0] if title else 0x0400486024DEC000))
     pool, records, children = bytearray(), bytearray(), []
 
     def name_ref(name):
@@ -74,11 +74,9 @@ def write_nup(path, packages):
     toc = bytearray(
         struct.pack("<4sIQQQQQ", b"TOC\x01", len(roots), len(dirs), len(files), toc_size - len(pool), len(pool), 0)
     )
-    for version, kind, ri, romfs in roots:
+    for version, kind, ri, romfs, title_id in roots:
         toc.extend(
-            struct.pack(
-                "<QIIIIBBHIQI20x", 0x0400486024DEC000, ri, 0xFFFFFFFF, romfs, version, kind, int(kind == 1), 0, 0, 0, 0
-            )
+            struct.pack("<QIIIIBBHIQI20x", title_id, ri, 0xFFFFFFFF, romfs, version, kind, int(kind == 1), 0, 0, 0, 0)
         )
     toc.extend(records)
     toc.extend(file_records)
@@ -137,6 +135,28 @@ def test_newest_update_is_used_without_base_fallback(tmp_path, monkeypatch):
 def test_incomplete_newest_update_does_not_borrow_base_files(tmp_path):
     path = write_nup(tmp_path / "game.nup", [(0, 0, version_files()), (131072, 1, {VERSION_FILES[0]: b"new"})])
     with pytest.raises(PackError, match="missing romfs"):
+        version_digest(path)
+
+
+def test_update_with_its_own_title_id_is_the_same_game(tmp_path):
+    """Dumps that keep base and update apart give the update the base's title ID plus 0x800."""
+    base, update = 0x0400486024DEC000, 0x0400486024DEC800
+    path = write_nup(
+        tmp_path / "game.nup", [(65536, 0, version_files(b"old"), base), (131072, 1, version_files(), update)]
+    )
+    expected = version_digest(write_nup(tmp_path / "update.nup", [(131072, 1, version_files())]))
+    assert version_digest(path) == expected
+    with open_nup(path) as source:
+        assert source.package.title_id == update
+        assert source.read(VERSION_FILES[0]) == version_files()[VERSION_FILES[0]]
+
+
+def test_packages_of_two_games_are_refused(tmp_path):
+    path = write_nup(
+        tmp_path / "game.nup",
+        [(65536, 0, version_files(), 0x0400486024DEC000), (131072, 1, version_files(), 0x0100000000011800)],
+    )
+    with pytest.raises(PackError, match="one game"):
         version_digest(path)
 
 
