@@ -51,7 +51,8 @@ def test_release_lists_only_source_and_local_assets_with_no_game_and_does_not_ov
         assert set(EXTRA) <= names
         assert {"LICENSE", "NOTICE", "uv.lock", "src/clawshot/data/world.toml", "READ ME FIRST.txt"} <= names
         assert all(b"invented forbidden payload" not in archive.read(name) for name in archive.namelist())
-        assert archive.getinfo("Clawshot-2.4.6/clawshot.sh").external_attr >> 16 & 0o111
+        for launcher in ("clawshot.sh", "Clawshot.command"):
+            assert archive.getinfo(f"Clawshot-2.4.6/{launcher}").external_attr >> 16 & 0o111
     before = first.read_bytes(), first.stat().st_mtime_ns
     with pytest.raises(FileExistsError):
         build(first.parent, root=root)

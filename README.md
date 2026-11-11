@@ -21,7 +21,8 @@ that output. Clawshot is not affiliated with or endorsed by Nintendo.
 1. Download **Clawshot-\<version\>.zip** from a [UI test release](https://github.com/hiKareeem/Clawshot/releases),
    not GitHub's generic source-code zip. Unzip the whole folder outside your game and Hookshot folders.
 2. **Windows:** double-click **Clawshot.bat**. **Linux:** run **clawshot.sh**.
-   **macOS:** open clawshot.sh with Terminal; macOS is untested.
+   **macOS (untested):** right-click **Clawshot.command** and choose **Open** the first time
+   because the download is unsigned; later, double-click it.
    The first start may download the checked app-local uv tool, Python and locked dependencies; no administrator access.
 3. On **Game**, Browse to your own supported **romfs folder or .nup** and Check it.
    Hookshot is optional: it is only needed for the Play button.

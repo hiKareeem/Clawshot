@@ -166,7 +166,7 @@ Hidden Chromium proof visually inspected `shots/catalog-review-filtered-newest.p
 
 Added the explicit backup reminder/confirmation and remembered game-mod folder. Exclusive Clawshot-seed-N/romfs is a real file copy with a post-copy digest check; existing names are never replaced. Configured dump/Hookshot, environment dump, current output and source checkout are protected destinations. Eden's known game folder is offered only when present and clicked; other emulators use the folder picker. No emulator start or main-save access. Native-capable sessions alone may copy; headless refuses.
 
-**Startup platform question for Claude/Kareem:** macOS Finder normally opens `.sh` as text. The requested `clawshot.sh` can be opened with Terminal, but a literal Finder double-click needs a `.command` entry or association. Shall the release include a `.command` wrapper? Windows/Linux implementation proceeds; macOS remains explicitly untested as requested.
+Startup platform decision (Claude, final review): ship Clawshot.command to run clawshot.sh. Mac players right-click it and choose Open on the first run because the download is unsigned; macOS remains explicitly untested.
 
 Emulator proof: focused export/library/app/Play/HTTP/loader/detector/pack **94 passed in28.06s**; integrated display-name/bootstrap focused checks also passed (50 cases), format/lint passed. Hidden Chromium used one injected synthetic chooser, copied successfully, refused a second copy without replacing anything, and remembered the selected folder after reload. `shots/emulator-copy-complete.png` visually inspected. Eden's real existing path was offered but never selected or written; only external synthetic fixtures were copied. No JS errors, emulator, game or OS dialog.
 
@@ -192,7 +192,7 @@ The first integrated run exposed a Windows TCP reset on an early rejected POST: 
 2. Browse to your romfs or .nup and Check; expect the supported build, with the dump first and Hookshot marked optional.
 3. Leave Hookshot empty and settings untouched; Generate should use Recommended, a random number and Documents, then show Seed ready.
 4. On Game, choose/check your mod-capable Hookshot folder, quit every running Hookshot, then return to the result and press Play.
-5. Start a New Game and collect a shuffled pickup named in the play note; expect that reward and `fs: OpenFile(...): from the overlay` in this seed's hookshot_log.txt.
+5. Start a New Game and collect a shuffled pickup named in Play note (spoilers); expect that reward and both `mods: <file> <- <path in this seed>` and `mods: 1 mods from <seed folder>` in this seed's hookshot_log.txt (Play uses HOS_MODS, never overlay log proof).
 6. Quit game/app, reopen My seeds and Play the same seed; expect its private save to remain and normal Hookshot saves unchanged.
 
 ### Release item 4: version-bound sharing
@@ -231,7 +231,7 @@ Current rebased commit inventory (onto e06f839): base `4124f7b 74d94b6 159cba8 0
 
 Final rebased artifact runtime proof: extracted release-final into a separate external folder and ran its own locked/offline environment with --no-open. The actual shipped project served v0.1.0; dump is the first Game input, Recommended is selected, Gift/song card is enabled, and the versioned share string loads. `shots/final-rebased-settings.png` visually inspected; no JS errors. A throwaway harness expression chained .catch onto print's undefined return; printed that cause and resumed only screenshot/close with a fresh observation, no product edit. Every owned browser/service is closed.
 
-For Kareem's current mod-loader acceptance, also retain the `mods: <changed file> <- <this seed path>` log entry specified by the round's launcher instructions, alongside any `fs: OpenFile(...): from the overlay` entry and the matching in-game reward. Log mounting alone is not a gameplay acceptance claim.
+For Kareem's current mod-loader acceptance, retain both `mods: <file> <- <path in this seed>` and `mods: 1 mods from <seed folder>` plus the matching in-game reward. Play uses HOS_MODS; overlay log proof does not apply. Log mounting alone is not a gameplay acceptance claim.
 
 ## Final UI release handoff (rebased e06f839)
 
@@ -247,7 +247,7 @@ Gate JSON: `E:/OOTRemake/work/r11-ui-cs11d/release-gates.json`; all returncodes0
 
 Deliverable: release-final/Clawshot-0.1.0.zip and SHA256 above; actual rebased/extracted offline UI smoke passed. No dump/game bytes/fonts/keys are shipped. Nothing was pushed, merged, published, or changed in the main checkout. The README edit is only this worktree.
 
-**Remaining external acceptance:** Kareem's real Play/in-game/save isolation check using the six-line checklist; NUP file-picker and browser/Tk visuals; Linux/macOS UI runtime. The `.command` versus Open With Terminal macOS question remains for the owners (current docs explicitly use Terminal and mark macOS untested). Gamepad/Steam Deck input, Tracker tab and dump-health notice remain outside this release, not scaffolds or claimed completed features. Owner's real pywebview responsiveness/folder-picker evidence remains recorded above.
+**Remaining external acceptance:** Kareem's real Play/in-game/save isolation check using the six-line checklist; NUP file-picker and browser/Tk visuals; Linux/macOS UI runtime. Claude approved Clawshot.command with first-run right-click/Open for the unsigned download; macOS remains untested. Gamepad/Steam Deck input, Tracker tab and dump-health notice remain outside this release, not scaffolds or claimed completed features. Owner's real pywebview responsiveness/folder-picker evidence remains recorded above.
 
 ## Spoiler disclosure correction (Claude's final UI review)
 
@@ -259,4 +259,16 @@ Visually checked result actions/warning and full viewer. Archived screenshots: `
 
 Replacement code-only artifact (do not use the earlier zip with automatic preview): `E:/OOTRemake/work/r11-ui-cs11d/release-spoiler-correction/Clawshot-0.1.0.zip`, SHA256 **e20dfe7c45be75a6a73c09771e14c23620596c8029e9f7158cff53d3e504cea0**. Extracted and launched successfully with `uv run --offline --project <extracted root> --frozen --no-dev python -m clawshot.ui --no-open`.
 
-Prettier formatted the two changed assets; `uv run ruff format --check` reported299 files already formatted and `uv run ruff check` passed. Required whole synthetic and dump gates are running serially, one worker with exclusive gate.lock; this paragraph is not a gate-completion claim.
+Prettier formatted the two changed assets; `uv run ruff format --check` reported299 files already formatted and `uv run ruff check` passed. Required whole gates completed serially with one worker and exclusive gate.lock: `uv run pytest` **931 passed,110 skipped in1062.92s**; `OOT_ROMFS=E:/Games/Hookshot/romfs uv run pytest -m dump` **93 passed,16 skipped,932 deselected in1136.18s**. Both returncodes0; locks released. The latter still lacked OOT_NUP. Per Claude, no rerun is needed: his review gates set both fixtures. **Every future dump gate on this track must set both OOT_ROMFS and OOT_NUP.**
+
+### Final owner corrections and stop boundary
+
+Claude corrected the Play acceptance proof to the two HOS_MODS log forms above; fixed both occurrences in this round and added the exact proof to the UI guide. Historical early-round overlay experiment/log records were not rewritten into fictional mod-loader results.
+
+Claude reports Kareem updated to Hookshot v2.0.14 today (HDR menu colours, bracketed build folders, FPS counter size). Mod loading is unchanged as far as those release notes say; this is owner-provided information, not an agent runtime certification. No game/native dialog was started.
+
+One final commit combines corrected log/checklist documentation, the future two-fixture dump-gate requirement, and the approved macOS wrapper/release packaging/instructions. `uv run ruff format --check` (299 files), `uv run ruff check` and `CLAWSHOT_WORKERS=1 uv run pytest tests/test_ui_release.py tests/test_ui_bootstrap.py` passed (**11 tests in0.25s**). No full/dump gate rerun after Claude's instruction. Main checkout README remains untouched. After posting this commit's head, stop for Claude's review/merge: no further commits.
+
+Actual final artifact: `E:/OOTRemake/work/r11-ui-cs11d/release-review-final/Clawshot-0.1.0.zip`, SHA256 **3b4d2ada563c8732a2d9d204d8dbe356522b88822acde5baa043184c5783fb6f**; supersedes both earlier release zips. Its Clawshot.command has zip Unix mode100755; the five-line READ ME names right-click/Open, the unsigned download and untested macOS status. The real shipped wrapper and real clawshot.sh ran through Git sh on Windows from a different working directory, in an extracted path containing spaces, using only a fake PATH uv: preserved the project path and spaced arguments, returned0 and propagated7 with the existing readable failure text; no download/.tools creation, actual uv/UI/game/native window. This proves shell delegation, not Finder/Gatekeeper/macOS runtime. Disposable smoke extraction cleaned itself; completed gate wrapper removed.
+
+Branch feature commit for the spoiler correction is73c23d2; this final owner-correction commit follows it and the earlier0918e43 handoff. All source UI browser/service smokes are closed. No push/merge; Claude owns review and merger from here.

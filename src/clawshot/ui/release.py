@@ -10,6 +10,7 @@ from clawshot.pack import ROOT, source_files
 
 EXTRA = (
     "Clawshot.bat",
+    "Clawshot.command",
     "clawshot.sh",
     "scripts/start-windows.ps1",
     "docs/ui.md",
@@ -19,7 +20,8 @@ EXTRA = (
 )
 READ_ME = (
     "Unzip the whole folder outside your game and Hookshot folders.\n"
-    "Windows: double-click Clawshot.bat. Linux: run clawshot.sh. macOS: open it with Terminal (untested).\n"
+    "Windows: double-click Clawshot.bat. Linux: run clawshot.sh. "
+    "macOS (untested): first right-click Clawshot.command and choose Open (unsigned download).\n"
     "Choose your own supported romfs or .nup on Game; Hookshot is optional and only needed for Play.\n"
     "Generate with Recommended; Play uses separate Hookshot saves, or Copy to my emulator after backing up saves.\n"
     "Keep the terminal open. No game is included or downloaded; never share generated mods. See docs/ui.md.\n"
@@ -52,7 +54,7 @@ def build(out: Path, *, root: Path = ROOT) -> Path:
                 entry = zipfile.ZipInfo(folder + "/" + name, date_time=(1980, 1, 1, 0, 0, 0))
                 entry.compress_type = zipfile.ZIP_DEFLATED
                 entry.create_system = 3
-                entry.external_attr = (0o100755 if name == "clawshot.sh" else 0o100644) << 16
+                entry.external_attr = (0o100755 if name in {"clawshot.sh", "Clawshot.command"} else 0o100644) << 16
                 archive.writestr(entry, data)
     except BaseException:
         destination.unlink()

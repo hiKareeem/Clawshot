@@ -2,7 +2,9 @@
 
 Download the **Clawshot-\<version\>.zip** attached to a UI test release (not the generic source zip).
 Unzip the whole Clawshot folder, then double-click **Clawshot.bat** on Windows.
-Linux uses executable **clawshot.sh**. On macOS, open clawshot.sh with Terminal; macOS is untested.
+Linux uses executable **clawshot.sh**. **macOS is untested:** the first time, right-click
+**Clawshot.command** and choose **Open** because the download is unsigned; later, double-click it.
+The wrapper runs clawshot.sh from the extracted app folder.
 Keep its terminal open while playing with the menu. Nothing requires administrator access.
 
 The starter first uses uv already on your PATH or in the app's `.tools` folder. If missing, it
@@ -63,6 +65,9 @@ on macOS, and `$XDG_CONFIG_HOME/clawshot/paths.json` (or `~/.config/clawshot/pat
   Play uses `output/user` for this seed's saves and `output/hookshot_log.txt` for its log, never
   your normal Hookshot saves. Quit a running seed before starting another. Changed seed files are
   refused; generate a new seed instead of repairing an output in place.
+  Play loads through `HOS_MODS`, not an overlay: in this seed's `hookshot_log.txt`, check
+  `mods: 1 mods from <seed folder>` and `mods: <file> <- <path in this seed>`, plus the
+  matching in-game reward. Mounting a mod alone does not prove gameplay.
 - **My seeds:** finished seeds remain available after restarting Clawshot. The default output
   folder and folders opened with Find seeds are remembered in your user configuration folder.
   Each entry offers Play, Open folder and **Play note (spoilers)**, with a short hash. Only folders with
@@ -177,7 +182,6 @@ on 2026-11-10. This does not confirm its NUP file picker, browser/Tk picker or t
 Not implemented in the current checkout:
 - gamepad/Steam Deck controller navigation (keyboard/mouse only);
 - the planned Tracker tab (not a separate tracker application);
-- literal macOS Finder double-click association (open the shell script with Terminal; macOS untested);
 - a bundled executable/installer or bundled fonts;
 - native Play acceptance or Linux/macOS UI runtime certification.
 
@@ -217,4 +221,4 @@ uv run python -m clawshot.ui.release --out E:/Clawshot-releases
 This builds `Clawshot-<project version>.zip` without reading a dump or generating a seed. It
 contains source, local UI assets, the starters/PowerShell helper, lock file, licences/notices and
 a five-line READ ME. The positive source allowlist excludes tools, caches, tests and game/output
-files. The shell script is executable in the zip; an existing release is never replaced.
+files. Both shell entry points are executable in the zip; an existing release is never replaced.
