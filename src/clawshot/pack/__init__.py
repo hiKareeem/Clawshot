@@ -40,12 +40,28 @@ def check_version(romfs: Path) -> None:
         raise PackError(f"RomFS does not match build {BUILD}: fingerprint {actual}, expected {ROMFS_SHA256}")
 
 
+MACOS_METADATA = {".DS_Store", ".AppleDouble", ".LSOverride", ".Spotlight-V100", ".Trashes", ".fseventsd", "__MACOSX"}
+
+
+def is_os_metadata(name: str) -> bool:
+    """Files macOS Finder writes into folders it opens (or zips): never game or seed content."""
+    return name in MACOS_METADATA or name.startswith("._") or name == "Icon\r"
+
+
+def ignore_os_metadata(_folder, names):
+    """``shutil.copytree`` ignore callback."""
+    return {name for name in names if is_os_metadata(name)}
+
+
 def tree_digest(root: Path) -> str:
-    """Hash sorted relative paths and file hashes, including spoiler/note; never filesystem metadata."""
+    """Hash sorted relative paths and file hashes, including spoiler/note; never filesystem metadata, including
+    the .DS_Store Finder adds when a seed folder is opened."""
     if not root.is_dir():
         raise PackError(f"seed folder missing: {root}; run Make seed.bat first")
     digest = hashlib.sha256()
     for path in sorted(root.rglob("*"), key=lambda p: p.relative_to(root).as_posix()):
+        if any(is_os_metadata(part) for part in path.relative_to(root).parts):
+            continue
         if path.is_symlink() or path.is_junction():
             raise PackError(f"seed contains a link: {path}")
         if path.is_file():

@@ -5,7 +5,7 @@ from pathlib import Path
 
 from clawshot.app.library import inspect_seed
 from clawshot.app.paths import SOURCE_ROOT, absolute_path
-from clawshot.pack import tree_digest
+from clawshot.pack import ignore_os_metadata, tree_digest
 
 SAVE_WARNING = "Back up your emulator saves first: your emulator uses your normal saves. Enable only this seed."
 
@@ -33,7 +33,7 @@ def copy_to_emulator(result: dict | None, folder: str, *, protected=()) -> dict:
     except OSError as error:
         raise ValueError(f"Cannot write to that mod folder. Choose a writable folder: {error}") from error
     try:
-        shutil.copytree(seed / "romfs", destination / "romfs")
+        shutil.copytree(seed / "romfs", destination / "romfs", ignore=ignore_os_metadata)
         if tree_digest(destination / "romfs") != tree_digest(seed / "romfs"):
             raise ValueError("The copied files did not match. Choose a reliable writable folder and copy again.")
     except OSError as error:

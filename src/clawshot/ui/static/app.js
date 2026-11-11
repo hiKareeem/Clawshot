@@ -648,7 +648,16 @@ async function browse(kind) {
     .querySelectorAll("[data-browse], #browse-dump")
     .forEach((el) => (el.disabled = true));
   try {
-    const data = await api("browse", { kind, seed: Number($("seed").value) });
+    const data = await api("browse", {
+      kind,
+      seed: Number($("seed").value),
+      window: {
+        x: Math.round(window.screenX),
+        y: Math.round(window.screenY),
+        width: Math.round(window.outerWidth),
+        height: Math.round(window.outerHeight),
+      },
+    });
     if (!data.path) return;
     preferenceWarning(data.warning);
     if (kind === "seeds") {

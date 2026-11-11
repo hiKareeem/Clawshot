@@ -142,3 +142,25 @@ def test_make_without_hookshot_still_rejects_romfs_overlap(configured_pack, nest
     with pytest.raises(PackError, match="outside your game folders"):
         runtime.make(root)
     assert (root / "seed" / "note.md").read_bytes() == b"verified local seed"
+
+
+def test_pack_zip_keeps_its_files_at_the_root_with_the_seed_in_pack_json(tmp_path, monkeypatch):
+    import zipfile
+
+    import clawshot.pack as pack
+
+    def fake_generate(_root, _romfs, _seed, _settings, out):
+        out.mkdir()
+        (out / "spoiler.json").write_text("{}")
+
+    monkeypatch.setattr(pack, "check_version", lambda _: None)
+    monkeypatch.setattr(pack, "generate", fake_generate)
+    romfs = tmp_path / "romfs"
+    romfs.mkdir()
+    manifest = build(romfs, 4242, "CS1", tmp_path / "seed-4242.zip")
+    with zipfile.ZipFile(tmp_path / "seed-4242.zip") as archive:
+        names = archive.namelist()
+        metadata = json.loads(archive.read("pack.json"))
+    assert "READ ME FIRST.txt" in names and "Make seed.bat" in names
+    assert metadata == manifest and metadata["seed"] == 4242
+    assert not any(name.startswith("seed/") or ".DS_Store" in name for name in names)

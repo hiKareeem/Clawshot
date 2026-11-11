@@ -6,7 +6,7 @@ inspired by OoT Randomizer and Ship of Harkinian's randomizer.
 > [!IMPORTANT]
 > Clawshot reads **your own game dump**, moves items according to access rules, and writes a
 > RomFS mod: a folder of changed game files loaded instead of the originals. The supported game is
-> program `0400486024DEC000`, update v131072, build `e0f3ccfa`.
+> program `0400486024DEC000`, Version 1.1.1 (update v131072), build `e0f3ccfa`.
 
 > [!NOTE]
 > This project is AI-assisted: the code is written with AI coding tools, directed, reviewed and
@@ -144,10 +144,10 @@ uv run python -m clawshot --romfs C:/Games/OoT/romfs --seed 7 --out C:/Clawshot/
 `--romfs` takes an extracted RomFS folder with the supported update applied, a `.nup`, or a dump
 folder that keeps the base game and its updates apart (`base/romfs` and `updates/<version>/romfs`,
 the layout NUP packs from; an update may hold only its changed files). From a dump folder the newest
-update is laid over the base, so it must be the supported one: today that is v131072 (v1.1). A later
+update is laid over the base, so it must be the supported one: today that is v131072 (Version 1.1.1). A later
 game update is a different build, and Clawshot refuses it until it supports that build. For a `.nup`
 or a dump folder the generator first copies the files it reads to a temporary folder. The base game's
-RomFS alone is refused.
+RomFS alone (Version 1.0.0) is refused; the UI accepts `base/romfs` picked inside a dump folder and uses the dump folder.
 A default seed shuffles chests. To print settings without opening the dump, then replay them:
 
 ```sh

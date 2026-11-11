@@ -29,7 +29,7 @@ def test_saved_seed_reopens_after_server_restart_without_original_files(made_ui_
     root = Path(result["output"])
     config = tmp_path / "config/paths.json"
     first = Application(
-        Jobs(synthetic_run), spec=synthetic_spec(), preferences=Preferences(config), chooser=lambda _: root
+        Jobs(synthetic_run), spec=synthetic_spec(), preferences=Preferences(config), chooser=lambda _kind, _window: root
     )
     with running_server(first) as server:
         assert request(server, "browse", {"kind": "seeds"})[0] == 200
