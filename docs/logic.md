@@ -107,7 +107,7 @@ pull prerequisites and adult checks, without assuming optional child errands. Fr
 both logic and native patches; do not copy the search assumption without that patch contract.
 Sources: `plans/04-world-format.md`, Ages; `src/clawshot/world/search.py`;
 `src/clawshot/data/world/remake/sheik.toml`; `plans/playtest/answers.md`, R9-FREE-TRAVEL and
-R10-FIRST-PULL-FIXED. Non-default Door of Time modes remain untested in game; see [settings](settings.md).
+R10-FIRST-PULL-FIXED. Non-default Door of Time modes passed first in-game checks; returning to child afterwards is untested. See [settings](settings.md).
 
 The fill uses seeded assumed fill, placement restrictions and safe swaps, then an independent
 collection search on the completed placement. Item pool preparation uses actual remake identities,

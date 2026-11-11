@@ -27,8 +27,8 @@ that output. Clawshot is not affiliated with or endorsed by Nintendo.
 3. On **Game**, Browse to your own supported **romfs folder or .nup** and Check it.
    Hookshot is optional: it is only needed for the Play button.
 4. Go to **Generate**. Recommended settings, a random seed and a new Documents folder are ready;
-   leave them alone for a first seed. Wait for **Seed ready**. **Play note (spoilers)** is optional:
-   it reveals item locations and all shuffled rewards; it does not open automatically.
+   leave them alone for a first seed, then choose **Generate seed**. Wait for **Seed ready**.
+   **Play note (spoilers)** is optional: it reveals item locations and all shuffled rewards; it does not open automatically.
 5. **Hookshot:** choose/check its folder on Game, quit any already running Hookshot, then press **Play**.
    This seed has its own saves; normal Hookshot saves are not used.
    **Emulator instead:** back up your normal saves, then **Copy to my emulator**, choose this game's
@@ -92,7 +92,7 @@ and [playtest answers](https://github.com/hiKareeem/Clawshot/blob/main/plans/pla
 
 - **After receiving an item Link cannot use at his current age, Save and Continue before using
   other items.** A child Fairy Bow pickup jammed the item bar on both Hookshot and Lichii; changing areas
-  did not fix it. Other item families carry precautionary warnings. Read this seed's `play-note.md`.
+  did not fix it. Other item families carry precautionary warnings. This seed's `play-note.md` lists them but reveals item locations.
 - Chest ocarinas show no model despite working; songs can show an ocarina stand-in rather than a
   normal item model. Only some songs have been individually played from chests.
 - **Hookshot 2.0.12 and later: use Clawshot's Play or a current pack's `Play seed.bat`,** which loads the seed as a
@@ -159,7 +159,7 @@ uv run python -m clawshot --romfs C:/Games/OoT/romfs --seed 7 --settings CS1 --o
 to replay that command's choices. Explicit options override the string. Reproduction needs the
 same seed, settings, generator source and world data, not just the same version label.
 
-The output has `romfs/`, `play-note.md` (directions and warnings) and `spoiler.json` (all placements).
+The output has `romfs/`, `play-note.md` (directions, warnings and item-location spoilers) and `spoiler.json` (all placements).
 Load it using the [seed-pack guide's runtime instructions](docs/seed-pack.md); generation does not
 start the game. More options: [settings](https://github.com/hiKareeem/Clawshot/blob/main/docs/settings.md).
 For logic ports and trackers: [logic reference](https://github.com/hiKareeem/Clawshot/blob/main/docs/logic.md).

@@ -8,7 +8,7 @@ The wrapper runs clawshot.sh from the extracted app folder.
 Keep its terminal open while playing with the menu. Nothing requires administrator access.
 
 The starter first uses uv already on your PATH or in the app's `.tools` folder. If missing, it
-announces a one-time download of pinned uv0.13.7 from its official GitHub release, checks the
+announces a one-time download of pinned uv 0.13.7 from its official GitHub release, checks the
 embedded SHA-256 before extracting/executing, and keeps it inside `.tools`. It changes no PATH,
 profile or system install. No internet or a blocked download gives the manual release link.
 Dependencies come from `uv.lock` with `--frozen --no-dev`; Windows also selects the optional UI extra.
@@ -100,13 +100,13 @@ with “Hookshot is already running. Quit it, then press Play.”
 This happens before creating the save folder, opening the log or starting another process.
 
 The pack's Make path was verified on Linux (WSL) with both a romfs folder and a `.nup`, producing
-the same digest as Windows (maintainer verification, round11). The UI shares that generator path,
+the same digest as Windows (maintainer verification, round 11). The UI shares that generator path,
 so generation is expected to work on Linux and macOS; macOS itself is untested. **Play starts
 `bin/hookshot.exe` on Windows and `bin/hookshot` on Linux**, the layout of a Hookshot Builder game
 folder. A Linux source build without `bin` is refused like any folder-root launcher, and a folder
 holding the other system's game is refused before anything is written. macOS has no Hookshot build,
 so Play stays off there. Linux Play is **built, not accepted by the maintainers in game**; Linux Make
-verification is not native-UI certification.
+verification does not certify the Linux UI.
 
 ## Keyboard and layout
 
@@ -149,7 +149,7 @@ The Generate action fits without scrolling at 1280×860.
 2. Add a matching table in app `settings.toml`: `label`, `kind`, `group`, `help`; choices need
    both `labels` and `choice_help` entries. Bounds belong on integer fields. Schema generation
    refuses missing/stale fields, labels or choice help; never add a second JS setting list.
-3. Use `unavailable` for a genuinely held choice, with a plain-language reason. It is also refused
+3. Use `unavailable` for a choice that is not yet available, with a plain-language reason. It is also refused
    by validation. Use `enabled_when` for a setting that currently has no effect: a list of
    `{key, contains|equals|greater_than, reason}` conditions, all required. Inactive values are
    preserved; they are not silently reset or removed from CS1.
@@ -157,7 +157,7 @@ The Generate action fits without scrolling at 1280×860.
    fast start uses Skipped/Plays. `clears` identifies derived override keys to clear when a control
    changes, rather than hard-coding a field dependency in JavaScript.
    Check totals belong to the generator's actual result, not schema prose or a second UI eligibility
-   algorithm: new Gift checks must not require editing a copied count or a held-check list here.
+   algorithm: new Gift checks must not require editing a copied count or an unavailable-check list here.
 5. Run the synthetic app/HTTP tests, then exercise the actual UI and any changed generator path.
    Keep seeds/game files outside the repository. Follow the project's full gates and in-game
    evidence rules for changes to gameplay.
@@ -168,7 +168,7 @@ All colors live in the `:root` block of `style.css`. The two font variables are 
 (titles/tabs/section headings/panel titles) and `--sans` (rows/values/body/hints). Change those
 stacks there; do not put font families on individual controls. Check row heights, long paths,
 disabled controls, keyboard focus, and 1280×860 idle/running/finished captures afterwards.
-The approved stacks prefer Palatino and Candara with platform fallbacks (decisions D36/D37).
+The approved stacks prefer Palatino and Candara with platform fallbacks.
 A future bundled font is a **licence decision for the maintainers**, not an automatic OFL addition:
 rule 7's accepted dependency licences do not currently list OFL. No font file is bundled today.
 
@@ -184,16 +184,17 @@ legacy-constant fallback. Headless screenshots use `--no-open` and a fresh brows
 OS dialog/window may be triggered. Keep screenshots outside the repository.
 
 Kareem confirmed a real pywebview window was responsive and Browse opened a normal folder picker
-on 2026-11-10. This does not confirm its NUP file picker, browser/Tk picker or the new native Play.
+on 2026-11-10. This does not confirm its NUP file picker or browser/Tk picker.
 
 Not implemented in the current checkout:
 - gamepad/Steam Deck controller navigation (keyboard/mouse only);
 - the planned Tracker tab (not a separate tracker application);
 - a bundled executable/installer or bundled fonts;
-- native Play acceptance or Linux/macOS UI runtime certification.
+- Linux/macOS UI runtime certification.
 
-Seed packs still use Make/Play; the UI is run from the source checkout or an installed Python
-package containing its static assets. Architecture and the local HTTP contract: [UI plan](../plans/05-ui.md).
+Seed packs still use Make/Play; the UI is available in the public release zip, from a source checkout or an
+installed Python package containing its static assets. Architecture and the local HTTP contract:
+[UI plan](../plans/05-ui.md).
 
 ## Sharing
 
