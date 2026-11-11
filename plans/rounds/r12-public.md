@@ -5,7 +5,7 @@ Branch: `r12/public`. Owner: cs12a (openai-codex/gpt-6.1-sol).
 ## Scope and choices
 
 - Jobs 1–5 from Claude's round prompt: mechanical proofreading; UI-friendly issue forms; the base-only dump-folder hint; public-pack/spoiler wording; first-player troubleshooting.
-- No generation, logic or placement changes. No version or `uv.lock` edits. No game launch, game-folder writes, push, merge or GitHub comments.
+- No generation algorithm, logic or placement changes. No version or `uv.lock` edits. No game launch, game-folder writes, push, merge or GitHub comments.
 - `docs/settings.md` belongs to cs12b; read for consistency, never edited here.
 - Provisional choice (cs12a): preserve historical round/decision records as history. Correct current architecture/UI statements contradicted by shipped code, as explicitly requested; do not revise decisions.
 - Provisional choice (cs12a): use plain player language in new help/report text. Keep existing developer API identifiers where they document a real contract; mechanical proofreading is not a technical-reference rewrite.
@@ -30,13 +30,15 @@ Seed-output changes are isolated: three closing parentheses in location `where` 
 
 | Commit | Job | Seed output changes? |
 |---|---|---|
-| `8897606` | 1: public text/current-state fixes and Detect guidance | No |
-| `4220ed5` | 1: isolated generated description/source-reference text | **Yes** |
-| `f4c229b` | 2: player issue forms and consistent reporting instructions | No |
-| `decb5ae` | 3: base-only dump hint, synthetic test and guide | No |
-| `0d3d20e` | 4: public pack wording and spoilers warning | No |
-| `709508d` | 5: first-player troubleshooting and release known issues | No |
-| `8524f94` | 1: full plan audit, current flag summary, logic-form UI string guidance | No |
+| `19a6f11` | 1: public text/current-state fixes and Detect guidance | No |
+| `ec24c52` | 1: isolated generated description/source-reference text | **Yes** |
+| `a5aa7c3` | 2: player issue forms and consistent reporting instructions | No |
+| `d0265dc` | 3: base-only dump hint, synthetic test and guide | No |
+| `7c1d18e` | 4: public pack wording and spoilers warning | No |
+| `df88a73` | 5: first-player troubleshooting and release known issues | No |
+| `7830592` | 1: full plan audit, current flag summary, logic-form UI string guidance | No |
+| `cfd0afa` | Round implementation record | No |
+| `1efa1e0` | Linux Play steer: platform help, schema/API docs, neutral log privacy | No |
 
 ## Verification
 
@@ -46,7 +48,7 @@ Initial `git status --short --branch`: clean `r12/public`. Initial `tasklist /FI
 - After the targeted fix: `CLAWSHOT_WORKERS=1 uv run pytest tests/test_pack_dump_folder.py tests/test_cli_romfs.py -q`: **10 passed**, 0.41 s.
 - External synthetic smoke (`uv run --with pyyaml python E:/OOTRemake/work/r12-public-cs12a/smoke.py`): all three issue forms parse and have unique required fields; Discord URL unchanged. Real generator CLI and source-preflight commands now print the base-game/update hint, without making output. Pack success formatting exercised with a synthetic publisher boundary, not a real pack build.
 - `uv run python -m clawshot.pack --help`: public-test wording observed.
-- Claude's steer during this run: main moved to `9f86b3a` with PR #2 (Linux Play). Rebase is authorized; update new help/templates to Windows/Linux Play, Linux Hookshot Builder `bin/hookshot`, macOS without Play. The merged runtime retains the same per-output save/log paths. Initial gates precede this rebase; final gates will run after integration.
+- Claude's steer during this run: main moved to `9f86b3a` with PR #2 (Linux Play). Rebase prepared in a detached scratch worktree so the in-flight gates never read a changing source tree. The only conflict was the Linux platform paragraph in `docs/ui.md`: retained merged Linux behavior plus the proofreading spacing correction. New help/templates support Windows/Linux Play, Linux Hookshot Builder `bin/hookshot`, macOS without Play. The merged runtime retains the same per-output save/log paths. Final gates will run after the tested worktree's branch is moved to the rebased commits.
 - External link checker: **17 documents, zero broken local links/anchors**, including the troubleshooting section.
 - Real headless UI (`python -m clawshot.ui --no-open`) loaded at 1280×860. Synthetic frontend completed-seed/capability state displayed the corrected “Choose Detect” guidance with Play disabled; screenshot inspected. No game, OS dialogs or visible windows opened; tab and owned server closed. This is text-rendering proof, not Play acceptance.
 - UI smoke first exposed a browser-helper execution-world discrepancy (`page.evaluate` could not see the classic-script function, while direct `tab.evaluate` could). Printed function/script/error values, reported the tool issue, then used direct page-world evaluation successfully.
