@@ -82,6 +82,59 @@ class NupRomfs:
         return data
 
 
+class LayeredRomfs:
+    """A dump folder in the layout NUP packs from: ``base/romfs`` and optionally ``updates/<version>/romfs``.
+
+    The newest update's RomFS shadows the base's by path, as a console applies an update (NUP SPEC.md, "Update
+    layering"). An update folder may hold the full tree or only its changed files; both read the same. Lists of
+    removed paths that some unpackers write are not read: for build e0f3ccfa they name only superseded
+    ``.Product.100.`` files, which Clawshot never reads, and ``check_version`` rejects any other build.
+    """
+
+    def __init__(self, path: Path):
+        layers = dump_layers(path)
+        if layers is None:
+            raise PackError(f"not a dump folder (no base/romfs): {path}")
+        self.layers = layers
+        self.files = {}
+        for layer in layers:  # base first, so the update's copy wins
+            for file in layer.rglob("*"):
+                if file.is_file():
+                    self.files[file.relative_to(layer).as_posix()] = file
+
+    def close(self):
+        pass
+
+    def read(self, relative: str) -> bytes:
+        if relative not in self.files:
+            raise PackError(f"dump folder is missing romfs/{relative}; base and update must both be complete")
+        return self.files[relative].read_bytes()
+
+
+def dump_layers(path: Path) -> list[Path] | None:
+    """``[base romfs, newest update romfs]`` (or only the base) for a dump folder, else None."""
+    base = path / "base" / "romfs"
+    if not base.is_dir():
+        return None
+    updates = path / "updates"
+    versions = []
+    if updates.is_dir():
+        versions = [int(d.name) for d in updates.iterdir() if d.name.isdecimal() and (d / "romfs").is_dir()]
+    if not versions:
+        return [base]
+    return [base, updates / str(max(versions)) / "romfs"]
+
+
+@contextmanager
+def open_source(path: Path):
+    """A ``.nup`` or a dump folder, read through one ``files``/``read`` interface."""
+    if path.is_dir():
+        yield LayeredRomfs(path)
+        return
+    with open_nup(path) as source:
+        yield source
+
+
 @contextmanager
 def open_nup(path: Path):
     source = None
@@ -104,8 +157,8 @@ def resource_spec() -> dict:
     return tomllib.loads(Path(__file__).with_name("resources.toml").read_text(encoding="utf-8"))
 
 
-def working_files(source: NupRomfs, spec: dict) -> set[str]:
-    """Resolve the one cache definition against the NUP index and source catalogues."""
+def working_files(source: "NupRomfs | LayeredRomfs", spec: dict) -> set[str]:
+    """Resolve the one cache definition against the source's file index and the catalogues."""
     from fnmatch import fnmatchcase
 
     from clawshot.patch import items, shops
@@ -121,9 +174,11 @@ def working_files(source: NupRomfs, spec: dict) -> set[str]:
 
 
 @contextmanager
-def local_romfs(path: Path, parent: Path):
-    """Never write under the source; remove only this invocation's disposable cache."""
-    if path.is_dir():
+def local_romfs(path: Path, parent: Path | None):
+    """A RomFS folder as given; for a ``.nup`` or a base+update dump folder, a disposable working set of the files
+    the generator reads, under ``parent`` (the system temporary folder when None). Never write under the source;
+    remove only this invocation's disposable cache."""
+    if path.is_dir() and dump_layers(path) is None:
         yield path
         return
     from clawshot.formats import byml, zsdic
@@ -131,7 +186,7 @@ def local_romfs(path: Path, parent: Path):
     from clawshot.patch import gamedata
 
     check_version(path)  # before creating even an empty cache
-    with open_nup(path) as source, TemporaryDirectory(prefix=".romfs-", dir=parent) as temporary:
+    with open_source(path) as source, TemporaryDirectory(prefix=".romfs-", dir=parent) as temporary:
         root = Path(temporary)
         spec = resource_spec()
 

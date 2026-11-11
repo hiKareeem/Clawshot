@@ -7,7 +7,7 @@ from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
 from typing import TYPE_CHECKING
 
-from clawshot.census.scan import DEFAULT_CHEST_DROP
+from clawshot.census.scan import DEFAULT_CHEST_DROP, GAME_DATA_LIST
 from clawshot.formats import byml, rstb, zsdic
 from clawshot.patch.getitem import member_growth as getitem_member_growth
 from clawshot.patch.plan import DROP_KEY, EVENT_KEY, SUBSTITUTE_KEY, PatchError, Plan
@@ -29,6 +29,23 @@ class WrittenFile:
     new_compressed_size: int
     entry: int | None = None  # its resource-size-table entry, before (None for the table itself)
     new_entry: int | None = None  # and after
+
+
+def check_romfs(romfs: Path) -> None:
+    """A plain error for a folder that is not the supported romfs (update v131072, the v1.1 update), instead of a
+    traceback from the first missing file. The base game's romfs alone keeps the update's files at version 100."""
+    if not romfs.is_dir():
+        raise PatchError(f"romfs folder not found: {romfs}")
+    if (romfs / GAME_DATA_LIST).is_file():
+        return
+    base = (romfs / GAME_DATA_LIST.replace(".110.", ".100.")).is_file()
+    hint = (
+        "this looks like the base game (v1.0) on its own; give the dump folder that holds both base/ and "
+        "updates/131072/, or a romfs with update v131072 (v1.1) laid over it"
+        if base
+        else "give the game's romfs folder at update v131072 (v1.1)"
+    )
+    raise PatchError(f"{romfs} has no {GAME_DATA_LIST}: {hint}")
 
 
 def check_output_folder(romfs: Path, out: Path) -> None:

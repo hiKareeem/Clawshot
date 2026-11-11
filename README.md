@@ -141,7 +141,13 @@ uv run python -m clawshot --help
 uv run python -m clawshot --romfs C:/Games/OoT/romfs --seed 7 --out C:/Clawshot/seed-7
 ```
 
-The generator CLI takes an extracted RomFS folder. For `.nup` input use the UI or seed-pack workflow.
+`--romfs` takes an extracted RomFS folder with the supported update applied, a `.nup`, or a dump
+folder that keeps the base game and its updates apart (`base/romfs` and `updates/<version>/romfs`,
+the layout NUP packs from; an update may hold only its changed files). From a dump folder the newest
+update is laid over the base, so it must be the supported one: today that is v131072 (v1.1). A later
+game update is a different build, and Clawshot refuses it until it supports that build. For a `.nup`
+or a dump folder the generator first copies the files it reads to a temporary folder. The base game's
+RomFS alone is refused.
 A default seed shuffles chests. To print settings without opening the dump, then replay them:
 
 ```sh

@@ -25,9 +25,11 @@ from pathlib import Path
 from clawshot.generate import FillError, Settings
 from clawshot.generate import hints as hint_choices
 from clawshot.generate.fill import DUNGEON_ITEM_CHOICES
+from clawshot.pack import PackError
+from clawshot.pack.source import local_romfs
 from clawshot.patch import PatchError, check_dungeon_items, gamedata, gifts, make_seed, write_seed
 from clawshot.patch.items import ItemActorError
-from clawshot.patch.write import check_output_folder
+from clawshot.patch.write import check_output_folder, check_romfs
 from clawshot.world.load import WorldError, load_spec
 
 
@@ -40,7 +42,11 @@ def _logic_value(text: str) -> object:
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="python -m clawshot", description=__doc__.splitlines()[0])
-    parser.add_argument("--romfs", type=Path, help="the game's romfs folder (read only)")
+    parser.add_argument(
+        "--romfs",
+        type=Path,
+        help="the game's romfs folder, a dump folder holding base/ and updates/<version>/, or a .nup (read only)",
+    )
     parser.add_argument("--seed", type=int)
     parser.add_argument("--out", type=Path, help="the mod folder to write (empty or absent)")
     parser.add_argument("--settings", help="a CS1 settings string; explicit options override it")
@@ -159,13 +165,17 @@ def main(argv: list[str] | None = None) -> int:
     try:
         check_dungeon_items(settings)
         check_output_folder(args.romfs, args.out)
-        spec, steps = None, []
-        if gifts.SHUFFLE in settings.shuffle or set(settings.shuffle).intersection(gifts.GIFT_TYPES):
-            spec, settings, step = gifts.seed_setup(args.romfs, load_spec(), settings)
-            steps.append(step)
-        output = make_seed(args.romfs, args.seed, settings, spec, extra_steps=steps)
-        written = write_seed(output, args.romfs, args.out)
-    except (FillError, WorldError, PatchError, ItemActorError) as e:
+        if not args.romfs.exists():
+            raise PatchError(f"romfs folder not found: {args.romfs}")
+        with local_romfs(args.romfs, None) as romfs:  # a romfs folder as is; a dump folder or .nup via a working set
+            check_romfs(romfs)
+            spec, steps = None, []
+            if gifts.SHUFFLE in settings.shuffle or set(settings.shuffle).intersection(gifts.GIFT_TYPES):
+                spec, settings, step = gifts.seed_setup(romfs, load_spec(), settings)
+                steps.append(step)
+            output = make_seed(romfs, args.seed, settings, spec, extra_steps=steps)
+            written = write_seed(output, romfs, args.out)
+    except (FillError, WorldError, PatchError, ItemActorError, PackError) as e:
         print(f"error: {e}", file=sys.stderr)
         return 1
     seed = output.seed

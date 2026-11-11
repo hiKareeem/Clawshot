@@ -26,11 +26,11 @@ class PackError(ValueError):
 
 
 def version_digest(romfs: Path) -> str:
-    from clawshot.pack.source import fingerprint, open_nup
+    from clawshot.pack.source import dump_layers, fingerprint, open_source
 
-    if romfs.is_dir():
+    if romfs.is_dir() and dump_layers(romfs) is None:
         return fingerprint(lambda relative: (romfs / relative).read_bytes())
-    with open_nup(romfs) as source:
+    with open_source(romfs) as source:  # a .nup, or a base+update dump folder
         return fingerprint(source.read)
 
 

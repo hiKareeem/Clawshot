@@ -52,20 +52,28 @@ def resource_modes():
             yield f"door-{door}", replace(all_kinds, door_of_time=door, logic={"free_time_travel": True})
 
 
-@pytest.fixture(scope="module")
-def cached_romfs(romfs, tmp_path_factory):
-    if not os.environ.get("OOT_NUP"):
-        pytest.skip("OOT_NUP is not set")
-    source = Path(os.environ["OOT_NUP"])
+def _stats(source: Path) -> dict:
+    """Size and modification time of the source and, for a dump folder, of every file in it."""
+    files = source.rglob("*") if source.is_dir() else (source,)
+    return {path: (path.stat().st_size, path.stat().st_mtime_ns) for path in files if path.is_file()}
+
+
+# OOT_NUP: a .nup file. OOT_DUMP: a dump folder with base/romfs and updates/<version>/romfs, the newest update
+# laid over the base. Both are compared with OOT_ROMFS, an extracted romfs of the same build.
+@pytest.fixture(scope="module", params=["OOT_NUP", "OOT_DUMP"])
+def cached_romfs(request, romfs, tmp_path_factory):
+    if not os.environ.get(request.param):
+        pytest.skip(f"{request.param} is not set")
+    source = Path(os.environ[request.param])
     check_version(source)
     assert version_digest(source) == version_digest(romfs)
-    before = source.stat()
+    before = _stats(source)
     parent = tmp_path_factory.mktemp("nup-working-set")
     with local_romfs(source, parent) as cache:
+        assert cache != source and cache.is_relative_to(parent)
         yield cache
     assert not cache.exists()
-    after = source.stat()
-    assert (after.st_size, after.st_mtime_ns) == (before.st_size, before.st_mtime_ns)
+    assert _stats(source) == before
 
 
 def test_nup_generator_working_set_matches_romfs(romfs, cached_romfs):
@@ -136,7 +144,9 @@ def test_cache_only_generates_and_writes_every_resource_mode(romfs, cached_romfs
 
 def test_missing_cache_input_reports_its_romfs_path(tmp_path, capsys):
     empty_cache = tmp_path / "empty-cache"
-    empty_cache.mkdir()
+    # Only the file the CLI's romfs check looks for (synthetic bytes), so the first resource read still fails.
+    (empty_cache / "GameData").mkdir(parents=True)
+    (empty_cache / "GameData/GameDataList.Product.110.byml.zs").write_bytes(b"synthetic")
     with pytest.raises(AssertionError, match="Pack/ZsDic.pack.zs"):
         generate_and_write(empty_cache, tmp_path / "not-written", Settings(), capsys)
     assert not (tmp_path / "not-written").exists()
