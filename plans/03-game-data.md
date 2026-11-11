@@ -19,7 +19,7 @@ does not read), and `r1_numbers.py`, which recomputes the headline numbers below
 | 3 `GetEventName` | Row of `RSDB/EventSetting`; overrides the chest's default open event. The item is passed in, not hard-coded: a new item needs no new event. |
 | 4 Event gifts | Every gift ends in `PouchSystemActor.EventTriggerAddOrRemovePouchContent` with the item's actor name as a string parameter, usually through a wrapper flow. |
 | 5 Other checks | 100 Gold Skulltulas, 36 heart-piece anchors, 8 boss heart containers, 56 shop slots + 7 mask slots, 21 business scrubs, 14 cows, 6 Great Fairy events. |
-| 6 Flags | `GameDataList` keys flags by murmur3 of their name; placement checks (chests, GS, heart pieces) are `Bool64bitKey` flags keyed **by the actor `Hash`**. Event checks: `HavePlayedEvent.<event>` plus named flags. |
+| 6 Flags | `GameDataList` keys named flags by murmur3 of their name; ordinary chests use named `IsTreasureBoxOpen.<Hash>` Struct Bools, while GS and heart pieces use saved actor-Hash `Bool64bitKey` contracts (section 44). Event checks: `HavePlayedEvent.<event>` plus named flags. |
 | 7 Sizes | `RSDB/` has no size table. `System/Resource/ResourceSizeTable...rsizetable.zs` (TotK's RESTBL) has an entry for every placement file. |
 | 8 `DreamWorld` | Boss and miniboss rematch / boss rush / Enemy Museum with a swapped-in temporary inventory. Not a source of checks. |
 | 9 vs OoT Randomizer | Gold Skulltulas match per area exactly (100/100). Chests: 175 there vs 184 here (+12 treasure-game boxes), with real per-area differences listed below. |
@@ -201,10 +201,10 @@ to an entry. `MetaData` names the save files (`slot_%02d/progress.sav`, `option.
   `Obj_Heart_Piece`, all 85 silver rupees and all 51 business scrubs. Checks use `ResetTypeValue` 24 (permanent);
   pots, rocks and grass use 88 plus an `ExtraByte`; scrubs 280. The other 7971 keys match no Banc `Hash` (1308 of
   them sit at ±2 from one); their source is open.
-  **Superseded in round11 (cs11b; section44):** ~~So a chest's opened flag is its `Hash`, and changing only
+  **Superseded in round 11 (cs11b; section 44):** ~~So a chest's opened flag is its `Hash`, and changing only
   `Drop__DropActor` keeps it. A chest at a new `Hash` would need a new `GameDataList` entry [inference].~~
   Ordinary chests instead read the named Struct Bool `IsTreasureBoxOpen.<decimal actor Hash>`.
-  A raw Bool64 entry's existence does not establish that a check uses it; section44 distinguishes
+  A raw Bool64 entry's existence does not establish that a check uses it; section 44 distinguishes
   audited pickup/actor contracts and lists earlier chest-save checks needing re-verification.
 - **Event checks** have `HavePlayedEvent.<EventSetting row>`: all 2380 rows have such a `Bool`. Flows also gate
   repeats on their own named flags (`..._GetReward10`, `GreatFairy_AlreadyAppeared`, `HeartPieceAnchor_GameDataPath`
@@ -1667,7 +1667,7 @@ Buy refills remain Shop-only; sale rules, ammo actor mappings and aliases are un
 
 Regression evidence: an otherwise-open synthetic seed placed Bombs in its early Hammer chest before the fix.
 Eight synthetic cases now cover all six ammo counts/classes, aliases, pack alternatives and impossible destinations;
-real seed7 passes with Chest-only and Chest+Shop shuffle. After rebasing onto `a81faf9`, two actual CLI processes
+real seed 7 passes with Chest-only and Chest+Shop shuffle. After rebasing onto `a81faf9`, two actual CLI processes
 (different hash seeds; the second replays the settings string) produced **78 byte-identical files**. All **six**
 native ammo pickups (three each of bombs/Bombchus) were outside bag-free reach; **59 Buy refills** stayed in Shop,
 and the written placement passed beatability. Reports and full gate results: `plans/rounds/r6-shopfix.md`.
@@ -1676,7 +1676,7 @@ change the size-only 7b continuation. Quiver/bullet bag capacity still does not 
 
 ### Purchase conditions and native refusals (reviewer follow-up)
 
-`DisplayShop:SelectItem_CheckAvailable` starts at **Event318** (index284). Its explicit category gates are
+`DisplayShop:SelectItem_CheckAvailable` starts at **Event318** (index 284). Its explicit category gates are
 **Event299** (BulletBag IsGet), **Event320** (Quiver IsGet), **Event327** (Fire stone quest complete) and
 **Event325** (any empty bottle). **Event310/Event240** ask the native seller `EventQueryCheckBuyResult`;
 **Event303/Event77** ask `EventQueryCanAddToPorchByGameData(Shop_SelectItemName)`. These native queries own
@@ -1690,7 +1690,7 @@ their own message files. More specific follow-up messages:
 
 | Item(s) | Purchase condition / explicit evidence | Refusal label(s), paraphrased |
 |---|---|---|
-| `Shop_Heart` | Life below maximum; recover4 quarter-hearts, native hold check | `Shop_05`: health already full |
+| `Shop_Heart` | Life below maximum; recover 4 quarter-hearts, native hold check | `Shop_05`: health already full |
 | `Shop_MagicJar_Small` | Magic gauge exists and MP has room; MPRecover60 metadata, native hold check | Generic preamble/recovery refusal; no new magic is granted by buying |
 | `Shop_DekuNutBundle_01/02`, `Shop_DekuStick`, `Shop_DekuStickBundle_Medium` | Stock below capacity; nut/stick rows permit creating the small bag | Generic preamble, then `Shop_03`: carrying capacity full |
 | `Shop_DekuSeedBundle_01/02` | `IsGet.Item_BulletBag_Small` (Event299), plus stock room | Generic preamble; `Shop_03` for full stock |
@@ -1707,7 +1707,7 @@ All rows also retain their slot's original release/stock fields and require the 
 `EventQueryCheckBuyResult`/the later buy/pay actions own this, not a new randomizer bypass.
 
 **In game (Kareem via Claude, 2026-11-08, 07):** Bazaar Bombchus were bought; Deku Stick and heart purchases
-worked once stock/health had room. His initial full10 sticks, owned Deku Shield, unknown bottle contents,
+worked once stock/health had room. His initial full 10 sticks, owned Deku Shield, unknown bottle contents,
 no Bomb Bag/Bow and full hearts explain native refusals. Reviewer cancelled the proposed extra buyable test;
 none was created or run.
 
@@ -1721,20 +1721,20 @@ buy access supplies `can_refill_bombchus`. With free drops off, Bomb Bag plus bu
 No new Bomb-Bag requirement is invented for the observed successful purchase.
 
 **Blue Fire purchase gate fixed (reviewer authorization, 2026-11-08):** Potion merchants test the **selected**
-Blue Fire item for prior acquisition (`DisplayShop` Event108), while only their original slot5 release rules
+Blue Fire item for prior acquisition (`DisplayShop` Event108), while only their original slot 5 release rules
 already model that condition. `shops.toml [item_locations]` now allows `Buy Blue Fire` only at those two Potion
-slot5 checks or the 48 supported non-Potion shop checks. The existing `allowed()` destination check enforces
+slot 5 checks or the 48 supported non-Potion shop checks. The existing `allowed()` destination check enforces
 this together with the effective Shop-only `item_location_types`; no new flow bypass or release-rule rewrite.
 Other bottle refills are unchanged; both vanilla/affordable price modes retain the native acquired-Blue-Fire gate.
 
-Before the fix, both price modes allowed Market Potion slot1, and synthetic seed3 placed its required first
-Blue Fire there. All30 shop-logic tests now pass, including that 20-seed bootstrap regression. Actual seed7 CLI
+Before the fix, both price modes allowed Market Potion slot 1, and synthetic seed 3 placed its required first
+Blue Fire there. All 30 shop-logic tests now pass, including that 20-seed bootstrap regression. Actual seed 7 CLI
 and settings/hash replay on **0afcca5** produce **79 identical files**, including readable `play-note.md`;
-Blue Fire sells at **Kak Bazaar Item5** and **GC Shop Item6**.
+Blue Fire sells at **Kak Bazaar Item 5** and **GC Shop Item 6**.
 Written shelves/seller components were parsed and original release fields preserved; D25's six native ammo
-placements and beatability still pass. **All78 files of 7b are hash-identical before/after**; no continuation reroll.
+placements and beatability still pass. **All 78 files of 7b are hash-identical before/after**; no continuation reroll.
 The names-track randomized-slot golden was removed with reviewer approval: its meaningful ordering checks
-now live in the fixed-placement free-shield fixture. A dump-level real seed7 CLI check independently
+now live in the fixed-placement free-shield fixture. A dump-level real seed 7 CLI check independently
 replays the written opening as child to Gohma and checks the note's Enter/Complete order, with no slot pins.
 Full gate results and final commit: `plans/rounds/r6-shopfix.md`.
 
@@ -1791,7 +1791,7 @@ Chest display uses the content actor's `Components.ModelInfoRef` -> `FmdbName` a
 `Obj_Rupee`, explaining the Storms/Minuet green-rupee observations. The two ocarinas already
 have their correct model assets, but `Components.EventPerformerRef` selects `Common.event.root`,
 not `PouchContent.event.root`. Common lacks the chest's `EventTriggerModelBindForItemGetDemo`;
-PouchContent root151 -> bind146 computes the child/adult get-demo offset and binds to Player.
+PouchContent root 151 -> bind 146 computes the child/adult get-demo offset and binds to Player.
 Small chest Event10 and big chest Event66 call that missing action. **[INFERENCE]** This
 presentation-dispatch mismatch explains the Fairy Ocarina's invisible model; runtime proof is pending.
 
@@ -1803,10 +1803,10 @@ non-shrinking native display heap reservations. Every pouch identity, OcarinaPar
 and saved flag stays unchanged. No new assets, edited AI graphs or automatic seed default.
 
 Common writer accounts for same-shape embedded string growth without lowering original overhead.
-ActorInfo's existing own-file allocation is raw1,934,492 -> rounded1,934,496 +3,064 =1,937,560;
+ActorInfo's existing own-file allocation is raw 1,934,492 -> rounded 1,934,496 + 3,064 = 1,937,560;
 changed table retains its size. The explicit full-family dump oracle checks inverse diffs on all
-14 packs/all8,363 ActorInfo rows, native assets and every output allocation. Public writer smoke
-built16 resources successfully. Gameplay/binding/ocarina use still needs Kareem, not a parse-only claim.
+14 packs/all 8,363 ActorInfo rows, native assets and every output allocation. Public writer smoke
+built 16 resources successfully. Gameplay/binding/ocarina use still needs Kareem, not a parse-only claim.
 
 One new-game launcher: `E:/OOTRemake/work/r7-getitem/ingame/Test - chest-gift-models.bat`, its own
 empty user and nine-resource overlay. Mido doorway view: middle-left Fairy Ocarina; far-left
@@ -1942,18 +1942,18 @@ and a once-only Boomerang from the shopkeeper. Its flow grows 50552 -> 51200 byt
 50832 -> 51472. No GameDataList is written. Checklist/isolated release-only launcher are in the round file.
 
 Kareem confirmed via Claude (2026-11-08): Boomerang with the shield equipped, nothing on later
-talks. No game was rerun by the agent. His option1 keeps the native story window and forbids
+talks. No game was rerun by the agent. His option 1 keeps the native story window and forbids
 progression at the shuffled check: its `Missable` location type is rejected for progression by
 `allowed()`. Gift expansion/effective-CS1 replay include the new type. The controlled Boomerang
 probe is engine evidence, not a placement permitted in ordinary generated seeds under this policy.
 Extending the native window is later work. A 20-seed synthetic generation regression failed before
-the guard (seed1 put Deku Shield there) and passes after.
+the guard (seed 1 put Deku Shield there) and passes after.
 
-Initial pre-policy public child-slice CLI smoke (seed7, Chest+Gift): 17 checks, three spheres, 16 resources;
+Initial pre-policy public child-slice CLI smoke (seed 7, Chest+Gift): 17 checks, three spheres, 16 resources;
 both merchant branches grant the placed Fairy Ocarina, no implicit shield event or new GameDataList.
 The written spoiler/note includes its two physical IDs and visit directions. A second CLI/CS1/hash-seed
 process produced 18 byte-identical files; independent child-only Search won. That initial smoke did
-not substitute for the whole-world Chest+Shop+Gift seed7, which exposed D25 ammo consuming early
+not substitute for the whole-world Chest+Shop+Gift seed 7, which exposed D25 ammo consuming early
 Fire-key capacity. Claude subsequently authorized the generator follow-up below.
 
 ### Generator follow-up: restriction order before ammo
@@ -1969,7 +1969,7 @@ junk. No retry bound, native rule, item eligibility or gift story window is rela
 
 Three synthetic regressions cover ammo consuming the only entrance-key slot, the type-held song/bag
 dependency cycle and type-held ammo bypassing D25. They fail before their aimed fixes and pass after. Actual
-whole-world seed7 mode/attempt/sphere evidence and final gates are in `plans/rounds/r7-gifts.md`;
+whole-world seed 7 mode/attempt/sphere evidence and final gates are in `plans/rounds/r7-gifts.md`;
 these do not claim a Hookshot play run.
 
 ### Treasure Chest Game: contents experiment only
@@ -1984,11 +1984,11 @@ The EventSetting row `MiniGame_ChoiceTreasure_OpenClearTreasureBox` runs
 `MiniGame_SequentialChoiceTreasure:MiniGame_SequentialChoiceTreasure_OpenClearTreasureBox`.
 Event66 passes `ContentName` to OpenTreasureBoxClear; Event191 passes it to
 `Dm_SY_Treasurebox:SuccessForMiniGame`. ClearFlagOn Event146 sets
-`MiniGame_ChoiceTreasure_IsClear` (Hash3046747885; false/reset8/save0); both reward Hashes have
+`MiniGame_ChoiceTreasure_IsClear` (Hash 3046747885; false/reset8/save0); both reward Hashes have
 permanent type24 Bool64bitKey entries. No flow or flag is changed.
 
 Output `ingame/treasure-red` and its release-only isolated save-copy launcher use the child ranch
-backup `2026-11-07_llr-tower-before-pickup`, manual slot01 (child, Sun's Song, first-clear false,
+backup `2026-11-07_llr-tower-before-pickup`, manual slot 01 (child, Sun's Song, first-clear false,
 first-prize Hash unset). One resource: Market Child Static 259184 -> 259100 bytes, existing entry
 259464 retained. Exact inverse two-field delta, compression/readback, unchanged source/backup
 checksums and static launcher checks passed. Game acceptance is pending Kareem; D17 is not enabled.
@@ -2032,17 +2032,17 @@ completion, retaining exit/revisit behavior without granting a fresh reward on e
 
 - `DoorOfTime:DoorOfTime_CheckStoneNum` Event38/39/56 reads Fire/Water stone **quest completion**,
   not the held stones. Event68 reads `HavePlayedEvent.Dm_MelodyGet_Zelda`.
-  Door opening Event60 requires `DoorOfTime_IsAfter_Step04_Exp`, Event27 plays melody4,
+  Door opening Event60 requires `DoorOfTime_IsAfter_Step04_Exp`, Event27 plays melody 4,
   Event69 checks the opened Bool and Event58 the door cutscene's history; Event53 sets
   `Market_Child_TimeTempleDoor_Opened`, Event57 advances Step06. First-pull attention is gated by
-  that quest step (`Market_Child_Prefab_e700`, section16), not independent stone inventory.
+  that quest step (`Market_Child_Prefab_e700`, section 16), not independent stone inventory.
 - Adult return and Prelude's separate trigger read `SageOfForest_IsCompleted_Exp`
-  (`Market_Adult_Prefab_89da` / `_edc2`, section16). Finding Forest Medallion elsewhere cannot
+  (`Market_Adult_Prefab_89da` / `_edc2`, section 16). Finding Forest Medallion elsewhere cannot
   open the pedestal, and moving that medallion away must not forge Forest completion.
 - The later Light Arrows chain is `AllSage:Market_Adult_Field_GetArrowLight`, Event17 ->
   `Dm_TimeTemple_0130`; Event25/26 read `HavePlayedEvent.Dm_Awake_Spirit` and
   `...Dm_Awake_Shadow`, not Spirit/Shadow Medallion ownership. `SageOfLight`/`AllSage` progress
-  separately. `AllSage_AwakeSageCount` is an existing saved Int default5; Escape decrements it on
+  separately. `AllSage_AwakeSageCount` is an existing saved Int default 5; Escape decrements it on
   the five sage routes (Event249/251/252/253/267). No literal flow/decoded-logic reader of that Int
   was found; do not invent a medallion-count gate from its name.
 - Fresh query survey found **zero literal stone/medallion item queries in 640 active flowcharts**.
@@ -2112,9 +2112,9 @@ placement-derived, not separately played.
 
 | Grave | Direction | Contents |
 |---|---|---|
-| Shield / ReDead | Nearest row of seven, fourth from right, unmarked; hole x21.5/z11.2 | Chest16912540161937823130, ReDead17994273783244561622 |
-| Heart piece | Same row, leftmost/seventh from right; hole x21.4/z23.2 | Chest9622128545943056087; no enemy/song puzzle |
-| Marked fairy grave | Lower row of five, second from right, flowers/butterflies; hole x4/z5.7 | Cracked wall9366825990748670811, eight fairies behind it; **no chest or shuffled check** |
+| Shield / ReDead | Nearest row of seven, fourth from right, unmarked; hole x21.5/z11.2 | Chest 16912540161937823130, ReDead 17994273783244561622 |
+| Heart piece | Same row, leftmost/seventh from right; hole x21.4/z23.2 | Chest 9622128545943056087; no enemy/song puzzle |
+| Marked fairy grave | Lower row of five, second from right, flowers/butterflies; hole x4/z5.7 | Cracked wall 9366825990748670811, eight fairies behind it; **no chest or shuffled check** |
 
 Both age Static/Dynamic copies were checked. Heart chest has only its item Dynamic parameter:
 no Presence, spawn override, actor link or AiGroup/song trigger. `True` remains the inside-grave
@@ -2124,7 +2124,7 @@ https://www.nintendolife.com/guides/zelda-ocarina-of-time-heart-piece-locations-
 https://www.ign.com/wikis/ocarina-of-time-remake/Spiritual_Stone_of_Fire_-_Kakariko_Village_Walkthrough .
 
 N64 comparison only: https://www.zeldadungeon.net/wiki/Graveyard_(Ocarina_of_Time) (facts supplied by
-Claude; direct fetch returned403). N64 combines shield chest/fairy wall in its marked grave and
+Claude; direct fetch returned 403). N64 combines shield chest/fairy wall in its marked grave and
 requires Sun's Song for the heart chest. Remake splits them. `child_graveyard.toml` introduces
 `Graveyard Fairy Grave`, moves Fairy out of Shield Grave and requires `has_explosives and has_bottle`,
 not Hammer. Both ordinary grave entrances keep the same child night/time-flow access; no check added.
@@ -2142,16 +2142,16 @@ Main digest stayed unchanged; live 7c changed during play but the diagnostic fie
 | `PouchData.Item_Bomb.StockNum` | 20 | 8 |
 | `HavePlayedGetEvent.Item_BombBag_Small` | false | true |
 | `IsGet.Armor_Child_Gauntlet_Goron` | false | true |
-| `PlayerStatus.LiftGrade` (Enum hash0x59979321) | None | Low |
+| `PlayerStatus.LiftGrade` (Enum hash 0x59979321) | None | Low |
 
-**Native gate:** spawned `Item_Bomb` LiftableParam requires Low (hash3655598229), whereas 7c's saved
-None is hash3069107721. Bomb pre-lift calls `0x027e2c50 -> 0x02e50760 -> 0x02e50570`;
+**Native gate:** spawned `Item_Bomb` LiftableParam requires Low (hash 3655598229), whereas 7c's saved
+None is hash 3069107721. Bomb pre-lift calls `0x027e2c50 -> 0x02e50760 -> 0x02e50570`;
 `0x02e506ac..b0` compares required <= available. Player virtual +0x100 override `0x02e878d0`
-reads PlayerStatus/LiftGrade and maps None/Low/Middle/High to0/1/2/3. Failure finishes pre-lift:
+reads PlayerStatus/LiftGrade and maps None/Low/Middle/High to 0/1/2/3. Failure finishes pre-lift:
 this explains Kareem's brief raise/cancel, not missing capacity. No bag get-history use gate was found
 on this path; setting a presentation flag is not a justified fix.
 
-The real small Bomb Bag's expansion resource targets bombs/Bombchus capacity20, not strength.
+The real small Bomb Bag's expansion resource targets bombs/Bombchus capacity 20, not strength.
 Goron Bracelet (`Item_Gauntlet_Goron` / `Armor_Child_Gauntlet_Goron`) grants LiftGradeUP Low.
 **[INFERENCE] The KF Storms bag alone will not fix canceled bombs with strength None; Bracelet should.**
 Do not infer permanent save damage. Future shared bomb logic needs the native strength requirement,
@@ -2164,13 +2164,13 @@ Kareem via Claude, 2026-11-08: Bombchus used on main with no Bomb Bag. Native It
 LiftableParam independently requires **None**, not Low. Its SmallBagActor points to the Bomb Bag,
 but that link does not impose a lifting prerequisite.
 
-Readback of **written** 7b GC Shop Item8: native Shop_BombchuBundle_05, five Item_Bombchu,
-PriceOffset35, StockNum -1. Normal repeatable ShopItem sale, not a chest-style grant; no explicit
-bag/Dodongo gate in this item branch (section24). 7b/7c's228 shuffled placements are identical.
-Fixed-placement replay with current rules and native fixed vanilla mapping wins in25 spheres;
-GC8 at4 precedes Windmill/Storms at9 and KF bag at10. Removing GC8 alone stalls before the pull
-and bag (334 checks,8 spheres). That establishes the logic dependency, not every possible game route.
-The child-only prefix obtains unshuffled Saria's Song at3, Darunia's Bracelet plus GC8 at4;
+Readback of **written** 7b GC Shop Item 8: native Shop_BombchuBundle_05, five Item_Bombchu,
+PriceOffset 35, StockNum -1. Normal repeatable ShopItem sale, not a chest-style grant; no explicit
+bag/Dodongo gate in this item branch (section 24). 7b/7c's 228 shuffled placements are identical.
+Fixed-placement replay with current rules and native fixed vanilla mapping wins in 25 spheres;
+GC8 at 4 precedes Windmill/Storms at 9 and KF bag at 10. Removing GC8 alone stalls before the pull
+and bag (334 checks, 8 spheres). That establishes the logic dependency, not every possible game route.
+The child-only prefix obtains unshuffled Saria's Song at 3, Darunia's Bracelet plus GC8 at 4;
 it reaches the pull without adult loot or the Storms bag.
 
 **Advice:** keep these saves; buy/use GC8 Bombchus for early explosives. Learn Saria's Song and play
@@ -2180,19 +2180,19 @@ result is claimed. D25 remains the policy for new seeds, not a reason to rewrite
 
 ### Vanilla shield grave: explicit fallback, not universal duplicate conversion
 
-Both ages' A_06 chest16912540161937823130 explicitly checks TBox_Shield_Hylian and selects
-TBox_Rupee_Red when already held; its default CheckCondition is true. Native root nodes16/30/29
-perform count>0 then XOR CheckCondition; nodes24/25 select main/substitute. Red rupee's bundle count
-is20. Kareem's vanilla-file20-rupee observation matches this exact branch, not a different grave.
+Both ages' A_06 chest 16912540161937823130 explicitly checks TBox_Shield_Hylian and selects
+TBox_Rupee_Red when already held; its default CheckCondition is true. Native root nodes 16/30/29
+perform count>0 then XOR CheckCondition; nodes 24/25 select main/substitute. Red rupee's bundle count
+is 20. Kareem's vanilla-file 20-rupee observation matches this exact branch, not a different grave.
 
 The existing shuffled writer `patch_tree` already overwrites primary **and** substitute with the new
 reward, so owning the shield cannot turn shuffled progression into vanilla rupees. Real-placement,
 in-memory smoke across both ages selected shield/red rupee before patch and Boomerang/Boomerang
-after patch. No blanket20-rupee rule for other duplicate items, and no shuffled in-game result inferred.
+after patch. No blanket 20-rupee rule for other duplicate items, and no shuffled in-game result inferred.
 
 ## 31. Round 7: usable bombs need age-appropriate lift strength (cs7g)
 
-D30, build e0f3ccfa. Native trace: section30; independent PouchActorInfo/actor-pack audit and
+D30, build e0f3ccfa. Native trace: section 30; independent PouchActorInfo/actor-pack audit and
 commands: `plans/rounds/r7-bombs.md`, `E:/OOTRemake/work/r7-bombs-cs7g/lift_audit.py`.
 Canonical Item_Gauntlet_Goron / Armor_Child_Gauntlet_Goron grants LiftGradeUP **Low**;
 Item_Gauntlet_Silver / Armor_Adult_Gauntlet_Silver grants **Middle** and declares AdultEquipment;
@@ -2215,14 +2215,14 @@ the progressive first tier, wake-on-strength, unchanged Bombchu/Hammer/flower al
 stale/duplicate/missing helper contracts. Native metadata plus search behavior is not new in-game
 acceptance: **Kareem's same-bombs-before/after-Bracelet comparison on 7c remains pending.**
 
-Search acceptance: real seed7 CLI modes Chest, Chest+Shop, Chest+Shop+Gift and default `CS1`
+Search acceptance: real seed 7 CLI modes Chest, Chest+Shop, Chest+Shop+Gift and default `CS1`
 succeed in **1, 3, 10, 1** attempts within the unchanged ten-attempt bound, with **25, 24, 27, 25**
 collection spheres. Gift mode uses its last permitted attempt; its rejection payloads are retained.
 The old 7b's **228 unchanged placements** still win in **25 spheres**; no continuation is rewritten.
 
-Matched-placement timing (1-based first ordinary-bomb-use sphere, not ammo pickup): seed7 Chest
+Matched-placement timing (1-based first ordinary-bomb-use sphere, not ammo pickup): seed 7 Chest
 **3 -> 5**, Chest+Shop **6 -> 6**, Chest+Shop+Gift **4 -> 7**, default CS1 **3 -> 5**;
-old 7b **7 -> 7**. Independently, all 200 logic-level default seeds0–199 win before/after:
+old 7b **7 -> 7**. Independently, all 200 logic-level default seeds 0–199 win before/after:
 **153 later, 47 unchanged, zero earlier**, zero newly uncollected checks. An upper-bound inventory
 audit over **2,405** exit/event/location/stone rules finds zero newly impossible rules. Existing
 disabled/N64-only rules are not claimed satisfiable. Exact method, output paths, full diagnostics
@@ -2261,7 +2261,7 @@ Build e0f3ccfa; external read-only reproducers and detailed acceptance boundary:
 `plans/rounds/r8-getitem.md`, `E:/OOTRemake/work/r8-getitem/`. Kareem's post-bind Fairy Ocarina
 invisibility is confirmed input, not retested by the agent.
 
-The ocarina mesh is correct and also visible on the song stand-in. Correction to section26:
+The ocarina mesh is correct and also visible on the song stand-in. Correction to section 26:
 `PouchContentGuestPerformer` uses its own `EquipmentCommon.event.root` exceptional binding,
 already including the get-demo bind. Instrument EventPerformer substitution alone did not
 establish a repair of that path. Native ocarinas are Accessory equipment, not generic get
@@ -2280,7 +2280,7 @@ Grant/text still use the original ContentName, not the prop. This is a handheld 
 not a promised floating/rotating get model or a newly certified chest grant.
 
 Synthetic lifecycle/normal-path/inverse regressions and actual common-writer smoke pass.
-Small flow74808 ->79616/allocation79888; big38848 ->43680/allocation43952. Native big
+Small flow 74808 -> 79616/allocation 79888; big 38848 -> 43680/allocation 43952. Native big
 Rotate/NoHit/Bind order differs from small NoHit/Bind/Rotate and is guarded independently.
 **Kareem: visibility, position, disappearance, actual instrument use and Time upgrade/song
 retention still need the single isolated new-game experiment; no agent game run.**
@@ -2292,7 +2292,7 @@ Letter, Egg, Card, Epona and all eight ordinary native masks. The seed catalog h
 this experiment adds none. Sword, Slingshot and Bomb Bag chests remain native. No game/launcher run.
 
 Independent actual-output inverse diffs and source hashes pass; reversed actor order in a fresh
-Python hash-seed process reproduces all15 resources byte-identically (`artifact-proof.json`).
+Python hash-seed process reproduces all 15 resources byte-identically (`artifact-proof.json`).
 Only the already player-confirmed Din's Fire and Adult's Wallet join the chest-verified list.
 The new experiment admits no unreported actor; songs-anywhere's existing opt-in inference remains.
 
@@ -2303,7 +2303,7 @@ Read-only dump build `e0f3ccfa`; reproducible commands and player checklist:
 
 ### Uncollected shuffled shopkeeper gift
 
-Round7's saved Bool `HaveTalked_Npc_Kokiri_001_Shop_Child_PresentDekuShield` remains the
+Round 7's saved Bool `HaveTalked_Npc_Kokiri_001_Shop_Child_PresentDekuShield` remains the
 completion gate (false/reset8/save0); no new flag/save layout. `Talk` initializes camera/Navi state
 before Event24 -> Event23 (castle completion) -> Event21 (Gohma completion) -> Event1 (tree meeting).
 When the merchant gift is shuffled, Event24 instead checks saved completion, then the same
@@ -2316,7 +2316,7 @@ Control-flow/readback oracles prove early/late/castle combinations, repeats, res
 and pre-meeting refusal. The common writer built the requested new-game Boomerang experiment:
 `ingame/shopkeeper-after-gohma-next/`, own empty user and copied release-only launcher.
 Mido far-right chest supplies Deku Shield so the merchant can be skipped until after Gohma
-(optionally also Zelda). Flow50552 ->51736, allocation50832 ->52016; no GameDataList.
+(optionally also Zelda). Flow 50552 -> 51736, allocation 50832 -> 52016; no GameDataList.
 Exact inverse deltas recover the original flow and both chest files. **Kareem, 2026-11-09,
 via Claude:** on a copy of his ranch save with Forest stone, Zelda's Lullaby and Deku Shield,
 having never talked to the merchant, `shopkeeper-after-gohma-next` gave Boomerang and did
@@ -2329,31 +2329,31 @@ is now an ordinary progression-eligible `NPC` check, not `Missable`. Its data-so
 bootstrap Mido or be collected as adult. Gift expansion and effective-CS1/NPC replay both apply
 the same world conversion and existing window/once patch. A required-progression fill and
 late-story reachability regressions cover this policy. Unshuffled native flow, equipment query,
-early free-shield event and rule are unchanged. The prior section28/D28 restriction is historical.
+early free-shield event and rule are unchanged. The prior section 28/D28 restriction is historical.
 
 ### Partial shelves and fixed scrub fees
 
-Settings `shop_slots=0..8` (default8) selects the first N native indices in each of the eight ordinary
+Settings `shop_slots=0..8` (default 8) selects the first N native indices in each of the eight ordinary
 shops; mask loans stay vanilla. Selection is logical-check metadata before pool construction, so all
 age/Alternative/short-stock copies share it and excluded contents never enter the pool. Unselected
 `keep_vanilla` reasons survive. Affordable prices and wallet rules cover selected shelves only;
 independent cheap-Deku-Shield pricing still applies even with zero selected shelves.
 
-`scrub_prices=vanilla|fixed`, `scrub_price=0..1000` (default10 when fixed) covers the four supported
+`scrub_prices=vanilla|fixed`, `scrub_price=0..1000` (default 10 when fixed) covers the four supported
 shuffled once-sale families, not repeat vendors or unshuffled scrubs. Every tier's original call to
 `SimpleShopSub_Scrub_Business_OneTime` changes only `ActorName` and `Price`; the same argument
 already supplies native quote/rupee-check/payment handling. The selected-item string follows the
 reward as before. Cancel/shortfall and success-only saved Bools/control flow stay unchanged.
-Native prices remain40/100 by default. Wallet predicates read the existing shops.toml tiers
+Native prices remain 40/100 by default. Wallet predicates read the existing shops.toml tiers
 (200/500/1000); the original stun/age/puzzle rule stays conjunctive. Spoiler/opening-note prices
 come from the same effective fees. All three fields serialize through CS1 and have explicit CLI overrides.
 Event289 quotes the supplied `SellerMessageId`. All four distinct seller labels used by the seven
 grant/tier calls have a group2/type12 run-time tag on `SimpleShop_Price` in `Enemy_Event.msbt`
-(all16 language archives checked). No literal rupee amount or archive edit is needed for those price quotes; native
+(all 16 language archives checked). No literal rupee amount or archive edit is needed for those price quotes; native
 flavour still names the vanilla item, as with the existing reward swaps.
 
 Provisional implementation choices by cs8c (2026-11-09): deterministic first-N indices rather
-than a second random shelf-selection algorithm; fixed-price default10; scope restricted to supported
+than a second random shelf-selection algorithm; fixed-price default 10; scope restricted to supported
 shuffled families. Questions and exercised full-output/price boundaries: `plans/rounds/r8-shops.md`.
 ## 35. Round 8: gift checks, native identities and success-only merchant sales (cs8d)
 
@@ -2362,9 +2362,9 @@ No agent game run. New/corrected families remain held vanilla until Kareem's res
 
 ### Cows: placements are not independent checks
 
-Fourteen Hashes are eight physical cows, counting age/Alternative copies: DMT1, field grotto1,
-ranch2, Impa's1, Link's1, GV1, GF1. No placement has Dynamic parameters selecting a milk
-event or flag. Shared `Animal_Cow` GiveMilk/PushToBottleMilk fills an empty bottle with bottle10;
+Fourteen Hashes are eight physical cows, counting age/Alternative copies: DMT 1, field grotto 1,
+ranch 2, Impa's 1, Link's 1, GV 1, GF 1. No placement has Dynamic parameters selecting a milk
+event or flag. Shared `Animal_Cow` GiveMilk/PushToBottleMilk fills an empty bottle with bottle 10;
 `Cow_IsGetMilkFromCow` and shared talk history are not per-cow completion. Actor variants use
 fixed schedules/replacement events. The active flow query inventory has no demonstrated instance
 identity predicate. A new Bool alone would make one global milk reward, not cowsanity.
@@ -2372,35 +2372,35 @@ Reviewer narrowed this item to research: no cow patch this round; **D11 stands**
 
 ### Skulltula House
 
-GatheringTokenGold gives10/Event398 Wallet_Medium,20/Event75 AgonyStone,30/Event194 Wallet_Large,
-40/Event200 **BombchuBundle_Large =20**,50/Event219 Heart_Piece,100/Event215 first Gold Rupee.
-Native10–50 saved GetReward Bools gate their checks;100 uses the quest's completion. Event471
-is the father's native repeat200 rupees and remains untouched. The corrected40 pool item stays
+GatheringTokenGold gives 10/Event398 Wallet_Medium, 20/Event75 AgonyStone, 30/Event194 Wallet_Large,
+40/Event200 **BombchuBundle_Large = 20**, 50/Event219 Heart_Piece, 100/Event215 first Gold Rupee.
+Native 10–50 saved GetReward Bools gate their checks; 100 uses the quest's completion. Event471
+is the father's native repeat 200 rupees and remains untouched. The corrected 40 pool item stays
 held pending acceptance; no new flag or token-count/quest change is needed.
 
-The Gift seed step composes assigned10–50 item previews into `Npc_SkullDad` Talk_28/Talk_23–26,
-using native English item names, existing wrapping/highlighting and all16 language archives (D26).
-Existing Gossip Stone text survives composition. First100 has no added preview/repeat slot.
+The Gift seed step composes assigned 10–50 item previews into `Npc_SkullDad` Talk_28/Talk_23–26,
+using native English item names, existing wrapping/highlighting and all 16 language archives (D26).
+Existing Gossip Stone text survives composition. First 100 has no added preview/repeat slot.
 
 ### Frogs
 
-Five stable TeachNewMusic callers: Event172 Lullaby,220 Epona,221 Saria,222 Sun,223 Time.
+Five stable TeachNewMusic callers: Event172 Lullaby, 220 Epona, 221 Saria, 222 Sun, 223 Time.
 Each passes its own saved completion Bool. The native escalating rupees are **5/10/15/20/30 by
-prior song count**, not50 each and not a literal pouch actor. Census rows therefore have empty
+prior song count**, not 50 each and not a literal pouch actor. Census rows therefore have empty
 item/parameter fields; no arbitrary pool item is assigned to this order-dependent native reward.
 
-Storms' heart is **Event384** (previously mislinked as the bug game), saving StormSong at112.
+Storms' heart is **Event384** (previously mislinked as the bug game), saving StormSong at 112.
 The bug game's first heart uses **Event161 or Event75** for initial/retry wins; InsectRepellent
 is set after success. Native repeat Event162/Event76 Blue Rupees and failed rounds stay native.
 SongClear means all six songs, not winning the bug game. All seven completion Bools already
-exist, defaultfalse/reset8/save0; no new GameDataList flag is needed.
+exist, default false/reset8/save0; no new GameDataList flag is needed.
 
 For changed ordinary songs, clone only the reachable TeachNewMusic graph for that caller.
 Replace the rupee-UI subtree with the ordinary gift wrapper; preserve flag, first-song count,
 growth and native repeat routing. Remap graph edges and subcall indices, retain original entries
 and all untouched callers; refuse entry-local actor bindings rather than guessing. Corrected
 heart identities and all five song prizes stay vanilla until gameplay acceptance; the fixed
-song-pool item policy is a question for Kareem/co-owner, not an inferred five50-rupee pool.
+song-pool item policy is a question for Kareem/co-owner, not an inferred five 50-rupee pool.
 
 ### Three merchants: flag only the successful grant
 
@@ -2420,11 +2420,11 @@ private SimpleShop entries; original events/entries, beans and other consumers a
 Flags are set inside successful grants, never after an outer call that also returns on refusal.
 Choice, funds, capacity and fees remain native. Medigoron's own two sword-ownership reads become
 check reads; his private generic grant does not consume a broken knife. Granny uses the ordinary
-gift wrapper plus the original100-rupee charge on its success edge, without filling a bottle.
+gift wrapper plus the original 100-rupee charge on its success edge, without filling a bottle.
 Revisits bypass the transaction; cancellation/poverty/full capacity do not consume the check.
 
 Data-sourced rules retain existing adult/trade/room/approach predicates; Granny adds her bottle
-requirement and carpet drops the unsupported upgraded-wallet/Bombchu prerequisites (price90).
+requirement and carpet drops the unsupported upgraded-wallet/Bombchu prerequisites (price 90).
 Every merchant stays held vanilla pending Kareem. Graph/state, serialization, allocation and
 saved-Bool proofs do not establish engine presentation, actual grants/use or Save/Continue.
 
@@ -2435,24 +2435,24 @@ Claude approved keeping `HC Malon Egg` and `HC Zeldas Letter` vanilla. The exist
 actor is admitted to `chest_verified`. Native Malon, Egg hatch, Chicken/Talon and Zelda
 grants remain unchanged. The shared child-trade cell is not treated as independently
 retained items without an accepted ownership/cycling contract. Detailed native evidence
-and pinned OoTR526b4c8d rules/runtime patch citations are in the round file.
+and pinned OoTR 526b4c8d rules/runtime patch citations are in the round file.
 
 ## 36. Round 8: freestanding native pick-ups (cs8e)
 
 Build `e0f3ccfa`, dump/save backups read-only. Complete 36-anchor ledger, native actor-pack survey,
 diagnostics, commands and acceptance checklist: `plans/rounds/r8-freestanding.md`.
 Reproducers and decoded evidence stay under `E:/OOTRemake/work/r8-freestanding-cs8e/`.
-Sections32–35 belong ahead of36 when their tracks merge; no placeholder sections are invented.
+Sections 32–35 belong ahead of 36 when their tracks merge; no placeholder sections are invented.
 
 ### What an anchor represents
 
 The **36 unique HeartPieceAnchors / 55 placement copies** represent **14 placed heart pieces,
-six ordinary chests and16 named completion flags**, not36 floor pickups. The old section5
-count of21 named paths is superseded. Every direct reward link resolves to a permanent
-type24/save0 Bool64bitKey; all16 named completion Bools are false/reset8/save0. LLR's extra
+six ordinary chests and 16 named completion flags**, not 36 floor pickups. The old section 5
+count of 21 named paths is superseded. Every direct reward link resolves to a permanent
+type24/save0 Bool64bitKey; all 16 named completion Bools are false/reset8/save0. LLR's extra
 reference is its LocationArea, not a second check. Anchors and their links stay unchanged.
 
-The14 placed pickups are13 `Obj_Heart_Piece` plus GV's `Obj_GerudoValley_Heart_Piece`.
+The 14 placed pickups are 13 `Obj_Heart_Piece` plus GV's `Obj_GerudoValley_Heart_Piece`.
 All are ungrouped, saved by their pickup Hash, inheriting NoRespawn and ActorLogicSimpleActor.
 Existing heart-piece AI calls `OneShotHeartPieceTakenDeadAfter`; replacement native shield/rupee/
 container actors use DropItem instead. D27's actual King Dodongo persistence result is the
@@ -2460,17 +2460,17 @@ precedent, not proof that every replacement at every floor/water location persis
 
 Census links now identify DMC volcano **744856631664786545**, wall **10331043360028932045**,
 and GV waterfall **16129198288828948135**. Existing OoTR/remake access rules are retained,
-not swapped by file order. The other11 pieces were already linked. All14 now have player
+not swapped by file order. The other 11 pieces were already linked. All 14 now have player
 directions in the existing location-name catalog; no physical position or check Hash changes.
 
 ### Default-off Freestanding
 
-Scope confirmed by Claude, 2026-11-09: **only the14 anchored heart-piece checks this round**.
+Scope confirmed by Claude, 2026-11-09: **only the 14 anchored heart-piece checks this round**.
 `--shuffle Chest Freestanding` joins them to the pool. Census-linked Collectable hearts become
 Freestanding on a copied spec; original unlinked N64 Freestanding rows remain vanilla.
 Digging/event hearts, keys, chests, gifts and existing exclusions keep their own types/rules.
 Native grants reuse D27's single palette: Heart Container, Piece of Heart, Deku Shield, Hylian
-Shield,20-rupee Red Rupee (`Obj_`, not the chest's `TBox_` actor). All other actual-pool items
+Shield, 20-rupee Red Rupee (`Obj_`, not the chest's `TBox_` actor). All other actual-pool items
 intersect prior type restrictions to stay away from floor destinations; BossHeart restrictions
 compose. The CS1 string retains the option and its effective restrictions; default stays Chest.
 
@@ -2481,10 +2481,10 @@ An unmoved Piece of Heart retains its native GV variant rather than rewriting it
 
 ### Other pickups: audited, not enabled
 
-All7,239 non-DreamWorld placed actor types' packs resolve. Ordinary rupees (81 green,25 blue,
-four red,two purple),25 recovery/water hearts and three loose nut/seed/stick actors have
+All 7,239 non-DreamWorld placed actor types' packs resolve. Ordinary rupees (81 green, 25 blue,
+four red, two purple), 25 recovery/water hearts and three loose nut/seed/stick actors have
 type24/save0 flags and native DropItem/NoRespawn metadata, but lack exact physical remake-to-logic
-links; those are later work. Silver rupees85 retain puzzle-specific AI. The two Well/Shadow keys
+links; those are later work. Silver rupees 85 retain puzzle-specific AI. The two Well/Shadow keys
 and eight Fortress key actors have **no saved actor Hash** and effective **AlwaysRespawn**,
 despite their inherited NoRespawn base: level/key-specific logic owns their lifetime.
 Fire Arrows retain the known crash exclusion. Story ocarina/letter, lures, renewable bottle
@@ -2497,24 +2497,24 @@ logic or replacement scene/callback was invented for any excluded family.
 
 `ingame/Test - llr-tower-hylian-next.bat` copies the approved pre-pickup ranch backup into
 its own user when Kareem runs it; bin game executable only, updates disabled, missing-exe stop.
-Only LLR tower pickup9814903750835309225 becomes Obj_Shield_Hylian. All six source saves
+Only LLR tower pickup 9814903750835309225 becomes Obj_Shield_Hylian. All six source saves
 are child, pickup unset, Hylian Shield absent; source checksums unchanged. The agent never
 started the game, launcher or a window and never copied/wrote a player save.
 
-HyruleField Child Static **395636 ->395656** decompressed bytes, **134949 ->132472** compressed;
-allocation **395912 ->395944**, with the common size table emitted. Inverse tree diff and
-allocation/readback checks pass. The14-check /26-copy whole-dump transform oracle and synthetic
+HyruleField Child Static **395636 -> 395656** decompressed bytes, **134949 -> 132472** compressed;
+allocation **395912 -> 395944**, with the common size table emitted. Inverse tree diff and
+allocation/readback checks pass. The 14-check / 26-copy whole-dump transform oracle and synthetic
 palette/eligibility/restriction/CS1/BossHeart composition checks pass; full gate evidence follows
 in the round file. **Kareem:** tower rear recess must show/grant the Hylian Shield, no heart
 progress; uncollected recovery, then collect/Save/quit/Continue/re-enter with no respawn.
 Require the Child Static overlay-open log and isolated save checker's collected Hash.
 Underwater collection and other unplayed palette/location combinations remain inferred.
 
-Seed7 Chest+Freestanding currently exposes Track A's fill robustness issue (ten attempts,
-last Boomerang43 allowed/57 remaining). Exact first-attempt Fire-key frontier/placements and
+Seed 7 Chest+Freestanding currently exposes Track A's fill robustness issue (ten attempts,
+last Boomerang 43 allowed/57 remaining). Exact first-attempt Fire-key frontier/placements and
 repro are recorded in the round file and posted to `cs-r8`; no retry/rule/fill change here.
 Claude permits independent successful-seed smoke plus the synthetic proof while Track A fixes
-that failure; no seed7 success or gameplay certification is claimed.
+that failure; no seed 7 success or gameplay certification is claimed.
 
 ## 37. Round 9: item-bar assignment and age-locked pickups (cs9a)
 
@@ -2522,13 +2522,13 @@ Read-only dump/build e0f3ccfa and bow-lock backup; full button-family age table,
 provenance, limits and reproducible probes: `plans/rounds/r9-itembar.md`,
 `E:/OOTRemake/work/r9-itembar-cs9a/`. No agent game run or save edit.
 
-Kareem's seed8 Bow joined child Link's greyed ZR bar and jammed item use. Zone transitions did
+Kareem's seed 8 Bow joined child Link's greyed ZR bar and jammed item use. Zone transitions did
 not help; Save and Continue removed Bow from the bar and restored use. The backup confirms
-childhood, acquired `Weapon_Range_Bow`/stock1 in all six saves; four retain Bow in saved enum
-0xa0029837. Two other assignable enums are saved; fourth candidate0x76f85e6d is save-1, so its
+childhood, acquired `Weapon_Range_Bow`/stock 1 in all six saves; four retain Bow in saved enum
+0xa0029837. Two other assignable enums are saved; fourth candidate 0x76f85e6d is save-1, so its
 absence from progress.sav is expected. Separate live selection is not represented by ownership alone.
 
-Kareem also reproduced seed8's lock in **Lichii**: Bow obtained before Boomerang, item use
+Kareem also reproduced seed 8's lock in **Lichii**: Bow obtained before Boomerang, item use
 locked, Save and Continue cleared it (`answers.md`, R9-LICHII; reviewer relay).
 This establishes game behaviour, not a Hookshot-specific defect. No gameplay/fill change follows.
 
@@ -2545,21 +2545,21 @@ Native get code separately calls its selected-item setter (0x01110158..0x0111019
 0x01211c00). Native inventory readers consult the table's age fields. **[INFERENCE]** Get-time
 selection misses an age-filtered rebuild that Save/Continue performs; the precise boot caller
 and live use-cancellation predicate are unproved. Display/model changes do not repair inventory.
-The shipped equipment-sync action calls wearable reapplication (0x02951f50 ->0x00f201b0),
+The shipped equipment-sync action calls wearable reapplication (0x02951f50 -> 0x00f201b0),
 not a demonstrated item-bar refresh. No safe data-only fix is established and none is enabled.
 
 Facts-only lead: [sloperina docs/FINDINGS.md](https://github.com/PracticeROM/sloperina/blob/master/docs/FINDINGS.md),
-sections1/2/5.6 (enum hashes, PouchTable, separate wheel state); independently checked against
+sections 1/2/5.6 (enum hashes, PouchTable, separate wheel state); independently checked against
 the player's data. No GPL code/file copied. Adult Slingshot/Boomerang recovery remains
 Kareem's reverse-direction check; only the child Bow failure/recovery is game-confirmed.
 
-Round9 takes the specified fallback: `data/itembar.toml` sources warning ages from the native
+Round 9 takes the specified fallback: `data/itembar.toml` sources warning ages from the native
 table; `generate.itembar` replays complete chronological sphere prefixes through Search,
 including fixed finds and the isolated child pre-return view. The spoiler/note list opposite-age
 first-frontier pickups, including ties; optional later wrong-age pickups remain possible.
 The note says Save and Continue, not just move between zones. No item permission/placement is
-changed. Actual seed8 CLI replay:287 placements and all129 RomFS resources byte-identical to
-the played seed, with10 warning rows (including Mido middle-left Bow, child-first, sphere1).
+changed. Actual seed 8 CLI replay: 287 placements and all 129 RomFS resources byte-identical to
+the played seed, with 10 warning rows (including Mido middle-left Bow, child-first, sphere 1).
 The precise get-text and strict physical matching-age fill alternatives/costs are proposals
 only in the round file, awaiting Kareem/co-owner.
 
@@ -2580,7 +2580,7 @@ Request `Market_Adult_Field_GetLightPrelude` maps to that entry in **AllSage**. 
 Event169/170 -> Event73 -> Event39 -> Event37 transitions to **Dm_MelodyGet_Shine**,
 whose Event53 grants **Item_Melody_LightPrelude** and Event46 sets the completion Bool,
 removing Sheik and the trigger. AllSage Event34 rolls its quest to Step01_01 afterwards.
-The Forest blue-warp chain separately sets Forest Complete in Event199 (section16).
+The Forest blue-warp chain separately sets Forest Complete in Event199 (section 16).
 Shuffled medals would not change those native quest gates; no reward-policy change here.
 
 The adult-first backup's manual01/autosave04 are adult/ForestStep01, no medal or Prelude.
@@ -2589,7 +2589,7 @@ Prelude/completion(04/05), then Complete with medal/Prelude/completion(00). Thus
 ownership precedes the scene that actually deletes Sheik, corroborating Kareem's room-entry
 observation. The remaining adult-first slots are older child/Ready saves.
 
-The existing free-travel patch opens only the pedestal (section16), leaving that blocking
+The existing free-travel patch opens only the pedestal (section 16), leaving that blocking
 NPC alive. The isolated extension gates only this placed NPC's Presence on the same Forest
 completion expression: absent before Forest, present for the original scene afterwards;
 native deletion remains. Native Market uses BoolExp Presence on distant cloud actors already.
@@ -2598,8 +2598,8 @@ No global NPC removal, relocation, premature song, quest-completion or saved-def
 in the round file; runtime success is not established by these native-data observations.**
 
 `patch/age.py` now validates both groups before mutation and emits that Presence plus the
-original ungated pedestal binding. The native adult Banc is **30540 ->30664** bytes;
-allocation **30824 ->30952**. Independent inverse-tree and saved-gate checks pass; the
+original ungated pedestal binding. The native adult Banc is **30540 -> 30664** bytes;
+allocation **30824 -> 30952**. Independent inverse-tree and saved-gate checks pass; the
 two unrun isolated save-copy launchers and checklist are under the external `ingame/` folder.
 The sourced `remake/sheik.toml` corrects the translated Prelude medal rule to adult Forest
 completion (`Defeat Phantom Ganon`, the age-return abstraction), regardless of free travel.
@@ -2612,14 +2612,14 @@ The native NPC talk flow selects **Talk_01** and **Talk_03** before Hookshot own
 now replaces both through `patch/text`, independently of Gossip Stone mode and free travel.
 It names an actual Hookshot placement using the player-facing catalogue; with multiple copies,
 the lexicographically first readable location is deterministic. A slice without Hookshot uses
-a Clawshot-authored neutral line with no tool/location claim. English in all16 archives (D26),
+a Clawshot-authored neutral line with no tool/location claim. English in all 16 archives (D26),
 existing opening style, two-row/page wrapping and native highlight/reset helpers. All other
 NPC messages and the original talk flow remain unchanged; transforms compose with stone/House
 hints rather than overwriting their archives.
 
-Actual seed7 Chest+Gift/free-travel CLI: **212 shuffled checks,24 spheres,124 resources**.
-Readback found both lines in all16 archives name its real **Ganon's Castle Light Trial
-Triforce Tile Chest** Hookshot. All40 stone texts survive; Prelude's native completion
+Actual seed 7 Chest+Gift/free-travel CLI: **212 shuffled checks, 24 spheres, 124 resources**.
+Readback found both lines in all 16 archives name its real **Ganon's Castle Light Trial
+Triforce Tile Chest** Hookshot. All 40 stone texts survive; Prelude's native completion
 write is unchanged despite its normal shuffled gift. Synthetic boundaries and all-language
 inverse archive oracle pass. Full-gate evidence and remaining human acceptance are in the round file.
 
@@ -2650,30 +2650,30 @@ folders are never rebuilt in place. The agent does not run Play, a batch or the 
 
 The source is `Banc/BancBasedResource/MapParam.byml.zs`, not a height estimate or an N64 room label.
 For each dungeon, `Room[Dynamic.DefaultDungeonRoomIndex].Floor` contains signed logical floors:
-0 is1F,1 is2F,-1 isB1. The global `Floor` array starts at `MinFloor`; its `TBox.InstanceID` values
+0 is 1F, 1 is 2F, -1 is B1. The global `Floor` array starts at `MinFloor`; its `TBox.InstanceID` values
 identify each chest's exact floor. Prefer that exact Hash join when a room spans multiple floors.
 An icon-matched chest need not have an explicit room override (Forest Boss Key is one).
 
-`location_names.toml` now has `floor` metadata on **143 checks**:134 chests,8 native boss pickups,
-and the Ice Cavern Sheik lesson sharing the Iron Boots chest room. The complete catalogue has369
-descriptions.126 chest floors come from exact map icons;8 Ganon trial checks absent from those lists
+`location_names.toml` now has `floor` metadata on **143 checks**: 134 chests, 8 native boss pickups,
+and the Ice Cavern Sheik lesson sharing the Iron Boots chest room. The complete catalogue has 369
+descriptions. 126 chest floors come from exact map icons; 8 Ganon trial checks absent from those lists
 use their single-valued physical room floor. Boss pickups use `BossRoomId` and its room floor;
-Volvagia's native pickup lacks a Dynamic override, so no fake room0 default is introduced.
+Volvagia's native pickup lacks a Dynamic override, so no fake room 0 default is introduced.
 The reader exposes `floor`, renders it in the same name used by spoiler, play note and location hints,
 and retains world keys, physical identities, rules and exclusions. Three redundant hard-coded Deku
 name prefixes were removed so the structured floor is not displayed twice in a check's label.
 
-Fire Temple has16 chest icons and5 Skulltula/CollectSign icons, matching Kareem's guide-map count.
-Chest floors are1F five,2F one,3F six,4F none,5F four. The timed trio (both extra red-rupee chests
-included) and Hammer are5F; the cracked-floor shortcut cell is2F. Map texture filenames independently
-agree with the signed labels (Deku B2..3F, Well B2/B1, Jabu B1..2F, Fire1F..5F).
+Fire Temple has 16 chest icons and 5 Skulltula/CollectSign icons, matching Kareem's guide-map count.
+Chest floors are 1F five, 2F one, 3F six, 4F none, 5F four. The timed trio (both extra red-rupee chests
+included) and Hammer are 5F; the cracked-floor shortcut cell is 2F. Map texture filenames independently
+agree with the signed labels (Deku B2..3F, Well B2/B1, Jabu B1..2F, Fire 1F..5F).
 GTG and the castle interior retain stored floor metadata but lack a corresponding dungeon-floor
 texture set; their labels are not a claim of a newly observed pause-menu floor view.
 
 The native dump oracle checks every floor-bearing description against map icons/physical rooms,
-including basement offsets and tall-room distinctions. Actual seed8 CLI output has142 shuffled
+including basement offsets and tall-room distinctions. Actual seed 8 CLI output has 142 shuffled
 floor labels (the held Well check stays held), unchanged placements and chronological spheres,
-and the same131 output paths. Only spoiler/note,16 language hint archives and the common size table
+and the same 131 output paths. Only spoiler/note, 16 language hint archives and the common size table
 change. Proof/check commands and remaining player comparison are in `r9-seedpack.md`; no game was run.
 
 The earlier exact-r8-full pack proof is branch-local. Each future pack computes a fresh digest from
@@ -2689,17 +2689,17 @@ External decoded data and outputs stay under `E:/OOTRemake/work/r10-gifts-cs10a/
 ### Released frogs
 
 Kareem confirmed the complete seven-check experiment (`answers.md` R8-FROGS, 2026-11-09).
-Round10 removes the holds and fixes each of the five song pool contributions at OoTR's
+Round 10 removes the holds and fixes each of the five song pool contributions at OoTR's
 `Rupees (20)`, per the round spec. Their census actor fields stay empty: native rewards
-still vary5/10/15/20/30 by prior song count. Shuffled callers always use their specialized
-grant, even when assigned20 again; unshuffled behavior stays native. Storms and bug-game
+still vary 5/10/15/20/30 by prior song count. Shuffled callers always use their specialized
+grant, even when assigned 20 again; unshuffled behavior stays native. Storms and bug-game
 first/retry wins retain their two independent heart checks and native saved completion.
-No new flag, growth change or repeat reward change. Actual Chest+Gift seed7 builds all
-seven into218 shuffled checks/28 spheres; focused persisted-state and pool tests pass.
+No new flag, growth change or repeat reward change. Actual Chest+Gift seed 7 builds all
+seven into 218 shuffled checks/28 spheres; focused persisted-state and pool tests pass.
 
 ### Market Potion Shop bottle tutorial
 
-The actual child merchant is020, not the tentative046 in R9-SEED8-MARKET. Existing census
+The actual child merchant is 020, not the tentative 046 in R9-SEED8-MARKET. Existing census
 `Npc_Hylia_020_Shop_Child/Event171` now groups as remake-only `Market Potion Shop Bottle`.
 Fixed logic adds its free empty Bottle as child at the existing daytime Potion Shop region.
 The default AISchedule selects the offer without an item, fee or quest gate. Acceptance grants
@@ -2714,26 +2714,26 @@ tests the isolated backup-copy launcher/checklist in the round file. No save-lay
 
 ### Deterministic bowling and gallery tiers
 
-Gift/NPC shuffle dispatches native bowling First Prize on win1, Second Prize on win2,
+Gift/NPC shuffle dispatches native bowling First Prize on win 1, Second Prize on win 2,
 then the existing red-rupee filler. Native opening (Dodongo quest), rental, fee, failures,
 count and difficulty remain. The second grant also writes the native third/heart-marker
 completion Bool. No extra shuffled/fixed Bombchu payout or phantom Bomb item in this mode.
 Unshuffled routing remains native.
 
 The two ownership-dependent grants of each supported upgrade now normalize to fixed native
-medium tiers: Bomb Bag30, Bullet Bag40, Quiver40 (`PouchActorInfo.AfterExpansionMaxNum`).
-Bomb Bag30 supplies the bag ability; bullet bags and quivers do not supply rental weapon
+medium tiers: Bomb Bag 30, Bullet Bag 40, Quiver 40 (`PouchActorInfo.AfterExpansionMaxNum`).
+Bomb Bag 30 supplies the bag ability; bullet bags and quivers do not supply rental weapon
 ownership. Their native normal-win saved flags remain; both normal galleries join Gift.
 
-Native expert modes repeat30/70 rupees (`Event202`/`Event599`) after the normal reward,
+Native expert modes repeat 30/70 rupees (`Event202`/`Event599`) after the normal reward,
 without first-win state or a literal item actor. Kareem selected fixed Rupees (20) for each
 first-expert pool item (2026-11-09, via Claude). Census records these variable native calls
 honestly; two remake-only checks use the normal-clear prerequisite and one D22 saved Bool each:
-`Clawshot.Gift.MiniGame_HitTarget.Event202` (Hash1800298829) and `.Event599` (Hash2333016720),
-defaultfalse/reset8/save0. Only Event445/449's expert branch gets the new query; false grants
+`Clawshot.Gift.MiniGame_HitTarget.Event202` (Hash 1800298829) and `.Event599` (Hash 2333016720),
+default false/reset8/save0. Only Event445/449's expert branch gets the new query; false grants
 the assignment through `GetInEvent_NotTurn_NotNpc`, then saves completion and rejoins native
 post-reward talk without opening the rupee UI. True uses the original expert talk/UI/call/close
-path, unchanged30/70. Normal wins/failures do not consume expert state; same20 assignments
+path, unchanged 30/70. Normal wins/failures do not consume expert state; same 20 assignments
 still specialize. Both checks remain D15-held pending Kareem's isolated test. No existing
 output was rebuilt; new `gallery-expert-next`, two users/launchers and `expert-check.md`.
 
@@ -2744,7 +2744,7 @@ Active `.110` Event628, already in the raw census, is the real pouch grant throu
 Linked it to the existing digging check and moved its unchanged child/night/Time Flows rule
 into gift overrides, typed NPC, held under D15 pending the isolated test.
 The saved native completion Bool is `GraveYard_DiggingHoleTour_Drop_HeartPiece`
-(Hash3037888117,false/reset8/save0). Main routes read it, but the shortcut can structurally
+(Hash 3037888117, false/reset8/save0). Main routes read it, but the shortcut can structurally
 reenter the grant. A completion query now guards only the reward branch at Event449's fork,
 and Event628 writes completion immediately after its grant. The parallel native cleanup
 still runs on both paths. No new saved flag, floor-major actor, lottery or fee change.
@@ -2754,7 +2754,7 @@ Actual writer/inverse/serialized once-and-cleanup proofs and player checklist ar
 
 The old bypass gave Boomerang but omitted native post-catch Insect_Delete and
 Shop_Bottle_Insect_Appeared, plus Wait/schedule-select/arrival-reset actions. The copied
-save has Present/Started/Cleared true and Boomerang stock1, but both missing flags false;
+save has Present/Started/Cleared true and Boomerang stock 1, but both missing flags false;
 this matches the observed remaining bug/frightened merchant. The corrected path reproduces
 all five native final-state flags and those three native actions before quest completion,
 without bottle removal/refill. Exact FATAL native callee is not established.
@@ -2788,17 +2788,17 @@ original prize. Save and Continue between wins was not reported. Experts remain 
 ## 41. Round 10: age travel and Door of Time (cs10b)
 
 Build `e0f3ccfa`; native read-only probes and exact evidence: `plans/rounds/r10-agetravel.md`,
-`E:/OOTRemake/work/r10-agetravel-cs10b/`. Kareem confirmed round9's pre-Forest return and
+`E:/OOTRemake/work/r10-agetravel-cs10b/`. Kareem confirmed round 9's pre-Forest return and
 post-Forest Prelude, but reported a missing Sheik in the first adult arrival (answers R9-FIRST-PULL).
 
 First arrival runs `Dm_TimeTemple_0050` **then** `Dm_TimeTemple_0055` (AllSage Event9/Event0).
 Both need placed Temple Sheik. Free travel now uses a non-saved BoolExp for his Presence:
-**not HavePlayedEvent.Dm_TimeTemple_0055 or SageOfForest_IsCompleted_Exp**. Waiting for0055
-preserves dialogue after0050's timeline; native Prelude completion still deletes him afterwards.
+**not HavePlayedEvent.Dm_TimeTemple_0055 or SageOfForest_IsCompleted_Exp**. Waiting for 0055
+preserves dialogue after 0050's timeline; native Prelude completion still deletes him afterwards.
 The new expression is reset0/save-1; no saved layout/default or native expression changes.
-Native postfix0=Bool,10=BoolExp,5=NOT,4=OR; Mido/door predicates supply precedents.
+Native postfix 0=Bool, 10=BoolExp, 5=NOT, 4=OR; Mido/door predicates supply precedents.
 
-The timeline has no item/quest/GameData writes. Dialogue0055's Ready/Event252 sets
+The timeline has no item/quest/GameData writes. Dialogue 0055's Ready/Event252 sets
 `HrlField_HasEnteredFirstTime_Adult`; Event137 increments Notes NPC-talk count. AllSage's
 following chain sets the first-adult/Navi shield-history flags and SageOfLight Complete,
 AllSage Step01 and Forest Step01. The broken-scene user's adult saves retain both event
@@ -2821,14 +2821,14 @@ and Step06 progression remain. Either child ocarina can play; no stone quest is 
 Open changes the exact native `Logic/Market_Common_f252.logic.module.ainb` threshold literal
 Step06 to Ready, with NUL padding and unchanged bytes/offsets/length elsewhere. Native
 is-after/is-equal outputs then open the gate without advancing a quest. Independent external
-AINB decoding shows exactly one changed field (node8's ChallengeStepName); no GPL implementation
+AINB decoding shows exactly one changed field (node 8's ChallengeStepName); no GPL implementation
 is copied. The common module also displays the altar stones when open; these are visual actors,
 not inventory grants. The child pedestal reuses the existing ungated attention module and
 first-pull request; native Draw still selects first-arrival or repeat travel from scene history.
 All native scenes, stone grants/quests, adult return and Prelude stay separate.
 
 The earlier door exposes an existing logic mismatch: translated `can_play` allowed Fairy
-Ocarina as adult. **Source is the item-bar/PouchTable age metadata audited in section37,
+Ocarina as adult. **Source is the item-bar/PouchTable age metadata audited in section 37,
 NOT an in-game Fairy-as-adult test.** Fairy is child-only there; Time is both-age.
 Sourced helper overrides apply in EVERY door mode, requiring Ocarina2 for adult song use.
 The return kit's data-defined mandatory inventory/staged families follow each door mode:
@@ -2852,13 +2852,13 @@ never borrow or fall back to older content. Upstream TOC/bounds checks precede t
 every resource read verifies its actual SHA256 against its NUP record. No filename or display
 version is trusted as the supported-build oracle. Folder and NUP fingerprints must agree.
 
-Kareem's read-only NUP is25,020,741,061 bytes, one standalone update131072 with186,592 file
-records and601 directories. Its fingerprint is the existing supported signature
+Kareem's read-only NUP is 25,020,741,061 bytes, one standalone update 131072 with 186,592 file
+records and 601 directories. Its fingerprint is the existing supported signature
 `fc09c4af707a0ca092188cf014f6fdf3d40514def773f097b798f52f9f28bc93`.
-The initial1,239 selected generator inputs /25,821,037 bytes compare byte-identical with his
+The initial 1,239 selected generator inputs / 25,821,037 bytes compare byte-identical with his
 extracted RomFS. The later data-defined cache also includes Track B's Door of Time input
 `Logic/Market_Common_f252.logic.module.ainb`; all its other named inputs are already covered.
-The working set excludes ExeFS/models/textures/audio, not a full25GB extraction.
+The working set excludes ExeFS/models/textures/audio, not a full 25GB extraction.
 
 NUP Make bootstraps frozen uv/Python/zstd for input preflight, then saves configuration and
 creates a unique pack-local `.romfs-*` cache only after version success. Folder preflight remains
@@ -2886,23 +2886,23 @@ Read-only native dump/build `e0f3ccfa`; full per-area counts, evidence, commands
 acceptance boundary: `plans/rounds/r10-pots.md`. Reproducers and decoded/native resources
 stay under `E:/OOTRemake/work/r10-pots-cs10d/`, never in this repository.
 
-The non-DreamWorld census finds530 ordinary pot Hashes,50 breakable-crate Hashes and112
-ordinary ground rupees (81green,25blue,4red,2purple;170 age copies). These are placement
-identities, not530/50 once-only logical checks. Pots/crates at the same physical site
-usually have distinct child/adult Hashes. The `_Dream` pot variant also appears12 times
+The non-DreamWorld census finds 530 ordinary pot Hashes, 50 breakable-crate Hashes and 112
+ordinary ground rupees (81 green, 25 blue, 4 red, 2 purple; 170 age copies). These are placement
+identities, not 530/50 once-only logical checks. Pots/crates at the same physical site
+usually have distinct child/adult Hashes. The `_Dream` pot variant also appears 12 times
 in the ordinary Ganondorf room, outside the excluded DreamWorld directory.
 
 Ordinary pots inherit the resource-supply DropParam. `Dynamic.Drop__DropActor` and
 `Drop__DropTable` are native instance String128 selectors; `Drop__DropTableOverWrite`
-is not instance-settable. Pot selectors:101 actor-only,250 table-only,2 both,177 neither.
+is not instance-settable. Pot selectors: 101 actor-only, 250 table-only, 2 both, 177 neither.
 The default and before-boss tables choose resources conditionally/probabilistically;
 some explicitly spawn multiple objects. They are not one fixed N64 vanilla pool item.
-The50 crates are38 `Obj_BrokenBox_A_01`,6 `_03`,1 `_02`,5 `_06`; the last two variants
+The 50 crates are 38 `Obj_BrokenBox_A_01`, 6 `_03`, 1 `_02`, 5 `_06`; the last two variants
 have no ordinary DropRef. Puzzle/movable crates, flying/archery/spinning/skull pots,
 scenery, silver puzzles, diving rupees, shop displays and event representations stay out.
 
-All499 flagged pots and44 flagged crates use reset88/save0, not permanent reset24.
-Thirty-one pots and6 crates lack a Bool64bitKey under their placement Hash. The112
+All 499 flagged pots and 44 flagged crates use reset88/save0, not permanent reset24.
+Thirty-one pots and 6 crates lack a Bool64bitKey under their placement Hash. The 112
 ordinary ground rupees are reset24/save0, native DropItem/NoRespawn. Three Deku Tree
 rupees nevertheless have scrub-completion Presence gates; two lake rupees have native
 AI bindings. A saved Hash is not a certificate of an ungated region or a generic grant.
@@ -2911,25 +2911,25 @@ The inspected pot/common-breakable AI requests object death, while DropItem hand
 pickup physics/rotation. No explicit collected-spawned-drop identity channel was found
 there; the engine death/drop component has not been reverse-engineered. **[INFERENCE]**
 Retiring the pot on destruction can lose an uncollected shuffled item; renewing a supply
-pot can duplicate an upgrade. Changing reset88 to24 would not solve collection tracking.
+pot can duplicate an upgrade. Changing reset88 to 24 would not solve collection tracking.
 
 The conservative candidate destination palette is the existing D27/D33 five native
-pickups: Heart Container, Piece of Heart, Deku Shield, Hylian Shield and red20-rupee pickup.
+pickups: Heart Container, Piece of Heart, Deku Shield, Hylian Shield and red 20-rupee pickup.
 Existing floor/boss observations do not certify these as pot drops or every floor surface.
 Piece-of-Heart-specific pickup AI makes its generated-drop persistence an explicit test.
 Inventory-only major actors and the known-crashing Fire Arrows are not inferred safe.
 
-**Reviewed scope (Claude, Round10): no Pot or Rupee seed switch this round.** Four isolated
+**Reviewed scope (Claude, Round 10): no Pot or Rupee seed switch this round.** Four isolated
 experiments under `work/r10-pots-cs10d/ingame/`, each a new `-next` overlay with copied
 approved save launcher and a separate user:
 
-- Reset88 supply pot15406610986108637956 in the child House of Twins -> Piece of Heart.
-- No-placement-Hash-save Forest2F Bow-room pot18069611988256927347 -> Piece of Heart.
+- Reset88 supply pot 15406610986108637956 in the child House of Twins -> Piece of Heart.
+- No-placement-Hash-save Forest 2F Bow-room pot 18069611988256927347 -> Piece of Heart.
   Its intact native room graph requires empty arrows, the ordinary partner pot dead,
-  no arrow bundle nearby, camera/player clearance and1200-frame delay. It also has an
+  no arrow bundle nearby, camera/player clearance and 1200-frame delay. It also has an
   AutogenGameData destruction latch: absent placement Hash does **not** mean no native state.
-- Child-only Kokiri training-enclosure blue rupee16647730239269178270 -> Piece of Heart.
-- East Hyrule Field bomb-grotto blue rupee5620885265123329978 -> Hylian Shield, both ages.
+- Child-only Kokiri training-enclosure blue rupee 16647730239269178270 -> Piece of Heart.
+- East Hyrule Field bomb-grotto blue rupee 5620885265123329978 -> Hylian Shield, both ages.
 
 `ingame/checklist.md` specifies source save/slot, directions, required overlay logs,
 actual inventory/counter checks, area return and Save/Continue. Both pot experiments
@@ -2944,8 +2944,8 @@ resource-entry deltas. Source-backup SHA256 maps remain unchanged. This is data 
 not a gameplay result. **Kareem: run the four experiments and separate pot recovery paths;
 report the grant, repeat/change/loss after returns and Save/Continue, with overlay logs.**
 
-MIT OoT Randomizer526b4c8d has341 non-MQ Pot,74 Crate,6 SmallCrate and155 Freestanding
-rows (not155 rupees). Counts, ages, geometry and vanilla rewards differ materially.
+MIT OoT Randomizer 526b4c8d has 341 non-MQ Pot, 74 Crate, 6 SmallCrate and 155 Freestanding
+rows (not 155 rupees). Counts, ages, geometry and vanilla rewards differ materially.
 Future checks use **remake names and the actual region's access rule**, like `extra_*`
 chests; record an N64 name only for an exact mapping. No ordinal/nearest-position join,
 unverified rule, new saved flag or shuffle setting is introduced by this exploration.
@@ -2956,11 +2956,11 @@ Build `e0f3ccfa`; evidence and exact native addresses: `plans/rounds/r11-keys.md
 Read-only reproducers, decoded graphs, save audit and native disassembly stay under
 `E:/OOTRemake/work/r11-keys-cs11b/`, never in this repository.
 
-`GameDataList`'s `DungeonInfo` Struct selects14 dungeon Structs; `DungeonParam.TargetGameData`
+`GameDataList`'s `DungeonInfo` Struct selects 14 dungeon Structs; `DungeonParam.TargetGameData`
 matches the selecting child keys. Each has saved reset8/file0 leaves:
 `SmallKeyNum` (remaining Int), `SmallKeyTotalNum` (acquired-total Int),
 `IsGetSmallKeyOnce`, `IsGetBossKey`, `IsGetMap`, `IsGetCompass` (Bools).
-All start0/false. These exist even for keyless dungeons; Kokiri's field rows have no
+All start 0/false. These exist even for keyless dungeons; Kokiri's field rows have no
 TargetGameData. Names and flattened save hashes were checked against the actual Struct links.
 
 The four generic item actors carry no dungeon name. Chest special-item actions
@@ -2980,7 +2980,7 @@ remains static evidence, not acceptance of those shuffled named items.
 
 ### Collection-state correction and historical test audit
 
-Section6's old blanket chest claim is superseded, not erased. Native `TreasureBox.module`
+Section 6's old blanket chest claim is superseded, not erased. Native `TreasureBox.module`
 reads/writes `IsTreasureBoxOpen`, indexed by `QueryGenericGetInstanceId.InstanceIDString`.
 The Struct child key is murmur3 of the **decimal actor Hash**, and its Value selects the saved
 Bool whose full name is `IsTreasureBoxOpen.<Hash>` (reset24/file0). The same unchanged Hash
@@ -2990,19 +2990,19 @@ still identifies the check; `Save.is_set(Hash)` is not its open-state accessor.
 |---|---|
 | Ordinary chests | Named `IsTreasureBoxOpen.<Hash>` Bool. Late Forest save has these true while the raw chest Hashes are false; the native graph confirms the reader/writer. |
 | Treasure Chest Game first prize | Its native flow also gates first clear on named `MiniGame_ChoiceTreasure_IsClear`; an unset raw prize Hash is not proof it is unclaimed. |
-| Ordinary placed ground rupees, recovery floor hearts, anchored floor Heart Pieces, boss hearts | Native saved placement-Hash Bool64 list, with NoRespawn/reset24/file0 contracts audited in rounds7–10 (`r7-drops`, `r8-freestanding`, `r10-pots`). Round2's actual saves show recovery hearts/rupees and Gohma's heart by raw Hash; the ranch backup still has Gohma's heart Hash set. Replacement callbacks and persistence remain per-experiment acceptance, not certified by table presence. Boss creation/story gates can coexist (Gohma's additional obtained Bool is documented in section27). |
-| Gold Skulltulas | Raw enemy Hash plus token-related Hash±2 in the observed round2 saves; special token collection callback still matters (sections22/27). |
-| Saved ordinary supply pots/crates | Raw reset88 destruction state, not permanent item collection; some respawn/scripted variants have no such entry. See section43. |
-| Scripted floor small keys, fortress keys, Ocarina/letter actors | Not covered by a universal raw-Hash rule; level/event-specific state (section36). Dungeon inventory itself uses the named DungeonInfo leaves above. |
+| Ordinary placed ground rupees, recovery floor hearts, anchored floor Heart Pieces, boss hearts | Native saved placement-Hash Bool64 list, with NoRespawn/reset24/file0 contracts audited in rounds 7–10 (`r7-drops`, `r8-freestanding`, `r10-pots`). Round 2's actual saves show recovery hearts/rupees and Gohma's heart by raw Hash; the ranch backup still has Gohma's heart Hash set. Replacement callbacks and persistence remain per-experiment acceptance, not certified by table presence. Boss creation/story gates can coexist (Gohma's additional obtained Bool is documented in section 27). |
+| Gold Skulltulas | Raw enemy Hash plus token-related Hash±2 in the observed round 2 saves; special token collection callback still matters (sections 22/27). |
+| Saved ordinary supply pots/crates | Raw reset88 destruction state, not permanent item collection; some respawn/scripted variants have no such entry. See section 43. |
+| Scripted floor small keys, fortress keys, Ocarina/letter actors | Not covered by a universal raw-Hash rule; level/event-specific state (section 36). Dungeon inventory itself uses the named DungeonInfo leaves above. |
 | Small-key locks | Named `IsChainLockDoorOpen` Struct indexed by the controller ID; separate from both inventory and a pickup's Hash. |
 
 Historical **unopened-chest save premises** found by auditing `plans/rounds/`:
 
 | Earlier record | Raw-Hash premise / corrected disposition |
 |---|---|
-| `r5-gifts.md:227–234`, `chest-song-storms-kak` | Ranch manual01 target12902291359202819102 reads raw=false **but named open=true**. Its raw-based selection was invalid. Section19's “In game” already records replacing that follow-up with new-game `chest-ocarina-storms` because the ranch chest was open. The fresh named read corroborates that history; no new game rerun is needed and no observed song success is retracted. No output/user was rewritten. |
-| `r7-gifts.md:87–109`, `treasure-red` | `build_treasure.py:16` asserts raw prize16881481538337649070 unset. The same original ranch manual01 now reads named open=false AND native first-clear=false; the named first-clear condition was already checked by that builder. Raw evidence is redundant, not its once-only proof. |
-| `r10-agetravel.md:165–168`, three controlled child door tests | `build_player_doors.py:19–22` selected a Graveyard chest using `not Save.is_set(Hash)`. Claude rechecked chosen9622128545943056087 in main-Jabu manual01: named open=false, Mido named-open true controls. **Accepted reviewer evidence; not rerun here.** Those tests stand. |
+| `r5-gifts.md:227–234`, `chest-song-storms-kak` | Ranch manual01 target 12902291359202819102 reads raw=false **but named open=true**. Its raw-based selection was invalid. Section 19's “In game” already records replacing that follow-up with new-game `chest-ocarina-storms` because the ranch chest was open. The fresh named read corroborates that history; no new game rerun is needed and no observed song success is retracted. No output/user was rewritten. |
+| `r7-gifts.md:87–109`, `treasure-red` | `build_treasure.py:16` asserts raw prize 16881481538337649070 unset. The same original ranch manual01 now reads named open=false AND native first-clear=false; the named first-clear condition was already checked by that builder. Raw evidence is redundant, not its once-only proof. |
+| `r10-agetravel.md:165–168`, three controlled child door tests | `build_player_doors.py:19–22` selected a Graveyard chest using `not Save.is_set(Hash)`. Claude rechecked chosen 9622128545943056087 in main-Jabu manual01: named open=false, Mido named-open true controls. **Accepted reviewer evidence; not rerun here.** Those tests stand. |
 
 `r2-census.md:466–470` had already explicitly warned that opened chests were absent from the raw
 list; the unresolved location is now explained by the named Struct. `r1-formats.md:164–166`
@@ -3020,14 +3020,14 @@ Counts below are remaining/acquired-total; first-key means `IsGetSmallKeyOnce`.
 
 | Case | Observed result / saved state | Evidence |
 |---|---|---|
-| Plain key, overworld small chest | Chest open; remaining/total/first-key unchanged in all14 dungeons: key lost. | Mido,12:35/12:36; R11-KEY-OVERWORLD |
-| Plain key, keyless dungeon big chest | Deku0/0/false→1/1/true; map false, all13 other dungeons unchanged. No indicator popup. | Deku map chest,13:10/13:11; R11-KEY-KEYLESS |
-| Plain key, keyed dungeon non-key big chest | Fire0/7→1/8; chest open; all13 other dungeons unchanged. Both map displays increment; persists after reload. | Hammer chest,14:16/14:17; R11-KEY-FIRE |
-| Named key, overworld small chest (child/adult) | Child Forest0/0/false→1/1/true; adult likewise1/1/true after Goron chest. Generic text does not identify Forest. | Mido12:41 and Goron13:29; R11-KEY-NAMED-FOREST / DOOR |
-| Named key used on native door | Forest1/1 after Goron;1/2 after the door and native tree key: one spent, native key subsequently counted; only Forest changed across14. | Door opened,13:27–13:33; R11-KEY-DOOR |
-| Named key, big chest inside another dungeon | **Failed:** prompt appears but chest does not open; no grant. Source Forest/Deku0/0/false, map false; no post-pickup attribution result. | Rewired Deku row/cloned big entry,14:02–14:04; R11-KEY-NAMED-BIGCHEST |
+| Plain key, overworld small chest | Chest open; remaining/total/first-key unchanged in all 14 dungeons: key lost. | Mido, 12:35/12:36; R11-KEY-OVERWORLD |
+| Plain key, keyless dungeon big chest | Deku 0/0/false→1/1/true; map false, all 13 other dungeons unchanged. No indicator popup. | Deku map chest, 13:10/13:11; R11-KEY-KEYLESS |
+| Plain key, keyed dungeon non-key big chest | Fire 0/7→1/8; chest open; all 13 other dungeons unchanged. Both map displays increment; persists after reload. | Hammer chest, 14:16/14:17; R11-KEY-FIRE |
+| Named key, overworld small chest (child/adult) | Child Forest 0/0/false→1/1/true; adult likewise 1/1/true after Goron chest. Generic text does not identify Forest. | Mido 12:41 and Goron 13:29; R11-KEY-NAMED-FOREST / DOOR |
+| Named key used on native door | Forest 1/1 after Goron; 1/2 after the door and native tree key: one spent, native key subsequently counted; only Forest changed across 14. | Door opened, 13:27–13:33; R11-KEY-DOOR |
+| Named key, big chest inside another dungeon | **Failed:** prompt appears but chest does not open; no grant. Source Forest/Deku 0/0/false, map false; no post-pickup attribution result. | Rewired Deku row/cloned big entry, 14:02–14:04; R11-KEY-NAMED-BIGCHEST |
 
-**Display correction:** Kareem's own Fire game with the map and2 keys showed
+**Display correction:** Kareem's own Fire game with the map and 2 keys showed
 "Map only shows Fire Temple, can't switch, 2 Small Keys shown next to the map screen and by
 the map on the game UI." Keys have a **standing current-dungeon display**, beside both
 the on-screen map and pause map; no other-dungeon selector. The door run had no Forest map.
@@ -3058,7 +3058,7 @@ docs-only results update. Settings/CS1 and pure fill's synthetic anywhere mode r
 R11-HOOKSHOT-2012 is Kareem/Claude's observed crash diagnosis, not an agent game run.
 Read-only evidence: `work/save-backups/2026-11-10_0905-r10-tests-crash-on-start/`.
 `bootcheck-A-overlay-crash.log:67–68,87–101` loads the overlay size table, selects Xbox
-icons, then crashes reading guest0 with the External font path on the stack.
+icons, then crashes reading guest 0 with the External font path on the stack.
 `bootcheck-B-mods-ok.log:4–5,69,87,96` discovers one mod, loads its table, logs the game's
 own icons fallback and reaches the isolated save mount. No crash was reproduced here.
 
@@ -3066,7 +3066,7 @@ own icons fallback and reaches the isolated save mount. No crash was reproduced 
 
 Play removes HOS_FS_OVERLAY from its child environment and sets HOS_MODS to the extracted
 pack root. `seed/romfs` stays where Make wrote it: no copies, moves or links. The pack root
-is not a mod; the seed child is. Discovery descends at most4 levels, ignores names starting
+is not a mod; the seed child is. Discovery descends at most 4 levels, ignores names starting
 `.`, `-` or `_`, and stops at a folder containing romfs/exefs. Hidden `.romfs-*` NUP caches
 cannot become mods. Play rejects a second discoverable mod, missing seed RomFS or traversed
 link before creating a user/log. The existing whole-seed digest remains mandatory.

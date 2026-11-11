@@ -912,15 +912,15 @@ Round 10 candidates (seed 8 play, Kareem 2026-11-09):
   has not played, or after Forest completion until the Prelude), check flags the skipped dialogue sets, and retest
   from an older child autosave; the pedestal may stay blocked until he leaves after that first scene.
 
-Later-round candidate (Kareem, 2026-11-09, seed8: "we need a check/item tracker"): **D38 makes
+Later-round candidate (Kareem, 2026-11-09, seed 8: "we need a check/item tracker"): **D38 makes
 this a Tracker tab of the UI**, reading the **seed's own save folder**, not an independent page
 watching the player's main autosave. Resolve collected state by actor/check kind: chests use
 named `IsTreasureBoxOpen.<Hash>` Bools; ordinary loose pickups use their saved placement-Hash
-Bool64 state; gifts and scripted actors use their audited event/state flags (section44).
+Bool64 state; gifts and scripted actors use their audited event/state flags (section 44).
 A universal raw-Hash test falsely labels opened chests unclaimed. Read the seed's spoiler and
 save to show checks by area, owned items and remaining keys per dungeon (its first job), and
 checks currently in logic without naming unfound items. Update on saves; PopTracker/EmoTracker
-export remains a later option. D38 and section44 distinguish this from the native current-
+export remains a later option. D38 and section 44 distinguish this from the native current-
 dungeon-only map/key display.
 
 ### Settings backlog (Ship of Harkinian's lists, shown by Kareem 2026-11-09)
@@ -1118,7 +1118,7 @@ skipped, dump 109 (with `OOT_NUP`).
   location IDs; an Archipelago port also needs a client that delivers items during play, which a RomFS mod cannot
   do), another randomizer author's name removed from this file. Then Kareem flips visibility; `main` protected;
   Greenferret added when he returns.
-- Keysanity (Kareem, 2026-11-10; section44 and R11-KEY-* answers). Played: a generic key
+- Keysanity (Kareem, 2026-11-10; section 44 and R11-KEY-* answers). Played: a generic key
   outside a dungeon is lost; in keyless Deku or keyed Fire it credits that dungeon, including
   a native big chest and persistence on reload. The default own-dungeon mode therefore has
   plain-key evidence for both chest sizes. Named Forest writes from child/adult overworld

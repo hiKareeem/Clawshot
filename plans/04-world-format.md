@@ -165,7 +165,7 @@ Low-or-higher lift strength: the actual fixed Goron Bracelet as child, any stren
 Progressive mode's first strength tier represents the Bracelet. `can_use(Bombs)` and the Octorok
 bomb shortcuts share that predicate; explosives/blast-or-smash and bomb-only tricks inherit it.
 Bombchu supply and local strength-gated Bomb Flower routes are unchanged. This is logic matching
-native lift requirements, not a gameplay patch or an extra bag/strength grant (sections30–31).
+native lift requirements, not a gameplay patch or an extra bag/strength grant (sections 30–31).
 
 ## The rule language
 
@@ -242,7 +242,7 @@ an early pull. Child-only goals that never open travel need no return proof.
 
 `free_time_travel = false` by default. With it on, the search shares inventory and skips the
 extra return proof; `make_seed` pairs that assumption with `patch.age`. Temple Sheik stays for
-the0050 introductory timeline AND0055 dialogue, disappears after0055, and returns for Forest
+the 0050 introductory timeline AND 0055 dialogue, disappears after 0055, and returns for Forest
 completion/Prelude. A non-saved BoolExp supplies Presence; native Prelude deletion remains.
 `remake/sheik.toml` gates the check on adult Forest completion, not medal ownership.
 No quest/reward/saved default is forced. First-arrival gameplay acceptance remains pending.
@@ -261,7 +261,7 @@ The data-defined return kit's lower-bound inventory and staged families vary wit
 earlier pulls cannot assume optional child Saria/strength/Time-ocarina finds. The independent
 first-pull oracle remains mandatory and may refuse combinations with unshuffled child-only
 prerequisites. No automatic free-travel or guarantee override. Native Fairy Ocarina is child-only
-(section37), so the sourced `age_ocarina.toml` helpers require Ocarina2 for adult song use;
+(section 37), so the sourced `age_ocarina.toml` helpers require Ocarina2 for adult song use;
 otherwise the new Fairy-only first-pull route would incorrectly pass adult Mido.
 
 **Time of day.** Without entrance shuffle OoT Randomizer assumes any time of day can be reached from wherever the
@@ -354,7 +354,7 @@ The overlay writer's `make_seed` supplies the remake's actual chest pool through
 `item_actors.toml`, not the untranslated N64 chest contents. Native shops use their catalog.
 Gift checks require matching native actors, except accepted variable frog-song and first-expert
 gallery prizes (fixed Rupees (20)) and explicit minigame tier families normalized to medium upgrades.
-Bowling's Bomb Bag30 counts as the bag ability; gallery Bullet Bag40/Quiver40 are capacity only,
+Bowling's Bomb Bag 30 counts as the bag ability; gallery Bullet Bag 40/Quiver 40 are capacity only,
 not Slingshot/Bow ownership. Unresolved upgrade tiers stay vanilla. Shuffled bowling removes
 the old extra native refill rows from the prepared world: two first-win prizes, then filler.
 
