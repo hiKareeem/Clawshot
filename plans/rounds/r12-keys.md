@@ -1117,3 +1117,33 @@ logs are preserved. No overall runner deadline, correcting the previous harness'
 3600-second interruption rather than blindly repeating that configuration.
 Full-suite/dump outcome is still **pending**, not inferred from the rebase/smoke.
 
+### Post-rebase gates: initial outcome and input correction
+
+The runner waited for the shared lock until17:35, then released it18:29:
+
+- Format **PASS**, lint **PASS**.
+- Synthetic **1020 passed/130 skipped**,1178.22s.
+- Dump **112 passed/1022 deselected/16 setup errors**,2082.16s; **not PASS**.
+  All16 errors were the `OOT_DUMP` parameter of `test_pack_nup_dump.py`'s shared
+  cache fixture; the NUP counterpart and remaining dump tests passed.
+
+Cause printed before any rerun: this runner inherited
+`OOT_DUMP=work/pr1-check/dump`, a legacy layered real-resource fixture with1243
+indexed files. Current `working_files(...)` minus that index is exactly
+`RSDB/GameAnalyzedEventInfo.Product.111.rstbl.byml.zs`; full supported romfs has it.
+The version digest check had passed, but that does not prove a working set complete.
+This is stale **runner input**, not a reason to weaken the cache loader/tests.
+
+Cause-directed recovery started: verify every indexed legacy file against the
+independent full-romfs bytes, copy the fixture into private cs12b scratch, add the
+missing **unmodified** resource to that copy's131072 update layer, and rerun the
+**entire dump suite** with romfs/NUP/refreshed layered inputs under the same
+one-worker/shared-lock/no-deadline policy. No original fixture/dump, production or
+test is edited. The private copy is a real-resource working-set fixture, not a
+claim to have produced a new complete game dump.
+
+Initial logs/results are preserved in `rebased-cd81449/`; recovery input proof,
+log and result go in its `dump-recovery/` subdirectory. Recovery outcome is
+**pending**, not inferred PASS. Latest source remains rebased onto cd81449;
+no Gate4 build or player-refusal change.
+
