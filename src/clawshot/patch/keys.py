@@ -199,9 +199,9 @@ class _Compiler:
         row = self.row(source)
         flow = Path(row["FlowchartFileName"]).stem
         entry = row["EntryPointName"]
-        if source in (BIG, SMALL):
-            # Default chests need a real outer lifecycle too, not a direct AllHide clone.
-            cloned = self.handoff("Big" if source == BIG else "Small", target)
+        if source == BIG:
+            # Default big chests need a real outer lifecycle, not a direct AllHide clone.
+            cloned = self.handoff("Big", target)
             self.add_row("InsideTheDekuTree_GetMap", name, "NaviChat", cloned)
         else:
             cloned = self.clone_entry(flow, entry, target, "wrapper")

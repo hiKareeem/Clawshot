@@ -42,13 +42,18 @@ def _sources():
         [evfl.Actor("GameDataActor", actions=["EventTriggerSetGameDataBool"])],
         [
             evfl.SubFlowEvent(
-                "Grant", keys.POUCH, "GetPouchContentByActorNameForTreasureBox", params={"ActorName": "Key"}
+                "Grant",
+                keys.POUCH,
+                "GetPouchContentByActorNameForTreasureBox",
+                params={"ActorName": "Key", "IsMiniGame": evfl.Argument("IsMiniGame")},
             ),
             evfl.ActionEvent("MidoStart", 0, 0, 2, {"GameDataName": "MidoStart", "Value": True}),
-            evfl.SubFlowEvent("MidoContent", "", "Success_"),
+            evfl.SubFlowEvent("MidoContent", "", "Success_", params={"IsMiniGame": False}),
+            evfl.ActionEvent("DefaultStart", 0, 0, 4, {"GameDataName": "MidoStart", "Value": False}),
+            evfl.SubFlowEvent("DefaultContent", "", "Success_", params={"IsMiniGame": False}),
         ],
         [
-            evfl.EntryPoint("Success", 0, [0]),
+            evfl.EntryPoint("Success", 3, [4]),
             evfl.EntryPoint("Success_", 0, [0]),
             evfl.EntryPoint("Success_MidoHouse", 1, [2]),
         ],
@@ -108,10 +113,11 @@ class _Run:
             for target in ("ForestTemple", "FireTemple", "InsideTheDekuTree")
             for field, value in [("SmallKeyNum", 0), ("SmallKeyTotalNum", 0), ("IsGetSmallKeyOnce", False)]
         }
+        self.state["MidoStart"] = False
         self.messages = []
         self.trace = []
 
-    def event(self, name):
+    def event(self, name, arguments=None):
         row = self.rows[name]
         flow = row["FlowchartFileName"].split("/")[-1].removesuffix(".evfc")
         analyzed = self.analyzed[name]
@@ -119,7 +125,7 @@ class _Run:
             assert name in self.active[1]["ChildEventList"]
         prior = self.active
         self.active = (flow, analyzed)
-        self.entry(flow, row["EntryPointName"], {})
+        self.entry(flow, row["EntryPointName"], {} if arguments is None else arguments)
         self.active = prior
 
     def entry(self, flow, name, arguments):
@@ -151,7 +157,7 @@ class _Run:
             operation = actor.actions[event.action]
             self.trace.append(operation)
             if operation == "EventTransition":
-                self.event(params["EventName"])
+                self.event(params["EventName"], arguments)
             elif operation == "EventTriggerParticipateEvent":
                 pass
             elif operation == "EventTalk":
@@ -203,7 +209,7 @@ def test_two_targets_both_sizes_do_not_cross_credit_or_replace_native_controls(o
         expected[f"DungeonInfo.{target}.IsGetSmallKeyOnce"] = True
         assert run.state == expected
         assert run.messages == list(labels(target))
-        assert run.trace[0:2] == ["EventTriggerParticipateEvent", "EventTransition"]
+        assert run.trace.index("EventTriggerParticipateEvent") < run.trace.index("EventTransition")
         assert "EventGetDungeonSmallKey" not in run.trace
         assert "EventTriggerAddOrRemovePouchContent" not in run.trace
     run.event(keys.BIG)
@@ -275,3 +281,13 @@ def test_long_source_names_keep_distinct_bindings_inside_the_actor_string64_limi
     names = [bindings[(source, "GerudoTrainingGround")].event for source in sources]
     assert names[0] != names[1]
     assert all(len(name.encode("utf-8")) < 64 for name in names)
+
+
+def test_default_small_source_keeps_its_reset_and_argument_bootstrap():
+    bindings, documents, rows, analyzed, _ = _compile([(keys.SMALL, "FireTemple")])
+    run = _Run(documents, rows, analyzed)
+    run.state["MidoStart"] = True
+    run.event(bindings[(keys.SMALL, "FireTemple")].event)
+    assert run.state["MidoStart"] is False
+    assert run.state["DungeonInfo.FireTemple.SmallKeyNum"] == 1
+    assert run.state["DungeonInfo.InsideTheDekuTree.SmallKeyNum"] == 0
