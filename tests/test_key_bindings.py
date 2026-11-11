@@ -262,3 +262,16 @@ def test_source_without_analyzed_registration_is_refused():
     analyzed = [row for row in _analysis(rows) if row["__RowId"] != "KokiriForest_TreasureBox_NaviChatOff"]
     with pytest.raises(ValueError, match="no analyzed-event registration"):
         keys.compile_bindings(documents, rows, analyzed, [("KokiriForest_TreasureBox_NaviChatOff", "ForestTemple")])
+
+
+def test_long_source_names_keep_distinct_bindings_inside_the_actor_string64_limit():
+    documents, rows = _sources()
+    native = next(row for row in rows if row["__RowId"] == "KokiriForest_TreasureBox_NaviChatOff")
+    sources = ["Long_Source_" + "x" * 41 + suffix for suffix in ("A", "B")]
+    rows.extend({**native, "__RowId": source} for source in sources)
+    bindings, _ = keys.compile_bindings(
+        documents, rows, _analysis(rows), [(source, "GerudoTrainingGround") for source in sources]
+    )
+    names = [bindings[(source, "GerudoTrainingGround")].event for source in sources]
+    assert names[0] != names[1]
+    assert all(len(name.encode("utf-8")) < 64 for name in names)

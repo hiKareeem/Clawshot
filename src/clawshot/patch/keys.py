@@ -7,6 +7,7 @@ Native startup and presentation require the ordered played gates in r12-keys.md.
 """
 
 import copy
+import hashlib
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass, replace
 from pathlib import Path
@@ -190,7 +191,9 @@ class _Compiler:
         if key in self.bindings:
             return self.bindings[key]
         _arguments(target)
-        name = f"Clawshot_Key_{target}_{source}"
+        # GetEventName is a String64 blackboard parameter. Full source names can overflow it.
+        source_id = hashlib.sha256(source.encode("utf-8")).hexdigest()[:12]
+        name = f"Clawshot_Key_{target}_{source_id}"
         binding = Binding(source, target, name)
         self.bindings[key] = binding
         row = self.row(source)
