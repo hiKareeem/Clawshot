@@ -230,3 +230,82 @@ This builds `Clawshot-<project version>.zip` without reading a dump or generatin
 contains source, local UI assets, the starters/PowerShell helper, lock file, licences/notices and
 a five-line READ ME. The positive source allowlist excludes tools, caches, tests and game/output
 files. Both shell entry points are executable in the zip; an existing release is never replaced.
+
+## Troubleshooting
+
+### Where do I get the game, and which version do I need?
+
+Clawshot provides and downloads no game files. Dump your own Nintendo Switch 2 copy of *Ocarina
+of Time*, including update **v131072 (v1.1)**, build **e0f3ccfa**; the base game alone is not enough.
+Choose its updated `romfs`, full `.nup`, or dump folder with `base/romfs` and `updates/131072/romfs`.
+**Check** on Game compares four game files' contents with the supported build's fingerprints, not
+the folder name. It never starts or changes the game. A different update or incomplete dump is
+refused: check your own dump and update, rather than renaming files or bypassing the check.
+
+### Which Hookshot version do I need?
+
+Use a current Hookshot with mod loading. Clawshot checks the program for that support, not just
+its version number. **2.0.14** has been played; seeds also start on **2.1.0**. On Game, choose the
+folder containing `bin/hookshot.exe` and press **Detect**. Update or repair Hookshot if refused.
+Hookshot is optional for generating a seed or copying it to an emulator.
+
+### Why is Play missing or greyed out?
+
+Generate a seed, or choose **View seed** in My seeds. Play is hidden until a Hookshot folder is
+chosen. It needs Windows, a successful Hookshot **Detect**, and finished, unchanged seed files.
+It is disabled while generating or while a seed launched by this UI runs; quit any running Hookshot
+before pressing Play. Sessions with desktop actions turned off also disable Play. Read the message
+beneath the buttons. Generate old or changed seeds into a new folder; keep the old folder and its saves.
+
+### What is the hash, and what if mine differs?
+
+**Hash** under Seed ready on Generate, also beside entries in My seeds, is a short fingerprint
+of the finished files, not the seed number. Share the number, whole settings string and hash.
+If yours differs, check the Clawshot version, number, whole settings string and supported game
+files match the shared recipe. Report both hashes and the recipe if it still differs; never edit
+files or bypass a failed check. For changed seed files, generate into a new folder and keep old saves.
+
+### Does it work on Linux or macOS?
+
+Linux's seed-pack Make was checked in WSL with matching Windows output; its UI has not been fully
+tested. Use `clawshot.sh`. **macOS is untested; a contributor is testing it.** Use `Clawshot.command`.
+Play starts Windows Hookshot only; Linux/macOS players can generate and copy to an emulator.
+Gamepad and Steam Deck controller navigation are not available yet.
+
+### Can I use an emulator?
+
+Yes, without Hookshot. Use **Copy to my emulator**, choose this game's mod folder and confirm.
+Back up your emulator saves first, then enable only this seed in its mod menu. Clawshot does not
+start the emulator or replace an existing copy. Lichii has play results; other layouts are untested.
+See [manual emulator steps](seed-pack.md#emulator--console-loading).
+
+### Where are the saves made by Play?
+
+In `user` inside **your chosen output folder**, usually `Documents/Clawshot/seed-<number>/user`,
+not Hookshot's normal save folder. **Open seed folder** opens the inner `seed` folder: go up one
+folder to find `user` and `hookshot_log.txt`. Keep the whole output folder when moving or backing
+up a playthrough. Emulators and Hookshot's own launcher use their normal saves instead.
+
+### How do I report a crash or a Clawshot error?
+
+Use [In-game bug or crash](https://github.com/hiKareeem/Clawshot/issues/new?template=bug_report.yml)
+for problems while playing. Give the Clawshot version (zip folder name or `Clawshot-<version>:`
+settings-string start), seed, whole settings string, hash, Hookshot version (log's first line), OS,
+area, Link's age and what Link was doing. Attach **only the whole `hookshot_log.txt`** from the
+output folder beside `seed` and `user`. It contains folder paths, including your user name, but
+no game data; those paths will be public. Emulator players attach their emulator's log instead.
+Never attach game files, seed folders, saves, keys, caches or spoilers.
+
+For UI, Generate or game-check problems, use [Clawshot itself](https://github.com/hiKareeem/Clawshot/issues/new?template=clawshot.yml):
+give the version, OS and whole UI error text (terminal error if it never opens). Attach nothing.
+[Discord](https://discord.gg/7R5ZXPcJqn) is also available for help.
+
+### Known issues in 0.1.1
+
+- Ocarinas from chests have no visible model, but you still receive them.
+- Dampé's digging prize and Bombchu Bowling prizes show the original prize but give the seed's item.
+- After picking up an item Link's age cannot use, **Save and Continue before using other items**:
+  the item bar can jam. The play note lists these pickups, but reveals item locations.
+- While a seed is loaded, text shows Switch button icons rather than your controller's.
+- Dungeon items outside their own dungeon (keysanity) are not available yet.
+- Both `play-note.md` and `spoiler.json` reveal item locations. Do not open them if you want surprises.
