@@ -11,6 +11,9 @@ post-Save/Quit save leaves Spirit at 0/0/false with no boss key, while both ches
 are open. This is authoritative played evidence; no game or save-check rerun here.
 Round 11's played overworld small-key loss and section 44's handler trace explain
 why generic actors cannot be placed by logical dungeon membership alone.
+Incident artifacts (all read-only): `E:/OOTRemake/work/r11-release/candidates/seed-11/`;
+checker `E:/OOTRemake/work/r12-spirit-hands/check_saves.py`; saves
+`E:/OOTRemake/work/save-backups/2026-11-11_124548-r12-spirit-hands-2/`.
 
 Implemented (cs12c, as requested): retain logical own-dungeon membership
 and additionally require the location's physical Banc area to match its dungeon
@@ -30,6 +33,36 @@ under `E:/OOTRemake/work/r12-dungeon-areas-cs12c/`.
 
 Kareem observed the child cutscene while adult, including child-to-adult morphing.
 Research is facts-only; no cutscene or story patch belongs to this track.
+
+**This is not known to be cosmetic-only:** the retained chest wrapper requests a
+Spirit quest step without checking Link's age. Confidence is high for the explicit
+flow writes below, but whether a late request can rewind an already-later quest
+step is unknown: the native challenge action's ordering semantics were not proved.
+No regression or adult Nabooru break is claimed from the visual morph alone.
+
+Existing, mutually corroborating sources: `plans/03-game-data.md` section 18
+(lines 1035–1044), `plans/rounds/r5-seeds.md` (chest event audit), and
+`src/clawshot/patch/chest_events.toml` entry `SageOfSpirit_NaboorIsTakenAway`.
+Static cross-check: original round-1 decoded `SageOfSpirit` flow, build `e0f3ccfa`,
+under `E:/OOTRemake/work/r1-research/decoded/evfl_all.json`.
+
+| Flow/node | Effect relevant to story |
+|---|---|
+| `SageOfSpirit:SageOfSpirit_NaboorIsTakenAway`, `Event64` | Calls `Dm_SY_Treasurebox`, which grants the current `ContentName`, not a second Silver Gauntlets grant. |
+| `SageOfSpirit/Event1` | Plays `Dm_DesertColossus_0030`, Nabooru taken away. |
+| `SageOfSpirit/Event190`, `Event322` | Clears `HavePlayedEvent.NaviTips_Gauntlet_01` and `HavePlayedEvent.NaviTips_Gauntlet_03`. |
+| `NaviChat:NaviChat_Serious` | Sets `NaviChat_Serious_Time=true` during the subsequent Navi talk. |
+| `SageOfSpirit/Event21` | Calls `EventExecuteProgressChallengeStep` for `SageOfSpirit`, `Step07`, with `IsIgnoreCompletedChallenge=true`; follows with quest progress UI. |
+
+An adult opening can therefore invoke the same Spirit-story progression request as
+a child opening (high confidence: no age branch in this wrapper). Later adult
+Nabooru progression has separate `Step08` / `Step08_01` writers; completing Spirit
+has its own later writers. Whether the Step07 request skips prerequisite staging or
+is ignored after a later step requires the challenge handler/AINB or a controlled
+play check; it is not resolved by the EVFL action name “Progress”.
+
+Direct dump/index-faithful wrapper and timeline inspection is queued under the
+gate lock to supplement the older decode, without changing any event.
 
 ## Verification
 
@@ -79,6 +112,20 @@ checked only that alias and omitted Gift preparation, causing `Buy Magic Bean`
 to have zero allowed destinations. Printed full settings and the false condition,
 then changed the driver to the existing CLI's expanded-type condition; one corrected
 run succeeded. No production change was needed for this scratch-only mistake.
+
+### Player follow-up (not run by the agent)
+
+The new seed output is not a repair for an existing seed 11 save: placements change
+and the opened hand chests are already consumed. Do not replace the published
+candidate or point a played save at this changed recipe.
+
+**Kareem: on an isolated new playthrough generated from the merged build, confirm
+the hand rewards match its spoiler, remain collected after Save and Quit, and the
+seed finishes; record the Hookshot `mods: Banc/DesertColossus/... <- ...` loading
+line.** The pre-merge scratch output above gives 20 rupees / 5 bombs, not keys.
+Use only Teleport/clock cheats if needed; do not edit inventory/story/age flags.
+Native own-dungeon key persistence already has the round-11 Deku/Fire controls;
+this track adds placement safety, not a new grant implementation.
 
 ## Handoff
 
