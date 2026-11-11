@@ -895,3 +895,208 @@ Existing played Gate1–3 launchers/profiles and their historical verification r
 remain unchanged; no retroactive resetting/pruning of Kareem's current copy. This
 is a forward rule, not permission to overwrite old evidence.
 
+
+## Gate 3 COMPLETE — PASSED (Claude/Kareem final acceptance)
+
+Claude reports Kareem opened the Deku compass chest: **“Forest Temple key.”**
+Final part-A saves, copied to
+`save-backups/2026-11-11_gate3a-final`:15:13:31 and15:13:35 (internal slots05/01).
+Mido, map, Slingshot-room side and compass chests are open; the unchanged Slingshot
+chest is open. **Forest2/2/true and Fire2/2/true, all14 match, no crash.**
+Small-source order Forest→Fire and big-source order Fire→Forest were both played.
+Part B already played the routed spend plus native key in both orders. Accepted
+as complete by Claude; no unchanged rerun of the game or his save audits.
+
+The documented Sword-cheat deviation is retained: Gate3 certifies the played key
+attribution/spend/persistence/order controls, not a no-cheat opening route from the
+old child checkpoint. It does not authorize more inventory cheats in Gate4.
+
+Next requested gate is **presentation/release on a real generated anywhere seed**,
+not manually chosen placements: short multi-target route, long-name layout and
+item-bar/caption inside another dungeon. Tracker/save-roster reads come later.
+This track will propose exact seed/settings/placements/checkpoints and post before
+building. **Player refusal stays until Gate4 passes.** No Gate4 mod or launcher has
+been built; single-candidate placement inspection writes only research evidence.
+
+
+## Gate 4 proposal — real generated seed7, not built
+
+**Proposed by cs12b for Claude/Kareem review before construction.** One full generated
+mod, two fresh copies of existing normal-play adult checkpoints, four pickups.
+Part B alone crosses **Shadow→Forest→Gerudo Proving Grounds**; part A compares the
+same long-name target in an overworld small chest against B's dungeon big chest.
+No new checkpoint, child equipment bootstrap, inventory cheat or room Teleport.
+
+### Real seed and unchanged release boundary
+
+- **Seed7**, full world, **Chest-only** shuffle, `dungeon_items=anywhere`; other
+  settings stay default: forest closed, Door of Time closed, intro skip, vanilla
+  prices/cheap Deku Shield, songs at song checks, always/balanced hints.
+- Actual `generate` with census-linked **remake-native pool**, not N64 vanilla,
+  produced **165 shuffled locations,37 small keys,23 beatability spheres**. Normal
+  fill and `check_beatable` ran; placements were not selected or edited by hand.
+  Shuffled boss keys/maps/compasses were checked to stay in their logical dungeon.
+- Exact settings/CS1 and all placements:
+  `work/r12-keys-cs12b/gate4-seed7-inspection.json`.
+  Canonical placements SHA256:
+  `836c76e51cdb61338917ecf7886b5bc1693d4acc879e16f9c884eba163dc91de`.
+- Seed12 was also inspected as a single candidate but not selected: its long-name
+  sources complicated this short checkpoint route. Neither candidate wrote any mod,
+  transformed resource, launcher or user directory.
+- Proposed acceptance-only harness: call real `generate`/native-pool resolution,
+  the existing normal patch-step functions (`make_plan`, hints/shops/door/fast-start
+  steps, then source-bound `keys.changes` composition), and `SeedOutput`/`write_seed`.
+  Emit the **whole generated seed**, including normal spoiler/CS1/play note, not a
+  four-chest excerpt. Check emitted spoiler placements against the digest above.
+  No monkeypatch/no-op guard, hand-authored `Seed.placements`, manual wrapper binding,
+  new public bypass setting or guard removal. Public CLI/`make_seed` keep refusing.
+  This is use of existing lower-level generation/emission APIs for the authorized
+  acceptance experiment, not a claim the guarded convenience entry accepts it.
+- Use current production source (including the audited Navi correction5cf92e5).
+  Version/uv.lock unchanged. Tracker reads explicitly come later.
+
+### Exact generated pickups
+
+Names below are generator identities for review; player checklists will use the
+plain physical directions and the game's English target names.
+
+| Part/order | Actual generated location | Hash | Size | Key shown |
+|---|---|---|---|---|
+|A1|Sacred Forest Meadow Chest (Item_ScrubBusinessSeed)|1764383515296652106|Small|Gerudo Proving Grounds|
+|B1|GC Maze Left Chest|4402942101476009858|Small|Shadow Temple|
+|B2|ZR Open Grotto Chest|8838426083116998768|Small|Forest Temple|
+|B3|Ice Cavern Compass Chest|13542013937093159888|Big|Gerudo Proving Grounds|
+
+These exact four rewards came from the real fill. The Gerudo logical key is
+`Small Key (Gerudo Training Ground)`; USen's actual location name is **Gerudo Proving
+Grounds**,22 characters. Expected acquisition is **Small Key (Gerudo Proving
+Grounds)**,34 characters; caption's target row **Dungeon: Gerudo Proving Grounds**,
+31 characters. Values are read from the dump at generation, not shipped as names.
+The absolute longest native target name is Inside Ganondorf's Castle,25 characters;
+this proposal does **not** claim that separate case was played. The chosen22-character
+case is available both outside a dungeon and in a different dungeon without a deep
+castle/proving-ground route or a forced placement.
+
+### Existing saves and actual thumbnail descriptions
+
+All sources remain read-only. Internal slot identifiers belong only in this
+technical record/template configuration, never player save-selection instructions.
+
+**A source:** `save-backups/2026-11-09_1022-main-adult-first/save/`
+`5a3c9e1f0b7d24680000000000000001`, internal manual01.
+Player description: **Temple of Time; adult Link beside Sheik on the round stone
+pedestal in the sword chamber.** Its actual embedded JPEG was decoded/read at
+`work/r12-keys-cs12b/gate4-source-adult.jpg`; no invented position.
+Sword, Bombs, Ocarina of Time and Song of Time are explicitly owned; the meadow
+chest is explicitly closed. Hookshot is not needed by its sourced route.
+
+**B source:** `save-backups/2026-11-10_1402-main-fire-hammer/save/`
+`5a3c9e1f0b7d24680000000000000001`, internal manual01.
+Player description: **Fire Temple after getting the Hammer; adult Link seen from
+behind with the blue/red Hylian Shield, facing the orange-brown rock wall, Navi
+bright on his right.** Actual image:
+`work/r12-keys-cs12b/gate4-source-hammer.jpg`; caption string metadata says
+`FireTemple`/`FireTemple/FireTemple`.
+Master Sword, Hammer, Bombs, bottle, Bow and Hookshot are explicitly owned, adult
+state confirmed. Goron left, river grotto and Ice compass chests explicitly closed.
+This avoids repeating Gate3's missing-weapon situation. Empty a normal bottle for
+Blue Fire if needed; no item or age cheat.
+
+All84 dungeon key/boss/map/compass fields exist in each source. Evidence:
+`gate4-proposal-proof.json` and `verify_gate4_proposal.py` **PASS**. The initial
+policy assertion incorrectly included an unshuffled SilverRupee puzzle, whose
+“dungeon” names the puzzle rather than the containing temple; printed type and
+shuffled-membership values showed the cause. Scoped that oracle to the165 shuffled
+chests, then it passed; no production/placement change was made to get green.
+
+### Proposed short route and reload points
+
+**A — overworld long-name window**
+
+1. Load the Temple of Time/Sheik thumbnail above. Teleport to Sacred Forest Meadow
+   entrance. Follow the normal adult route to the side clearing behind the Song
+   of Time blocks; use Bombs/Song of Time as its access requires. Open the former
+   Business Scrub Seed small chest, not another chest.
+2. Capture exact acquisition **and** caption, readable line wrapping, normal key
+   model and cleanup. Save/Quit/Continue, choose the newest picture from this test,
+   check the chest stays open, then quit before B.
+
+Sourced access: `remake/extra_sacred_forest_meadow.toml` requires adult, explosives
+and Song of Time; r4-logic-child.md describes this clearing. Those abilities were
+checked against the actual source, not assumed from a filename.
+
+**B — three targets, then the same long name inside Ice Cavern**
+
+1. Load the Fire Temple/Hylian Shield thumbnail above. Teleport to Goron City.
+   Follow the top-floor west maze, use the Hammer on its dark hammer-breakable rocks,
+   open the **left/red-rupee chest**, not Gate3's center pocket and not the silver-
+   gauntlet purple chest. Expect Shadow Temple.
+2. Teleport to Zora's River, take the normal raised-ledge **open-hole grotto** with
+   the chest/gossip stone/shallow pool; not the Song of Storms grotto. Open its small
+   chest: Forest Temple. Save/Quit/Continue; confirm both rewards persisted, no repeat.
+3. Teleport to Zora's Fountain, use the normal adult ice-floe entrance to Ice Cavern.
+   Clear the ordinary entrance/Freezard/scythe route; collect the required silver
+   rupees, bottle Blue Fire, melt the route to the compass room. Do not take the map
+   or Iron Boots chest. Open the **big compass chest**: Gerudo Proving Grounds.
+4. Capture both target-labelled messages and the floating pickup notice **while
+   still inside Ice Cavern**; report on-screen and pause-map numbers or their
+   absence. Save/Quit/Continue and confirm this chest and the prior two stay open.
+
+Route sources: r4-logic-child.md Goron maze (left requires Hammer or Silver
+Gauntlets); Zora River open grotto is uncovered and its chest item-free (Hash above);
+Ice Cavern's normal Blue Fire/compass route. The supplied late source has the
+weapons/bottle even for the previously noted optional ice-pillar/arrow-route doubts.
+Only entrance Teleports/clock; if blocked, stop and report instead of granting gear.
+Ice Cavern is a **different, keyless dungeon**, not the key's target; that distinction
+is deliberate, not a claim this route enters the Proving Grounds.
+
+### Expected saved changes and presentation acceptance
+
+Profiles are separate: never add A's count to B's. Compare every stage against
+that profile's84-field baseline.
+
+| Profile/stage | Intended remaining/total/once |
+|---|---|
+|A meadow|Gerudo0/0/false→1/1/true|
+|B Goron left|Shadow0/0/false→1/1/true|
+|B river grotto|Forest0/5/true→1/6/true|
+|B Ice compass|Gerudo0/0/false→1/1/true|
+
+The old normal-play saves are **presentation checkpoints, not a new-seed
+playthrough**; B already acquired/spent Forest keys before this experiment.
+Do not reset/rewrite that history or pretend total6 came from six pickups in this
+route. Real generation's beatability search is separate from this checkpoint test.
+All unlisted all14 fields stay baseline, especially standing Ice key/map/compass
+fields. No double/standing/pouch credit or new compass grant.
+
+Both acquisition and caption must name the actual target, with no “this area”
+wording, clipped/overlapping/unreadable long text or extra generic dialog; normal
+model, close, movement and persistence. Record any item-specific Navi comment
+separately and fail a misleading old-item claim on a named-key path.
+The inspected floating notice is icon/count-only: **do not promise a target-name
+pane or inject the remote count into it**. Record its actual count/absence separately
+from the named window and pause/on-screen standing counters. No roster/HUD hook.
+
+### Construction only after this proposal is reviewed
+
+Proposed real mod root: `key-gate4-generated-seed7-next`; fresh profile suffixes A/B.
+Proposed launcher names:
+**Key gate 4A - Sacred Forest Meadow long key.bat**;
+**Key gate 4B - Goron City, Zoras River, then Ice Cavern.bat**.
+Copy the current central template separately for each; only account/options and the
+chosen internal save directory. Dry-run subset hashes are already recorded in the
+proposal proof. Real folders, exactly one mod, ASCII/CRLF; no old user reuse.
+Switch the automatic watcher explicitly before B so its saves are not missed.
+
+Before handover: whole-seed read-back/inverses, registrations/dependency closure,
+allocations, all16 message pairs and exact placement digest; deterministic repeated
+output; actual template dry runs/exact four-file UID subsets/no links/source hashes.
+Claude boot-checks and hands it to Kareem. Public refusal remains; no game start here.
+Latest full repository gates still wait for the review-pr3 queue release; this
+proposal is not a claim they passed or that release is ready.
+
+**Claude/Kareem: approve this two-checkpoint seed7 route and the22-character
+Gerudo Proving Grounds long-name case before I build?** No mod/launcher/profile has
+been constructed. If the absolute25-character castle name is required instead,
+say so rather than silently treating this as proof of that different case.
+
