@@ -157,8 +157,32 @@ No event, cutscene, story flag, save or game output was changed by this research
   no READ ME FIRST, project version, lockfile or settings schema changes.
 - Initial `tasklist /FI "IMAGENAME eq hookshot.exe"`: no game process. All pytest
   runs conservatively use `CLAWSHOT_WORKERS=1`.
-- Full gates are queued through the shared gate lock; both sweeps completed below.
+- All four full gates passed serially through the shared gate lock; both sweeps passed below.
   Initial `mkdir` and the required 60-second retry reported an existing lock.
+
+### Full gate commands
+
+All pytest commands use `CLAWSHOT_WORKERS=1`. `TEMP`, `TMP`, `TMPDIR` point to
+`E:/OOTRemake/work/r12-dungeon-areas-cs12c/tmp`; decoded fixtures/output never go
+into a worktree or the player's dump. The wrapper removes its lock in `finally`
+after each command. Its initial waiting-only launches were cancelled/restarted
+to isolate temporary files and remove a queue-time deadline; no test was stopped
+or rerun unchanged.
+
+| Command | Result |
+|---|---|
+| `uv run ruff format --check` | Exit 0; 304 files already formatted |
+| `uv run ruff check` | Exit 0; all checks passed |
+| `CLAWSHOT_WORKERS=1 uv run pytest` | Exit 0; 975 passed, 128 skipped; 1097.42 s |
+| `CLAWSHOT_WORKERS=1 uv run pytest -m dump` | Exit 0; 126 passed, 977 deselected; 3814.32 s |
+
+Dump environment: `OOT_ROMFS=E:/Games/Hookshot/romfs`,
+`OOT_NUP=E:/Games/Hookshot/The Legend of Zelda Ocarina of Time [0400486024DEC000][v131072].nup`,
+`OOT_DUMP=E:/OOTRemake/work/pr1-check/dump`.
+Logs: scratch `gates-0.log` through `gates-3.log`; all four exit codes are recorded
+in `gates-commands.json`. The final community-recipe regression passed in the dump
+gate. The synthetic run's 128 skipped cases are not claimed as native passes;
+the separate dump run selected and passed all 126 dump-marked cases.
 
 ### Locked 50 + 50 seed sweep
 
@@ -200,6 +224,8 @@ in 66.28 s; the generator's beatability oracle passed before writing.
 `tree_digest` (SHA-256, paths and all file contents including spoiler/play note):
 `04edec972126b9b9ba0f67e1cadb001f191813118ce0fb47ece88a9677a94f91`
 (share hash `04EDEC972126`).
+This is the cs12c pre-merge output, still labelled 0.1.1 as instructed; the version
+bump and other merged output-text changes require a fresh final release digest.
 
 Independent read-back smoke decoded all four written chest copies (child/adult):
 both items match the plan, neither is generic dungeon loot, and the unchanged
@@ -230,4 +256,27 @@ this track adds placement safety, not a new grant implementation.
 
 ## Handoff
 
-Pending. No game launched, played output/save modified, merge or push.
+Branch commits before the final gate-evidence/handoff commit:
+
+- `c2dd8da`: incident and scope record.
+- `44eca0e`: physical-area helper, regression coverage, one settings-doc sentence.
+- `416f8de`: Spirit story effects and limits.
+- `e6ca93e`: exhaustive own-dungeon destination audit.
+- `4c4667a`: both sweeps and changed-output counts.
+- `03e00ff`: seed-11 regression uses its actual community shuffle recipe and dump pool.
+- `fca617b`: direct world/census join and index-faithful Spirit timeline proof.
+
+All three jobs and all four mandatory gate commands are complete. Final sequence
+released its lock and completion was posted at 15:30. Per Claude's 14:09 gate
+order, `review-pr3` runs next exclusively; cs12c has no pending lock requester
+and will not acquire the lock again before `review-pr3 gates done`.
+
+Integration surface: one private helper plus the final return in `allowed()`,
+one separate regression file, one conditional sentence in `docs/settings.md`,
+and this record. The sentence explicitly describes own-dungeon placement, not
+the named small-key Anywhere mode being developed by cs12b.
+
+After merge: Claude bumps the project version; Kareem performs the new-seed
+in-game check above. Adult Nabooru quest-step ordering remains an explicit
+research limit, not an event change or a claim of a reproduced story regression.
+No game launched, played output/save modified, merge or push.
