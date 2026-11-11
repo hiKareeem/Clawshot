@@ -818,9 +818,10 @@ every copy, with no sword available there**. Accepted as ground truth; no attemp
 to prove it closed or to replace the save. No 3A2 mod, launcher or profile was
 created. Only read-only rule/route research had begun. No new checkpoint is needed.
 
-### Current approved plan: SAME part-a copy, purchased Sticks
+### Superseded Sticks plan: same-copy continuation
 
-Claude's replacement plan is now the adjacent **part-A `.md` checklist**:
+Claude proposed the following plan, then reported the Sticks route unreachable.
+It is retained as history, not a current instruction to retry the detour:
 
 1. Continue **`user-key-gate3-mixed-targets-next-part-a`** at its existing state:
    Mido Forest key, Deku map Fire key, Deku Shield already owned. Do not repeat
@@ -843,4 +844,54 @@ fields. Remaining A expectations are unchanged: side small takes Fire1/1→2/2,
 compass big takes Forest1/1→2/2; all other all14 fields equal source. Actual Sticks
 passage and the remaining pickups/reload are still **pending**, not inferred PASS.
 Gate4 remains blocked; full gates still respect the review-pr3 queue.
+
+
+## Gate 3 A continuation: received items, equipment deviation, compass still pending
+
+Accepted Claude/Kareem report, **14:53–15:06**, without rerunning the game or save
+audit to confirm it:
+
+- Unchanged Slingshot chest gave the Slingshot.
+- Slingshot-room side chest gave the Fire key: **Fire2/2, Forest1/1, all14 match**.
+  No crash. This proves the additional small-source Fire attribution and saved
+  non-key reward; actual Slingshot firing is not separately reported here.
+- **Compass chest was not opened in any save.** Last save15:06:17 was immediately
+  after the side chest; normal game quit15:06:34. Claude is asking Kareem about the
+  missing step. Do not infer the compass grant or final reload/persistence PASS.
+- **Deviation:** the Sticks route was not reachable. Kareem gave this same copy the
+  Kokiri Sword through the cheat menu to pass the Scrub, contrary to the checklist's
+  Teleport/clock-only limit. Record the actual equipment modification; neither a
+  Sword-free/Sticks route nor unassisted progression is certified by this run.
+  All14 dungeon-field comparisons do not establish unchanged non-dungeon inventory.
+  The agent did not grant/equip anything or alter any save.
+
+Part B remains PASSED. Part A now has Mido Forest, big-map Fire, native Slingshot
+and small-side Fire evidence. Big-compass Forest and the final reload check remain
+pending; **Gate3 is not yet complete and Gate4 is not built**. The part-A adjacent
+checklist now distinguishes saved pickups, the recorded equipment exception and
+the remaining compass step. Same frozen mod and existing user; no new launcher.
+
+### Future-launcher rule: current single-save template, thumbnail identification
+
+Claude traced repeated old-Continue loads to the backup containing six saves and
+the UI identifying them by thumbnail rather than internal slot names. He revised
+`E:/OOTRemake/tools/test-launcher-template.bat` and reported its dry run checked.
+Read the revised template here; its first-copy branch now copies only:
+
+- `account.sav`;
+- `option.sav`;
+- the selected internal `SLOT` directory.
+
+For **every future launcher**, copy that central template anew, never an existing
+gate launcher. Keep the slot only as internal copy configuration. Player checklists
+must identify the save **by place and what its actual thumbnail shows, never a slot
+number**; inspect the chosen source thumbnail before writing that description.
+Do not invent its image from a filename or room assumption.
+
+Future dry-run verification must compare the copied UID tree against exactly that
+three-part source subset, not the old six-save whole-tree hash map. Check no other
+slot directories were copied, with no game started by this track.
+Existing played Gate1–3 launchers/profiles and their historical verification reports
+remain unchanged; no retroactive resetting/pruning of Kareem's current copy. This
+is a forward rule, not permission to overwrite old evidence.
 
