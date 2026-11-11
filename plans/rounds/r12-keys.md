@@ -408,6 +408,53 @@ copied saves match read-only backup hashes, no hookshot_log.
 Proofs: `gate2c-build.json`, `gate2c-verification.json`.
 Old mods/users remain untouched; no gate3/4 is built before Claude posts2c's result.
 
+### Played result: Gate 2c PASSED
+
+Accepted Claude/Kareem report,~13:08–13:12, Hookshot2.1.0, fresh slot04 copy:
+**“Works perfectly, Forest Temple shows for both small keys, no map from the Deku Tree.”**
+All14 comparison: after Mido Forest0/0/false→1/1/true; after named Deku big2/2/true.
+Deku0/0/false/map false; every other dungeon unchanged; chests stay open; no crash line.
+Snapshots `save-backups/2026-11-11_13*-r12-keygate2c-*`;
+checker `work/r12-keygate1-check/gate2c_saves.py`. No reconfirmation rerun.
+
+Cosmetic finding: opening the changed Deku map chest still makes Navi say
+**“Now we won't get lost”**. That is the preserved source map follow-up, not a map
+grant. Production named-key clones must omit item-specific Navi follow-ups when the
+chest no longer gives that item, without deleting story state. Ordinary plans already
+retain `keep` overrides for changed map/compass chests (`chest_events.toml`,
+`plan.make_plan`, `write.patch_tree`); the observed Deku wrapper is unconditional.
+The same retention mechanism exists for other map/compass sources, but each native
+wrapper's actual follow-up must be checked before claiming it speaks the wrong line.
+Only named-key clones will be corrected in this track; ordinary seed behavior is
+reported, not silently changed. The running full-source gate snapshot remains frozen
+until the separately prepared correction can be verified against its actual native call sites.
+
+## Gate 3 preparation: door source, no invented position
+
+**Existing door source available:** original
+`save-backups/2026-11-09_1022-main-adult-first/save/5a3c9e1f0b7d24680000000000000001`,
+manual **slot_01**. R11's played door experiment used exactly this checkpoint:
+Bombs/Master Sword owned, Hookshot absent, Forest0/0/false;
+Goron center maze chest1176975953041865014, Forest entrance door1163369963105284964
+and native tree chest1171460703078800858 explicitly closed. Mido's opened chest is
+the same-slot positive save control. No new door save position is needed.
+
+Played route: Teleport **Goron City**, top-floor west boulder maze, bomb the
+middle-corridor rock, open the straight-ahead center pocket chest, not its twin.
+Teleport **Forest Temple (entrance)**; walk to the entrance courtyard's first chained
+door and spend the routed Forest key. Then climb the east vines/high branches to
+the untouched native tree key. No Hookshot or room Teleport; this exact grant/spend/
+native-key route already passed r11. Gate3 will compare all14 states at each stage.
+
+Four mixed pickups/native non-key control still need their source availability checked.
+A read-only inventory researcher is prepared; it writes no mod/profile/save. No gate3
+or4 mod exists yet.
+**Kareem/Claude: if no single existing checkpoint safely combines the mixed pickups
+and door, may Gate3 use ONE mod with two fresh users (child slot04 for the mixed
+pickup sequence; this original adult slot01 for the played door/native-key route),
+or would you prefer to supply a new adult checkpoint combining them?**
+No position is invented, and no new copy of a played profile will be reset.
+
 ## Generator implementation (still refused for players)
 
 - Model:8 explicit native target IDs, no copied names. An off-dungeon small key remains
