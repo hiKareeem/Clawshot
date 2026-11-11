@@ -85,6 +85,13 @@ The cache is removed when generation finishes or fails. A force-terminated Make 
 cache behind; keep it private like `seed` and use a fresh pack folder rather than repairing in place.
 Never share any locally generated cache or overlay. The published zip contains neither.
 
+### Dump folders
+
+A dump folder may keep the game in `base/romfs` and its update in `updates/131072/romfs`.
+Clawshot reads the newest update over the base without changing either. A base-only dump is
+refused with the same base-game/update hint as a base-only `romfs`: include update v131072 (v1.1).
+No working cache or seed is made before that check passes.
+
 
 ## Emulator / console loading
 

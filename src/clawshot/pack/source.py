@@ -107,6 +107,13 @@ class LayeredRomfs:
 
     def read(self, relative: str) -> bytes:
         if relative not in self.files:
+            if len(self.layers) == 1 and relative == VERSION_FILES[1]:
+                from clawshot.patch.write import PatchError, check_romfs
+
+                try:
+                    check_romfs(self.layers[0])
+                except PatchError as error:
+                    raise PackError(str(error)) from error
             raise PackError(f"dump folder is missing romfs/{relative}; base and update must both be complete")
         return self.files[relative].read_bytes()
 
