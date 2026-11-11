@@ -39,6 +39,7 @@ Seed-output changes are isolated: three closing parentheses in location `where` 
 | `7830592` | 1: full plan audit, current flag summary, logic-form UI string guidance | No |
 | `cfd0afa` | Round implementation record | No |
 | `1efa1e0` | Linux Play steer: platform help, schema/API docs, neutral log privacy | No |
+| `f9b8940` | Rebased commit record and conflict-resolution note | No |
 
 ## Verification
 
@@ -48,12 +49,14 @@ Initial `git status --short --branch`: clean `r12/public`. Initial `tasklist /FI
 - After the targeted fix: `CLAWSHOT_WORKERS=1 uv run pytest tests/test_pack_dump_folder.py tests/test_cli_romfs.py -q`: **10 passed**, 0.41 s.
 - External synthetic smoke (`uv run --with pyyaml python E:/OOTRemake/work/r12-public-cs12a/smoke.py`): all three issue forms parse and have unique required fields; Discord URL unchanged. Real generator CLI and source-preflight commands now print the base-game/update hint, without making output. Pack success formatting exercised with a synthetic publisher boundary, not a real pack build.
 - `uv run python -m clawshot.pack --help`: public-test wording observed.
-- Claude's steer during this run: main moved to `9f86b3a` with PR #2 (Linux Play). Rebase prepared in a detached scratch worktree so the in-flight gates never read a changing source tree. The only conflict was the Linux platform paragraph in `docs/ui.md`: retained merged Linux behavior plus the proofreading spacing correction. New help/templates support Windows/Linux Play, Linux Hookshot Builder `bin/hookshot`, macOS without Play. The merged runtime retains the same per-output save/log paths. Final gates will run after the tested worktree's branch is moved to the rebased commits.
+- Claude's steer: main moved to `9f86b3a` with PR #2 (Linux Play). Rebased in a detached scratch worktree to keep the in-flight gates' source stable, then moved `r12/public` onto the rebased commits and removed that scratch worktree. The only conflict was the Linux paragraph in `docs/ui.md`: retained merged behavior plus spacing corrections. Help/templates support Windows/Linux Play, Linux Hookshot Builder `bin/hookshot`, macOS without Play. Save/log paths are unchanged.
 - External link checker: **17 documents, zero broken local links/anchors**, including the troubleshooting section.
 - Real headless UI (`python -m clawshot.ui --no-open`) loaded at 1280×860. Synthetic frontend completed-seed/capability state displayed the corrected “Choose Detect” guidance with Play disabled; screenshot inspected. No game, OS dialogs or visible windows opened; tab and owned server closed. This is text-rendering proof, not Play acceptance.
 - UI smoke first exposed a browser-helper execution-world discrepancy (`page.evaluate` could not see the classic-script function, while direct `tab.evaluate` could). Printed function/script/error values, reported the tool issue, then used direct page-world evaluation successfully.
 - Real `generate`, `spoiler_json` and `play_note` smoke on an invented three-location world rendered the corrected parentheses; no game files read.
-- Full serialized gates running with `CLAWSHOT_WORKERS=1`, atomic `gate.lock` directory and `finally` removal. Dump environment uses the three paths from the round prompt.
+- Pre-rebase full gates under `gate.lock`, `CLAWSHOT_WORKERS=1`: `uv run ruff format --check` **303 files formatted**; `uv run ruff check` **passed**; `uv run pytest` **954 passed, 126 skipped**, 1250.93 s. The dump gate was intentionally interrupted, **not passed**, to correct temporary-file placement.
+- Scratch correction: printed inherited `TEMP`/`TMP` and `tempfile.gettempdir()` showed `C:/Users/hi/AppData/Local/Temp`. Stopped only owned jobs and verified native pytest PID **45052** had exited. Its `.lock` identified the owned `pytest-271` directory; removed only that directory and released the owned gate lock. Further gates set `TEMP`, `TMP`, `TMPDIR` and `PYTEST_DEBUG_TEMPROOT` to `E:/OOTRemake/work/r12-public-cs12a/tmp`. No game folder was written or game started. This initial temporary-location deviation is recorded rather than hidden.
+- Claude's PR #3 steer: read local commit `cd7c1f7` (on `9f86b3a`), including source, picker and documentation changes. Its `check_romfs` remains the single base-game hint source, so job 3 automatically inherits “Version 1.0.0” / “Version 1.1.1” without a duplicated detector or message. New help uses the corrected Version 1.1.1 / update v131072 name. Wait for Claude's merge notice, then rebase and run final full gates with the corrected scratch environment.
 
 ## Questions / remaining work
 

@@ -236,7 +236,7 @@ files. Both shell entry points are executable in the zip; an existing release is
 ### Where do I get the game, and which version do I need?
 
 Clawshot provides and downloads no game files. Dump your own Nintendo Switch 2 copy of *Ocarina
-of Time*, including update **v131072 (v1.1)**, build **e0f3ccfa**; the base game alone is not enough.
+of Time*, including **Version 1.1.1 (update v131072)**, build **e0f3ccfa**; the base game alone is not enough.
 Choose its updated `romfs`, full `.nup`, or dump folder with `base/romfs` and `updates/131072/romfs`.
 **Check** on Game compares four game files' contents with the supported build's fingerprints, not
 the folder name. It never starts or changes the game. A different update or incomplete dump is

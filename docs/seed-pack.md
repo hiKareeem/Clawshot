@@ -89,7 +89,7 @@ Never share any locally generated cache or overlay. The published zip contains n
 
 A dump folder may keep the game in `base/romfs` and its update in `updates/131072/romfs`.
 Clawshot reads the newest update over the base without changing either. A base-only dump is
-refused with the same base-game/update hint as a base-only `romfs`: include update v131072 (v1.1).
+refused with the same base-game/update hint as a base-only `romfs`: include Version 1.1.1 (update v131072).
 No working cache or seed is made before that check passes.
 
 
