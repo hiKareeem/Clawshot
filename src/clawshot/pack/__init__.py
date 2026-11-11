@@ -1,4 +1,4 @@
-"""Private, game-free source packs with a reproducible local seed build."""
+"""Public test, game-free source packs with a reproducible local seed build."""
 
 import hashlib
 import json
