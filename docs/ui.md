@@ -305,6 +305,8 @@ give the version, OS and whole UI error text (terminal error if it never opens).
 
 ### Known issues in 0.1.1
 
+- Keys on Spirit Temple's outdoor hand chests can be lost; community seed 11 cannot be finished.
+  Keep its folder and saves, and wait for a release with the fix before starting another seed.
 - Ocarinas from chests have no visible model, but you still receive them.
 - Dampé's digging prize and Bombchu Bowling prizes show the original prize but give the seed's item.
 - After picking up an item Link's age cannot use, **Save and Continue before using other items**:
