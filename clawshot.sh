@@ -124,6 +124,9 @@ if [ -z "$uv" ]; then
 fi
 
 # No pywebview extra here: its system GUI backends are not available on every Linux/macOS installation.
+# The uv cache and this folder are often on different drives; copying is expected there, so skip uv's hardlink warning.
+UV_LINK_MODE=${UV_LINK_MODE:-copy}
+export UV_LINK_MODE
 "$uv" run --project "$root" --frozen --no-dev python -m clawshot.ui "$@"
 status=$?
 if [ "$status" -ne 0 ]; then

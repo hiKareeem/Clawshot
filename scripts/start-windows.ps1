@@ -110,6 +110,8 @@ if ($onPath) {
     $uv = $UvExe
 }
 
+# The uv cache and this folder are often on different drives; copying is expected there, so skip uv's hardlink warning.
+if (-not $env:UV_LINK_MODE) { $env:UV_LINK_MODE = 'copy' }
 & $uv run --project $Root --frozen --no-dev --extra ui python -m clawshot.ui @args
 $status = $LASTEXITCODE
 if ($status -ne 0) {
