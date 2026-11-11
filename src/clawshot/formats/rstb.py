@@ -38,6 +38,9 @@ OWN_FORMULA: dict[str, tuple[int, int]] = {
     "GameData/GameDataList.Product.110.byml": (8, 288),
     # ActorInfo: 1,934,492 raw -> 1,937,560; Round 7 same-shape model/heap field substitutions only.
     "RSDB/ActorInfo.Product.111.rstbl.byml": (32, 3064),
+    # Round 12: EventSetting 509212 -> 509480; same +264 observed in 19/19
+    # non-ActorInfo RSDB tables. Only this table's append growth is enabled.
+    "RSDB/EventSetting.Product.111.rstbl.byml": (32, 264),
 }
 
 

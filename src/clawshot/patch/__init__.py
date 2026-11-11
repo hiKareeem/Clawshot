@@ -56,8 +56,8 @@ def check_dungeon_items(settings: Settings) -> None:
     """Keep unverified dungeon attribution out of game output, not the synthetic fill."""
     if settings.dungeon_items == "anywhere":
         raise PatchError(
-            "dungeon_items='anywhere' is not enabled for seed output: generic key/map/compass actors "
-            "do not encode target dungeons, and named-dungeon grants have not passed in-game testing. "
+            "dungeon_items='anywhere' is not enabled for seed output: source-bound small-key grants "
+            "and dungeon-labelled pickup messages still need the ordered in-game acceptance gates. "
             "Use dungeon_items='own_dungeon'."
         )
 
@@ -147,6 +147,11 @@ def make_seed(
     fast_files = tuple(gamedata.build(romfs, list(event_settings), event_settings)) if event_settings else ()
     fast_files += tuple(door.build(romfs, mode=settings.door_of_time))
     plan = make_plan(out, links, table, chest_events.load())
+    if settings.dungeon_items == "anywhere":
+        from clawshot.patch import keys
+
+        plan, key_changes = keys.changes(romfs, plan, prior_changes=changes)
+        changes += (key_changes,)
     return SeedOutput(out, links, plan, changes, fast_files, item_names)
 
 
