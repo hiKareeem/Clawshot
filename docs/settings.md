@@ -135,12 +135,18 @@ recorded in-game acceptance (R9-FREE-TRAVEL, R9-PRELUDE-PATCHED, R10-FIRST-PULL-
 Adult song logic requires the Ocarina of Time; that age restriction comes from the game's inventory
 metadata, **not a played adult Fairy Ocarina test**.
 
-`--dungeon-items own_dungeon` is the safe/default policy. `--dungeon-items anywhere` exists in the
-fill and settings format but lacks in-game acceptance: native key actors are shared across dungeons.
-Do not use it for a playthrough; production refusal is being added pending that evidence. Maps and
-compasses must not be assumed portable either.
+`--dungeon-items own_dungeon` keeps dungeon items in their dungeon and is the default.
 When dungeon items stay in their own dungeon, the two chests on the Desert Colossus statue's
 hands cannot hold Spirit Temple keys, maps or compasses.
+**`--dungeon-items anywhere` refuses to build a player seed.** Its small-key source bindings
+and dungeon-labelled messages are being checked in isolated in-game tests. Settings strings
+can still record the option, but neither the CLI nor the UI can generate it yet.
+
+The intended anywhere mode moves **small keys only**, to chests the access rules permit.
+Boss keys, maps and compasses stay in their own dungeon. A key found outside its dungeon
+will name that dungeon in both pickup messages, in English in every language; dungeon names
+are read from your dump, not bundled with Clawshot. There is no new in-game key list.
+The planned Tracker tab will show keys per dungeon from that seed's own save.
 
 ## Hints, models and age warnings
 
