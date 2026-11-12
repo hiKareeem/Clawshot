@@ -9,7 +9,7 @@ from tempfile import NamedTemporaryFile
 
 from clawshot.app.paths import SOURCE_ROOT
 
-KEYS = {"dump", "hookshot", "emulator_mods"}
+KEYS = {"dump", "update", "hookshot", "emulator_mods"}  # update: a separate update; "" when the dump has it
 
 
 def _valid_value(key, value):

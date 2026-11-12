@@ -1,6 +1,6 @@
 [game]
 label = "Your game"
-help = "Only your game files are required. Choose an extracted romfs folder or a full .nup. Hookshot is optional and is used only by Play."
+help = "Only your game files are required. Choose an extracted romfs folder, a full .nup or an .nx. Hookshot is optional and is used only by Play."
 note = "Checking game files never starts the game. Emulator players can skip Hookshot."
 [settings]
 label = "Settings"
@@ -16,8 +16,12 @@ help = "Only needed for the Play button. Emulator players can skip it."
 note = "Choose the folder containing bin (the game is bin/hookshot.exe on Windows, bin/hookshot on Linux). Play keeps saves inside this seed's folder and never touches your normal saves."
 [dump]
 label = "Game dump"
-help = "Choose the extracted romfs folder or full .nup for your copy of the game. Clawshot checks that it is the supported game version."
+help = "Choose the extracted romfs folder, full .nup or .nx for your copy of the game. Clawshot checks that it is the supported game version."
 note = "Your game files are only read. Clawshot does not include or download a game."
+[update]
+label = "Update"
+help = "Tick this when your update is kept apart from the game: its own romfs folder, .nup or .nx. Clawshot lays it over the game dump. Leave it off for a romfs with the update applied, a dump folder with base and updates inside, or a .nup or .nx that includes the update."
+note = "Clawshot needs Version 1.1.1: the Version 1.0.0 cart files plus the update. The update is only read."
 [seed]
 label = "Seed number"
 help = "Choose a whole number or press Random. The same number and settings make the same seed."
@@ -35,7 +39,7 @@ label = "Check game and settings"
 help = "Check that these are the right game files and that your chosen options work together."
 [stage-source]
 label = "Read your game files"
-help = "Read your game folder, or make a temporary working copy of the needed files from your .nup. Your original files stay unchanged."
+help = "Read your game folder, or make a temporary working copy of the needed files from your .nup or .nx. Your original files stay unchanged."
 [stage-prepare]
 label = "Prepare supported checks"
 help = "Work out which rewards can be changed without breaking how you collect them."

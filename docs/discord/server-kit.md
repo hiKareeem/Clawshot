@@ -73,11 +73,11 @@ You need:
 Steps:
 1. Install uv, then download the public test pack zip. Extract it into its own new folder **outside**
    RomFS and Hookshot. Never extract over an older pack; each folder has its own Hookshot saves.
-2. Run `Make seed.bat`. It asks for your **full `.nup` filename or extracted RomFS folder** and an
+2. Run `Make seed.bat`. It asks for your **full `.nup` or `.nx` filename or extracted RomFS folder** and an
    **optional** Hookshot folder (the one containing `bin`). Leave Hookshot empty for an emulator.
    Make fingerprints the supported dump before generation, builds locally from the included source,
    settings and seed, then checks every output byte against the pack's reference digest.
-   NUP input may need uv/Python dependencies installed before that version check.
+   NUP or NX input may need uv/Python dependencies installed before that version check.
    Existing seeds are verified, never overwritten; nothing is written to your game folder.
 3. After **Verified seed**, use a current pack's `Play seed.bat` for Hookshot. It verifies again and
    starts only `bin\hookshot.exe`, with updates disabled, `HOS_FS_OVERLAY` cleared and the made seed
@@ -102,7 +102,7 @@ Code is included for inspection. Share the source-only zip, never its locally ge
 ### Playing in Lichii instead of Hookshot
 
 Kareem confirmed seed8 loads and plays on **Lichii (Eden/yuzu family)**. Install uv, extract the pack and
-run **Make seed** as above, providing your `.nup` filename or RomFS and **leaving Hookshot empty**.
+run **Make seed** as above, providing your `.nup` or `.nx` filename or RomFS and **leaving Hookshot empty**.
 No Hookshot installation is needed. Wait for Verified seed, then follow these steps; do not run Play.
 
 1. **Back up the emulator's saves for this game before starting.** A **New Game** for the seed takes over

@@ -25,17 +25,17 @@ class PackError(ValueError):
     """A pack cannot be built or safely used."""
 
 
-def version_digest(romfs: Path) -> str:
+def version_digest(romfs: Path, update: Path | None = None) -> str:
     from clawshot.pack.source import dump_layers, fingerprint, open_source
 
-    if romfs.is_dir() and dump_layers(romfs) is None:
+    if update is None and romfs.is_dir() and dump_layers(romfs) is None:
         return fingerprint(lambda relative: (romfs / relative).read_bytes())
-    with open_source(romfs) as source:  # a .nup, or a base+update dump folder
+    with open_source(romfs, update) as source:  # a .nup, an .nx, a base+update dump folder, or a separate update
         return fingerprint(source.read)
 
 
-def check_version(romfs: Path) -> None:
-    actual = version_digest(romfs)
+def check_version(romfs: Path, update: Path | None = None) -> None:
+    actual = version_digest(romfs, update)
     if actual != ROMFS_SHA256:
         raise PackError(f"RomFS does not match build {BUILD}: fingerprint {actual}, expected {ROMFS_SHA256}")
 
@@ -75,7 +75,9 @@ def source_files(root: Path = ROOT) -> dict[str, bytes]:
     """Positive allowlist: no plans, tests, outputs, Git metadata, caches or arbitrary root files."""
     names = ["pyproject.toml", "uv.lock", ".python-version", "README.md", "LICENSE", "NOTICE", "docs/seed-pack.md"]
     files = {name: (root / name).read_bytes() for name in names}
-    files["src/clawshot/pack/_nup/LICENSE.txt"] = (root / "src/clawshot/pack/_nup/LICENSE.txt").read_bytes()
+    for vendored in ("_nup", "_nx"):  # the upstream permission notices NOTICE points to
+        licence = f"src/clawshot/pack/{vendored}/LICENSE.txt"
+        files[licence] = (root / licence).read_bytes()
     for path in sorted((root / "src/clawshot").rglob("*")):
         if path.is_file() and path.suffix in {".py", ".toml", ".bat", ".ps1"} and "__pycache__" not in path.parts:
             if path.is_symlink():

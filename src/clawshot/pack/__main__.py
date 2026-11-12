@@ -15,7 +15,10 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--seed", required=True, type=int)
     parser.add_argument("--out", required=True, type=Path, help="new zip outside the repository and dump")
     parser.add_argument(
-        "--romfs", type=Path, default=os.environ.get("OOT_ROMFS"), help="RomFS folder or .nup file; or set OOT_ROMFS"
+        "--romfs",
+        type=Path,
+        default=os.environ.get("OOT_ROMFS"),
+        help="RomFS folder, .nup or .nx file; or set OOT_ROMFS",
     )
     args = parser.parse_args(argv)
     if args.romfs is None:

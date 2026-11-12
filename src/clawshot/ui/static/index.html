@@ -40,11 +40,37 @@
               <input
                 id="dump"
                 data-path
-                placeholder="Romfs folder or .nup file"
+                placeholder="Romfs folder, .nup or .nx file"
                 autocomplete="off"
                 spellcheck="false"
               /><button id="browse-dump">Browse…</button
               ><button id="check-dump">Check</button>
+            </div>
+          </div>
+          <div class="menu-row" data-interface="update">
+            <span class="row-label">Update</span>
+            <div class="value-cell">
+              <label class="check-label" for="update-separate"
+                ><input id="update-separate" type="checkbox" /> Update is a
+                separate folder, .nup or .nx</label
+              >
+            </div>
+          </div>
+          <div
+            id="update-row"
+            class="menu-row path-row"
+            data-interface="update"
+            hidden
+          >
+            <label for="update">Update files</label>
+            <div class="value-cell">
+              <input
+                id="update"
+                data-path
+                placeholder="Update romfs folder, .nup or .nx file"
+                autocomplete="off"
+                spellcheck="false"
+              /><button id="browse-update">Browse…</button>
             </div>
           </div>
           <div class="menu-row path-row" data-interface="hookshot">
@@ -72,7 +98,7 @@
             </div>
           </div>
           <div class="menu-row" data-interface="dump">
-            <span class="row-label">Game build</span>
+            <span class="row-label">Game version</span>
             <div
               id="dump-status"
               class="value-cell detection"
@@ -264,10 +290,36 @@
         <h2>Choose game files</h2>
         <button id="close-dump">Close</button>
       </div>
-      <p>Choose the extracted romfs folder or your full .nup game dump.</p>
+      <p>Choose the extracted romfs folder or your full .nup or .nx game dump.</p>
       <div class="result-actions">
         <button data-browse="dump-folder">Romfs folder…</button
-        ><button data-browse="dump-file">.nup file…</button>
+        ><button data-browse="dump-file">.nup or .nx file…</button>
+      </div>
+    </dialog>
+    <dialog id="update-dialog">
+      <div class="dialog-heading">
+        <h2>Choose update files</h2>
+        <button id="close-update">Close</button>
+      </div>
+      <p>
+        Choose the update's extracted romfs folder, its .nup or its .nx. It is laid over
+        your game dump.
+      </p>
+      <div class="result-actions">
+        <button data-browse="update-folder">Romfs folder…</button
+        ><button data-browse="update-file">.nup or .nx file…</button>
+      </div>
+    </dialog>
+    <dialog id="check-dialog" aria-describedby="check-text">
+      <div class="dialog-heading">
+        <h2>Checking your game files…</h2>
+      </div>
+      <p id="check-text" role="status">
+        Clawshot is reading your game files to find their version. The rest of
+        Clawshot waits until this finishes.
+      </p>
+      <div class="result-actions">
+        <button id="cancel-check">Cancel check</button>
       </div>
     </dialog>
     <dialog id="shared-dialog">

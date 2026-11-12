@@ -43,12 +43,19 @@ Hookshot installation are required. Checked input paths are remembered in your u
 Saved folders live in `%APPDATA%/Clawshot/paths.json` on Windows, `~/Library/Application Support/Clawshot/paths.json`
 on macOS, and `$XDG_CONFIG_HOME/clawshot/paths.json` (or `~/.config/clawshot/paths.json`) on Linux.
 
-- **Game:** your own romfs folder or `.nup` is the only required input. Hookshot is optional and
+- **Game:** your own romfs folder, `.nup` or `.nx` is the only required input. Hookshot is optional and
   needed only for Play; emulator players can skip it. Detecting Hookshot can fill an empty dump
   field from romfs or an adjacent NUP; it does not replace a dump you already chose.
   Detection only reads files. The supported game
   check is the pack's `check_version`. Read-only input links/junctions resolve to their real paths;
   output folders still refuse links. Paths are displayed in the host OS's form.
+  The status line names the version found (Version 1.0.0 is the cart, Version 1.1.1 the supported
+  cart + update), also when the files are refused. Tick **Update is a separate folder, .nup or .nx** when
+  the update is kept apart from the game: its romfs folder, `.nup` or `.nx` is laid over the dump, both for
+  the check and for Generate, and is protected like the dump. Leave it off for an applied romfs, a
+  dump folder with `base/` and `updates/`, or a `.nup` or `.nx` that includes the update.
+  While a check runs, a "Checking your game files" dialog blocks the page; Cancel (or Esc) drops
+  the check's answer, and nothing from it is remembered.
 - **Settings:** Defaults restores generator defaults. Recommended selects Chest, Shop, Gift,
   Scrub and BossHeart, with the remaining generator defaults. Every control and choice comes
   from the app schema. Cards explain their coverage and actual gameplay evidence. Unavailable
@@ -237,7 +244,7 @@ files. Both shell entry points are executable in the zip; an existing release is
 
 Clawshot provides and downloads no game files. Dump your own Nintendo Switch 2 copy of *Ocarina
 of Time*, including **Version 1.1.1 (update v131072)**, build **e0f3ccfa**; the base game alone is not enough.
-Choose its updated `romfs`, full `.nup`, or dump folder with `base/romfs` and `updates/131072/romfs`.
+Choose its updated `romfs`, full `.nup` or `.nx`, or dump folder with `base/romfs` and `updates/131072/romfs`.
 **Check** on Game compares four game files' contents with the supported build's fingerprints, not
 the folder name. It never starts or changes the game. A different update or incomplete dump is
 refused: check your own dump and update, rather than renaming files or bypassing the check.

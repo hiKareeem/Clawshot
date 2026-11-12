@@ -8,7 +8,10 @@ from clawshot.pack import BUILD, VERSION_FILES, PackError, check_version
 from clawshot.pack.hookshot import detect as _detect_hookshot
 
 SOURCE_ROOT = Path(__file__).resolve().parents[3]
+SUPPORTED_VERSION = "1.1.1"
 SUPPORTED_UPDATE = "Version 1.1.1 update (v131072)"
+UPDATE_OPTION = "Update is a separate folder, .nup or .nx"
+ARCHIVE_SUFFIXES = (".nup", ".nx")
 
 
 def default_output_root() -> Path:
@@ -62,39 +65,71 @@ def dump_root(path: Path) -> Path:
     return path
 
 
-def _missing_version_files(path: Path) -> list[str]:
-    from clawshot.pack.source import dump_layers
+def _source_path(value: str, label: str) -> Path:
+    path = absolute_path(value, label, allow_links=True)
+    if not path.is_dir() and (not path.is_file() or path.suffix.lower() not in ARCHIVE_SUFFIXES):
+        raise ValueError(f"{label}: choose an extracted romfs folder, a .nup or an .nx file")
+    return path
 
-    if not path.is_dir() or dump_layers(path) is not None:
-        return []
-    return [name for name in VERSION_FILES if not (path / name).is_file()]
+
+def _inspect(path: Path, update: Path | None) -> tuple[str | None, list[str]]:
+    """The version the files name and which fingerprint files are missing, without judging the build."""
+    from clawshot.pack.source import game_version, open_source
+
+    try:
+        with open_source(path, update) as source:
+            return game_version(source), [name for name in VERSION_FILES if not source.has(name)]
+    except (OSError, PackError):
+        return None, []
 
 
-def detect_dump(value: str) -> dict:
-    path = absolute_path(value, "Dump", allow_links=True)
-    if not path.is_dir() and (not path.is_file() or path.suffix.lower() != ".nup"):
-        raise ValueError("Choose an extracted romfs folder or a .nup file")
-    if path.is_dir():
+def _refusal(version: str | None, missing: list[str], update: Path | None) -> str:
+    if missing and version == "1.0.0":
+        if update is not None:
+            return (
+                f"Found Version 1.0.0: the update you chose does not hold the Version {SUPPORTED_VERSION} files "
+                f"({', '.join(missing)}). Choose the {SUPPORTED_UPDATE} folder, .nup or .nx."
+            )
+        return (
+            f"Found Version 1.0.0 (the cart files only). Clawshot needs Version {SUPPORTED_VERSION}: tick "
+            f"'{UPDATE_OPTION}' and choose the update, or choose the folder that holds both base/romfs and "
+            "updates/<version>/romfs."
+        )
+    if missing and version == SUPPORTED_VERSION:
+        return (
+            f"Found only Version {SUPPORTED_VERSION} update files (missing {', '.join(missing)}). Choose the "
+            f"Version 1.0.0 cart files as the game dump, tick '{UPDATE_OPTION}' and choose this as the update."
+        )
+    if missing:
+        return f"These game files are missing {', '.join(missing)}. Choose the full romfs folder, .nup or .nx."
+    if version is None:
+        return "These game files cannot be read or name no known version. Choose the full romfs folder, .nup or .nx."
+    return (
+        f"Found Version {version}, but not the supported build {BUILD} (Version {SUPPORTED_VERSION}). "
+        "Choose an unmodified dump of that version."
+    )
+
+
+def detect_dump(value: str, update: str | None = None) -> dict:
+    path = _source_path(value, "Game dump")
+    update_path = _source_path(update, "Update") if update else None
+    if update_path is not None and update_path == path:
+        raise ValueError("Choose the update separately from the game dump.")
+    if path.is_dir() and update_path is None:
         path = dump_root(path)
     try:
-        check_version(path)
-    except PackError as error:
-        raise ValueError(
-            f"These game files are not the supported build {BUILD} ({SUPPORTED_UPDATE}). "
-            "Choose the correct full game dump."
-        ) from error
-    except OSError as error:
-        missing = _missing_version_files(path)
-        if missing:
-            raise ValueError(
-                f"This romfs is missing {', '.join(missing)}. Build {BUILD} is the Version 1.0.0 cart files "
-                f"plus the {SUPPORTED_UPDATE}, so one of them alone is not enough. Choose the folder that holds both "
-                "base/romfs and updates/<version>/romfs, a romfs with the update applied, or a .nup."
-            ) from error
-        raise ValueError(
-            "These game files are incomplete or cannot be read. Choose the full romfs folder or .nup."
-        ) from error
-    return {"path": str(path), "kind": "romfs" if path.is_dir() else "nup", "build": BUILD, "supported": True}
+        check_version(path, update_path)
+    except (OSError, PackError) as error:
+        raise ValueError(_refusal(*_inspect(path, update_path), update_path)) from error
+    version, _ = _inspect(path, update_path)
+    return {
+        "path": str(path),
+        "kind": "romfs" if path.is_dir() else path.suffix.lower().lstrip("."),
+        "update": str(update_path) if update_path is not None else None,
+        "version": version or SUPPORTED_VERSION,
+        "build": BUILD,
+        "supported": True,
+    }
 
 
 def detect_hookshot(value: str) -> dict:
@@ -109,7 +144,7 @@ def detect_hookshot(value: str) -> dict:
     return result
 
 
-def output_path(value: str, source: Path, hookshot: Path | None = None) -> Path:
+def output_path(value: str, source: Path, hookshot: Path | None = None, update: Path | None = None) -> Path:
     out = absolute_path(value, "Output")
     if out.exists():
         raise ValueError(f"Output already exists; choose a new folder: {out}")
@@ -121,6 +156,12 @@ def output_path(value: str, source: Path, hookshot: Path | None = None) -> Path:
         protected.append(source.parent)
     if hookshot is not None:
         protected.append(hookshot)
+    if update is not None:
+        protected.append(update)
+        if update.is_file() or update.name.lower() == "romfs":
+            protected.append(update.parent)
+    # a layer picked inside a base+updates dump folder, as dump or as separate update: protect that whole folder
+    protected.extend(dump_root(path) for path in (source, update) if path is not None and path.is_dir())
     for root in protected:
         root = root.resolve()
         if out.is_relative_to(root) or root.is_relative_to(out):
