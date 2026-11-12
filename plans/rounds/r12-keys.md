@@ -1333,3 +1333,38 @@ after the thread exceeded50 posts because its `bermuda thread log` read retained
 only the newest50. That delayed seeing the20:13 handover; **watcher fixed**.
 This was a message-visibility failure, not a mod boot failure.
 
+### Gate 4A played results — attribution/text/reload PASS; visual-age question open
+
+Claude reports Kareem's21:16–21:20 run, snapshots
+`save-backups/2026-11-11_21*-r12-keygate4a-1..7`; accepted as reported, not rerun.
+Final saves: internal04 at21:19:22 and01 at21:19:58, both **adult**.
+Only GerudoTrainingGround remaining0→1, total0→1, once false→true changed;
+the other81 baseline fields stayed unchanged.
+
+Reported screenshots/result:
+- Acquisition **Small Key (Gerudo Proving Grounds)**: one line, fully readable.
+- Caption **Opens one locked door.** / **Dungeon: Gerudo Proving Grounds**: readable.
+- Normal key model; floating indicator appeared without increment, as specified.
+- Chest stayed open after Save/Quit/Continue; no second reward.
+
+Route deviation: SFM entrance Teleport landed at the **Forest Temple end**, not
+the expected lower entrance. Sheik's Minuet scene played in this copy; Kareem then
+took the adult route to the clearing. No seed/profile change is made here.
+
+**Open — Claude is asking Kareem:** Link looks child-like in both pickup screenshots
+(young face/Kokiri-style tunic), although every before/after save says adult.
+Do not infer a saved age change or certify the player's model from those saves.
+If confirmed, inspect the actual named-small-chest wrapper's get-item demo/actor
+and whether that path selects a child-only model; do not patch speculatively.
+The suggestion that gates1–3 were all child is inaccurate: **Gate3B used the adult-
+first checkpoint and played a named small key**. Its visual age was not recorded,
+so it is relevant prior exposure, not proof the appearance is correct.
+
+Minuet button prompts reportedly showed **Xbox** icons despite the runtime's
+resource-size-table/game-icons message. A separate ocarina-hint rendering path is
+**an inference only**; no Clawshot cause or fix is established.
+
+Part B is next; Claude reports its watcher **armed for the switch after A closes**.
+Gate4 as a whole remains incomplete, the model question unresolved, public refusal
+retained, all staged mod/save bytes untouched.
+
