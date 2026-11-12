@@ -59,8 +59,8 @@ KNOWN ISSUES
 - The Weird Egg, Zelda's Letter and the adult trading items are not shuffled.
   Child and adult trade items share one inventory slot, which shows an adult
   item first. As a child, wake Talon with the Cucco (and show Zelda's Letter
-  to the Kakariko guard) before taking the Pocket Egg as an adult, or finish
-  the adult trade first. Save and Continue does not change what that slot shows.
+  to the Kakariko guard) before taking the Pocket Egg as an adult.
+  Save and Continue does not change what that slot shows.
 - Bombchu Bowling: your first two wins give the seed's two prizes; later wins
   give the game's usual small prizes. The alley still shows its original prizes;
   you get the seed's.

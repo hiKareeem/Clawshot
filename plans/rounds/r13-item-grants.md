@@ -84,8 +84,9 @@ Gift moved its intermediate items is another reason the old placement was unsoun
 grant has no child `Talon_AfterWakeUp` prerequisite; early adult/free-return modes can therefore
 create the same hidden-Cucco situation. Following Claude's explicit 2026-11-12 option, this track
 uses a **plain README/play-note/pack warning**, not a fabricated native gate: wake child Talon and
-show Zelda's Letter to the Kakariko guard **before taking Anju's adult Pocket Egg**, or finish the
-adult trade first. The warning is not a claim that existing damaged seeds were rewritten.
+show Zelda's Letter to the Kakariko guard **before taking Anju's adult Pocket Egg**. Do not promise
+that finishing the adult chain clears the slot: the inspected final Biggoron flows have no explicit
+Claim Check removal (`trade/claim_consumption.py`). The warning does not rewrite existing seeds.
 
 Other affected child use: the guard's ShowItem ZeldaLetter route consumes the Letter at
 `Npc_Hylia_Soldier_003/Event57`; a hidden Letter can therefore block that interaction too.
@@ -151,6 +152,10 @@ Launcher dry run prints the bin executable, isolated user and exactly-one-mod HO
 no game started. Claude must obtain `mods: Sequence/SetPouchAndStatusForGameStart.module.ainb <- ...`
 and the Kokiri placement loading line before player acceptance. No second launcher for trade,
 bombs or capacity: native evidence settles the former policy/gates; castle's capacity PR is held.
+Claude reported **ib13 boot check passed**, 2026-11-12: 490 log lines, this mod's
+`SetPouchAndStatusForGameStart` loaded, no crash. He handed the check to Kareem with a save
+watcher on its isolated user. This is Claude's runtime loading proof, not yet Kareem's pickup/use result.
+
 
 ## Bomb purchase and tier audit status
 

@@ -308,7 +308,7 @@ def play_note(seed: Seed, log: Mapping[str, Any] | None = None) -> str:
             "## Trade-slot order",
             "",
             "Trading items stay at their native checks. Wake child Talon with the Cucco and show Zelda's Letter"
-            " before taking Anju's adult Pocket Egg, or finish the adult trade first.",
+            " before taking Anju's adult Pocket Egg.",
             "Child and adult trade items share one displayed slot; an owned adult trade item hides the Cucco."
             " Save and Continue does not change that ownership-based slot choice.",
             "",
