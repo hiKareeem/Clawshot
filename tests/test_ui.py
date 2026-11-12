@@ -295,3 +295,25 @@ def test_cancelled_check_answers_cancelled_and_remembers_nothing(tmp_path, monke
         status, _, value = request(server, "detect", {"dump": cart, "check": 9})
         assert status == 200 and preferences.snapshot()["update"] == ""  # unticked: no separate update
     assert seen == [(cart, update), (cart, update), (cart, None)]
+
+
+def test_a_cancelled_check_that_fails_does_not_cancel_a_later_check_with_its_id(tmp_path, monkeypatch):
+    from clawshot.app.preferences import Preferences
+    from clawshot.ui import server as ui_server
+
+    answers = [ValueError("not a game dump")]
+
+    def fake_detect(dump, update=None):
+        if answers:
+            raise answers.pop()
+        return {"path": dump, "update": update, "kind": "romfs", "version": "1.1.1", "build": "b", "supported": True}
+
+    monkeypatch.setattr(ui_server, "detect_dump", fake_detect)
+    app = Application(Jobs(synthetic_run), spec=synthetic_spec(), preferences=Preferences(tmp_path / "paths.json"))
+    with running_server(app) as server:
+        assert request(server, "cancel-check", {"check": 7})[0] == 200
+        status, _, value = request(server, "detect", {"dump": str(tmp_path / "bad"), "check": 7})
+        assert status == 400 and value["error"] == "not a game dump"
+        status, _, value = request(server, "detect", {"dump": str(tmp_path / "cart"), "check": 7})
+        assert status == 200 and value["dump"]["version"] == "1.1.1"
+    assert app.cancelled_checks == set()

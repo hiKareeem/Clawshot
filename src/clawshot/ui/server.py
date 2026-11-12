@@ -200,17 +200,20 @@ class Application:
         if method == "POST" and route == "detect":
             check = check_id(body.get("check", 0))
             result = {}
-            if body.get("dump"):
-                update = body.get("update") or None
-                result["dump"] = detect_dump(body["dump"], update)
-            if body.get("hookshot"):
-                result["hookshot"] = detect_hookshot(body["hookshot"])
-            if not result:
-                raise ValueError("Enter a dump or Hookshot path")
-            with self.checks_lock:  # a cancelled check's answer is dropped, and nothing is remembered from it
-                if check in self.cancelled_checks:
+            try:
+                if body.get("dump"):
+                    update = body.get("update") or None
+                    result["dump"] = detect_dump(body["dump"], update)
+                if body.get("hookshot"):
+                    result["hookshot"] = detect_hookshot(body["hookshot"])
+                if not result:
+                    raise ValueError("Enter a dump or Hookshot path")
+                with self.checks_lock:  # a cancelled check's answer is dropped, and nothing is remembered from it
+                    if check in self.cancelled_checks:
+                        raise ValueError("Check cancelled.")
+            finally:  # answered or failed, this id is done: a later check that reuses it must not read as cancelled
+                with self.checks_lock:
                     self.cancelled_checks.discard(check)
-                    raise ValueError("Check cancelled.")
             if "dump" in result:
                 self.preferences.remember("dump", result["dump"]["path"])
                 self.preferences.remember("update", result["dump"]["update"] or "")

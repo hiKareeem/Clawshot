@@ -30,8 +30,7 @@ let playAvailable = false,
 let openAvailable = false,
   libraryActions = [],
   lastLibraryOutput = "";
-let checkSeq = 0,
-  activeCheck = null;
+let activeCheck = null;
 let emulatorFolder = "",
   edenFolder = "",
   copyAvailable = false;
@@ -699,6 +698,12 @@ function separateUpdate() {
 }
 // A check blocks the page behind a modal until it answers or is cancelled; a
 // cancelled check's late answer is ignored here and dropped by the server.
+// Ids are random, not a counter: a counter restarts on reload, so a cancel the
+// server got after its check answered could match a later check's id.
+function newCheckId() {
+  const [high, low] = crypto.getRandomValues(new Uint32Array(2));
+  return (high >>> 11) * 2 ** 32 + low; // 53 bits, the server's limit
+}
 function cancelCheck() {
   if (!activeCheck) return;
   const { check, controller } = activeCheck;
@@ -709,7 +714,7 @@ async function detect(kind, fillDump = true) {
   if (kind === "hookshot") hookshotCanPlay = false;
   const button = $(kind === "dump" ? "check-dump" : "check-hookshot"),
     status = $(kind + "-status");
-  const check = ++checkSeq,
+  const check = newCheckId(),
     controller = new AbortController();
   activeCheck = { check, controller };
   if (!$("check-dialog").open) openDialog("check-dialog");

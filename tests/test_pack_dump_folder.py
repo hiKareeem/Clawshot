@@ -132,6 +132,17 @@ def test_a_separate_update_is_protected_from_output(tmp_path):
         inside.paths()
 
 
+def test_a_separate_update_picked_inside_a_dump_folder_protects_the_whole_dump_folder(tmp_path):
+    from clawshot.app import GenerationRequest
+
+    root = _cart_and_update(tmp_path / "dump")
+    cart, update = str(root / "base/romfs"), str(root / "updates/131072/romfs")
+    assert GenerationRequest(cart, str(tmp_path / "seed-1"), 1, "CS1", update=update).paths()[0] == root / "base/romfs"
+    beside_base = GenerationRequest(cart, str(root / "seed-1"), 1, "CS1", update=update)
+    with pytest.raises(ValueError, match=f"protected.*{root.name}$"):
+        beside_base.paths()
+
+
 def test_finder_metadata_is_not_game_or_seed_content(tmp_path):
     from clawshot.pack import tree_digest
 
