@@ -30,7 +30,7 @@ def version_digest(romfs: Path, update: Path | None = None) -> str:
 
     if update is None and romfs.is_dir() and dump_layers(romfs) is None:
         return fingerprint(lambda relative: (romfs / relative).read_bytes())
-    with open_source(romfs, update) as source:  # a .nup, a base+update dump folder, or a separate update
+    with open_source(romfs, update) as source:  # a .nup, an .nx, a base+update dump folder, or a separate update
         return fingerprint(source.read)
 
 

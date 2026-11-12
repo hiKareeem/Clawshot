@@ -10,7 +10,8 @@ from clawshot.pack.hookshot import detect as _detect_hookshot
 SOURCE_ROOT = Path(__file__).resolve().parents[3]
 SUPPORTED_VERSION = "1.1.1"
 SUPPORTED_UPDATE = "Version 1.1.1 update (v131072)"
-UPDATE_OPTION = "Update is a separate folder or .nup"
+UPDATE_OPTION = "Update is a separate folder, .nup or .nx"
+ARCHIVE_SUFFIXES = (".nup", ".nx")
 
 
 def default_output_root() -> Path:
@@ -66,8 +67,8 @@ def dump_root(path: Path) -> Path:
 
 def _source_path(value: str, label: str) -> Path:
     path = absolute_path(value, label, allow_links=True)
-    if not path.is_dir() and (not path.is_file() or path.suffix.lower() != ".nup"):
-        raise ValueError(f"{label}: choose an extracted romfs folder or a .nup file")
+    if not path.is_dir() and (not path.is_file() or path.suffix.lower() not in ARCHIVE_SUFFIXES):
+        raise ValueError(f"{label}: choose an extracted romfs folder, a .nup or an .nx file")
     return path
 
 
@@ -87,7 +88,7 @@ def _refusal(version: str | None, missing: list[str], update: Path | None) -> st
         if update is not None:
             return (
                 f"Found Version 1.0.0: the update you chose does not hold the Version {SUPPORTED_VERSION} files "
-                f"({', '.join(missing)}). Choose the {SUPPORTED_UPDATE} folder or .nup."
+                f"({', '.join(missing)}). Choose the {SUPPORTED_UPDATE} folder, .nup or .nx."
             )
         return (
             f"Found Version 1.0.0 (the cart files only). Clawshot needs Version {SUPPORTED_VERSION}: tick "
@@ -100,9 +101,9 @@ def _refusal(version: str | None, missing: list[str], update: Path | None) -> st
             f"Version 1.0.0 cart files as the game dump, tick '{UPDATE_OPTION}' and choose this as the update."
         )
     if missing:
-        return f"These game files are missing {', '.join(missing)}. Choose the full romfs folder or .nup."
+        return f"These game files are missing {', '.join(missing)}. Choose the full romfs folder, .nup or .nx."
     if version is None:
-        return "These game files cannot be read or name no known version. Choose the full romfs folder or .nup."
+        return "These game files cannot be read or name no known version. Choose the full romfs folder, .nup or .nx."
     return (
         f"Found Version {version}, but not the supported build {BUILD} (Version {SUPPORTED_VERSION}). "
         "Choose an unmodified dump of that version."
@@ -123,7 +124,7 @@ def detect_dump(value: str, update: str | None = None) -> dict:
     version, _ = _inspect(path, update_path)
     return {
         "path": str(path),
-        "kind": "romfs" if path.is_dir() else "nup",
+        "kind": "romfs" if path.is_dir() else path.suffix.lower().lstrip("."),
         "update": str(update_path) if update_path is not None else None,
         "version": version or SUPPORTED_VERSION,
         "build": BUILD,

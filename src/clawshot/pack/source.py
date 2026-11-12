@@ -1,4 +1,4 @@
-"""Read-only NUP input and a disposable, generator-only RomFS working set."""
+"""Read-only NUP and NX input and a disposable, generator-only RomFS working set."""
 
 import argparse
 import hashlib
@@ -14,6 +14,7 @@ import zstandard
 from clawshot.pack import VERSION_FILES, PackError, is_os_metadata
 from clawshot.pack._nup import format as F
 from clawshot.pack._nup.read import NupReader
+from clawshot.pack._nx import read as nx
 
 # A game's update has its own title ID: the base's plus 0x800. Both share the application ID (the upper bits).
 APPLICATION_ID_MASK = ~0xFFF
@@ -83,6 +84,50 @@ class NupRomfs:
         if hashlib.sha256(data).digest() != expected:
             raise PackError(f"NUP SHA256 mismatch: romfs/{relative}")
         return data
+
+
+class NxRomfs:
+    """The newest base/update snapshot of an NX archive (fab918/nxformat). Each NX snapshot is a complete tree
+    (``exefs/``, ``romfs/``, optional ``data/``; SPEC.md section 8), so the update snapshot is read on its own, never
+    laid over the base. Only archives converted from a NUP or an extracted dump hold a ``romfs/`` tree: one packed
+    from a decrypted NSP stores native NCAs, which Clawshot does not read."""
+
+    def __init__(self, path: Path):
+        self.archive = nx.NxArchive(path)
+        try:
+            games = [
+                s
+                for s in self.archive.snapshots
+                if s.snapshot_type in (nx.SNAPSHOT_BASE, nx.SNAPSHOT_UPDATE, nx.SNAPSHOT_STANDALONE_UPDATE)
+            ]
+            if not games or len({s.application_id & APPLICATION_ID_MASK for s in games}) != 1:
+                raise PackError("NX archive must contain one game's base/update snapshots")
+            newest = max(s.version for s in games)
+            games = [s for s in games if s.version == newest]
+            if len(games) != 1:
+                raise PackError("NX archive has more than one snapshot of its newest version")
+            self.snapshot = games[0]
+            tree = self.archive.tree(self.snapshot)
+            self.files = {path[len("romfs/") :]: record for path, record in tree.items() if path.startswith("romfs/")}
+            if not self.files:
+                raise PackError(
+                    "NX snapshot has no romfs/ tree (packed from a decrypted NSP?); convert the game from its NUP "
+                    "or an extracted dump folder, or choose those directly"
+                )
+        except BaseException:
+            self.archive.close()
+            raise
+
+    def has(self, relative: str) -> bool:
+        return relative in self.files
+
+    def close(self):
+        self.archive.close()
+
+    def read(self, relative: str) -> bytes:
+        if relative not in self.files:
+            raise PackError(f"NX newest snapshot is missing romfs/{relative}; a complete supported dump is required")
+        return self.archive.read(self.files[relative])
 
 
 class FolderRomfs:
@@ -188,14 +233,19 @@ def _open_one(path: Path):
     if path.is_dir():
         yield LayeredRomfs(path) if dump_layers(path) is not None else FolderRomfs(path)
         return
+    if path.suffix.lower() == ".nx":
+        with open_nx(path) as source:
+            yield source
+        return
     with open_nup(path) as source:
         yield source
 
 
 @contextmanager
 def open_source(path: Path, update: Path | None = None):
-    """A RomFS folder, a dump folder or a ``.nup``, optionally with a separate update (a RomFS folder holding the
-    update's files, or an update ``.nup``) laid over it, read through one ``files``/``has``/``read`` interface."""
+    """A RomFS folder, a dump folder, a ``.nup`` or an ``.nx``, optionally with a separate update (a RomFS folder
+    holding the update's files, or an update ``.nup`` or ``.nx``) laid over it, read through one
+    ``files``/``has``/``read`` interface."""
     with ExitStack() as stack:
         base = stack.enter_context(_open_one(path))
         if update is None:
@@ -229,6 +279,19 @@ def open_nup(path: Path):
             source.close()
 
 
+@contextmanager
+def open_nx(path: Path):
+    source = None
+    try:
+        source = NxRomfs(path)
+        yield source
+    except (nx.NxError, struct.error, IndexError, UnicodeError, zstandard.ZstdError) as error:
+        raise PackError(f"invalid NX archive: {error}") from error
+    finally:
+        if source is not None:
+            source.close()
+
+
 def fingerprint(read) -> str:
     hashes = "".join(hashlib.sha256(read(p)).hexdigest() + "\n" for p in VERSION_FILES)
     return hashlib.sha256(hashes.encode("ascii")).hexdigest()
@@ -238,7 +301,7 @@ def resource_spec() -> dict:
     return tomllib.loads(Path(__file__).with_name("resources.toml").read_text(encoding="utf-8"))
 
 
-def working_files(source: "NupRomfs | StackedRomfs | FolderRomfs", spec: dict) -> set[str]:
+def working_files(source: "NupRomfs | NxRomfs | StackedRomfs | FolderRomfs", spec: dict) -> set[str]:
     """Resolve the one cache definition against the source's file index and the catalogues."""
     from fnmatch import fnmatchcase
 
@@ -256,9 +319,9 @@ def working_files(source: "NupRomfs | StackedRomfs | FolderRomfs", spec: dict) -
 
 @contextmanager
 def local_romfs(path: Path, parent: Path | None, update: Path | None = None):
-    """A RomFS folder as given; for a ``.nup``, a base+update dump folder or a separate ``update``, a disposable
-    working set of the files the generator reads, under ``parent`` (the system temporary folder when None). Never
-    write under the source; remove only this invocation's disposable cache."""
+    """A RomFS folder as given; for a ``.nup`` or ``.nx``, a base+update dump folder or a separate ``update``, a
+    disposable working set of the files the generator reads, under ``parent`` (the system temporary folder when None).
+    Never write under the source; remove only this invocation's disposable cache."""
     if update is None and path.is_dir() and dump_layers(path) is None:
         yield path
         return

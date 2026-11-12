@@ -9,7 +9,7 @@ import threading
 from clawshot.app.paths import absolute_path, default_output_root
 
 KINDS = {"dump-folder", "dump-file", "update-folder", "update-file", "hookshot", "output", "seeds", "emulator_mods"}
-FILE_KINDS = {"dump-file": "Choose your game .nup", "update-file": "Choose your update .nup"}
+FILE_KINDS = {"dump-file": "Choose your game .nup or .nx", "update-file": "Choose your update .nup or .nx"}
 CANCELLED = -128  # AppleScript's "User canceled." error number
 
 
@@ -32,7 +32,7 @@ def macos_script(kind):
     """
     prompt = "with prompt " + _applescript_text(_title(kind))
     if kind in FILE_KINDS:
-        choose = f'choose file {prompt} of type {{"nup"}}'
+        choose = f'choose file {prompt} of type {{"nup", "nx"}}'
     else:
         choose = "choose folder " + prompt
         if kind == "output":
@@ -77,7 +77,9 @@ def choose_tk(kind, window):
             root.lift()
             root.focus_force()
         if kind in FILE_KINDS:
-            return filedialog.askopenfilename(parent=root, title=_title(kind), filetypes=[("NUP game dump", "*.nup")])
+            return filedialog.askopenfilename(
+                parent=root, title=_title(kind), filetypes=[("NUP or NX game dump", "*.nup *.nx")]
+            )
         return filedialog.askdirectory(
             parent=root,
             title=_title(kind),
@@ -144,7 +146,7 @@ def webview_chooser(window, webview):
         try:
             if kind in FILE_KINDS:
                 selected = window.create_file_dialog(
-                    open_dialog, allow_multiple=False, file_types=("NUP game dump (*.nup)",)
+                    open_dialog, allow_multiple=False, file_types=("NUP or NX game dump (*.nup;*.nx)",)
                 )
             else:
                 selected = window.create_file_dialog(folder_dialog, allow_multiple=False)
