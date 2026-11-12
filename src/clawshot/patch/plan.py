@@ -233,14 +233,22 @@ def _named_key(seed: Seed, location: str, item: str, area: str | None) -> str | 
     return None
 
 
-def make_plan(seed: Seed, links: Links, items: ItemActors, events: Mapping[str, ChestEvent]) -> Plan:
-    """The changes that give every shuffled location its placed item.
+def make_plan(
+    seed: Seed,
+    links: Links,
+    items: ItemActors,
+    events: Mapping[str, ChestEvent],
+    overrides: Mapping[str, str] | None = None,
+) -> Plan:
+    """The changes that give every shuffled location its placed item. ``overrides`` names the actor of a location
+    whose item has none in ``items`` (``clawshot.patch.custom_items``: Nothing, another player's item).
 
     With ``anywhere`` a small key outside its dungeon's area is named (:func:`_named_key`); a chest already holding
     the generic small key still changes for it. Other shuffled kinds have no named grant: a small key there must
     lie in its own dungeon's area."""
     anywhere = seed.settings.dungeon_items == "anywhere"
     changes, unchanged = [], []
+    overrides = overrides or {}
     for name in seed.shuffled:
         if name not in links.chests:
             # Other shuffled kinds are handled by make_seed's registered patch steps.
@@ -250,7 +258,7 @@ def make_plan(seed: Seed, links: Links, items: ItemActors, events: Mapping[str, 
                     raise PatchError(f"{name}: {item} outside its dungeon needs a named grant, which only chests have")
             continue
         item = seed.placements[name]
-        actor = items.actor(item)
+        actor = overrides[name] if name in overrides else items.actor(item)
         for chest in links.chests[name]:
             named_key = _named_key(seed, name, item, chest.area) if anywhere else None
             if chest.vanilla_item == actor and named_key is None:

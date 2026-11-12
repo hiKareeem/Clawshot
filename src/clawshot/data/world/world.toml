@@ -109,3 +109,7 @@ age_return_door_families = { song_only = ["Bow", "Progressive Hookshot", "Progre
 "Quiver (40)" = { class = "normal" }
 "Scrub Business Seed" = { class = "normal" } # D12: remake-only filler
 "Magic Jar" = { class = "normal" } # census Tbox_MagicJar_Large; no ability added
+# Another player's item (clawshot.patch.custom_items): a chest shows Zelda's Letter and names the player and item,
+# and gives nothing here; the multiworld's client sends it. Placed only by given placements (an Archipelago slot).
+# "Nothing" (OoT Randomizer's own item) is shown the same way when a chest holds it.
+"Archipelago Item" = { class = "normal" }

@@ -3,7 +3,7 @@ resource size table when a changed file needs a bigger entry, through ``clawshot
 romfs is written."""
 
 from collections.abc import Callable, Mapping, Sequence
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path, PurePosixPath
 from typing import TYPE_CHECKING
 
@@ -18,6 +18,19 @@ if TYPE_CHECKING:
 
 FileChanges = Mapping[str, Callable[[bytes], bytes]]
 """Romfs-relative paths to transforms of decompressed file bytes. Transforms must validate their read-back."""
+
+
+@dataclass(frozen=True)
+class NewFile:
+    """A file the game did not ship (``clawshot.patch.custom_items``): its decompressed bytes, and for each pack
+    member it adds the existing member whose size-table entry it takes, plus the growth of its 32-byte-rounded size
+    (the same-shape rule of ``getitem.member_growth``)."""
+
+    data: bytes
+    members: Mapping[str, tuple[str, int]] = field(default_factory=dict)
+
+
+NewFiles = Mapping[str, NewFile]
 
 
 @dataclass(frozen=True)
@@ -117,12 +130,15 @@ def write(
     *,
     extra_changes: Sequence[FileChanges] = (),
     fast_start_files: Sequence["BuiltFile"] = (),
+    new_files: NewFiles | None = None,
 ) -> list[WrittenFile]:
     """Write every file the plan changes to ``<out>/romfs/``, compressed with the dictionary its name calls for.
 
     Each changed file's resource-size-table entry is raised to ``rstb.required_size`` when it is short (never
-    lowered); the table is written only when an entry changed. Every file is built and read back first; nothing is
-    written if one fails."""
+    lowered); the table is written only when an entry changed. ``new_files`` are files the dump does not hold: each
+    gets a new entry (``rstb.required_size``), and each member it lists the entry of the member it copies plus its
+    growth. Every file is built and read back first; nothing is written if one fails."""
+    new_files = dict(new_files or {})
     romfs, out = Path(romfs), Path(out)
     check_output_folder(romfs, out)
     dicts = zsdic.Dictionaries.from_romfs(romfs)
@@ -169,7 +185,30 @@ def write(
         table.set(path, new_entry)
         info = WrittenFile(path, len(data), len(new_data), len(compressed), len(new_compressed), entry, new_entry)
         built.append((info, new_compressed))
-    occupied = set(paths)
+    for path in sorted(new_files):
+        relative = _patch_path(path)
+        new_file = new_files[path]
+        if path in paths or (romfs / relative).exists():
+            raise PatchError(f"{path}: a new file must be one the dump does not hold")
+        if table.get(path) is not None:
+            raise PatchError(f"{path}: the resource size table already has an entry for it")
+        for member, (donor, growth) in sorted(new_file.members.items()):
+            entry = table.get(donor)
+            if entry is None:
+                raise PatchError(f"{member}: its donor {donor} has no resource size table entry")
+            if table.get(member) is not None:
+                raise PatchError(f"{member}: the resource size table already has an entry for it")
+            table.set(member, entry + growth)
+            members_grew = True
+        new_compressed = dicts.compress(path, new_file.data) if path.endswith(".zs") else new_file.data
+        if path.endswith(".zs") and dicts.decompress(path, new_compressed) != new_file.data:
+            raise PatchError(f"{path}: the compressed file does not decompress to the written bytes")
+        new_entry = rstb.required_size(path, len(new_file.data))
+        table.set(path, new_entry)
+        members_grew = True
+        info = WrittenFile(path, 0, len(new_file.data), 0, len(new_compressed), None, new_entry)
+        built.append((info, new_compressed))
+    occupied = set(paths) | set(new_files)
     for file in sorted(fast_start_files, key=lambda f: f.path):
         relative = _patch_path(file.path)
         if file.path in occupied:
