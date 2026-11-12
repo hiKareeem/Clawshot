@@ -52,10 +52,15 @@ KNOWN ISSUES
 - Getting an item your current age can't use (the Bow as child, for example) can
   jam your item buttons. Save and Continue fixes it. play-note.md lists the places
   in your seed where that can happen.
+  New games initialize an empty nut slot (0/20); its prevention of first-pickup
+  jams is built but not yet verified in game. Existing saves are unchanged.
 - Ocarinas from chests show no model, and songs from chests show an ocarina.
   Both work normally.
-- The Weird Egg and Zelda's Letter are not shuffled (the remake keeps them in one
-  inventory slot).
+- The Weird Egg, Zelda's Letter and the adult trading items are not shuffled.
+  Child and adult trade items share one inventory slot, which shows an adult
+  item first. As a child, wake Talon with the Cucco (and show Zelda's Letter
+  to the Kakariko guard) before taking the Pocket Egg as an adult, or finish
+  the adult trade first. Save and Continue does not change what that slot shows.
 - Bombchu Bowling: your first two wins give the seed's two prizes; later wins
   give the game's usual small prizes. The alley still shows its original prizes;
   you get the seed's.

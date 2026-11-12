@@ -405,3 +405,73 @@ def test_child_trade_gifts_stay_vanilla_and_out_of_the_pool_and_chest_allowlist(
     assert check not in shuffled
     assert item not in pool
     assert item_actors.load().actor(item) not in CATALOG["chest_verified"]
+
+
+# R13: every adult trade hand-in is a ShowItemReplaceEvent of the item the previous trade gave (build e0f3ccfa,
+# SubEvent_GetSwordBigGoron Step03..Step11 and Anju's Pocket Cucco event), and the trade cell Pa_ItemIcon_23 shows
+# one owned variant, adult items first (native 0xa6ef20). Hand-in check -> (item it shows, the native source of
+# that item: a check, or the item it hatches from).
+ADULT_TRADE_HANDINS = {
+    "Kak Anju Trade Pocket Cucco": ("Pocket Cucco", "Kak Anju as Adult"),  # hatched natively from the Pocket Egg
+    "LW Trade Cojiro": ("Cojiro", "Kak Anju Trade Pocket Cucco"),
+    "Kak Granny Trade Odd Mushroom": ("Odd Mushroom", "LW Trade Cojiro"),
+    "LW Trade Odd Potion": ("Odd Potion", "Kak Granny Trade Odd Mushroom"),
+    "GV Trade Poachers Saw": ("Poachers Saw", "LW Trade Odd Potion"),
+    "DMT Trade Broken Sword": ("Broken Sword", "GV Trade Poachers Saw"),
+    "ZD Trade Prescription": ("Prescription", "DMT Trade Broken Sword"),
+    "LH Trade Eyeball Frog": ("Eyeball Frog", "ZD Trade Prescription"),
+    "DMT Trade Eyedrops": ("Eyedrops", "LH Trade Eyeball Frog"),
+    "DMT Biggoron": ("Claim Check", "DMT Trade Eyedrops"),
+}
+TRADE_ITEMS = (
+    "Weird Egg",
+    "Chicken",
+    "Zeldas Letter",
+    "Pocket Egg",
+    "Pocket Cucco",
+    "Cojiro",
+    "Odd Mushroom",
+    "Odd Potion",
+    "Poachers Saw",
+    "Broken Sword",
+    "Prescription",
+    "Eyeball Frog",
+    "Eyedrops",
+    "Claim Check",
+)
+
+
+@pytest.fixture(scope="module")
+def gift_world():
+    # Without the dump, let every gift whose rule is changeable move (an upper bound on a real seed's selection);
+    # the "more" checks stay held exactly as gifts.seed_setup holds them.
+    rules = gifts.load()
+    spec = load_spec()
+    movable = [name for name in spec["locations"] if name in rules and rules[name].cls != gifts.MORE]
+    settings, world = prepare(gifts.restrict_spec(spec, movable), Settings(shuffle=("Chest", *gifts.GIFT_TYPES)))
+    return world, shuffled_locations(world, settings)
+
+
+def test_no_trade_item_joins_the_gift_pool(gift_world):
+    # A child gift holding any adult trade item would take the shared cell from the Cucco Talon must be shown.
+    world, shuffled = gift_world
+    pool = {world.locations[name].vanilla for name in shuffled}
+    assert sorted(pool.intersection(TRADE_ITEMS)) == []
+
+
+@pytest.mark.parametrize("check", sorted(ADULT_TRADE_HANDINS))
+def test_each_adult_trade_hand_in_gets_its_shown_item_from_the_native_previous_trade(gift_world, check):
+    # The world keeps adult_trade_shuffle = false: its Access events assume the native chain, as the game does.
+    world, shuffled = gift_world
+    item, source = ADULT_TRADE_HANDINS[check]
+    assert world.settings["adult_trade_shuffle"] is False
+    assert source not in shuffled, source
+    assert world.locations[source].keep_vanilla, source
+    if item != "Pocket Cucco":
+        assert world.locations[source].vanilla == item
+
+
+def test_biggoron_reward_stays_shuffled_behind_the_native_claim_check(gift_world):
+    world, shuffled = gift_world
+    assert "DMT Biggoron" in shuffled
+    assert "Claim_Check" in world.locations["DMT Biggoron"].rule.text

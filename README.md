@@ -112,6 +112,10 @@ and [playtest answers](https://github.com/hiKareeem/Clawshot/blob/main/plans/pla
 - **After receiving an item Link cannot use at his current age, Save and Continue before using
   other items.** A child Fairy Bow pickup jammed the item bar on both Hookshot and Lichii; changing areas
   did not fix it. Other item families carry precautionary warnings. This seed's `play-note.md` lists them but reveals item locations.
+  New-game-only empty nut-slot initialization is built; its first-pickup prevention is not yet verified in game.
+- **Trading items share one displayed slot.** An adult trade item can hide the child's Cucco; Save and Continue
+  does not fix that. Wake Talon and show Zelda's Letter before taking Anju's adult Pocket Egg. Newly generated
+  seeds keep trading items vanilla; older Gift seeds may contain shuffled adult trade items.
 - Chest ocarinas show no model despite working; songs can show an ocarina stand-in rather than a
   normal item model. Only some songs have been individually played from chests.
 - Previously generated seeds can lose boss keys, maps and compasses placed in small chests,

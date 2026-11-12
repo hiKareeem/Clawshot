@@ -67,8 +67,11 @@ when released; later expert wins keep the usual 30/70-rupee payouts.
 
 Merchant sale experiments (Medigoron, Granny, desert carpet) remain held. The Skulltula House's
 10-token swap passed, with the 20-token preview observed; that does not certify the later thresholds.
-The corrected 40-token reward remains held. The Weird Egg and Zelda's Letter stay at their native
-checks because they share one trade inventory cell, rather than two independently retained items.
+The corrected 40-token reward remains held. The Weird Egg, Zelda's Letter and the adult trading items
+stay at their native checks. All fourteen share one trade inventory cell that shows a single owned item,
+adult items first (a child sees an owned adult item instead of the Cucco Talon must be shown), and every
+adult trade hand-in shows the item the previous native trade gave, as the logic assumes. Biggoron's
+final sword reward is still shuffled behind the native Claim Check.
 
 ### Songs and chest-only evidence
 
@@ -189,7 +192,9 @@ none exists in a partial world. This text is built/read-back-tested, not separat
 **Wrong-age pickups:** Save and Continue before using other items after taking an age-unusable
 reward. Child Bow jam/recovery is confirmed on Hookshot and Lichii; other families are precautionary.
 The note lists shuffled age-locked rewards reachable by the wrong age at their first search frontier,
-including ties. Optional later pickups can differ from that order. No data-only repair is enabled.
+including ties. Optional later pickups can differ from that order. New games initialize the native
+small Nut Bag and zero Deku Nuts (0/20) to prevent an empty-slot first-pickup jam; this prevention
+is built but not yet verified in game. Existing saves are unchanged; keep the reload precaution.
 
 Changed rewards omit the old item's acquisition-only Navi reaction. Where that reaction
 shares a wrapper with room or quest progress, a source-bound clone removes only the stale

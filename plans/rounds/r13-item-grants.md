@@ -57,14 +57,131 @@ or gratuitously refilled by later weapon; unrelated item and negative/removal gr
 failed/cancelled purchases grant nothing; the original reward's message/once flag remains correct.
 These are **expected values**, not unrun test results or new in-game acceptance.
 
-## Other investigations in progress
+## Decisions and trade-slot fix
 
-- Bomb strength gate and 100-seed historical-settings sweep: independent audit running.
-- Native child/adult trade cells, egg transition and Save/Continue note: independent audit running.
-- New-game-only nut-slot prevention and all native bomb-shop purchase gates: added by Claude's steer.
+**Approved by Claude, 2026-11-12:** hold the seven movable adult trade gifts vanilla, in addition
+to D31's Egg/Letter hold. Claude will add the decision to `decisions.md` at merge. The final
+Biggoron sword reward remains shuffled behind the native Claim Check. Version remains unchanged.
+
+Native evidence and reproducible probes: external `trade/REPORT.md`. Each trade actor has its own
+saved `IsGet` and `PouchData.<actor>.StockNum`; they do **not** overwrite one shared save field.
+All fourteen nevertheless share UI cell `Pa_ItemIcon_23`, whose variant order puts the eleven adult
+items before Letter, Cucco and Egg. Native picker `0x00a6ef20` chooses the first owned variant.
+Its child branch accepts child OR adult variants; its adult branch accepts adult variants only
+(the age-byte interpretation is a strong inference cross-checked against native age readers and
+266 existing saves). Thus an adult trade item can hide a child's Cucco without preventing hatching.
+Talon's actor accepts the **shown** AlarmCucco item; `Dm_HrlCastle_0020` then consumes it and sets
+`Talon_AfterWakeUp`. Reload recomputes the same ownership-based cell and cannot repair that problem.
+
+Clawshot never places `Weapon_Sword_BrokenGiant` (the actual Broken Giant's Knife equipment).
+**[INFERENCE]** the reporter meant `Item_BrokenSword` (Broken Goron Sword, the adult trade item).
+The independent finding that `adult_trade_shuffle=false` assumed the native hand-in chain while
+Gift moved its intermediate items is another reason the old placement was unsound.
+
+### Residual early-adult ordering gap
+
+**Yes, it remains possible with native trades:** Anju's `Npc_Hylia_049_Adult/Event264` Pocket Egg
+grant has no child `Talon_AfterWakeUp` prerequisite; early adult/free-return modes can therefore
+create the same hidden-Cucco situation. Following Claude's explicit 2026-11-12 option, this track
+uses a **plain README/play-note/pack warning**, not a fabricated native gate: wake child Talon and
+show Zelda's Letter to the Kakariko guard **before taking Anju's adult Pocket Egg**, or finish the
+adult trade first. The warning is not a claim that existing damaged seeds were rewritten.
+
+Other affected child use: the guard's ShowItem ZeldaLetter route consumes the Letter at
+`Npc_Hylia_Soldier_003/Event57`; a hidden Letter can therefore block that interaction too.
+Masks are **not** in the trade cell: native `PouchTable` puts ordinary masks in
+`EquipmentArray/Pa_HeadEquip_02`, SpecialDeal `Mask`, and Amiibo masks in `Pa_HeadEquip_03`.
+Mask merchant/guard flows test equipped `Armor_Child_Mask_*`, not a trade variant. An adult trade
+item does not directly replace a held mask; the unfinished Letter/guard interaction can delay
+the mask quest. External `trade/residual_order.py` independently prints these native cells,
+guard consumption, Anju gates and mask-equipment queries. The existing Save-and-Continue
+item-bar advice remains: that transient selection jam is a different mechanism.
+
+## New-game-only item-bar initialization
 
 External lead provenance: `E:/OOTRemake/work/rounds/r13/kamil-hookshot-randomized-findings.txt`
-(Kamil, 2026-11-12), facts/ideas only; no external randomizer implementation read or copied.
-Section 1's proposed new-game pushes and section 4's bomb shop gates require independent native
-verification. Section 5's optional bomb LiftGrade change and chest-bomb bag behavior are record-only;
-no optional bomb gameplay patch is authorized in this track.
+(Kamil, 2026-11-12), facts/ideas only. No external randomizer implementation was read or copied.
+Native verification: `Sequence/Opening` calls `SetPouchAndStatusForGameStart`, unlike load-save;
+the latter already pushes the wallet and tunics using `SeqOneShotPushToPouch`. Its native vtable
+at `0x04bb5908` resolves the push execute slot to `0x0110d370`, which forwards literal actor/Num
+parameters to native pouch addition. Small Nut Bag declares capacity 20 without a full-stock
+grant; Nuts are an assignable both-age native item.
+
+`patch/start_items.py` adds one ordered Sequential branch: `Item_NutBag_Small x1`, **then**
+`Item_DekuNut x0`. No free nut ammunition, changed item age permission, saved default or existing-save
+migration. The branch runs once in new-game setup, not once per frame or on load. Every original
+node/parameter/command retains its semantic identity; only the root's added child and necessary
+absolute offsets change. The supported native input is fingerprinted; unknown/already patched
+inputs are refused rather than heuristically edited. This is our own narrow binary splice,
+derived from native v0x408 records, not a vendored AINB implementation.
+
+Independent external oracle: the unmodified research-only GPL `ainb` decoder already installed
+under `work/r4-fast-start/.venv` was used only outside the repository. `oracle_sequence.py`
+compares fresh original/patched decodes: all 17 old nodes except root child membership and every
+other section unchanged; three new nodes are the Sequential branch and the two exact pushes.
+Initial oracle failures exposed duplicate empty-string interning and boolean property layout;
+the printed native values determined the fixes. The final oracle passes, including native
+`IsUpdateNextInFrame=true`. Synthetic tests are authored graphs, never decoded game fixtures.
+
+Size: native **5916 -> 6957** bytes; allocation **6296 -> 7352**. The per-file formula is rounded32
+plus 376, matching this native module; 107 of 108 native Sequence files have that overhead
+(one has 392). No unverified generic AINB formula. The NUP working-set catalogue includes this
+new input. All public seed paths register the transform, independently of intro/fast-start settings.
+
+**Built, not verified in game.** Keep the old reload warning until Kareem's acceptance; this
+does not establish that all age-locked families or existing saves are repaired.
+
+### Staged player check (Claude boot-checks; Kareem plays)
+
+One launcher: `E:/OOTRemake/work/r13-item-grants/ingame/Test - item-bar first Bow.bat`,
+copied/adapted from `E:/OOTRemake/tools/test-launcher-template.bat` with CRLF. Empty isolated
+user; choose **New Game**, no existing thumbnail. **6–9 minutes**. Its checklist requires:
+initial Nuts 0/20; Mido middle-left Bow **first**, middle-right Boomerang next; throw Boomerang
+before reload; far-left native nut bundle gives 3/20 and works; Save/Continue retains everything.
+The new saved thumbnail is described as outside Mido's house, never by slot number.
+
+Generated by public `make_seed`/`write_seed`, real whole-world search, seed 8, default Chest settings,
+using existing test-only `excluded_items` to pin those two rewards before fill. **29 spheres,
+78 resources**, no post-fill placement/resource edits. Reproducer `stage_itembar.py` and
+`itembar-staging-proof.json` record settings plus script and Sequence hashes. A plain CS1 recipe
+does not include these experiment-only pins. The earlier 137-resource CLI smoke in the external
+`itembar-first-bow-next` folder is **not** the player test (its early item is Hookshot).
+
+Launcher dry run prints the bin executable, isolated user and exactly-one-mod HOS_MODS path;
+no game started. Claude must obtain `mods: Sequence/SetPouchAndStatusForGameStart.module.ainb <- ...`
+and the Kokiri placement loading line before player acceptance. No second launcher for trade,
+bombs or capacity: native evidence settles the former policy/gates; castle's capacity PR is held.
+
+## Bomb purchase and tier audit status
+
+Native `DisplayShop` applies an item-specific ordinary-bomb gate through
+`Get_StoneOfFire_IsCompleted_Exp` (Event327; other display/sold-out routes also inspected).
+Only the Market Bazaar's native bomb shelf has a corresponding shelf-release gate; putting
+that requirement on every shelf would incorrectly block non-bomb shuffled replacements.
+Current Buy Bombs items are inert refills in logic, not Bomb Bag/explosives progression sources;
+no ungated purchase is used to prove beatability. Bombchus do not share this ordinary-bomb gate.
+Full per-path identifiers and the 100-seed sweep will be appended from the independent audit.
+
+Native lower-after-higher capacity proof: `AfterExpansionMaxNum` is row field +0xc0; the grant
+reads current capacity and skips expansion/refill when current >= offered at
+`0x0110f704..0x0110f708`. Wallets and all five bag/quiver families therefore do not downgrade.
+Strength differs: LiftGradeUP directly writes the offered grade at `0x011103c0`, and DiveDepthUP
+directly writes the offered scale depth at `0x01110480`, without comparing the old value.
+Claude therefore requires higher strength/scale placements **unreachable without every lower
+tier**, not merely a later earliest sphere; only then is a MAX level model sound.
+
+Hookshot is monotone: `plans/playtest/answers.md` R8-FROGS (2026-11-09) records a late Hookshot
+not replacing the Longshot, reaffirmed by Kareem to Claude on 2026-11-12. Ocarinas are separate
+slots (Kareem to Claude, 2026-11-12): no lower-item overwrite. Neither family gets a fill restriction.
+The complete alias-family table, MAX fix, prerequisite proof, historical/0.2.0 sweeps and
+community 11/15 results remain in progress, in a separate commit from this item-bar/trade fix.
+
+## Verification so far
+
+- Independent original/patched native Sequence decoder oracle: pass.
+- Public full CLI generation: seed 8, Chest+Shop+Gift+Scrub+BossHeart, 293 shuffled checks,
+  24 spheres, 137 resources; actual native writer/search smoke, not a game run.
+- Controlled public generation: 29 spheres / 78 resources, as above.
+- Template launcher `CLAWSHOT_DRY_RUN=1`: pass; no game started.
+- Focused ruff check: pass. Focused synthetic/native regressions: **15 passed**, 20 deselected
+  (`tests/test_start_items.py`, new adult-trade tests). Full serialized gates still pending.

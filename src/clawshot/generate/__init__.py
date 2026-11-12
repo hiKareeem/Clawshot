@@ -273,6 +273,8 @@ def play_note(seed: Seed, log: Mapping[str, Any] | None = None) -> str:
             "Picking up the Fairy Bow as child has jammed the ZR item bar; changing areas did not fix it, but Save and"
             " Continue did.",
             "Other age-locked items below are precautions, not individually confirmed failures.",
+            "New games initialize an empty Deku Nut slot (0/20) to prevent first-pickup selection jams;"
+            " this prevention still awaits in-game verification and does not modify existing saves.",
             "",
         ]
     )
@@ -301,6 +303,17 @@ def play_note(seed: Seed, log: Mapping[str, Any] | None = None) -> str:
     else:
         lines.append("No shuffled age-locked reward is reachable by the wrong age at its first search frontier.")
     lines.extend(["", "Optional later wrong-age pickups still need the same Save and Continue precaution.", ""])
+    lines.extend(
+        [
+            "## Trade-slot order",
+            "",
+            "Trading items stay at their native checks. Wake child Talon with the Cucco and show Zelda's Letter"
+            " before taking Anju's adult Pocket Egg, or finish the adult trade first.",
+            "Child and adult trade items share one displayed slot; an owned adult trade item hides the Cucco."
+            " Save and Continue does not change that ownership-based slot choice.",
+            "",
+        ]
+    )
     route = log["opening_route"]
     if route is not None:
         lines.extend(

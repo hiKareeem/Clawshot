@@ -43,6 +43,9 @@ OWN_FORMULA: dict[str, tuple[int, int]] = {
     "RSDB/EventSetting.Product.111.rstbl.byml": (32, 264),
     # The matching analyzed-event registry: 247276 raw -> 247560 allocated.
     "RSDB/GameAnalyzedEventInfo.Product.111.rstbl.byml": (32, 264),
+    # R13 native new-game Sequence: 5916 raw -> 6296 allocated, rounded32 +376.
+    # 107/108 native Sequence AINBs share this overhead; not a generic AINB rule.
+    "Sequence/SetPouchAndStatusForGameStart.module.ainb": (32, 376),
 }
 
 

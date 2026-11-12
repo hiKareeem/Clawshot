@@ -119,9 +119,9 @@ def make_seed(
         from clawshot.patch.age import changes as age_changes
 
         changes += (age_changes(out.placements, free_time_travel=True),)
-    from clawshot.patch import door
+    from clawshot.patch import door, start_items
 
-    changes += (door.changes(out.placements, mode=settings.door_of_time),)
+    changes += (door.changes(out.placements, mode=settings.door_of_time), start_items.changes())
     item_names: dict[str, str] = {}
     if out.hints:
         item_names, hint_changes = hint_step(romfs, out, table)

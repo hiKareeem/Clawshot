@@ -10,6 +10,7 @@ files = [
     "Event/EventFlow/EventFlowFileEntry.Product.110.byml.zs",
     "System/Resource/ResourceSizeTable.Product.111.Nin_Ounce_NVN2.rsizetable.zs",
     "Logic/Market_Common_f252.logic.module.ainb", # Round10 Door of Time open mode (cs10b)
+    "Sequence/SetPouchAndStatusForGameStart.module.ainb", # R13: new-game-only item-bar initialization
 ]
 patterns = [
     "Banc/*/*.bcett.byml.zs", # census reads all placements
