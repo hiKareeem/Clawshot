@@ -303,7 +303,7 @@ For UI, Generate or game-check problems, use [Clawshot itself](https://github.co
 give the version, OS and whole UI error text (terminal error if it never opens). Attach nothing.
 [Discord](https://discord.gg/7R5ZXPcJqn) is also available for help.
 
-### Known issues in 0.1.1
+### Known issues
 
 - **Seeds made with Clawshot 0.1.1 or earlier (including community seed 11) can be impossible to
   finish:** keys placed on Spirit Temple's outdoor hand chests are lost. To check an old seed,
