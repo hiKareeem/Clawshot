@@ -16,14 +16,20 @@ checkout's `.venv` Python when it has one). Exit status 0 prints `wrote <n> file
 `ERROR: <reason>` on stderr, which the client shows to the player. `--romfs` takes anything `local_romfs` takes.
 The output is the usual LayeredFS mod folder (`romfs/`); the client adds the in-game bridge's `exefs/` beside it.
 
-`<slot.json>` (`FORMAT = 1`):
+`<slot.json>` (`FORMAT = 2`):
 
 ```json
-{"format": 1, "seed": 123, "settings": {"<Settings field>": "..."}, "placements": {"<location>": "<item>"}}
+{"format": 2, "seed": 123, "settings": {"<Settings field>": "..."}, "placements": {"<location>": "<item>"},
+ "foreign": {"<location>": {"player": "<player name>", "item": "<item name>"}}}
 ```
 
 `settings` are `Settings(**fields)`; `placements` name every shuffled location, by world location name, with an
-item from the world's item table. A location holding another player's item names `FOREIGN_ITEM`.
+item from the world's item table. A location holding another player's item names `FOREIGN_ITEM`
+(`Archipelago Item`) and has an entry in `foreign`. Its chest shows Zelda's Letter and "You found <player>'s
+<item>!" in each of the game's 16 languages, and gives nothing; `Nothing` is a get window saying "You found Nothing."
+and no item; in a format-2 slot the player's own items say "You found your <item>!" (`patch.custom_items`,
+`patch.get_text`). Both go to chests only. Format 1 (no `foreign`, other players' items as `Rupee (1)`) is still
+read.
 `generate.from_placements` refuses a slot whose placements break `fill.allowed`, then fills the rest vanilla; there
 is no beatability search (the multiworld proved the seed) and the spoiler's `opening_route` is null.
 
@@ -38,7 +44,7 @@ in the PR is enough):
 |---|---|---|
 | `ap.FORMAT` and the slot fields above | the patch file the world writes | Bump `FORMAT` on any incompatible change; the world then resyncs |
 | `ap.RECEIVED_FLAG`, `ap.RECEIVED_BITS` | the save's received-item counter; the **in-game bridge hard-codes** the name pattern and 16 bits | No, not without a coordinated bridge release; old saves lose their count |
-| `ap.FOREIGN_ITEM` (`Rupee (1)`) | what another player's item shows; the world's placement rules require each location to be able to hold it | Yes, if the new item is chest-verified for every shuffled location; resync |
+| `ap.FOREIGN_ITEM` (`Archipelago Item`), `ap.NOTHING_ITEM` (`Nothing`) | what another player's item shows; the world's filler; the world's placement rules require each location to be able to hold `FOREIGN_ITEM` | Renaming breaks the world's item ids (`Nothing` has one); resync |
 | `IsTreasureBoxOpen.<census id>` chest flags | how the bridge detects a check | Only if the game data says otherwise |
 | Location and item names (`world/*.toml`, `oot_randomizer_name`) | the keys of Archipelago's ids, which are append-only | A rename gives the thing a new id; tell the world so it can carry the old one |
 | `Settings` fields and values the world sets: `shuffle`, `dungeon_items`, `forest`, `door_of_time`, `fast_start`, `cheap_deku_shield`, `logic.free_time_travel` | the player's options | Adding values is fine; renaming or removing breaks generation |

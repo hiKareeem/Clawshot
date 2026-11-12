@@ -3118,3 +3118,85 @@ custom-font and already-large-allocation cases, then Claude's isolated headless 
 Kareem's in-game icon/placement/save checks. None of this proposed Hookshot behavior was
 implemented, built, booted or submitted by this track. Exact pack smoke/gate results and
 remaining player acceptance are recorded in `plans/rounds/r11-loader.md`.
+
+## 46. Custom items, get text in every language, first stick and nut bags (2026-11-12)
+
+Read-only on the dump (1.1.1, build `e0f3ccfa`) by Claude for mysterypaint; scratch scripts outside the repository.
+No game text quoted beyond identifiers and Clawshot's own wordings. **Not yet run in a game** (checklist below).
+
+**Actors are listed in three tables only.** `Item_ZeldaLetter` is named in `RSDB/ActorInfo` (model, heaps, and
+`ActorName`, the text key: its pack's `ActorNameRef` points at an `ActorSystem/ActorName/...` file that exists
+nowhere in the romfs), `GameActorInfo` and `PouchActorInfo`; no other RSDB table, nor `Pack/Bootup`, holds it (byte
+search). All three keep rows sorted by `__RowId` (byte order). A chest's content goes through `PouchActorInfo`:
+`TBox_Rupee_Blue` is `BundleActor: Obj_Rupee_Green, BundleActorNum: 5`; `PouchSpecialDeal: NotPushToPouch` is
+the game's own "not put in the pouch" for maps, compasses, boss keys and magic jars (whose effect comes from their
+own actions, section 44). `Dm_SY_TreasureboxSmall` Event17 `EventQueryCanAddToPorch` case 2 shows the window only
+(`GetPouchContent:DisplayGetByActorName`).
+
+**A new actor** (`patch.custom_items`): the letter's pack with its `ActorParam` renamed and `ActorNameRef` moved,
+a row in each table copied from the letter's (`PouchActorInfo`: `NotPushToPouch`, `KeyItem`, `Large`), its four
+texts in each archive's `PouchContent.msbt`, and saved Bools `HavePlayedGetEvent.<actor>`/`IsGet.<actor>`. A new
+name reaches `GetPouchContent:DefaultGetMessage` (`EventQueryCheckUIMessageTargetActorName` branches only for named
+natives): `Dm_SY_Get:GetMessage` then `GetCaption`, each resolving the content's `_GetMessage`/`_GetCaption`.
+Size table: a new pack takes the pack formula (`round32 + 312`, section 11); its renamed `ActorParam` member takes
+the letter's member entry plus growth; `GameActorInfo` and `PouchActorInfo` are `round32 + 264` (measured; same as
+placements), `ActorInfo` `round32 + 3064` (section 26). [Inference] each holds when rows are added.
+
+**Grammar in item names.** Group 201 type 0 has four bytes: gender (1 masculine, 2 feminine, 3 neuter, 0 Dutch
+common), two article-form indices, number (2 plural); type 10 is a full case table (Polish, some German bottle
+contents), type 13 keeps a proper noun's capital (English, Dutch, Italian), type 15 lower-cases what follows, and
+Korean's type 7 picks the object particle at run time. Each item's `_GetMessage` is written out per language with
+its article in place, which `patch.get_text.possessive` swaps for "your" (results checked on all 113 pool keys of
+all 16 languages: German keeps 53 lines whose name follows no article, Polish/Russian use "your item: <name>").
+
+**Sticks and nuts do not bring their first bag** (mysterypaint, in play 2026-11-12: from chests and from the
+multiworld). Section 24 inferred they do from `IsAbleToGetBagIfGet` + `SmallBagActor`; that inference is wrong for
+these grant paths. No flow gives `Item_StickBag_Small`/`Item_NutBag_Small` (byte search: only
+`Npc_Goron_006_Child` names a small bag, the Bomb Bag). `patch.bags` gates `GetPouchContent` Event0 (the one add
+every chest, gift and window uses): name the content in `UI_MessageTargetActorName`, and for a stick or nut
+content with no bag of that kind (`PouchSystemActor.EventQueryIsExistInPouch`, each tier) add the small bag first.
+
+**In-game checklist** (a new game; mod built by an Archipelago slot of format 2 with Mido's House holding Nothing,
+another player's item, Deku Stick (1) and Deku Nuts (5)):
+1. The log names the mod's layer, and the game starts (new packs and grown RSDB tables load).
+2. Mido's top-left chest: Zelda's Letter held up, "You found Nothing.", then "Better luck next time!"; the chest
+   stays open after leaving and reloading; the pause screen has no new item.
+3. Top-right chest: the letter, "You found Kareem's Morph Ball!", "It's on its way to Kareem."
+4. Bottom-left: sticks and a stick bag (the item screen shows Deku Sticks, up to 10); bottom-right: nuts (up to 20).
+5. Any own item, e.g. the Deku Tree's map chest: "You found your Dungeon Map!" (in another language: switch the
+   system language, the lines follow it).
+
+**Follow-up (mysterypaint's Archipelago play, 2026-11-12, client log `Launcher_2026_11_12_05_30_44.txt`):**
+the custom items worked; the APWorld installed then was the build before these changes (it skipped the Magic Jar
+as ungrantable and spoke protocol 2), so its bridge never ran the magic, ocarina or bag steps. Found in play:
+- **The Slingshot brings no bullet bag** (given by name). Neither `Item_Range_SlingShot`/`_Bow` (chest) nor
+  `Weapon_Range_*` names a bag in `PouchActorInfo`, and no flow gives `Item_BulletBag_Small`/`Item_Quiver_Small`
+  (only shop and scrub conditions read them). `patch.bags` now gates both, like sticks and nuts; ammo alone (arrows,
+  seeds) brings no bag (mysterypaint's call).
+- **No D-pad before the Deku Tree**: it exists only once `ActionGuide_IsEnd.Navi` is set (sloperina FINDINGS §1;
+  saved Bool `0x7BE57CB0`, default false), so an ocarina found earlier cannot be played. `fast_start.toml
+  [always.dpad]` makes it true for every new game (`gamedata.load_always`, not a choice). `HavePreparedToPlayOcarina`
+  is no gate: only `Dm_SY_Ocarina` sets it, after the first play.
+- **The Lens of Truth was on after its give** (head equipment, `HeadArmor` with `MPMaxUP`; whether from its give or
+  from the meter it brings is open). The game has `PlayerStatus.IsActiveGlassTruth` (unsaved) and
+  `PlayerStatus.IsActiveHeadArmor` (saved); the bridge now logs and undoes what a lens give turns on.
+- **Rupees from the multiworld do not raise the rupee counter** (written to the save counter). The bridge now gives
+  them as `AddPouch(Obj_Rupee_Green, n)` first [inference: a stockable rupee, as field pick-ups]; its log says
+  whether that worked and tops up what did not arrive.
+
+**Second follow-up (bridge.log of mysterypaint's session, 2026-11-12):** the D-pad flag worked. Found:
+- **AddPouch refuses rupees outright** (`AddPouch(Obj_Rupee_Green, n): refused` for every amount), so a multiworld
+  rupee could only be a silent save write. `patch.receive_event` adds the event `Clawshot_Receive`, requested by the
+  bridge with `ActorName` and `ShowNotice`: hearts and magic jars go through `Dm_SY_Get`'s own
+  `EventQueryIsRecoverHeartOrMpActor` / `EventTriggerRecoverByCureItem` (the native heal and refill), anything else
+  through `GetPouchContent`'s rupee counter (`OpenRupeeUIIfNeed`/`CloseRupeeUIIfNeed`) and its native add (bundles
+  unpacked as from a chest); `ShowNotice` adds the pick-up notice (`EventTriggerRequestOpenPickUpWindow`). Requestable
+  events are rows of `RSDB/EventSetting` and `RSDB/GameAnalyzedEventInfo` (both sorted by name, `round32 + 264`);
+  only 13 flows are versioned, so a new flow lives at its plain path. [Inference] a requested event of a new name
+  runs; to check in game.
+- **The ocarina was never made on Link**: sloperina's heap search walks from address 0, and nxnative reports all host
+  memory below the game's address space as 4 KiB free pages, so the walk ended before the heap ("not found in 0 ms").
+  The bridge now searches the regions holding known heap objects. The Lens guard worked (`IsActiveHeadArmor` was
+  set by the give and cleared).
+- **One box**: Archipelago slots (which rewrite every get line) end `GetPouchContent:DefaultGetMessage` after
+  `Dm_SY_Get:GetMessage`, without `GetCaption` (mysterypaint's call). Pieces of Heart and other own windows keep theirs.
