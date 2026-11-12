@@ -90,7 +90,7 @@ def test_a_layer_picked_inside_a_dump_folder_means_the_dump_folder(tmp_path, mon
     _write(lone, {"GameData/GameDataList.Product.100.byml.zs": b"cart list"})
     with pytest.raises(ValueError, match=r"Found Version 1\.0\.0 \(the cart files only\)") as error:
         paths.detect_dump(str(lone))
-    assert "Update is a separate folder or .nup" in str(error.value)
+    assert "Update is a separate folder, .nup or .nx" in str(error.value)
     _write(tmp_path / "upd/romfs", {name: b"update" for name in VERSION_FILES[1:3]})
     with pytest.raises(ValueError, match="Found only Version 1.1.1 update files"):
         paths.detect_dump(str(tmp_path / "upd/romfs"))

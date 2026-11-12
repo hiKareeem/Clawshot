@@ -180,8 +180,8 @@ class Application:
                     str(path), "Selected path", allow_links=kind not in ("output", "emulator_mods")
                 )
                 if kind in FILE_KINDS:
-                    if not selected.is_file() or selected.suffix.lower() != ".nup":
-                        raise ValueError("Choose a .nup file")
+                    if not selected.is_file() or selected.suffix.lower() not in (".nup", ".nx"):
+                        raise ValueError("Choose a .nup or .nx file")
                 elif not selected.is_dir():
                     raise ValueError("Choose an existing folder")
                 path = str(selected / f"seed-{seed}") if kind == "output" else str(selected)
