@@ -16,7 +16,7 @@ from typing import Any
 
 from clawshot.census import definitions as census_definitions
 from clawshot.census.scan import scan
-from clawshot.generate import Seed, Settings, generate, play_note, prepare, spoiler
+from clawshot.generate import Seed, Settings, from_placements, generate, play_note, prepare, spoiler
 from clawshot.generate import hints as stone_hints
 from clawshot.generate import names as location_names
 from clawshot.generate.fill import shuffled_locations
@@ -69,8 +69,14 @@ def make_seed(
     spec: Mapping[str, Any] | None = None,
     *,
     extra_steps: Sequence[PatchStep] = (),
+    placements: Mapping[str, str] | None = None,
+    game_data_flags: Sequence[str] = (),
 ) -> SeedOutput:
-    """Fill a seed; kind-specific steps turn placements into decompressed file transforms."""
+    """Fill a seed; kind-specific steps turn placements into decompressed file transforms.
+
+    With ``placements`` the shuffled locations take those items instead of Clawshot's fill (an Archipelago slot,
+    ``clawshot.ap``; see ``generate.from_placements``) and no Gossip Stone hints are chosen. ``game_data_flags``
+    names saved Bools to add to the GameDataList (``gifts.add_flags``), for a runtime module's own state."""
     check_dungeon_items(settings)
     if "Token" in settings.shuffle:
         raise PatchError(
@@ -120,8 +126,15 @@ def make_seed(
     if drops.SHUFFLE in settings.shuffle:
         settings, step = drops.seed_setup(world, settings, census, definitions, vanilla)
         extra_steps = (*extra_steps, step)
-    out = generate(spec, seed, settings, vanilla=vanilla)
+    if placements is None:
+        out = generate(spec, seed, settings, vanilla=vanilla)
+    else:
+        out = from_placements(spec, seed, settings, placements, vanilla=vanilla)
     changes = tuple(step(out.placements) for step in extra_steps)
+    if game_data_flags:
+        from clawshot.patch.gifts import game_data_transform
+
+        changes += ({gamedata.GAME_DATA_LIST: game_data_transform(list(game_data_flags))},)
     if any(setting.game_data for setting in chosen):
         changes = ({gamedata.GAME_DATA_LIST: partial(gamedata.patch_initial_values, chosen=chosen)}, *changes)
     if world.settings.get("free_time_travel", False):
