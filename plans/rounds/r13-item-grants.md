@@ -503,11 +503,24 @@ All three private tier experiments remain paused at position 6 until explicitly 
   the nonempty moved-gift assertion and every emitted gift actor assertion, then failed on incidental
   `assert held`. Read-only setup shows four eligible rewards: Shopkeeper Deku Shield, Skull Kid and
   Memory Game Heart Pieces (native chest actors), and Saria's Fairy Ocarina (`chest_verified`).
-  Therefore no held item remains. An in-memory counterfactual removing **only** the
+  Therefore no held item remains **in this slice**. An in-memory counterfactual removing **only** the
   `LW Trade Odd Potion` vanilla lock restores `Poachers Saw: (NPC, Cutscene, Boss)`.
   The adult-trade policy removed the last held item; no gift-writing regression was observed.
   Removed this slice's incidental hold block; the synthetic Letter/Song destination-policy regression
-  remains unchanged. No production writer, grant or allocation behavior changed for these repairs.
+  remains unchanged. Claude required retained native held-write coverage: a fresh unrestricted production
+  Gift setup still holds **28 items: 12 songs and 16 non-songs**, including Bottle, both Scales,
+  Biggoron Sword and capacity upgrades. The same dump test now builds that real setup, swaps Bottle and
+  Deku Shield between child Anju and the Kokiri shopkeeper, asserts the held Bottle cannot go to chests
+  and both NPC destinations meet the restrictions, and reads back both native transformed hand-overs.
+  No counterfactual production-policy override is needed. No production writer, grant or allocation
+  behavior changed for these repairs.
 
-Causes were posted on `cs-r13` at 15:53, before editing. Original failed output is retained; only
-the directed corrected-input cases will be rerun. No foreign process or lock was removed.
+Causes were posted on `cs-r13` at 15:53 before editing, and reposted as two short merge-record notes at
+15:59. Rebased onto integrated main `fa6f4ef`; conflict resolution retains unconditional key/dungeon
+credit compilation before bag gates, plus native dungeon-state and pouch-stock simulator behavior.
+Static gates passed: **323 formatted files, ruff clean**. The initial corrected four-case run on
+`45412c2` passed **4/4 in 73.65s**, using one worker, the owned fixture and `r13/gate.lock`
+(`four-dump-after-main.txt`). Claude then requested the held-write assertion above and a **full rebased
+synthetic suite** (`-m 'not dump'`, one worker under the lock) before handoff. The four-case run will be
+repeated after this coverage addition; the initial pass and original failed output are retained.
+No foreign process or lock was removed.

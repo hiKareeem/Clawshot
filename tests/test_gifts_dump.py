@@ -214,7 +214,7 @@ def test_dump_game_data_list_differs_only_in_the_added_flags(romfs, context):
 
 @pytest.mark.dump
 def test_dump_gift_shuffle_slice_writes_each_moved_gift(romfs, tmp_path):
-    from clawshot.generate import Settings
+    from clawshot.generate import Settings, prepare
     from clawshot.patch import items as item_actors
     from clawshot.patch import make_seed, write_seed
     from clawshot.world.load import load_spec
@@ -243,6 +243,32 @@ def test_dump_gift_shuffle_slice_writes_each_moved_gift(romfs, tmp_path):
         if name in rules:
             assert rules[name].cls != gifts.MORE, name
     print(f"moved gifts: {[(n, seed.placements[n]) for n in moved]}")
+
+    # The forest slice has no held items after adult trades stay vanilla. A real
+    # unrestricted gift setup still holds Bottle outside chests; exercise its
+    # native hand-over writer with a controlled NPC-to-NPC swap.
+    held_spec, held_settings, held_step = gifts.seed_setup(
+        romfs, load_spec(), Settings(shuffle=("Chest", gifts.SHUFFLE), songs="song")
+    )
+    _, held_world = prepare(held_spec, held_settings)
+    held_placements = {name: loc.vanilla for name, loc in held_world.locations.items()}
+    source, destination = "Kak Anju as Child", gifts.SHOPKEEPER_CHECK
+    held_placements[source], held_placements[destination] = (
+        held_placements[destination],
+        held_placements[source],
+    )
+    held = held_settings.item_location_types
+    assert held_placements[destination] == "Bottle"
+    assert "Chest" not in held["Bottle"]
+    transforms = held_step(held_placements)
+    for name in (source, destination):
+        item = held_placements[name]
+        if item in held:
+            assert held_world.locations[name].type in held[item], (name, item)
+        for s in steps[name]:
+            original = dicts.decompress(s.file, (romfs / s.file).read_bytes())
+            event = next(e for e in evfl.read(transforms[s.file](original)).flowchart.events if e.name == s.event)
+            assert event.params[s.param] == actors.actor(item), s.id
 
 
 @pytest.mark.dump
