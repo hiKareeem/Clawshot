@@ -35,15 +35,16 @@ def test_logical_dungeon_location_outside_its_area_cannot_receive_dungeon_item(k
     world = build_world(spec)
     assert not allowed(world, Settings(), "Outside", item), (kind, world.locations["Outside"])
     assert allowed(world, Settings(), "Inside", item)
-    # The synthetic anywhere mode represents named grants and keeps its independent policy.
-    assert allowed(world, Settings(dungeon_items="anywhere"), "Outside", item)
+    # Only small keys have a named grant; the other families remain physically restricted.
+    assert allowed(world, Settings(dungeon_items="anywhere"), "Outside", item) is (kind == "SmallKey")
+    assert allowed(world, Settings(dungeon_items="anywhere"), "Inside", item)
     result = generate(spec, 0, Settings(), attempts=1)
     assert result.placements == {"Inside": item, "Outside": "Coin"}
     check_beatable(result.world, result.placements)
 
 
 @pytest.mark.parametrize("chest", ["Spirit Temple Silver Gauntlets Chest", "Spirit Temple Mirror Shield Chest"])
-def test_spirit_hands_reject_all_current_dungeon_reward_families(chest):
+def test_spirit_hands_reject_generic_items_but_allow_named_small_keys(chest):
     world = load_world()
     for item in (
         "Small Key (Spirit Temple)",
@@ -53,6 +54,7 @@ def test_spirit_hands_reject_all_current_dungeon_reward_families(chest):
     ):
         assert not allowed(world, Settings(), chest, item), (chest, item, world.locations[chest])
         assert allowed(world, Settings(), "Spirit Temple Map Chest", item)
+        assert allowed(world, Settings(dungeon_items="anywhere"), chest, item) is (world.items[item].type == "SmallKey")
 
 
 @pytest.mark.dump

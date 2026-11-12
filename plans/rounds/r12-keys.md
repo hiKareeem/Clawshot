@@ -1395,3 +1395,188 @@ release: current public CLI/`make_seed` refusal and UI unavailability remain in
 place. Claude requests a reviewed production plan below before any switch-on;
 staged/played seed files and users remain frozen. Tracker reads remain later.
 
+## Keysanity production plan — PROPOSAL ONLY; no switch-on approved
+
+**Proposed by cs12b after Claude/Kareem accepted Gate4.** “Anywhere” here means
+**small keys only**, not all dungeon items. Current CLI/API refusal and disabled
+UI choice remain in force. Claude reviews this scope/cutover before implementation.
+
+### 0. Integration prerequisite and current evidence
+
+Main is now **22095a5 /0.1.2** (public+physical-area tracks integrated). Followed
+the earlier rebase-after-integration instruction:23 commits replayed. Resolved
+only `generate/fill.py` and `docs/settings.md` conflicts by combining both policies:
+native physical-area safety **and** small-key-only named chest destinations.
+All played Gate4 files/users stay frozen at their original a2c0c8e provenance.
+
+Important merge detail: use `_in_dungeon_area(...)`, not the old logical-region
+early return, to admit an ordinary dungeon item. Otherwise a Spirit hand bypasses
+the new safety check. Only a supported small key may take the out-of-area chest
+branch. Do not overwrite this with main's older unrestricted-anywhere predicate.
+
+Incoming area tests assumed that synthetic anywhere also releases boss keys/maps/
+compasses. The first focused run printed3 failing family assertions; retained all
+families, corrected their contract, and added the real Spirit-hand anywhere
+boundary to the existing test. Corrected run: **31 passed/1 skipped** across
+`test_generate_dungeon_areas.py`, `test_key_model.py`, `test_keys.py`; one worker.
+Named format/check of the two affected files PASS. The skipped test needs romfs;
+**latest full gates and sweeps must be rerun after reviewed production edits**.
+
+Actual post-rebase API smoke: both Spirit hands' own-dungeon generic families
+are excluded; with anywhere only their small-key chest destination is admitted,
+not boss/map/compass; inside-Temple destinations remain admitted. Actual UI schema
+still marks anywhere disabled; schema validation and `make_seed` still refuse.
+No public enabling change was made by the rebase.
+
+### 1. Proposed release scope — preserve defaults and physical safety
+
+- Keep `dungeon_items=own_dungeon` as default and keep current presets unchanged.
+  Keep enum/CS1/CLI values `own_dungeon` and `anywhere`; no renamed setting or shim.
+- Anywhere releases **SmallKey only**, through source-bound named grants when a
+  chest's actual Banc is outside the target. All8 existing native target IDs; no
+  raw-name fallback, new saved fields, global target latch or in-game roster.
+- **BossKey/GanonBossKey, maps and compasses remain own-dungeon and physically
+  collectable inside that dungeon**, in both modes. They get no portable grant.
+  In particular the Colossus hands stay ineligible for generic Spirit rewards;
+  an anywhere **named small key** may use those chests.
+- “Chest destinations” does **not** mean globally requiring Chest-only shuffle.
+  Preserve mixed Chest/Shop/Gift/Scrub and existing optional kinds/palettes:
+  no off-dungeon keys on NPCs, shelves, scrubs or floors. Existing same-dungeon
+  native paths/palettes stay as they are. Test the supported mixed combinations
+  before release; do not advertise them on the strength of Chest-only Gate4.
+  With no shuffled key/chest source, do not invent keys or change the pool.
+- Preserve shared `allowed()` use in every fill/swap/age-return stage and hint
+  restriction classification. Preserve native pool counts, stable actor Hashes,
+  all age/file copies, story effects, bootstrap and dependency registrations.
+
+### 2. UI option and help — one existing metadata contract
+
+In `src/clawshot/app/settings.toml`, after review:
+- Remove only `dungeon_items.unavailable.anywhere`; Token remains unavailable.
+  `app/schema.py` then exposes/enforces the same enabled choice for UI/form/CS1.
+  No separate JS whitelist, backend bypass or auto-reset of a chosen setting.
+- Proposed label: **Small keys anywhere** (value remains `anywhere`).
+  Keep **Own dungeon**; default/presets unchanged.
+- Proposed field help: **Choose whether small keys stay in their dungeon or can
+  appear in chests elsewhere. Boss Keys, maps and compasses stay in their own dungeon.**
+- Proposed anywhere choice help: **Find small keys in shuffled chests, including
+  other dungeons and the overworld. The pickup message and caption name the target
+  dungeon in English. Boss Keys, maps and compasses do not leave their dungeon.**
+- Keep the0.1.2 public track's corrected small-key-only wording, not this branch's
+  obsolete pre-rebase “keys, maps and compasses anywhere” text. Add the same scope
+  to `--dungeon-items` CLI help, whose current argument has no explanatory help.
+- Browser smoke on the actual Settings/Generate surface: select/persist/import/
+  export the choice, see help, build a real seed, inspect result; no Play/game start.
+  Check actual unavailable-option/Token behavior still works. Do not test literal
+  strings or mock forwarding instead of consumer behavior.
+
+### 3. Refusal removal — reviewed clean cutover, not a no-op guard
+
+First run LSP references for exported `patch.check_dungeon_items`. Then delete
+the obsolete function, `patch.__all__` entry, CLI import/call and `make_seed` call;
+migrate any other live references found. No always-return-success stub/alias,
+research bypass flag or compatibility shim. Existing
+`make_seed`→`keys.changes(prior_changes=...)`→`write_seed` is already wired:
+use that normal public path, not the scratch Gate4 pipeline.
+
+Keep all real restrictions/errors: Token refusal, palette and physical-area
+checks, supported saved-field validation, unbound/stale event/unsupported-target
+refusals, safe output paths, source read-only and per-seed beatability.
+Change UI availability and backend permission in the **same reviewed cutover**.
+
+Retire only now-obsolete anywhere-refusal assertions in `tests/test_keys.py`
+and the disabled-option row in `tests/test_app.py`; preserve CS1 roundtrip/explicit
+override tests and other invalid-option tests. Replace with real generation/
+destination/credit/error behavior using existing synthetic fixtures where useful;
+use native smoke instead of adding wiring/mock-echo tests. Keep key model/binding/
+text and physical-area regressions, including nonportable boss/map/compass families.
+
+### 4. Docs, version and honest player expectations
+
+Update existing `README.md`, `docs/settings.md`, applicable `docs/ui.md` guidance,
+release notes and roadmap/playtest evidence in the repository's normal convention.
+Remove the stale “no in-game acceptance/never use” claims only in the reviewed
+release; state **small-key-only**, opt-in and Gate1–4 evidence, not complete-game
+acceptance of every source/target combination. Preserve own-dungeon hand safety.
+Review the unsupported-keysanity line in `docs/discord/server-kit.md`; don't post
+external announcements automatically.
+
+Explain two named pickup messages, English in all16 languages, and that standing
+HUD/pause-map/floating notices do **not** provide a remote key roster. In Gate4
+the overworld notices appeared without increment; Ice Cavern showed none, despite
+correct remote credit. Do not promise a target counter in those notices. Tracker
+reads come later and are **not** a prerequisite implementation in this cutover.
+No new model fix: the observed young-looking adult is normal. Qualify generic
+Switch-icon text guidance for the separately rendered ocarina interface.
+
+Maintainers select/bump the **next release version** because the set of supported
+seed outputs changes; do not reuse published0.1.2 or silently regenerate/replace
+a played seed. No agent version/lockfile bump without that approval.
+
+### 5. Release gates after reviewed implementation
+
+1. **Focused contracts + actual public API/CLI:** `make_seed`/`write_seed`, explicit
+   anywhere CLI and encoded-CS1 replay now succeed on the supported dump; reject
+   actual bad/unsupported destinations instead of bypassing checks. Exercise the
+   normal Gift/Scrub setup paths for mixed recipes. Preserve default own behavior.
+2. **Native fill sweep, proposed100 seeds each for Chest-only and Recommended
+   mixed shuffle**, seeds0–99, one worker: real census/native pool, no monkeypatch.
+   Every seed must pass `check_beatable`/existing age-return guarantee; audit every
+   shuffled placement for small-only release, destination palettes, physical
+   boss/map/compass home, exact pool conservation and no unbound off-area key.
+   Keep first failing seed/settings/parsed values and diagnose before any rerun;
+   do not count retried/filtered/failed rows as PASS. Representative optional
+   BossHeart/Freestanding and door/free-travel modes get boundary cases too.
+3. **Whole-seed emission/readback:** emit representative Chest and mixed public
+   seeds, repeat same recipe in fresh output and compare every file; check exact
+   placements/normal spoiler/CS1/play note, all copies, full allocations, native
+   prefix/story inverses, registration/dependency closure, text in all16 archives,
+   and serialized per-target grants. Reuse the existing source-family emission
+   probe across **all8 targets**, not only its earlier two-target sample. Static
+   coverage is not a claim every family/target was played.
+4. **Own-dungeon control:** compare representative default/community recipes
+   against pristine0.1.2 placements and romfs hashes; expected version metadata
+   differences must be explicit. No collateral default-output change or revival
+   of the Spirit-hand loss. Keep the integrated community-seed11 regression.
+5. **Pack/UI path:** include anywhere in real romfs/NUP/layered-cache generation
+   equivalence and UI generation smokes; stale scratch fixtures must be refreshed
+   privately from the same build (include analyzed-event111), not “fixed” by
+   disabling cache checks or mutating a player's dump.
+6. **All four mandatory repository gates** on the final integrated source:
+   ruff format/check, synthetic pytest, full dump pytest with recorded coverage.
+   Full suites/sweeps serialize under normal `gate.lock`; worker1 while Kareem
+   plays. No inherited pre-rebase/pre-switch PASS substituted for these runs.
+
+Do not force a post-integration seed7 to retain the old gate placement digest:
+the0.1.2 physical-area fix may legitimately change the fill/recipe/version.
+Gate4's old output is evidence and stays frozen; new public outputs must satisfy
+the audited invariants and their **own** deterministic digest.
+
+### 6. Navi's map follow-up — scoped fix versus known ordinary-seed note
+
+Named-key source clones **already** omit the audited acquisition-only Navi
+balloons; native entries and independent story reactions (including Nabooru197)
+remain intact. Keep that implementation and its behavioral/native inverses.
+Any misleading old-item comment on a named-key route is a blocker, not cosmetic
+acceptance for this feature.
+
+Separate existing ordinary-seed issue: a changed non-key reward in a source map
+chest can retain **“Now we won't get lost”** even without receiving a map. The
+source comment is not a map grant; it does not invalidate saved target counts.
+Do **not** silence all Navi, delete story effects, or broaden this patch to every
+map/compass wrapper without native call-site evidence and review.
+
+**cs12b recommendation for Claude review:** disclose that ordinary-seed cosmetic
+follow-up in Known Issues/settings notes and track a separate focused fix; do not
+claim all Navi text is corrected. If Claude requires it fixed before this release,
+make that an explicit additional reviewed work item, with source-specific
+preservation proof, rather than slipping it into refusal removal.
+
+### 7. Decision / handoff boundary
+
+**Claude: review the small-key-only mixed-shuffle scope, UI/help wording,
+200-seed/native emission gates, and the proposed documented ordinary-Navi caveat.
+Only then authorize production switch-on and choose the next version.**
+This commit is acceptance/rebase evidence plus a plan; no availability/refusal
+switch, new public preset, Tracker implementation or publication is authorized.
+
