@@ -175,5 +175,6 @@ Python 3.12+ with uv; rationale and product choices: [decisions](../plans/decisi
 | `tests/` | Synthetic fixtures; tests marked `dump` need `OOT_ROMFS` |
 | `plans/` | Architecture, format specification, evidence and decisions |
 
-For porting, see [logic reference](logic.md). Credits: [NOTICE](../NOTICE), including OoT Randomizer
+For porting, see [logic reference](logic.md); for writing a seed from an Archipelago slot, see
+[Archipelago slots](archipelago.md). Credits: [NOTICE](../NOTICE), including OoT Randomizer
 `526b4c8d` and Archipelago `Fill.py` at `1041167c` (`generate/fill.py` safe swap). Licence: [MIT](../LICENSE).
