@@ -24,6 +24,9 @@ def test_given_placements_fill_the_shuffled_locations_and_keep_the_rest_vanilla(
     assert out.shuffled == reference.shuffled
     assert all(out.placements[name] == FOREIGN_ITEM for name in out.shuffled)
     assert out.spheres == [] and out.hints == ()
+    from clawshot.generate.route import opening
+
+    assert opening(out) is None  # no spheres: the opening witness is absent, not an error
 
 
 def test_placements_that_do_not_fit_the_world_are_refused_by_name():

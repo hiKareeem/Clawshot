@@ -83,6 +83,8 @@ def opening(seed: "Seed") -> OpeningRoute | None:
     config = tomllib.loads(CATALOG.read_text(encoding="utf-8")).get("opening")
     if config is None or seed.world.settings.get("starting_age", CHILD) != config["age"]:
         return None
+    if not seed.spheres:
+        return None  # placements chosen elsewhere (from_placements): progression may sit in other games' worlds
     target, entry = config["event"], config["region"]
     if entry not in seed.world.regions or not any(event.name == target for event in seed.world.events):
         return None
