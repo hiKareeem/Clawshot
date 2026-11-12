@@ -128,17 +128,19 @@ have recorded in-game results. Legacy `--skip mido` aliases `--forest open`; con
 forest choices are refused. Forest flags compose with gift save flags.
 
 The opening-movie skip is on by default. It removes the movie entirely, not just its skip-button
-restriction; Navi waking Link and normal new-game initialization still run. Movie removal is
-**built, untested in game**. `--skip intro saria deku_tree kaepora` selects fast-start skips;
-`--skip` alone disables them. These are separate from changing shuffled kinds.
+restriction; Navi waking Link and normal new-game initialization still run. Movie removal
+**passed Kareem's new-game check on 2026-11-12**. `--skip intro saria deku_tree kaepora`
+selects fast-start skips; `--skip` alone disables them. These are separate from shuffled kinds.
 
 Skipping the Deku Tree's talk does **not** bypass kept Mido: equip the Kokiri Sword and
 a shield, then talk to him. His early quest state, idle schedule, Talk initialization and
 blocker clear remain native; only that clear applies the skipped tree-talk state. Bypassed
 Mido instead keeps the initial completed-meeting preset. Saria's skip preserves the forest
-visit flag normally set by her area banner, so it does not leave the pause map locked.
-The first Mido repair **hung in game and was replaced**. The native-clear replacement has
-automated native-data coverage; its combined new-game check is **built, untested in game**.
+visit flag normally set by her area banner; the forest pause map opens in the same played check.
+The first Mido repair **hung in game and was replaced**. Kareem verified the native-clear
+replacement: normal middle position, sword-only refusal, clear after adding a shield, and
+no Deku Tree talk with its mouth open. Reload remains pending. Shuffled own-dungeon map/compass
+credit is a separate bug, not a failure of this map-access correction.
 
 ## Door of Time and returning to child
 

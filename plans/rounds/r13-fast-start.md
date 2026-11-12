@@ -280,6 +280,33 @@ simulation; the replacement still needs a fresh in-game check.
   reproduced the **entire frozen spoiler exactly**: no differing fields, including placements,
   spheres, opening and patch metadata. The staged files were not rewritten.
 
+## Native-Mido played result (Kareem, via Claude)
+
+**2026-11-12 11:35–11:46; A/C core checks PASS.** Claude reports:
+
+- Opening movie skipped entirely; later scenes remain skippable.
+- Forest pause map opens.
+- Mido is in the correct **middle** position. Sword-only still blocks. With the shield
+  added, dialogue opens the path; saves show blocker **true -> false at 11:40**.
+- No Deku Tree dialogue; mouth open. The player reached the dungeon Map chest.
+- **Reload remains pending Kareem's answer.** Neither-equipped and shield-only live talks
+  were not reported in this result; their registration-aware native replays passed.
+
+Read-only runtime loading proof from the new isolated user's `hookshot_log.txt`:
+GameDataList **59**, OpeningEvent **410**, Kokiri Forest child dynamic/static Banc
+**1093/1094**, child Mido flow **1152**. Every `mods: <file> <- <path>` points at
+`ingame-native-mido/mods/fast-start-native-mido/fast-start-native-mido/romfs`, not the failed
+frozen candidate. No game was started or controlled by cs13a.
+
+**Separate issue, not a fast-start regression:** the dungeon Map chest opens with map
+text/animation, but `DungeonInfo.InsideTheDekuTree.IsGetMap` remains **false**. Claude assigns
+the own-dungeon map/compass credit bug to **cs13c** and states this fix stands. Do not claim
+the Map pickup was credited, and do not fold its repair into this branch.
+
+Docs/UI now reflect the observed movie-removal pass rather than saying unplayed.
+The matrix's immutable source is implementation commit `240600a`; the later UI-help change
+only updates played status, not settings, generation or patch behavior.
+
 ## Verification
 
 Focused replacement/return-pool regression run: **32 passed in 75.78s**. Actual browser UI
@@ -289,14 +316,44 @@ closed-door/Gift alternatives. Recommended + open door returns HTTP 200 with tha
 retained and no alert. No JavaScript errors; owned hidden tab/server closed. Screenshot:
 external `return-kit-ui-refusal.webp`. No game was started.
 
-Final full gates are **queued, not started as of 10:26**, via `tools/review_gates.sh`, workers **1**:
-`r13-fast-start-cs13a-final-gates.txt`. The script has waited on the shared lock; process/thread
-inspection identifies cs13b's `tier-impact.py recommended --tag v020` phase (lock created
-10:12:16), with its MCF experiment also queued. No foreign lock/process was touched; a gate
-handoff was requested on `cs-r13`. The matrix waiter was removed from the lock race so
-only the full gate competes for the handoff. Its prepared runner additionally requires
-two passing pytest summaries and clean Ruff results before any native rows. It uses
+The full serialized run used `tools/review_gates.sh`, workers **1**, retained log
+`E:/OOTRemake/work/r13-fast-start-cs13a-final-gates.txt`. Claude confirmed it acquired
+the lock at 10:30:05; the 10:42 waiting-lock statement was stale.
+
+| Initial command | Observed result |
+|---|---|
+| `ruff format --check` | rc 0; 322 files already formatted |
+| `ruff check` | rc 0; all checks passed |
+| `pytest` | rc 0; 1,072 passed, 144 skipped; 976.27 s |
+| `pytest -m dump` | rc 1; 124 passed, 1,074 deselected, 18 setup errors; 2,315.63 s |
+
+All 18 errors are `OOT_DUMP` cases in `test_pack_nup_dump.py`: the default
+`E:/OOTRemake/work/pr1-check/dump` lacks
+`RSDB/GameAnalyzedEventInfo.Product.111.rstbl.byml.zs`. The NUP and feature cases passed.
+Claude identified the cause: that shared fixture contains only the 0.1.1-era working set;
+0.2.0's key compiler added this resource. This is **stale fixture data, not a production
+code failure**. No production/test code was changed to suppress it and no case skipped; no unchanged rerun.
+
+Per Claude's 2026-11-12 instruction, copied external `pr1-check/make_dump_folder.py`,
+changed only `OUT` to `E:/OOTRemake/work/rounds/r13/dump-fast-start`, and ran it from this
+worktree. **1,242 wanted files; base 1,207; update 48; same 1,194; missing 0.**
+The fresh base/update layers resolve every current resource, including the missing RSDB
+in `updates/131072/romfs`. Its fingerprint equals the read-only reference:
+`fc09c4af707a0ca092188cf014f6fdf3d40514def773f097b798f52f9f28bc93`.
+The old fixture was not edited; Claude owns its merged-main rebuild at integration.
+Superseded full-tree extraction was stopped and its owned output/script removed.
+
+Only `tests/test_pack_nup_dump.py -m dump -k OOT_DUMP` was rerun under the shared lock,
+`OOT_DUMP` pointing at the new fixture. Separate retained log:
+`E:/OOTRemake/work/r13-fast-start-cs13a-oot-dump-rerun.txt`.
+**rc 0; 18 passed, 19 deselected in 1,585.77 s (26:25).** The original report retains all
+18 setup errors; this report records their corrected-input pass. The initial 124 native
+passes were not rerun. No NUP, synthetic or broader dump rerun was substituted.
+The matrix's prepared guard accepts the original successful gates plus exactly these
+corrected 18 cases, retaining both reports.
+It uses
 the immutable `witness/after-native-mido-src` snapshot (208 source files; manifest SHA256
 `d9f0232a0c18c4f6b90bab81356e83dcb803e16b30d19f5ec6e8312615469633`).
 Open/closed rows precede extra song_only rows; already recorded baseline rows are resumed,
-not repeated. No full-matrix pass is claimed yet. In-game acceptance remains Kareem's.
+not repeated. No full-matrix pass is claimed yet. A/C core checks passed in game as recorded
+above; reload remains pending, and the separate map/compass credit defect belongs to cs13c.

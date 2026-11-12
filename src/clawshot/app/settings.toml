@@ -188,7 +188,7 @@ closed = "Open the door with the Spiritual Stones, Ocarina of Time and Song of T
 song_only = "Open the door with the learned Song of Time and either ocarina, without the stones. Its first in-game check passed; returning to child after an early visit is untested."
 open = "The door starts open without the stones or song. Its first in-game check passed; returning to child after an early visit is untested."
 [fast_start.choice_help]
-intro = "Remove the opening movie entirely. New-game setup and Navi waking Link still run. Movie removal is built, not yet tested in game."
+intro = "Remove the opening movie entirely. New-game setup and Navi waking Link still run. Movie removal passed a new-game check."
 saria = "Skip Saria's opening scene while keeping the forest visited so its pause map remains available. This does not give an item or change forest access."
 deku_tree = "Skip the Deku Tree's opening talk. With Mido kept, you must still equip your sword and shield and talk to him to clear the path."
 kaepora = "Skip the selected Kaepora introductions. Routes and item requirements stay the same."

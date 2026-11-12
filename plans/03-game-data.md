@@ -805,13 +805,18 @@ opens the area banner. The initial-value patch now sets `IsVisitLocation.KokiriF
 only with `saria`; intro alone retains the Saria/banner route.
 The pause-map lead came from Kamil's Hookshot Randomized findings, section 5 (2026-11-12, MIT;
 facts verified independently against native flows, RSDB and historical saves; no code copied).
-Trace, regression proof, external source path and unplayed acceptance checklist:
+Trace, regression proof, external source path, acceptance result and checklist:
 `rounds/r13-fast-start.md`.
 The round 13 `intro` flow transform removes the movie transition, starts at the native forest-load
 check, and replaces the redundant post-movie wait with a one-frame yield while loading. Pouch/status
 initialization, fade and reserved Navi wake-up remain. It does not pre-set the forest visit flag;
-the Saria/banner route is unaffected unless `saria` is also selected. This removal is built and
-native-data checked, **not yet played**; the older movie-made-skippable test is not its acceptance.
+the Saria/banner route is unaffected unless `saria` is also selected. **Kareem, via Claude,
+2026-11-12 11:35–11:46:** movie entirely skipped, later scenes skippable; forest pause map opens;
+Mido stands in the middle, refuses sword-only, clears after a shield is added (saved blocker
+true -> false at 11:40); tree dialogue absent and mouth open. Runtime loading proof is in the
+round record. Reload is pending. The Map chest plays its map text/animation but leaves
+`DungeonInfo.InsideTheDekuTree.IsGetMap=false`: Claude assigns this separate own-dungeon
+map/compass credit bug to cs13c; this fast-start fix stands.
 
 ## 15. Round 4: event flows and gifts (cs4d)
 
