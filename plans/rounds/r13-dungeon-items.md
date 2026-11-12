@@ -357,9 +357,27 @@ After native boss approval, focused changed-path run: **133passed/12.86s**,
 regressions exercise native boss ownership once, display armed before pickup,
 source story-state preservation, no literal parallel credit and no cross-dungeon
 credit when literal/native bindings coexist.
-Final serialized four-gate runner requeued at13:07, position3 after cs13b,
-using the same own OOT_DUMP, start-time worker selection and no deadline.
-Results go to `gates-native-boss/results.json`; pending is not PASS.
+Final serialized four-gate run on code commit `3f517b5`: queued13:07 at
+position3 after cs13b, acquired14:15:06, completed/released15:43:46.
+Hookshot was present at both test-stage starts, so both used worker1.
+Own OOT_DUMP `work/rounds/r13/dump-dungeon-items`, explicit native ROMFS/NUP;
+no foreign fixture, output, process or lock was changed.
+
+| Required gate | Result |
+|---|---|
+| `uv run ruff format --check` | PASS:317files already formatted |
+| `uv run ruff check` | PASS |
+| `uv run pytest -q` | PASS:1105passed,130skipped;1349.95s |
+| `uv run pytest -q -m dump` with ROMFS/NUP/own OOT_DUMP | PASS:128passed,1107deselected;3967.77s |
+
+Both pytest runs disabled the cache provider and used separate external
+`--basetemp` directories; synthetic ran without native fixture environment
+variables. No failure rerun or narrowed substitute. Exact supervisor, environment,
+return codes and full logs:
+`work/rounds/r13/dungeon-items-cs13c/run_gates.py`,
+`gates-native-boss/results.json`, `format.log`, `lint.log`, `synthetic.log`,
+`dump.log`. Position4 cs13a was handed the released gate at15:44; cs13b's
+A/B/baseline work remains position5 per Claude's order.
 
 
 ## Decisions proposed by cs13c
