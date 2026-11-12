@@ -38,6 +38,14 @@ OWN_FORMULA: dict[str, tuple[int, int]] = {
     "GameData/GameDataList.Product.110.byml": (8, 288),
     # ActorInfo: 1,934,492 raw -> 1,937,560; Round 7 same-shape model/heap field substitutions only.
     "RSDB/ActorInfo.Product.111.rstbl.byml": (32, 3064),
+    # GameActorInfo 574,824 -> 575,112 and PouchActorInfo 49,380 -> 49,672: rounded + 264, the placement files'
+    # overhead (build e0f3ccfa, read 2026-11-12). [Inference] the same holds when custom_items adds rows.
+    "RSDB/GameActorInfo.Product.111.rstbl.byml": (32, 264),
+    "RSDB/PouchActorInfo.Product.111.rstbl.byml": (32, 264),
+    # EventSetting 509,212 -> 509,480 and GameAnalyzedEventInfo 247,276 -> 247,560: rounded + 264 (measured
+    # 2026-11-12). [Inference] the same holds when receive_event adds a row.
+    "RSDB/EventSetting.Product.111.rstbl.byml": (32, 264),
+    "RSDB/GameAnalyzedEventInfo.Product.111.rstbl.byml": (32, 264),
 }
 
 

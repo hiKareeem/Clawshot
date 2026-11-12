@@ -152,14 +152,22 @@ def remake_vanilla(world: World, links: Links, items: ItemActors) -> dict[str, s
     return out
 
 
-def make_plan(seed: Seed, links: Links, items: ItemActors, events: Mapping[str, ChestEvent]) -> Plan:
-    """The changes that give every shuffled location its placed item."""
+def make_plan(
+    seed: Seed,
+    links: Links,
+    items: ItemActors,
+    events: Mapping[str, ChestEvent],
+    overrides: Mapping[str, str] | None = None,
+) -> Plan:
+    """The changes that give every shuffled location its placed item. ``overrides`` names the actor of a location
+    whose item has none in ``items`` (``clawshot.patch.custom_items``: Nothing, another player's item)."""
     changes, unchanged = [], []
+    overrides = overrides or {}
     for name in seed.shuffled:
         if name not in links.chests:
             continue  # Other shuffled kinds are handled by make_seed's registered patch steps.
         item = seed.placements[name]
-        actor = items.actor(item)
+        actor = overrides[name] if name in overrides else items.actor(item)
         for chest in links.chests[name]:
             if chest.vanilla_item == actor:
                 unchanged.append((name, chest.id))
