@@ -566,3 +566,26 @@ Window 4. Execution still sets window/text before grant and autosave. All fixtur
 names/entry points; native-state and order assertions remain intact. No production guard relaxation.
 Failure log `rebased-synthetic.txt` is retained; the corrected full synthetic rerun uses
 `rebased-synthetic-fixture-fixed.txt`, one worker and the lock before handoff.
+
+### Final rebased gate-repair result
+
+| Check | Revision | Observed result |
+|---|---|---|
+| Format and lint | `6204cca` | 323 Python files formatted; ruff clean |
+| Directed four dump cases, including held-Bottle writes | `12cd47a` | 4 passed, 82.64s |
+| Real named-key/first-bag trace and unmodified public CLI | `12cd47a` | Passed; guard unchanged, 33 named bindings, 93 resources |
+| Full synthetic suite, `-m 'not dump'` | `6204cca` | 1,156 passed, 2 skipped, 129 deselected, 1,155.84s |
+
+Both test runs used `CLAWSHOT_WORKERS=1` under `E:/OOTRemake/work/rounds/r13/gate.lock`;
+the native run explicitly set the owned `OOT_DUMP` and read-only installed `OOT_ROMFS`.
+The final synthetic revision differs from the passing native/CLI revision **only in the synthetic
+fixture and this evidence record**, not production code. Result metadata records both revisions.
+Logs/results remain outside the repository:
+`four-dump-held-after-main.txt` / `four-dump-held-after-main-result.json`,
+`rebased-synthetic-fixture-fixed.txt` / `rebased-synthetic-fixture-fixed-result.json`,
+and the production proof/CLI files named above. Original failed logs remain intact.
+Only the four requested native cases were rerun, **not the entire native suite**.
+
+The owned lock was released after each run; no foreign lock/process was touched. Claude's position 5
+matrix may proceed after this handoff. A/B and the missing historical Chest-only baseline remain
+**unmeasured and explicitly paused at position 6**; no allocator experiment is applied or recommended.
