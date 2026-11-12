@@ -407,3 +407,22 @@ handoff was flagged on the thread: Claude's 14:19 order still requires cs13b's c
 four-case rerun before this matrix at position 5. No heavy runner or gate waiter is active.
 The earlier full fast-start gates remain evidence for their original source, not a new
 whole-rebased-branch gate run. Matrix and reload evidence remain pending.
+
+### Native-Mido reload: machine evidence (Kareem, 16:45–16:47)
+
+Claude reports Continue in the same staged user folder, with three snapshots matching
+`save-backups/2026-11-12_164*-r13-mido-reload-1..3`. `check_player_save.py` on the newest
+`slot_01` (16:47:17) reports the expected persisted state:
+
+- `Mido_Child_Blocker = False`
+- `IsVisitLocation.KokiriForest = True`
+- `Step_Meet_DekuTree = Complete`
+
+The reported runtime log has no crash and 15 mod-loading lines, including
+`Npc_Kokiri_Mido_Child`, `OpeningEvent`, `GameDataList` and the KokiriForest banks.
+The reported slot thumbnail shows young Link beside Mido at the Deku Tree tunnel mouth.
+These are Claude's save/log/thumbnail observations, not a replay by this agent.
+
+Kareem's spoken observations remain pending and will come through Claude. Do not infer
+post-Continue traversal or pause-map behavior from the saved flags or thumbnail alone.
+No complete reload acceptance or matrix pass is claimed; no heavy work before ordered GO.
