@@ -1147,3 +1147,37 @@ log and result go in its `dump-recovery/` subdirectory. Recovery outcome is
 **pending**, not inferred PASS. Latest source remains rebased onto cd81449;
 no Gate4 build or player-refusal change.
 
+### Final post-rebase gates — all PASS
+
+Supersedes the pending recovery status above. The full cause-directed dump rerun
+finished19:33; its cooperative lock was released normally.
+
+| Gate | Latest result |
+|---|---|
+|`uv run ruff format --check`|PASS|
+|`uv run ruff check`|PASS|
+|`uv run pytest`|1020 passed/130 skipped,1178.22s|
+|`uv run pytest -m dump` with romfs/NUP/refreshed layered input|128 passed/1022 deselected,3651.81s|
+
+All ran with one worker after the conflict-free rebase onto **cd81449**. No tested
+production/test source changed between these results; intervening commits only
+recorded evidence in this round file. Both post-rebase real CLI refusal smokes
+also passed, with no output directory.
+
+Recovery preflight proved **all1243 indexed legacy resources byte-identical** to
+the full-romfs oracle. The private1244th file was unmodified analyzed-event data,
+SHA256 `40f61c00c80e141ff2a7c766097f906e5e675043168f99e0f9c7989469657e80`.
+All original dump/fixture files stayed untouched. No loader fallback, disabled
+case, test change or production fix was used to turn the stale input green.
+The initial112-pass/16-setup-error log remains preserved, not relabelled PASS.
+
+Retained text logs/results/input proof under `rebased-cd81449/` and
+`dump-recovery/`. Removed only this run's owned synthetic/dump/recovery temporary
+trees and private layered fixture; verified all four paths absent. Original
+`pr1-check/dump`, full romfs, NUP and prior gate evidence were not removed.
+
+**Remaining:** Gate4's posted seed7/two-checkpoint/22-character long-name proposal
+still needs Claude/Kareem review before construction. Gate3 remains accepted PASS;
+Gate4 is unbuilt, Tracker later, player refusal retained. No version/uv.lock change,
+game launch, merge or push.
+
