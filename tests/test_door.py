@@ -8,9 +8,12 @@ import pytest
 from clawshot.__main__ import main
 from clawshot.formats import evfl
 from clawshot.generate import FillError, Settings, prepare
-from clawshot.patch import door
+from clawshot.patch import door, gifts
 from clawshot.patch.plan import PatchError
 from clawshot.world import ADULT, CHILD, load_spec
+
+# An early door under the adult-return guarantee needs movable gifts and songs (fill.return_guarantee_conflict).
+GIFTS = ("Chest", *gifts.GIFT_TYPES)
 
 
 def run_open_flow(fc, state, *, recommended=True, quest_ready=False):
@@ -145,7 +148,7 @@ def test_song_patch_refuses_changed_native_gate():
     ],
 )
 def test_world_door_modes_match_actual_inventory_requirements(mode, items, expected):
-    settings, world = prepare(load_spec(), Settings(door_of_time=mode))
+    settings, world = prepare(load_spec(), Settings(shuffle=GIFTS, door_of_time=mode))
     exit = next(exit for exit in world.regions["Temple of Time"].exits if exit.target == "Beyond Door of Time")
     assert exit.rule(items, CHILD, 3) is expected
     # Early door is independent of reverse travel and the physical Forest/Prelude gate.
@@ -159,7 +162,7 @@ def test_world_door_modes_match_actual_inventory_requirements(mode, items, expec
 
 @pytest.mark.parametrize("mode", door.MODES)
 def test_adult_fairy_ocarina_cannot_play_saria_in_any_door_mode(mode):
-    _, world = prepare(load_spec(), Settings(door_of_time=mode))
+    _, world = prepare(load_spec(), Settings(shuffle=GIFTS, door_of_time=mode))
     exit = next(exit for exit in world.regions["Lost Woods"].exits if exit.target == "LW Beyond Mido")
     assert exit.rule({"Ocarina": 1, "Sarias Song": 1}, CHILD, 3)
     assert not exit.rule({"Ocarina": 1, "Sarias Song": 1}, ADULT, 3)
@@ -167,7 +170,7 @@ def test_adult_fairy_ocarina_cannot_play_saria_in_any_door_mode(mode):
 
 
 def test_cli_explicit_door_mode_overrides_an_effective_settings_string(capsys):
-    effective, _ = prepare(load_spec(), Settings(door_of_time="open"))
+    effective, _ = prepare(load_spec(), Settings(shuffle=GIFTS, door_of_time="open"))
     assert main(["--settings", effective.to_string(), "--door-of-time", "song_only", "--print-settings"]) == 0
     settings = Settings.from_string(capsys.readouterr().out.strip())
     assert settings.door_of_time == "song_only"

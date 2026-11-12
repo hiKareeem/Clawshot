@@ -770,9 +770,9 @@ component list sets `SkipSetting` `DisableSkip`: `Dm_Kokiri_0000` (the opening m
 
 | Scene | Event(s) | Gate | State it leaves | `fast_start` |
 |---|---|---|---|---|
-| Opening movie | `Opening_LoadingKokiriForest` → `Dm_Kokiri_0000` | none: `Sequence/Opening` | nothing read later | `intro`: skippable |
+| Opening movie | `Opening_LoadingKokiriForest` → `Dm_Kokiri_0000` | none: `Sequence/Opening` | nothing read later (round 13 audit below) | `intro`: removed by event-flow bypass (round 13; originally only made skippable) |
 | Navi wakes Link | `Opening_Introduction` → `Dm_Kokiri_0030` | none: reserved boot event | `Meet_DekuTree` `Step01`, Navi talked | not offered (skippable already) |
-| Saria at the door, Saria meets Navi | `Dm_Kokiri_0045` → `_0050`; `Dm_Kokiri_0060` | module `..._Npc_Kokiri_Saria_Child_a766` | `KokiriForest_LinkHouseDoor_Open`; house door module also opens on `HavePlayedEvent.Dm_Kokiri_0050` | `saria` |
+| Saria at the door, Saria meets Navi | `Dm_Kokiri_0045` → `_0050`; `Dm_Kokiri_0060` | module `..._Npc_Kokiri_Saria_Child_a766` | `KokiriForest_LinkHouseDoor_Open`; house door module also opens on `HavePlayedEvent.Dm_Kokiri_0050`; `_0045` Event7 opens the Kokiri area banner, setting `IsVisitLocation.KokiriForest` | `saria` (round 13 also preserves the visit flag) |
 | Mido's block | blocker AI | `KokiriForest_Npc_Kokiri_Mido_Child_Blocker` (default true) | flow `Npc_Kokiri_Mido_Child` clears it, `Meet_DekuTree` `Step02`/`Step03` | `mido` (logic: Mido no longer needs sword and shield) |
 | Deku Tree's talk | `KokiriForest_Meet_DekuTree_MeetDekuTree_01` → `Dm_Kokiri_0070`, `_0075` | module `..._All_02_a798`, until `Meet_DekuTree` past `Step03` | `KokiriForest_Meet_DekuTree_OpenDekuTreeMouth`; `Meet_DekuTree` `Complete`; `Get_StoneOfForest` `GoInside` | `deku_tree` |
 | Kaepora, Hyrule Field | `HyruleField_Goto_HyruleCastle_Kaepora` → `Dm_HrlField_0000`, `_0005`, `_0010` | module `HyruleField_Child_Prefab_de5f`: `Dm_HrlField_0010` not played, `Goto_HyruleCastle` not past `Step01` | `Goto_HyruleCastle` `Step02`; adds `Pouch_Amiibo` | `kaepora` |
@@ -793,6 +793,25 @@ straight to the Great Deku Tree. Its first autosave read `Step_Meet_DekuTree = C
 `Step_Get_StoneOfForest = GoInside`, `Step_Goto_HyruleCastle = Step02`, `KokiriForest_Npc_Kokiri_Mido_Child_Blocker =
 False`, `KokiriForest_Meet_DekuTree_OpenDekuTreeMouth = True`: the opening did not set the quest steps back.
 `intro-removed` and the owl after the Deku Tree are not tested yet.
+
+**Round 13 corrections (2026-11-12, cs13a):** the all-skips result above did not test kept Mido.
+Pre-completing the meeting selects his later scheduled talk and leaves the invisible wall's
+saved blocker true. The first cross-entry wrapper then **hung in game**: its later entry
+did not register the newly reachable subflow calls. It is removed. With Mido kept, the tree
+skip now retains the native early meeting state, schedule, Talk and clear, and applies the
+four tree-talk values only after that clear. With Mido bypassed, the initial Complete/mouth
+presets remain. Saria's skip also omitted the forest visit flag, because her `_0045` Event7
+opens the area banner. The initial-value patch now sets `IsVisitLocation.KokiriForest=true`
+only with `saria`; intro alone retains the Saria/banner route.
+The pause-map lead came from Kamil's Hookshot Randomized findings, section 5 (2026-11-12, MIT;
+facts verified independently against native flows, RSDB and historical saves; no code copied).
+Trace, regression proof, external source path and unplayed acceptance checklist:
+`rounds/r13-fast-start.md`.
+The round 13 `intro` flow transform removes the movie transition, starts at the native forest-load
+check, and replaces the redundant post-movie wait with a one-frame yield while loading. Pouch/status
+initialization, fade and reserved Navi wake-up remain. It does not pre-set the forest visit flag;
+the Saria/banner route is unaffected unless `saria` is also selected. This removal is built and
+native-data checked, **not yet played**; the older movie-made-skippable test is not its acceptance.
 
 ## 15. Round 4: event flows and gifts (cs4d)
 

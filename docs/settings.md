@@ -127,8 +127,18 @@ option has in-game evidence with Mido still blocking (R6-CLOSEDDEKU). Mido skip 
 have recorded in-game results. Legacy `--skip mido` aliases `--forest open`; conflicting explicit
 forest choices are refused. Forest flags compose with gift save flags.
 
-The intro skip is on by default. `--skip intro saria deku_tree kaepora` selects fast-start skips;
+The opening-movie skip is on by default. It removes the movie entirely, not just its skip-button
+restriction; Navi waking Link and normal new-game initialization still run. Movie removal is
+**built, untested in game**. `--skip intro saria deku_tree kaepora` selects fast-start skips;
 `--skip` alone disables them. These are separate from changing shuffled kinds.
+
+Skipping the Deku Tree's talk does **not** bypass kept Mido: equip the Kokiri Sword and
+a shield, then talk to him. His early quest state, idle schedule, Talk initialization and
+blocker clear remain native; only that clear applies the skipped tree-talk state. Bypassed
+Mido instead keeps the initial completed-meeting preset. Saria's skip preserves the forest
+visit flag normally set by her area banner, so it does not leave the pause map locked.
+The first Mido repair **hung in game and was replaced**. The native-clear replacement has
+automated native-data coverage; its combined new-game check is **built, untested in game**.
 
 ## Door of Time and returning to child
 
@@ -144,6 +154,15 @@ unlock return from the minimum mandatory first-pull inventory and adult checks; 
 errands are not assumed. Early-door settings can be refused with unshuffled child-only prerequisites.
 There is no automatic free-travel override. Early Zelda escape/moat story timing with an open door
 still needs a player check.
+
+With the return guarantee enabled, this generator cannot build Chest-only seeds with
+`song_only` or `open`: its return-kit bound needs movable ocarinas and Saria's Song, but those
+remain at child gifts. Validation names the fixed checks and offers a closed door or Gift
+shuffle. This is a construction limitation, not proof that no physical route exists;
+in particular, an unshuffled Time-song gift already requires all three stones.
+
+An open-bridge, early-door seed can validly require adult Link before Gohma. Its play note
+explains when no child-only opening guide exists instead of rejecting the beatable seed.
 
 Free travel keeps Temple Sheik through both first-arrival scenes, then hides him until Forest quest
 completion. Forest rewards remain native; Prelude follows quest completion, **not medallion ownership**.

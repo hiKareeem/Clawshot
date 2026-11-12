@@ -1,9 +1,7 @@
 """Opening notes need a sufficient route, not an intersection that loses alternatives."""
 
-import pytest
-
 from clawshot.generate import Settings, generate, play_note, spoiler
-from clawshot.generate.route import opening
+from clawshot.generate.route import NoChildOpening, opening
 
 
 def opening_world(*, child_shield=True, paid_shield="Later Shelf"):
@@ -67,8 +65,20 @@ def test_opening_keeps_one_alternative_and_every_needed_purchase_before_entry():
 
 def test_adult_find_cannot_fake_a_child_opening_purchase():
     seed = generate(opening_world(child_shield=False), 7, Settings(shuffle=()))
-    with pytest.raises(ValueError):
-        opening(seed)
+    route = opening(seed)
+    assert isinstance(route, NoChildOpening)  # never a route that borrows the adult-only shield
+    assert route.event == "Defeat Queen Gohma" and "adult Link's help" in route.reason
+    log = spoiler(seed)
+    assert log["opening_route"] is None
+    assert log["opening_route_unavailable"] == {
+        "name": route.name,
+        "event": route.event,
+        "region": route.region,
+        "reason": route.reason,
+    }
+    note = play_note(seed, log)
+    assert route.reason in note
+    assert "| Step | Action |" not in note and "Adult Shortcut" not in note
 
 
 def test_required_scrub_reward_is_a_priced_purchase_before_dungeon_entry():

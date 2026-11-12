@@ -6,7 +6,7 @@
 Reads the player's dump (read only), shuffles chests and optionally native shop contents,
 checks beatability, and writes changed resources (including selected fast-start files and the size table when needed)
 under ``<out>/romfs`` and the placements/spheres/patch plan to ``<out>/spoiler.json``.
-The intro is skippable by default; ``--skip`` alone disables all fast start.
+The opening movie is removed by default (fast start ``intro``); ``--skip`` alone disables all fast start.
 ``--areas`` with ``--goal`` makes a slice: only those areas' regions, beaten when the goal holds (round 3's
 playtest: ``--areas KokiriForest LostWood InsideTheDekuTree --goal "'Defeat Queen Gohma'"``). ``--shuffle Gift`` also
 moves the event gifts that can be changed (``clawshot.patch.gifts``); the others keep their items.

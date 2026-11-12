@@ -180,8 +180,8 @@ def write(
         new_data = dicts.decompress(file.path, file.content) if file.path.endswith(".zs") else file.content
         if (len(data), len(new_data), table.get(file.path)) != (file.size, file.new_size, file.entry):
             raise PatchError(f"{file.path}: fast-start build no longer matches its input or size entry")
-        # gamedata.build validates the exact tree edits. Initial-value edits keep the layout; removing the
-        # intro's SkipSetting only shrinks its tree. Neither needs an unverified generic .bgyml size formula.
+        # The builder (door.build) validates its exact edit; a prebuilt file keeps its original allocation instead
+        # of borrowing an unverified generic size formula for its type.
         if file.new_size > file.size or file.new_size > file.entry:
             raise PatchError(f"{file.path}: fast-start file must fit without growing its original allocation")
         info = WrittenFile(

@@ -71,9 +71,12 @@ def test_the_return_kit_leaves_another_dungeons_key_chest_to_its_key():
             },
         ],
     }
-    for number in range(20):
-        seed = generate(spec, number, Settings(), attempts=1)
-        assert seed.placements["E Entrance"] == "Small Key (E)", (number, seed.placements)
+    # A native pool override must be checked before the return-kit preflight, not after it.
+    for spec_item, vanilla in [("Weapon", {}), ("Rupee", {"E Inner": "Weapon"})]:
+        spec["regions"][-1]["locations"]["E Inner"]["vanilla"] = spec_item
+        for number in range(20):
+            seed = generate(spec, number, Settings(), attempts=1, vanilla=vanilla)
+            assert seed.placements["E Entrance"] == "Small Key (E)", (number, seed.placements)
 
 
 def _bracelet_spec() -> dict:

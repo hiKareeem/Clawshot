@@ -16,9 +16,16 @@ from typing import Any
 
 from clawshot.generate import hints as stone_hints
 from clawshot.generate import names as location_names
-from clawshot.generate.fill import FillError, Settings, check_beatable, fill, shuffled_locations
+from clawshot.generate.fill import (
+    FillError,
+    Settings,
+    check_beatable,
+    fill,
+    return_guarantee_conflict,
+    shuffled_locations,
+)
 from clawshot.generate.itembar import age_locked_pickups
-from clawshot.generate.route import opening
+from clawshot.generate.route import NoChildOpening, opening
 from clawshot.world.load import build_world
 from clawshot.world.model import World
 from clawshot.world.shops import with_shop_prices, with_shop_slots
@@ -62,6 +69,8 @@ def prepare(spec: Mapping[str, Any], settings: Settings) -> tuple[Settings, Worl
 
     With ``dungeon_items = "anywhere"`` the logic setting ``keysanity`` is set too, where the world has it.
     ``open_forest`` and the legacy ``skip_mido`` rule flag derive from the same forest mode the overlay patches.
+    Native setup also uses this compilation before its pool overrides are known. The UI checks return-kit
+    construction against the spec; :func:`generate` checks it against the effective native pool before filling.
     """
     logic = dict(settings.logic)
     if "open_forest" in spec.get("settings", {}):
@@ -95,7 +104,8 @@ def prepare(spec: Mapping[str, Any], settings: Settings) -> tuple[Settings, Worl
     if "Shop" in settings.shuffle:
         held = {name: ("Shop",) for name in spec.get("items", {}) if name.startswith("Buy ")}
         settings = replace(settings, item_location_types={**settings.item_location_types, **held})
-    return settings, build_world(world_spec(spec, settings), settings.logic)
+    world = build_world(world_spec(spec, settings), settings.logic)
+    return settings, world
 
 
 def generate(
@@ -122,6 +132,8 @@ def generate(
     bad = sorted(item for item in vanilla.values() if item not in world.items)
     if bad:
         raise FillError(f"vanilla items the world does not know: {bad}")
+    if conflict := return_guarantee_conflict(world, settings, vanilla):
+        raise FillError(conflict)
     rng = random.Random(seed)
     errors: list[str] = []
     for _ in range(attempts):
@@ -147,6 +159,9 @@ def _required_items(seed: Seed, sources: tuple[str, ...], visits: Mapping[str, d
 
 def spoiler(seed: Seed, item_names: Mapping[str, str] | None = None) -> dict[str, Any]:
     """Keep world-keyed placements/spheres and add physical descriptions, a replayed opening witness and the hints.
+
+    ``opening_route`` is a child-only route or null; ``opening_route_unavailable`` explains a configured opening that
+    child Link alone cannot complete in this seed (adult Link first), else null.
 
     Items keep their logic names everywhere; ``item_names`` in the log adds, for each placed item whose name differs,
     the name the player sees: the remake's (``clawshot.generate.names.item_names``), or the game's where the
@@ -178,7 +193,10 @@ def spoiler(seed: Seed, item_names: Mapping[str, str] | None = None) -> dict[str
     locations = {name: describe(name) for name in seed.shuffled}
     route = opening(seed)
     opening_log = None
-    if route is not None:
+    opening_unavailable = None
+    if isinstance(route, NoChildOpening):
+        opening_unavailable = {"name": route.name, "event": route.event, "region": route.region, "reason": route.reason}
+    elif route is not None:
         goal_regions = list(dict.fromkeys(event.region for event in seed.world.events if event.name == route.event))
 
         def describe_step(step):
@@ -239,6 +257,7 @@ def spoiler(seed: Seed, item_names: Mapping[str, str] | None = None) -> dict[str
         },
         "locations": locations,
         "opening_route": opening_log,
+        "opening_route_unavailable": opening_unavailable,
         "age_locked_pickups": [asdict(pickup) for pickup in age_locked_pickups(seed)],
         "spheres": [sphere for sphere in spheres if sphere],
         "hints": hint_log,
@@ -312,6 +331,17 @@ def play_note(seed: Seed, log: Mapping[str, Any] | None = None) -> str:
             "",
         ]
     )
+    unavailable = log["opening_route_unavailable"]
+    if unavailable is not None:
+        lines.extend(
+            [
+                f"## Opening: {unavailable['name']}",
+                "",
+                unavailable["reason"],
+                "The seed passed the beatability search; the spheres below are its full search, not a play order.",
+                "",
+            ]
+        )
     route = log["opening_route"]
     if route is not None:
         lines.extend(

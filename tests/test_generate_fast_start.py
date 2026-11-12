@@ -7,13 +7,15 @@ from clawshot.world import CHILD, Search, load_spec
 
 
 @pytest.mark.parametrize("shield", ["Buy Deku Shield", "Buy Hylian Shield"])
-def test_kept_mido_still_needs_sword_and_either_shield(shield):
-    _, world = prepare(load_spec(), Settings(fast_start=()))
+@pytest.mark.parametrize("skips", [(), ("deku_tree",), ("intro", "deku_tree")])
+@pytest.mark.parametrize("forest", ["closed", "closed_deku"])
+def test_kept_mido_still_needs_sword_and_either_shield(shield, skips, forest):
+    _, world = prepare(load_spec(), Settings(fast_start=skips, forest=forest))
     search = Search(world, ["Kokiri Sword"])
     assert not search.can_reach("KF Outside Deku Tree", CHILD)
     search.collect(shield)
     assert search.can_reach("KF Outside Deku Tree", CHILD)
-    assert not search.can_reach("LW Bridge From Forest", CHILD)
+    assert search.can_reach("LW Bridge From Forest", CHILD) is (forest == "closed_deku")
 
 
 @pytest.mark.parametrize("shield,helper", [("Deku Shield", "Deku_Shield"), ("Hylian Shield", "Hylian_Shield")])

@@ -1,32 +1,39 @@
 """Fast start: what a new game skips (``src/clawshot/data/fast_start.toml``), written as a mod folder.
 
     settings = load()                               # name -> FastStartSetting, in file order
-    files = build(romfs, ["intro", "saria"])        # the changed files, built and checked, nothing written
-    write(romfs, out, ["intro", "saria"])           # <out>/romfs/... (only the changed files)
+    file_changes = changes(select(settings, ["intro", "saria"]))   # romfs path -> decompressed transform
+    write(romfs, out, ["intro", "saria"])           # <out>/romfs/... (only the changed files, and the size table)
 
     python -m clawshot.patch.gamedata --romfs <dump> --out <dir> [--skip intro saria ...] [--list]
 
 A setting changes initial values in ``GameData/GameDataList.Product.110.byml.zs`` (a new game resets every flag to
-its ``DefaultValue``), and, for a cutscene no flag gates, removes the ``SkipSetting`` from the event's setting
-component list so the player may skip it. Facts and the reasons for each value: ``plans/03-game-data.md``,
-section 14. Flags are found by name: a ``GameDataList`` entry's ``Hash`` is the murmur3 of its name.
+its ``DefaultValue``), and, for what no flag gates, applies named event-flow edits (:data:`FLOW_EDITS`). Both are
+decompressed transforms for ``clawshot.patch.write``, which composes them with a seed's other changes and raises a
+grown file's size-table entry. Facts and the reasons for each value: ``plans/03-game-data.md``, section 14. Flags
+are found by name: a ``GameDataList`` entry's ``Hash`` is the murmur3 of its name.
 """
 
 import argparse
 import sys
 import tomllib
-from dataclasses import dataclass
-from pathlib import Path, PurePosixPath
+from collections.abc import Callable
+from dataclasses import dataclass, replace
+from functools import partial
+from pathlib import Path
 
-from clawshot.formats import byml, rstb, zsdic
-from clawshot.patch.plan import PatchError
-from clawshot.patch.write import check_output_folder
+from clawshot.formats import byml, evfl
+from clawshot.patch import mido
+from clawshot.patch.plan import PatchError, Plan
+from clawshot.patch.write import FileChanges, WrittenFile
+from clawshot.patch.write import write as write_patch
 from clawshot.save import murmur3_32
 
 FAST_START_TOML = Path(__file__).resolve().parents[1] / "data" / "fast_start.toml"
 GAME_DATA_LIST = "GameData/GameDataList.Product.110.byml.zs"
-EVENT_SETTING_TABLE = "RSDB/EventSetting.Product.111.rstbl.byml.zs"
-SKIP_SETTING = "SkipSetting"
+OPENING_FLOW = "Event/EventFlow/OpeningEvent.bfevfl.zs"
+OPENING_LOADING = "Opening_LoadingKokiriForest"
+OPENING_MOVIE = "Dm_Kokiri_0000"
+OPENING_WAIT = "ClawshotWaitForKokiriForest"
 
 # The GameDataList types a setting may change, and the Python type of the value fast_start.toml gives for each.
 VALUE_TYPES = {"Bool": bool, "Int": int, "Enum": str}
@@ -34,7 +41,7 @@ VALUE_TYPES = {"Bool": bool, "Int": int, "Enum": str}
 # values: Sequence/NormalTitle resets with ResetType 3 before the opening, and bit 3 is set on all 9338 per-slot
 # story Bools; system entries such as Sequence_* have 0.]
 NEW_GAME_RESET_BIT = 1 << 3
-SETTING_KEYS = {"default", "skips", "state", "source", "logic", "game_data", "skippable"}
+SETTING_KEYS = {"default", "skips", "state", "source", "logic", "game_data", "flow_edits"}
 
 
 @dataclass(frozen=True)
@@ -50,8 +57,8 @@ class FastStartSetting:
     """How the setting changes what a seed's logic may assume (None: it does not)."""
     game_data: dict[str, bool | int | str]
     """GameDataList entry name -> its new initial value (a Bool, an Int, or an Enum's value name)."""
-    skippable: tuple[str, ...]
-    """Events whose SkipSetting is removed."""
+    flow_edits: tuple[str, ...]
+    """Names of the event-flow edits (:data:`FLOW_EDITS`) the setting applies."""
 
 
 @dataclass(frozen=True)
@@ -76,6 +83,78 @@ class FastStartError(PatchError):
     pass
 
 
+# --- event flows ----------------------------------------------------------------------------------------------------
+
+
+def _targets(event: evfl.Event) -> list[int]:
+    """The event indices ``event`` may continue to."""
+    if isinstance(event, evfl.SwitchEvent | evfl.SubFlowSwitchEvent):
+        return [target for _, target in event.cases]
+    if isinstance(event, evfl.ForkEvent):
+        return [*event.forks, event.join]
+    return [event.next] if isinstance(event, evfl.ActionEvent | evfl.JoinEvent | evfl.SubFlowEvent) else []
+
+
+def opening_without_movie(data: bytes) -> bytes:
+    """``OpeningEvent`` (decompressed) with ``Opening_LoadingKokiriForest`` starting after the opening movie.
+
+    Natively that entry plays the movie (``EventSystemActor.EventTransition`` ``Dm_Kokiri_0000``) while
+    ``Sequence/Opening`` loads Kokiri Forest, then switches on ``GameSystemActor.EventQueryBancChangeIsLoaded``, whose
+    only case (1) fades in. Here the entry starts at that query, and the movie's event becomes its case 0: a one-frame
+    ``GameSystemActor.EventWait`` back to the query, so the flow waits for the load the movie used to cover. Every
+    other event, actor and entry point stays native; no actor, action, query, sub flow or child event is added."""
+    document = evfl.read(data)
+    fc = document.flowchart
+    if fc is None or fc.name != "OpeningEvent":
+        raise FastStartError(f"{OPENING_FLOW}: expected the OpeningEvent flowchart")
+    entries = [entry for entry in fc.entry_points if entry.name == OPENING_LOADING]
+    if len(entries) != 1:
+        raise FastStartError(f"{OPENING_FLOW}: expected one {OPENING_LOADING} entry point, found {len(entries)}")
+    entry = entries[0]
+    movie_index = entry.main_event
+    movie = fc.events[movie_index] if movie_index < len(fc.events) else None
+    query_index = movie.next if isinstance(movie, evfl.ActionEvent) else evfl.NONE
+    query = fc.events[query_index] if query_index < len(fc.events) else None
+    if (
+        not isinstance(movie, evfl.ActionEvent)
+        or fc.actors[movie.actor].name != "EventSystemActor"
+        or fc.actors[movie.actor].actions[movie.action] != "EventTransition"
+        or (movie.params or {}).get("EventName") != OPENING_MOVIE
+        or not isinstance(query, evfl.SwitchEvent)
+        or fc.actors[query.actor].name != "GameSystemActor"
+        or fc.actors[query.actor].queries[query.query] != "EventQueryBancChangeIsLoaded"
+        or query.params is not None
+        or [value for value, _ in query.cases] != [1]
+        or "EventWait" not in fc.actors[query.actor].actions
+    ):
+        raise FastStartError(f"{OPENING_FLOW}: changed native {OPENING_LOADING} start: {movie!r}, {query!r}")
+    others = [event.name for event in fc.events if movie_index in _targets(event)]
+    others += [e.name for e in fc.entry_points if e is not entry and movie_index in (e.main_event, *e.sub_flow_events)]
+    if others or movie_index in entry.sub_flow_events:
+        raise FastStartError(f"{OPENING_FLOW}: the movie's event is also reached from {others}")
+    action = fc.actors[query.actor].actions.index("EventWait")
+    fc.events[movie_index] = evfl.ActionEvent(
+        OPENING_WAIT, query.actor, action, query_index, {"Frames": 1, "IsWaitEnd": True}
+    )
+    query.cases = [(0, movie_index), *query.cases]
+    entry.main_event = query_index
+    result = evfl.write(document)
+    if evfl.read(result) != document:
+        raise FastStartError(f"{OPENING_FLOW}: the written flow does not read back as the changed flow")
+    return result
+
+
+# Named event-flow edits a setting may apply (``flow_edits`` in fast_start.toml): name -> (romfs path, transform of
+# the decompressed file). Each validates the native structure it changes and its read-back.
+FLOW_EDITS: dict[str, tuple[str, Callable[[bytes], bytes]]] = {
+    "opening_without_movie": (OPENING_FLOW, opening_without_movie),
+    "deku_tree_after_mido": (mido.FLOW, mido.complete_deku_meeting),
+}
+
+
+# --- settings -------------------------------------------------------------------------------------------------------
+
+
 def loads(text: str) -> dict[str, FastStartSetting]:
     out = {}
     for name, entry in tomllib.loads(text).get("setting", {}).items():
@@ -91,17 +170,19 @@ def loads(text: str) -> dict[str, FastStartSetting]:
         for flag, value in game_data.items():
             if not isinstance(value, bool | int | str):
                 raise FastStartError(f"{where}: {flag} = {value!r}: a value is true/false, a number or a step name")
-        skippable = entry.get("skippable", [])
-        if not isinstance(skippable, list) or not all(isinstance(e, str) for e in skippable):
-            raise FastStartError(f"{where}: 'skippable' is a list of event names")
-        if not game_data and not skippable:
-            raise FastStartError(f"{where}: changes nothing (no game_data, no skippable)")
+        flow_edits = entry.get("flow_edits", [])
+        if not isinstance(flow_edits, list) or not all(isinstance(e, str) for e in flow_edits):
+            raise FastStartError(f"{where}: 'flow_edits' is a list of edit names")
+        if unknown := [e for e in flow_edits if e not in FLOW_EDITS]:
+            raise FastStartError(f"{where}: unknown flow edits {unknown}; known: {', '.join(FLOW_EDITS)}")
+        if not game_data and not flow_edits:
+            raise FastStartError(f"{where}: changes nothing (no game_data, no flow_edits)")
         logic = entry.get("logic")
         if logic is not None and not isinstance(logic, str):
             raise FastStartError(f"{where}: 'logic' is text")
         out[name] = FastStartSetting(
             name, entry["default"], entry["skips"], entry["state"], entry["source"], logic, dict(game_data),
-            tuple(skippable),
+            tuple(flow_edits),
         )  # fmt: skip
     return out
 
@@ -115,10 +196,26 @@ def defaults(settings: dict[str, FastStartSetting]) -> list[str]:
 
 
 def select(settings: dict[str, FastStartSetting], names: list[str]) -> list[FastStartSetting]:
-    """The named settings, in file order; an unknown name is an error."""
+    """Resolve skips in file order. Kept Mido supplies the tree skip only after his native clear."""
     if unknown := [n for n in names if n not in settings]:
         raise FastStartError(f"unknown fast-start settings {unknown}; known: {', '.join(settings)}")
-    return [s for name, s in settings.items() if name in names]
+    chosen = [s for name, s in settings.items() if name in names]
+    bypassed = any(setting.game_data.get(mido.BLOCKER) is False for setting in chosen)
+    # Completing the meeting up front selects the wrong Mido schedule/init protocol.
+    # With Mido kept, the flow supplies these four values after his native clear.
+    # With Mido bypassed, retain the presets and leave his entire flow native.
+    return [
+        replace(
+            setting,
+            game_data=setting.game_data if bypassed else {},
+            flow_edits=tuple(edit for edit in setting.flow_edits if edit != "deku_tree_after_mido")
+            if bypassed
+            else setting.flow_edits,
+        )
+        if "deku_tree_after_mido" in setting.flow_edits
+        else setting
+        for setting in chosen
+    ]
 
 
 # --- GameDataList ---------------------------------------------------------------------------------------------------
@@ -199,126 +296,28 @@ def patch_initial_values(data: bytes, chosen: list[FastStartSetting]) -> bytes:
     return result
 
 
-# --- event settings -------------------------------------------------------------------------------------------------
+# --- changes and writing --------------------------------------------------------------------------------------------
 
 
-def _romfs_path(work_path: str) -> str:
-    """``Work/Event/.../X.engine__event__T.gyml`` -> ``Event/.../X.engine__event__T.bgyml`` (``?``-prefixed too)."""
-    path = work_path.removeprefix("?").removeprefix("Work/")
-    if path.endswith(".gyml"):
-        path = path.removesuffix(".gyml") + ".bgyml"
-    return path
-
-
-def component_list_path(event_settings: list[dict], event: str) -> str:
-    """The romfs path of ``event``'s setting component list (``RSDB/EventSetting``'s ``EventSettingComponentList``).
-    Shared by another event, it is an error: removing its SkipSetting would change that event too."""
-    rows = {row.get("__RowId"): row for row in event_settings}
-    if event not in rows:
-        raise FastStartError(f"RSDB/EventSetting has no event {event!r}")
-    work_path = rows[event].get("EventSettingComponentList", "")
-    if not work_path:
-        raise FastStartError(f"event {event!r} has no EventSettingComponentList")
-    sharing = sorted(r for r, row in rows.items() if r != event and row.get("EventSettingComponentList") == work_path)
-    if sharing:
-        raise FastStartError(f"event {event!r}: its component list {work_path} is shared with {sharing}")
-    return _romfs_path(work_path)
-
-
-def _skip_setting_in_parents(read, path: str, seen: tuple[str, ...] = ()) -> str | None:
-    """The first ``$parent`` (romfs path) up the chain from ``path`` that sets a SkipSetting, or None."""
-    tree = read(path)
-    parent = tree.get("$parent") if isinstance(tree, dict) else None
-    if not parent:
-        return None
-    parent_path = _romfs_path(parent)
-    if parent_path in seen:
-        raise FastStartError(f"{path}: $parent loop through {parent_path}")
-    parent_tree = read(parent_path)
-    if SKIP_SETTING in (parent_tree.get("Components") or {}):
-        return parent_path
-    return _skip_setting_in_parents(read, parent_path, (*seen, parent_path))
-
-
-def make_skippable(tree: dict, path: str) -> None:
-    """Remove the SkipSetting from a component list tree, in place."""
-    components = tree.get("Components") if isinstance(tree, dict) else None
-    if not isinstance(components, dict) or SKIP_SETTING not in components:
-        raise FastStartError(f"{path} has no Components/{SKIP_SETTING}: the event is skippable already")
-    del components[SKIP_SETTING]
-
-
-# --- building and writing -------------------------------------------------------------------------------------------
-
-
-class _Romfs:
-    def __init__(self, romfs: Path):
-        self.root = romfs
-        self.dicts = zsdic.Dictionaries.from_romfs(romfs)
-        self.table = rstb.read(self.dicts.decompress(rstb.TABLE_PATH, (romfs / rstb.TABLE_PATH).read_bytes()))
-
-    def raw(self, path: str) -> bytes:
-        data = (self.root / PurePosixPath(path)).read_bytes()
-        return self.dicts.decompress(path, data) if path.endswith(".zs") else data
-
-    def tree(self, path: str):
-        return byml.read(self.raw(path))
-
-    def built(self, path: str, document: byml.Document, data: bytes) -> BuiltFile:
-        """Write ``document``, check it reads back and fits the file's size-table entry, and compress it like the
-        game's file."""
-        new_data = byml.dump(document)
-        if (d := byml.difference(document.root, byml.read(new_data))) is not None:
-            raise FastStartError(f"{path}: the written file does not read back as the changed tree: {d}")
-        entry = self.table.get(path)
-        if entry is None:
-            raise FastStartError(f"{path}: the resource size table has no entry for it")
-        if len(new_data) > entry:
-            raise FastStartError(f"{path}: {len(new_data)} bytes do not fit its size-table entry {entry}")
-        content = new_data
-        if path.endswith(".zs"):
-            content = self.dicts.compress(path, new_data)
-            if self.dicts.decompress(path, content) != new_data:
-                raise FastStartError(f"{path}: the compressed file does not decompress to the written bytes")
-        return BuiltFile(path, content, len(data), len(new_data), entry)
-
-
-def build(romfs: str | Path, names: list[str], settings: dict[str, FastStartSetting] | None = None) -> list[BuiltFile]:
-    """The files the named settings change, built and checked; nothing is written. The romfs is only read."""
-    settings = load() if settings is None else settings
-    chosen = select(settings, names)
-    fs = _Romfs(Path(romfs))
-    out = []
+def changes(chosen: list[FastStartSetting]) -> FileChanges:
+    """The chosen settings as decompressed file transforms: their initial values and each flow edit once."""
+    out: dict[str, Callable[[bytes], bytes]] = {}
     if any(s.game_data for s in chosen):
-        data = fs.raw(GAME_DATA_LIST)
-        document = byml.load(data)
-        apply_game_data(document.root, plan_game_data(document.root, chosen))
-        out.append(fs.built(GAME_DATA_LIST, document, data))
-    events = [event for s in chosen for event in s.skippable]
-    if events:
-        event_settings = fs.tree(EVENT_SETTING_TABLE)
-        for event in dict.fromkeys(events):
-            path = component_list_path(event_settings, event)
-            if parent := _skip_setting_in_parents(fs.tree, path):
-                raise FastStartError(f"event {event!r}: its parent list {parent} sets a SkipSetting too")
-            data = fs.raw(path)
-            document = byml.load(data)
-            make_skippable(document.root, path)
-            out.append(fs.built(path, document, data))
+        out[GAME_DATA_LIST] = partial(patch_initial_values, chosen=chosen)
+    for name in dict.fromkeys(edit for s in chosen for edit in s.flow_edits):
+        path, transform = FLOW_EDITS[name]
+        if path in out:
+            raise FastStartError(f"flow edit {name!r}: another fast-start edit changes {path} too")
+        out[path] = transform
     return out
 
 
-def write(romfs: str | Path, out: str | Path, names: list[str], settings=None) -> list[BuiltFile]:
-    """Write the changed files to ``<out>/romfs/``; ``out`` must be empty or absent and outside the romfs. Every file
-    is built and checked before the first is written."""
-    romfs, out = Path(romfs), Path(out)
-    check_output_folder(romfs, out)
-    files = build(romfs, names, settings)
-    for f in files:
-        target = out / "romfs" / PurePosixPath(f.path)
-        target.parent.mkdir(parents=True, exist_ok=True)
-        target.write_bytes(f.content)
-    return files
+def write(romfs: str | Path, out: str | Path, names: list[str], settings=None) -> list[WrittenFile]:
+    """Write the files the named settings change to ``<out>/romfs/``, and the size table when a changed file needs a
+    bigger entry; ``out`` must be empty or absent and outside the romfs, which is only read. Every file is built and
+    read back before the first is written."""
+    chosen = select(load() if settings is None else settings, names)
+    return write_patch(Plan([], [], []), romfs, out, extra_changes=[changes(chosen)])
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -345,7 +344,8 @@ def main(argv: list[str] | None = None) -> int:
         return 1
     print(f"fast start: {', '.join(names) or 'nothing'}")
     for f in written:
-        print(f"  {f.path}: {f.size} -> {f.new_size} bytes ({f.new_size - f.size:+d}), size-table entry {f.entry}")
+        entry = "" if f.entry is None else f", size-table entry {f.entry} -> {f.new_entry}"
+        print(f"  {f.path}: {f.size} -> {f.new_size} bytes ({f.new_size - f.size:+d}){entry}")
     print(f"wrote {len(written)} files under {args.out / 'romfs'}")
     return 0
 

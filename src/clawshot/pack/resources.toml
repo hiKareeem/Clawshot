@@ -20,5 +20,3 @@ patterns = [
 ]
 # Actor names are derived from item_actors.toml and shops.toml, not duplicated here.
 actor_pack = "Pack/Actor/{actor}.pack.zs"
-# Resolve every fast_start.toml skippable event's component and parents from EventSetting.
-fast_start_components = true

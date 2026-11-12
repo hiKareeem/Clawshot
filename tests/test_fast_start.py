@@ -1,20 +1,17 @@
 """Fast start (``clawshot.patch.gamedata``) on synthetic data: settings, the initial-value plan, the written files."""
 
-import copy
-
 import pytest
+from test_fast_start_intro import opening_file
 
-from clawshot.formats import byml, rstb, zsdic
+from clawshot.formats import byml, evfl, rstb, zsdic
 from clawshot.formats.byml import I32, U32, U64
 from clawshot.patch import gamedata
-from clawshot.patch.gamedata import FastStartError, build, loads, plan_game_data, write
+from clawshot.patch.gamedata import FastStartError, loads, opening_without_movie, plan_game_data, write
 from clawshot.patch.plan import PatchError
 from clawshot.save import murmur3_32
 
 GDL = gamedata.GAME_DATA_LIST
-LISTS = "Event/EventSetting/EventSettingComponentList"
-INTRO_LIST = f"{LISTS}/Dm_Intro.engine__event__EventSettingComponentList.bgyml"
-MOVIE_LIST = f"{LISTS}/Movie.engine__event__EventSettingComponentList.bgyml"
+FLOW = gamedata.OPENING_FLOW
 ROOMY = 1 << 20
 STEPS = ["NotReady", "Ready", "Step01", "Complete"]
 
@@ -48,27 +45,13 @@ def game_data_list() -> dict:
     }
 
 
-def work(path: str) -> str:
-    return "Work/" + path.removesuffix(".bgyml") + ".gyml"
-
-
-EVENT_SETTINGS = [
-    {"__RowId": "Dm_Intro", "EventSettingComponentList": work(INTRO_LIST)},
-    {"__RowId": "Dm_Other", "EventSettingComponentList": work(MOVIE_LIST)},
-]
-INTRO = {
-    "$parent": work(MOVIE_LIST),
-    "Components": {"PlayEnv": "?Event/Env.bgyml", "SkipSetting": "?Event/DisableSkip.bgyml"},
-}
-MOVIE = {"Category": "TimelineEvent", "Components": {"ActorPos": "?Event/Pos.bgyml"}}
-
 SETTINGS_TOML = """
 [setting.intro]
 default = true
 skips = "the intro"
 state = "nothing"
 source = "synthetic"
-skippable = ["Dm_Intro"]
+flow_edits = ["opening_without_movie"]
 
 [setting.door]
 default = false
@@ -104,14 +87,12 @@ def fake_romfs(tmp_path, zsdic_pack):
     files = {
         zsdic.PACK_PATH: zsdic_pack,
         GDL: dicts.compress(GDL, byml.write(game_data_list(), "big")),
-        gamedata.EVENT_SETTING_TABLE: dicts.compress(gamedata.EVENT_SETTING_TABLE, byml.write(EVENT_SETTINGS)),
-        INTRO_LIST: byml.write(INTRO),
-        MOVIE_LIST: byml.write(MOVIE),
+        FLOW: dicts.compress(FLOW, evfl.write(opening_file())),
     }
     for path, content in files.items():
         (root / path).parent.mkdir(parents=True, exist_ok=True)
         (root / path).write_bytes(content)
-    write_size_table(root, dicts, {GDL: ROOMY, INTRO_LIST: ROOMY})
+    write_size_table(root, dicts, {GDL: ROOMY, FLOW: ROOMY})
     return root
 
 
@@ -130,9 +111,10 @@ def test_the_game_default_is_the_intro_alone():
 @pytest.mark.parametrize(
     ("text", "message"),
     [
-        ('[setting.a]\ndefault = true\nskips = "x"\nstate = "y"\nsource = "z"\nwhat = 1\nskippable = ["E"]', "unknown"),
-        ('[setting.a]\ndefault = true\nskips = "x"\nstate = "y"\nskippable = ["E"]', "'source' is required"),
-        ('[setting.a]\nskips = "x"\nstate = "y"\nsource = "z"\nskippable = ["E"]', "'default' is required"),
+        ('[setting.a]\ndefault = true\nskips = "x"\nstate = "y"\nsource = "z"\nwhat = 1\nflow_edits = []', "unknown"),
+        ('[setting.a]\ndefault = true\nskips = "x"\nstate = "y"\nflow_edits = ["E"]', "'source' is required"),
+        ('[setting.a]\nskips = "x"\nstate = "y"\nsource = "z"\nflow_edits = ["E"]', "'default' is required"),
+        ('[setting.a]\ndefault = true\nskips = "x"\nstate = "y"\nsource = "z"\nflow_edits = "E"', "a list of edit"),
         ('[setting.a]\ndefault = true\nskips = "x"\nstate = "y"\nsource = "z"', "changes nothing"),
         (
             '[setting.a]\ndefault = true\nskips = "x"\nstate = "y"\nsource = "z"\n[setting.a.game_data]\nF = 1.5',
@@ -182,14 +164,14 @@ def test_plan_refuses_two_settings_that_disagree(settings):
         plan_game_data(game_data_list(), [settings["door"], one_setting('Step_Quest = "Step01"')])
 
 
-def test_write_changes_only_the_chosen_initial_values_and_the_skip_setting(fake_romfs, tmp_path, settings):
+def test_write_changes_only_the_chosen_initial_values_and_flows(fake_romfs, tmp_path, settings):
     before = {p: p.read_bytes() for p in fake_romfs.rglob("*") if p.is_file()}
     out = tmp_path / "out"
     written = write(fake_romfs, out, ["intro", "door", "blocker"], settings)
 
-    assert [f.path for f in written] == [GDL, INTRO_LIST]
+    assert [f.path for f in written] == [FLOW, GDL]
     assert sorted(p.relative_to(out).as_posix() for p in out.rglob("*") if p.is_file()) == [
-        f"romfs/{INTRO_LIST}",
+        f"romfs/{FLOW}",
         f"romfs/{GDL}",
     ]
     dicts = zsdic.Dictionaries.from_romfs(fake_romfs)
@@ -202,48 +184,40 @@ def test_write_changes_only_the_chosen_initial_values_and_the_skip_setting(fake_
     bools[h("Blocker")]["DefaultValue"] = False
     expected["Data"]["Enum"][0]["DefaultValue"] = h("Complete")  # the enum keeps its U32 node type
     assert byml.difference(byml.read(data), expected) is None
-    assert len(data) == written[0].size == written[0].new_size
+    assert len(data) == written[1].size == written[1].new_size
 
-    intro = byml.read((out / "romfs" / INTRO_LIST).read_bytes())
-    assert byml.difference(intro, {**INTRO, "Components": {"PlayEnv": "?Event/Env.bgyml"}}) is None
+    flow = dicts.decompress(FLOW, (out / "romfs" / FLOW).read_bytes())
+    assert flow == opening_without_movie(evfl.write(opening_file()))
     assert {p: p.read_bytes() for p in fake_romfs.rglob("*") if p.is_file()} == before
 
 
-def test_a_setting_without_game_data_leaves_game_data_list_alone(fake_romfs, settings):
-    assert [f.path for f in build(fake_romfs, ["intro"], settings)] == [INTRO_LIST]
+def test_a_setting_without_game_data_leaves_game_data_list_alone(fake_romfs, tmp_path, settings):
+    assert [f.path for f in write(fake_romfs, tmp_path / "out", ["intro"], settings)] == [FLOW]
 
 
-def test_unknown_setting_names_are_refused(fake_romfs, settings):
+def test_unknown_setting_names_are_refused(fake_romfs, tmp_path, settings):
     with pytest.raises(FastStartError, match=r"unknown fast-start settings \['outro'\]"):
-        build(fake_romfs, ["intro", "outro"], settings)
+        write(fake_romfs, tmp_path / "out", ["intro", "outro"], settings)
 
 
-def test_skippable_refuses_a_shared_list_a_parent_skip_and_an_event_already_skippable(fake_romfs, settings):
-    dicts = zsdic.Dictionaries.from_romfs(fake_romfs)
-    table = fake_romfs / gamedata.EVENT_SETTING_TABLE
-
-    shared = [*EVENT_SETTINGS, {"__RowId": "Dm_Twin", "EventSettingComponentList": work(INTRO_LIST)}]
-    table.write_bytes(dicts.compress(gamedata.EVENT_SETTING_TABLE, byml.write(shared)))
-    with pytest.raises(FastStartError, match=r"shared with \['Dm_Twin'\]"):
-        build(fake_romfs, ["intro"], settings)
-
-    table.write_bytes(dicts.compress(gamedata.EVENT_SETTING_TABLE, byml.write(EVENT_SETTINGS)))
-    movie = copy.deepcopy(MOVIE)
-    movie["Components"]["SkipSetting"] = "?Event/DisableSkip.bgyml"
-    (fake_romfs / MOVIE_LIST).write_bytes(byml.write(movie))
-    with pytest.raises(FastStartError, match="parent list .*Movie.* sets a SkipSetting too"):
-        build(fake_romfs, ["intro"], settings)
-
-    (fake_romfs / MOVIE_LIST).write_bytes(byml.write(MOVIE))
-    (fake_romfs / INTRO_LIST).write_bytes(byml.write({**INTRO, "Components": {"PlayEnv": "?Event/Env.bgyml"}}))
-    with pytest.raises(FastStartError, match="skippable already"):
-        build(fake_romfs, ["intro"], settings)
-
-
-def test_nothing_is_written_when_a_file_outgrows_its_size_table_entry(fake_romfs, tmp_path, settings, zsdic_pack):
-    write_size_table(fake_romfs, zsdic.Dictionaries.from_pack(zsdic_pack), {GDL: ROOMY, INTRO_LIST: 16})
+def test_a_grown_flow_raises_its_size_table_entry(fake_romfs, tmp_path, settings, zsdic_pack):
+    dicts = zsdic.Dictionaries.from_pack(zsdic_pack)
+    write_size_table(fake_romfs, dicts, {GDL: ROOMY, FLOW: 16})
     out = tmp_path / "out"
-    with pytest.raises(FastStartError, match="do not fit its size-table entry 16"):
+    written = {f.path: f for f in write(fake_romfs, out, ["intro"], settings)}
+    assert sorted(written) == [FLOW, rstb.TABLE_PATH]
+    table = rstb.read(dicts.decompress(rstb.TABLE_PATH, (out / "romfs" / rstb.TABLE_PATH).read_bytes()))
+    assert table.get(FLOW) == written[FLOW].new_entry == rstb.required_size(FLOW, written[FLOW].new_size)
+    assert table.get(GDL) == ROOMY
+
+
+def test_nothing_is_written_when_a_flow_edit_refuses(fake_romfs, tmp_path, settings, zsdic_pack):
+    document = opening_file()
+    document.flowchart.events[1].params["EventName"] = "Dm_Other"
+    dicts = zsdic.Dictionaries.from_pack(zsdic_pack)
+    (fake_romfs / FLOW).write_bytes(dicts.compress(FLOW, evfl.write(document)))
+    out = tmp_path / "out"
+    with pytest.raises(FastStartError, match="changed native Opening_LoadingKokiriForest start"):
         write(fake_romfs, out, ["door", "intro"], settings)
     assert not out.exists()
 

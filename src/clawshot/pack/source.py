@@ -188,37 +188,15 @@ def local_romfs(path: Path, parent: Path | None):
     if path.is_dir() and dump_layers(path) is None:
         yield path
         return
-    from clawshot.formats import byml, zsdic
     from clawshot.pack import check_version
-    from clawshot.patch import gamedata
 
     check_version(path)  # before creating even an empty cache
     with open_source(path) as source, TemporaryDirectory(prefix=".romfs-", dir=parent) as temporary:
         root = Path(temporary)
-        spec = resource_spec()
-
-        def fetch(relative):
+        for relative in sorted(working_files(source, resource_spec())):
             target = root / relative
-            if not target.is_file():
-                data = source.read(relative)
-                target.parent.mkdir(parents=True, exist_ok=True)
-                target.write_bytes(data)
-            return target
-
-        for relative in sorted(working_files(source, spec)):
-            fetch(relative)
-        dictionaries = zsdic.Dictionaries.from_romfs(root)
-
-        def tree(relative):
-            raw = fetch(relative).read_bytes()
-            return byml.read(dictionaries.decompress(relative, raw) if relative.endswith(".zs") else raw)
-
-        if spec["fast_start_components"]:
-            event_settings = tree(gamedata.EVENT_SETTING_TABLE)
-            for setting in gamedata.load().values():
-                for event in setting.skippable:
-                    relative = gamedata.component_list_path(event_settings, event)
-                    gamedata._skip_setting_in_parents(tree, relative)
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_bytes(source.read(relative))
         yield root
 
 

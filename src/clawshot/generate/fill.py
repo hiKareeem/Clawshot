@@ -13,7 +13,7 @@ import binascii
 import json
 import random
 import zlib
-from collections.abc import Callable, Mapping
+from collections.abc import Callable, Iterable, Mapping
 from dataclasses import dataclass, field, replace
 from typing import Any
 
@@ -470,6 +470,87 @@ def _fill_age_return(
                 break
         else:
             raise FillError(f"return kit: no adult return-kit destination for {staged!r}", stage="return kit")
+
+
+def return_guarantee_conflict(world: World, settings: Settings, vanilla: Mapping[str, str] | None = None) -> str | None:
+    """Why the return-kit stage cannot support this door mode's configured first-pull inventory, or None.
+
+    This is a generator limitation, not proof that no physical route exists. The kit starts adult Link holding
+    only ``age_return_fill_inventory``. As an upper bound, give every shuffled location's effective pool item,
+    every non-progression item and every dungeon reward, then search unshuffled checks in place. Apply the same
+    native ``vanilla`` overrides as the fill; if even that cannot open the gate, the kit stage cannot succeed.
+
+    For song_only, the actual earliest pull can require more: the fixed Time-song gift requires all three stones
+    (hyrule_field.toml:18-19), unlike the configured Ocarina + Time-song bound. Do not call this physically impossible.
+    None (undecided) for a missing gate/first pull (a slice), or a shuffle meta-kind absent from the world (Gift
+    before seed setup expands it). The seed pipeline checks again after that setup.
+    """
+    families = world.settings.get("age_return_fill_families", ())
+    if world.age_return is None or not world.settings.get("age_return_guarantee", False) or not families:
+        return None
+    event, region = world.age_return
+    events = {e.name for e in world.events}
+    if region not in world.regions or event not in events or world.age_pull_event not in events:
+        return None
+    types = {loc.type for loc in world.locations.values()}
+    if any(kind not in types for kind in settings.shuffle):
+        return None
+    vanilla = vanilla or {}
+
+    def vanilla_item(name: str) -> str | None:
+        return vanilla.get(name, world.locations[name].vanilla)
+
+    shuffled = shuffled_locations(world, settings)
+    pool = [vanilla_item(name) for name in shuffled]
+    moving = set(shuffled)
+    fixed = {
+        name: vanilla_item(name)
+        for name, loc in world.locations.items()
+        if name not in moving and vanilla_item(name) is not None and loc.n64_only is None
+    }
+    pooled = set(pool)
+    possible = pool + [
+        name
+        for name, item in world.items.items()
+        if item.type != "Event" and (not item.progression or item.type == "DungeonReward") and name not in pooled
+    ]
+    inventory = world.settings.get("age_return_fill_inventory", {})
+    held = [name for name, count in inventory.items() for _ in range(count)]
+
+    def opens(extra: Iterable[str]) -> bool:
+        search = Search.adult_after_pull(world, [*held, *possible, *extra])
+        search.collect_spheres(fixed)
+        return search.holds(event) and search.can_reach(region, ADULT)
+
+    if opens(()):
+        return None
+    # Return-kit families that only unshuffled checks give: the ones the kit cannot forward-place.
+    moved = {_age_family(world, item) for item in pool}
+    withheld = sorted(({_age_family(world, item) for item in fixed.values()} & set(families)) - moved)
+    from clawshot.generate.names import load as location_names
+
+    door = world.settings.get("door_of_time")
+    holding = f"holding only {', '.join(sorted(inventory))}" if inventory else "before finding anything"
+    start = (
+        f"door_of_time = {door!r} with shuffle {list(settings.shuffle)} is not supported with the adult-return "
+        f"guarantee (logic age_return_guarantee): the generator's return kit assumes Link may pull the Master Sword "
+        f"{holding} (age_return_fill_inventory for this door mode), then must reach {event!r} to return to child."
+    )
+    if not withheld or not opens(name for name in world.items if _age_family(world, name) in withheld):
+        return (
+            f"{start} Under that assumption, adult Link cannot reach it even with every item the fill can place. "
+            "Choose door_of_time = 'closed'."
+        )
+    catalog = location_names()
+    sources = [name for name, item in fixed.items() if _age_family(world, item) in withheld]
+    checks = ", ".join(sorted(catalog[name].name if name in catalog else name for name in sources))
+    kinds = ", ".join(sorted({world.locations[name].type for name in sources}))
+    return (
+        f"{start} Even with every item the fill can place, that assumed start still needs {', '.join(withheld)}, "
+        f"which stay at unshuffled checks adult Link cannot reach first ({checks}). "
+        "Choose door_of_time = 'closed', or also shuffle those checks "
+        f"(their kinds: {kinds}; the Gift shuffle moves gifts and songs)."
+    )
 
 
 def _assumable(world: World, settings: Settings, items: list[str]) -> list[str]:

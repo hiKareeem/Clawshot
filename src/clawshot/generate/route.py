@@ -2,6 +2,8 @@
 
 Reverse deletion retains one sufficient source witness (including OR alternatives). Each collection step
 then gets its own source-minimal predecessor witness. No inventory is assumed from unlisted purchases.
+A seed whose child Link alone cannot complete the milestone (an early Door of Time lets adult Link supply it)
+gets an explanation instead of a guide; adult finds never enter a child opening route.
 """
 
 import tomllib
@@ -33,6 +35,16 @@ class OpeningRoute:
     region: str
     steps: tuple[Step, ...]
     visits: dict[str, dict]
+
+
+@dataclass(frozen=True)
+class NoChildOpening:
+    """The configured milestone, which child Link alone cannot complete in this seed; ``reason`` says why."""
+
+    name: str
+    event: str
+    region: str
+    reason: str
 
 
 def _proof(seed: "Seed", sources: Iterable[str]) -> Search:
@@ -74,11 +86,43 @@ def _visit_sources(seed: "Seed", config: dict) -> tuple["Seed", dict[str, dict]]
     return replace(seed, world=world, placements=placements, spheres=[list(visits), *seed.spheres]), visits
 
 
-def opening(seed: "Seed") -> OpeningRoute | None:
+def _first_sphere(seed: "Seed", target: str) -> int | None:
+    """After how many of the seed's beatability spheres the full (two-age) search holds ``target``; None if never."""
+    search = Search(seed.world)
+    if search.holds(target):
+        return 0
+    for index, sphere in enumerate(seed.spheres, 1):
+        search.collect_spheres({location: seed.placements[location] for location in sphere})
+        if search.holds(target):
+            return index
+    return None
+
+
+def _no_child_opening(seed: "Seed", name: str, target: str, entry: str) -> NoChildOpening:
+    """Why ``target`` has no child-only witness, read from the seed's own beatability spheres (no new rule)."""
+    reached = _first_sphere(seed, target)
+    if reached is None:
+        reason = (
+            f"The beatability search never reaches {target!r} in this seed: finishing does not need it, so there is "
+            "no opening guide."
+        )
+    else:
+        when = "from the start" if reached == 0 else f"after collection sphere {reached}"
+        reason = (
+            f"Child Link alone cannot reach {target!r} in this seed. The beatability search reaches it {when} only "
+            "with adult Link's help (an early Door of Time allows adult Link first), so there is no child opening "
+            "guide."
+        )
+    return NoChildOpening(name, target, entry, reason)
+
+
+def opening(seed: "Seed") -> OpeningRoute | NoChildOpening | None:
     """Prove the configured child opening; absent for worlds without that milestone or an adult start.
 
     Outside-dungeon prerequisites that are already accessible are collected before entering. The entry row
     lists preparation for the chosen clear, not merely the weaker predicate for reaching the lobby.
+    A beatable seed whose child Link alone cannot complete the milestone (adult Link first, then the return to child)
+    gets :class:`NoChildOpening` instead of a route.
     """
     config = tomllib.loads(CATALOG.read_text(encoding="utf-8")).get("opening")
     if config is None or seed.world.settings.get("starting_age", CHILD) != config["age"]:
@@ -86,6 +130,7 @@ def opening(seed: "Seed") -> OpeningRoute | None:
     target, entry = config["event"], config["region"]
     if entry not in seed.world.regions or not any(event.name == target for event in seed.world.events):
         return None
+    original = seed
     seed, visits = _visit_sources(seed, config)
     sales = shops(seed) if visits else {}
     prefix = []
@@ -94,7 +139,7 @@ def opening(seed: "Seed") -> OpeningRoute | None:
         if _proof(seed, prefix).holds(target):
             break
     else:
-        raise ValueError(f"no child opening witness reaches {target!r}")
+        return _no_child_opening(original, config["name"], target, entry)
     witness = _minimize(seed, prefix, lambda search: search.holds(target))
     dungeon = seed.world.regions[entry].dungeon
 

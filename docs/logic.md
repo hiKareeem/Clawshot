@@ -138,7 +138,8 @@ The JSON is local generated output: **do not upload or distribute it**. The prod
 | `settings_string` | Replayable CS1 representation, requiring the same source/world data. |
 | `placements` | World-location key → item for shuffled checks only, not a complete list of fixed rewards. |
 | `locations` | Descriptions keyed by those world keys, with catalogue fields and applicable shop/scrub metadata. Custom worlds can lack physical IDs. |
-| `opening_route` | An opening witness (`name`, `event`, `region`, `steps`), or null. Steps carry kind, location, requirements and alternatives. Not the entire game's route. |
+| `opening_route` | A proved child-only opening witness (`name`, `event`, `region`, `steps`), or null. Steps carry kind, location, requirements and alternatives. Not the entire game's route; adult-first seeds can lack this guide while remaining beatable. |
+| `opening_route_unavailable` | Null, or `name`, `event`, `region`, `reason` explaining why no child-only opening is listed. No invented pre-pull purchases; the full beatability search remains the seed-validity oracle. |
 | `age_locked_pickups` | Wrong-age first-frontier item information, including ties. Not a required play order or a complete pickup-timing analysis. |
 | `spheres` | World-keyed progression pickups grouped by search collection sphere; empty progression spheres omitted. Not every collected filler item. |
 | `hints` | Stone, where, message label, kind, rendered text, area, location and item; some target fields can be null. |

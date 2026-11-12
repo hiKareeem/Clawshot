@@ -9,8 +9,7 @@ catalog. The fill and beatability search are ``clawshot.generate``'s.
 
 import json
 from collections.abc import Callable, Mapping, Sequence
-from dataclasses import dataclass, field, replace
-from functools import partial
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
@@ -113,8 +112,8 @@ def make_seed(
         extra_steps = (*extra_steps, step)
     out = generate(spec, seed, settings, vanilla=vanilla)
     changes = tuple(step(out.placements) for step in extra_steps)
-    if any(setting.game_data for setting in chosen):
-        changes = ({gamedata.GAME_DATA_LIST: partial(gamedata.patch_initial_values, chosen=chosen)}, *changes)
+    # Fast-start initial values compose before gift flag additions; its flow edits run before other flow steps.
+    changes = (gamedata.changes(chosen), *changes)
     if world.settings.get("free_time_travel", False):
         from clawshot.patch.age import changes as age_changes
 
@@ -133,10 +132,7 @@ def make_seed(
         if item == "Hookshot"
     ]
     changes += (text.sheik_hint_changes(romfs, hookshot_locations),)
-    # GameData defaults compose before gift flag additions; only cutscene component files are prebuilt.
-    event_settings = {s.name: replace(s, game_data={}) for s in chosen if s.skippable}
-    fast_files = tuple(gamedata.build(romfs, list(event_settings), event_settings)) if event_settings else ()
-    fast_files += tuple(door.build(romfs, mode=settings.door_of_time))
+    fast_files = tuple(door.build(romfs, mode=settings.door_of_time))
     plan = make_plan(out, links, table, chest_events.load())
     from clawshot.patch import keys
 
