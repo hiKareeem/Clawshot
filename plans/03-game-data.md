@@ -1644,9 +1644,9 @@ then its `SmallBagActor`; the bag's `AfterExpansionMaxNum`, `ExpansionMaxNumActo
 | `TBox_ArrowBundle_Small` / `_Medium` / `_Large` | 3 / 5 / 10 | same small quiver, 30 | Same arrow chain; bag grant inferred, not a Bow |
 | `Shop_DekuSeedBundle_01` / `_02` | 30 / 10 | `Item_BulletBag_Small`, 30 | `Item_DekuSeed` chain; bag grant inferred; **no Slingshot grant in these rows** |
 | `Shop_DekuNutBundle_01` / `_02` | 5 / 10 | `Item_NutBag_Small`, 20 | Base `Item_DekuNut` explicitly has `IsAbleToGetBagIfGet = true` |
-| `TBox_DekuNutBundle` | 3 | same small nut bag, 20 | Same explicit auto-bag nut chain |
-| `Shop_DekuStick`; `Shop_DekuStickBundle_Medium` | 1; 5 | `Item_StickBag_Small`, 10 | Single Shop stick and base `Item_DekuStick` explicitly permit getting the bag |
-| `Item_DekuStickBundle_Small` | 3 | same small stick bag, 10 | Same explicit auto-bag stick chain |
+| `TBox_DekuNutBundle` | 3 | same small nut bag, 20 | Same declared nut link; automatic chest bag inference superseded below |
+| `Shop_DekuStick`; `Shop_DekuStickBundle_Medium` | 1; 5 | `Item_StickBag_Small`, 10 | Single Shop stick and base `Item_DekuStick` declare permission to get the bag, not proof that every path does |
+| `Item_DekuStickBundle_Small` | 3 | same small stick bag, 10 | Same declared stick link; automatic chest bag inference superseded below |
 
 The Bomb Bag expands **both** bombs and Bombchus; `IsItemStockMaxIfGet = true`, while
 `ActorFullOnlyIfIsGetWhenGetBag` singles out Bombchus. Exact first-Bombchu fill ordering is not established by
@@ -1654,6 +1654,14 @@ metadata alone. Small quiver/bullet bag also set stock-max on bag acquisition; n
 `SmallBagActor` is a real container link, not by itself proof of every ordinary dropped-pickup path:
 the bomb/arrow/seed rows omit `IsAbleToGetBagIfGet`, whereas a chest uses the `GetPouchContent` get-event grant.
 Only the reported Shop Bombs(10) chest case is gameplay-certified here.
+
+**Correction, 2026-11-12 (mysterypaint player report via Claude):** sticks/nuts from chests can leave
+Link without their bag despite `IsAbleToGetBagIfGet`. The row links above remain correct; inferring an
+automatic first bag on every grant path was not. Slingshot from the Kokiri shopkeeper also produced 0/0.
+Castle's first-bag fix plus Clawshot's missing direct-hand-over/source coverage explicitly grant a missing
+small container before the original positive item add, preserving larger bags and the original quantity.
+Arrow/seed refills do not grant their weapon or a new bag through this fix. See `rounds/r13-item-grants.md`
+for native path identifiers, ordered key composition and the pending in-game check.
 
 Kareem's Basement Chest finding: old seed 7 placed **Buy Bombs (10)** / `Shop_BombBundle_02`; with no Bomb Bag,
 the chest gave a Bomb Bag and 20 bombs, and the save has `IsGet.Item_BombBag_Small` (Kareem via Claude).

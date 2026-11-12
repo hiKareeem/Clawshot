@@ -81,8 +81,10 @@ for Deku Sticks, 20-nut capacity for Deku Nuts, a 30-seed Bullet Bag for the Sli
 keep the original bundle quantity. A bag already owned, including a larger tier, is not replaced
 or refilled. A bag upgrade does not grant its weapon.
 
-This shared path covers chest grants and the Kokiri shopkeeper gift. It does not retroactively
-change older seed folders or saves. New-game empty nut-slot initialization remains 0/20.
+This covers shared chest/shopkeeper grants, direct NPC hand-overs, successful scrub purchases and
+literal source gifts; refused or cancelled purchases grant nothing. These companion changes have
+synthetic and native-resource checks; their new in-game acceptance is still pending. Older seed
+folders and saves are not retroactively changed. New-game empty nut-slot initialization remains 0/20.
 
 ### Songs and chest-only evidence
 

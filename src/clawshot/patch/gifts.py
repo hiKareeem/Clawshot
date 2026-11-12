@@ -44,6 +44,7 @@ from clawshot.census.scan import CHEST, read_romfs_byml, scan
 from clawshot.formats import byml, evfl, zsdic
 from clawshot.formats.byml import I32, U32
 from clawshot.generate import Settings, prepare
+from clawshot.patch import bags
 from clawshot.patch import items as item_actors
 from clawshot.patch.gamedata import GAME_DATA_LIST
 from clawshot.patch.items import ItemActors
@@ -774,6 +775,9 @@ def patch_flowchart(fc: evfl.Flowchart, flow: str, changes: Sequence[GiftChange]
                 _skip(fc, flow, ref)
         if change.rule.purchase:
             _purchase(fc, flow, change)
+    # Shared flows are guarded once by bags.changes, after all source edits and key compilation.
+    if flow not in {bags.FLOW, bags.HANDOVER_FLOW}:
+        bags.patch_grants(fc, literal_only=True)
 
 
 def flows_changed(changes: Iterable[GiftChange]) -> list[str]:

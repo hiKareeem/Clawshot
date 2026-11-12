@@ -463,6 +463,8 @@ def test_named_reward_omits_old_item_comment_but_preserves_story_and_native_comm
 def test_public_seed_preserves_named_key_credit_and_first_weapon_bag(tmp_path, zsdic_pack, monkeypatch, chest):
     """Reversing bag/key registration makes the real key compiler reject the literal bag grant."""
     documents, rows = key_sources()
+    handover = patch_api.bags.HANDOVER_FLOW
+    documents[handover] = evfl.EventFlowFile(handover, flowchart=evfl.Flowchart(handover))
     originals = {keys.flow_path(name): evfl.write(document) for name, document in documents.items()}
     originals[keys.SETTINGS] = byml.write(rows)
     originals[keys.ANALYZED] = byml.write(key_analysis(rows))

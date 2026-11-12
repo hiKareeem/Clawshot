@@ -14,12 +14,13 @@ mysterypaint, 2026-11-12: sticks and nuts from chests and from the multiworld le
 gives these bags (only ``Npc_Goron_006_Child`` gives ``Item_BombBag_Small``, by name), so the fix does what that flow
 does instead of relying on the row.
 
-Every chest, NPC gift and pick-up window gives through one action, ``GetPouchContent`` Event0
-(``PouchSystemActor.EventTriggerAddOrRemovePouchContent``, the content in the ``ActorName`` argument). Before it,
-:func:`patch_flow` adds: name the content in ``UI_MessageTargetActorName`` (the get window's own String64, as
-``clawshot.patch.getitem`` does), and when it is a stick or nut item and Link holds no bag of that kind
-(``PouchSystemActor.EventQueryIsExistInPouch`` on each tier, as the Goron's flow asks), add the small bag, then go on to
-the native add. A bag already held is never replaced, so a capacity upgrade found first stays.
+``GetPouchContent`` Event0 covers chests and most gifts, but ``Dm_SY_GetInEvent`` also grants directly
+in Goron hand-overs, scrub purchases and its shield helper. Shuffled source flows can give a literal actor
+directly too. Each positive grant gets the same missing-bag guard; removals and ammo-only refills do not.
+The guard remembers the requested actor in ``UI_MessageTargetActorName``, checks every bag tier, then
+adds only a missing small bag before the original grant. Existing capacity, original quantity, message,
+equip and get-event flags survive. Literal source grants are guarded after their gift rewrites;
+shared flows are guarded after named-key compilation.
 """
 
 import copy
@@ -31,6 +32,7 @@ from clawshot.formats import evfl
 from clawshot.patch.plan import PatchError
 
 FLOW = "GetPouchContent"
+HANDOVER_FLOW = "Dm_SY_GetInEvent"
 MESSAGE_TARGET = "UI_MessageTargetActorName"
 PREFIX = "Clawshot_Bag_"
 
@@ -77,7 +79,7 @@ def patch_flow(flowchart: evfl.Flowchart, families: Mapping[str, tuple[Sequence[
     for needed in ("PouchSystemActor", "GameDataActor"):
         if needed not in actors:
             raise PatchError(f"{FLOW}: no {needed}")
-    pouch, game_data = actors["PouchSystemActor"], actors["GameDataActor"]
+    pouch = actors["PouchSystemActor"]
     add = flowchart.events[0] if flowchart.events else None
     if not (
         isinstance(add, evfl.ActionEvent)
@@ -86,7 +88,25 @@ def patch_flow(flowchart: evfl.Flowchart, families: Mapping[str, tuple[Sequence[
         and (add.params or {}).get("Actor") == evfl.Argument("ActorName")
     ):
         raise PatchError(f"{FLOW}: Event0 is no longer the content's AddOrRemovePouchContent: {add}")
-    target = 0
+    return _guard_grant(flowchart, 0, families)
+
+
+def _guard_grant(
+    flowchart: evfl.Flowchart, target: int, families: Mapping[str, tuple[Sequence[str], Sequence[str]]] = FAMILIES
+) -> int:
+    add = flowchart.events[target]
+    assert isinstance(add, evfl.ActionEvent) and add.params is not None
+    prefix = f"{PREFIX}{add.name}_"
+    if any(event.name.startswith(prefix) for event in flowchart.events):
+        raise PatchError(f"{flowchart.name}/{add.name}: bag gates already added")
+    pouch = add.actor
+    game_data = next(
+        (i for i, actor in enumerate(flowchart.actors) if actor.name == "GameDataActor" and not actor.secondary_name),
+        None,
+    )
+    if game_data is None:
+        game_data = len(flowchart.actors)
+        flowchart.actors.append(evfl.Actor("GameDataActor"))
     original = len(flowchart.events)
     pouch_actor, gd_actor = flowchart.actors[pouch], flowchart.actors[game_data]
     is_in_pouch = _index(pouch_actor.queries, "EventQueryIsExistInPouch")
@@ -95,7 +115,7 @@ def patch_flow(flowchart: evfl.Flowchart, families: Mapping[str, tuple[Sequence[
     is_string = _index(gd_actor.queries, "EventQueryIsGameDataString64")
 
     def append(event) -> int:
-        event.name = f"{PREFIX}{len(flowchart.events)}"
+        event.name = f"{prefix}{len(flowchart.events)}"
         flowchart.events.append(event)
         return len(flowchart.events) - 1
 
@@ -103,7 +123,15 @@ def patch_flow(flowchart: evfl.Flowchart, families: Mapping[str, tuple[Sequence[
     for family in reversed(list(families)):
         contents, bags = families[family]
         give_params = copy.deepcopy(add.params)
-        give_params.update({"Actor": bags[0], "Num": 1, "IsSetMessageTargetActorName": False, "IsGetEvent": False})
+        give_params.update(
+            {
+                "Actor": bags[0],
+                "Num": 1,
+                "IsEquipDIrect": False,
+                "IsSetMessageTargetActorName": False,
+                "IsGetEvent": False,
+            }
+        )
         give = append(evfl.ActionEvent("", pouch, add_action, target, give_params))
         # Ask for each tier, largest first: held -> the native add; none held -> the small bag first.
         check = give
@@ -127,7 +155,7 @@ def patch_flow(flowchart: evfl.Flowchart, families: Mapping[str, tuple[Sequence[
             game_data,
             set_string,
             otherwise,
-            {"GameDataName": MESSAGE_TARGET, "Index": -1, "Value": evfl.Argument("ActorName")},
+            {"GameDataName": MESSAGE_TARGET, "Index": -1, "Value": add.params["Actor"]},
         )
     )
     # Every way into the native add now comes through the gates (the new events' own edges excepted).
@@ -144,6 +172,30 @@ def patch_flow(flowchart: evfl.Flowchart, families: Mapping[str, tuple[Sequence[
     return first
 
 
+def patch_grants(flowchart: evfl.Flowchart, *, literal_only: bool = False) -> None:
+    """Guard positive pouch additions, using each action's own actor argument or literal."""
+    targets = []
+    for index, event in enumerate(flowchart.events):
+        if not isinstance(event, evfl.ActionEvent) or not event.params:
+            continue
+        actor = flowchart.actors[event.actor]
+        if actor.name != "PouchSystemActor" or actor.actions[event.action] != "EventTriggerAddOrRemovePouchContent":
+            continue
+        content = event.params.get("Actor")
+        if isinstance(content, evfl.Argument):
+            if literal_only:
+                continue
+        elif not any(content in contents for contents, _ in FAMILIES.values()):
+            continue
+        amount = event.params.get("Num")
+        if isinstance(amount, evfl.Argument):
+            raise PatchError(f"{flowchart.name}/{event.name}: cannot classify grant quantity {amount!r}")
+        if isinstance(amount, int) and amount > 0:
+            targets.append(index)
+    for target in targets:
+        _guard_grant(flowchart, target)
+
+
 def transform(data: bytes) -> bytes:
     """The ``GetPouchContent`` flow file (decompressed) with :func:`patch_flow` applied, read back checked."""
     document = evfl.read(data)
@@ -156,6 +208,18 @@ def transform(data: bytes) -> bytes:
     return written
 
 
+def handover_transform(data: bytes) -> bytes:
+    """Guard direct hand-overs, including cloned grants introduced by earlier gift transforms."""
+    document = evfl.read(data)
+    if document.flowchart is None or document.flowchart.name != HANDOVER_FLOW:
+        raise PatchError(f"the {HANDOVER_FLOW} file holds no flowchart of that name")
+    patch_grants(document.flowchart)
+    written = evfl.write(document)
+    if evfl.read(written) != document:
+        raise PatchError(f"{HANDOVER_FLOW}: the written flow does not read back as the edited flow")
+    return written
+
+
 def changes(romfs: str | Path) -> dict:
-    """The file change of this fix, for ``clawshot.patch.write``."""
-    return {flow_path(romfs, FLOW): transform}
+    """Shared grant transforms, composed after source gifts and named-key compilation."""
+    return {flow_path(romfs, FLOW): transform, flow_path(romfs, HANDOVER_FLOW): handover_transform}
