@@ -12,7 +12,7 @@ label = "Dungeon items"
 kind = "choice"
 choices = ["own_dungeon", "anywhere"]
 group = "Items"
-help = "Dungeon items stay in their own dungeon. Finding small keys elsewhere is not available yet; Boss Keys, maps and compasses will stay in their own dungeon."
+help = "Choose whether small keys stay in their own dungeon or can be in chests anywhere. Boss keys, maps and compasses always stay in their own dungeon."
 [songs]
 label = "Song placement"
 kind = "choice"
@@ -131,9 +131,7 @@ Token = "Gold Skulltula tokens"
 Token = "Not available yet: Skulltulas still add a token instead of giving a different item."
 [dungeon_items.labels]
 own_dungeon = "Own dungeon"
-anywhere = "Anywhere"
-[dungeon_items.unavailable]
-anywhere = "Not available yet: small keys outside their own dungeon still need complete in-game checks."
+anywhere = "Small keys anywhere"
 [songs.labels]
 song = "Song checks only"
 anywhere = "Anywhere supported"
@@ -177,7 +175,7 @@ Freestanding = "Heart pieces lying around the world can become the same items as
 Token = "Gold Skulltulas still give their original tokens. A test with a different reward added a token instead, so these rewards cannot be shuffled yet."
 [dungeon_items.choice_help]
 own_dungeon = "Find a dungeon's keys, maps and compasses only inside that dungeon."
-anywhere = "Find small keys outside their original dungeon once this option is ready. Boss Keys, maps and compasses stay in their own dungeon."
+anywhere = "Small keys can be in any shuffled chest, including other dungeons and the overworld. The pickup message names the key's dungeon (in English in every language). The game's key counters only show the dungeon you are in."
 [songs.choice_help]
 song = "Find songs only at the usual song rewards."
 anywhere = "Songs can appear in the other places you shuffle. Song of Storms and Minuet of the Forest have been played after finding them in chests."

@@ -111,7 +111,9 @@ def wait_job(jobs):
 
 def test_schema_is_exhaustive_and_replay_preserves_values():
     assert {row["key"] for row in schema()} == {field.name for field in fields(Settings)}
-    settings = validate({"forest": "open", "shop_slots": 3, "logic": {"free_time_travel": True}})
+    settings = validate(
+        {"dungeon_items": "anywhere", "forest": "open", "shop_slots": 3, "logic": {"free_time_travel": True}}
+    )
     restored = validate(text=settings.to_string())
     assert restored == settings
     assert restored.shop_slots == 3 and restored.forest == "open" and restored.logic["free_time_travel"] is True
@@ -125,7 +127,6 @@ def test_schema_is_exhaustive_and_replay_preserves_values():
         {"cheap_deku_shield": "false"},
         {"shuffle": ["Imaginary"]},
         {"shuffle": ["Token"]},
-        {"dungeon_items": "anywhere"},
         {"areas": ["Test"]},
         {"no_such_setting": True},
         {"logic": {"open_forest": "open"}},

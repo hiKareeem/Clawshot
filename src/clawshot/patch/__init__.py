@@ -28,7 +28,7 @@ from clawshot.patch.write import FileChanges, WrittenFile, write
 from clawshot.settings import CATALOG
 from clawshot.world.load import load_spec
 
-__all__ = ["PatchError", "PatchStep", "SeedOutput", "check_dungeon_items", "make_seed", "write_seed"]
+__all__ = ["PatchError", "PatchStep", "SeedOutput", "make_seed", "write_seed"]
 
 # A kind-specific step closes over its census/romfs context. File transforms receive decompressed bytes;
 # multiple steps touching one file compose in registration order, after the chest changes.
@@ -52,16 +52,6 @@ class SeedOutput:
         return json.dumps(self.spoiler(), indent=2, ensure_ascii=False) + "\n"
 
 
-def check_dungeon_items(settings: Settings) -> None:
-    """Keep unverified dungeon attribution out of game output, not the synthetic fill."""
-    if settings.dungeon_items == "anywhere":
-        raise PatchError(
-            "dungeon_items='anywhere' is not enabled for seed output: source-bound small-key grants "
-            "and dungeon-labelled pickup messages still need the ordered in-game acceptance gates. "
-            "Use dungeon_items='own_dungeon'."
-        )
-
-
 def make_seed(
     romfs: str | Path,
     seed: int,
@@ -71,7 +61,6 @@ def make_seed(
     extra_steps: Sequence[PatchStep] = (),
 ) -> SeedOutput:
     """Fill a seed; kind-specific steps turn placements into decompressed file transforms."""
-    check_dungeon_items(settings)
     if "Token" in settings.shuffle:
         raise PatchError(
             "Token shuffle is not enabled: per-enemy grant selection and GoldTokenGmdHash persistence "

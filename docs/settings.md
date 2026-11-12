@@ -135,18 +135,32 @@ recorded in-game acceptance (R9-FREE-TRAVEL, R9-PRELUDE-PATCHED, R10-FIRST-PULL-
 Adult song logic requires the Ocarina of Time; that age restriction comes from the game's inventory
 metadata, **not a played adult Fairy Ocarina test**.
 
-`--dungeon-items own_dungeon` keeps dungeon items in their dungeon and is the default.
-When dungeon items stay in their own dungeon, the two chests on the Desert Colossus statue's
-hands cannot hold Spirit Temple keys, maps or compasses.
-**`--dungeon-items anywhere` refuses to build a player seed.** Its small-key source bindings
-and dungeon-labelled messages are being checked in isolated in-game tests. Settings strings
-can still record the option, but neither the CLI nor the UI can generate it yet.
+`--dungeon-items own_dungeon` keeps dungeon items in their dungeon and is the default; both UI
+presets keep it. While it is set, the two chests on the Desert Colossus statue's hands cannot
+hold Spirit Temple keys, maps or compasses: a generic grant there would credit the wrong
+dungeon or nothing.
 
-The intended anywhere mode moves **small keys only**, to chests the access rules permit.
-Boss keys, maps and compasses stay in their own dungeon. A key found outside its dungeon
-will name that dungeon in both pickup messages, in English in every language; dungeon names
-are read from your dump, not bundled with Clawshot. There is no new in-game key list.
-The planned Tracker tab will show keys per dungeon from that seed's own save.
+`--dungeon-items anywhere` (the UI choice **Small keys anywhere**) moves **small keys only**,
+into any shuffled chest the access rules permit, including other dungeons and the overworld.
+An off-dungeon key is delivered as a named chest grant; no other shuffled kind can grant one.
+Boss keys (Ganon's Castle included), maps and compasses stay in their own dungeon in both
+modes. With anywhere, the statue's two hand chests may hold a small key, named to its own
+dungeon, so it is not lost.
+
+A key found outside its dungeon names that dungeon in both pickup messages — for example
+"Small Key (Forest Temple)" and the caption "Opens one locked door." / "Dungeon: Forest Temple" —
+in English in all 16 language archives; dungeon names are read from your dump, not bundled with Clawshot.
+There is no new in-game key list: the standing HUD, pause-map counters and floating notices show only the
+dungeon you are in. A key credited to another dungeon can show no notice or no counter change
+where you stand (in the played gates an overworld pickup showed no increment and an Ice Cavern
+one no notice, both with the saved count correct); the notices do not track the key's target
+dungeon. The planned Tracker tab will show keys per dungeon from that seed's own save; it is
+not in this release.
+
+Acceptance: Gates 1–4 passed in game — native and named key chests of both sizes, in-dungeon
+and out, child and adult, correct remote credit, door spending and reload persistence, ending
+with a whole generated anywhere seed ([round 12](../plans/rounds/r12-keys.md)). That is not every
+source/target combination or a complete playthrough.
 
 ## Hints, models and age warnings
 
@@ -162,8 +176,14 @@ reward. Child Bow jam/recovery is confirmed on Hookshot and Lichii; other famili
 The note lists shuffled age-locked rewards reachable by the wrong age at their first search frontier,
 including ties. Optional later pickups can differ from that order. No data-only repair is enabled.
 
+For rewards other than named keys, a chest that originally held a map can still play its Navi
+follow-up — "Now we won't get lost" — after a different reward. Cosmetic only: the line does
+not grant a map or alter saved map/key fields. Named off-dungeon key pickups omit that obsolete
+comment; no broad Navi change is made for ordinary seeds.
+
 On Hookshot 2.0.12+, clear `HOS_FS_OVERLAY` and load through mods; the old overlay route crashes.
-The game's Switch button icons then appear in text. See [loading instructions](seed-pack.md).
+The game's Switch button icons then appear in ordinary text; the separately drawn ocarina note
+interface keeps its own controller prompts. See [loading instructions](seed-pack.md).
 
 ## Developer layout
 

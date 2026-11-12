@@ -29,6 +29,8 @@ def resource_modes():
     for kind in SHUFFLES:
         yield kind.lower(), Settings(shuffle=tuple(dict.fromkeys(("Chest", kind))))
     all_kinds = Settings(shuffle=SHUFFLES)
+    yield "small-keys-anywhere", Settings(dungeon_items="anywhere")
+    yield "mixed-small-keys-anywhere", replace(all_kinds, dungeon_items="anywhere")
     skips = tuple(name for name in gamedata.load() if name not in ("mido", "forest_exit"))
     for forest in CATALOG["forest"]:
         yield f"forest-{forest}", replace(all_kinds, forest=forest, fast_start=skips)

@@ -1,9 +1,9 @@
-"""Source-bound small-key grants. Player generation remains gated in ``patch``.
+"""Source-bound small-key grants and dungeon-labelled pickup messages.
 
 Clone native wrapper/presentation entries, not shared native bindings. A wrapper keeps
 its source lifecycle and transitions to a target-specific chest destination. One
 argument-driven helper writes the existing dungeon counters; no pouch grant or latch.
-Native startup and presentation require the ordered played gates in r12-keys.md.
+Played acceptance and remaining limitations are recorded in r12-keys.md.
 """
 
 import copy

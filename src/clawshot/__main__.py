@@ -27,7 +27,7 @@ from clawshot.generate import hints as hint_choices
 from clawshot.generate.fill import DUNGEON_ITEM_CHOICES
 from clawshot.pack import PackError
 from clawshot.pack.source import local_romfs
-from clawshot.patch import PatchError, check_dungeon_items, gamedata, gifts, make_seed, write_seed
+from clawshot.patch import PatchError, gamedata, gifts, make_seed, write_seed
 from clawshot.patch.items import ItemActorError
 from clawshot.patch.write import check_output_folder, check_romfs
 from clawshot.world.load import WorldError, load_spec
@@ -63,7 +63,14 @@ def main(argv: list[str] | None = None) -> int:
             "BossHeart/Freestanding: native pickups; Token: disabled"
         ),
     )
-    parser.add_argument("--dungeon-items", choices=DUNGEON_ITEM_CHOICES)
+    parser.add_argument(
+        "--dungeon-items",
+        choices=DUNGEON_ITEM_CHOICES,
+        help=(
+            "own_dungeon (default), or small keys in shuffled chests anywhere; "
+            "boss keys, maps and compasses always stay in their own dungeon"
+        ),
+    )
     parser.add_argument(
         "--forest",
         choices=("closed", "closed_deku", "open"),
@@ -163,7 +170,6 @@ def main(argv: list[str] | None = None) -> int:
     if args.romfs is None or args.seed is None or args.out is None:
         parser.error("generation needs --romfs, --seed and --out")
     try:
-        check_dungeon_items(settings)
         check_output_folder(args.romfs, args.out)
         if not args.romfs.exists():
             raise PatchError(f"romfs folder not found: {args.romfs}")

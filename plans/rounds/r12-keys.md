@@ -1580,3 +1580,56 @@ Only then authorize production switch-on and choose the next version.**
 This commit is acceptance/rebase evidence plus a plan; no availability/refusal
 switch, new public preset, Tracker implementation or publication is authorized.
 
+## Production cutover APPROVED — 0.2.0 implementation
+
+Claude approved the preceding plan and authorized implementation on `r12/keys`.
+Decisions: small-key-only/off-area chest grants; other dungeon items physically
+home; native mixed-shuffle paths/defaults/presets unchanged; exact supplied
+**Small keys anywhere** UI wording and equivalent CLI help. Delete the obsolete
+guard/export/callers, no shim. Cosmetic ordinary-seed Navi map follow-up is
+**not a blocker**: disclose in README Known issues, UI troubleshooting, settings
+and the follow-up list; no broad Navi edit. Named-key misinformation stays blocking.
+
+Authorized version **0.2.0**, including pyproject+uv.lock in the cutover commit.
+Sweeps choose3 workers if no hookshot.exe at **each** start, otherwise1; full
+suites/sweeps serialize under the shared lock. Keep first failures, no retried
+rows counted. Stage one real public-path Recommended anywhere seed as one mod
+for Claude's boot check, optional10-minute pickup/door route/current template/
+thumbnail save description. Post cutover and each gate result; no merge/push/game.
+
+LSP references for `patch.check_dungeon_items` were attempted: **no language
+server available**. Literal whole-src/tests lookup found only its export/body,
+CLI import/call and `make_seed` call; all removed together with UI availability.
+Obsolete refusal tests removed, CS1/override coverage preserved; UI CS1 validation
+now includes anywhere, and native NUP/layered equivalence gains Chest/mixed
+anywhere modes. Production key/story/registration implementation otherwise unchanged.
+
+### Approved follow-up list
+
+- Ordinary changed map-chest **“Now we won't get lost”** is a cosmetic known issue,
+  not a map grant/count defect. Separate future source-specific investigation/fix;
+  keep native story reactions, no blanket Navi suppression.
+- Tracker reads later; no roster/HUD implementation in this cutover.
+- Played Gate4 assets/users remain frozen at a2c0c8e; new public recipe outputs
+  receive their own version/digest and do not replace a played seed.
+
+### Cutover implementation smoke
+
+Backend/UI availability switched together with the exact approved label/help;
+obsolete guard/export/imports/calls deleted. Defaults/presets unchanged. Version
+and locked editable package are **0.2.0**; `uv lock --check` PASS. Six named
+source/test files: format/check PASS.
+
+Focused consumer/model/binding/text/physical-area checks: **66 passed/2 skipped**,
+5.80s, worker1; skips require native dump. Actual **public CLI** seed7 anywhere
+Chest-only succeeded:165 checks/23 spheres,90 romfs resources plus normal
+spoiler/play note,26.15s. This is a new integrated recipe, not a rewrite of Gate4.
+Full suites, sweeps, cache/UI/determinism and public mixed boot-stage evidence
+remain pending; no inherited gate result is claimed for the cutover.
+
+README/UI troubleshooting/settings now disclose the approved ordinary-seed Navi
+cosmetic issue without claiming a map grant or applying it to named-key pickups.
+Small-only scope and current-area counters are documented; Discord kit changed
+locally only. Removed an unexercised sweep-success claim from the draft docs:
+only completed played evidence is stated there.
+

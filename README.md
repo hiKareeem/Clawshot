@@ -55,9 +55,9 @@ will be a UI tab, not a separate tool; it is not in this release.
 ## At a glance
 
 - **Shuffled now:** chests, shop shelves, NPC gifts and songs, one-time Deku Scrub sales.
-- **Optional:** boss Heart Containers and floor Heart Pieces.
-- **Not shuffled yet:** Gold Skulltula tokens, cows, dungeon rewards, pots, crates, loose rupees,
-  or keys outside their dungeon.
+- **Optional:** boss Heart Containers, floor Heart Pieces, and small keys outside their own
+  dungeon (opt-in **Small keys anywhere**; boss keys, maps and compasses never leave).
+- **Not shuffled yet:** Gold Skulltula tokens, cows, dungeon rewards, pots, crates and loose rupees.
 
 Choose the kinds you want. The UI starts with Recommended; the generator's Defaults shuffle chests
 only. Some checks stay unchanged pending in-game tests; the evidence and limits are below.
@@ -94,8 +94,15 @@ The Door of Time's song-only and open modes each passed a first in-game check (t
 first sword pull); returning to child afterwards is untested.
 
 Gold Skulltula tokens, cows, dungeon completion rewards, pots, crates and loose rupees are not
-shuffled. Keysanity (dungeon items outside their own dungeon) has no in-game acceptance; do not use
-it for a playthrough. Progressive items, entrance shuffle and Archipelago are not supported.
+shuffled. Of the dungeon items, only small keys can leave their dungeon, and only when you opt in:
+**Small keys anywhere** puts them in any shuffled chest, including other dungeons and the overworld.
+Boss keys, maps and compasses always stay in their own dungeon, and defaults and both presets keep
+every dungeon item home. A key found outside its dungeon names that dungeon in its pickup messages
+(English in every language); the game's key counters still show only the dungeon you are in. The
+played gates cover key chests in and out of dungeons, correct credit, door spending and reloads,
+plus presentation on a whole generated anywhere seed. Not every combination or a full
+playthrough has been played.
+Progressive items, entrance shuffle and Archipelago are not supported.
 See [settings and restrictions](https://github.com/hiKareeem/Clawshot/blob/main/docs/settings.md) for the detailed reference.
 Evidence: [recorded results](https://github.com/hiKareeem/Clawshot/blob/main/plans/00-roadmap.md)
 and [playtest answers](https://github.com/hiKareeem/Clawshot/blob/main/plans/playtest/answers.md).
@@ -107,10 +114,14 @@ and [playtest answers](https://github.com/hiKareeem/Clawshot/blob/main/plans/pla
   did not fix it. Other item families carry precautionary warnings. This seed's `play-note.md` lists them but reveals item locations.
 - Chest ocarinas show no model despite working; songs can show an ocarina stand-in rather than a
   normal item model. Only some songs have been individually played from chests.
+- For rewards other than named keys, a chest that originally held a map can still make Navi say
+  "Now we won't get lost" after a different reward. This is cosmetic: the line does not grant a
+  map or alter the saved counts. Named off-dungeon key pickups omit that obsolete comment.
 - **Hookshot 2.0.12 and later: use Clawshot's Play or a current pack's `Play seed.bat`,** which loads the seed as a
   Hookshot mod. Packs built before 2026-11-10 used Hookshot's older overlay loading
   (`HOS_FS_OVERLAY`), which now crashes at start-up; rebuild the pack from current source.
-  While a seed is loaded, button icons in text show Switch buttons instead of your controller's.
+  While a seed is loaded, button icons in ordinary text show Switch buttons instead of your
+  controller's; the ocarina note interface is drawn separately and keeps its own prompts.
 - A Market guard-house crash on Hookshot 2.0.11 matched the upstream
   [Hookshot issue #1112](https://github.com/NotRexed/Hookshot/issues/1112); no fix is claimed here.
 
