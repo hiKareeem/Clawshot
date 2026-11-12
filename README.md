@@ -5,6 +5,8 @@
 An unofficial item randomizer for *The Legend of Zelda: Ocarina of Time* on Nintendo Switch 2,
 inspired by OoT Randomizer and Ship of Harkinian's randomizer.
 
+<img src="docs/images/ui-generate.png" width="100%" alt="Clawshot's Generate screen after seed 2026 finished: every generation step is done, and the Seed ready panel shows the seed number, settings string and hash with Copy buttons, plus the Play, Open seed folder and Copy to my emulator buttons.">
+
 > [!IMPORTANT]
 > Clawshot reads **your own game dump**, moves items according to access rules, and writes a
 > RomFS mod: a folder of changed game files loaded instead of the originals. The supported game is
@@ -41,6 +43,14 @@ settings and short hash to share a seed recipe, never the generated game files.
 [The UI guide](docs/ui.md) covers loading, saves, shared seeds and troubleshooting.
 Keyboard/mouse only: **gamepad and Steam Deck controller input are not done**. The planned tracker
 will be a UI tab, not a separate tool; it is not in this release.
+
+<table>
+  <tr>
+    <td width="33%" valign="top"><img src="docs/images/ui-game-check.png" width="100%" alt="The Game screen after a successful check: the game dump is a verified romfs of build e0f3ccfa and Hookshot v2.1.0 supports mods."><br><sub><b>Game:</b> your dump checked as the supported build; Hookshot is optional.</sub></td>
+    <td width="33%" valign="top"><img src="docs/images/ui-settings.png" width="100%" alt="The Settings screen with the Defaults and Recommended presets, the item kinds to shuffle and dungeon item and song placement options."><br><sub><b>Settings:</b> choose what to shuffle, or replay a settings string.</sub></td>
+    <td width="33%" valign="top"><img src="docs/images/ui-seeds.png" width="100%" alt="My seeds listing a saved seed with its number, hash and folder, and View seed, Play, Open folder and Play note buttons."><br><sub><b>My seeds:</b> earlier seeds, ready to view or play again.</sub></td>
+  </tr>
+</table>
 
 ## At a glance
 
