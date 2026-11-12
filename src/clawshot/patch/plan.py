@@ -91,6 +91,8 @@ class ChestChange:
             out["key_event"] = self.key_event
         if self.dungeon_item is not None:
             out["dungeon_item"] = {"target": self.dungeon_item.target, "family": self.dungeon_item.family}
+            if self.dungeon_item.native_boss:
+                out["dungeon_item"]["native_boss"] = True
         return out
 
 
@@ -283,7 +285,9 @@ def make_plan(seed: Seed, links: Links, items: ItemActors, events: Mapping[str, 
                 if missing or (target is not None and target.id != chest.area):
                     if target is None:
                         raise PatchError(f"{name}: no native dungeon-item target for {item}")
-                    dungeon_item = DungeonGrant(target.id, family)
+                    dungeon_item = DungeonGrant(
+                        target.id, family, native_boss=family == "BossKey" and target.id == chest.area
+                    )
                     if source_for(chest.actor, kept_event.name if kept_event else None) is None:
                         raise PatchError(f"{name}: no played dungeon-item opening contract for {chest.actor}")
             changes.append(

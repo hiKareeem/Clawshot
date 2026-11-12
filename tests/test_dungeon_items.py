@@ -63,11 +63,7 @@ def test_bound_item_sets_exactly_its_targets_native_fields_and_keeps_native_pres
     assert run.windows == [ITEMS[family]]
     assert run.messages == GET_TEXT
     assert run.balloons == []
-    if source == keys.BIG:
-        assert run.trace[-1] == "EventTriggerRequestOpenPickUpWindow"
-        assert ("EventTriggerSetDisplayBossKey" in run.trace) == (family == "BossKey")
-    else:
-        assert run.trace[-1] == "EventTriggerRequestAutoSave"
+    assert ("EventTriggerSetDisplayBossKey" in run.trace) == (source == keys.BIG and family == "BossKey")
     entries = [entry.name for entry in documents[keys.POUCH].flowchart.entry_points]
     assert (keys.HELPER in entries) == (family == "SmallKey")
 
@@ -181,6 +177,7 @@ def test_every_family_binding_appends_only_and_native_events_behave_as_before():
     requests = [(source, DungeonGrant("ForestTemple", family)) for source in SOURCES for family in ITEMS]
     requests += [(source, DungeonGrant("FireTemple", "SmallKey", named=True)) for source in SOURCES]
     requests += [(source, DungeonGrant("", "Content")) for source in SOURCES]
+    requests += [(keys.SMALL, DungeonGrant("ForestTemple", "BossKey", native_boss=True))]
     _, written, new_rows, new_analyzed, _ = compile_grants(requests)
     documents, rows = key_sources()
     analyzed = key_analysis(rows)
@@ -233,6 +230,7 @@ def test_every_target_and_family_event_name_fits_the_string64_parameter():
         if family != "SmallKey" or target.id in keyed
     ]
     grants += [DungeonGrant(target, "SmallKey", named=True) for target in sorted(keyed)]
+    grants += [DungeonGrant(target.id, "BossKey", native_boss=True) for target in DUNGEON_TARGETS.values()]
     bindings, _, new_rows, _, _ = compile_grants([(source, grant) for source in SOURCES for grant in grants])
     _, rows = key_sources()
     native_ids = {row["__RowId"] for row in rows}
@@ -277,3 +275,38 @@ def test_pouch_grant_an_earlier_patch_made_literal_is_refused_not_overwritten(so
     with pytest.raises(PatchError, match="unexpected pouch grant"):
         keys.compile_bindings(documents, rows, key_analysis(rows), [(source, grant)])
     assert documents == before
+
+
+@pytest.mark.parametrize("source", [keys.SMALL, "KokiriForest_TreasureBox_NaviChatOff"])
+def test_same_dungeon_native_boss_grant_arms_indicator_before_the_pickup_window(source):
+    grant = DungeonGrant("ForestTemple", "BossKey", native_boss=True)
+    run, event, _ = _bound(source, grant, ITEMS["BossKey"], "ForestTemple")
+    expected = _granted(run.state, grant)
+    expected.update(SOURCE_EFFECTS.get(source, ({}, []))[0])
+    run.event(event)
+    assert run.state == expected
+    assert run.boss_display is True
+    assert run.pouch == []
+    assert run.messages == GET_TEXT
+    assert run.windows == [ITEMS["BossKey"]]
+    assert run.trace.count("EventGetDungeonBossKey") == 1
+    assert run.trace.count("EventTriggerSetDisplayBossKey") == 1
+    assert run.trace.index("EventGetDungeonBossKey") < run.trace.index("EventTriggerSetDisplayBossKey")
+    assert run.trace.index("EventTriggerSetDisplayBossKey") < run.trace.index("EventTriggerRequestOpenPickUpWindow")
+    assert not [name for name, _ in run.writes if name.startswith("DungeonInfo.")]
+
+
+def test_native_and_off_area_boss_bindings_do_not_share_a_grant_or_cross_credit():
+    native = DungeonGrant("ForestTemple", "BossKey", native_boss=True)
+    off_area = DungeonGrant("ForestTemple", "BossKey")
+    bindings, documents, rows, analyzed, _ = compile_grants([(keys.SMALL, native), (keys.SMALL, off_area)])
+    assert bindings[(keys.SMALL, native)].event != bindings[(keys.SMALL, off_area)].event
+    run = KeyRun(documents, rows, analyzed, ITEMS["BossKey"], "ForestTemple")
+    run.event(bindings[(keys.SMALL, native)].event)
+    assert run.state["DungeonInfo.ForestTemple.IsGetBossKey"] is True
+    assert run.boss_display is True
+    other = KeyRun(documents, rows, analyzed, ITEMS["BossKey"], "InsideTheDekuTree")
+    other.event(bindings[(keys.SMALL, off_area)].event)
+    assert other.state["DungeonInfo.ForestTemple.IsGetBossKey"] is True
+    assert other.state["DungeonInfo.InsideTheDekuTree.IsGetBossKey"] is False
+    assert not [operation for operation in other.trace if operation.startswith("EventGetDungeon")]

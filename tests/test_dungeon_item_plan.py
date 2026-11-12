@@ -40,7 +40,7 @@ def planned(item, kind, *, actor=None, event=None):
 def test_missing_small_chest_ownership_requires_a_bound_grant(item, family, kind):
     plan, chest = planned(item, kind)
     (change,) = plan.changes
-    assert change.dungeon_item == DungeonGrant("FireTemple", family)
+    assert change.dungeon_item == DungeonGrant("FireTemple", family, native_boss=family == "BossKey")
     tree = {"Actors": [{"Gyaml": kind, "Hash": chest.id, "Dynamic": {"Drop__DropActor": chest.vanilla_item}}]}
     with pytest.raises(PatchError, match="no grant binding"):
         patch_tree(tree, chest.files[0], plan)
@@ -84,5 +84,5 @@ def test_ganons_castle_boss_key_uses_the_boss_key_saved_field():
     seed = Seed(world, 1, Settings(), {"Fire Key Chest": item}, ["Fire Key Chest"], [["Fire Key Chest"]])
     plan = make_plan(seed, links, item_actors.load(), EVENTS)
     (change,) = plan.changes
-    assert change.dungeon_item == DungeonGrant("InsideGanonCastle", "BossKey")
+    assert change.dungeon_item == DungeonGrant("InsideGanonCastle", "BossKey", native_boss=True)
     assert change.dungeon_item.field == "DungeonInfo.InsideGanonCastle.IsGetBossKey"

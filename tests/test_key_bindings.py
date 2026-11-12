@@ -32,6 +32,7 @@ PRESENTATION = {
     "EventTriggerSetDisplayBossKey",
     "EventTriggerRequestOpenPickUpWindow",
     "EventTriggerRequestAutoSave",
+    "EventWait",
 }
 
 
@@ -113,18 +114,24 @@ def key_sources():
     )
     small = _document(
         keys.SMALL,
-        [evfl.Actor("GameDataActor", actions=["EventTriggerSetGameDataBool"])],
+        [
+            evfl.Actor("GameDataActor", actions=["EventTriggerSetGameDataBool"]),
+            evfl.Actor("GameSystemActor", actions=["EventWait"]),
+            evfl.Actor("UISystemActor", actions=["EventTriggerRequestOpenPickUpWindow"]),
+        ],
         [
             evfl.SubFlowEvent(
                 "Grant",
                 keys.POUCH,
                 "GetPouchContentByActorNameForTreasureBox",
+                next=5,
                 params={"ActorName": evfl.Argument("ContentName"), "IsMiniGame": evfl.Argument("IsMiniGame")},
             ),
             evfl.ActionEvent("MidoStart", 0, 0, 2, {"GameDataName": "MidoStart", "Value": True}),
             evfl.SubFlowEvent("MidoContent", "", "Success_", params=_success_arguments()),
             evfl.ActionEvent("DefaultStart", 0, 0, 4, {"GameDataName": "MidoStart", "Value": False}),
             evfl.SubFlowEvent("DefaultContent", "", "Success_", params=_success_arguments()),
+            evfl.ActionEvent("SmallPickUpWindow", 2, 0, params=_content()),
         ],
         [
             evfl.EntryPoint("Success", 3, [4]),
@@ -202,10 +209,20 @@ class KeyRun:
         self.windows = []  # the actors the get window was set for: its text names that item
         self.pouch = []  # generic pouch grants (their IsGet bit), never dungeon ownership for the three Bools
         self.writes = []
+        self.boss_display = False
 
     def observed(self):
         return copy.deepcopy(
-            (self.state, self.messages, self.balloons, self.trace, self.windows, self.pouch, self.writes)
+            (
+                self.state,
+                self.messages,
+                self.balloons,
+                self.trace,
+                self.windows,
+                self.pouch,
+                self.writes,
+                self.boss_display,
+            )
         )
 
     def event(self, name):
@@ -275,6 +292,8 @@ class KeyRun:
                     native_small_key(self.state, self.standing)
                 else:
                     self.state[f"DungeonInfo.{self.standing}.IsGet{family}"] = True
+            elif operation == "EventTriggerSetDisplayBossKey":
+                self.boss_display = params["IsDisplayBossKey"]
             else:
                 assert operation in PRESENTATION, operation
             index = event.next

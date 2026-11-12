@@ -1,9 +1,10 @@
 """Source-bound dungeon-item grants using the played small/big chest lifecycle.
 
 Clone native wrappers and presentation entries, not shared native bindings. Small
-keys write the native counters; other dungeon items write their saved ownership
-Bool. Off-dungeon small keys alone replace the native pickup messages.
-Played acceptance and remaining limitations are recorded in r12-keys.md.
+keys write native counters; same-dungeon boss keys reuse the native grant and
+indicator. Maps, compasses and off-area grants write saved ownership Bools.
+Only off-dungeon small keys replace pickup text. Played acceptance and remaining
+limitations are recorded in r12-keys.md and r13-dungeon-items.md.
 """
 
 import copy
@@ -26,6 +27,7 @@ POUCH = "GetPouchContent"
 SETTINGS = "RSDB/EventSetting.Product.111.rstbl.byml.zs"
 ANALYZED = "RSDB/GameAnalyzedEventInfo.Product.111.rstbl.byml.zs"
 HELPER = "ClawshotGrantSmallKey"
+NATIVE_BOSS_HELPER = "ClawshotGrantNativeBossKey"
 # Acquisition-only balloons, not the independent Nabooru story reaction (197).
 # Supported-dump classification and index/parameter provenance: plans/rounds/r12-keys.md.
 _ITEM_NAVI_BALLOONS = frozenset({228, 345, 354, 361, 474, 475, 476, 478, 479, 480, 495})
@@ -165,6 +167,8 @@ class _Compiler:
         if any(grant.family == "SmallKey" for grant in grants):
             add_grant_helper(self.chart(POUCH))
             self.touched.add(POUCH)
+        if any(grant.native_boss for grant in grants):
+            self.add_native_boss_helper()
 
     def chart(self, flow: str) -> evfl.Flowchart:
         if flow not in self.documents or self.documents[flow].flowchart is None:
@@ -210,6 +214,8 @@ class _Compiler:
                 raise PatchError(f"unsupported dungeon-item target {grant.target!r}")
             if grant.family not in {"SmallKey", "BossKey", "Map", "Compass"}:
                 raise PatchError(f"unsupported dungeon-item family {grant.family!r}")
+        if grant.native_boss and (grant.family != "BossKey" or grant.named):
+            raise PatchError("the native boss-key grant requires a same-dungeon boss key")
         # GetEventName is a String64 blackboard parameter. Full source names can overflow it.
         source_id = hashlib.sha256(source.encode("utf-8")).hexdigest()[:12]
         name = f"Clawshot_Key_{target}_{source_id}"
@@ -303,9 +309,30 @@ class _Compiler:
             self.rewrite_action(flow, index, new_index, event, target, mode)
         return new_index
 
+    def add_native_boss_helper(self) -> None:
+        """Reuse the big opening's native grant, indicator and display wait on existing small-flow actors."""
+        chart = self.chart(SMALL)
+        if any(entry.name == NATIVE_BOSS_HELPER for entry in chart.entry_points):
+            raise PatchError(f"{SMALL}: native boss-key helper already exists")
+        ai, grant = _operation(chart, "GameSystemActor", "actions", "EventGetDungeonBossKey")
+        ui, display = _operation(chart, "UISystemActor", "actions", "EventTriggerSetDisplayBossKey")
+        _, wait = _operation(chart, "GameSystemActor", "actions", "EventWait")
+        start = len(chart.events)
+        chart.events.extend(
+            [
+                evfl.ActionEvent("ClawshotNativeBossGrant", ai, grant, start + 1, {"IsWaitEnd": True}),
+                evfl.ActionEvent("ClawshotNativeBossDisplay", ui, display, start + 2, {"IsDisplayBossKey": True}),
+                evfl.ActionEvent("ClawshotNativeBossWait", ai, wait, evfl.NONE, {"IsWaitEnd": True, "Frames": 50}),
+            ]
+        )
+        chart.entry_points.append(evfl.EntryPoint(NATIVE_BOSS_HELPER, start))
+        self.touched.add(SMALL)
+
     def grant_event(self, name: str, target: str, next_event: int) -> evfl.Event:
         grant = self.grants[target]
         chart = self.chart(POUCH)
+        if grant.native_boss:
+            return evfl.SubFlowEvent(name, SMALL, NATIVE_BOSS_HELPER, next_event)
         if grant.family == "SmallKey":
             if not grant.named:
                 ai, action = _operation(chart, "GameDataActor", "actions", "EventTriggerSetGameDataBool")
@@ -344,6 +371,8 @@ class _Compiler:
         if grant.family == "Content":
             return
         if flow == BIG and actor.name == "GameSystemActor" and operation == f"EventGetDungeon{grant.family}":
+            if grant.native_boss:
+                return  # A big opening already performs this same native grant and indicator.
             # Keep the native post-grant presentation, but never credit the standing dungeon as well.
             pouch = self.chart(POUCH)
             entry_name = f"Clawshot_{target}_Grant"

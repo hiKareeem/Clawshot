@@ -58,10 +58,15 @@ class DungeonGrant:
     target: str
     family: str
     named: bool = False
+    native_boss: bool = False
+    """Same-dungeon boss keys use the native grant and indicator, not a literal Bool write."""
 
     @property
     def id(self) -> str:
-        return self.target if self.named else f"{self.family}_{self.target}"
+        if self.named:
+            return self.target
+        family = "NativeBossKey" if self.native_boss else self.family
+        return f"{family}_{self.target}"
 
     @property
     def field(self) -> str:

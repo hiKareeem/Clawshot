@@ -148,10 +148,12 @@ modes. With anywhere, the statue's two hand chests may hold a small key, named t
 dungeon, so it is not lost.
 
 Dungeon-item delivery uses the native grant where it already works: own-dungeon small keys
-in small chests and all four families in big chests. Maps, compasses and boss keys moved to
-small chests need source-bound ownership writes; a get message or HUD icon alone does not
-prove they were saved. The repair preserves native pickup text and unchanged placements.
-It is automated-tested; the repaired in-game check is still pending.
+in small chests and all four families in big chests. Moved small-chest maps and compasses
+use source-bound ownership writes; own-dungeon boss keys reuse the native boss-key action
+and pickup indicator on existing actors. A get message or HUD icon alone does not prove
+saved ownership. Native pickup text and unchanged placements are preserved.
+Map/compass saves and pause menus, and boss-key credit, pickup indicator and normal boss-door
+opening passed in-game. Boss-door reload persistence is untested: the arena prevents saving.
 
 Previously generated seeds can lose these three items from small chests. Rebuilding a mod
 does not re-award a chest already opened in an existing save.
