@@ -17,10 +17,10 @@ does instead of relying on the row.
 ``GetPouchContent`` Event0 covers chests and most gifts, but ``Dm_SY_GetInEvent`` also grants directly
 in Goron hand-overs, scrub purchases and its shield helper. Shuffled source flows can give a literal actor
 directly too. Each positive grant gets the same missing-bag guard; removals and ammo-only refills do not.
-The guard remembers the requested actor in ``UI_MessageTargetActorName``, checks every bag tier, then
-adds only a missing small bag before the original grant. Existing capacity, original quantity, message,
-equip and get-event flags survive. Literal source grants are guarded after their gift rewrites;
-shared flows are guarded after named-key compilation.
+Dynamic names use ``UI_MessageTargetActorName`` to select the family; literal names select it at
+compile time without touching message state. Every bag tier is checked before adding a missing small
+bag. Existing capacity, original quantity, message, equip and get-event flags survive. Literal source
+grants are guarded after their gift rewrites; shared flows after named-key compilation.
 """
 
 import copy
@@ -100,19 +100,27 @@ def _guard_grant(
     if any(event.name.startswith(prefix) for event in flowchart.events):
         raise PatchError(f"{flowchart.name}/{add.name}: bag gates already added")
     pouch = add.actor
-    game_data = next(
-        (i for i, actor in enumerate(flowchart.actors) if actor.name == "GameDataActor" and not actor.secondary_name),
-        None,
-    )
-    if game_data is None:
-        game_data = len(flowchart.actors)
-        flowchart.actors.append(evfl.Actor("GameDataActor"))
+    requested = add.params["Actor"]
+    dynamic = isinstance(requested, evfl.Argument)
     original = len(flowchart.events)
-    pouch_actor, gd_actor = flowchart.actors[pouch], flowchart.actors[game_data]
+    pouch_actor = flowchart.actors[pouch]
     is_in_pouch = _index(pouch_actor.queries, "EventQueryIsExistInPouch")
     add_action = pouch_actor.actions.index("EventTriggerAddOrRemovePouchContent")
-    set_string = _index(gd_actor.actions, "EventTriggerSetGameDataString64")
-    is_string = _index(gd_actor.queries, "EventQueryIsGameDataString64")
+    if dynamic:
+        game_data = next(
+            (
+                i
+                for i, actor in enumerate(flowchart.actors)
+                if actor.name == "GameDataActor" and not actor.secondary_name
+            ),
+            None,
+        )
+        if game_data is None:
+            game_data = len(flowchart.actors)
+            flowchart.actors.append(evfl.Actor("GameDataActor"))
+        gd_actor = flowchart.actors[game_data]
+        set_string = _index(gd_actor.actions, "EventTriggerSetGameDataString64")
+        is_string = _index(gd_actor.queries, "EventQueryIsGameDataString64")
 
     def append(event) -> int:
         event.name = f"{prefix}{len(flowchart.events)}"
@@ -122,6 +130,8 @@ def _guard_grant(
     otherwise = target
     for family in reversed(list(families)):
         contents, bags = families[family]
+        if not dynamic and requested not in contents:
+            continue
         give_params = copy.deepcopy(add.params)
         give_params.update(
             {
@@ -139,6 +149,9 @@ def _guard_grant(
             check = append(
                 evfl.SwitchEvent("", pouch, is_in_pouch, [(0, target), (1, check)], {"Num": 1, "Actor": bag})
             )
+        if not dynamic:
+            otherwise = check
+            break
         for content in reversed(contents):
             otherwise = append(
                 evfl.SwitchEvent(
@@ -149,15 +162,17 @@ def _guard_grant(
                     {"GameDataName": MESSAGE_TARGET, "Index": -1, "Value": content},
                 )
             )
-    first = append(
-        evfl.ActionEvent(
-            "",
-            game_data,
-            set_string,
-            otherwise,
-            {"GameDataName": MESSAGE_TARGET, "Index": -1, "Value": add.params["Actor"]},
+    first = otherwise
+    if dynamic:
+        first = append(
+            evfl.ActionEvent(
+                "",
+                game_data,
+                set_string,
+                otherwise,
+                {"GameDataName": MESSAGE_TARGET, "Index": -1, "Value": requested},
+            )
         )
-    )
     # Every way into the native add now comes through the gates (the new events' own edges excepted).
     for event in flowchart.events[:original]:
         if getattr(event, "next", None) == target:

@@ -37,10 +37,11 @@ def flow():
     return evfl.EventFlowFile(bags.FLOW, flowchart=fc)
 
 
-def walk(fc, content, held, *, entry=None, flags=None, trace=None):
+def walk(fc, content, held, *, entry=None, flags=None, trace=None, strings=None):
     """Run a synthetic entry, retaining inventory checks, quantities and once flags."""
     index = next(ep.main_event for ep in fc.entry_points if entry is None or ep.name == entry)
-    strings, adds = {}, []
+    adds = []
+    strings = {} if strings is None else strings
     flags = set() if flags is None else flags
     for _ in range(200):
         if index == evfl.NONE:
@@ -72,6 +73,8 @@ def walk(fc, content, held, *, entry=None, flags=None, trace=None):
             value = event.params["Actor"]
             added = content if isinstance(value, evfl.Argument) else value
             adds.append(added)
+            if event.params.get("IsSetMessageTargetActorName"):
+                strings[bags.MESSAGE_TARGET] = added
             if event.params["Num"] > 0:
                 held.add(added)
             elif event.params["Num"] < 0:
@@ -189,12 +192,22 @@ def test_literal_removals_zero_ammo_and_bag_only_grants_do_not_gain_companions(c
     assert walk(evfl.read(evfl.write(document)).flowchart, None, set()) == [content]
 
 
-def test_literal_grant_without_existing_game_data_actor():
+def test_literal_grant_keeps_existing_message_without_a_game_data_actor():
     fc = evfl.Flowchart(
         "Npc_Synthetic",
         actors=[evfl.Actor("PouchSystemActor", actions=["EventTriggerAddOrRemovePouchContent"])],
-        events=[evfl.ActionEvent("Give", 0, 0, params={"Actor": "Weapon_Range_SlingShot", "Num": 1})],
+        events=[
+            evfl.ActionEvent(
+                "Give",
+                0,
+                0,
+                params={"Actor": "Weapon_Range_SlingShot", "Num": 1, "IsSetMessageTargetActorName": False},
+            )
+        ],
         entry_points=[evfl.EntryPoint("Talk", 0)],
     )
     bags.patch_grants(fc, literal_only=True)
-    assert walk(fc, None, set()) == ["Item_BulletBag_Small", "Weapon_Range_SlingShot"]
+    original_message = "Earlier displayed reward"
+    strings = {bags.MESSAGE_TARGET: original_message}
+    assert walk(fc, None, set(), strings=strings) == ["Item_BulletBag_Small", "Weapon_Range_SlingShot"]
+    assert strings[bags.MESSAGE_TARGET] == original_message
