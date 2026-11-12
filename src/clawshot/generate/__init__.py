@@ -18,12 +18,22 @@ from clawshot.generate import hints as stone_hints
 from clawshot.generate import names as location_names
 from clawshot.generate.fill import FillError, Settings, check_beatable, fill, shuffled_locations
 from clawshot.generate.itembar import age_locked_pickups
+from clawshot.generate.prepare import prepare, world_spec
 from clawshot.generate.route import opening
-from clawshot.world.load import build_world
 from clawshot.world.model import World
-from clawshot.world.shops import with_shop_prices, with_shop_slots
 
-__all__ = ["FillError", "Seed", "Settings", "generate", "play_note", "prepare", "spoiler", "spoiler_json", "world_spec"]
+__all__ = [
+    "FillError",
+    "Seed",
+    "Settings",
+    "from_placements",
+    "generate",
+    "play_note",
+    "prepare",
+    "spoiler",
+    "spoiler_json",
+    "world_spec",
+]
 
 FILL_ATTEMPTS = 10
 
@@ -41,61 +51,6 @@ class Seed:
     """The beatability search's spheres: location names collected in each."""
     hints: tuple[stone_hints.Hint, ...] = ()
     """One hint per Gossip Stone (``clawshot.generate.hints``), in world order; none for a world without stones."""
-
-
-def world_spec(spec: Mapping[str, Any], settings: Settings) -> Mapping[str, Any]:
-    """The spec cut down to ``settings.areas`` (the regions in those census areas and the area-less start regions,
-    whose exits elsewhere then dangle) with ``settings.goal``; the spec unchanged when no areas are given."""
-    if not settings.areas:
-        return spec
-    areas = set(settings.areas)
-    regions = [r for r in spec["regions"] if r.get("area") is None or r.get("area") in areas]
-    if not any(r.get("area") in areas for r in regions):
-        raise FillError(f"no region of the world lies in the areas {sorted(areas)}")
-    kept = {name for r in regions for name in r.get("locations", {})}
-    locations = {name: info for name, info in spec.get("locations", {}).items() if name in kept}
-    return {**spec, "regions": regions, "locations": locations, "goal": settings.goal or spec["goal"]}
-
-
-def prepare(spec: Mapping[str, Any], settings: Settings) -> tuple[Settings, World]:
-    """The settings as a seed uses them, and the world they build.
-
-    With ``dungeon_items = "anywhere"`` the logic setting ``keysanity`` is set too, where the world has it.
-    ``open_forest`` and the legacy ``skip_mido`` rule flag derive from the same forest mode the overlay patches.
-    """
-    logic = dict(settings.logic)
-    if "open_forest" in spec.get("settings", {}):
-        if "open_forest" in logic and logic["open_forest"] != settings.forest:
-            raise FillError("open_forest logic must agree with the seed's forest setting")
-        logic["open_forest"] = settings.forest
-    if "skip_mido" in spec.get("settings", {}):
-        skipped = settings.forest == "open"
-        if "skip_mido" in logic and logic["skip_mido"] != skipped:
-            raise FillError("skip_mido logic must agree with the seed's forest setting")
-        logic["skip_mido"] = skipped
-    if "door_of_time" in spec.get("settings", {}):
-        if "door_of_time" in logic and logic["door_of_time"] != settings.door_of_time:
-            raise FillError("door_of_time logic must agree with the seed's door_of_time setting")
-        logic["door_of_time"] = settings.door_of_time
-        for source, target in (
-            ("age_return_door_inventory", "age_return_fill_inventory"),
-            ("age_return_door_families", "age_return_fill_families"),
-        ):
-            modes = spec["settings"].get(source, {})
-            if source in spec["settings"]:
-                logic[target] = modes.get(settings.door_of_time, spec["settings"][target])
-    if settings.dungeon_items == "anywhere" and "keysanity" in spec.get("settings", {}):
-        if logic.get("keysanity") is False:
-            raise FillError("dungeon_items = 'anywhere' needs the logic setting keysanity = true")
-        logic["keysanity"] = True
-    settings = replace(settings, logic=logic)
-    if "Shop" in settings.shuffle:
-        spec = with_shop_slots(spec, settings.shop_slots)
-    spec = with_shop_prices(spec, settings.shuffle, settings.shop_prices, settings.cheap_deku_shield)
-    if "Shop" in settings.shuffle:
-        held = {name: ("Shop",) for name in spec.get("items", {}) if name.startswith("Buy ")}
-        settings = replace(settings, item_location_types={**settings.item_location_types, **held})
-    return settings, build_world(world_spec(spec, settings), settings.logic)
 
 
 def generate(
@@ -135,6 +90,42 @@ def generate(
     spheres = check_beatable(world, placements)
     out = Seed(world, seed, settings, placements, shuffled_locations(world, settings), spheres)
     return replace(out, hints=stone_hints.choose(out, settings.hints, settings.hint_distribution))
+
+
+def from_placements(
+    spec: Mapping[str, Any],
+    seed: int,
+    settings: Settings,
+    placements: Mapping[str, str],
+    vanilla: Mapping[str, str] | None = None,
+) -> Seed:
+    """A seed whose shuffled locations hold ``placements`` chosen elsewhere (an Archipelago multiworld's fill), the
+    other locations their vanilla items, as :func:`generate` would place them.
+
+    ``placements`` must name exactly the shuffled locations, with items the world knows that the location may take
+    (``fill.allowed``: palettes, holds, exclusions, own-dungeon items). No beatability search: the placer proved the
+    seed across its whole multiworld, where this world's progression can sit in other games."""
+    from clawshot.generate.fill import allowed
+
+    settings, world = prepare(spec, settings)
+    vanilla = dict(vanilla or {})
+    shuffled = shuffled_locations(world, settings)
+    problems = [f"not a shuffled location: {name}" for name in sorted(set(placements) - set(shuffled))]
+    problems += [f"no item given for {name}" for name in shuffled if name not in placements]
+    problems += [
+        f"{name}: unknown item {item!r}" if item not in world.items else f"{name}: may not hold {item!r}"
+        for name, item in sorted(placements.items())
+        if name in shuffled and (item not in world.items or not allowed(world, settings, name, item))
+    ]
+    if problems:
+        raise FillError("placements do not fit this world:\n  " + "\n  ".join(problems))
+    out = {}
+    for name, loc in world.locations.items():
+        if name in placements:
+            out[name] = placements[name]
+        elif loc.n64_only is None and (item := vanilla.get(name, loc.vanilla)) is not None:
+            out[name] = item
+    return Seed(world, seed, settings, out, shuffled, spheres=[])
 
 
 def _required_items(seed: Seed, sources: tuple[str, ...], visits: Mapping[str, dict]) -> list[dict[str, Any]]:
