@@ -322,7 +322,7 @@ def write(romfs: str | Path, out: str | Path, names: list[str], settings=None) -
     """Write the files the named settings change to ``<out>/romfs/``, and the size table when a changed file needs a
     bigger entry; ``out`` must be empty or absent and outside the romfs, which is only read. Every file is built and
     read back before the first is written."""
-    chosen = select(load() if settings is None else settings, names)
+    chosen = [*load_always(), *select(load() if settings is None else settings, names)]
     return write_patch(Plan([], [], []), romfs, out, extra_changes=[changes(chosen)])
 
 

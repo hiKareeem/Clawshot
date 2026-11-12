@@ -470,21 +470,29 @@ def test_public_seed_preserves_named_key_credit_and_first_weapon_bag(tmp_path, z
     originals[keys.SETTINGS] = byml.write(rows)
     originals[keys.ANALYZED] = byml.write(key_analysis(rows))
     originals[FLOW_VERSIONS] = byml.write({"Versions": {}})
-    originals["GameData/GameDataList.Product.110.byml.zs"] = byml.write(
+    game_data = {
+        "Data": {
+            "Bool64bitKey": [],
+            "Enum": [],
+            **{
+                kind: [
+                    {"Hash": byml.U32(save_key(name)), "ResetTypeValue": 8, "SaveFileIndex": 0}
+                    for argument, name in keys._arguments("ForestTemple").items()
+                    if (argument == "Once") == (kind == "Bool")
+                ]
+                for kind in ("Int", "Bool")
+            },
+        }
+    }
+    game_data["Data"]["Bool"].append(
         {
-            "Data": {
-                "Bool64bitKey": [],
-                **{
-                    kind: [
-                        {"Hash": byml.U32(save_key(name)), "ResetTypeValue": 8, "SaveFileIndex": 0}
-                        for argument, name in keys._arguments("ForestTemple").items()
-                        if (argument == "Once") == (kind == "Bool")
-                    ]
-                    for kind in ("Int", "Bool")
-                },
-            }
+            "Hash": byml.U32(save_key("ActionGuide_IsEnd.Navi")),
+            "DefaultValue": False,
+            "ResetTypeValue": 8,
+            "SaveFileIndex": 0,
         }
     )
+    originals["GameData/GameDataList.Product.110.byml.zs"] = byml.write(game_data)
     originals["Banc/Synthetic/Synthetic_Static.bcett.byml.zs"] = byml.write({"Actors": []})
     originals[text.archive_path("USen")] = sarc.write(
         {
@@ -532,6 +540,9 @@ def test_public_seed_preserves_named_key_credit_and_first_weapon_bag(tmp_path, z
     for changes in output.extra_changes:
         for path in written.keys() & changes.keys():
             written[path] = changes[path](written[path])
+    initial = byml.read(written["GameData/GameDataList.Product.110.byml.zs"])
+    navi = next(entry for entry in initial["Data"]["Bool"] if entry["Hash"] == save_key("ActionGuide_IsEnd.Navi"))
+    assert navi["DefaultValue"] is True
     run = KeyRun(
         {name: evfl.read(written[keys.flow_path(name)]) for name in documents},
         byml.read(written[keys.SETTINGS]),

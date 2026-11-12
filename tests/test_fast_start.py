@@ -13,6 +13,7 @@ from clawshot.save import murmur3_32
 GDL = gamedata.GAME_DATA_LIST
 FLOW = gamedata.OPENING_FLOW
 ROOMY = 1 << 20
+DPAD_FLAG = "ActionGuide_IsEnd.Navi"
 STEPS = ["NotReady", "Ready", "Step01", "Complete"]
 
 
@@ -27,7 +28,13 @@ def flag(name, default, reset=8):
 def game_data_list() -> dict:
     return {
         "Data": {
-            "Bool": [flag("Saw_Intro", False), flag("Door_Open", False), flag("Blocker", True), flag("Sys", False, 0)],
+            "Bool": [
+                flag("Saw_Intro", False),
+                flag("Door_Open", False),
+                flag("Blocker", True),
+                flag("Sys", False, 0),
+                flag(DPAD_FLAG, False),
+            ],
             "Int": [flag("Rupees", I32(0))],
             "Enum": [
                 {
@@ -182,6 +189,7 @@ def test_write_changes_only_the_chosen_initial_values_and_flows(fake_romfs, tmp_
     bools[h("Saw_Intro")]["DefaultValue"] = True
     bools[h("Door_Open")]["DefaultValue"] = True
     bools[h("Blocker")]["DefaultValue"] = False
+    bools[h(DPAD_FLAG)]["DefaultValue"] = True
     expected["Data"]["Enum"][0]["DefaultValue"] = h("Complete")  # the enum keeps its U32 node type
     assert byml.difference(byml.read(data), expected) is None
     assert len(data) == written[1].size == written[1].new_size
@@ -189,10 +197,6 @@ def test_write_changes_only_the_chosen_initial_values_and_flows(fake_romfs, tmp_
     flow = dicts.decompress(FLOW, (out / "romfs" / FLOW).read_bytes())
     assert flow == opening_without_movie(evfl.write(opening_file()))
     assert {p: p.read_bytes() for p in fake_romfs.rglob("*") if p.is_file()} == before
-
-
-def test_a_setting_without_game_data_leaves_game_data_list_alone(fake_romfs, tmp_path, settings):
-    assert [f.path for f in write(fake_romfs, tmp_path / "out", ["intro"], settings)] == [FLOW]
 
 
 def test_unknown_setting_names_are_refused(fake_romfs, tmp_path, settings):
@@ -205,7 +209,7 @@ def test_a_grown_flow_raises_its_size_table_entry(fake_romfs, tmp_path, settings
     write_size_table(fake_romfs, dicts, {GDL: ROOMY, FLOW: 16})
     out = tmp_path / "out"
     written = {f.path: f for f in write(fake_romfs, out, ["intro"], settings)}
-    assert sorted(written) == [FLOW, rstb.TABLE_PATH]
+    assert sorted(written) == [FLOW, GDL, rstb.TABLE_PATH]
     table = rstb.read(dicts.decompress(rstb.TABLE_PATH, (out / "romfs" / rstb.TABLE_PATH).read_bytes()))
     assert table.get(FLOW) == written[FLOW].new_entry == rstb.required_size(FLOW, written[FLOW].new_size)
     assert table.get(GDL) == ROOMY
@@ -231,7 +235,14 @@ def test_write_needs_an_empty_folder_outside_the_romfs(fake_romfs, tmp_path, set
         write(fake_romfs, tmp_path / "used", ["intro"], settings)
 
 
-def test_the_dpad_is_always_there_and_not_a_choice():
-    always = {setting.name: setting for setting in gamedata.load_always()}
-    assert always["dpad"].game_data == {"ActionGuide_IsEnd.Navi": True}
-    assert "dpad" not in gamedata.load()  # never offered as a fast-start choice
+def test_no_skips_still_gives_a_new_game_the_dpad(fake_romfs, tmp_path, settings):
+    out = tmp_path / "out"
+    written = write(fake_romfs, out, [], settings)
+    overlay = out / "romfs" / GDL
+    data = (overlay if overlay.exists() else fake_romfs / GDL).read_bytes()
+    actual = byml.read(zsdic.Dictionaries.from_romfs(fake_romfs).decompress(GDL, data))
+    entry = next(entry for entry in actual["Data"]["Bool"] if entry["Hash"] == h(DPAD_FLAG))
+    assert entry["DefaultValue"] is True, {"written": [file.path for file in written], "flag": entry}
+    expected = game_data_list()
+    next(entry for entry in expected["Data"]["Bool"] if entry["Hash"] == h(DPAD_FLAG))["DefaultValue"] = True
+    assert byml.difference(actual, expected) is None

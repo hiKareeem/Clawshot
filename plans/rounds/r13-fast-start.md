@@ -444,3 +444,34 @@ historical rows toward the integrated verdict.
 
 cs13b's tier experiments stay paused at position 7; cs13d's read-only Gerudo-card count
 queues after position 6. No heavy job or gate waiter is active here before Claude's GO.
+
+### Integrated D-pad prerequisite (Claude's position-6 GO)
+
+Rebased onto merged main `ac07355`. Resolved three conflicts by retaining cs13b's raw-AINB
+oracle and trade-slot guidance, while preserving the fast-start child-opening/unavailable
+guide contract. No production bag guard was changed. Castle/mysterypaint's `6ea2122` was
+cherry-picked with `-x` as `71130fa`, retaining his author and the full source-commit trailer.
+Its loader addition preserves the native intro/Mido flow transforms.
+
+The castle commit loaded `[always.*]` but neither production entrypoint consumed it.
+The follow-on wiring applies it in both `make_seed` and standalone `gamedata.write`, even
+with an empty skip selection. Before the fix, the zero-skip regression printed
+`written=[]` and Navi's default `False`; after wiring, all 22 fast-start synthetic cases
+passed. The two real-transform key/bag composition cases also passed after adding the
+new saved Bool and missing empty Enum list to their synthetic GameData fixture; the
+production schema validation remains unchanged. Native dump oracles now include the
+always-on flag while requiring unrelated story state and metadata to remain unchanged.
+
+**Can today's skips leave a new save without `ActionGuide_IsEnd.Navi`? Yes.**
+The native saved Bool defaults false (hash `0x7BE57CB0`, reset 8, save file 0); none of the
+eight intro/Saria/Deku-talk combinations writes it. Read-only observations of the earlier
+native-Mido 11:39:16 snapshot show it false in slots 01 and 03; the 16:47:17 reload slot 01
+has it true. Thus the skips alone do not supply early D-pad availability; this is separate
+from the Mido/meeting repair. The always-on patch sets the new-game initial value true.
+Exact observations: `E:/OOTRemake/work/r13-fast-start-cs13a/dpad-native-flag-observations.txt`.
+No save or installed game file was changed.
+
+A single fresh-user public-seed D-pad check is being staged; first-item and Save+Continue
+HUD acceptance are not yet claimed. Full integrated gates and matrix follow that staging,
+with stage-start Hookshot detection and the shared lock. cs13d may take the lock between
+stages when its synthetic run is ready.

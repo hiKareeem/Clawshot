@@ -74,7 +74,7 @@ def make_seed(
         spec = freestanding.restrict_spec(spec, definitions)
     fast_settings = gamedata.load()
     names = [*settings.fast_start, *CATALOG["forest"][settings.forest]["fast_start"]]
-    chosen = gamedata.select(fast_settings, names)
+    chosen = [*gamedata.load_always(), *gamedata.select(fast_settings, names)]
     _, world = prepare(spec, settings)
     table = item_actors.load()
     table.check(world.items)

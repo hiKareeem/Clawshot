@@ -1,5 +1,5 @@
 """Fast start on the dump (``-m dump``): every setting in ``fast_start.toml`` applies to the game's data, and the
-written files differ from the game's only in the chosen entries and flow edits."""
+written files differ from the game's only in the selected and always-on initial values and flow edits."""
 
 import pytest
 
@@ -16,7 +16,7 @@ def by_hash(tree: dict) -> dict[tuple[str, int], dict]:
 
 def test_all_settings_change_only_their_entries(romfs, tmp_path):
     settings = gamedata.load()
-    chosen = gamedata.select(settings, list(settings))
+    chosen = [*gamedata.load_always(), *gamedata.select(settings, list(settings))]
     out = tmp_path / "out"
     files = {f.path: f for f in gamedata.write(romfs, out, list(settings))}
     dicts = zsdic.Dictionaries.from_romfs(romfs)
