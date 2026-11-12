@@ -49,6 +49,13 @@ on macOS, and `$XDG_CONFIG_HOME/clawshot/paths.json` (or `~/.config/clawshot/pat
   Detection only reads files. The supported game
   check is the pack's `check_version`. Read-only input links/junctions resolve to their real paths;
   output folders still refuse links. Paths are displayed in the host OS's form.
+  The status line names the version found (Version 1.0.0 is the cart, Version 1.1.1 the supported
+  cart + update), also when the files are refused. Tick **Update is a separate folder or .nup** when
+  the update is kept apart from the game: its romfs folder or `.nup` is laid over the dump, both for
+  the check and for Generate, and is protected like the dump. Leave it off for an applied romfs, a
+  dump folder with `base/` and `updates/`, or a `.nup` that includes the update.
+  While a check runs, a "Checking your game files" dialog blocks the page; Cancel (or Esc) drops
+  the check's answer, and nothing from it is remembered.
 - **Settings:** Defaults restores generator defaults. Recommended selects Chest, Shop, Gift,
   Scrub and BossHeart, with the remaining generator defaults. Every control and choice comes
   from the app schema. Cards explain their coverage and actual gameplay evidence. Unavailable

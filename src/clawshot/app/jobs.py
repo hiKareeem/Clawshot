@@ -33,15 +33,20 @@ class GenerationRequest:
     seed: int
     settings: str
     hookshot: str = ""
+    update: str = ""  # a separate update folder or .nup laid over the dump; empty when the dump includes it
+
+    def update_path(self) -> Path | None:
+        return absolute_path(self.update, "Update", allow_links=True) if self.update else None
 
     def paths(self) -> tuple[Path, Path]:
         if type(self.seed) is not int or not -(2**53 - 1) <= self.seed <= 2**53 - 1:
             raise ValueError("Seed must be an integer within JavaScript's exact integer range")
         source = absolute_path(self.dump, "Dump", allow_links=True)
-        if source.is_dir():  # base/romfs typed inside a dump folder: generate from, and protect, the whole dump
+        update = self.update_path()
+        if source.is_dir() and update is None:  # base/romfs inside a dump folder: use, and protect, the whole dump
             source = dump_root(source)
         hookshot = absolute_path(self.hookshot, "Hookshot", allow_links=True) if self.hookshot else None
-        return source, output_path(self.output, source, hookshot)
+        return source, output_path(self.output, source, hookshot, update)
 
 
 def generate_seed(request: GenerationRequest, stage: Path, report) -> dict:
@@ -53,9 +58,10 @@ def generate_seed(request: GenerationRequest, stage: Path, report) -> dict:
     report("validate")
     source, _ = request.paths()
     settings = validate(text=request.settings)
-    detect_dump(str(source))
+    update = request.update_path()
+    detect_dump(str(source), str(update) if update is not None else None)
     report("source")
-    with local_romfs(source, stage) as romfs:
+    with local_romfs(source, stage, update) as romfs:
         report("prepare")
         spec, steps = None, []
         if gifts.SHUFFLE in settings.shuffle or set(settings.shuffle).intersection(gifts.GIFT_TYPES):
