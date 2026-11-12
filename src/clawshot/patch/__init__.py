@@ -138,11 +138,11 @@ def make_seed(
     fast_files = tuple(gamedata.build(romfs, list(event_settings), event_settings)) if event_settings else ()
     fast_files += tuple(door.build(romfs, mode=settings.door_of_time))
     plan = make_plan(out, links, table, chest_events.load())
-    if settings.dungeon_items == "anywhere":
-        from clawshot.patch import keys
+    from clawshot.patch import keys
 
-        plan, key_changes = keys.changes(romfs, plan, prior_changes=changes)
-        changes += (key_changes,)
+    # Source-bound dungeon credit must see native pouch grants; bag gates compose afterwards.
+    plan, key_changes = keys.changes(romfs, plan, prior_changes=changes)
+    changes += (key_changes,)
     return SeedOutput(out, links, plan, changes, fast_files, item_names)
 
 
