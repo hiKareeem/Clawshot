@@ -289,7 +289,7 @@ simulation; the replacement still needs a fresh in-game check.
 - Mido is in the correct **middle** position. Sword-only still blocks. With the shield
   added, dialogue opens the path; saves show blocker **true -> false at 11:40**.
 - No Deku Tree dialogue; mouth open. The player reached the dungeon Map chest.
-- **Reload remains pending Kareem's answer.** Neither-equipped and shield-only live talks
+- **Reload passed (16:45–16:47; acceptance below).** Neither-equipped and shield-only live talks
   were not reported in this result; their registration-aware native replays passed.
 
 Read-only runtime loading proof from the new isolated user's `hookshot_log.txt`:
@@ -408,7 +408,7 @@ four-case rerun before this matrix at position 5. No heavy runner or gate waiter
 The earlier full fast-start gates remain evidence for their original source, not a new
 whole-rebased-branch gate run. Matrix and reload evidence remain pending.
 
-### Native-Mido reload: machine evidence (Kareem, 16:45–16:47)
+### Native-Mido + reload acceptance: PASSED (Kareem, 16:45–16:47)
 
 Claude reports Continue in the same staged user folder, with three snapshots matching
 `save-backups/2026-11-12_164*-r13-mido-reload-1..3`. `check_player_save.py` on the newest
@@ -423,6 +423,9 @@ The reported runtime log has no crash and 15 mod-loading lines, including
 The reported slot thumbnail shows young Link beside Mido at the Deku Tree tunnel mouth.
 These are Claude's save/log/thumbnail observations, not a replay by this agent.
 
-Kareem's spoken observations remain pending and will come through Claude. Do not infer
-post-Continue traversal or pause-map behavior from the saved flags or thumbnail alone.
-No complete reload acceptance or matrix pass is claimed; no heavy work before ordered GO.
+Kareem subsequently confirmed, via Claude, that talking to Mido finished normally and the
+Deku Tree's mouth was open after Continue. Together with the persisted save state and
+no-crash/mod-loading evidence above, Claude accepts **native-Mido + reload as PASSED**.
+
+Gates and matrix are separate, still pending. Claude explicitly requires the ordered GO
+before either starts; no heavy job or gate waiter has been launched.

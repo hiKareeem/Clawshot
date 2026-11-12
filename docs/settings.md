@@ -139,7 +139,8 @@ Mido instead keeps the initial completed-meeting preset. Saria's skip preserves 
 visit flag normally set by her area banner; the forest pause map opens in the same played check.
 The first Mido repair **hung in game and was replaced**. Kareem verified the native-clear
 replacement: normal middle position, sword-only refusal, clear after adding a shield, and
-no Deku Tree talk with its mouth open. Reload remains pending. Shuffled own-dungeon map/compass
+no Deku Tree talk with its mouth open. Reload also passed: after Continue, Mido's dialogue
+finished normally and the Deku Tree's mouth was open. Shuffled own-dungeon map/compass
 credit is a separate bug, not a failure of this map-access correction.
 
 ## Door of Time and returning to child

@@ -814,8 +814,11 @@ the Saria/banner route is unaffected unless `saria` is also selected. **Kareem, 
 2026-11-12 11:35–11:46:** movie entirely skipped, later scenes skippable; forest pause map opens;
 Mido stands in the middle, refuses sword-only, clears after a shield is added (saved blocker
 true -> false at 11:40); tree dialogue absent and mouth open. Runtime loading proof is in the
-round record. Reload is pending. The Map chest plays its map text/animation but leaves
-`DungeonInfo.InsideTheDekuTree.IsGetMap=false`: Claude assigns this separate own-dungeon
+round record. **Native-Mido + reload acceptance PASSED (16:45–16:47):** Kareem confirmed
+normal Mido dialogue and an open Deku Tree mouth after Continue; the save retained blocker
+false and completed meeting state, with no crash and the expected mod-loading evidence.
+In the earlier run, the Map chest played its map text/animation but left
+`DungeonInfo.InsideTheDekuTree.IsGetMap=false`: Claude assigned this separate own-dungeon
 map/compass credit bug to cs13c; this fast-start fix stands.
 
 ## 15. Round 4: event flows and gifts (cs4d)
