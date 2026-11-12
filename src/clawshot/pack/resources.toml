@@ -7,6 +7,10 @@ files = [
     "RSDB/EventSetting.Product.111.rstbl.byml.zs",
     "RSDB/GameAnalyzedEventInfo.Product.111.rstbl.byml.zs", # source-bound small-key event registration
     "RSDB/PouchActorInfo.Product.111.rstbl.byml.zs",
+    "RSDB/ActorInfo.Product.111.rstbl.byml.zs", # custom items: rows copied from Zelda's Letter
+    "RSDB/GameActorInfo.Product.111.rstbl.byml.zs",
+    "Pack/Actor/Item_ZeldaLetter.pack.zs", # the custom items' donor pack
+    "RSDB/GameAnalyzedEventInfo.Product.111.rstbl.byml.zs", # receive_event's row
     "Event/EventFlow/EventFlowFileEntry.Product.110.byml.zs",
     "System/Resource/ResourceSizeTable.Product.111.Nin_Ounce_NVN2.rsizetable.zs",
     "Logic/Market_Common_f252.logic.module.ainb", # Round10 Door of Time open mode (cs10b)
