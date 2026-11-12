@@ -4,6 +4,11 @@ Clawshot is an unfinished, unofficial randomizer. Small fixes, remake logic evid
 and tests are welcome. Discuss larger changes in [Discord](https://discord.gg/7R5ZXPcJqn) first.
 Kareem and his co-owner decide product behavior and merge contributions.
 
+**Claim work before you start.** For anything bigger than a small fix, check the
+[open issues](https://github.com/hiKareeem/Clawshot/issues) and pull requests first. Comment on the issue you're
+taking (or open one) so it can be marked `in progress`, and say which files you expect to touch. The maintainers do
+the same for their own work. Your pull request then says `Fixes #<number>`.
+
 ## Licence and sources
 
 By submitting a contribution, you agree to license it under Clawshot's [MIT licence](LICENSE)
