@@ -82,9 +82,10 @@ keep the original bundle quantity. A bag already owned, including a larger tier,
 or refilled. A bag upgrade does not grant its weapon.
 
 This covers shared chest/shopkeeper grants, direct NPC hand-overs, successful scrub purchases and
-literal source gifts; refused or cancelled purchases grant nothing. These companion changes have
-synthetic and native-resource checks; their new in-game acceptance is still pending. Older seed
-folders and saves are not retroactively changed. New-game empty nut-slot initialization remains 0/20.
+literal source gifts; refused or cancelled purchases grant nothing. Chest Deku Sticks and the Kokiri
+counter-gift Slingshot passed pickup, use and Save and Quit → Continue (Kareem, 2026-11-12).
+Scrub/Goron and other companion paths have native-data/test coverage, not individual played acceptance.
+Older seed folders and saves are not retroactively changed. New-game empty nut-slot initialization remains 0/20.
 
 ### Songs and chest-only evidence
 

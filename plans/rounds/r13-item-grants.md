@@ -1,15 +1,16 @@
 # R13 item grants (cs13b)
 
 Base: `30ba5c9`, version 0.2.0, unpublished. No version bump. Player reports are ground truth;
-no game was started. Dump/build e0f3ccfa is read-only. Research and generated artifacts belong under
+the agent did not start the game. Dump/build e0f3ccfa is read-only. Research and generated artifacts belong under
 `E:/OOTRemake/work/r13-item-grants/`, never this repository.
 
-## Capacity implementation hold
+## Capacity integration decisions
 
-Claude's 2026-11-12 steer: castle is preparing the capacity PR. **Do not implement a competing fix.**
-No capacity implementation has been written in this worktree. Review that PR against the following
-native contract when Claude supplies it. This audit distinguishes native declarations, explicit flow
-operations, and behavior that still needs the game; a metadata row alone is not gameplay proof.
+Initial steer reserved the capacity implementation for castle. Claude subsequently approved cherry-picking
+`be71d73` with castle's authorship, then separate commits for ordered wiring and missing paths. The cherry-pick
+retains `-x`; `c1156dd` wires it after named-key compilation. Our extension covers the three direct
+`Dm_SY_GetInEvent` grants and literal positive source gifts. `6ea2122` (D-pad) remains out: it shares the
+fast-start/gamedata loader with cs13a. The audit below separates native declarations from gameplay proof.
 
 ## Native capacity and expected regression values
 
@@ -37,7 +38,7 @@ Actual current pool includes base Slingshot/Bow/Bomb Bag, fixed Medium Bomb Bag/
 minigame prizes, fixed Medium scrub Stick/Nut capacity, and both larger wallets. Native Large tiers
 also occur in ownership-dependent native branches; documenting them does not admit new pool items.
 
-### Grant-path comparison
+### Grant-path comparison before the capacity fix
 
 | Grant path | Native operation / source | What current Clawshot changes | Capacity/ammo consequence and review obligation |
 |---|---|---|---|
@@ -56,6 +57,77 @@ capacity/refill declaration preserved; quiver/bullet upgrade acquired before wea
 or gratuitously refilled by later weapon; unrelated item and negative/removal grants unchanged;
 failed/cancelled purchases grant nothing; the original reward's message/once flag remains correct.
 These are **expected values**, not unrun test results or new in-game acceptance.
+
+### Applied capacity coverage and data smoke
+
+Castle's claim that all grants pass through `GetPouchContent/Event0` is too broad. Native
+`Dm_SY_GetInEvent` directly adds at **Event124** (`GetInEvent_Goron`, also the Zelda-letter entry),
+**Event430** (`GetInEvent_NotTurn_2DShop`) and **Event442** (`DekuShield_GetAndEquipCheck`).
+All three now use the same missing-container guard. Cloned positive grants in that shared flow are
+included. Literal source gifts are guarded after their reward/once edits; common flows have one owner
+and are guarded after the key compiler. `NpcCommon` has only a negative pouch add (`Event489`, -1);
+scanning it made byte-identical output. No shelf/floor major-item admission was added.
+
+Native hand-over read/write/read and gate execution passed for all three original IDs: 783 → 876 events,
+exactly one missing small bag before the requested item; larger owned bags skip the companion.
+Original quantities, message, equip and get-event flags survive; the companion cannot equip or replace
+the displayed reward. Synthetic purchase failure/cancel and literal once/removal/zero/bag-only boundaries
+pass. Combined bag/key/gift/scrub regressions: **62 passed**. An in-memory reversed registration order
+makes the public named-key regression fail at the expected literal-grant rejection; the real order passes.
+These are data/model proofs, not an in-game pass.
+
+One extra literal-source edge was reproduced before its fix: with native
+`IsSetMessageTargetActorName=false`, a dynamic scratch-string gate overwrote the existing UI target.
+The retained regression failed with the exact old/new values, then passed after literal actors selected
+their family at compile time. Their guard now uses only pouch-tier queries and the missing-bag add,
+without a GameData actor, message mutation or dead runtime family comparisons.
+
+The section-24 stick/nut automatic-bag inference is corrected in `03-game-data.md`: player reports
+override metadata-based assumptions. New-game Nut Bag x1 / Nuts x0 still composes without free nuts.
+
+### Staged first-container check
+
+Public `gifts.seed_setup` → `make_seed` → `write_seed`, seed 8 with existing test-only fill exclusions:
+**24 spheres, 122 resources**, complete beatability and all-pair replay. No post-fill placement/resource
+mutation. External `stage_capacity.py` and `capacity-staging-proof.json` retain exact inputs, actor Hashes
+and source actors. Fresh isolated New Game launcher/checklist:
+`ingame/Test - first containers.bat`, `ingame/first-container-checklist.md` in the external work directory.
+Template-derived CRLF launcher dry-run passed; no game started or game-folder write.
+Active binding after the literal-message correction is **first-container-check-v2**:
+mod `ingame/mods/first-container-check-v2/first-container-check-v2`, user
+`ingame/user-first-container-check-v2`. The same launcher filename passed a fresh CRLF/dry-run check.
+The proof records hashes of nine current source files. Old test user/mod remain untouched; Claude
+re-runs the boot check and re-arms the watcher before Kareem plays. No acceptance is inferred from process presence.
+
+Mido's middle-left chest gives native three-stick bundle **3/10**, far-right gives Kokiri Sword and
+middle-right gives Hylian Shield. After meeting the tree, the shop counter gives Slingshot **30/30**;
+shoot to **29/30**, repeat talk must not refill/reward again or give an extra Deku Shield, then reload
+retains stock/capacity. Optional 40-rupee near-bridge scrub gives Medium Stick Bag **20/20**; this is a
+bag-only scrub regression, **not** a first Bow/quiver acceptance. Required route 7–9 minutes; stop at ten,
+skipping the optional scrub if necessary. Save/reload thumbnail: Kokiri Forest outside Kokiri Shop;
+first launch has no existing thumbnail. Claude must boot-check; Kareem supplies item-menu results and
+runtime `mods: <file> <- <test path>` proof for Sequence, child Banc, shopkeeper and both shared flows.
+
+### First-containers v2: in-game acceptance
+
+**PASS — Kareem, 2026-11-12, play/save evidence 12:07–12:11, reported by Claude.**
+Snapshots are outside the repository under `E:/OOTRemake/work/save-backups/`, the
+`2026-11-12_12*-r13-firstcontainers-v2-1` through `-10` series. Claude first reported the save evidence,
+then Kareem confirmed that he could swing a Stick and fire the Slingshot; both still worked after
+**Save and Quit → Continue**, with no issues.
+
+| Saved state | Confirmed native actors | Stock / capacity |
+|---|---|---:|
+| New Game | No Sticks, Stick Bag or Slingshot | — |
+| Mido middle-left chest | `Item_DekuStick` + `Item_StickBag_Small` | 3 / 10 |
+| Counter gift | `Weapon_Range_SlingShot` + `Item_BulletBag_Small` | 30 / 30 |
+| After a shot | Slingshot retained | 29 / 30 |
+
+No Deku Shield was granted; no crash. Runtime loaded `GetPouchContent`, `Dm_SY_GetInEvent`,
+the Kokiri child shopkeeper flow/packs and `SetPouchAndStatusForGameStart` **from this mod**.
+This accepts **chest Sticks + counter-gift Slingshot pickup/use/reload**, not every family or source.
+Scrub/Goron, literal-source and Bow/quiver paths retain native-data/test coverage only; a loaded common
+flow is not proof every branch was played.
 
 ## Decisions and trade-slot fix
 
@@ -177,7 +249,17 @@ Only the Market Bazaar's native bomb shelf has a corresponding shelf-release gat
 that requirement on every shelf would incorrectly block non-bomb shuffled replacements.
 Current Buy Bombs items are inert refills in logic, not Bomb Bag/explosives progression sources;
 no ungated purchase is used to prove beatability. Bombchus do not share this ordinary-bomb gate.
-Full per-path identifiers and the 100-seed sweep will be appended from the independent audit.
+The completed independent audit is external `bomb-gating-report.md` and its JSON/probe files.
+Ordinary bomb LiftableParam requires Low; Bombchus require None. Bag expansion grants no strength.
+D30 already gates bombs in 0.1.2 (`6e5e179` predates both releases): all 236 compiled bag-dependent
+rules also read strength, no ungated witness among 2,411 compiled rules. Child Silver/Golden alone
+remain conservatively unusable in logic; adult accepts them. Native one-field LiftGrade is shared.
+
+Read-only original 0.1.2 Recommended seeds 0–99: **100/100 generated on the first attempt and beatable;
+zero newly unbeatable** under the real strength gate. A deliberately pre-D30, bag-only counterfactual
+generated 100 but **26** fail replay under the real gate; this is not a defect count for published 0.1.2.
+In 74 actual seeds the bag can precede the Bracelet without being credited as usable bombs.
+No new bomb/Bombchu logic restriction or shelf-wide King Dodongo gate is justified.
 
 Native lower-after-higher capacity proof: `AfterExpansionMaxNum` is row field +0xc0; the grant
 reads current capacity and skips expansion/refill when current >= offered at
@@ -190,8 +272,191 @@ tier**, not merely a later earliest sphere; only then is a MAX level model sound
 Hookshot is monotone: `plans/playtest/answers.md` R8-FROGS (2026-11-09) records a late Hookshot
 not replacing the Longshot, reaffirmed by Kareem to Claude on 2026-11-12. Ocarinas are separate
 slots (Kareem to Claude, 2026-11-12): no lower-item overwrite. Neither family gets a fill restriction.
-The complete alias-family table, MAX fix, prerequisite proof, historical/0.2.0 sweeps and
-community 11/15 results remain in progress, in a separate commit from this item-bar/trade fix.
+The complete alias-family audit follows. Historical and community impact measurements are complete;
+the corrected hard-order screen's first-attempt failures are an allocation issue, documented below.
+
+## Complete alias-family audit
+
+Effective `prepare(load_spec(), Settings())` contains **41 alias targets**: five fixed-tier families,
+four other targets, 22 silver-rupee targets and ten small-key targets. The following covers all of them.
+The MAX implementation is uncommitted pending its approved placement proof's first-attempt sweep and full gates;
+no fallback policy or version change has been approved.
+
+| Family | Previous accumulation | Audited behavior / change |
+|---|---|---|
+| Ocarina: Fairy 1, Time 2 | SUM, incorrectly 3 together | Separate native slots; MAX 2, no placement restriction. Kareem 2026-11-12. |
+| Hookshot 1, Longshot 2 | SUM, incorrectly 3 together | MAX 2, no restriction. Late Hookshot retained Longshot in R8-FROGS and Kareem's 2026-11-12 statement. |
+| Strength: Bracelet 1, Silver 2, Golden 3 | SUM; Bracelet + Silver incorrectly satisfied tier 3 | Native shared saved LiftGrade can be overwritten downward. MAX needs the mandatory-lower ownership proof; not merely sphere order. |
+| Scales: Silver 1, Golden 2 | SUM, incorrectly 3 together | Native saved DiveDepth can be overwritten downward. MAX needs the same mandatory-lower proof. |
+| Wallets: Adult 1, Giant 2, Tycoon 3 | SUM; Adult + Giant incorrectly gave 3 | Native capacity expansion is max-guarded; MAX, no restriction. Tycoon is catalogued, not a new supported grant. |
+| Magic Meter: Lens, Din/Farore/Nayru, Fire/Ice/Light Arrows, each 1 | Additive availability aliases | Unchanged: rules test availability, not a two-level magic counter. Native MPMaxUP skips an existing nonzero meter except the double-magic grant (special-deal index 12), so a later base grant does not lower double magic. |
+| Bomb Bag (30) → Bomb Bag 1 | Additive availability alias | Unchanged: the rule needs presence, not a bag-tier count. Capacity is natively max-guarded. |
+| Heart Container → Piece of Heart 4; TCG Piece → Piece of Heart 1 | Quantities add | Unchanged: genuine piece counts, not tiers. |
+| Buy Magic Bean / Magic Bean Pack → Magic Bean 10 each | Quantities add | Unchanged: genuine bean counts. |
+| Ten Small Key Ring → corresponding Small Key targets, 10 each | Quantities add | Unchanged: Bottom of the Well, Fire, Forest, Ganons Castle, Gerudo Training Ground, Shadow, Spirit, Thieves Hideout, Treasure Chest Game and Water. Catalog audit, not approval of key-ring grants. |
+| Twenty-two Silver Rupee Pouch → corresponding Silver Rupee targets, 10 each | Quantities add | Unchanged: Well Basement; Dodongos Staircase; Ganons Fire/Forest/Light/Shadow/Spirit/Water trials; GTG Lava/Slopes/Water; Ice Push Block/Spinning Scythe; Shadow Huge Pit/Invisible Blades/Invisible Spikes/Scythe Shortcut; Spirit Adult Boulders/Adult Climb/Child Early Torches/Lobby and Lower Adult/Sun Block. |
+| Slingshot/Bullet Bags, Bow/Quivers, stick/nut capacity | No multi-tier alias family in this world | Unchanged: Bullet Bag (40), Quiver (40) and stick/nut capacity are independent items. Their native capacities are max-guarded; a bag does not imply owning its rental weapon. |
+| Swords and shields | Independent items, no tier aliases | Unchanged: Kokiri Sword, Giants Knife and Biggoron Sword are not summed into a sword level. No sword/shield MAX conversion or restriction. |
+
+Genuine progressive copies keep counting; a fixed tier does not add its tier number to those copies.
+The family level is `max(genuine progressive count, highest fixed tier)`. Focused tier/fill/age tests:
+**82 passed** after correcting one test's mistaken expectation that the family level was its raw copy count.
+
+## Historical MAX impact and unsafe original orders
+
+Original-version generators, unchanged placements, all five alias families switched SUM→MAX only at
+replay; every withheld-lower pair checked, with no native exemption. Exact source/release provenance
+and settings are external `tier-impact-provenance*.json`; results/seed lists are `tier-impact-summary.json`
+and its four JSONL datasets. Frozen production Search cross-check matches the independent replay.
+
+| Original dataset | SUM wins | MAX wins | Full spheres changed | Golden Gauntlets reachable without Silver | Golden Scale reachable without Silver Scale |
+|---|---:|---:|---:|---:|---:|
+| 0.1.2 Recommended, seeds 0–99 | 100/100 | 100/100 | 15 | 94 | 66 |
+| 0.2.0 `30ba5c9` Recommended, seeds 0–99 | 100/100 | 100/100 | 15 | 94 | 66 |
+| Community 11, 0.1.1, hash `1C37F227BEDE` | 1/1 | 1/1 | 0 | 1 | 1 |
+| Community 15, 0.1.2, hash `0EF74161E8AF` | 1/1 | 1/1 | 0 | 1 | 1 |
+
+No seed needed summed tiers; no collected set shrank. Strength alone causes the sphere changes:
+Bracelet+Silver overestimated tier 3 in 29 seeds per Recommended set. Only seed 2 changes sphere count,
+20→21; the other changes delay OGC Great Fairy and occasional downstream checks. The four other
+families change no reachability. Both version datasets have identical placements.
+Community regenerated placements match their stored spoilers; full spheres are unchanged under MAX.
+**Their logical wins are not in-game safety proofs:** both permit the dangerous higher-before-lower
+strength and scale orders. Seed 11's Spirit hand-chest key defect is separately unresolved by this replay.
+
+## Native source guards
+
+Inspected the reward entries themselves, not just the item-table setters. No inspected source-specific
+flow checks a higher owned tier before granting the lower one:
+
+| Native source | Native reward path | Guard / consequence |
+|---|---|---|
+| Darunia's Bracelet | `Get_StoneOfFire/Event31` → `Dm_Goron_0030:C10/Event127` → `Dm_SY_GetInEvent:GetInEvent_Goron/Event124` | Literal Bracelet pouch grant. The upstream SariaMelodyPlay BoolExp compares the saved quest-stage enum, not strength. The get entry has no higher-grade condition. |
+| Zora diving Silver Scale | `MiniGame_Diving:FirstClear/Event21` → `GetInEvent_NotTurn_NotNpc/Event313` → `GetPouchContent/Event0` | Literal Silver grant. First-clear/minigame flags do not inspect Golden Scale or DiveDepth. |
+| Fishing Golden Scale | `MiniGame_Fishing:GiveReward/Event579` and `Event822` | Fish size, age, lure and `MiniGame_Fishing_GetGoldScale` gate the reward; not lower-scale ownership. Golden's own depth grant is idempotent at its tier. |
+| Silver Gauntlets chest, Hash `2490063409521505179` | `SageOfSpirit:SageOfSpirit_NaboorIsTakenAway/Event64` → standard big chest, then Nabooru story | No query in the source wrapper; the native chest's ordinary pouch-admission path remains. No source-specific Golden/strength guard. |
+| Golden Gauntlets chest, Hash `17657623307936361670` | `Defeat_Ganon:InsideGanonCastle_Dungeon_Get_Gauntlet_Gold/Event654` → standard big chest → `Event655` cutscene | No query in this source wrapper. No source-specific lower-tier test. |
+
+Strength's Item/Armor grant rows are Low/Middle/High. Silver and Golden declare their separate adult
+equipment actors; the Bracelet's GoronGauntlet special deal supplies the child armor. Equipment ownership
+is not evidence that the shared saved lift grade is monotone. The separate UI-only `Pouch_Gauntlet_Gold`
+row says Middle/Silver; it must not be substituted for the real Item/Armor Golden grant.
+
+External reproducers: `source_guards.py`, `source_more.py`, `source_grant_guards.py`, `entry_guards.py`,
+`source_expressions.py`, `strength_equipment.py`, under `E:/OOTRemake/work/r13-item-grants`.
+No game files or decoded trees were added to the repository.
+
+## Feasibility: distinguish assumptions from actual reachability
+
+The first screen assumed **every other seed item**, including fixed Ruto's Letter, stones and medallions.
+That is a sufficient but unnecessarily strong screen, not an exact proof that the user's rule is infeasible.
+In the frozen candidate, it left Recommended Golden Scale with only LH Lab Dive (self-locked at scale 2)
+and Kak 100 Skulltulas (the world has 97 available tokens): **zero viable slots**. Public CLI seed 8 failed
+all ten fills there. Chest-only seeds 0–99 did generate on their first attempt; their scale pair was fixed.
+
+**Correction to the initial agent diagnosis:** `native_slot_screen.py` tested maximal assumed inventory,
+not the native placement graph. `native_tier_replay.py` replayed all native placements, forced **all pairs**
+checked (no unshuffled exemption), and found **zero violations in both presets**. Withholding the Bracelet
+blocked both gauntlets; withholding Silver Gauntlets blocked Golden; withholding Silver Scale blocked
+Golden Scale, Ruto's Letter, the Sapphire and time travel. Native progression dependencies, rather than a
+source-specific grant guard, protect this closed-default layout. A blanket native-pair exemption is not justified.
+
+A second **read-only, no-fill diagnostic**, `fixed_progression_screen.py`, assumes only shuffled pool items
+and actually collects fixed rewards through their own rules. It preserves those dependencies:
+
+| Preset | Higher tier | Type-eligible slots | Pass corrected screen | Viable without target/later tiers |
+|---|---|---:|---:|---:|
+| Recommended | Silver Gauntlets | 209 | 134 | 103 |
+| Recommended | Golden Gauntlets | 209 | 31 | 22 |
+| Recommended | Golden Scale | 40 | 13 | 11 |
+| Chest-only | Silver Gauntlets | 165 | 140 | 112 |
+| Chest-only | Golden Gauntlets | 165 | 28 | 21 |
+| Chest-only, hypothetical moved scale | Golden Scale | 165 | 135 | 135 |
+
+These candidate sets are seed-invariant, so their minimum and median are identical; the last row is diagnostic,
+not a claim that Chest-only shuffles scales. The diagnostic did not perform a fill.
+**Approved by Claude, 2026-11-12:** repair the fixed-item assumption and retain the actual-placement replay for
+every pair, including native pairs. Implemented in `generate/fill.py`; no fallback or wrapper.
+The focused suite now passes **83 tests**, including the fixed-reward prerequisite regression and rejection of
+an unsafe all-native layout. A fresh 100+100 sweep must count first outer attempts only (`attempts=1`), keep the
+first failure, and stop further behavior changes if either rate is below 100%.
+
+The original-screen measurement completed: Chest-only **100/100**, first attempt; Recommended **0/100** over
+1,000 outer attempts. Of those attempts 997 failed at Golden Scale and three at the return kit. This is the
+superseded algorithm, not the approved correction. `feasibility-report.md` and `feasibility-summary.json`
+retain all seed IDs, first errors and candidate/stage min/medians; original data was not overwritten.
+Historical all-family SUM/MAX/ownership replays are separate from these fill measurements.
+
+### Corrected-screen first attempts and allocation diagnosis
+
+The corrected screen's separate no-retry sweep preserved every first failure:
+
+| Preset, seeds 0–99 | First-attempt generated | Failed seed IDs |
+|---|---:|---|
+| Chest-only | 98/100 | 16, 19 |
+| Recommended | 97/100 | 12, 55, 59 |
+
+All five fail in `_fill_age_return` with Golden Gauntlets unplaced; all successful outputs have zero
+all-pair violations. Scale outcomes are unknown in those aborted fills, not falsely counted successful.
+Original `approved-first-attempt-*` data are retained; corrected strength attribution is in the separate
+`approved-first-attempt-family-attribution.json`. No production allocation/rule retuning followed.
+
+Read-only exact failed-attempt replays (`allocation-diagnosis.md`, `kit-trace-*.json`) find one usable adult
+Golden destination after Silver is collected: **Goron City Chest (TBox_Rupee_Purple) #1**. The tier screen
+allows 28 Chest-only / 31 Recommended shuffled slots overall, but the other empty ones are not adult
+return-kit reachable then. Flexible earlier staged items consume that sole slot:
+
+| Failed seed | Consuming item | Its candidates that pass | Golden candidates that pass |
+|---|---|---:|---:|
+| Chest-only 16 | Longshot | 22 | 1 |
+| Chest-only 19 | Hookshot | 40 | 1 |
+| Recommended 12 | Bow | 19 | 1 |
+| Recommended 55 | Bow | 24 | 1 |
+| Recommended 59 | Bow | 22 | 1 |
+
+The private full-MCF replacement selects the minimum **positive** candidate count per return-kit pass,
+retaining staged-order ties and waiting on zero candidates. New independent first-attempt datasets
+`allocation-mcf-{defaults,recommended}.jsonl` generated every seed, fixed all five old failures and introduced
+none; all-pair violations and internal retries were zero. The boss key never preceded the first small key.
+Original failure files and production allocation were unchanged.
+
+**Rejected by Claude, 2026-11-12:** the success rate does not justify the predictable placements:
+
+| Preset | Silver destinations before MCF | Silver destinations under MCF | Golden destinations under MCF |
+|---|---:|---:|---:|
+| Chest-only | 25 | 3 | 1 |
+| Recommended | 14 | 3 | 1 |
+
+Silver always goes to GC Chest #2 or one of the two Dampé Race checks; Golden always goes to GC Chest #1.
+The measured MCF patch was never applied to production.
+
+**New experiments approved by Claude, production still frozen:**
+
+- **A:** derive the fixed tiers actually needed by the independent adult-return oracle, credit guaranteed
+  initial inventory, and stage only those. Other fixed tiers (including Golden, and redundant Hookshot tiers)
+  go through ordinary fill with the unchanged hard reachability rule and its full candidate set.
+- **B:** jump the staged queue only for the first item with exactly one candidate; otherwise retain the
+  original first-positive choice. No MCF priority among larger candidate sets.
+- Each gets its own new Chest-only and Recommended seeds 0–99, attempts=1, full placements, first failures,
+  independent beatability/age-return/all-pair checks and five-item distinct location/frequency metrics.
+- Compare with actual pre-rule 0.2.0 `30ba5c9` for Goron Bracelet, Silver/Golden Gauntlets and Silver/Golden Scale.
+  Reuse existing historical Recommended placements; generate only missing baseline data.
+
+Recommend only after both results: zero failures first, then placement variety. Do not alter production
+allocation, weaken the tier rule or silently accept a predictable fallback before Claude chooses.
+
+### Option costs and recommendation
+
+| Option | Strength cost | Scales cost | Safety requirement |
+|---|---|---|---|
+| (a) Whole family vanilla | Remove three rewards from shuffle | Remove two rewards from shuffle | Still replay the actual placements; the native source alone is not a downgrade guard, and changed settings can bypass native progression. |
+| (b) Only infeasible tier vanilla | Remove only each affected tier, retaining the other tier rewards | Golden-only fallback removes one shuffled reward, retaining Silver | Still prove every lower prerequisite for the fixed higher source; never silently exempt a native fallback. |
+| (c) Progressive chest wrapper, later | Three progressive strength copies, limited to chests | Two progressive scale copies, limited to chests | New runtime grant/owned/equipment/presentation behavior, both chest lifecycles, source wrappers and analyzed-event preloads; requires separate played acceptance. Named-key cloning is a pattern, not proof. |
+
+Recommendation, superseded by Claude's approved correction above: do not sacrifice shuffle or introduce a wrapper
+to work around pre-owned fixed checks. Correct the assumption and keep the same hard replay guarantee for both
+families. The corrected diagnostic supplies nonzero candidates for every shuffled higher tier; actual first-attempt
+success remains the acceptance condition. No automatic fallback has been implemented.
 
 ## Verification so far
 
@@ -202,3 +467,14 @@ community 11/15 results remain in progress, in a separate commit from this item-
 - Template launcher `CLAWSHOT_DRY_RUN=1`: pass; no game started.
 - Focused ruff check: pass. Focused synthetic/native regressions: **15 passed**, 20 deselected
   (`tests/test_start_items.py`, new adult-trade tests). Full serialized gates still pending.
+
+### Final verification fixture
+
+Claude identified the default `pr1-check/dump` as an obsolete partial fixture; it was not edited or used
+for these final gates. Copied its builder to external `rounds/r13/make_dump_item_grants.py`, changed only
+the owned copy's output/scratch paths, and ran it with this worktree's explicit `PYTHONPATH`.
+Own fixture: `E:/OOTRemake/work/rounds/r13/dump-item-grants`: **1,245 wanted files, 1,210 base copies,
+48 changed/new update copies, 1,197 unchanged, zero missing**. The actual `local_romfs` adapter opened it;
+the new-game Sequence, both key-compiler RSDB files and both shared item-get flows were present.
+Builder used one worker while Hookshot was active. Final `review_gates.sh` is queued/running under
+`r13/gate.lock` with explicit `OOT_DUMP` pointing to this fixture, via Git Bash rather than Windows' WSL `bash`.
