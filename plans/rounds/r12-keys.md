@@ -1181,3 +1181,139 @@ still needs Claude/Kareem review before construction. Gate3 remains accepted PAS
 Gate4 is unbuilt, Tracker later, player refusal retained. No version/uv.lock change,
 game launch, merge or push.
 
+## Gate 4 approved and built — real whole seed7
+
+Claude approved the proposal **as written**, including the22-character long-name
+case and two existing checkpoints. Conditions: current single-slot template;
+honest checklist estimates/explicit B2 stop-and-report option; emitted placement
+digest and both public refusals checked; no full run/lock use while review-012
+owns it. Build on the current **a2c0c8e** source; rebase only **after** main moves
+to0.1.2, not during this build. No version/uv.lock changes.
+
+`work/r12-keys-cs12b/build_gate4.py` calls real `generate` with native census pool,
+normal cheap-shield/door/hints/Sheik/intro patch functions, source-bound
+`keys.changes(prior_changes=...)`, then `SeedOutput`/`write_seed`. No entry-point
+guard replacement or hand-authored placements. Whole seed:165 shuffled checks,
+37 small keys,23 beatability spheres;155 changed physical chests,34 named off-
+dungeon bindings across all8 targets. **91 resources plus normal spoiler/play note**
+were emitted to the approved single-mod root.
+
+### Exact placement proof and harness correction
+
+Full real generation remains **1331 placements**, canonical SHA256
+`836c76e51cdb61338917ecf7886b5bc1693d4acc879e16f9c884eba163dc91de`.
+Normal `generate.spoiler` intentionally serializes only the **165 shuffled**
+placements; their canonical SHA256 is
+`207c42dbf0733d81888f11542793c50667135115b4408619c05250ddfe4b1894`.
+All emitted entries equal the approved candidate's complete shuffled projection.
+Combining them with independently generated fixed placements recovers the full
+approved digest. This distinction does not change the seed or narrow its emission.
+
+The first normal write succeeded, then my harness incorrectly compared that165-
+entry spoiler mapping directly to the1331-entry model. Printed counts/digests
+showed the exact cause. Preserved that first emission outside the mod root,
+corrected only the harness's scope assertion, then one corrected build passed.
+The corrected builder independently regenerated and wrote the **entire seed**
+again to a non-mod scratch root: all93 files (including spoiler/play note) are
+byte-identical. Source resource/save hashes remain unchanged.
+
+Read-only `check_gate4_save.py A|B <progress.sav>` compares all84 fields against
+that profile's baseline and the actual opened planned chests, not collection
+order. It reports partial-route inventory matches separately from route completion
+(B2 stopping is not Gate4 completion). Actual source A/B smoke: all14 match, no
+changes, every planned chest closed, route incomplete as expected.
+
+Native load, rendered layout, pickup bar/caption behavior and route/reload results
+remain **unplayed** here. Public refusal remains until the played acceptance;
+Tracker follows later. Final read-back/launcher proof and handoff are recorded below.
+
+### Staged player artifacts
+
+Root: `work/r12-keys-cs12b/ingame/`. Each launcher has the same-stem `.md`.
+
+| Part | Launcher | Honest estimate at checklist top |
+|---|---|---|
+|A|`Key gate 4A - Sacred Forest Meadow long key.bat`|15–25 minutes|
+|B|`Key gate 4B - Goron City, Zoras River, then Ice Cavern.bat`|60–90 minutes, longer if navigating; B1–B2 about20–30|
+
+Both independently copied the **current** central template, SHA256
+`80795106951ff85cbb9b48251328eb28a4c728dba1f72120ccde5579dab1fc9b`.
+Only NAME/ROUND/SAVES/T substitutions; both use the source's internal manual01.
+Player selection is **Temple of Time/Sheik pedestal** for A, **Fire Temple/Link's
+Hylian Shield/orange-brown wall/Navi right** for B, never a slot number.
+The fresh users are `user-key-gate4-generated-seed7-next-part-a` and `-part-b`.
+Watcher confirmation is explicit before playing **each** copy.
+
+B's first paragraph expressly permits **Save/Quit after B2 and partial report** if
+short of time; B3's silver-rupee/Blue Fire navigation is not presented as a quick
+detour. Reload/finish from the newest actual picture later. No Gate4 completion
+claim from B1–B2 alone. Neither checklist promises an unplayed shortcut.
+
+Physical directions use the existing Banc-backed `location_names.toml` entries:
+SFM Gossip Stone clearing1275–1279; Goron south-west dark-rock pocket809–811;
+river hole relative to first bridge/fairy hole1640–1644; Ice east room/Blue Fire
+font/wall Skulltula962–967. Both messages, long-name readability, floating notice
+and standing HUD/pause-map counters are separate observations, with no remote
+HUD/name-pane promise. No inventory/age/door/room cheats; no off-route chests/key spend.
+
+### Runtime proof still to collect
+
+Claude boot-checks before handing these to Kareem. Require actual
+`mods: <file> <- <path>` lines from this mod for both common chest flows,
+`GetPouchContent`, active-language Mals, both registration tables and the reached
+adult placement files: SFM/Goron City/Zora River `*_Adult_Dynamic` and Ice Cavern
+`IceCavern_Static`. File counts alone are not proof of the particular route file.
+Do not fabricate these lines from read-back: no game has been started here.
+
+Kareem's exact acquisition/caption/bar/HUD observations and saved all14 deltas,
+followed by chest-open/reload/no-repeat results, remain required. Partial B2 is
+valid progress, not a passed Gate4. Preserve these staged bytes across later
+source rebases; their provenance remains the approved a2c0c8e experiment.
+
+### Gate 4 file verification and launcher dry runs — PASS
+
+Actual `uv run python -u work/r12-keys-cs12b/verify_gate4.py` completed in25.10s:
+**165 placements,34 named keys,30 registrations,8 targets; A1+B3 traces all84;
+refusals×3; two dry runs PASS**.91 romfs resources/93 seed files.
+
+- Independent real regeneration matches the full approved digest and complete
+  emitted shuffled projection; full spoiler/play note byte-equal to normal builders.
+- Every changed/unchanged chest and every changed Banc copy checked; exact inverses.
+  Eight key-touched flows append to their **pre-key normal-patch baseline**, preserving
+  hint/Sheik/cheap-shield/intro composition. All30 additions match between registry
+  tables, are String64-safe and reachable; actual subflow/child closure checked.
+- All34 serialized routes: correct target arguments, native source bootstrap,
+  target message/caption labels, no generic/pouch/standing dungeon credit or
+  item-specific Navi follow-up. Exact four-node helper; A/B stages match all84
+  expected fields, including B's Forest total5→6 and unchanged Ice fields.
+- All16 language archives contain exactly the16 added English labels (8 pairs),
+  with inverse to the composed prior text; entire resource size table, actor-member
+  growth, compression and fast-start bytes checked.97 verifier-read dump files and
+  the builder's broader input hash set unchanged.
+- **Actual public CLI explicit anywhere and CS1:** exit1/in-game acceptance refusal,
+  no output. **Actual `make_seed`:** same `PatchError`, no output. Nothing released.
+- **Actual .bat dry runs:** both exit0/exact expected command, ASCII/CRLF and exact
+  current-template substitution. Each fresh UID has **only four files**: account,
+  options, chosen caption and progress. No other slot/reparse/game log; source
+  backups unchanged. `HOS_FS_OVERLAY` cleared, HOS_MODS holds exactly this one real mod.
+
+One verifier bookkeeping defect was diagnosed, not worked around in the mod:
+it discarded each owned helper index before later collecting that appended node,
+then called all8 grants orphans. Printed switches122→132,224→234,… showed the
+forward-reference order. Compare complete declared/claimed sets after traversal
+instead; all exact grant-edge/type/argument checks remain. One cause-directed
+rerun passed; no artifact or production/test edit.
+
+Evidence outside repo: `gate4-build.json`, `gate4-verification.json`,
+`gate4-launcher-manifest.json`, `check_gate4_save.py`, and both source thumbnail
+images. Removed only owned duplicate first/repeat emissions after byte-equality
+proof; reports retain their hashes. **Kept the staged mod and both fresh test
+profiles.** The once-only verifier requires fresh users/repeat scratch; never
+delete played copies or rerun it over a played handoff.
+
+**Ready for Claude's boot check and handover, not claimed passed in game.**
+Use the two same-stem checklists above; confirm watcher A, switch explicitly to B,
+and allow the B2 partial stop. No game start, full suite, gate.lock acquisition,
+rebase, version change, merge or push during this approved build. Rebase onto0.1.2
+only when Claude reports that integration; these staged bytes stay frozen.
+
