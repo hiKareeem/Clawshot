@@ -17,7 +17,7 @@ from clawshot.generate.fill import SMALL_KEY, allowed, is_restricted
 from clawshot.patch import events as chest_events
 from clawshot.patch import items as item_actors
 from clawshot.patch.key_targets import TARGETS
-from clawshot.patch.plan import ChestChange, PatchError, Plan, link, make_plan
+from clawshot.patch.plan import ChestChange, Links, PatchError, Plan, link, make_plan, restrict_key_openings
 from clawshot.patch.write import patch_tree, write
 from clawshot.world import Search, build_world, load_spec
 
@@ -372,6 +372,39 @@ def test_every_stage_of_an_anywhere_fill_keeps_other_dungeon_items_home():
         adult.collect_spheres(seed.placements)
         assert adult.holds("D Clear"), number  # the return kit still works from the adult phase
     assert left > 0  # small keys do leave
+
+
+@pytest.mark.parametrize(
+    ("chest_kind", "event", "eligible"),
+    [
+        ("Obj_TBox_A_01_memo11", None, False),
+        ("Obj_TBox_Unknown", None, False),
+        ("Obj_TBox_A_01", None, True),
+        ("Obj_TBox_A_01_NoBake", None, True),
+        ("Obj_TBox_A_06", None, True),
+        ("Obj_TBox_GlassTruth_A_01", None, True),
+        ("Obj_TBox_A_02", None, True),
+        ("Obj_TBox_A_03", None, True),
+        ("Obj_TBox_A_01_memo11", "House_NaviChatOff", True),
+    ],
+)
+def test_native_heart_piece_chest_requires_a_played_named_key_opening(chest_kind, event, eligible):
+    spec = load_spec()
+    world = build_world(spec)
+    name = "Hyrule Field Chest (Obj_Heart_Piece)"
+    chest = census_location(
+        2967378296224661060,
+        "HyruleField",
+        ("Banc/HyruleField/Synthetic.bcett.byml.zs",),
+        "Obj_Heart_Piece",
+        event,
+        gyaml=chest_kind,
+    )
+    links = Links({name: [chest]}, {chest.id: name}, [])
+    native = build_world(restrict_key_openings(spec, world, links, EVENTS))
+    settings = Settings(dungeon_items="anywhere")
+    assert allowed(native, settings, name, FOREST_KEY) is eligible
+    assert allowed(native, settings, name, "Rupees (5)")
 
 
 def test_an_anywhere_seed_of_the_whole_world_keeps_the_contract():

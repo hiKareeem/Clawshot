@@ -20,6 +20,7 @@ from dataclasses import dataclass
 
 from clawshot.census.definitions import Definition
 from clawshot.census.scan import CHEST, Location
+from clawshot.chest_openings import source_for
 from clawshot.generate import Seed
 from clawshot.generate.fill import SMALL_KEY
 from clawshot.patch.events import REMOVE, ChestEvent
@@ -162,6 +163,40 @@ def link(world: World, shuffled: Sequence[str], definitions: Sequence[Definition
         and (d.oot_randomizer_name or d.name) not in world_names
     ]
     return Links(chests, {d.id: d.name for d in definitions}, vanilla)
+
+
+def restrict_key_openings(spec: dict, world: World, links: Links, events: Mapping[str, ChestEvent]) -> dict:
+    """Add native per-target exclusions before fill; every physical copy must support its named opening."""
+    keys = [
+        (name, TARGETS[info.dungeon].id)
+        for name, info in world.items.items()
+        if info.type == SMALL_KEY and info.dungeon in TARGETS
+    ]
+    exclusions = {}
+    for name, chests in links.chests.items():
+        blocked = set(world.locations[name].excluded_items)
+        for item, target in keys:
+            for chest in chests:
+                event = events.get(chest.event)
+                kept = event.name if event is not None and event.patch != REMOVE else None
+                if chest.area != target and source_for(chest.actor, kept) is None:
+                    blocked.add(item)
+                    break
+        if blocked != set(world.locations[name].excluded_items):
+            exclusions[name] = sorted(blocked)
+    if not exclusions:
+        return spec
+    regions = []
+    for region in spec["regions"]:
+        locations = dict(region.get("locations", {}))
+        changed = False
+        for name, value in locations.items():
+            if name in exclusions:
+                info = {"rule": value} if isinstance(value, str) else dict(value)
+                locations[name] = {**info, "excluded_items": exclusions[name]}
+                changed = True
+        regions.append({**region, "locations": locations} if changed else region)
+    return {**spec, "regions": regions}
 
 
 def remake_vanilla(world: World, links: Links, items: ItemActors) -> dict[str, str]:

@@ -1633,3 +1633,126 @@ Small-only scope and current-area counters are documented; Discord kit changed
 locally only. Removed an unexercised sweep-success claim from the draft docs:
 only completed played evidence is stated there.
 
+### Production sweep failure and native eligibility correction
+
+The first production sweeps are **failed product evidence**, not release passes:
+Chest-only **76 passed/24 failed**; Recommended **70 passed/30 failed**. Every
+failure was `opening_contract` at **Hyrule Field Chest (Obj_Heart_Piece)**,
+hash `2967378296224661060`, kind `Obj_TBox_A_01_memo11`, no kept event. Fill
+admitted an off-area small key, while the key compiler correctly refused its
+unplayed opening. Original JSONL/first-failure/summary files remain under
+`work/r12-keys-cs12b/production-020/sweep/`; no failed rows count as passing.
+
+**Claude directed the fix:** share the played opening contract, refuse unsupported
+off-area destinations before fill, preserve kept-event cases, and restart both
+100-seed sweeps from zero. `clawshot.chest_openings.source_for` now owns the
+small kinds (`A_01`, `A_06`, `GlassTruth_A_01`), big kinds (`A_02`, `A_03`),
+`_NoBake` normalization and kept-event precedence. Both native destination
+preparation and `patch/keys.py` use it. `restrict_key_openings` adds existing
+per-location `excluded_items` data per target; `allowed()` already enforces it.
+Every census copy is checked; physical-home generic key grants remain valid.
+This preparation runs only for anywhere, leaving default own-dungeon untouched.
+
+Whole native census: **10 raw kinds/184 checks**. Counts: `A_01`79,
+`A_01_NoBake`39, `A_01_memo11`1, `A_02`24, `A_02_NoBake`16, `A_03`4,
+`A_03_NoBake`2, `A_06`7, `A_06_NoBake`1, `GlassTruth_A_01`11. The **only**
+excluded kind is `Obj_TBox_A_01_memo11`, the single Hyrule Field check above.
+No new opening kind has been declared played. Synthetic regression on that
+logical check plus supported, unknown, NoBake and kept-event cases: **9 passed**.
+
+Separate first public-emission failure was an **audit-harness error**, as Claude
+diagnosed: the intro setting component shrank512→384 bytes and retained its
+5736-byte allocation. The audit had incorrectly demanded a generic `.bgyml`
+growth formula. Corrected it to mirror the writer's no-growth rule, preserving
+the initial failure and rerunning unchanged seed generation successfully.
+That harness correction is not a product fix or an excuse for the chest failure.
+
+Fresh evidence for the native eligibility fix is isolated under
+`work/r12-keys-cs12b/production-020/opening-contract-fix/`. The new public UI
+job completed seed7 Recommended anywhere: **300 checks/153 mod files**;
+the completed record passed normal library integrity verification and the
+actual rendered result was observed. No game/runtime was started.
+
+### Fresh production sweeps, own controls and public boot stage
+
+Both corrected native sweeps completed seeds **0–99**, **100 passed/0 failed**
+each, **3 workers** each (Hookshot absent at each start), with age-return proofs
+for all200 seeds. The summaries are separate new-run artifacts; original
+76/24 and70/30 results stay failed. No opening/palette/pool/beatability/binding
+violation remains in these200 rows.
+
+Actual own-dungeon CLI controls against pristine0.1.2 passed for default seed7
+and community seed11: placements and all romfs bytes match (80/139 resources).
+The only changed spoiler field is `generator`: `clawshot 0.1.2`→`clawshot 0.2.0`.
+No other default output change is being classified as version metadata.
+
+The boundary harness's first run failed after product generation returned:
+it passed an `Item` object to `allowed`, which takes an item **name**. The
+printed `KeyError: Item(name='Ocarina of Time', ...)` is preserved in
+`production-020/final-gates/boundaries.log`. Corrected only the harness
+argument and moved fresh boundary outputs into `opening-contract-fix`;
+the continuation runner skips the already-passing own controls and runs
+corrected boundaries, then the four repository gates under `gate.lock`.
+
+**Public stage:** the complete successful normal UI Recommended/anywhere
+seed7 was copied byte-for-byte into the sole real mod
+`ingame/mods/key-production-020-seed7-next/key-production-020-seed7-next`.
+No forced placements. Both fresh sweeps have no Forest key at GC Maze Center;
+instead the actual generated **Zora's River open grotto** holds a Forest key.
+Readback verifies its binding in all source copies. The adult backup has that
+chest and the first Forest courtyard chained door closed, zero Forest keys.
+
+Launcher/checklist:
+`ingame/Small keys 0.2.0 - seed 7 - Zoras River then Forest door.bat` / `.md`.
+Current central template copied directly (SHA256 `80795106951ff85cbb9b48251328eb28a4c728dba1f72120ccde5579dab1fc9b`),
+only NAME/ROUND/SAVES substitutions, ASCII/CRLF; actual dry run passed.
+Exactly one four-file save copy, original source unchanged, played Gate4
+outputs untouched. Player selects **Temple of Time, adult by Sheik/pedestal**
+by thumbnail. Optional approximately10-minute pickup→reload→Forest door→reload
+route permits a pickup-only partial report; no item/key/door cheats.
+
+**Claude reported kp020 boot PASS:**515 log lines,12 mod lines from this exact
+mod, rendering correct, no crash. Claude handed the optional route to Kareem
+and armed the watcher on `user-key-production-020-seed7-next`. Do not alter
+that user or staged mod. Pickup/credit/spending/persistence for this new seed
+are not yet claimed; the earlier played Gates1–4 remain their own evidence.
+No game was started by cs12b.
+
+### Fresh public emission, source-family closure and UI equivalence — PASS
+
+Fresh public API→CS1 CLI repeats on the corrected source are byte-identical
+for every seed file, not only placements:
+
+| Seed7 profile | Shuffled / small keys / spheres | Named copies | Registry additions | Banc copies checked | Native flow inverses | Languages |
+|---|---|---|---|---|---|---|
+|Chest-only|165 /37 /22|34|32|186|8|16|
+|Recommended|300 /37 /22|36|30|185|6|16|
+
+All allocations match writer behavior, including the shrinking intro component.
+Both registration tables retain identical native rows and matching added IDs.
+Composed actor/flow/text inverses, exact named messages in all16 archives,
+actual child/subflow closure and absence of old-item named Navi comments passed.
+The serialized helper's16 traces per profile (8 targets, empty/existing counts)
+match all84 fields exactly.
+
+Expanded source-family emission: **33 sources ×8 targets =264 requests**,
+272 bindings including dependencies,16 flowcharts. Two independent writes
+are byte-identical:35 files/296 added registry rows each. These source-family
+bytes also match the pre-eligibility-fix probe; the compiler's source behavior
+was not broadened to make an unsupported kind appear valid.
+
+The browser-made Recommended seed7, fresh API output and fresh CS1 CLI repeat
+match in **all155 files** (153 romfs plus spoiler/play note), all300 placements
+and settings; no missing/extra/mismatched file. UI record short hash
+`D3FEB009C792`; evidence aggregate
+`51f6f51394a07750b991fea1206dcbaf1c3b5f4f4ede9a251ec8476991a734c7`.
+The watched/staged mod is that unchanged UI output.
+
+Legitimate anywhere outputs changed after correcting eligibility (75 changed
+files for Chest-only,84 for Recommended versus the pre-fix run). Do not force
+old0.2.0 scratch placements or use them as the deterministic oracle. This is
+the still-unreleased0.2.0 correction; own-dungeon output preservation is proved
+separately above. All earlier scratch failures and outputs remain preserved.
+Proof JSON/logs live under `production-020/opening-contract-fix/`; full
+synthetic/native cache/format suite results are recorded separately when complete.
+

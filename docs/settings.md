@@ -141,11 +141,15 @@ hold Spirit Temple keys, maps or compasses: a generic grant there would credit t
 dungeon or nothing.
 
 `--dungeon-items anywhere` (the UI choice **Small keys anywhere**) moves **small keys only**,
-into any shuffled chest the access rules permit, including other dungeons and the overworld.
-An off-dungeon key is delivered as a named chest grant; no other shuffled kind can grant one.
+into shuffled chests whose access and native opening contracts permit it, including other dungeons
+and the overworld. An off-dungeon key is delivered as a named chest grant; no other shuffled kind can grant one.
 Boss keys (Ganon's Castle included), maps and compasses stay in their own dungeon in both
 modes. With anywhere, the statue's two hand chests may hold a small key, named to its own
 dungeon, so it is not lost.
+
+Every physical copy of a destination must support that named opening. The Hyrule Field heart-piece
+chest does not have a played named-key opening contract, so it cannot hold an off-dungeon small key.
+It remains shuffled for other eligible rewards; it has not been enabled by assuming it opens like another chest.
 
 A key found outside its dungeon names that dungeon in both pickup messages — for example
 "Small Key (Forest Temple)" and the caption "Opens one locked door." / "Dungeon: Forest Temple" —

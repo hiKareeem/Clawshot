@@ -12,6 +12,7 @@ from collections.abc import Mapping, Sequence
 from dataclasses import dataclass, replace
 from pathlib import Path
 
+from clawshot.chest_openings import source_for
 from clawshot.formats import byml, evfl, zsdic
 from clawshot.patch import key_text
 from clawshot.patch.key_targets import TARGETS
@@ -468,16 +469,9 @@ def changes(romfs: str | Path, plan: Plan, *, prior_changes: Sequence[FileChange
     needed = {BIG, SMALL, POUCH, "NaviChat"}
     requests = []
     for change in routed:
-        if change.kept_event:
-            source = change.kept_event.name
-        else:
-            kind = change.chest.removesuffix("_NoBake")
-            if kind in ("Obj_TBox_A_01", "Obj_TBox_A_06", "Obj_TBox_GlassTruth_A_01"):
-                source = SMALL
-            elif kind in ("Obj_TBox_A_02", "Obj_TBox_A_03"):
-                source = BIG
-            else:
-                raise PatchError(f"{change.location}: no small-key opening contract for {change.chest}")
+        source = source_for(change.chest, change.kept_event.name if change.kept_event else None)
+        if source is None:
+            raise PatchError(f"{change.location}: no small-key opening contract for {change.chest}")
         row = next((row for row in rows if row["__RowId"] == source), None)
         if row is None:
             raise PatchError(f"{change.location}: no source event {source}")
