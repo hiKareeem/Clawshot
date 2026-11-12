@@ -380,3 +380,30 @@ pass: three `written_files_differ` / `ZsError` cases involving uncompressed Sequ
 running at position 3. Position 4 is cs13b's rerun of those four cases after its fix;
 this matrix moves to **position 5**, and cs13b's private comparisons to position 6.
 Keep the matrix stopped until the ordered handoff. Hookshot is running: use one worker.
+
+### Rebase and evidence provenance (Claude's 15:52 instruction)
+
+Rebased cleanly onto main `fa6f4ef`; resulting branch head `e187ca6`. The old snapshot's
+208-file checksum list differs from this source in seven files: the played-status intro
+help text and six dungeon-compiler files. The changed `make_seed` invokes that compiler
+before returning, so the 71 historical after rows cannot stand in for this integrated
+public path. They remain untouched in `after-native-mido.jsonl`, not counted toward the
+new verdict. The unchanged `base-30ba5c9` / `baseline.jsonl` resumes its 118 retained rows.
+
+The replacement immutable snapshot is
+`E:/OOTRemake/work/r13-fast-start-cs13a/witness/after-e187ca6-src`, created by
+`git archive e187ca6 -- src`. Source tree: `53b0be4277ac436cb0ff5816667f5fe3654e6b46`;
+archive SHA256: `1318ac3584c9635476952516a0ff389c0f29dba6652ba09fdfd57a7deb55027f`.
+`SOURCE_STATE.txt` records its provenance. The runner now selects that snapshot and
+`after-e187ca6.jsonl`, with separate current-source logs and summary.
+
+A lightweight smoke imported the public CLI from this exact snapshot, printed and
+validated closed forest / closed Door of Time / intro+deku_tree skips, and observed the
+expected clear validation refusal for Chest-only / open Door of Time. Exit 0; no native
+generation, mod writing or game launch. This is not a witness or full-gate pass.
+
+cs13c reports its four gates passed and released the lock at 15:43:46. Its old-position
+handoff was flagged on the thread: Claude's 14:19 order still requires cs13b's corrected
+four-case rerun before this matrix at position 5. No heavy runner or gate waiter is active.
+The earlier full fast-start gates remain evidence for their original source, not a new
+whole-rebased-branch gate run. Matrix and reload evidence remain pending.
