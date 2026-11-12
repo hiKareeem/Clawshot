@@ -589,3 +589,40 @@ Only the four requested native cases were rerun, **not the entire native suite**
 The owned lock was released after each run; no foreign lock/process was touched. Claude's position 5
 matrix may proceed after this handoff. A/B and the missing historical Chest-only baseline remain
 **unmeasured and explicitly paused at position 6**; no allocator experiment is applied or recommended.
+
+## Public default-attempt sweep: Claude's ORDER UPDATE 17:05
+
+This order superseded the earlier queue: public sweep at position 5, cs13a's integrated gates/matrix
+at position 6, private A/B experiments still paused at position 7 (possibly a later round).
+Measured **exactly `6174a3b4681b8fdb0b1334f5ca9069bfe8d19225`**, before this evidence-only update.
+
+One sweep, one lock, **250 distinct (preset, seed) runs**, each in a fresh Python process using the
+actual public `clawshot.app.jobs.generate_seed` validation/source/preparation/generation/**writer**.
+Settings came from the canonical UI presets; the anywhere variant changed only `dungeon_items`.
+The public `generate(..., attempts=10)` default was **not overridden**. An observational wrapper counted
+outer `fill` calls, delegated the original arguments/RNG and rethrew original failures unchanged.
+No extra sweep-level retries, altered placements, test world, pinned items, allocation change or fake writer.
+
+| Preset / seed range | Generated | Seeds needing >1 attempt | Attempts for those seeds | Mean wall s/seed | Median | P95 | Min–max |
+|---|---:|---|---:|---:|---:|---:|---:|
+| Recommended 0–99 | 100/100 | 12, 55, 59 | 2 each | 54.738 | 54.955 | 57.269 | 44.606–58.157 |
+| Chest-only 0–99 | 100/100 | 16, 19 | 2 each | 33.886 | 33.454 | 37.573 | 28.825–42.519 |
+| Recommended, small keys anywhere, 0–49 | 50/50 | 5, 6, 39 | 2 each | 62.903 | 62.719 | 64.885 | 58.624–69.798 |
+
+**Zero final failures; 242 first-attempt successes, eight second-attempt successes, 258 total outer fill
+calls.** Every group used three workers under `E:/OOTRemake/work/rounds/r13/gate.lock`, with Hookshot
+detection at each group start. Whole-sweep elapsed time: **4,065.248 seconds**. Per-seed wall time
+includes fresh child-process startup, the complete public pipeline/write and process exit; queue wait is
+excluded. These are concurrent-three-worker timings, not a claimed serial UI benchmark.
+
+Evidence root: `E:/OOTRemake/work/r13-item-grants/public-default-attempts-6174a3b/`.
+`manifest.json` records source/default attempts/settings; `rows.jsonl` and **`timings.csv` contain
+every seed's timing and attempt count**; `results/` retains individual attempt errors/stage timings;
+`logs/` retains child output; `outputs/` retains the actual generated seeds. `final.json` contains the
+aggregate verdict. Read-back checked 250 unique requested identities, 250 CSV rows, all successful
+process exits and all 250 written spoiler files. No seed was rerun for that check.
+
+Posted all results/retry IDs/timings on `cs-r13` at 18:21. The owned lock is released; no foreign
+lock/process was touched and no game was started. **All requested public seeds generated.**
+Claude owns the merge; the agent did not merge, push or change the version. A/B remain paused and
+unmeasured; their earlier first-attempt experiments are not substituted for this public-default sweep.
