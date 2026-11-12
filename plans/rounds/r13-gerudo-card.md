@@ -92,7 +92,7 @@ Those source-state flags must not be confused with owning the card.
 `GerudoFortress_Meet_FourCarpenter_NumOfCarpenterHelped` at Event184 (index335),
 and decrements its `_02` counter at Event191 (index337). Its post-rescue branch
 Event154 (index331) transitions to `Meet_FourCarpenter_ClearEvent` at Event145
-(index328) when the helped count is greater than3. This is upstream rescue
+(index328) when the helped count is greater than 3. This is upstream rescue
 state, **not an effect of picking up Item_Token_Gerudo**.
 
 `RSDB/EventSetting` maps `Meet_FourCarpenter_ClearEvent` to the same-named entry
@@ -107,7 +107,7 @@ in `SageOfSpirit.bfevfl.zs`. Its complete relevant continuation is:
    Challenge write**; its four WarpPoint reads choose staging for the last
    rescued carpenter.
 4. Return to the enclosing flow: fade out, move captain to schedule anchor2,
-   wait60frames, then Event192 (index210) sets
+   wait 60 frames, then Event192 (index210) sets
    `GerudoFortress_Npc_Gerudo_001_IsInFirstPlace=false`.
 5. Event146 (index22) calls `EventExecuteProgressChallengeStep` for
    `SageOfSpirit/Step02` (`IsIgnoreCompletedChallenge=true`, UI not ignored).
@@ -141,18 +141,18 @@ supported route to claim tested.
 
 The current gift patch changes the destination's item parameter
 (`gifts.py:400-413`). If it appends a once Bool, that Bool belongs to the source
-check (`416-429`), not the card. The card can reach54 native grant steps across
-47 checks in32 flows, using21 wrapper entries plus2 direct pouch-add steps
+check (`416-429`), not the card. The card can reach 54 native grant steps across
+47 checks in 32 flows, using 21 wrapper entries plus 2 direct pouch-add steps
 (external `scratch/grants/destinations.json` and `wrapper-summary.json`).
-Wrappers reach `GetPouchContent:GetPouchContent/Event0`; the2 direct steps use
+Wrappers reach `GetPouchContent:GetPouchContent/Event0`; the 2 direct steps use
 the same `PouchSystemActor.EventTriggerAddOrRemovePouchContent` action locally.
 No wrapper writes or branches on card-specific story state.
 
 The card's PouchActorInfo is KeyItem/Large, autosave-on-get, with no special
 deal, equipment or bundle alias. The common native grant records
-`IsGet.Item_Token_Gerudo` (saved Bool241329351), recognizes its inventory
+`IsGet.Item_Token_Gerudo` (saved Bool 241329351), recognizes its inventory
 identity, and takes the autosave branch (`GetPouchContent/Event67`). The saved
-`PouchData.Item_Token_Gerudo.StockNum` Int4273263979 is the associated stock
+`PouchData.Item_Token_Gerudo.StockNum` Int 4273263979 is the associated stock
 field; its update is **[INFERENCE: native]**, not a card-specific flow write.
 
 Unlike the native captain source, a remote gift does not enter
@@ -172,12 +172,20 @@ change from expulsion to imprisonment.
 | Access | Actual data contract |
 |---|---|
 | Haunted Wasteland gate guard 006 | `Component/AIScheduleParam/Npc_Gerudo_006...bgyml` has a reversed `SageOfSpirit_IsAfter_Step01_Exp` conditional with **empty EventEntry**: no normal gate talk before clearance. Default talk resolves to `Npc_Gerudo_006:Talk`; first gate conversation runs `Dm_Gerudo_0030`, sets `Gerudo_phantomdesert_gate=true`, records `HaveTalked_Special.Npc_Gerudo_006_Talk_Event8`, and calls progress to Step02. `GerudoFortress_Common_305a` ANDs the gate Bool with adulthood to open the shutter/remove the air wall. Later conversation distinguishes `SageOfSpirit_IsAfter_Step03_Exp`. No card query. |
-| Gerudo Training Ground guard 004 | `Npc_Gerudo_004...AIScheduleParam` suppresses normal talk while not past Step01. Previously-started Ice Arrow quest and finished-talk variants precede that conditional. `Open_TrainingGround` Event88 checks30rupees, Event123 deducts30, Event109 sets `GerudoTrainingGround_Gate`, Event0 sets `GerudoFortress_TrainingGroundGateOpend`, Event111 progresses `SubEvent_GetIceArrow/Step00`. No card query. `PayTalk`, called by `ItemCheck_ForTrainingGround`, optionally checks Bow, Hammer, Iron Boots, Longshot-or-Hookshot and Silver Gauntlets under the Mask of Truth branch; these choose equipment-advice lines and converge on the same rupee display/payment choice, not a mandatory equipment gate. |
-| Horseback archery 008 | `MiniGame_HorsebackArchery_8380` gates both security and the proximity sensor on Spirit progress. The ready schedule suppresses pre-clear talk; its earlier near-player conditional cannot normally bypass this because the proximity sensor exists only after clearance. Day actions start05:20, switch at18:00. `Minigame_HorsebackArchery` then tests Epona quest completion, horse proximity/riding, Bow ownership/rental branch and30rupees; this remake has rental paths, not simply the N64 "own Epona+Bow" conjunction. No card query. |
+| Gerudo Training Ground guard 004 | `Npc_Gerudo_004...AIScheduleParam` suppresses normal talk while not past Step01. Previously-started Ice Arrow quest and finished-talk variants precede that conditional. `Open_TrainingGround` Event88 checks 30 rupees, Event123 deducts 30, Event109 sets `GerudoTrainingGround_Gate`, Event0 sets `GerudoFortress_TrainingGroundGateOpend`, Event111 progresses `SubEvent_GetIceArrow/Step00`. No card query. `PayTalk`, called by `ItemCheck_ForTrainingGround`, optionally checks Bow, Hammer, Iron Boots, Longshot-or-Hookshot and Silver Gauntlets under the Mask of Truth branch; these choose equipment-advice lines and converge on the same rupee display/payment choice, not a mandatory equipment gate. |
+| Horseback archery 008 | `MiniGame_HorsebackArchery_8380` gates both security and the proximity sensor on Spirit progress. The ready schedule suppresses pre-clear talk; its earlier near-player conditional cannot normally bypass this because the proximity sensor exists only after clearance. Day actions start 05:20, switch at 18:00. `Minigame_HorsebackArchery` then tests Epona quest completion, horse proximity/riding, Bow ownership/rental branch and 30 rupees; this remake has rental paths, not simply the N64 "own Epona+Bow" conjunction. No card query. |
 
 These are static data findings, not played entry tests. In particular, no claim
 is made that arbitrary stale/debug-set flags could not activate an earlier
 schedule override.
+
+Exact HBA predicates: `Get_Epona_IsCompleted_Exp` at Event175/Event168,
+`EventQueryIsHorseEponaNear{Distance=30}` at Event143 (and 5 at retry Event15),
+`EventQueryPlayerCheckRideHorse`, `IsExistInPouch(Weapon_Range_Bow)` at Event247,
+and `EventQueryHasRuppe{Value=30}` at Event75. The rental/first-talk branches
+also read `MiniGame_HorseBackArcher_HaveTalkedAboutBow`,
+`...HaveTalkedAboutRentalHorse`, `...HaveTalkedAboutHorse`, and
+`GerudoFortress_PlayedYabusame`. None substitutes a card read for quest clearance.
 
 ## 4. Jail versus expulsion; softlock boundary
 
@@ -245,9 +253,9 @@ static graph; modified/stale/debug flags are outside this proof.
   original-source, reload and later-Spirit played acceptance for every admitted
   chest/gift contract. Not safe to assume ready for the next public release.
 
-  Concrete feasibility cost: of the32 current destination flows,19 already
-  have the unscoped ChallengeSystemActor/progress action,1 has the actor but
-  needs the action added, and12 have no challenge actor. The current gift-Bool
+  Concrete feasibility cost: of the 32 current destination flows, 19 already
+  have the unscoped ChallengeSystemActor/progress action, 1 has the actor but
+  needs the action added, and 12 have no challenge actor. The current gift-Bool
   helper cannot write quest progress; the named-key compiler is chest-only
   and rejects added actors. A shared helper would need analyzed-event preload
   closure updates as well **[INFERENCE]**. No patched gift/chest challenge-step
@@ -261,6 +269,9 @@ static graph; modified/stale/debug flags are outside this proof.
   Verify pool/placement conservation and regenerate release recipes. It changes
   outputs; Claude chooses the release/version policy. It does not repair old
   generated seeds or retroactively grant quest progress to existing saves.
+  This is the safest **card-specific** next-release choice, not a claim that
+  every other route is verified; the separate Longshot arrest-route assumption
+  below still deserves its own logic review.
 - **C — model source completion instead of card ownership. Medium cost.** Add
   a completion event tied to actually finishing the carpenter/captain source,
   use it for friendly fortress/entry gates, and stop treating a remotely held
@@ -364,8 +375,8 @@ Executed on this worktree, no game start:
 - `uv run ruff format --check`: **PASS, 318 files**.
 - `uv run ruff check`: **PASS**.
 
-The100-seed public CLI audit is queued after the ordered heavy jobs under
-`E:/OOTRemake/work/rounds/r13/gate.lock` (Claude's17:05 order: cs13b public
+The 100-seed public CLI audit is queued after the ordered heavy jobs under
+`E:/OOTRemake/work/rounds/r13/gate.lock` (Claude's 17:05 order: cs13b public
 generation, then cs13a integrated gates/matrix). It remains pinned to this
 baseline and is not replaced with cs13b's newer-code API sweep. No count or
 full pytest result is claimed by this first evidence record.
