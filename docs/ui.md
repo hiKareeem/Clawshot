@@ -319,9 +319,9 @@ give the version, OS and whole UI error text (terminal error if it never opens).
   the item bar can jam. The play note lists these pickups, but reveals item locations.
 - While a seed is loaded, ordinary text shows Switch button icons rather than your
   controller's; the ocarina note interface is drawn separately and keeps its own prompts.
-- For rewards other than named keys, a chest that originally held a map can still make Navi say
-  "Now we won't get lost" after a different reward. This is cosmetic: the line does not grant a
-  map or alter saved counts. Named off-dungeon key pickups omit that obsolete comment.
+- Earlier seeds can also lose boss keys, maps and compasses moved to small chests inside their
+  own dungeon; pickup text or an icon is not saved ownership. The source-bound repair is
+  automated-tested, with its repaired in-game check pending. It cannot re-award opened chests.
 - Of dungeon items outside their own dungeon, only the opt-in **Small keys anywhere** choice
   exists: small keys in any shuffled chest, named to their own dungeon, with the game's key
   counters still showing only the dungeon you are in. Moving boss keys, maps or compasses

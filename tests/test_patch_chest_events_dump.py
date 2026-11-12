@@ -1,59 +1,12 @@
-"""Story wrappers stay on the actual opened chest; the unsafe sword equipment scene does not."""
+"""Native story-state evidence: no equipment replay in shuffled rewards, and songs remain separate gifts."""
 
 from pathlib import Path
 
 import pytest
 
-from clawshot.formats import byml, evfl, zsdic
-from clawshot.generate import Settings
-from clawshot.patch import make_seed, write_seed
-from clawshot.patch.items import load as load_items
+from clawshot.formats import evfl, zsdic
 
 pytestmark = pytest.mark.dump
-
-STATEFUL = (
-    "SubEvent_GetIceArrow_OpenTBox",
-    "InsideGanonCastle_Get_Gauntlet_Gold",
-    "SageOfSpirit_NaboorIsTakenAway",
-    "SageOfWater_MelodyGet_Water",
-)
-
-
-@pytest.fixture(scope="module")
-def chest_overlay(romfs, tmp_path_factory):
-    output = make_seed(romfs, 7, Settings())
-    target = tmp_path_factory.mktemp("chest-events") / "seed"
-    write_seed(output, romfs, target)
-    return output, target, zsdic.Dictionaries.from_romfs(romfs)
-
-
-@pytest.mark.parametrize("event_name", STATEFUL)
-def test_changed_chest_keeps_its_story_wrapper_and_placed_reward(chest_overlay, event_name):
-    output, target, dictionaries = chest_overlay
-    changes = [c for c in output.plan.changes if c.kept_event and c.kept_event.name == event_name]
-    assert changes, (event_name, output.plan.as_dict())
-    actors = load_items()
-    for change in changes:
-        placed = actors.actor(output.seed.placements[change.location])
-        assert placed != change.old_actor
-        for path in change.files:
-            tree = byml.read(dictionaries.decompress(path, (target / "romfs" / path).read_bytes()))
-            chest = next(a for a in tree["Actors"] if a.get("Hash") == change.id)
-            assert chest["Dynamic"]["GetEventName"] == event_name
-            assert chest["Dynamic"]["Drop__DropActor"] == placed
-        print(event_name, change.id, change.old_actor, "->", placed, "wrapper retained")
-
-
-def test_sword_wrapper_is_removed_without_removing_other_story_events(chest_overlay):
-    output, target, dictionaries = chest_overlay
-    removed = [c for c in output.plan.changes if c.event]
-    assert {c.event.name for c in removed} == {"Get_StoneOfForest_GetSword"}
-    for change in removed:
-        for path in change.files:
-            tree = byml.read(dictionaries.decompress(path, (target / "romfs" / path).read_bytes()))
-            chest = next(a for a in tree["Actors"] if a.get("Hash") == change.id)
-            assert "GetEventName" not in chest["Dynamic"]
-            assert chest["Dynamic"]["Drop__DropActor"] == change.new_actor
 
 
 def events_from(chart, entry):

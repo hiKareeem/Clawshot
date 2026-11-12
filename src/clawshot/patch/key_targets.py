@@ -35,6 +35,39 @@ _TARGETS = (
     KeyTarget("Gerudo Training Ground", "GerudoTrainingGround", "GerudoTrainingGround"),
     KeyTarget("Ganons Castle", "InsideGanonCastle", "InsideGanonCastle"),
 )
+
+# The other dungeon-item families also exist in the three child dungeons and Ice Cavern.
+DUNGEON_TARGETS = MappingProxyType(
+    {
+        target.dungeon: target
+        for target in (
+            *_TARGETS,
+            KeyTarget("Deku Tree", "InsideTheDekuTree", "InsideTheDekuTree"),
+            KeyTarget("Dodongos Cavern", "DodongoCavern", "DodongoCavern"),
+            KeyTarget("Jabu Jabus Belly", "InsideJabuJabuBelly", "InsideJabuJabuBelly"),
+            KeyTarget("Ice Cavern", "IceCavern", "IceCavern"),
+        )
+    }
+)
+
+
+@dataclass(frozen=True, order=True)
+class DungeonGrant:
+    """A source-bound reward. Only off-dungeon small keys need replacement pickup text."""
+
+    target: str
+    family: str
+    named: bool = False
+
+    @property
+    def id(self) -> str:
+        return self.target if self.named else f"{self.family}_{self.target}"
+
+    @property
+    def field(self) -> str:
+        return f"DungeonInfo.{self.target}.IsGet{self.family}"
+
+
 TARGETS: MappingProxyType[str, KeyTarget] = MappingProxyType({target.dungeon: target for target in _TARGETS})
 """Logic dungeon -> its target: every dungeon with logic small keys (``data/world/items.toml``)."""
 

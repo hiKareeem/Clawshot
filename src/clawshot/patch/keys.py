@@ -1,8 +1,8 @@
-"""Source-bound small-key grants and dungeon-labelled pickup messages.
+"""Source-bound dungeon-item grants using the played small/big chest lifecycle.
 
-Clone native wrapper/presentation entries, not shared native bindings. A wrapper keeps
-its source lifecycle and transitions to a target-specific chest destination. One
-argument-driven helper writes the existing dungeon counters; no pouch grant or latch.
+Clone native wrappers and presentation entries, not shared native bindings. Small
+keys write the native counters; other dungeon items write their saved ownership
+Bool. Off-dungeon small keys alone replace the native pickup messages.
 Played acceptance and remaining limitations are recorded in r12-keys.md.
 """
 
@@ -15,7 +15,7 @@ from pathlib import Path
 from clawshot.chest_openings import source_for
 from clawshot.formats import byml, evfl, zsdic
 from clawshot.patch import key_text
-from clawshot.patch.key_targets import TARGETS
+from clawshot.patch.key_targets import DUNGEON_TARGETS, TARGETS, DungeonGrant
 from clawshot.patch.plan import PatchError, Plan
 from clawshot.patch.write import FileChanges
 from clawshot.save import key as save_key
@@ -29,6 +29,8 @@ HELPER = "ClawshotGrantSmallKey"
 # Acquisition-only balloons, not the independent Nabooru story reaction (197).
 # Supported-dump classification and index/parameter provenance: plans/rounds/r12-keys.md.
 _ITEM_NAVI_BALLOONS = frozenset({228, 345, 354, 361, 474, 475, 476, 478, 479, 480, 495})
+# These acquisition comments share a source wrapper with required room/quest state.
+_COMMENTED_STORY_SOURCES = frozenset({"InsideJabuJabuBelly_TreasureBoxWithRuto09", "SubEvent_GetIceArrow_OpenTBox"})
 
 
 def flow_path(name: str) -> str:
@@ -138,7 +140,14 @@ class Binding:
 
 
 class _Compiler:
-    def __init__(self, documents: Mapping[str, evfl.EventFlowFile], rows: list[dict], analyzed_rows: list[dict]):
+    def __init__(
+        self,
+        documents: Mapping[str, evfl.EventFlowFile],
+        rows: list[dict],
+        analyzed_rows: list[dict],
+        grants: Sequence[DungeonGrant],
+    ):
+        self.grants = {grant.id: grant for grant in grants}
         self.originals = documents
         self.documents = copy.deepcopy(dict(documents))
         self.original_rows = copy.deepcopy(rows)
@@ -153,8 +162,9 @@ class _Compiler:
         self.bindings: dict[tuple[str, str], Binding] = {}
         self.destinations: dict[tuple[str, str, str], str] = {}
         self.touched: set[str] = set()
-        add_grant_helper(self.chart(POUCH))
-        self.touched.add(POUCH)
+        if any(grant.family == "SmallKey" for grant in grants):
+            add_grant_helper(self.chart(POUCH))
+            self.touched.add(POUCH)
 
     def chart(self, flow: str) -> evfl.Flowchart:
         if flow not in self.documents or self.documents[flow].flowchart is None:
@@ -194,7 +204,12 @@ class _Compiler:
         key = (source, target)
         if key in self.bindings:
             return self.bindings[key]
-        _arguments(target)
+        grant = self.grants[target]
+        if grant.family != "Content":
+            if grant.target not in {value.id for value in DUNGEON_TARGETS.values()}:
+                raise PatchError(f"unsupported dungeon-item target {grant.target!r}")
+            if grant.family not in {"SmallKey", "BossKey", "Map", "Compass"}:
+                raise PatchError(f"unsupported dungeon-item family {grant.family!r}")
         # GetEventName is a String64 blackboard parameter. Full source names can overflow it.
         source_id = hashlib.sha256(source.encode("utf-8")).hexdigest()[:12]
         name = f"Clawshot_Key_{target}_{source_id}"
@@ -288,6 +303,27 @@ class _Compiler:
             self.rewrite_action(flow, index, new_index, event, target, mode)
         return new_index
 
+    def grant_event(self, name: str, target: str, next_event: int) -> evfl.Event:
+        grant = self.grants[target]
+        chart = self.chart(POUCH)
+        if grant.family == "SmallKey":
+            if not grant.named:
+                ai, action = _operation(chart, "GameDataActor", "actions", "EventTriggerSetGameDataBool")
+                demo = len(chart.events)
+                chart.events.append(
+                    evfl.ActionEvent(
+                        name + "CounterDemo",
+                        ai,
+                        action,
+                        next_event,
+                        {"GameDataName": "UI_RequestSmallKeyCountUpDemo", "Index": -1, "Value": True},
+                    )
+                )
+                next_event = demo
+            return evfl.SubFlowEvent(name, "", HELPER, next_event, _arguments(grant.target))
+        ai, action = _operation(chart, "GameDataActor", "actions", "EventTriggerSetGameDataBool")
+        return evfl.ActionEvent(name, ai, action, next_event, {"GameDataName": grant.field, "Index": -1, "Value": True})
+
     def rewrite_action(
         self, flow: str, original_index: int, index: int, event: evfl.ActionEvent, target: str, mode: str
     ) -> None:
@@ -304,19 +340,28 @@ class _Compiler:
                 params["EventName"] = self.bind(name, target).event
         if mode != "content":
             return
-        if flow == BIG and actor.name == "GameSystemActor" and operation == "EventGetDungeonSmallKey":
-            chart.events[index] = evfl.SubFlowEvent(event.name, POUCH, HELPER, event.next, _arguments(target))
+        grant = self.grants[target]
+        if grant.family == "Content":
+            return
+        if flow == BIG and actor.name == "GameSystemActor" and operation == f"EventGetDungeon{grant.family}":
+            # Keep the native post-grant presentation, but never credit the standing dungeon as well.
+            pouch = self.chart(POUCH)
+            entry_name = f"Clawshot_{target}_Grant"
+            if not any(entry.name == entry_name for entry in pouch.entry_points):
+                call = self.grant_event(event.name + "Grant", target, evfl.NONE)
+                start = len(pouch.events)
+                pouch.entry_points.append(
+                    evfl.EntryPoint(entry_name, start, [start] if isinstance(call, evfl.SubFlowEvent) else [])
+                )
+                pouch.events.append(call)
+                self.touched.add(POUCH)
+            chart.events[index] = evfl.SubFlowEvent(event.name, POUCH, entry_name, event.next)
         elif flow == POUCH and actor.name == "PouchSystemActor" and operation == "EventTriggerAddOrRemovePouchContent":
             if params.get("Num") != 1 or params.get("Actor") != evfl.Argument("ActorName"):
                 raise PatchError("unexpected pouch grant in named chest path")
-            call = len(chart.events)
-            chart.events.append(evfl.SubFlowEvent(event.name + "Grant", "", HELPER, event.next, _arguments(target)))
-            ai, query = _operation(chart, "PouchSystemActor", "queries", "EventQueryIsSmallKey")
-            chart.events[index] = evfl.SwitchEvent(
-                event.name, ai, query, [(0, call), (1, original_index)], {"ActorName": evfl.Argument("ActorName")}
-            )
-        elif flow == POUCH and actor.name == "SystemTextNPC" and operation == "EventTalk":
-            message, caption = key_text.labels(target)
+            chart.events[index] = self.grant_event(event.name, target, event.next)
+        elif flow == POUCH and actor.name == "SystemTextNPC" and operation == "EventTalk" and grant.named:
+            message, caption = key_text.labels(grant.target)
             if params.get("MessageId") == "EventFlowMsg/Dm_SY_Get:GetMessage":
                 params["MessageId"] = message
             elif params.get("MessageId") == "EventFlowMsg/Dm_SY_Get:GetCaption":
@@ -435,20 +480,27 @@ def compile_bindings(
     documents: Mapping[str, evfl.EventFlowFile],
     rows: list[dict],
     analyzed_rows: list[dict],
-    requests: list[tuple[str, str]],
-) -> tuple[dict[tuple[str, str], Binding], FileChanges]:
+    requests: list[tuple[str, DungeonGrant]],
+) -> tuple[dict[tuple[str, DungeonGrant], Binding], FileChanges]:
     """Compile native source-event/target pairs; deterministic regardless of request order."""
     if not requests:
         return {}, {}
-    compiler = _Compiler(documents, rows, analyzed_rows)
-    for source, target in sorted(set(requests)):
-        compiler.bind(source, target)
-    return compiler.bindings, compiler.finish()
+    compiler = _Compiler(documents, rows, analyzed_rows, [grant for _, grant in requests])
+    for source, grant in sorted(set(requests)):
+        compiler.bind(source, grant.id)
+    bindings = {(source, grant): compiler.bindings[(source, grant.id)] for source, grant in requests}
+    return bindings, compiler.finish()
 
 
 def changes(romfs: str | Path, plan: Plan, *, prior_changes: Sequence[FileChanges] = ()) -> tuple[Plan, FileChanges]:
-    """Resolve every off-dungeon key's source family and append its event/text bindings."""
-    routed = [change for change in plan.changes if change.named_key is not None]
+    """Resolve moved dungeon items and off-dungeon keys through played source bindings."""
+    routed = [
+        change
+        for change in plan.changes
+        if change.named_key is not None
+        or change.dungeon_item is not None
+        or (change.kept_event is not None and change.kept_event.name in _COMMENTED_STORY_SOURCES)
+    ]
     if not routed:
         return plan, {}
     romfs = Path(romfs)
@@ -463,12 +515,24 @@ def changes(romfs: str | Path, plan: Plan, *, prior_changes: Sequence[FileChange
 
     rows = byml.read(read(SETTINGS))
     analyzed_rows = byml.read(read(ANALYZED))
-    _check_fields(byml.read(read("GameData/GameDataList.Product.110.byml.zs")), [change.named_key for change in routed])
+    grants = [
+        DungeonGrant(change.named_key, "SmallKey", named=True)
+        if change.named_key
+        else change.dungeon_item or DungeonGrant("", "Content")
+        for change in routed
+    ]
+    game_data = byml.read(read("GameData/GameDataList.Product.110.byml.zs"))
+    _check_fields(game_data, [grant.target for grant in grants if grant.family == "SmallKey"])
+    for grant in grants:
+        if grant.family not in {"SmallKey", "Content"}:
+            found = [row for row in game_data["Data"]["Bool"] if row["Hash"] == save_key(grant.field)]
+            if len(found) != 1 or found[0].get("ResetTypeValue") != 8 or found[0].get("SaveFileIndex") != 0:
+                raise PatchError(f"{grant.field}: expected one existing saved Bool, got {found}")
     documents = {}
     # Source wrappers can call NaviChat; content calls remain within the three common flows.
     needed = {BIG, SMALL, POUCH, "NaviChat"}
     requests = []
-    for change in routed:
+    for change, grant in zip(routed, grants, strict=True):
         source = source_for(change.chest, change.kept_event.name if change.kept_event else None)
         if source is None:
             raise PatchError(f"{change.location}: no small-key opening contract for {change.chest}")
@@ -476,7 +540,7 @@ def changes(romfs: str | Path, plan: Plan, *, prior_changes: Sequence[FileChange
         if row is None:
             raise PatchError(f"{change.location}: no source event {source}")
         needed.add(Path(row["FlowchartFileName"]).stem)
-        requests.append((source, change.named_key))
+        requests.append((source, grant))
     for name in sorted(needed):
         path = flow_path(name)
         documents[name] = evfl.read(read(path))
@@ -487,9 +551,11 @@ def changes(romfs: str | Path, plan: Plan, *, prior_changes: Sequence[FileChange
     new_plan = replace(
         plan,
         changes=[
-            replace(change, key_event=replacements.get((change.id, change.files))) if change.named_key else change
+            replace(change, key_event=replacements[(change.id, change.files)])
+            if (change.id, change.files) in replacements
+            else change
             for change in plan.changes
         ],
     )
-    transforms.update(key_text.changes(romfs, [change.named_key for change in routed]))
+    transforms.update(key_text.changes(romfs, [grant.target for grant in grants if grant.named]))
     return new_plan, transforms

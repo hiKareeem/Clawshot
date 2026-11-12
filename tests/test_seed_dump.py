@@ -56,8 +56,12 @@ def field_changes(a, b, path=(), actor=None):
 def expected_changes(plan: Plan, path: str) -> set:
     out = set()
     for change in plan.for_file(path):
-        out.add((change.id, ("Dynamic", DROP_KEY), change.old_actor, change.new_actor))
-        if change.event is not None:
+        if change.old_actor != change.new_actor:
+            out.add((change.id, ("Dynamic", DROP_KEY), change.old_actor, change.new_actor))
+        if change.key_event is not None:
+            source = change.kept_event or change.event
+            out.add((change.id, ("Dynamic", EVENT_KEY), source.name if source else REMOVED, change.key_event))
+        elif change.event is not None:
             out.add((change.id, ("Dynamic", EVENT_KEY), change.event.name, REMOVED))
     return out
 

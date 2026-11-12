@@ -10,7 +10,7 @@ get the same item). Each chest is an actor ``Hash`` in every file the census lis
 With ``dungeon_items = "anywhere"`` a small key in a chest outside its dungeon's Banc area is a named key
 (:attr:`ChestChange.named_key`): the generic actor would credit the dungeon Link stands in, or nothing in the
 overworld, so the chest changes even when it already holds a small key, and ``clawshot.patch.keys`` binds a named
-grant to it (:attr:`ChestChange.key_event`). ``own_dungeon`` plans have no named keys.
+grant to it (:attr:`ChestChange.key_event`). Missing small-chest map/compass/boss grants use the same bindings.
 
 Chests only (D15): a shuffled location that is not a census chest (a Treasure Chest Game box, D17) stops the plan.
 """
@@ -25,7 +25,7 @@ from clawshot.generate import Seed
 from clawshot.generate.fill import SMALL_KEY
 from clawshot.patch.events import REMOVE, ChestEvent
 from clawshot.patch.items import ItemActors
-from clawshot.patch.key_targets import BY_ID, TARGETS
+from clawshot.patch.key_targets import BY_ID, DUNGEON_TARGETS, TARGETS, DungeonGrant
 from clawshot.world.model import World
 
 DROP_KEY = "Drop__DropActor"
@@ -54,15 +54,17 @@ class ChestChange:
     named_key: str | None = None
     """A small key outside its dungeon (``anywhere`` only): the target's native ID (``key_targets``)."""
     key_event: str | None = None
-    """The ``GetEventName`` binding the named grant for :attr:`named_key`, written last."""
+    """The source-bound grant or story-comment cleanup's ``GetEventName``, written last."""
+    dungeon_item: DungeonGrant | None = None
+    """A missing native grant: explicit ownership, native text and a played source lifecycle."""
 
     def __post_init__(self) -> None:
         where = f"{self.location} (chest {self.id})"
         if self.named_key is not None and self.named_key not in BY_ID:
             raise PatchError(f"{where}: {self.named_key!r} is not a small-key target")
         if self.key_event is not None:
-            if self.named_key is None:
-                raise PatchError(f"{where}: a key binding {self.key_event!r} needs a named key")
+            if self.named_key is None and self.dungeon_item is None and self.kept_event is None:
+                raise PatchError(f"{where}: a key binding {self.key_event!r} needs a named key or dungeon item/source")
             if not isinstance(self.key_event, str) or not self.key_event:
                 raise PatchError(f"{where}: the key binding must be an event name, not {self.key_event!r}")
 
@@ -87,6 +89,8 @@ class ChestChange:
             out["named_key"] = self.named_key
         if self.key_event is not None:
             out["key_event"] = self.key_event
+        if self.dungeon_item is not None:
+            out["dungeon_item"] = {"target": self.dungeon_item.target, "family": self.dungeon_item.family}
         return out
 
 
@@ -236,9 +240,9 @@ def _named_key(seed: Seed, location: str, item: str, area: str | None) -> str | 
 def make_plan(seed: Seed, links: Links, items: ItemActors, events: Mapping[str, ChestEvent]) -> Plan:
     """The changes that give every shuffled location its placed item.
 
-    With ``anywhere`` a small key outside its dungeon's area is named (:func:`_named_key`); a chest already holding
-    the generic small key still changes for it. Other shuffled kinds have no named grant: a small key there must
-    lie in its own dungeon's area."""
+    With ``anywhere`` a small key outside its dungeon's area is named (:func:`_named_key`).
+    Other moved items retain native grants wherever present; small-chest map/compass/boss
+    pickups and physical off-area destinations need source-bound dungeon credit."""
     anywhere = seed.settings.dungeon_items == "anywhere"
     changes, unchanged = [], []
     for name in seed.shuffled:
@@ -267,6 +271,21 @@ def make_plan(seed: Seed, links: Links, items: ItemActors, events: Mapping[str, 
                 if event.patch != REMOVE:
                     kept_event = event
                     event = None
+            info = seed.world.items[item]
+            dungeon_item = None
+            if named_key is None and info.type in {"SmallKey", "BossKey", "GanonBossKey", "Map", "Compass"}:
+                target = DUNGEON_TARGETS.get(info.dungeon)
+                family = "BossKey" if info.type == "GanonBossKey" else info.type
+                opening = source_for(chest.actor)
+                if opening is None and kept_event is None:
+                    raise PatchError(f"{name}: no played dungeon-item opening contract for {chest.actor}")
+                missing = opening == "Dm_SY_TreasureboxSmall" and family != "SmallKey"
+                if missing or (target is not None and target.id != chest.area):
+                    if target is None:
+                        raise PatchError(f"{name}: no native dungeon-item target for {item}")
+                    dungeon_item = DungeonGrant(target.id, family)
+                    if source_for(chest.actor, kept_event.name if kept_event else None) is None:
+                        raise PatchError(f"{name}: no played dungeon-item opening contract for {chest.actor}")
             changes.append(
                 ChestChange(
                     location=name,
@@ -280,6 +299,7 @@ def make_plan(seed: Seed, links: Links, items: ItemActors, events: Mapping[str, 
                     event=event,
                     kept_event=kept_event,
                     named_key=named_key,
+                    dungeon_item=dungeon_item,
                 )
             )
     return Plan(changes, unchanged, list(links.vanilla_chests))

@@ -147,6 +147,15 @@ Boss keys (Ganon's Castle included), maps and compasses stay in their own dungeo
 modes. With anywhere, the statue's two hand chests may hold a small key, named to its own
 dungeon, so it is not lost.
 
+Dungeon-item delivery uses the native grant where it already works: own-dungeon small keys
+in small chests and all four families in big chests. Maps, compasses and boss keys moved to
+small chests need source-bound ownership writes; a get message or HUD icon alone does not
+prove they were saved. The repair preserves native pickup text and unchanged placements.
+It is automated-tested; the repaired in-game check is still pending.
+
+Previously generated seeds can lose these three items from small chests. Rebuilding a mod
+does not re-award a chest already opened in an existing save.
+
 Every physical copy of a destination must support that named opening. The Hyrule Field heart-piece
 chest does not have a played named-key opening contract, so it cannot hold an off-dungeon small key.
 It remains shuffled for other eligible rewards; it has not been enabled by assuming it opens like another chest.
@@ -180,10 +189,9 @@ reward. Child Bow jam/recovery is confirmed on Hookshot and Lichii; other famili
 The note lists shuffled age-locked rewards reachable by the wrong age at their first search frontier,
 including ties. Optional later pickups can differ from that order. No data-only repair is enabled.
 
-For rewards other than named keys, a chest that originally held a map can still play its Navi
-follow-up — "Now we won't get lost" — after a different reward. Cosmetic only: the line does
-not grant a map or alter saved map/key fields. Named off-dungeon key pickups omit that obsolete
-comment; no broad Navi change is made for ordinary seeds.
+Changed rewards omit the old item's acquisition-only Navi reaction. Where that reaction
+shares a wrapper with room or quest progress, a source-bound clone removes only the stale
+comment and retains the story writes. Native unchanged rewards retain their original event.
 
 On Hookshot 2.0.12+, clear `HOS_FS_OVERLAY` and load through mods; the old overlay route crashes.
 The game's Switch button icons then appear in ordinary text; the separately drawn ocarina note

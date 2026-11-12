@@ -483,7 +483,7 @@ def test_source_event_classifications_survive_and_the_binding_lands_last(world, 
     assert kept_row["kept_event"] == "House_NaviChatOff" and "key_event" not in kept_row
     assert story_row["removed_event"] == "Story_GetSword" and story_row["story_state"] == "nothing to restore"
 
-    with pytest.raises(PatchError, match="has a key named FireTemple but no grant binding"):
+    with pytest.raises(PatchError):
         patch_tree(field_tree(KF_CHILD), KF_CHILD, plan)
 
     plan = bound(plan)

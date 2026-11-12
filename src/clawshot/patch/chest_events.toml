@@ -3,14 +3,14 @@
 # clawshot.patch.events. plans/03-game-data.md section 3 describes them.
 #
 # `patch` says what the writer does to a chest whose item changes:
-#   remove  unsafe vanilla equipment creation (the Kokiri Sword wrapper): use the chest's default event.
-#   keep    grant the chest's ContentName and preserve its story state/gift on that chest. Navi's extra lines
-#           or a cosmetic scene may still refer to the vanilla item; deleting quest state is not a text fix.
+#   remove  vanilla equipment creation or a verified item-only Navi reaction: use the chest's default event.
+#   keep    grant ContentName and preserve source story state. Source-bound clones remove obsolete item
+#           balloons from the two stateful wrappers that contain them, without deleting their quest writes.
 # A chest whose item does not change keeps its override. A chest with an override not listed here stops the
 # writer.
 #
 # `flow` identifies the event's wrapper; `does` records its actions, `story_state` the persistent state and its
-# preservation. Only the Kokiri Sword wrapper is removed (reviewer-approved round 5 policy).
+# preservation. Pure acquisition reactions have no story state to restore (r13-dungeon-items.md).
 
 [event.Get_StoneOfForest_GetSword]
 flow = "Get_StoneOfForest:GetSword"
@@ -20,19 +20,19 @@ story_state = "nothing to restore [inference]: neither flow sets a game-data fla
 
 [event.InsideTheDekuTree_GetMap]
 flow = "NaviChat:TreasureBoxDM_NaviChat_Deku_Map"
-patch = "keep"
+patch = "remove"
 does = "the big-chest event (NaviChat:PlayDemo), then Navi balloon 354 (about the map, inferred)"
 story_state = "none: the flow sets no flag; HavePlayedEvent.InsideTheDekuTree_GetMap is named in no event flow or Logic/Sequence AINB (byte search)"
 
 [event.InsideTheDekuTree_GetCompass]
 flow = "NaviChat:TreasureBoxDM_NaviChat_Deku_Compass"
-patch = "keep"
+patch = "remove"
 does = "the big-chest event (NaviChat:PlayDemo), then Navi balloon 345 (about the compass, inferred)"
 story_state = "none: the flow sets no flag; HavePlayedEvent.InsideTheDekuTree_GetCompass is named in no event flow or Logic/Sequence AINB (byte search)"
 
 [event.InsideTheDekuTree_GetSlingShot]
 flow = "NaviChat:TreasureBoxDM_NaviChat_Deku_GetSlingShot"
-patch = "keep"
+patch = "remove"
 does = "the big-chest event (NaviChat:PlayDemo), then Navi balloon 474 (about the Slingshot, inferred)"
 story_state = "none: the flow sets no flag; HavePlayedEvent.InsideTheDekuTree_GetSlingShot is named in no event flow or Logic/Sequence AINB (byte search)"
 
@@ -125,43 +125,43 @@ does = "plays the big or small chest event by Minigame_DampeRace_TreasureBoxStat
 
 [event.BottomOfTheWell_GetGlassTruth]
 flow = "BottomOfTheWell:BottomOfTheWell_GetGlassTruth"
-patch = "keep"
+patch = "remove"
 does = "the big-chest event, then Navi talk (SubEvent_GetGlassTruth_NaviRepeat) chosen by IsGet.Item_Melody_ShadowNocturne (about the Lens, inferred)"
 story_state = "none found: the flow sets no flag"
 
 [event.FireTemple_GetHammer]
 flow = "NaviChat:TreasureBoxDM_NaviChat_FireTemple_GetHammer"
-patch = "keep"
+patch = "remove"
 does = "the big-chest event (NaviChat:PlayDemo), then Navi balloon 479 (about the Hammer, inferred)"
 story_state = "none: the flow sets no flag"
 
 [event.ForesetTemple_GetBossKey]
 flow = "ForestTemple_Gimmick:TreasureBoxDM_NaviChat_ForestTemple_BossKey"
-patch = "keep"
+patch = "remove"
 does = "the big-chest event, then Navi balloon 361 (about the boss key, inferred); the open event of five boss-key chests (Forest, Fire, Water, Shadow, Spirit)"
 story_state = "none: the flow sets no flag"
 
 [event.ForestTemple_GetBow]
 flow = "SageOfForest:TreasureBoxDM_NaviChat_Bow"
-patch = "keep"
+patch = "remove"
 does = "the big-chest event, then Navi balloon 476 (about the Bow, inferred)"
 story_state = "none: the flow sets no flag"
 
 [event.Get_StoneOfFire_GetBombBag]
 flow = "Get_StoneOfFire:Get_StoneOfFire_GetBombBag"
-patch = "keep"
+patch = "remove"
 does = "the big-chest event, then Navi balloon 495 (about the Bomb Bag, inferred)"
 story_state = "none: the flow sets no flag"
 
 [event.SageOfShdawo_GetHoverBoots]
 flow = "SageOfShadow:SageOfShdawo_GetHoverBoots"
-patch = "keep"
+patch = "remove"
 does = "the big-chest event, then Navi balloon 228 (about the Hover Boots, inferred)"
 story_state = "none: the flow sets no flag"
 
 [event.WaterTemple_Room07_LongHook_FocusOnGimmick]
 flow = "SageOfWater_FocusGimmick:WaterTemple_Room07_LongHook"
-patch = "keep"
+patch = "remove"
 does = "unequips, the big-chest event, a camera move, then Navi balloon 480 (about using the Longshot there, inferred)"
 story_state = "none: the flow sets no flag"
 

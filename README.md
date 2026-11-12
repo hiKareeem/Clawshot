@@ -114,9 +114,9 @@ and [playtest answers](https://github.com/hiKareeem/Clawshot/blob/main/plans/pla
   did not fix it. Other item families carry precautionary warnings. This seed's `play-note.md` lists them but reveals item locations.
 - Chest ocarinas show no model despite working; songs can show an ocarina stand-in rather than a
   normal item model. Only some songs have been individually played from chests.
-- For rewards other than named keys, a chest that originally held a map can still make Navi say
-  "Now we won't get lost" after a different reward. This is cosmetic: the line does not grant a
-  map or alter the saved counts. Named off-dungeon key pickups omit that obsolete comment.
+- Previously generated seeds can lose boss keys, maps and compasses placed in small chests,
+  despite showing their pickup text. The source-bound repair is automated-tested; its in-game
+  check is pending. Rebuilding a mod does not re-award already-opened chests in an existing save.
 - **Hookshot 2.0.12 and later: use Clawshot's Play or a current pack's `Play seed.bat`,** which loads the seed as a
   Hookshot mod. Packs built before 2026-11-10 used Hookshot's older overlay loading
   (`HOS_FS_OVERLAY`), which now crashes at start-up; rebuild the pack from current source.

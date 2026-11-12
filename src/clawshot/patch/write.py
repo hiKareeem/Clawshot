@@ -61,15 +61,15 @@ def check_output_folder(romfs: Path, out: Path) -> None:
 def patch_tree(tree: dict, path: str, plan: Plan) -> None:
     """Apply the plan's changes for the placement file ``path`` to its parsed tree, in place.
 
-    A named key's binding (``ChestChange.key_event``) is written last, after the removed native event, and only over
+    A source-bound grant (``ChestChange.key_event``) is written last, after the removed native event, and only over
     the event state the plan classified, so a binding chosen for another source cannot land."""
     changes = plan.for_file(path)
     actors = tree.get("Actors") if isinstance(tree, dict) else None
     if not isinstance(actors, list):
         raise PatchError(f"{path} has no Actors list")
     for change in changes:
-        if change.named_key is not None and change.key_event is None:
-            raise PatchError(f"{path}: actor {change.id} has a key named {change.named_key} but no grant binding")
+        if (change.named_key is not None or change.dungeon_item is not None) and change.key_event is None:
+            raise PatchError(f"{path}: actor {change.id} has a dungeon-item reward but no grant binding")
         found = [a for a in actors if isinstance(a, dict) and a.get("Hash") == change.id]
         if len(found) != 1:
             raise PatchError(f"{path}: {len(found)} actors have Hash {change.id}, expected one")
