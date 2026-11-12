@@ -155,10 +155,11 @@ FLOW_EDITS: dict[str, tuple[str, Callable[[bytes], bytes]]] = {
 # --- settings -------------------------------------------------------------------------------------------------------
 
 
-def loads(text: str) -> dict[str, FastStartSetting]:
+def loads(text: str, table: str = "setting") -> dict[str, FastStartSetting]:
+    """The settings of ``table``: ``setting`` (the choices a run makes) or ``always`` (applied to every seed)."""
     out = {}
-    for name, entry in tomllib.loads(text).get("setting", {}).items():
-        where = f"fast_start.toml: setting {name!r}"
+    for name, entry in tomllib.loads(text).get(table, {}).items():
+        where = f"fast_start.toml: {table} {name!r}"
         if unknown := set(entry) - SETTING_KEYS:
             raise FastStartError(f"{where}: unknown keys {sorted(unknown)}")
         for key in ("skips", "state", "source"):
@@ -189,6 +190,11 @@ def loads(text: str) -> dict[str, FastStartSetting]:
 
 def load(path: str | Path = FAST_START_TOML) -> dict[str, FastStartSetting]:
     return loads(Path(path).read_text(encoding="utf-8"))
+
+
+def load_always(path: str | Path = FAST_START_TOML) -> list[FastStartSetting]:
+    """The ``[always.*]`` settings: every seed applies them, whatever fast-start choices it names."""
+    return list(loads(Path(path).read_text(encoding="utf-8"), "always").values())
 
 
 def defaults(settings: dict[str, FastStartSetting]) -> list[str]:

@@ -77,3 +77,14 @@ source = "Logic HyruleField_Child_Prefab_de5f (request when Dm_HrlField_0010 not
 "HavePlayedEvent.Dm_LostWood_0010" = true
 "UI_IsFinishChallengeMenuOpenEvent" = true
 "Step_Goto_HyruleCastle" = "Step02"
+
+# --- Applied to every seed, not a choice ([always.*], gamedata.load_always) -------------------------------------------
+
+[always.dpad]
+default = true
+skips = "Nothing is skipped: the D-pad (where the ocarina, the Navi button and item shortcuts sit) is there from the start of a new game, as an item that needs it (an ocarina, a shortcut item) can be found before the Great Deku Tree."
+state = "ActionGuide_IsEnd.Navi true (saved Bool, default false). The game sets it on entering the Deku Tree (Navi's guide); until then the HUD has no D-pad, so an ocarina found earlier cannot be played."
+source = "sloperina docs/FINDINGS.md section 1 (the D-pad only exists once ActionGuide_IsEnd.Navi is set) and section 5.1/5.4 (unticking an ocarina leaves it set, the D-pad stays); GameDataList Bool 0x7BE57CB0 (murmur3 of the name), SaveFileIndex 0; reported by mysterypaint 2026-11-12 (D-pad missing in an Archipelago seed)."
+
+[always.dpad.game_data]
+"ActionGuide_IsEnd.Navi" = true

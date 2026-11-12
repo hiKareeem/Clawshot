@@ -229,3 +229,9 @@ def test_write_needs_an_empty_folder_outside_the_romfs(fake_romfs, tmp_path, set
     (tmp_path / "used" / "x").write_text("x")
     with pytest.raises(PatchError, match="not empty"):
         write(fake_romfs, tmp_path / "used", ["intro"], settings)
+
+
+def test_the_dpad_is_always_there_and_not_a_choice():
+    always = {setting.name: setting for setting in gamedata.load_always()}
+    assert always["dpad"].game_data == {"ActionGuide_IsEnd.Navi": True}
+    assert "dpad" not in gamedata.load()  # never offered as a fast-start choice
