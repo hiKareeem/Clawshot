@@ -1317,3 +1317,19 @@ and allow the B2 partial stop. No game start, full suite, gate.lock acquisition,
 rebase, version change, merge or push during this approved build. Rebase onto0.1.2
 only when Claude reports that integration; these staged bytes stay frozen.
 
+### Claude's Gate 4 boot check accepted; part A handed over
+
+Claude reports **kg4 boot OK:508 log lines, rendering, no crash**. Accepted as
+reported; not rerun here. This establishes boot/rendering, not the unplayed
+acquisition/layout/bar/credit/persistence acceptance.
+
+Claude is handing4A to Kareem with the automatic watcher **armed on part A**.
+Part-A pickup/reload results remain pending; explicitly switch the watcher before
+B, retaining its permitted B2 partial stop. Staged bytes/users remain untouched,
+and the public refusal stays enabled.
+
+Coordination correction reported by Claude: the cs-r12 watcher had been blind
+after the thread exceeded50 posts because its `bermuda thread log` read retained
+only the newest50. That delayed seeing the20:13 handover; **watcher fixed**.
+This was a message-visibility failure, not a mod boot failure.
+
