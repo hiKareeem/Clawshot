@@ -788,7 +788,7 @@ function renderPlay() {
       : !playAvailable
         ? playUnavailableReason
         : !hookshotCanPlay
-          ? "Choose Check beside your Hookshot folder on Game to enable Play."
+          ? "Choose Detect beside your Hookshot folder on Game to enable Play."
           : "Ready to play in Hookshot with separate saves for this seed.";
   $("play-paths").textContent =
     playState.output === resultOutput && playState.user

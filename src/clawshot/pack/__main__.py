@@ -1,4 +1,4 @@
-"""Build a private seed source zip, never a generated overlay."""
+"""Build a public test seed source zip, never a generated mod."""
 
 import argparse
 import os
@@ -25,7 +25,7 @@ def main(argv: list[str] | None = None) -> int:
     except (OSError, PackError, subprocess.CalledProcessError) as error:
         print(f"error: {error}", file=sys.stderr)
         return 1
-    print(f"seed {args.seed}: {manifest['output_sha256']}\nPrivate source pack: {args.out}")
+    print(f"seed {args.seed}: {manifest['output_sha256']}\nPublic test source pack: {args.out}")
     return 0
 
 

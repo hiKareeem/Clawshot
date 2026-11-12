@@ -26,6 +26,7 @@ from clawshot.app import (
 from clawshot.app.emulator import copy_to_emulator
 from clawshot.app.library import SeedLibrary
 from clawshot.app.paths import absolute_path, default_output_root
+from clawshot.app.play import play_refusal
 from clawshot.app.preferences import Preferences, suggested_eden_folder
 from clawshot.app.sharing import import_settings, player_settings, share_settings
 from clawshot.ui.dialogs import FILE_KINDS, KINDS
@@ -117,10 +118,10 @@ class Application:
                 "copy_available": self.chooser is not None,
                 "eden_folder": suggested_eden_folder(),
                 "open_available": self.allow_open,
-                "play_available": self.allow_play and sys.platform == "win32",
+                "play_available": self.allow_play and not play_refusal(),
                 "play_unavailable_reason": (
-                    "Play needs Windows. Use the emulator steps below."
-                    if sys.platform != "win32"
+                    "Play needs Windows or Linux. Use the emulator steps below."
+                    if play_refusal()
                     else "Play is disabled in --no-open. Open Clawshot normally to play."
                 ),
                 "presets": [p | {"share_string": share_settings(p["settings_string"])} for p in choices],

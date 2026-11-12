@@ -1,0 +1,110 @@
+# Round 12: public polish (cs12a)
+
+Branch: `r12/public`. Owner: cs12a (openai-codex/gpt-6.1-sol).
+
+## Scope and choices
+
+- Jobs 1–5 from Claude's round prompt: mechanical proofreading; UI-friendly issue forms; the base-only dump-folder hint; public-pack/spoiler wording; first-player troubleshooting.
+- No generation algorithm, logic or placement changes. No version or `uv.lock` edits. No game launch, game-folder writes, push, merge or GitHub comments.
+- `docs/settings.md` belongs to cs12b; read for consistency, never edited here.
+- Provisional choice (cs12a): preserve historical round/decision records as history. Correct current architecture/UI statements contradicted by shipped code, as explicitly requested; do not revise decisions.
+- Provisional choice (cs12a): use plain player language in new help/report text. Keep existing developer API identifiers where they document a real contract; mechanical proofreading is not a technical-reference rewrite.
+- Required documents read directly or through the read-only audit: the roadmap/game-data/world-format documents received a full delegated proofreading pass, and player strings received a separate full census. All edits and commits belong to cs12a.
+- Kareem's README steer via Claude: add the exact Discord and Download badges on one line beneath the title, retain the existing Discord paragraph, and leave screenshots for Claude after merge. Applied during the final run; no tested code or fixtures changed.
+
+## Findings
+
+- `pack.runtime.launch_plan` writes saves to `<output>/user` and stderr to `<output>/hookshot_log.txt`; `app.play.play_plan` passes the seed's parent output folder. UI Open seed folder opens `<output>/seed`, so the log is one folder above that view.
+- The existing report form and contribution instructions ask for excerpts; job 2 explicitly requires the complete Hookshot log as a file. Update the report instructions together, explaining folder-path privacy and prohibiting other attachments.
+- `plans/01-architecture.md` still describes future mods support; current `pack.runtime` uses `HOS_MODS`. Treat as a stale current-state statement, not a new architecture decision.
+- `docs/ui.md` still describes the UI as source/package-only and Play as new/unaccepted; release 0.1.1 is already public. Distinguish recorded game/launch evidence from platform coverage.
+- Job 1: corrected glued numbers/current-state claims and the UI's instruction to choose “Check” next to Hookshot (the button is “Detect”). No spelling-style changes: the optional Center/Centre suggestion was rejected.
+- Job 2: separate in-game and Clawshot-itself forms, exact UI recipe/hash locations, log/save paths verified against code, path-privacy disclosure, log-only attachment checkbox. Kept the Discord config unchanged. Updated contribution, seed-pack and Discord report instructions together.
+- Job 3: only the missing version-marker read of a single-layer dump delegates to the existing `check_romfs` diagnostic, preserving `PackError` for pack callers. Synthetic regression covers absent and empty updates folders and refusal before a cache is made.
+- Job 4: public-test source-pack wording and an explicit pack-note spoiler warning. The template/report edits are pack source content, not generated seed content.
+- Job 5: `docs/ui.md#troubleshooting` answers game/update checks, Hookshot support, disabled Play, hash differences, Linux/macOS, emulators, saves and reports. Its known-issue list matches Claude's read-only `release-notes-0.1.1-final.md`; macOS is untested with contributor testing underway.
+- Full plan audit: 200 line corrections; all differ only in whitespace except the front summary's stale chest-save claim, corrected from the later section 44 evidence. Preserved code spans, canonical report IDs, compact save-state tokens, uppercase emphasis and historical status.
+- Cross-track request from cs12b (`cs-r12`, 12:35): corrected only the UI's future-anywhere help to say **small keys**, not Boss Keys/maps/compasses. Kept the option unavailable; no setting, generator or placement behavior changed.
+- New maintainer evidence (`cs-r12`, Claude 12:49): both Spirit hand-chest keys were lost and published community seed 11 cannot be finished. cs12a initially added a current-release warning; Claude corrected this because the branch ships with cs12c's fix as 0.1.2. Removed the README warning. Troubleshooting now explicitly targets seeds made by 0.1.1 or earlier, explains how to inspect both hand-chest rewards in the spoiler, and states newer versions never put dungeon keys there. No physical-area code changes belong to this polish branch.
+- Real headless Settings screen at 1280×860: focused Dungeon items and observed the new small-key-only help and unavailability reason; inspected the rendered screenshot. Own dungeon remained selected and Anywhere's option was disabled. Closed the owned tab and server; no picker or game opened.
+
+## Commits and seed output
+
+Seed-output changes are isolated: three closing parentheses in location `where` descriptions (LW Trade Cojiro, LW Ocarina Memory Game, GC Rolling Goron as Adult), plus spaces in source-reference metadata rendered into `spoiler.json` (`section 27/39/40`, `round 9/10`, `repeat 30/70`, `fixed 20`). Files: `data/location_names.toml` and `generate/names.py`. This changes output text/digests, not placements, logic or game patches. **Claude must bump the version at merge.** Other job commits do not change generated seed output.
+
+| Commit | Job | Seed output changes? |
+|---|---|---|
+| `256b480` | 1: public text/current-state fixes and Detect guidance | No |
+| `3696d62` | 1: isolated generated description/source-reference text | **Yes** |
+| `3dd0460` | 2: player issue forms and consistent reporting instructions | No |
+| `3a4b52f` | 3: base-only dump hint, synthetic test and guide | No |
+| `c3344fb` | 4: public pack wording and spoilers warning | No |
+| `040ee8b` | 5: first-player troubleshooting and release known issues | No |
+| `52505a9` | 1: full plan audit, current flag summary, logic-form UI string guidance | No |
+| `6924ab9` | Round implementation record | No |
+| `7933a33` | Linux Play steer: platform help, schema/API docs, neutral log privacy | No |
+| `e53f426` | Rebased commit record and conflict-resolution note | No |
+| `7859f99` | Version wording aligned with PR #3 | No |
+| `d925391` | Small-key-only future help and provisional legacy-seed warning | No |
+| `47494d7` | Remove README warning; target legacy seeds in troubleshooting | No |
+| `222b4cb` | Exclusive PR #3 review gate queue record | No |
+| `ee23b59` | Requested README Discord and Download badges | No |
+
+## Verification
+
+Initial `git status --short --branch`: clean `r12/public`. Initial `tasklist /FI "IMAGENAME eq hookshot.exe"`: no matching process. Use `CLAWSHOT_WORKERS=1` conservatively for tests regardless, and the shared gate lock for full pytest/dump runs.
+
+- Expected-before regression: `CLAWSHOT_WORKERS=1 uv run pytest tests/test_pack_dump_folder.py -k base_only_dump_explains -x -q` failed with the printed technical missing-GameDataList message.
+- After the targeted fix: `CLAWSHOT_WORKERS=1 uv run pytest tests/test_pack_dump_folder.py tests/test_cli_romfs.py -q`: **10 passed**, 0.41 s.
+- External synthetic smoke (`uv run --with pyyaml python E:/OOTRemake/work/r12-public-cs12a/smoke.py`): all three issue forms parse and have unique required fields; Discord URL unchanged. Real generator CLI and source-preflight commands now print the base-game/update hint, without making output. Pack success formatting exercised with a synthetic publisher boundary, not a real pack build.
+- `uv run python -m clawshot.pack --help`: public-test wording observed.
+- Claude's steer: main moved to `9f86b3a` with PR #2 (Linux Play). Rebased in a detached scratch worktree to keep the in-flight gates' source stable, then moved `r12/public` onto the rebased commits and removed that scratch worktree. The only conflict was the Linux paragraph in `docs/ui.md`: retained merged behavior plus spacing corrections. Help/templates support Windows/Linux Play, Linux Hookshot Builder `bin/hookshot`, macOS without Play. Save/log paths are unchanged.
+- External link checker: **17 documents, zero broken local links/anchors**, including the troubleshooting section.
+- Real headless UI (`python -m clawshot.ui --no-open`) loaded at 1280×860. Synthetic frontend completed-seed/capability state displayed the corrected “Choose Detect” guidance with Play disabled; screenshot inspected. No game, OS dialogs or visible windows opened; tab and owned server closed. This is text-rendering proof, not Play acceptance.
+- UI smoke first exposed a browser-helper execution-world discrepancy (`page.evaluate` could not see the classic-script function, while direct `tab.evaluate` could). Printed function/script/error values, reported the tool issue, then used direct page-world evaluation successfully.
+- Real `generate`, `spoiler_json` and `play_note` smoke on an invented three-location world rendered the corrected parentheses; no game files read.
+- Rebased read-only smoke passed on Windows after PR #2: both Windows/Linux Builder launch plans preserve output/user and output/hookshot_log.txt; macOS and wrong-system binaries refuse. This did not start either executable. The real note/spoiler renderers rendered **all 373** catalogue descriptions in an invented world, including the three closed parentheses and spaced source references. Forms and 17-document link check also passed.
+- Pre-rebase full gates under `gate.lock`, `CLAWSHOT_WORKERS=1`: `uv run ruff format --check` **303 files formatted**; `uv run ruff check` **passed**; `uv run pytest` **954 passed, 126 skipped**, 1250.93 s. The dump gate was intentionally interrupted, **not passed**, to correct temporary-file placement.
+- Scratch correction: printed inherited `TEMP`/`TMP` and `tempfile.gettempdir()` showed `C:/Users/hi/AppData/Local/Temp`. Stopped only owned jobs and verified native pytest PID **45052** had exited. Its `.lock` identified the owned `pytest-271` directory; removed only that directory and released the owned gate lock. Further gates set `TEMP`, `TMP`, `TMPDIR` and `PYTEST_DEBUG_TEMPROOT` to `E:/OOTRemake/work/r12-public-cs12a/tmp`. No game folder was written or game started. This initial temporary-location deviation is recorded rather than hidden.
+- Claude's PR #3 steer: read local commit `cd7c1f7` (on `9f86b3a`), including source, picker and documentation changes. Its `check_romfs` remains the single base-game hint source, so job 3 automatically inherits “Version 1.0.0” / “Version 1.1.1” without a duplicated detector or message. New help uses the corrected Version 1.1.1 / update v131072 name. Wait for Claude's merge notice, then rebase and run final full gates with the corrected scratch environment.
+- Claude's gate-queue instruction: cs12c finishes its current sequence, then Claude's `review-pr3` gate runs exclusively. cs12a has no gate job running and will not acquire `gate.lock` until Claude posts `review-pr3 gates done` on `cs-r12`. Final rebase still awaits the separate PR #3 merge notice.
+- Claude posted `review-pr3 gates done` and merged PR #3 as `cd81449`. Rebased all 14 public-polish commits onto it. Only conflict: independent additions to `tests/test_pack_dump_folder.py`; kept the picker/Finder/protection scenarios and both base-only-update cases. `pack/source.py` merged automatically, preserving the shared diagnostic.
+- Post-rebase real headless UI smoke: inspected Settings' small-key-only help and the completed-seed card's “Choose Detect” instruction, with Play visibly disabled. Completed-seed/capability state was synthetic frontend state only; no generation, picker, executable launch or source-folder write. Owned tab and server closed.
+- Started the final external runner with `CLAWSHOT_WORKERS=1` and all four temporary-root variables set to the supplied scratch. It acquires one shared `gate.lock` for the smokes and entire four-command gate sequence, without releasing between commands.
+
+### Final acceptance on `cd81449`
+
+All four commands passed under one continuous shared lock with `CLAWSHOT_WORKERS=1`.
+`TEMP`, `TMP`, `TMPDIR` and `PYTEST_DEBUG_TEMPROOT` all pointed to
+`E:/OOTRemake/work/r12-public-cs12a/tmp`.
+
+| Command | Observed result |
+|---|---|
+| `uv run ruff format --check` | 304 files already formatted |
+| `uv run ruff check` | All checks passed |
+| `uv run pytest` | 978 passed, 127 skipped; 987.10 s |
+| `uv run pytest -m dump` | 125 passed, 980 deselected; 3003.83 s |
+
+Dump environment: `OOT_ROMFS=E:/Games/Hookshot/romfs`,
+`OOT_NUP=E:/Games/Hookshot/The Legend of Zelda Ocarina of Time [0400486024DEC000][v131072].nup`,
+`OOT_DUMP=E:/OOTRemake/work/pr1-check/dump`. The runner released `gate.lock` in its finalizer.
+Raw command logs remain at `E:/OOTRemake/work/r12-public-cs12a/final-gate-{1,2,3,4}.log`.
+
+Final smokes also passed: all three issue forms; the real generator and source-preflight CLI's
+shared Version 1.0.0 / Version 1.1.1 hint without creating output; Windows/Linux launch-plan paths
+and platform refusals without starting an executable; real note/spoiler rendering for all 373
+descriptions; 17 documents with zero broken local links or anchors. Pack success wording was
+checked at a synthetic publisher boundary, not presented as a real pack-build smoke.
+Both requested badge endpoints returned their expected labels (Download currently v0.1.1).
+Real post-rebase UI screenshots were inspected as recorded above; no screenshots were added
+to the repository.
+
+Removed the seven owned throwaway scripts/patch and the owned temporary test tree after proof.
+Kept text logs only. No game was started and no source game folder was written, moved or deleted.
+
+
+## Questions / remaining work
+
+No cs12a implementation or verification work remains. Claude reviews and merges this branch with
+cs12c's hand-chest fix for 0.1.2, bumps the generator version for `3696d62`'s isolated seed-text
+changes, and adds README screenshots after merge. Project version and `uv.lock` remain untouched here.

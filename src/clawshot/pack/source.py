@@ -157,6 +157,17 @@ class LayeredRomfs(StackedRomfs):
         self.layers = layers
         super().__init__(FolderRomfs(layer) for layer in layers)
 
+    def read(self, relative: str) -> bytes:
+        if not self.has(relative) and len(self.layers) == 1 and relative == VERSION_FILES[1]:
+            # a base-only dump folder: say that the update is missing, as a plain romfs check would
+            from clawshot.patch.write import PatchError, check_romfs
+
+            try:
+                check_romfs(self.layers[0])
+            except PatchError as error:
+                raise PackError(str(error)) from error
+        return super().read(relative)
+
 
 def dump_layers(path: Path) -> list[Path] | None:
     """``[base romfs, newest update romfs]`` (or only the base) for a dump folder, else None."""

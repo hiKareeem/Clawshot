@@ -39,8 +39,9 @@ STEPS
    update Hookshot.
    Emulator: back up your saves for this game first (a new game overwrites them),
    then follow "Emulator / console loading" in docs\seed-pack.md.
-4. seed\play-note.md explains how the seed opens. seed\spoiler.json lists every item;
-   only open it if you are stuck.
+4. seed\play-note.md and seed\spoiler.json both hold spoilers: the play note's
+   age-locked item table and opening route name item locations, and its full reward
+   table lists every shuffled item. Open either file only if you want spoilers.
 
 Prefer Play. To load the seed from Hookshot's own launcher, see docs\seed-pack.md.
 Back up your saves first: that route uses your main save folder.
@@ -67,7 +68,10 @@ KNOWN ISSUES
 
 REPORTS, QUESTIONS, NEW SEEDS
 Discord: https://discord.gg/7R5ZXPcJqn
-Please include where you were, what happened, pack.json, and your log
-(Hookshot: hookshot_log.txt in this folder; emulator: its own log).
+Please include the Clawshot version, seed number, whole settings string, hash,
+Hookshot or emulator version, OS, where you were and what happened. Attach only
+the whole log (Hookshot: hookshot_log.txt in this folder; emulator: its own log).
+The Hookshot log contains your folder paths and user name, but no game data.
+Nothing else attached: never game files, seed folders, saves, keys or spoilers.
 
 Share this zip, never the generated "seed" folder: that one contains game files.

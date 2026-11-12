@@ -217,6 +217,17 @@ def is_restricted(world: World, settings: Settings, item: str) -> bool:
     return settings.dungeon_items == "own_dungeon" and world.items[item].dungeon is not None
 
 
+def _in_dungeon_area(world: World, location: str, dungeon: str) -> bool:
+    """Logical dungeon routes can contain checks physically outside its Banc (the Spirit hands).
+
+    Region.area identifies the dungeon's Banc; Location.area includes the physical overrides.
+    Area-less synthetic worlds retain their logical-only policy (None equals None).
+    """
+    loc = world.locations[location]
+    region = world.regions[loc.region]
+    return region.dungeon == dungeon and loc.area == region.area
+
+
 def allowed(world: World, settings: Settings, location: str, item: str) -> bool:
     """Whether ``item`` may go to ``location`` at all, reachable or not."""
     if item in world.locations[location].excluded_items:
@@ -240,7 +251,7 @@ def allowed(world: World, settings: Settings, location: str, item: str) -> bool:
         return False
     if not is_restricted(world, settings, item):
         return True
-    return world.regions[world.locations[location].region].dungeon == world.items[item].dungeon
+    return _in_dungeon_area(world, location, world.items[item].dungeon)
 
 
 def shuffled_locations(world: World, settings: Settings) -> list[str]:

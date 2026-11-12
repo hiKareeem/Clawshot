@@ -1,7 +1,11 @@
 # Clawshot
 
+[![Discord](https://img.shields.io/badge/Discord-Join%20the%20server-5865F2?logo=discord&logoColor=white)](https://discord.gg/7R5ZXPcJqn) [![Download](https://img.shields.io/github/v/release/hiKareeem/Clawshot?label=Download&color=2ea44f)](https://github.com/hiKareeem/Clawshot/releases/latest)
+
 An unofficial item randomizer for *The Legend of Zelda: Ocarina of Time* on Nintendo Switch 2,
 inspired by OoT Randomizer and Ship of Harkinian's randomizer.
+
+<img src="docs/images/ui-generate.png" width="100%" alt="Clawshot's Generate screen after seed 2026 finished: every generation step is done, and the Seed ready panel shows the seed number, settings string and hash with Copy buttons, plus the Play, Open seed folder and Copy to my emulator buttons.">
 
 > [!IMPORTANT]
 > Clawshot reads **your own game dump**, moves items according to access rules, and writes a
@@ -27,8 +31,8 @@ that output. Clawshot is not affiliated with or endorsed by Nintendo.
 3. On **Game**, Browse to your own supported **romfs folder or .nup** and Check it.
    Hookshot is optional: it is only needed for the Play button.
 4. Go to **Generate**. Recommended settings, a random seed and a new Documents folder are ready;
-   leave them alone for a first seed. Wait for **Seed ready**. **Play note (spoilers)** is optional:
-   it reveals item locations and all shuffled rewards; it does not open automatically.
+   leave them alone for a first seed, then choose **Generate seed**. Wait for **Seed ready**.
+   **Play note (spoilers)** is optional: it reveals item locations and all shuffled rewards; it does not open automatically.
 5. **Hookshot:** choose/check its folder on Game, quit any already running Hookshot, then press **Play**.
    This seed has its own saves; normal Hookshot saves are not used.
    **Emulator instead:** back up your normal saves, then **Copy to my emulator**, choose this game's
@@ -39,6 +43,14 @@ settings and short hash to share a seed recipe, never the generated game files.
 [The UI guide](docs/ui.md) covers loading, saves, shared seeds and troubleshooting.
 Keyboard/mouse only: **gamepad and Steam Deck controller input are not done**. The planned tracker
 will be a UI tab, not a separate tool; it is not in this release.
+
+<table>
+  <tr>
+    <td width="33%" valign="top"><img src="docs/images/ui-game-check.png" width="100%" alt="The Game screen after a successful check: the game dump is a verified romfs of build e0f3ccfa and Hookshot v2.1.0 supports mods."><br><sub><b>Game:</b> your dump checked as the supported build; Hookshot is optional.</sub></td>
+    <td width="33%" valign="top"><img src="docs/images/ui-settings.png" width="100%" alt="The Settings screen with the Defaults and Recommended presets, the item kinds to shuffle and dungeon item and song placement options."><br><sub><b>Settings:</b> choose what to shuffle, or replay a settings string.</sub></td>
+    <td width="33%" valign="top"><img src="docs/images/ui-seeds.png" width="100%" alt="My seeds listing a saved seed with its number, hash and folder, and View seed, Play, Open folder and Play note buttons."><br><sub><b>My seeds:</b> earlier seeds, ready to view or play again.</sub></td>
+  </tr>
+</table>
 
 ## At a glance
 
@@ -92,7 +104,7 @@ and [playtest answers](https://github.com/hiKareeem/Clawshot/blob/main/plans/pla
 
 - **After receiving an item Link cannot use at his current age, Save and Continue before using
   other items.** A child Fairy Bow pickup jammed the item bar on both Hookshot and Lichii; changing areas
-  did not fix it. Other item families carry precautionary warnings. Read this seed's `play-note.md`.
+  did not fix it. Other item families carry precautionary warnings. This seed's `play-note.md` lists them but reveals item locations.
 - Chest ocarinas show no model despite working; songs can show an ocarina stand-in rather than a
   normal item model. Only some songs have been individually played from chests.
 - **Hookshot 2.0.12 and later: use Clawshot's Play or a current pack's `Play seed.bat`,** which loads the seed as a
@@ -159,7 +171,7 @@ uv run python -m clawshot --romfs C:/Games/OoT/romfs --seed 7 --settings CS1 --o
 to replay that command's choices. Explicit options override the string. Reproduction needs the
 same seed, settings, generator source and world data, not just the same version label.
 
-The output has `romfs/`, `play-note.md` (directions and warnings) and `spoiler.json` (all placements).
+The output has `romfs/`, `play-note.md` (directions, warnings and item-location spoilers) and `spoiler.json` (all placements).
 Load it using the [seed-pack guide's runtime instructions](docs/seed-pack.md); generation does not
 start the game. More options: [settings](https://github.com/hiKareeem/Clawshot/blob/main/docs/settings.md).
 For logic ports and trackers: [logic reference](https://github.com/hiKareeem/Clawshot/blob/main/docs/logic.md).

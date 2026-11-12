@@ -19,8 +19,10 @@ def test_macos_uses_osascript_not_tk_and_quotes_its_text(monkeypatch, tmp_path):
     script = calls[0][2]
     assert script.startswith("activate\n") and "choose folder" in script
     assert 'choose file with prompt "Choose your game .nup" of type {"nup"}' in dialogs.macos_script("dump-file")
-    monkeypatch.setattr(dialogs, "default_output_root", lambda: tmp_path / 'odd "name\\' / "Clawshot")
-    assert 'odd \\"name\\\\' in dialogs.macos_script("output")
+    # (a backslash is a path separator on Windows, so the path keeps only the quote; the text quoting covers both)
+    monkeypatch.setattr(dialogs, "default_output_root", lambda: tmp_path / 'odd "name' / "Clawshot")
+    assert 'odd \\"name' in dialogs.macos_script("output")
+    assert dialogs._applescript_text('a"b\\c') == '"a\\"b\\\\c"'
 
 
 def test_macos_cancel_is_none_and_failure_is_an_error(monkeypatch):

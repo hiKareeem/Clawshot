@@ -35,7 +35,7 @@ def load(path: Path = CATALOG) -> dict[str, LocationName]:
         floor = row.get("floor", "")
         source = row["source"]
         if floor:
-            source += "; floor: Banc/BancBasedResource/MapParam.byml.zs (e0f3ccfa), section39."
+            source += "; floor: Banc/BancBasedResource/MapParam.byml.zs (e0f3ccfa), section 39."
         result[key] = LocationName(
             row["name"] + (f" ({floor})" if floor else ""),
             row["where"],

@@ -13,7 +13,7 @@ note = "Keep the number, settings and Clawshot version if you want to make the s
 [hookshot]
 label = "Hookshot folder (optional)"
 help = "Only needed for the Play button. Emulator players can skip it."
-note = "Choose the folder containing bin/hookshot.exe. Play keeps saves inside this seed's folder and never touches your normal saves."
+note = "Choose the folder containing bin (the game is bin/hookshot.exe on Windows, bin/hookshot on Linux). Play keeps saves inside this seed's folder and never touches your normal saves."
 [dump]
 label = "Game dump"
 help = "Choose the extracted romfs folder or full .nup for your copy of the game. Clawshot checks that it is the supported game version."
@@ -55,7 +55,7 @@ help = "Move the finished seed into your new output folder. If another seed is a
 [play]
 label = "Play in Hookshot"
 help = "Start this seed in Hookshot with a save folder of its own inside the output. Your normal saves are never touched."
-note = "Quit a running Hookshot game before starting another seed. Play needs Windows and a Hookshot build that can load mods."
+note = "Quit a running Hookshot game before starting another seed. Play needs Windows or Linux and a Hookshot build that can load mods."
 [seeds]
 label = "My seeds"
 help = "Open a folder containing seeds you made earlier. Clawshot checks their files before allowing Play; your original game dump is not needed to play them."

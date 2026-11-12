@@ -1,0 +1,46 @@
+name: Clawshot itself
+description: Report a problem with the UI, Generate or checking your game files.
+title: "[Clawshot] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        For a crash or problem while playing a seed, use **In-game bug or crash** instead.
+        Copy error text into this form; do not attach files. Never upload game files, seed folders, saves, keys, caches or spoilers.
+        Error text may include your folder paths and user name. You may replace those private parts before posting; keep the rest of the error unchanged.
+  - type: input
+    id: version
+    attributes:
+      label: Clawshot version
+      description: "Give the zip folder's name (for example Clawshot-0.1.1), or the Clawshot-<version>: start of your settings string. For a source checkout, include the commit."
+    validations:
+      required: true
+  - type: input
+    id: os
+    attributes:
+      label: Operating system
+      description: For example Windows 11, or your Linux/macOS version. Say whether Clawshot opened in its own window or a browser.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: What were you trying to do?
+      description: Which tab and button, what you expected, and what happened instead. For a game check, say whether you chose a romfs folder, a .nup file or a dump folder with base and updates.
+    validations:
+      required: true
+  - type: textarea
+    id: error
+    attributes:
+      label: UI error text
+      description: Copy the whole error shown in the UI. If Clawshot did not open, copy the error from its terminal instead. If there was no error text, say so.
+      render: text
+    validations:
+      required: true
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Safe to publish
+      options:
+        - label: Nothing is attached — no game files, seed folders, saves, keys, caches or spoilers — and the pasted text contains no private credentials.
+          required: true

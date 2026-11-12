@@ -9,15 +9,27 @@ import sys
 from pathlib import Path
 
 from clawshot.pack import PackError, check_version, generate, tree_digest
-from clawshot.pack.hookshot import detect
+from clawshot.pack.hookshot import detect, native_game
 
 RUNNING_GAME = "Hookshot is already running. Quit it, then press Play."
+NO_PLAY = "Play needs Windows or Linux. Open the seed folder and load romfs as a mod in your emulator."
+OTHER_SYSTEM = (
+    "This Hookshot folder holds the game for another system. "
+    "Choose the Hookshot folder built on this computer, then press Play."
+)
 
 
-def running_process_names() -> tuple[str, ...]:
-    """Read the Windows process list without opening a console or adding a dependency."""
-    if sys.platform != "win32":
-        return ()
+def play_refusal(exe: Path | str | None = None, platform: str | None = None) -> str:
+    """Why this computer cannot start the game, or "": no Hookshot build for it, or ``exe`` is another system's."""
+    native = native_game(platform)
+    if native is None:
+        return NO_PLAY
+    if exe is not None and Path(exe).name != Path(native).name:
+        return OTHER_SYSTEM
+    return ""
+
+
+def _windows_process_names() -> tuple[str, ...]:
     tasklist = Path(os.environ.get("SYSTEMROOT", r"C:\Windows")) / "System32/tasklist.exe"
     try:
         result = subprocess.run(
@@ -32,9 +44,36 @@ def running_process_names() -> tuple[str, ...]:
     return tuple(row[0] for row in rows if len(row) > 1)
 
 
+def _linux_process_names(proc: Path = Path("/proc")) -> tuple[str, ...]:
+    """The program file name of every process whose /proc/<pid>/exe link this user may read."""
+    try:
+        entries = sorted(entry for entry in proc.iterdir() if entry.name.isdigit())
+    except OSError as error:
+        raise PackError("Clawshot could not check running programs. Close Hookshot and try Play again.") from error
+    names = []
+    for entry in entries:
+        try:
+            target = os.readlink(entry / "exe")
+        except OSError:
+            continue  # a kernel thread, another user's process, or one that ended meanwhile
+        # The kernel marks a program file replaced while it runs, as a rebuilt game is.
+        names.append(Path(target.removesuffix(" (deleted)")).name)
+    return tuple(names)
+
+
+def running_process_names() -> tuple[str, ...]:
+    """Read the process list without opening a console or adding a dependency."""
+    if sys.platform == "win32":
+        return _windows_process_names()
+    if sys.platform.startswith("linux"):
+        return _linux_process_names()
+    return ()
+
+
 def hookshot_running(process_lister=None) -> bool:
     lister = running_process_names if process_lister is None else process_lister
-    return any(name.casefold() == "hookshot.exe" for name in lister())
+    # Windows names are case-insensitive; a Linux program file is exactly "hookshot".
+    return any(name.casefold() == "hookshot.exe" or name == "hookshot" for name in lister())
 
 
 def configuration(root: Path) -> tuple[dict, Path, Path | None]:
@@ -128,8 +167,8 @@ def start_game(plan: dict, *, process_lister=None) -> subprocess.Popen:
     """Execute a checked plan. Tests inspect launch_plan instead; never invoke this on a real game."""
     if hookshot_running(process_lister):
         raise PackError(RUNNING_GAME)
-    if sys.platform != "win32":
-        raise PackError("Play needs Windows. Open the seed folder and load romfs as a mod in your emulator.")
+    if refusal := play_refusal(plan["command"][0]):
+        raise PackError(refusal)
     Path(plan["user"]).mkdir(exist_ok=True)
     env = dict(os.environ, **plan["environment"])
     for key in plan["unset_environment"]:

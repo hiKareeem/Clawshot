@@ -139,6 +139,8 @@ metadata, **not a played adult Fairy Ocarina test**.
 fill and settings format but lacks in-game acceptance: native key actors are shared across dungeons.
 Do not use it for a playthrough; production refusal is being added pending that evidence. Maps and
 compasses must not be assumed portable either.
+When dungeon items stay in their own dungeon, the two chests on the Desert Colossus statue's
+hands cannot hold Spirit Temple keys, maps or compasses.
 
 ## Hints, models and age warnings
 

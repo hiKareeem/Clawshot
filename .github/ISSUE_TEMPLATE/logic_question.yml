@@ -18,7 +18,7 @@ body:
     id: seed_settings
     attributes:
       label: Seed, complete settings string and explicit overrides
-      description: If not about a seed, say so. Otherwise include the full CS1 string.
+      description: "If not about a seed, say so. Otherwise paste the whole Clawshot-<version>: settings string from the UI, or the full CS1 string for a command-line seed."
       render: text
     validations:
       required: true

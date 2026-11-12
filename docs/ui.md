@@ -8,7 +8,7 @@ The wrapper runs clawshot.sh from the extracted app folder.
 Keep its terminal open while playing with the menu. Nothing requires administrator access.
 
 The starter first uses uv already on your PATH or in the app's `.tools` folder. If missing, it
-announces a one-time download of pinned uv0.13.7 from its official GitHub release, checks the
+announces a one-time download of pinned uv 0.13.7 from its official GitHub release, checks the
 embedded SHA-256 before extracting/executing, and keeps it inside `.tools`. It changes no PATH,
 profile or system install. No internet or a blocked download gives the manual release link.
 Dependencies come from `uv.lock` with `--frozen --no-dev`; Windows also selects the optional UI extra.
@@ -33,7 +33,7 @@ available, paste a path instead. No Qt/PySide dependency is added by Clawshot.
 Keep the terminal running. Ctrl+C stops the server and cancels generation. Closing a browser tab
 alone does not stop the server; closing the pywebview window does. A game already launched is not
 terminated by UI shutdown. `--no-open` **disables Browse, Open seed folder, emulator copying and Play**,
-including their HTTP endpoints. Normal sessions enable them; Play also requires Windows.
+including their HTTP endpoints. Normal sessions enable them; Play also requires Windows or Linux.
 
 ## Using it
 
@@ -85,7 +85,8 @@ on macOS, and `$XDG_CONFIG_HOME/clawshot/paths.json` (or `~/.config/clawshot/pat
   Changed files are refused then, without repairing them. Finished seeds do not need the old dump path.
 
 The new output layout is `output/seed/romfs` with the note and spoiler beside romfs. Play shares
-the pack's checked launch code: only `bin/hookshot.exe`, exactly that seed as the one mod under
+the pack's checked launch code: only the game in `bin` (`bin/hookshot.exe` on Windows,
+`bin/hookshot` on Linux; never the folder-root launcher), exactly that seed as the one mod under
 `HOS_MODS=output`, no `HOS_FS_OVERLAY` variable, and the update check off. Older outputs are never
 moved or rewritten. Emulator players get three loading steps and a main-save backup warning;
 Clawshot does not start an emulator. See [seed-pack instructions](seed-pack.md) for manual loading.
@@ -101,13 +102,18 @@ If the tested Eden/Lichii game folder exists, it is offered as an explicit choic
 Other emulators use only the folder picker. Copying is disabled in `--no-open`.
 
 Before starting a game, both UI and pack Play check the PC-wide process list. Any running
-`hookshot.exe` refuses with “Hookshot is already running. Quit it, then press Play.”
+`hookshot.exe` (Windows) or program file named `hookshot` (Linux, from `/proc/<pid>/exe`) refuses
+with “Hookshot is already running. Quit it, then press Play.”
 This happens before creating the save folder, opening the log or starting another process.
 
 The pack's Make path was verified on Linux (WSL) with both a romfs folder and a `.nup`, producing
-the same digest as Windows (maintainer verification, round11). The UI shares that generator path,
-so generation is expected to work on Linux and macOS; macOS itself is untested. **Play is
-Windows-only**: it starts `bin/hookshot.exe`. Linux Make verification is not native-UI certification.
+the same digest as Windows (maintainer verification, round 11). The UI shares that generator path,
+so generation is expected to work on Linux and macOS; macOS itself is untested. **Play starts
+`bin/hookshot.exe` on Windows and `bin/hookshot` on Linux**, the layout of a Hookshot Builder game
+folder. A Linux source build without `bin` is refused like any folder-root launcher, and a folder
+holding the other system's game is refused before anything is written. macOS has no Hookshot build,
+so Play stays off there. Linux Play is **built, not accepted by the maintainers in game**; Linux Make
+verification does not certify the Linux UI.
 
 ## Keyboard and layout
 
@@ -150,7 +156,7 @@ The Generate action fits without scrolling at 1280×860.
 2. Add a matching table in app `settings.toml`: `label`, `kind`, `group`, `help`; choices need
    both `labels` and `choice_help` entries. Bounds belong on integer fields. Schema generation
    refuses missing/stale fields, labels or choice help; never add a second JS setting list.
-3. Use `unavailable` for a genuinely held choice, with a plain-language reason. It is also refused
+3. Use `unavailable` for a choice that is not yet available, with a plain-language reason. It is also refused
    by validation. Use `enabled_when` for a setting that currently has no effect: a list of
    `{key, contains|equals|greater_than, reason}` conditions, all required. Inactive values are
    preserved; they are not silently reset or removed from CS1.
@@ -158,7 +164,7 @@ The Generate action fits without scrolling at 1280×860.
    fast start uses Skipped/Plays. `clears` identifies derived override keys to clear when a control
    changes, rather than hard-coding a field dependency in JavaScript.
    Check totals belong to the generator's actual result, not schema prose or a second UI eligibility
-   algorithm: new Gift checks must not require editing a copied count or a held-check list here.
+   algorithm: new Gift checks must not require editing a copied count or an unavailable-check list here.
 5. Run the synthetic app/HTTP tests, then exercise the actual UI and any changed generator path.
    Keep seeds/game files outside the repository. Follow the project's full gates and in-game
    evidence rules for changes to gameplay.
@@ -169,7 +175,7 @@ All colors live in the `:root` block of `style.css`. The two font variables are 
 (titles/tabs/section headings/panel titles) and `--sans` (rows/values/body/hints). Change those
 stacks there; do not put font families on individual controls. Check row heights, long paths,
 disabled controls, keyboard focus, and 1280×860 idle/running/finished captures afterwards.
-The approved stacks prefer Palatino and Candara with platform fallbacks (decisions D36/D37).
+The approved stacks prefer Palatino and Candara with platform fallbacks.
 A future bundled font is a **licence decision for the maintainers**, not an automatic OFL addition:
 rule 7's accepted dependency licences do not currently list OFL. No font file is bundled today.
 
@@ -185,16 +191,17 @@ legacy-constant fallback. Headless screenshots use `--no-open` and a fresh brows
 OS dialog/window may be triggered. Keep screenshots outside the repository.
 
 Kareem confirmed a real pywebview window was responsive and Browse opened a normal folder picker
-on 2026-11-10. This does not confirm its NUP file picker, browser/Tk picker or the new native Play.
+on 2026-11-10. This does not confirm its NUP file picker or browser/Tk picker.
 
 Not implemented in the current checkout:
 - gamepad/Steam Deck controller navigation (keyboard/mouse only);
 - the planned Tracker tab (not a separate tracker application);
 - a bundled executable/installer or bundled fonts;
-- native Play acceptance or Linux/macOS UI runtime certification.
+- Linux/macOS UI runtime certification.
 
-Seed packs still use Make/Play; the UI is run from the source checkout or an installed Python
-package containing its static assets. Architecture and the local HTTP contract: [UI plan](../plans/05-ui.md).
+Seed packs still use Make/Play; the UI is available in the public release zip, from a source checkout or an
+installed Python package containing its static assets. Architecture and the local HTTP contract:
+[UI plan](../plans/05-ui.md).
 
 ## Sharing
 
@@ -230,3 +237,92 @@ This builds `Clawshot-<project version>.zip` without reading a dump or generatin
 contains source, local UI assets, the starters/PowerShell helper, lock file, licences/notices and
 a five-line READ ME. The positive source allowlist excludes tools, caches, tests and game/output
 files. Both shell entry points are executable in the zip; an existing release is never replaced.
+
+## Troubleshooting
+
+### Where do I get the game, and which version do I need?
+
+Clawshot provides and downloads no game files. Dump your own Nintendo Switch 2 copy of *Ocarina
+of Time*, including **Version 1.1.1 (update v131072)**, build **e0f3ccfa**; the base game alone is not enough.
+Choose its updated `romfs`, full `.nup`, or dump folder with `base/romfs` and `updates/131072/romfs`.
+**Check** on Game compares four game files' contents with the supported build's fingerprints, not
+the folder name. It never starts or changes the game. A different update or incomplete dump is
+refused: check your own dump and update, rather than renaming files or bypassing the check.
+
+### Which Hookshot version do I need?
+
+Use a current Hookshot with mod loading. Clawshot checks the program for that support, not just
+its version number. **2.0.14** has been played; seeds also start on **2.1.0**. On Game, choose the
+Hookshot Builder game folder containing `bin/hookshot.exe` on Windows or `bin/hookshot` on Linux,
+then press **Detect**. Update or repair Hookshot if refused. A Linux source-build folder without
+`bin/hookshot` is not enough. Hookshot is optional for generating a seed or copying it to an emulator.
+
+### Why is Play missing or greyed out?
+
+Generate a seed, or choose **View seed** in My seeds. Play is hidden until a Hookshot folder is
+chosen. It needs Windows or Linux, a successful Hookshot **Detect**, and finished, unchanged seed files.
+It is disabled while generating or while a seed launched by this UI runs; quit any running Hookshot
+before pressing Play. Sessions with desktop actions turned off also disable Play. Read the message
+beneath the buttons. Generate old or changed seeds into a new folder; keep the old folder and its saves.
+macOS has no Hookshot Play support; use the emulator steps instead.
+
+### What is the hash, and what if mine differs?
+
+**Hash** under Seed ready on Generate, also beside entries in My seeds, is a short fingerprint
+of the finished files, not the seed number. Share the number, whole settings string and hash.
+If yours differs, check the Clawshot version, number, whole settings string and supported game
+files match the shared recipe. Report both hashes and the recipe if it still differs; never edit
+files or bypass a failed check. For changed seed files, generate into a new folder and keep old saves.
+
+### Does it work on Linux or macOS?
+
+On Linux, use `clawshot.sh`; Play supports a Linux Hookshot Builder game folder with `bin/hookshot`.
+Linux's seed-pack Make was checked in WSL with matching Windows output; Linux Play has not yet
+been accepted in game by the maintainers. **macOS is untested; a contributor is testing it.**
+Use `Clawshot.command` there; macOS has no Play, but can generate and copy to an emulator.
+Gamepad and Steam Deck controller navigation are not available yet.
+
+### Can I use an emulator?
+
+Yes, without Hookshot. Use **Copy to my emulator**, choose this game's mod folder and confirm.
+Back up your emulator saves first, then enable only this seed in its mod menu. Clawshot does not
+start the emulator or replace an existing copy. Lichii has play results; other layouts are untested.
+See [manual emulator steps](seed-pack.md#emulator--console-loading).
+
+### Where are the saves made by Play?
+
+In `user` inside **your chosen output folder**, usually `Documents/Clawshot/seed-<number>/user`,
+not Hookshot's normal save folder. **Open seed folder** opens the inner `seed` folder: go up one
+folder to find `user` and `hookshot_log.txt`. Keep the whole output folder when moving or backing
+up a playthrough. Emulators and Hookshot's own launcher use their normal saves instead.
+
+### How do I report a crash or a Clawshot error?
+
+Use [In-game bug or crash](https://github.com/hiKareeem/Clawshot/issues/new?template=bug_report.yml)
+for problems while playing. Give the Clawshot version (zip folder name or `Clawshot-<version>:`
+settings-string start), seed, whole settings string, hash, Hookshot version (log's first line), OS,
+area, Link's age and what Link was doing. Attach **only the whole `hookshot_log.txt`** from the
+output folder beside `seed` and `user`. It contains folder paths, including your user name, but
+no game data; those paths will be public. Emulator players attach their emulator's log instead.
+Never attach game files, seed folders, saves, keys, caches or spoilers.
+
+For UI, Generate or game-check problems, use [Clawshot itself](https://github.com/hiKareeem/Clawshot/issues/new?template=clawshot.yml):
+give the version, OS and whole UI error text (terminal error if it never opens). Attach nothing.
+[Discord](https://discord.gg/7R5ZXPcJqn) is also available for help.
+
+### Known issues
+
+- **Seeds made with Clawshot 0.1.1 or earlier (including community seed 11) can be impossible to
+  finish:** keys placed on Spirit Temple's outdoor hand chests are lost. To check an old seed,
+  open its `seed/spoiler.json` (this reveals rewards) and find `Spirit Temple Silver Gauntlets Chest`
+  and `Spirit Temple Mirror Shield Chest` under `placements`. These are the Desert Colossus statue
+  hand chests at the child and adult exits. If either reward is a Small Key or Boss Key, generate
+  a fresh seed with a newer Clawshot and start a new game; keep the old folder and saves.
+  Newer versions never put a dungeon's keys in those two chests.
+- Ocarinas from chests have no visible model, but you still receive them.
+- Dampé's digging prize and Bombchu Bowling prizes show the original prize but give the seed's item.
+- After picking up an item Link's age cannot use, **Save and Continue before using other items**:
+  the item bar can jam. The play note lists these pickups, but reveals item locations.
+- While a seed is loaded, text shows Switch button icons rather than your controller's.
+- Dungeon items outside their own dungeon (keysanity) are not available yet.
+- Both `play-note.md` and `spoiler.json` reveal item locations. Do not open them if you want surprises.

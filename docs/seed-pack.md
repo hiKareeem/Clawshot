@@ -30,8 +30,8 @@ player-facing summary (steps, known issues, the Discord link); this file has the
    emulator steps below. A missing bin executable is a hard stop: the folder-root launcher ignores save
    isolation and is never used.
    Start a **new game**; later plays continue this pack's saves. No main save is copied or reset.
-6. Read `seed/play-note.md`. `seed/spoiler.json` reveals all placements. Reports should attach
-   `<pack>/hookshot_log.txt` and `pack.json` (not saves, the overlay or your dump).
+6. `seed/play-note.md` and `seed/spoiler.json` both reveal item locations; open them only if you want spoilers.
+   For reports, attach only the whole `<pack>/hookshot_log.txt`, not `pack.json`, saves, seed folders or your dump.
 
 Dungeon check labels include their map floor (`1F`, `2F`, `B1`, ...), from the game's map metadata,
 not the old N64 room name or an estimated height. Some rooms span floors; each chest uses its own
@@ -85,6 +85,13 @@ The cache is removed when generation finishes or fails. A force-terminated Make 
 cache behind; keep it private like `seed` and use a fresh pack folder rather than repairing in place.
 Never share any locally generated cache or overlay. The published zip contains neither.
 
+### Dump folders
+
+A dump folder may keep the game in `base/romfs` and its update in `updates/131072/romfs`.
+Clawshot reads the newest update over the base without changing either. A base-only dump is
+refused with the same base-game/update hint as a base-only `romfs`: include Version 1.1.1 (update v131072).
+No working cache or seed is made before that check passes.
+
 
 ## Emulator / console loading
 
@@ -104,8 +111,8 @@ the steps below instead of Play. Do not run Play for this route.
 4. To play normally, untick the mod in Add-ons. Restore your backed-up save if you want the pre-seed progress;
    disabling the mod alone does not restore saves.
 
-For reports, name the emulator/version and attach its own log plus `pack.json`;
-the Hookshot log is not produced on this route.
+For reports, name the emulator/version and attach only its own log, not `pack.json`;
+the Hookshot log is not produced on this route. Paste the seed number and settings from `pack.json`.
 
 Other conventional layouts are **untested with Clawshot**:
 

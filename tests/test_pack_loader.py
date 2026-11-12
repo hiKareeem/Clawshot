@@ -1,6 +1,8 @@
 """A pack loads only its verified seed, never caches, unrelated mods or vanilla."""
 
 import json
+import os
+import sys
 from pathlib import Path
 
 import pytest
@@ -102,6 +104,9 @@ def test_linked_mod_paths_are_rejected(made_pack, tmp_path, target):
         (["HOOKSHOT.EXE", "other.exe"], True),
         (["HookshotBuilder.exe"], False),
         (["myhookshot.exe"], False),
+        (["hookshot"], True),
+        (["bash", "python3.12", "hookshot"], True),
+        (["Hookshot", "hookshot-folder", "AppRun", "hookshot.bin"], False),
         ([], False),
     ],
 )
@@ -123,3 +128,92 @@ def test_global_running_game_refuses_before_saves_log_or_process(made_pack, monk
     assert str(caught.value) == "Hookshot is already running. Quit it, then press Play."
     assert not (root / "user").exists() and not (root / "hookshot_log.txt").exists()
     assert before == {p: (p.read_bytes(), p.stat().st_mtime_ns) for p in root.rglob("*") if p.is_file()}
+
+
+@pytest.mark.skipif(sys.platform == "win32", reason="builds a synthetic /proc from symbolic links")
+def test_linux_process_names_come_from_readable_exe_links(tmp_path):
+    proc = tmp_path / "proc"
+    links = {
+        "101": "/games/Hookshot/bin/hookshot",
+        "102": "/games/Rebuilt/bin/hookshot (deleted)",
+        "103": "/usr/bin/bash",
+    }
+    for pid, target in links.items():
+        (proc / pid).mkdir(parents=True)
+        os.symlink(target, proc / pid / "exe")
+    (proc / "104").mkdir()  # a kernel thread or another user's process: no readable link
+    (proc / "self").mkdir()
+    os.symlink("/games/Hookshot/bin/hookshot", proc / "self/exe")
+    (proc / "uptime").write_text("not a process")
+    names = runtime._linux_process_names(proc)
+    assert names == ("hookshot", "hookshot", "bash")
+    assert runtime.hookshot_running(lambda: names)
+    assert not runtime.hookshot_running(lambda: runtime._linux_process_names(proc / "104"))
+
+
+def test_play_is_refused_where_it_cannot_start_the_folders_game():
+    assert runtime.play_refusal(platform="win32") == ""
+    assert runtime.play_refusal(platform="linux") == ""
+    assert runtime.play_refusal(platform="darwin") == runtime.NO_PLAY
+    assert runtime.play_refusal("C:/Games/Hookshot/bin/hookshot.exe", "win32") == ""
+    assert runtime.play_refusal("/games/Hookshot/bin/hookshot", "linux") == ""
+    assert runtime.play_refusal("/mnt/windows/Hookshot/bin/hookshot.exe", "linux") == runtime.OTHER_SYSTEM
+    assert runtime.play_refusal("C:/Games/Hookshot/bin/hookshot", "win32") == runtime.OTHER_SYSTEM
+    assert runtime.play_refusal("/games/Hookshot/bin/hookshot", "darwin") == runtime.NO_PLAY
+
+
+def pack_with_game(tmp_path, game):
+    root = tmp_path / "pack"
+    resource = root / "seed/romfs/Banc/Synthetic.byml.zs"
+    resource.parent.mkdir(parents=True)
+    resource.write_bytes(b"invented placement")
+    exe = tmp_path / "game" / game
+    exe.parent.mkdir(parents=True)
+    exe.write_bytes(b"synthetic image\0HOS_MODS\0")
+    return root, exe
+
+
+@pytest.mark.parametrize(
+    "platform, game, refusal",
+    [
+        ("linux", "bin/hookshot.exe", runtime.OTHER_SYSTEM),
+        ("win32", "bin/hookshot", runtime.OTHER_SYSTEM),
+        ("darwin", "bin/hookshot", runtime.NO_PLAY),
+    ],
+)
+def test_unstartable_game_refuses_before_saves_log_or_process(tmp_path, monkeypatch, platform, game, refusal):
+    root, exe = pack_with_game(tmp_path, game)
+    plan = runtime.launch_plan(root, exe.parent.parent)
+    monkeypatch.setattr("clawshot.pack.hookshot.sys.platform", platform)
+
+    def forbidden(*args, **kwargs):
+        raise AssertionError("No test may launch a game")
+
+    monkeypatch.setattr(runtime.subprocess, "Popen", forbidden)
+    with pytest.raises(PackError) as caught:
+        runtime.start_game(plan, process_lister=lambda: [])
+    assert str(caught.value) == refusal
+    assert not (root / "user").exists() and not (root / "hookshot_log.txt").exists()
+
+
+@pytest.mark.parametrize("platform, game", [("win32", "bin/hookshot.exe"), ("linux", "bin/hookshot")])
+def test_native_start_hands_the_checked_plan_to_one_process(tmp_path, monkeypatch, platform, game):
+    root, exe = pack_with_game(tmp_path, game)
+    plan = runtime.launch_plan(root, exe.parent.parent)
+    assert plan["command"] == [str(exe), "--user", str(root / "user")]
+    monkeypatch.setattr("clawshot.pack.hookshot.sys.platform", platform)
+    monkeypatch.setenv("HOS_FS_OVERLAY", "inherited overlay")
+    monkeypatch.setenv("HOS_MODS", "inherited mods")
+    started = []
+
+    def recorded(command, **options):
+        started.append((command, options["cwd"], dict(options["env"]), options["stderr"].name))
+        return "synthetic process"
+
+    monkeypatch.setattr(runtime.subprocess, "Popen", recorded)
+    assert runtime.start_game(plan, process_lister=lambda: []) == "synthetic process"
+    ((command, cwd, env, log),) = started
+    assert command == plan["command"] and cwd == str(exe.parent.parent)
+    assert env["HOS_MODS"] == str(root) and env["HOOKSHOT_NO_UPDATE_CHECK"] == "1" and "HOS_FS_OVERLAY" not in env
+    assert log == str(root / "hookshot_log.txt") and (root / "user").is_dir()
+    assert exe.read_bytes() == b"synthetic image\0HOS_MODS\0"

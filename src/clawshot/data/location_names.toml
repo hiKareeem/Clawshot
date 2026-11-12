@@ -2530,7 +2530,7 @@ location = "Market Bombchu Bowling Second Prize"
 name = "Bombchu Bowling Second Prize"
 where = "Child Market, Bombchu Bowling after Dodongo's Cavern: with Gift shuffle, the second win. Unshuffled, the native heart prize is the third win."
 oot_randomizer_name = "Market Bombchu Bowling Second Prize"
-source = "cs10a native MiniGame_BombchuBowling Event73/Event72 dispatch normalized for Gift; Event143 grant and native saved count/heart marker; section40. Original native order recorded in child_market.toml."
+source = "cs10a native MiniGame_BombchuBowling Event73/Event72 dispatch normalized for Gift; Event143 grant and native saved count/heart marker; section 40. Original native order recorded in child_market.toml."
 ids = ["MiniGame_BombchuBowling/Event143"]
 
 [[location]]
@@ -2538,7 +2538,7 @@ location = "Market Bombchu Bowling First Prize"
 name = "Bombchu Bowling First Prize"
 where = "Child Market, Bombchu Bowling after Dodongo's Cavern: with Gift shuffle, the first win. Unshuffled, the native bomb-bag upgrade is the second win."
 oot_randomizer_name = "Market Bombchu Bowling First Prize"
-source = "cs10a native MiniGame_BombchuBowling Event73/Event72 dispatch normalized for Gift; Event304/Event306 grants both give the assigned fixed item; section40. Opening and rental equipment remain native."
+source = "cs10a native MiniGame_BombchuBowling Event73/Event72 dispatch normalized for Gift; Event304/Event306 grants both give the assigned fixed item; section 40. Opening and rental equipment remain native."
 ids = ["MiniGame_BombchuBowling/Event304", "MiniGame_BombchuBowling/Event306"]
 
 [[location]]
@@ -2546,7 +2546,7 @@ location = "Market Bombchu Bowling Bombchus"
 name = "Bombchu Bowling Vanilla Bombchus"
 where = "Child Market, Bombchu Bowling: native unshuffled first-win Bombchus. With Gift shuffle this is not a third check; only First Prize and Second Prize are shuffled."
 oot_randomizer_name = "Market Bombchu Bowling Bombchus"
-source = "Native MiniGame_BombchuBowling Event309; round10 Gift mode removes this extra payout from logic and keeps later native filler; section40."
+source = "Native MiniGame_BombchuBowling Event309; round 10 Gift mode removes this extra payout from logic and keeps later native filler; section 40."
 ids = ["MiniGame_BombchuBowling/Event309"]
 
 [[location]]
@@ -2728,7 +2728,7 @@ ids = ["Npc_Hylia_012_Adult/Event58"]
 [[location]]
 location = "LW Trade Cojiro"
 name = "Craftsman's Son Cojiro Trade"
-where = "Lost Woods near the Kokiri entrance (adult): show Cojiro to the sleeping Master Craftsman's Son (guides differ on the exact clearing"
+where = "Lost Woods near the Kokiri entrance (adult): show Cojiro to the sleeping Master Craftsman's Son (guides differ on the exact clearing)"
 oot_randomizer_name = "LW Trade Cojiro"
 source = "https://www.nintendolife.com/guides/zelda-ocarina-of-time-biggeron-sword-trading-sequence-switch-2; https://www.ign.com/wikis/ocarina-of-time-remake/How_to_Get_the_Biggoron_Sword_-_Trading_Sidequest; data: census gift step(s) Npc_Hylia_017_Adult/Event100, Npc_Hylia_017_Adult/Event116 (src/clawshot/data/locations.toml; gift_rules.toml class more; plans/03-game-data.md section 19)"
 ids = ["Npc_Hylia_017_Adult/Event100", "Npc_Hylia_017_Adult/Event116"]
@@ -2816,7 +2816,7 @@ ids = ["Npc_SkullKid_Child/Event71"]
 [[location]]
 location = "LW Ocarina Memory Game"
 name = "Skull Kids' Ocarina Game"
-where = "Lost Woods (child): from the Kokiri entrance follow the music right and drop to the lower stumps; the third round of the Skull Kids' melody game (earlier rounds pay rupees"
+where = "Lost Woods (child): from the Kokiri entrance follow the music right and drop to the lower stumps; the third round of the Skull Kids' melody game (earlier rounds pay rupees)"
 oot_randomizer_name = "LW Ocarina Memory Game"
 source = "https://zeldacentral.com/games/ocarina-of-time-remake/mini-games/#skull-kid-melody-game; https://www.eurogamer.net/all-heart-pieces-locations-zelda-ocarina-of-time#section-3; data: census gift step(s) Npc_SkullKid_Child_02/Event24 (src/clawshot/data/locations.toml; gift_rules.toml class swap; plans/03-game-data.md section 19)"
 ids = ["Npc_SkullKid_Child_02/Event24"]
@@ -2832,7 +2832,7 @@ ids = ["Npc_Zora_KingZora_adult/Event131", "Npc_Zora_KingZora_adult/Event87"]
 [[location]]
 location = "GC Rolling Goron as Adult"
 name = "Darunia's Son Link (Adult)"
-where = "Goron City, emptied (adult): stop or find Darunia's son Link rolling on a lower ring and talk to him (guides differ on needing a bomb"
+where = "Goron City, emptied (adult): stop or find Darunia's son Link rolling on a lower ring and talk to him (guides differ on needing a bomb)"
 oot_randomizer_name = "GC Rolling Goron as Adult"
 source = "https://www.nintendolife.com/guides/zelda-ocarina-of-time-fire-temple-walkthrough-switch-2#how-to-stop-the-rolling-goron; https://zeldacentral.com/games/ocarina-of-time-remake/walkthrough/goron-city-adult/#goron-tunic; data: census gift step(s) SageOfFire/Event18 (src/clawshot/data/locations.toml; gift_rules.toml class swap; plans/03-game-data.md section 19)"
 ids = ["SageOfFire/Event18"]
@@ -3062,7 +3062,7 @@ name = "Dodongo's Cavern: King Dodongo Boss Pickup"
 floor = "1F"
 where = "Dodongo's Cavern, King Dodongo's arena: the saved floor pickup after the boss is defeated."
 oot_randomizer_name = "Dodongos Cavern King Dodongo Heart"
-source = "Native boss-heart Hash in Banc/DodongoCavern/DodongoCavern_Static.bcett.byml.zs; saved pickup/Logic_Create binding: section27 and r7-drops. MapParam.byml.zs DodongoCavern BossRoomId=22, Room.Floor; cs9c round9, build e0f3ccfa."
+source = "Native boss-heart Hash in Banc/DodongoCavern/DodongoCavern_Static.bcett.byml.zs; saved pickup/Logic_Create binding: section 27 and r7-drops. MapParam.byml.zs DodongoCavern BossRoomId=22, Room.Floor; cs9c round 9, build e0f3ccfa."
 ids = ["5936534468710061389"]
 
 
@@ -3072,7 +3072,7 @@ name = "Fire Temple: Volvagia Boss Pickup"
 floor = "1F"
 where = "Fire Temple, Volvagia's arena: the saved floor pickup after the boss is defeated."
 oot_randomizer_name = "Fire Temple Volvagia Heart"
-source = "Native boss-heart Hash in Banc/FireTemple/FireTemple_Static.bcett.byml.zs; saved pickup/Logic_Create binding: section27 and r7-drops. MapParam.byml.zs FireTemple BossRoomId=33, Room.Floor; cs9c round9, build e0f3ccfa."
+source = "Native boss-heart Hash in Banc/FireTemple/FireTemple_Static.bcett.byml.zs; saved pickup/Logic_Create binding: section 27 and r7-drops. MapParam.byml.zs FireTemple BossRoomId=33, Room.Floor; cs9c round 9, build e0f3ccfa."
 ids = ["9478330070473364248"]
 
 
@@ -3082,7 +3082,7 @@ name = "Forest Temple: Phantom Ganon Boss Pickup"
 floor = "B2"
 where = "Forest Temple, Phantom Ganon's arena: the saved floor pickup after the boss is defeated."
 oot_randomizer_name = "Forest Temple Phantom Ganon Heart"
-source = "Native boss-heart Hash in Banc/ForestTemple/ForestTemple_Static.bcett.byml.zs; saved pickup/Logic_Create binding: section27 and r7-drops. MapParam.byml.zs ForestTemple BossRoomId=29, Room.Floor; cs9c round9, build e0f3ccfa."
+source = "Native boss-heart Hash in Banc/ForestTemple/ForestTemple_Static.bcett.byml.zs; saved pickup/Logic_Create binding: section 27 and r7-drops. MapParam.byml.zs ForestTemple BossRoomId=29, Room.Floor; cs9c round 9, build e0f3ccfa."
 ids = ["18379569660496940670"]
 
 
@@ -3092,7 +3092,7 @@ name = "Jabu-Jabu's Belly: Barinade Boss Pickup"
 floor = "2F"
 where = "Jabu-Jabu's Belly, Barinade's arena: the saved floor pickup after the boss is defeated."
 oot_randomizer_name = "Jabu Jabus Belly Barinade Heart"
-source = "Native boss-heart Hash in Banc/InsideJabuJabuBelly/InsideJabuJabuBelly_Static.bcett.byml.zs; saved pickup/Logic_Create binding: section27 and r7-drops. MapParam.byml.zs InsideJabuJabuBelly BossRoomId=15, Room.Floor; cs9c round9, build e0f3ccfa."
+source = "Native boss-heart Hash in Banc/InsideJabuJabuBelly/InsideJabuJabuBelly_Static.bcett.byml.zs; saved pickup/Logic_Create binding: section 27 and r7-drops. MapParam.byml.zs InsideJabuJabuBelly BossRoomId=15, Room.Floor; cs9c round 9, build e0f3ccfa."
 ids = ["17608884438514432711"]
 
 
@@ -3102,7 +3102,7 @@ name = "Deku Tree: Queen Gohma Boss Pickup"
 floor = "B2"
 where = "Deku Tree, Queen Gohma's arena: the saved floor pickup after the boss is defeated."
 oot_randomizer_name = "Deku Tree Queen Gohma Heart"
-source = "Native boss-heart Hash in Banc/InsideTheDekuTree/InsideTheDekuTree_Static.bcett.byml.zs; saved pickup/Logic_Create binding: section27 and r7-drops. MapParam.byml.zs InsideTheDekuTree BossRoomId=10, Room.Floor; cs9c round9, build e0f3ccfa."
+source = "Native boss-heart Hash in Banc/InsideTheDekuTree/InsideTheDekuTree_Static.bcett.byml.zs; saved pickup/Logic_Create binding: section 27 and r7-drops. MapParam.byml.zs InsideTheDekuTree BossRoomId=10, Room.Floor; cs9c round 9, build e0f3ccfa."
 ids = ["17948245526767051747"]
 
 
@@ -3112,7 +3112,7 @@ name = "Shadow Temple: Bongo Bongo Boss Pickup"
 floor = "B4"
 where = "Shadow Temple, Bongo Bongo's arena: the saved floor pickup after the boss is defeated."
 oot_randomizer_name = "Shadow Temple Bongo Bongo Heart"
-source = "Native boss-heart Hash in Banc/ShadowTemple/ShadowTemple_Static.bcett.byml.zs; saved pickup/Logic_Create binding: section27 and r7-drops. MapParam.byml.zs ShadowTemple BossRoomId=24, Room.Floor; cs9c round9, build e0f3ccfa."
+source = "Native boss-heart Hash in Banc/ShadowTemple/ShadowTemple_Static.bcett.byml.zs; saved pickup/Logic_Create binding: section 27 and r7-drops. MapParam.byml.zs ShadowTemple BossRoomId=24, Room.Floor; cs9c round 9, build e0f3ccfa."
 ids = ["17599164808183510748"]
 
 
@@ -3122,7 +3122,7 @@ name = "Spirit Temple: Twinrova Boss Pickup"
 floor = "3F"
 where = "Spirit Temple, Twinrova's arena: the saved floor pickup after the boss is defeated."
 oot_randomizer_name = "Spirit Temple Twinrova Heart"
-source = "Native boss-heart Hash in Banc/SpiritTemple/SpiritTemple_Static.bcett.byml.zs; saved pickup/Logic_Create binding: section27 and r7-drops. MapParam.byml.zs SpiritTemple BossRoomId=33, Room.Floor; cs9c round9, build e0f3ccfa."
+source = "Native boss-heart Hash in Banc/SpiritTemple/SpiritTemple_Static.bcett.byml.zs; saved pickup/Logic_Create binding: section 27 and r7-drops. MapParam.byml.zs SpiritTemple BossRoomId=33, Room.Floor; cs9c round 9, build e0f3ccfa."
 ids = ["4720088048159616469"]
 
 
@@ -3132,7 +3132,7 @@ name = "Water Temple: Morpha Boss Pickup"
 floor = "3F"
 where = "Water Temple, Morpha's arena: the saved floor pickup after the boss is defeated."
 oot_randomizer_name = "Water Temple Morpha Heart"
-source = "Native boss-heart Hash in Banc/WaterTemple/WaterTemple_Static.bcett.byml.zs; saved pickup/Logic_Create binding: section27 and r7-drops. MapParam.byml.zs WaterTemple BossRoomId=23, Room.Floor; cs9c round9, build e0f3ccfa."
+source = "Native boss-heart Hash in Banc/WaterTemple/WaterTemple_Static.bcett.byml.zs; saved pickup/Logic_Create binding: section 27 and r7-drops. MapParam.byml.zs WaterTemple BossRoomId=23, Room.Floor; cs9c round 9, build e0f3ccfa."
 ids = ["14426685265732353862"]
 
 [[location]]
@@ -3140,7 +3140,7 @@ location = "Market Potion Shop Bottle"
 name = "Market: Potion Shop Bottle Tutorial"
 where = "As child, enter the Market Potion Shop by day and accept the owner's bottle tutorial. Vanilla gives an empty bottle before the bug-catching lesson; a shuffled reward ends the bottle-only lesson after the gift."
 oot_randomizer_name = ""
-source = "Kareem R9-SEED8-MARKET, 2026-11-09; cs10a native Npc_Hylia_020_Shop_Child/Event171 and default AISchedule; section40."
+source = "Kareem R9-SEED8-MARKET, 2026-11-09; cs10a native Npc_Hylia_020_Shop_Child/Event171 and default AISchedule; section 40."
 ids = ["Npc_Hylia_020_Shop_Child/Event171"]
 
 [[location]]
@@ -3148,7 +3148,7 @@ location = "Graveyard Dampe Gravedigging Tour"
 name = "Graveyard: Dampe Digging Reward"
 where = "As child at night after meeting Zelda, lead Dampe to the graveyard's digging spots and pay for digs until the heart-prize result. The temporary heart prop is presentation; the event gives the shuffled reward once."
 oot_randomizer_name = "Graveyard Dampe Gravedigging Tour"
-source = "cs10a active Npc_Hylia_Dampe_001.110/Event628 grant, native saved completion and existing child_graveyard access rule; section40."
+source = "cs10a active Npc_Hylia_Dampe_001.110/Event628 grant, native saved completion and existing child_graveyard access rule; section 40."
 ids = ["Npc_Hylia_Dampe_001/Event628"]
 
 [[location]]
@@ -3156,7 +3156,7 @@ location = "Market Shooting Gallery Expert Reward"
 name = "Market Slingshot Gallery Expert"
 where = "Child Market, daytime Shooting Gallery: win the normal course to unlock expert, then get a perfect expert win. First expert win gives the shuffled item once; later expert wins retain native 30 rupees."
 oot_randomizer_name = ""
-source = "cs10a native MiniGame_HitTarget Event445 hard-mode branch, Event202 repeat30, normal HrlCity_Get_BulletBag gate; Kareem fixed20 pool approval, section40."
+source = "cs10a native MiniGame_HitTarget Event445 hard-mode branch, Event202 repeat 30, normal HrlCity_Get_BulletBag gate; Kareem fixed 20 pool approval, section 40."
 ids = ["MiniGame_HitTarget/Event202"]
 
 [[location]]
@@ -3164,5 +3164,5 @@ location = "Kak Shooting Gallery Expert Reward"
 name = "Kakariko Archery Gallery Expert"
 where = "Adult Kakariko Shooting Gallery, daytime with Fairy Bow: win the normal course, then get a perfect expert win. First expert win gives the shuffled item once; later expert wins retain native 70 rupees."
 oot_randomizer_name = ""
-source = "cs10a native MiniGame_HitTarget Event449 hard-mode branch, Event599 repeat70, normal Kakariko_Get_Quiver gate; Kareem fixed20 pool approval, section40."
+source = "cs10a native MiniGame_HitTarget Event449 hard-mode branch, Event599 repeat 70, normal Kakariko_Get_Quiver gate; Kareem fixed 20 pool approval, section 40."
 ids = ["MiniGame_HitTarget/Event599"]

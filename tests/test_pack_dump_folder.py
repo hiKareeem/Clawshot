@@ -2,7 +2,7 @@
 
 import pytest
 
-from clawshot.pack import VERSION_FILES, PackError, version_digest
+from clawshot.pack import VERSION_FILES, PackError, check_version, version_digest
 from clawshot.pack.source import LayeredRomfs, dump_layers, local_romfs
 
 
@@ -154,3 +154,24 @@ def test_generation_uses_and_protects_the_whole_dump_folder(tmp_path):
     inside = GenerationRequest(str(root / "base/romfs"), str(root / "seed-1"), 1, "CS1")
     with pytest.raises(ValueError, match="protected"):
         inside.paths()
+
+
+@pytest.mark.parametrize("empty_updates", [False, True])
+def test_base_only_dump_explains_the_required_update_before_caching(tmp_path, empty_updates):
+    root = tmp_path / "dump"
+    _write(
+        root / "base/romfs",
+        {
+            VERSION_FILES[0]: b"synthetic dictionary pack",
+            VERSION_FILES[1].replace(".110.", ".100."): b"synthetic base game data",
+        },
+    )
+    if empty_updates:
+        (root / "updates").mkdir()
+    with pytest.raises(PackError, match="base game.*v131072"):
+        check_version(root)
+    parent = tmp_path / "stage"
+    parent.mkdir()
+    with pytest.raises(PackError, match="base game.*v131072"), local_romfs(root, parent):
+        pytest.fail("a base-only dump must not be used for generation")
+    assert not list(parent.iterdir())
