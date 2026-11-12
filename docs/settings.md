@@ -73,6 +73,17 @@ adult items first (a child sees an owned adult item instead of the Cucco Talon m
 adult trade hand-in shows the item the previous native trade gave, as the logic assumes. Biggoron's
 final sword reward is still shuffled behind the native Claim Check.
 
+### First ammo containers
+
+Newly generated seed mods add a missing small bag before the shared item grant: 10-stick capacity
+for Deku Sticks, 20-nut capacity for Deku Nuts, a 30-seed Bullet Bag for the Slingshot and a
+30-arrow Quiver for the Bow. The ranged bags use their native full-stock grant; sticks and nuts
+keep the original bundle quantity. A bag already owned, including a larger tier, is not replaced
+or refilled. A bag upgrade does not grant its weapon.
+
+This shared path covers chest grants and the Kokiri shopkeeper gift. It does not retroactively
+change older seed folders or saves. New-game empty nut-slot initialization remains 0/20.
+
 ### Songs and chest-only evidence
 
 With `--shuffle Chest Gift`, `--songs song` (default) keeps songs on song checks;

@@ -20,7 +20,7 @@ from clawshot.generate import Seed, Settings, generate, play_note, prepare, spoi
 from clawshot.generate import hints as stone_hints
 from clawshot.generate import names as location_names
 from clawshot.generate.fill import shuffled_locations
-from clawshot.patch import drops, freestanding, gamedata, scrubs, shops, text
+from clawshot.patch import bags, drops, freestanding, gamedata, scrubs, shops, text
 from clawshot.patch import events as chest_events
 from clawshot.patch import items as item_actors
 from clawshot.patch.plan import Links, PatchError, Plan, link, make_plan, remake_vanilla, restrict_key_openings
@@ -143,6 +143,7 @@ def make_seed(
     # Source-bound dungeon credit must see native pouch grants; bag gates compose afterwards.
     plan, key_changes = keys.changes(romfs, plan, prior_changes=changes)
     changes += (key_changes,)
+    changes += (bags.changes(romfs),)
     return SeedOutput(out, links, plan, changes, fast_files, item_names)
 
 

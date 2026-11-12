@@ -4,10 +4,15 @@ import copy
 
 import pytest
 
-from clawshot.formats import byml, evfl
-from clawshot.patch import keys
+from clawshot import patch as patch_api
+from clawshot.census.gifts import FLOW_VERSIONS
+from clawshot.formats import byml, evfl, msbt, sarc, zsdic
+from clawshot.generate import Settings
+from clawshot.patch import key_text, keys, text
 from clawshot.patch.key_targets import DungeonGrant
 from clawshot.patch.key_text import labels
+from clawshot.patch.plan import ChestChange, Plan
+from clawshot.save import key as save_key
 
 GET_TEXT = ["EventFlowMsg/Dm_SY_Get:GetMessage", "EventFlowMsg/Dm_SY_Get:GetCaption"]
 # The four shared dungeon-item actors, in the big chest's dispatch order (cases 0-3; r13-dungeon-items.md).
@@ -208,6 +213,7 @@ class KeyRun:
         self.trace = []
         self.windows = []  # the actors the get window was set for: its text names that item
         self.pouch = []  # generic pouch grants (their IsGet bit), never dungeon ownership for the three Bools
+        self.stock = {}
         self.writes = []
         self.boss_display = False
 
@@ -220,6 +226,7 @@ class KeyRun:
                 self.trace,
                 self.windows,
                 self.pouch,
+                self.stock,
                 self.writes,
                 self.boss_display,
             )
@@ -258,6 +265,10 @@ class KeyRun:
                 if operation == "EventQueryTreasureBoxIsDungeonCommonItemInside":
                     items = list(ITEMS.values())
                     result = items.index(params["ActorName"]) if params["ActorName"] in items else len(items)
+                elif operation == "EventQueryIsGameDataString64":
+                    result = 0 if self.state[params["GameDataName"]] == params["Value"] else 1
+                elif operation == "EventQueryIsExistInPouch":
+                    result = 0 if self.stock.get(params["Actor"], 0) >= params["Num"] else 1
                 else:
                     assert operation == "EventQueryIsGameDataInt"
                     current = self.state[params["GameDataName"]]
@@ -279,12 +290,16 @@ class KeyRun:
             elif operation == "EventTriggerAddOrSubGameDataInt":
                 self.state[params["GameDataName"]] += params["Value"]
                 self.writes.append((params["GameDataName"], params["Value"]))
+            elif operation == "EventTriggerSetGameDataString64":
+                self.state[params["GameDataName"]] = params["Value"]
             elif operation == "EventTriggerSetForGetWindow":
                 self.windows.append(params["Actor"])
             elif operation == "EventTriggerAddOrRemovePouchContent":
-                self.pouch.append(params["Actor"])
+                content = params["Actor"]
+                self.pouch.append(content)
+                self.stock[content] = self.stock.get(content, 0) + params["Num"]
                 # Only the small key has a pouch special deal; the other three are NotPushToPouch (r11-keys.md).
-                if params["Actor"] == ITEMS["SmallKey"]:
+                if content == ITEMS["SmallKey"]:
                     native_small_key(self.state, self.standing)
             elif operation.startswith("EventGetDungeon"):
                 family = operation.removeprefix("EventGetDungeon")
@@ -442,3 +457,86 @@ def test_named_reward_omits_old_item_comment_but_preserves_story_and_native_comm
     run.balloons.clear()
     run.event(request[0])
     assert run.balloons == [354, 197]
+
+
+@pytest.mark.parametrize("chest", ["Obj_TBox_A_01", "Obj_TBox_A_02"])
+def test_public_seed_preserves_named_key_credit_and_first_weapon_bag(tmp_path, zsdic_pack, monkeypatch, chest):
+    """Reversing bag/key registration makes the real key compiler reject the literal bag grant."""
+    documents, rows = key_sources()
+    originals = {keys.flow_path(name): evfl.write(document) for name, document in documents.items()}
+    originals[keys.SETTINGS] = byml.write(rows)
+    originals[keys.ANALYZED] = byml.write(key_analysis(rows))
+    originals[FLOW_VERSIONS] = byml.write({"Versions": {}})
+    originals["GameData/GameDataList.Product.110.byml.zs"] = byml.write(
+        {
+            "Data": {
+                "Bool64bitKey": [],
+                **{
+                    kind: [
+                        {"Hash": byml.U32(save_key(name)), "ResetTypeValue": 8, "SaveFileIndex": 0}
+                        for argument, name in keys._arguments("ForestTemple").items()
+                        if (argument == "Once") == (kind == "Bool")
+                    ]
+                    for kind in ("Int", "Bool")
+                },
+            }
+        }
+    )
+    originals["Banc/Synthetic/Synthetic_Static.bcett.byml.zs"] = byml.write({"Actors": []})
+    originals[text.archive_path("USen")] = sarc.write(
+        {
+            key_text.GET_TEXT: msbt.write(msbt.Msbt({}, buckets=2)),
+            key_text.LOCATION_TEXT: msbt.write(
+                msbt.Msbt({keys.TARGETS["Forest Temple"].location_label: ["Invented Grove"]}, buckets=2)
+            ),
+            text.POUCH_TEXT: msbt.write(msbt.Msbt({key_text.KEY_NOUN: ["Invented Key"]}, buckets=2)),
+        }
+    )
+    dictionaries = zsdic.Dictionaries.from_pack(zsdic_pack)
+    for path, data in {zsdic.PACK_PATH: zsdic_pack, **originals}.items():
+        destination = tmp_path / path
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        destination.write_bytes(data if path == zsdic.PACK_PATH else dictionaries.compress(path, data))
+    plan = Plan(
+        [
+            ChestChange(
+                "Foreign Key",
+                1,
+                "Foreign Key",
+                ("Banc/Synthetic/Synthetic_Static.bcett.byml.zs",),
+                chest,
+                "Small Key (Forest Temple)",
+                "TBox_Rupee_Blue",
+                "Item_Dungeon_SmallKey",
+                None,
+                named_key="ForestTemple",
+            )
+        ],
+        [],
+        [],
+    )
+    # The placement plan is invented; unrelated Sheik localization does not participate in this grant.
+    monkeypatch.setattr(patch_api.item_actors, "load", lambda: patch_api.item_actors.loads(""))
+    monkeypatch.setattr(patch_api, "make_plan", lambda *args: plan)
+    monkeypatch.setattr(text, "sheik_hint_changes", lambda *args: {})
+    output = patch_api.make_seed(
+        tmp_path,
+        0,
+        Settings(dungeon_items="anywhere", fast_start=(), cheap_deku_shield=False),
+        {"start": "Root", "goal": "True", "items": {}, "regions": [{"name": "Root"}]},
+    )
+    written = originals.copy()
+    for changes in output.extra_changes:
+        for path in written.keys() & changes.keys():
+            written[path] = changes[path](written[path])
+    run = KeyRun(
+        {name: evfl.read(written[keys.flow_path(name)]) for name in documents},
+        byml.read(written[keys.SETTINGS]),
+        byml.read(written[keys.ANALYZED]),
+    )
+    run.entry(keys.POUCH, "GetPouchContentByActorNameForTreasureBox", {"ActorName": "Item_Range_SlingShot"})
+    assert run.stock == {"Item_BulletBag_Small": 1, "Item_Range_SlingShot": 1}
+    run.event(output.plan.changes[0].key_event)
+    assert run.state["DungeonInfo.ForestTemple.SmallKeyNum"] == 1
+    assert run.state["DungeonInfo.ForestTemple.SmallKeyTotalNum"] == 1
+    assert run.state["DungeonInfo.InsideTheDekuTree.SmallKeyNum"] == 0
