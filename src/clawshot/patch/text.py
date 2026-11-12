@@ -4,7 +4,8 @@ Where the game's text comes from (``03-game-data.md`` section 22):
 
 - Every line is a message in ``Mals/<language>.Product.110.sarc.zs``, an archive of MSBT files; a flow shows it by
   ``MessageId: "<file without .msbt>:<label>"``. :func:`edit_messages` gives the transform that replaces messages
-  in one language's archive (decompressed bytes in and out, as :data:`clawshot.patch.write.FileChanges` expects).
+  in one language's archive (decompressed bytes in and out, as :data:`clawshot.patch.write.FileChanges` expects);
+  :func:`add_messages` the one that appends new labels to a file the archive already holds.
 - An item's texts are labelled by its actor's ``ActorName`` component (:func:`text_key`), in
   ``ActorMsg/PouchContent.msbt``: ``<key>_Name``, ``_Caption``, ``_GetMessage``, ``_GetCaption``, ... The get
   window shows ``Dm_SY_Get:GetMessage`` and ``GetCaption``, whose only content is a run-time tag (group 2, types
@@ -79,6 +80,43 @@ def edit_messages(edits: Mapping[str, Mapping[str, Sequence[Part]]]) -> Callable
         out = sarc.write(files)
         if sarc.read(out) != files:
             raise PatchError("the written archive does not read back as the edited files")
+        return out
+
+    return transform
+
+
+def add_messages(additions: Mapping[str, Mapping[str, Sequence[Part]]]) -> Callable[[bytes], bytes]:
+    """The transform of one language archive that appends ``additions[file][label]`` as new messages.
+
+    Each file must already be in the archive and each label must be new to it: a missing file or a label it already
+    holds raises :class:`PatchError`, so nothing native or already added is overwritten. The old messages keep their
+    order and index and the file its bucket count; the new labels follow in sorted order; every other member stays
+    as it was. Each changed file is read back, and removing exactly the added labels must write the original file
+    again; then the archive is read back."""
+
+    def transform(data: bytes) -> bytes:
+        files = sarc.read(data)
+        for name in sorted(additions):
+            if name not in files:
+                raise PatchError(f"no message file {name} in the archive")
+            document = msbt.read(files[name])
+            labels = sorted(additions[name])
+            taken = [label for label in labels if label in document.messages]
+            if taken:
+                raise PatchError(f"{name}: messages labelled {taken} are already there")
+            added = {label: msbt.normalized(list(additions[name][label])) for label in labels}
+            expected = msbt.Msbt({**document.messages, **added}, document.buckets)
+            written = msbt.write(expected)
+            back = msbt.read(written)
+            if back != expected or list(back.messages) != list(expected.messages):
+                raise PatchError(f"{name}: the written file does not read back as the old messages, then the new")
+            kept = {label: parts for label, parts in back.messages.items() if label not in added}
+            if msbt.write(msbt.Msbt(kept, back.buckets)) != files[name]:
+                raise PatchError(f"{name}: removing the added labels does not give back the original file")
+            files[name] = written
+        out = sarc.write(files)
+        if sarc.read(out) != files:
+            raise PatchError("the written archive does not read back as the files with the added messages")
         return out
 
     return transform

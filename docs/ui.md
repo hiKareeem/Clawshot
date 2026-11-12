@@ -318,11 +318,19 @@ give the version, OS and whole UI error text (terminal error if it never opens).
   and `Spirit Temple Mirror Shield Chest` under `placements`. These are the Desert Colossus statue
   hand chests at the child and adult exits. If either reward is a Small Key or Boss Key, generate
   a fresh seed with a newer Clawshot and start a new game; keep the old folder and saves.
-  Newer versions never put a dungeon's keys in those two chests.
+  Newer versions never put keys there while dungeon items stay home; with **Small keys
+  anywhere** a hand chest can hold a small key named to its own dungeon, so it is not lost.
 - Ocarinas from chests have no visible model, but you still receive them.
 - Dampé's digging prize and Bombchu Bowling prizes show the original prize but give the seed's item.
 - After picking up an item Link's age cannot use, **Save and Continue before using other items**:
   the item bar can jam. The play note lists these pickups, but reveals item locations.
-- While a seed is loaded, text shows Switch button icons rather than your controller's.
-- Dungeon items outside their own dungeon (keysanity) are not available yet.
+- While a seed is loaded, ordinary text shows Switch button icons rather than your
+  controller's; the ocarina note interface is drawn separately and keeps its own prompts.
+- For rewards other than named keys, a chest that originally held a map can still make Navi say
+  "Now we won't get lost" after a different reward. This is cosmetic: the line does not grant a
+  map or alter saved counts. Named off-dungeon key pickups omit that obsolete comment.
+- Of dungeon items outside their own dungeon, only the opt-in **Small keys anywhere** choice
+  exists: small keys in any shuffled chest, named to their own dungeon, with the game's key
+  counters still showing only the dungeon you are in. Moving boss keys, maps or compasses
+  outside their dungeon, and wider keysanity, are not available.
 - Both `play-note.md` and `spoiler.json` reveal item locations. Do not open them if you want surprises.

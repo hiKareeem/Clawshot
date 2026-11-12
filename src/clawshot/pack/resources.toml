@@ -5,6 +5,7 @@ files = [
     "Pack/ZsDic.pack.zs",
     "GameData/GameDataList.Product.110.byml.zs",
     "RSDB/EventSetting.Product.111.rstbl.byml.zs",
+    "RSDB/GameAnalyzedEventInfo.Product.111.rstbl.byml.zs", # source-bound small-key event registration
     "RSDB/PouchActorInfo.Product.111.rstbl.byml.zs",
     "RSDB/ActorInfo.Product.111.rstbl.byml.zs", # custom items: rows copied from Zelda's Letter
     "RSDB/GameActorInfo.Product.111.rstbl.byml.zs",

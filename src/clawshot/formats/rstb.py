@@ -42,9 +42,10 @@ OWN_FORMULA: dict[str, tuple[int, int]] = {
     # overhead (build e0f3ccfa, read 2026-11-12). [Inference] the same holds when custom_items adds rows.
     "RSDB/GameActorInfo.Product.111.rstbl.byml": (32, 264),
     "RSDB/PouchActorInfo.Product.111.rstbl.byml": (32, 264),
-    # EventSetting 509,212 -> 509,480 and GameAnalyzedEventInfo 247,276 -> 247,560: rounded + 264 (measured
-    # 2026-11-12). [Inference] the same holds when receive_event adds a row.
+    # Round 12: EventSetting 509212 -> 509480; same +264 observed in 19/19
+    # non-ActorInfo RSDB tables; growth is enabled for these two event registries.
     "RSDB/EventSetting.Product.111.rstbl.byml": (32, 264),
+    # The matching analyzed-event registry: 247276 raw -> 247560 allocated.
     "RSDB/GameAnalyzedEventInfo.Product.111.rstbl.byml": (32, 264),
 }
 

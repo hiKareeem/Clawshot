@@ -151,8 +151,10 @@ Digging still shows a heart prize but gives the shuffled item. First expert gall
 merchant experiments and some Skulltula House rewards stay unchanged until tested.
 The Door of Time's song-only and open modes passed a first check each.
 
-Tokens, cows, dungeon completion rewards, pots, crates and loose rupees are not shuffled. Keysanity,
-progressive items, entrance shuffle and Archipelago are not supported for play. See the
+Tokens, cows, dungeon completion rewards, pots, crates and loose rupees are not shuffled. Small
+keys can leave their dungeon only through the opt-in **Small keys anywhere** choice (any shuffled
+chest, named to the key's own dungeon; boss keys, maps and compasses always stay home); wider
+keysanity, progressive items, entrance shuffle and Archipelago are not supported for play. See the
 [README](../../README.md) and [settings reference](../settings.md) for exact limits.
 
 Known issues: after an age-unusable item pickup, Save and Continue before using other items.

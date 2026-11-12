@@ -25,12 +25,12 @@ from clawshot.patch import events as chest_events
 from clawshot.patch import items as item_actors
 from clawshot.patch import receive_event as receive_event_patch
 from clawshot.patch.custom_items import Foreign
-from clawshot.patch.plan import Links, PatchError, Plan, link, make_plan, remake_vanilla
+from clawshot.patch.plan import Links, PatchError, Plan, link, make_plan, remake_vanilla, restrict_key_openings
 from clawshot.patch.write import FileChanges, NewFile, WrittenFile, write
 from clawshot.settings import CATALOG
 from clawshot.world.load import load_spec
 
-__all__ = ["PatchError", "PatchStep", "SeedOutput", "check_dungeon_items", "make_seed", "write_seed"]
+__all__ = ["PatchError", "PatchStep", "SeedOutput", "make_seed", "write_seed"]
 
 # A kind-specific step closes over its census/romfs context. File transforms receive decompressed bytes;
 # multiple steps touching one file compose in registration order, after the chest changes.
@@ -56,16 +56,6 @@ class SeedOutput:
         return json.dumps(self.spoiler(), indent=2, ensure_ascii=False) + "\n"
 
 
-def check_dungeon_items(settings: Settings) -> None:
-    """Keep unverified dungeon attribution out of game output, not the synthetic fill."""
-    if settings.dungeon_items == "anywhere":
-        raise PatchError(
-            "dungeon_items='anywhere' is not enabled for seed output: generic key/map/compass actors "
-            "do not encode target dungeons, and named-dungeon grants have not passed in-game testing. "
-            "Use dungeon_items='own_dungeon'."
-        )
-
-
 def make_seed(
     romfs: str | Path,
     seed: int,
@@ -87,7 +77,6 @@ def make_seed(
     ``foreign`` names the player and item of each location placed ``Archipelago Item``; ``possessive_text`` makes
     the get line of every item the seed holds say "your" (``clawshot.patch.custom_items``); ``receive_event`` adds
     the event a runtime module requests to give an item with the game's own notice (``patch.receive_event``)."""
-    check_dungeon_items(settings)
     if "Token" in settings.shuffle:
         raise PatchError(
             "Token shuffle is not enabled: per-enemy grant selection and GoldTokenGmdHash persistence "
@@ -130,6 +119,8 @@ def make_seed(
     census = scan(romfs)
     links = link(world, chests, definitions, census)
     vanilla = remake_vanilla(world, links, table)
+    if settings.dungeon_items == "anywhere":
+        spec = restrict_key_openings(spec, world, links, chest_events.load())
     if freestanding.SHUFFLE in settings.shuffle:
         settings, step = freestanding.seed_setup(world, settings, census, definitions, vanilla)
         extra_steps = (*extra_steps, step)
@@ -179,6 +170,11 @@ def make_seed(
     fast_files = tuple(gamedata.build(romfs, list(event_settings), event_settings)) if event_settings else ()
     fast_files += tuple(door.build(romfs, mode=settings.door_of_time))
     plan = make_plan(out, links, table, chest_events.load(), overrides=custom.actors)
+    if settings.dungeon_items == "anywhere":
+        from clawshot.patch import keys
+
+        plan, key_changes = keys.changes(romfs, plan, prior_changes=changes)
+        changes += (key_changes,)
     return SeedOutput(out, links, plan, changes, fast_files, item_names, new_files)
 
 
