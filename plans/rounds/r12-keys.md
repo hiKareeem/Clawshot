@@ -1756,3 +1756,28 @@ separately above. All earlier scratch failures and outputs remain preserved.
 Proof JSON/logs live under `production-020/opening-contract-fix/`; full
 synthetic/native cache/format suite results are recorded separately when complete.
 
+### Corrected boundary run and lint gates
+
+Product correction committed locally as **9a800d4**; no merge/push. The
+corrected boundary harness passed all three real public generation/write
+profiles on the same product source:
+
+| Profile | Shuffled | Spheres | Written resources | Beatability and destinations |
+|---|---|---|---|---|
+|Recommended + Freestanding|314|16|158|PASS|
+|Open Door of Time + free travel|301|18|151|PASS|
+|Song-only door + mixed songs + mask hints, no fast start|300|15|149|PASS|
+
+The first failed boundary log remains classified as **harness Item/name
+argument error**, not a product failure or a passing row. Fresh successful
+boundary proof is `opening-contract-fix/boundaries-proof.json`.
+Full `uv run ruff format --check`: **314 files already formatted**;
+`uv run ruff check`: **all checks passed**. Both ran worker1 under the
+shared lock after corrected boundaries. Synthetic/dump results follow separately.
+
+The0.2.0 wheel also built successfully outside the checkout. An isolated
+`uv run --no-project --with <wheel> python -I` process imported the new
+`clawshot.chest_openings` from installed `site-packages` (not editable source),
+resolved the played A_01 source and refused memo11. Repository test environment
+and the watched game/user copy were not changed by this packaging smoke.
+
