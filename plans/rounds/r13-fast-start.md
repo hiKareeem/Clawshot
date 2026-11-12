@@ -357,3 +357,26 @@ the immutable `witness/after-native-mido-src` snapshot (208 source files; manife
 Open/closed rows precede extra song_only rows; already recorded baseline rows are resumed,
 not repeated. No full-matrix pass is claimed yet. A/C core checks passed in game as recorded
 above; reload remains pending, and the separate map/compass credit defect belongs to cs13c.
+
+### Ordered matrix pause (12:52)
+
+Preserved **71 complete after records: 55 generated, 16 expected refusals, zero unexpected
+failures**, all valid JSON; the 118 existing baseline records are unchanged. The last
+complete after row is Recommended / closed_deku / closed / seed 1 / intro+deku_tree.
+The unfinished row is excluded. This is partial evidence, not a complete matrix verdict.
+
+The record-boundary watcher timed out, so only the owned runner/process tree was stopped;
+this was not a graceful full-chunk completion. Only the unchanged, owned 12:39:52 gate
+lock was released after checking its identity and the absence of another active sweep or
+pytest. No foreign process or lock was touched.
+
+Claude's order is cs13b full gates, cs13c full gates, then this matrix (position 4), followed
+by cs13b's private comparisons. No matrix runner or gate waiter is active. Resume retained
+rows only after the ordered handoff; do not repeat completed rows. Reload remains pending.
+
+**14:19 order update (Claude):** cs13b's full gate ended with four dump failures, not a
+pass: three `written_files_differ` / `ZsError` cases involving uncompressed Sequence
+`.ainb`, and one gift-slice failure (`no gift item is held`). cs13c's full gates are now
+running at position 3. Position 4 is cs13b's rerun of those four cases after its fix;
+this matrix moves to **position 5**, and cs13b's private comparisons to position 6.
+Keep the matrix stopped until the ordered handoff. Hookshot is running: use one worker.
