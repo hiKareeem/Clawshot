@@ -22,7 +22,18 @@ from clawshot.generate.prepare import prepare, world_spec
 from clawshot.generate.route import opening
 from clawshot.world.model import World
 
-__all__ = ["FillError", "Seed", "Settings", "generate", "play_note", "prepare", "spoiler", "spoiler_json", "world_spec"]
+__all__ = [
+    "FillError",
+    "Seed",
+    "Settings",
+    "from_placements",
+    "generate",
+    "play_note",
+    "prepare",
+    "spoiler",
+    "spoiler_json",
+    "world_spec",
+]
 
 FILL_ATTEMPTS = 10
 
@@ -79,6 +90,42 @@ def generate(
     spheres = check_beatable(world, placements)
     out = Seed(world, seed, settings, placements, shuffled_locations(world, settings), spheres)
     return replace(out, hints=stone_hints.choose(out, settings.hints, settings.hint_distribution))
+
+
+def from_placements(
+    spec: Mapping[str, Any],
+    seed: int,
+    settings: Settings,
+    placements: Mapping[str, str],
+    vanilla: Mapping[str, str] | None = None,
+) -> Seed:
+    """A seed whose shuffled locations hold ``placements`` chosen elsewhere (an Archipelago multiworld's fill), the
+    other locations their vanilla items, as :func:`generate` would place them.
+
+    ``placements`` must name exactly the shuffled locations, with items the world knows that the location may take
+    (``fill.allowed``: palettes, holds, exclusions, own-dungeon items). No beatability search: the placer proved the
+    seed across its whole multiworld, where this world's progression can sit in other games."""
+    from clawshot.generate.fill import allowed
+
+    settings, world = prepare(spec, settings)
+    vanilla = dict(vanilla or {})
+    shuffled = shuffled_locations(world, settings)
+    problems = [f"not a shuffled location: {name}" for name in sorted(set(placements) - set(shuffled))]
+    problems += [f"no item given for {name}" for name in shuffled if name not in placements]
+    problems += [
+        f"{name}: unknown item {item!r}" if item not in world.items else f"{name}: may not hold {item!r}"
+        for name, item in sorted(placements.items())
+        if name in shuffled and (item not in world.items or not allowed(world, settings, name, item))
+    ]
+    if problems:
+        raise FillError("placements do not fit this world:\n  " + "\n  ".join(problems))
+    out = {}
+    for name, loc in world.locations.items():
+        if name in placements:
+            out[name] = placements[name]
+        elif loc.n64_only is None and (item := vanilla.get(name, loc.vanilla)) is not None:
+            out[name] = item
+    return Seed(world, seed, settings, out, shuffled, spheres=[])
 
 
 def _required_items(seed: Seed, sources: tuple[str, ...], visits: Mapping[str, dict]) -> list[dict[str, Any]]:
