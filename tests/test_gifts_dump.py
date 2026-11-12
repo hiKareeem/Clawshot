@@ -242,11 +242,6 @@ def test_dump_gift_shuffle_slice_writes_each_moved_gift(romfs, tmp_path):
     for name in seed.shuffled:
         if name in rules:
             assert rules[name].cls != gifts.MORE, name
-    held = settings.item_location_types
-    assert held, "no gift item is held"
-    for name, item in seed.placements.items():
-        if name in seed.shuffled and item in held:
-            assert seed.world.locations[name].type in held[item], (name, item)
     print(f"moved gifts: {[(n, seed.placements[n]) for n in moved]}")
 
 

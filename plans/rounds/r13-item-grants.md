@@ -476,13 +476,38 @@ the owned copy's output/scratch paths, and ran it with this worktree's explicit 
 Own fixture: `E:/OOTRemake/work/rounds/r13/dump-item-grants`: **1,245 wanted files, 1,210 base copies,
 48 changed/new update copies, 1,197 unchanged, zero missing**. The actual `local_romfs` adapter opened it;
 the new-game Sequence, both key-compiler RSDB files and both shared item-get flows were present.
-Builder used one worker while Hookshot was active. Final `review_gates.sh` is queued/running under
-`r13/gate.lock` with explicit `OOT_DUMP` pointing to this fixture, via Git Bash rather than Windows' WSL `bash`.
+Builder used one worker while Hookshot was active. Final `review_gates.sh` ran under `r13/gate.lock`
+with explicit `OOT_DUMP` pointing to this fixture, via Git Bash rather than Windows' WSL `bash`.
 
 All five required fixture files also matched the read-only installed romfs **byte-for-byte by SHA256**,
 not merely by filename. Whole-repository static gates passed: **320 Python files formatted; ruff check clean**.
 Only two formatting-only differences in the pending tier correction/test were normalized; no allocation
 behavior changed and the frozen experiment snapshots were not edited.
-Full pytest/dump have not run yet: the confirmed `owner-cs13c.txt` owns the lock for its active whole sweep.
-Our queue-only runner has no deadline and all private experiments yield to the full gates; no foreign
-lock or process was removed, and no unrun suite is reported as passing.
+The original full run finished 2026-11-12 at 14:14: format/lint passed; synthetic **1,082 passed,
+136 skipped** (557.63s); native **130 passed, four failed**, 1,084 deselected (4,448.20s).
+Log: `E:/OOTRemake/work/r13-item-grants-final-gates.txt`. This was **not a clean full gate**.
+
+### Directed four-case repair
+
+Claude requested read-only diagnosis, evidence before edits, then only the four failed native cases
+after rebasing onto integrated main `fa6f4ef`; one worker under `r13/gate.lock`, before cs13a's matrix.
+All three private tier experiments remain paused at position 6 until explicitly authorized.
+
+- `test_seed_dump.py::test_written_files_differ_only_where_the_plan_says[1-3]`: the installed romfs and
+  owned fixture's `base/romfs` both store the startup Sequence as **raw AINB**, 5,916 bytes,
+  magic `4149422008040000`, SHA-256
+  `63ddeaa34e4839eceea2509e20b27b6f3c19f15cd72daf308c799bdfdb6e87b0`.
+  No compressed sibling exists in the installed romfs. The writer already reads/writes non-`.zs`
+  resources raw; the test incorrectly decompressed every extra file. The oracle now decodes only `.zs`.
+- `test_gifts_dump.py::test_dump_gift_shuffle_slice_writes_each_moved_gift`: the original run passed
+  the nonempty moved-gift assertion and every emitted gift actor assertion, then failed on incidental
+  `assert held`. Read-only setup shows four eligible rewards: Shopkeeper Deku Shield, Skull Kid and
+  Memory Game Heart Pieces (native chest actors), and Saria's Fairy Ocarina (`chest_verified`).
+  Therefore no held item remains. An in-memory counterfactual removing **only** the
+  `LW Trade Odd Potion` vanilla lock restores `Poachers Saw: (NPC, Cutscene, Boss)`.
+  The adult-trade policy removed the last held item; no gift-writing regression was observed.
+  Removed this slice's incidental hold block; the synthetic Letter/Song destination-policy regression
+  remains unchanged. No production writer, grant or allocation behavior changed for these repairs.
+
+Causes were posted on `cs-r13` at 15:53, before editing. Original failed output is retained; only
+the directed corrected-input cases will be rerun. No foreign process or lock was removed.

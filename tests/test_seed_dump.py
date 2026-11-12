@@ -92,11 +92,14 @@ def test_written_files_differ_only_where_the_plan_says(romfs, tmp_path, seed_num
             f"{f.new_compressed_size}, size-table entry {table.get(path)} -> {f.new_entry} (needs {need})"
         )
 
-    # The other steps' files (the slice's Gossip Stone hints: language archives and the stone flow): each entry
-    # raised to what its written size needs, nothing else.
+    # The other steps include compressed hints/flows and the raw new-game AINB:
+    # each entry raised to what its written size needs, nothing else.
     extra = sorted({path for changes in output.extra_changes for path in changes})
     for path in extra:
-        need = rstb.required_size(path, len(dicts.decompress(path, (out / "romfs" / path).read_bytes())))
+        data = (out / "romfs" / path).read_bytes()
+        if path.endswith(".zs"):
+            data = dicts.decompress(path, data)
+        need = rstb.required_size(path, len(data))
         expected_table.set(path, max(table.get(path), need))
     print(f"  other steps: {len(extra)} files")
 
