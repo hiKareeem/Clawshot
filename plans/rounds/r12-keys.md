@@ -1781,3 +1781,101 @@ The0.2.0 wheel also built successfully outside the checkout. An isolated
 resolved the played A_01 source and refused memo11. Repository test environment
 and the watched game/user copy were not changed by this packaging smoke.
 
+Full synthetic command on the integrated source:
+`CLAWSHOT_WORKERS=1 uv run pytest --basetemp <private synthetic-temp>`:
+**1031 passed,135 skipped**,979.55s, exit0, under `gate.lock`.
+Native skips are not counted as passing coverage. Complete output is
+`production-020/final-gates-boundary-harness-corrected/synthetic.log`.
+The full dump/NUP/layered-cache suite started after that successful exit;
+its result is not inferred from the synthetic run.
+
+### Native gate supervisor interruption — not a native PASS
+
+The continuation's outer3600-second tool deadline expired during the dump
+suite, after format/lint and the successful synthetic exit. Its partial
+`final-gates-boundary-harness-corrected/dump.log` is preserved; it contains
+no `FAILED`/`ERROR`/traceback markers but has **no completed native result**.
+Do not count its partial dots or combine them with a later run.
+
+Confirmed the interrupted supervisor/native test processes were gone; its
+empty lock still had the exact original creation time23:03:25, so only that
+owned stale lock was removed. The queued formerly-failing seed4 smoke had
+only waited for this lock and had not generated a seed; it was rescheduled
+without a deadline. Both that smoke and the **complete** native suite now
+run under the same lock with no outer deadline. Native replay keeps worker1,
+the original read-only romfs/NUP and the already-corrected private layered
+fixture; no subset/failed-row filtering, skipped cache modes or product edits.
+Fresh native evidence goes to `production-020/final-dump-no-deadline/`.
+Already-passing own controls, boundaries, lint and synthetic are not rerun.
+
+Formerly failing **Recommended seed4** now also passes the **actual public CLI
+and normal writer**, not only the fill audit:300 shuffled checks,29 spheres,
+156 romfs resources plus normal spoiler/play note (158 files), exit0. The
+preserved failing sweep put **Small Key (Water Temple)** in memo11; the new
+public seed puts **Piece of Heart** there. No guard bypass, forced placement
+or game start. Evidence:
+`opening-contract-fix/formerly-failing-recommended-seed4-proof.json` and its
+CLI log/output folder. No native gate pass is inferred from this single seed.
+
+### Claude's native worker-rule correction
+
+Claude explicitly directed the dump rerun to use the standing start-time rule:
+**3 workers when Hookshot is absent, otherwise1**, with **no deadline**.
+He reported that worker1 needs well over an hour and worker3 took47–54 minutes
+today. The superseded no-deadline worker1 attempt was stopped before completion;
+its partial `final-dump-no-deadline/dump.log` remains uncounted.
+
+After confirming its processes were gone and removing only its exact owned
+empty lock (creation00:04:49), the corrected runner acquired the shared lock,
+checked processes at that actual start, observed **Hookshot absent**, and
+selected **CLAWSHOT_WORKERS=3**. Full-suite start00:12:21, no deadline;
+fresh evidence directory `production-020/final-dump-standing-workers/`.
+No source changes, subset selection or reuse of partial native pass counts.
+This newer explicit native worker rule supersedes the worker1 rerun note above.
+
+### Final integrated production gates — ALL PASS
+
+The complete native run finished **133 passed,1033 deselected**,3060.92s
+(51 minutes), exit0. It selected3 workers from the actual absent-Hookshot
+start check, held `gate.lock`, had no supervisor deadline, and released the
+lock normally. No prior partial native dots were counted or filtered in.
+Evidence: `final-dump-standing-workers/result.json` and `dump.log`.
+
+| Mandatory command | Final result |
+|---|---|
+|`uv run ruff format --check`|PASS,314 files already formatted|
+|`uv run ruff check`|PASS,all checks|
+|`uv run pytest` (private basetemp, worker1)|1031 passed,135 skipped;979.55s|
+|`uv run pytest -m dump` (private basetemp, start-rule worker3)|133 passed,1033 deselected;3060.92s|
+
+Native environment supplied the real read-only `OOT_ROMFS`, real `OOT_NUP`
+and corrected private layered `OOT_DUMP`; the latter retains the original
+1243 indexed resources plus the same-build analyzed-event111 addition.
+The complete native suite includes all37 `test_pack_nup_dump.py` checks,
+including `small-keys-anywhere` and `mixed-small-keys-anywhere` resource modes
+for actual NUP/layered-cache generation equivalence. No missing-fixture skip
+or cache-check bypass. Synthetic/native result counts are separate.
+
+All approved automation is now complete on the product source in **9a800d4**:
+fresh100+100 native sweeps, physical-home/palette/pool/beatability/age-return
+checks, default/community0.1.2 own-dungeon byte controls, public API/CLI/UI
+whole-output equality, all33-source/eight-target compiler emission and native
+inverses, all16 language archives, registry closure, all84-field helper traces,
+optional-setting boundaries, previously failing seed4's public writer, installed
+wheel smoke, and all four mandatory commands. Each gate was posted as it landed.
+
+The0.2.0 cutover remains **0097703**, with the discovered native eligibility
+defect corrected by9a800d4. This is a local reviewed-production handoff, not
+a merge, push, external publication or claim of a full randomized playthrough.
+Only memo11 lacks the named-opening contract in the current census; defaults
+and presets remain unchanged. Cosmetic ordinary-map Navi follow-ups and the
+future Tracker remain disclosed follow-ups, not silently broadened work.
+
+The staged normal UI seed7 remains frozen after Claude's reported boot PASS
+(515 lines/12 mod lines/rendering/no crash). The watcher stays with Claude on
+`user-key-production-020-seed7-next`; Kareem's optional pickup/door result has
+not been reported here and is not fabricated. Its checklist and exact source
+save state are recorded above. No game was started by cs12b; cs12b did not
+modify the watched mod/user copy, original saves/game folder or played Gate4
+outputs after handoff. The player's own writes remain the watcher's evidence.
+
