@@ -20,11 +20,13 @@ from clawshot.generate import Seed, Settings, from_placements, generate, play_no
 from clawshot.generate import hints as stone_hints
 from clawshot.generate import names as location_names
 from clawshot.generate.fill import shuffled_locations
-from clawshot.patch import drops, freestanding, gamedata, scrubs, shops, text
+from clawshot.patch import custom_items, drops, freestanding, gamedata, scrubs, shops, text
 from clawshot.patch import events as chest_events
 from clawshot.patch import items as item_actors
+from clawshot.patch import receive_event as receive_event_patch
+from clawshot.patch.custom_items import Foreign
 from clawshot.patch.plan import Links, PatchError, Plan, link, make_plan, remake_vanilla, restrict_key_openings
-from clawshot.patch.write import FileChanges, WrittenFile, write
+from clawshot.patch.write import FileChanges, NewFile, WrittenFile, write
 from clawshot.settings import CATALOG
 from clawshot.world.load import load_spec
 
@@ -44,6 +46,8 @@ class SeedOutput:
     fast_start_files: tuple[gamedata.BuiltFile, ...] = ()
     item_names: dict[str, str] = field(default_factory=dict)
     """The game's (English) names of the items the hints name, as the stones say them."""
+    new_files: dict[str, NewFile] = field(default_factory=dict)
+    """Files the dump does not hold (the custom items' actor packs, the receive event's flow)."""
 
     def spoiler(self) -> dict[str, Any]:
         return spoiler(self.seed, self.item_names) | {"patch": self.plan.as_dict()}
@@ -60,11 +64,18 @@ def make_seed(
     *,
     extra_steps: Sequence[PatchStep] = (),
     placements: Mapping[str, str] | None = None,
+    foreign: Mapping[str, Foreign] | None = None,
+    possessive_text: bool = False,
+    receive_event: bool = False,
 ) -> SeedOutput:
     """Fill a seed; kind-specific steps turn placements into decompressed file transforms.
 
     With ``placements`` the shuffled locations take those items instead of Clawshot's fill (another placer's, such
-    as an Archipelago multiworld's; see ``generate.from_placements``), and no Gossip Stone hints are chosen."""
+    as an Archipelago multiworld's; see ``generate.from_placements``), and no Gossip Stone hints are chosen.
+    ``foreign`` names the player and item of each location placed ``Archipelago Item``; ``possessive_text`` makes
+    the get line of every item the seed holds say "your" (``clawshot.patch.custom_items``); ``receive_event`` adds
+    the event a runtime module requests to give an item with the game's own notice (``patch.receive_event``).
+    A solo seed places neither custom item and sets neither switch, so none of this changes its output."""
     if "Token" in settings.shuffle:
         raise PatchError(
             "Token shuffle is not enabled: per-enemy grant selection and GoldTokenGmdHash persistence "
@@ -120,6 +131,20 @@ def make_seed(
     else:
         out = from_placements(spec, seed, settings, placements, vanilla=vanilla)
     changes = tuple(step(out.placements) for step in extra_steps)
+    custom = custom_step(romfs, out, links, table, foreign or {}, possessive_text=possessive_text)
+    flags = list(custom.flags)
+    new_files = dict(custom.new_files)
+    if custom.changes:
+        changes += (custom.changes,)
+    if receive_event:
+        event_changes, event_files = receive_event_patch.changes(romfs)
+        changes += (event_changes,)
+        new_files.update(event_files)
+        flags.append(receive_event_patch.FLAG)
+    if flags:
+        from clawshot.patch.gifts import game_data_transform
+
+        changes += ({gamedata.GAME_DATA_LIST: game_data_transform(flags)},)
     if any(setting.game_data for setting in chosen):
         changes = ({gamedata.GAME_DATA_LIST: partial(gamedata.patch_initial_values, chosen=chosen)}, *changes)
     if world.settings.get("free_time_travel", False):
@@ -144,13 +169,43 @@ def make_seed(
     event_settings = {s.name: replace(s, game_data={}) for s in chosen if s.skippable}
     fast_files = tuple(gamedata.build(romfs, list(event_settings), event_settings)) if event_settings else ()
     fast_files += tuple(door.build(romfs, mode=settings.door_of_time))
-    plan = make_plan(out, links, table, chest_events.load())
+    plan = make_plan(out, links, table, chest_events.load(), overrides=custom.actors)
     if settings.dungeon_items == "anywhere":
         from clawshot.patch import keys
 
         plan, key_changes = keys.changes(romfs, plan, prior_changes=changes)
         changes += (key_changes,)
-    return SeedOutput(out, links, plan, changes, fast_files, item_names)
+    return SeedOutput(out, links, plan, changes, fast_files, item_names, new_files)
+
+
+def custom_step(
+    romfs: str | Path,
+    seed: Seed,
+    links: Links,
+    table: item_actors.ItemActors,
+    foreign: Mapping[str, Foreign],
+    *,
+    possessive_text: bool,
+) -> custom_items.CustomItems:
+    """The custom items the seed places (Nothing, other players' items) and the "your" get lines."""
+    by_item: dict[str, list[str]] = {item: [] for item in custom_items.CUSTOM_ITEMS}
+    for name in seed.shuffled:
+        if seed.placements.get(name) in by_item:
+            by_item[seed.placements[name]].append(name)
+    placed = [name for names in by_item.values() for name in names]
+    not_chests = sorted(name for name in placed if name not in links.chests)
+    if not_chests:
+        raise PatchError(f"Nothing and other players' items go only to chests so far, not {not_chests[:5]}")
+    unnamed = sorted(set(by_item[custom_items.FOREIGN_ITEM]) - set(foreign))
+    if unnamed:
+        raise PatchError(f"no player and item named for the Archipelago items at {unnamed[:5]}")
+    stray = sorted(set(foreign) - set(by_item[custom_items.FOREIGN_ITEM]))
+    if stray:
+        raise PatchError(f"other players' items named for locations that do not hold one: {stray[:5]}")
+    own = [table.actors[item] for item in seed.placements.values() if item in table.actors] if possessive_text else []
+    return custom_items.changes(
+        romfs, nothing_locations=by_item[custom_items.NOTHING_ITEM], foreign=foreign, own_actors=own
+    )
 
 
 def hint_step(romfs: str | Path, seed: Seed, table: item_actors.ItemActors) -> tuple[dict[str, str], FileChanges]:
@@ -178,7 +233,12 @@ def write_seed(output: SeedOutput, romfs: str | Path, out: str | Path) -> list[W
     spoiler_text = json.dumps(log, indent=2, ensure_ascii=False) + "\n"
     note_text = play_note(output.seed, log)
     written = write(
-        output.plan, romfs, out, extra_changes=output.extra_changes, fast_start_files=output.fast_start_files
+        output.plan,
+        romfs,
+        out,
+        extra_changes=output.extra_changes,
+        fast_start_files=output.fast_start_files,
+        new_files=output.new_files,
     )
     (out / "spoiler.json").write_text(spoiler_text, encoding="utf-8", newline="\n")
     (out / "play-note.md").write_text(note_text, encoding="utf-8", newline="\n")
