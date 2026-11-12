@@ -1368,3 +1368,30 @@ Part B is next; Claude reports its watcher **armed for the switch after A closes
 Gate4 as a whole remains incomplete, the model question unresolved, public refusal
 retained, all staged mod/save bytes untouched.
 
+## Gate 4 COMPLETE — PASSED (Claude/Kareem acceptance)
+
+Claude reports Kareem's~21:25–21:36 part B: `check_gate4_save.py B` on internal03,
+21:35:51, **planned_route_complete=true, all14_match=true, no mismatch**, adult
+throughout, no crash in the log.15 snapshots: `save-backups/*r12-keygate4b-*`.
+Accepted as reported, not rerun:
+
+- Goron maze **left**, river **open grotto**, Ice **compass** chests open.
+- Shadow+1; Forest+1 with historical total5→6; Gerudo+1. Other fields match baseline.
+- Grotto screenshot: **Small Key (Forest Temple)** and **Opens one locked door.** /
+  **Dungeon: Forest Temple**. Ice screenshot: **Small Key (Gerudo Proving Grounds)**
+  with both caption rows, readable, normal key model/chest.
+- Kareem: Goron/grotto floating indicator appeared without increment, like4A.
+  **Ice: no floating indicator appeared.** That absence is accepted, not a missing
+  reward; the save proves target credit. “Only areas with small keys show the
+  counter” remains an inference, not a reason to add a HUD hook.
+
+Resolved by Kareem/Claude: the child-like appearance **is this game's adult model**;
+adult throughout. No get-item age/model defect is established and no fix is needed.
+Minuet's Xbox prompts occur **only in the ocarina interface**, a Hookshot path,
+not this patch. The SFM Teleport/Minuet route deviation remains in the4A record.
+
+**All four ordered played gates now accepted.** This is not automatic public
+release: current public CLI/`make_seed` refusal and UI unavailability remain in
+place. Claude requests a reviewed production plan below before any switch-on;
+staged/played seed files and users remain frozen. Tracker reads remain later.
+
