@@ -79,19 +79,20 @@ def key_sources():
             evfl.Actor("GameSystemActor", actions=["EventTriggerRequestAutoSave"]),
         ],
         [
-            # The get window is set for the content (its text names that item) before any grant.
-            evfl.ActionEvent("Window", 0, 1, 1, {"Actor": evfl.Argument("ActorName")}),
-            evfl.ActionEvent("Message", 2, 0, 2, {"MessageId": GET_TEXT[0]}),
-            evfl.ActionEvent("Caption", 2, 0, evfl.NONE, {"MessageId": GET_TEXT[1]}),
-            evfl.SubFlowEvent("Display", "", "DisplayGetByActorName", 4, _content("ActorName")),
+            # Native Event0 stores the grant; the display entry still sets the
+            # get window and text before returning to that grant.
             evfl.ActionEvent(
                 "Grant", 0, 0, 5, {"Num": 1, "IsSetMessageTargetActorName": True, "Actor": evfl.Argument("ActorName")}
             ),
+            evfl.ActionEvent("Message", 2, 0, 2, {"MessageId": GET_TEXT[0]}),
+            evfl.ActionEvent("Caption", 2, 0, evfl.NONE, {"MessageId": GET_TEXT[1]}),
+            evfl.SubFlowEvent("Display", "", "DisplayGetByActorName", 0, _content("ActorName")),
+            evfl.ActionEvent("Window", 0, 1, 1, {"Actor": evfl.Argument("ActorName")}),
             evfl.ActionEvent("AutoSave", 3, 0),
         ],
         [
             evfl.EntryPoint("GetPouchContentByActorNameForTreasureBox", 3, [3]),
-            evfl.EntryPoint("DisplayGetByActorName", 0),
+            evfl.EntryPoint("DisplayGetByActorName", 4),
         ],
     )
     big = _document(

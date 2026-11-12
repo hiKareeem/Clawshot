@@ -524,3 +524,45 @@ Static gates passed: **323 formatted files, ruff clean**. The initial corrected 
 synthetic suite** (`-m 'not dump'`, one worker under the lock) before handoff. The four-case run will be
 repeated after this coverage addition; the initial pass and original failed output are retained.
 No foreign process or lock was removed.
+
+### Rebased verification and native-shaped fixture correction
+
+The strengthened four-case native run on `12cd47a` passed **4/4 in 82.64s** (one worker,
+owned `OOT_DUMP`, serialized lock), including the real production held-Bottle hand-over assertions.
+Log/result: `four-dump-held-after-main.txt`, `four-dump-held-after-main-result.json`.
+
+The requested full synthetic run on the same head was **not clean**: **1,154 passed, two failed,
+two skipped, 129 deselected**, 1,056.32s. Both failures are the public named-key/first-bag test
+(`Obj_TBox_A_01`, `Obj_TBox_A_02`). Printed payload: shared synthetic `GetPouchContent` index 0
+was `Window/EventTriggerSetForGetWindow`; the bag transform requires the native argument-driven
+`EventTriggerAddOrRemovePouchContent` there. Read-only native inspection confirms
+`GetPouchContent.bfevfl.zs` index 0 is `Event0`, `PouchSystemActor`,
+`EventTriggerAddOrRemovePouchContent`, `Num=1`, `Actor=Argument('ActorName')`.
+
+Claude requested production proof before accepting a synthetic-only fix; the proposed fixture edit
+was held/reverted until that check completed. **Real production proof passed on `12cd47a`:**
+
+- Native `GetPouchContent` has 114 events; index 0 is the argument-driven `Event0` pouch grant.
+  `EventTriggerSetForGetWindow` is `Event11` at index 6, not the synthetic fixture's index 0.
+- Public seed 8 with `dungeon_items=anywhere` compiled **33 named-key bindings**. After `keys.changes`,
+  the flow had 2,547 events and **the complete original 114-event prefix was unchanged**.
+  An observer at the actual `bags.patch_flow` call saw that same unchanged `Event0` and prefix, then
+  called the original guard unchanged. Helpers were appended, not reordered over native events.
+- An independent, unmodified public CLI invocation succeeded:
+  `uv run python -m clawshot --romfs E:/Games/Hookshot/romfs --seed 8 --dungeon-items anywhere --out
+  E:/OOTRemake/work/r13-item-grants/named-keys-first-bag-cli-seed8`.
+  It wrote **93 resources**; its complete spoiler matched the traced public API output exactly.
+  Bomb Bag Small moved to Kokiri Sword Chest; Slingshot moved to Dodongo's Cavern Map Chest.
+  The production bag guard remained enabled and its source SHA-256 unchanged.
+
+Proof: external `named-keys-native-bags-proof.json`; CLI log `named-keys-first-bag-cli-seed8.txt`.
+One worker under the lock; no game started. The first diagnostic script stopped on an unsupported
+catalog name `Bomb Bag (40)` before reaching the CLI; the actual catalog was printed and the
+diagnostic selector corrected. No production failure or unchanged retry was hidden.
+
+With production identity/order demonstrated, corrected **only** the synthetic fixture's storage:
+swap Grant/Window at indexes 0/4, point the display continuation to Grant 0 and display entry to
+Window 4. Execution still sets window/text before grant and autosave. All fixture consumers use
+names/entry points; native-state and order assertions remain intact. No production guard relaxation.
+Failure log `rebased-synthetic.txt` is retained; the corrected full synthetic rerun uses
+`rebased-synthetic-fixture-fixed.txt`, one worker and the lock before handoff.
