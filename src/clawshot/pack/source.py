@@ -360,7 +360,7 @@ def local_romfs(path: Path, parent: Path | None, update: Path | None = None):
 
 
 def main(argv=None):
-    parser = argparse.ArgumentParser(description="Check a RomFS folder or NUP before configuration/generation.")
+    parser = argparse.ArgumentParser(description="Check a RomFS folder, NUP or NX before configuration/generation.")
     parser.add_argument("path", type=Path)
     parser.add_argument("--expected", required=True)
     args = parser.parse_args(argv)

@@ -18,6 +18,7 @@ def synthetic_source(root):
         "NOTICE",
         "docs/seed-pack.md",
         "src/clawshot/pack/_nup/LICENSE.txt",
+        "src/clawshot/pack/_nx/LICENSE.txt",
         "src/clawshot/__init__.py",
         "src/clawshot/data/world.toml",
         *EXTRA,
@@ -50,6 +51,7 @@ def test_release_lists_only_source_and_local_assets_with_no_game_and_does_not_ov
         names = {Path(name).relative_to("Clawshot-2.4.6").as_posix() for name in archive.namelist()}
         assert set(EXTRA) <= names
         assert {"LICENSE", "NOTICE", "uv.lock", "src/clawshot/data/world.toml", "READ ME FIRST.txt"} <= names
+        assert {"src/clawshot/pack/_nup/LICENSE.txt", "src/clawshot/pack/_nx/LICENSE.txt"} <= names
         assert all(b"invented forbidden payload" not in archive.read(name) for name in archive.namelist())
         for launcher in ("clawshot.sh", "Clawshot.command"):
             assert archive.getinfo(f"Clawshot-2.4.6/{launcher}").external_attr >> 16 & 0o111

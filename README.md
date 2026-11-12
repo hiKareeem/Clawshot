@@ -28,7 +28,7 @@ that output. Clawshot is not affiliated with or endorsed by Nintendo.
    **macOS (untested):** right-click **Clawshot.command** and choose **Open** the first time
    because the download is unsigned; later, double-click it.
    The first start may download the checked app-local uv tool, Python and locked dependencies; no administrator access.
-3. On **Game**, Browse to your own supported **romfs folder or .nup** and Check it.
+3. On **Game**, Browse to your own supported **romfs folder, .nup or .nx** and Check it.
    Hookshot is optional: it is only needed for the Play button.
 4. Go to **Generate**. Recommended settings, a random seed and a new Documents folder are ready;
    leave them alone for a first seed, then choose **Generate seed**. Wait for **Seed ready**.
@@ -130,7 +130,7 @@ and [playtest answers](https://github.com/hiKareeem/Clawshot/blob/main/plans/pla
 1. Install [uv](https://docs.astral.sh/uv/getting-started/installation/).
 2. Unzip the seed pack into **its own new folder outside your game dump and Hookshot**.
    Do not extract over another pack.
-3. Run **`Make seed.bat`** and give it your own supported **`.nup` file or extracted RomFS folder**.
+3. Run **`Make seed.bat`** and give it your own supported **`.nup` or `.nx` file, or extracted RomFS folder**.
    For Hookshot, also give its installation folder (the one containing `bin`); for an emulator,
    leave that answer blank. Wait for **Verified seed** before playing.
 4. **Hookshot:** run **`Play seed.bat`** and start a **new game** the first time. Later plays
@@ -164,11 +164,11 @@ uv run python -m clawshot --help
 uv run python -m clawshot --romfs C:/Games/OoT/romfs --seed 7 --out C:/Clawshot/seed-7
 ```
 
-`--romfs` takes an extracted RomFS folder with the supported update applied, a `.nup`, or a dump
+`--romfs` takes an extracted RomFS folder with the supported update applied, a `.nup`, an `.nx`, or a dump
 folder that keeps the base game and its updates apart (`base/romfs` and `updates/<version>/romfs`,
 the layout NUP packs from; an update may hold only its changed files). From a dump folder the newest
 update is laid over the base, so it must be the supported one: today that is v131072 (Version 1.1.1). A later
-game update is a different build, and Clawshot refuses it until it supports that build. For a `.nup`
+game update is a different build, and Clawshot refuses it until it supports that build. For a `.nup`, an `.nx`
 or a dump folder the generator first copies the files it reads to a temporary folder. The base game's
 RomFS alone (Version 1.0.0) is refused; the UI accepts `base/romfs` picked inside a dump folder and uses the dump folder.
 A default seed shuffles chests. To print settings without opening the dump, then replay them:
@@ -202,6 +202,6 @@ or anything generated from them, including in issues and attachments.
 ## Credits and licence
 
 Clawshot is [MIT licensed](LICENSE). [NOTICE](NOTICE) lists the pinned sources and licences:
-OoT Randomizer's world, rule language, search and fill; Archipelago's safe fill swap; and a55uka's
-NUP reader. Their work is credited without implying endorsement. Nintendo owns the game and its
+OoT Randomizer's world, rule language, search and fill; Archipelago's safe fill swap; a55uka's
+NUP reader; and fab918's NX format specification, from which the NX reader was written. Their work is credited without implying endorsement. Nintendo owns the game and its
 trademarks; no part of it is included here.

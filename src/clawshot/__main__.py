@@ -175,9 +175,8 @@ def main(argv: list[str] | None = None) -> int:
         check_output_folder(args.romfs, args.out)
         if not args.romfs.exists():
             raise PatchError(f"romfs folder not found: {args.romfs}")
-        with local_romfs(
-            args.romfs, None
-        ) as romfs:  # a romfs folder as is; a dump folder, .nup or .nx via a working set
+        # a romfs folder as is; a dump folder, .nup or .nx via a working set
+        with local_romfs(args.romfs, None) as romfs:
             check_romfs(romfs)
             spec, steps = None, []
             if gifts.SHUFFLE in settings.shuffle or set(settings.shuffle).intersection(gifts.GIFT_TYPES):

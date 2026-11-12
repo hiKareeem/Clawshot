@@ -40,5 +40,12 @@ Commit a4840f06c94ddeb414eea5b33c9704ffe995f11c (branch meow).
 - Full upstream permission notice: src/clawshot/pack/_nup/LICENSE.txt, included in source packs.
   The PyPI package named "nup" is unrelated; no dependency on it is introduced.
 
+fab918/nxformat (https://github.com/fab918/nxformat), MIT License, Copyright (c) 2026 fab918.
+Commit 208b815dc21fd92e8bd1c596c708c908b467a457 (tag V1.0.3, branch main).
+- src/clawshot/pack/_nx/read.py: a read-only reader written from docs/SPEC.md (release 1.0.3): the header slots,
+  Catalog, Manifest, index and block layouts and their checks. No upstream code is copied; the writer, CLI and
+  conformance fixtures are not vendored.
+- Full upstream permission notice: src/clawshot/pack/_nx/LICENSE.txt, included in source packs.
+
 The Legend of Zelda and Ocarina of Time are trademarks of Nintendo. Clawshot is an unofficial fan project, not
 affiliated with or endorsed by Nintendo, and contains no part of the game.

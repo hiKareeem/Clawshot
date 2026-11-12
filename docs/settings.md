@@ -21,7 +21,7 @@ The spoiler records both effective settings and their replay string. Use `--help
 Reproduction needs the same seed, settings, generator source/version and world data. Generator
 defaults are in `src/clawshot/data/settings.toml`; logic defaults are in `src/clawshot/data/world/`.
 A version label alone does not identify the exact source. The generator reads an extracted RomFS;
-the pack workflow additionally accepts `.nup` input. Output is changed files under `romfs/`, plus
+the pack workflow additionally accepts `.nup` and `.nx` input. Output is changed files under `romfs/`, plus
 `spoiler.json` and `play-note.md`, never a copy of the whole game.
 
 ## What enters the shuffle

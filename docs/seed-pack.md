@@ -12,7 +12,7 @@ player-facing summary (steps, known issues, the Discord link); this file has the
    Python and locked dependencies on the first build.
 3. Extract the zip into its **own new folder outside RomFS and Hookshot**, e.g. `C:\Clawshot\seed-8`.
    Extract every pack separately: each has its own `user` save folder. Do not extract over an old pack.
-4. Run `Make seed.bat`. It asks once for your **`.nup` file or extracted RomFS folder** and an
+4. Run `Make seed.bat`. It asks once for your **`.nup` or `.nx` file, or extracted RomFS folder** and an
    **optional** Hookshot folder (the folder containing `bin`).
    Leave Hookshot **empty for emulator loading**; Make needs no Hookshot installation or executable.
    Enter paths without enclosing quotes. It stores your answers in this pack's `folders.json`.
@@ -78,6 +78,15 @@ incomplete or unsupported newer updates never fall back to an older package. Eve
 is checked against its NUP SHA256. The same four-resource fingerprint is computed **from inside
 the container**, not from its name or display-version metadata.
 
+### NX input
+
+An `.nx` archive ([fab918's MIT NX format](https://github.com/fab918/nxformat)) is read the same way:
+**read-only**, by a reader written from its specification and shipped with its licence, with the same
+uv/zstd note as NUP. The newest base/update snapshot is used as a complete tree, every structure and
+every file read is checked against its SHA-256, and the fingerprint is computed from inside the archive.
+Only archives that hold a `romfs/` tree (converted from a NUP or an extracted dump) can be read; one packed
+from a decrypted NSP is refused with an explanation.
+
 After preflight, Make creates a unique `.romfs-*` working cache inside this extracted pack.
 It contains only the generator's resource working set (placements, flows, messages, supported
 item/shop packs and supporting tables/components), not the whole dump or ExeFS/models/textures/audio.
@@ -97,7 +106,7 @@ No working cache or seed is made before that check passes.
 
 **Confirmed by Kareem:** seed8 loads and plays on Lichii (Eden/yuzu family), 2026-11-09;
 reviewer record `plans/playtest/answers.md`, R9-LICHII, main `d3e5c08`.
-Install uv and extract the pack as above, then run **Make seed**, give your `.nup` filename or
+Install uv and extract the pack as above, then run **Make seed**, give your `.nup` or `.nx` filename or
 RomFS folder and **leave the optional Hookshot answer empty**. No Hookshot installation is needed. Wait for Verified seed, then follow
 the steps below instead of Play. Do not run Play for this route.
 
@@ -130,7 +139,7 @@ Copy generated files locally from your own dump; never redistribute the overlay.
 OOT_ROMFS=E:/Games/Hookshot/romfs uv run python -m clawshot.pack --settings <CS1> --seed 8 --out E:/OOTRemake/work/seed-8-next.zip
 ```
 
-`--romfs <path>` may replace `OOT_ROMFS`; either accepts a RomFS folder or `.nup` file. The publisher needs the read-only supported dump to compute
+`--romfs <path>` may replace `OOT_ROMFS`; either accepts a RomFS folder, a `.nup` or an `.nx` file. The publisher needs the read-only supported dump to compute
 an oracle; testers do not need the publisher's dump. The zip destination must be new and outside both
 repository and dump. No existing zip or seed folder is replaced.
 

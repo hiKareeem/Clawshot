@@ -40,7 +40,7 @@
               <input
                 id="dump"
                 data-path
-                placeholder="Romfs folder or .nup file"
+                placeholder="Romfs folder, .nup or .nx file"
                 autocomplete="off"
                 spellcheck="false"
               /><button id="browse-dump">Browse…</button
@@ -52,7 +52,7 @@
             <div class="value-cell">
               <label class="check-label" for="update-separate"
                 ><input id="update-separate" type="checkbox" /> Update is a
-                separate folder or .nup</label
+                separate folder, .nup or .nx</label
               >
             </div>
           </div>
@@ -67,7 +67,7 @@
               <input
                 id="update"
                 data-path
-                placeholder="Update romfs folder or .nup file"
+                placeholder="Update romfs folder, .nup or .nx file"
                 autocomplete="off"
                 spellcheck="false"
               /><button id="browse-update">Browse…</button>
@@ -290,10 +290,10 @@
         <h2>Choose game files</h2>
         <button id="close-dump">Close</button>
       </div>
-      <p>Choose the extracted romfs folder or your full .nup game dump.</p>
+      <p>Choose the extracted romfs folder or your full .nup or .nx game dump.</p>
       <div class="result-actions">
         <button data-browse="dump-folder">Romfs folder…</button
-        ><button data-browse="dump-file">.nup file…</button>
+        ><button data-browse="dump-file">.nup or .nx file…</button>
       </div>
     </dialog>
     <dialog id="update-dialog">
@@ -302,12 +302,12 @@
         <button id="close-update">Close</button>
       </div>
       <p>
-        Choose the update's extracted romfs folder or its .nup. It is laid over
+        Choose the update's extracted romfs folder, its .nup or its .nx. It is laid over
         your game dump.
       </p>
       <div class="result-actions">
         <button data-browse="update-folder">Romfs folder…</button
-        ><button data-browse="update-file">.nup file…</button>
+        ><button data-browse="update-file">.nup or .nx file…</button>
       </div>
     </dialog>
     <dialog id="check-dialog" aria-describedby="check-text">

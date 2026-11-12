@@ -75,7 +75,9 @@ def source_files(root: Path = ROOT) -> dict[str, bytes]:
     """Positive allowlist: no plans, tests, outputs, Git metadata, caches or arbitrary root files."""
     names = ["pyproject.toml", "uv.lock", ".python-version", "README.md", "LICENSE", "NOTICE", "docs/seed-pack.md"]
     files = {name: (root / name).read_bytes() for name in names}
-    files["src/clawshot/pack/_nup/LICENSE.txt"] = (root / "src/clawshot/pack/_nup/LICENSE.txt").read_bytes()
+    for vendored in ("_nup", "_nx"):  # the upstream permission notices NOTICE points to
+        licence = f"src/clawshot/pack/{vendored}/LICENSE.txt"
+        files[licence] = (root / licence).read_bytes()
     for path in sorted((root / "src/clawshot").rglob("*")):
         if path.is_file() and path.suffix in {".py", ".toml", ".bat", ".ps1"} and "__pycache__" not in path.parts:
             if path.is_symlink():
