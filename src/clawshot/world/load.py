@@ -334,16 +334,17 @@ def _rule_entry(value: Any, where: str) -> tuple[str, dict[str, Any]]:
 
 
 def _progressive_tiers(table: Mapping[str, list[str]], items: dict[str, Item]) -> dict[str, list[str]]:
-    """Add an item for each tier of each progressive item: tier ``n`` (from 1) counts as ``n`` of the progressive
-    item, so every rule that asks for ``(Progressive_Hookshot, 2)`` reads a Longshot as well."""
+    """Add an item for each tier of each progressive item: tier ``n`` (from 1) raises the progressive item to at
+    least ``n`` (``Item.tier``), so every rule that asks for ``(Progressive_Hookshot, 2)`` reads a Longshot as well,
+    and two lower tiers never add up to a higher one."""
     for progressive, tiers in table.items():
         if progressive not in items:
             raise WorldError(f"[progressive]: {progressive!r} is not in the item table")
         base = items[progressive]
-        for n, tier in enumerate(tiers, start=1):
-            if tier in items:
-                raise WorldError(f"[progressive]: tier {tier!r} of {progressive!r} is already an item")
-            items[tier] = Item(tier, base.type, base.progression, base.priority, alias=(progressive, n))
+        for n, name in enumerate(tiers, start=1):
+            if name in items:
+                raise WorldError(f"[progressive]: tier {name!r} of {progressive!r} is already an item")
+            items[name] = Item(name, base.type, base.progression, base.priority, alias=(progressive, n), tier=True)
     return dict(table)
 
 

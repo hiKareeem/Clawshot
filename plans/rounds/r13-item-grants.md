@@ -478,3 +478,11 @@ Own fixture: `E:/OOTRemake/work/rounds/r13/dump-item-grants`: **1,245 wanted fil
 the new-game Sequence, both key-compiler RSDB files and both shared item-get flows were present.
 Builder used one worker while Hookshot was active. Final `review_gates.sh` is queued/running under
 `r13/gate.lock` with explicit `OOT_DUMP` pointing to this fixture, via Git Bash rather than Windows' WSL `bash`.
+
+All five required fixture files also matched the read-only installed romfs **byte-for-byte by SHA256**,
+not merely by filename. Whole-repository static gates passed: **320 Python files formatted; ruff check clean**.
+Only two formatting-only differences in the pending tier correction/test were normalized; no allocation
+behavior changed and the frozen experiment snapshots were not edited.
+Full pytest/dump have not run yet: the confirmed `owner-cs13c.txt` owns the lock for its active whole sweep.
+Our queue-only runner has no deadline and all private experiments yield to the full gates; no foreign
+lock or process was removed, and no unrun suite is reported as passing.

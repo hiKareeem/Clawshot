@@ -90,10 +90,19 @@ age_return_fill_inventory = { "Ocarina" = 2, "Song of Time" = 1, "Sarias Song" =
 age_return_door_inventory = { song_only = { "Ocarina" = 1, "Song of Time" = 1 }, open = {} }
 age_return_door_families = { song_only = ["Bow", "Progressive Hookshot", "Progressive Strength Upgrade", "Small Key (Forest Temple)", "Boss Key (Forest Temple)", "Sarias Song", "Ocarina"], open = ["Bow", "Progressive Hookshot", "Progressive Strength Upgrade", "Small Key (Forest Temple)", "Boss Key (Forest Temple)", "Sarias Song", "Ocarina"] }
 
-# Each progressive item's tiers, lowest first. Tier n is an item of its own that counts as n of the progressive
-# item, so OoT Randomizer's rules ("Hookshot" = Progressive_Hookshot, "Longshot" = (Progressive_Hookshot, 2))
-# read fixed and progressive items alike. Finding a higher tier first gives that tier's ability [inference: the
-# remake granting a Longshot or Golden Gauntlets without the lower tier is not checked in game yet].
+# Strength and scales downgrade (r13, Kareem/Claude 2026-11-12): the native get grant writes the found tier's grade
+# unconditionally (ExpansionAbility LiftGradeUP -> PlayerStatus.LiftGrade enum setter, DiveDepthUP -> PlayerStatus.
+# DiveDepth float setter; no game-data file writes either key: plans/rounds/r13-item-grants.md), so a lower tier found
+# later takes the higher ability away. The fill puts each higher fixed tier only where every lower tier the seed
+# holds is mandatory (generate.fill.tier_forbidden), then replays the placements without each lower tier. Capacity
+# tiers (wallets, bags) keep the larger capacity natively; Hookshot/Longshot and both ocarinas are separate items.
+downgrade_tier_families = ["Progressive Strength Upgrade", "Progressive Scale"]
+
+# Each progressive item's tiers, lowest first. Tier n is an item of its own that raises the progressive item to at
+# least n (`Item.tier`: the highest fixed tier held, never a sum), so OoT Randomizer's rules ("Hookshot" =
+# Progressive_Hookshot, "Longshot" = (Progressive_Hookshot, 2)) read fixed and progressive items alike. Finding a
+# higher tier first gives that tier's ability [inference: the remake granting a Longshot or Golden Gauntlets without
+# the lower tier is not checked in game yet].
 [progressive]
 "Progressive Hookshot" = ["Hookshot", "Longshot"]
 "Progressive Strength Upgrade" = ["Goron Bracelet", "Silver Gauntlets", "Golden Gauntlets"]

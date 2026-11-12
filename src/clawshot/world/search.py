@@ -7,7 +7,7 @@ and adult reaches the return pedestal, both views share inventory again. Worlds 
 OoT Randomizer's unrestricted two-age search. Time of day spreads through region exits as before.
 """
 
-from collections.abc import Iterable, Mapping
+from collections.abc import Callable, Iterable, Mapping
 from typing import NamedTuple
 
 from clawshot.world.model import Event, Exit, Location, Region, World
@@ -27,6 +27,11 @@ class Search:
         self._return_gate = world.age_return
         self._return_open = self._return_gate is None
         self._child_counts: dict[str, int] = self.counts if self._return_open else {}
+        # Progressive items with fixed tiers (Item.tier): per inventory view, [genuine copies + other additions,
+        # highest fixed tier held]. The item's count is the larger of the two.
+        self._tiered = frozenset(item.alias[0] for item in world.items.values() if item.tier and item.alias)
+        self._levels: dict[str, list[int]] = {}
+        self._child_levels: dict[str, list[int]] = self._levels if self._return_open else {}
         self._child_collected: set[str] = set()
         self._starting_child = world.settings.get("starting_age", CHILD) == CHILD
         self._adult_enabled = True
@@ -76,13 +81,50 @@ class Search:
 
     def _collect_item(self, name: str, *, child: bool, global_item: bool) -> None:
         item = self.world.items.get(name)
-        values = ((name, 1),) if item is None or item.alias is None else ((name, 1), item.alias)
-        for key, count in values:
-            if global_item:
-                self._add(key, count)
-            if child and self._child_counts is not self.counts:
-                self._add_child(key, count)
+        views = []
+        if global_item:
+            views.append((self.counts, self._levels, self._add))
+        if child and self._child_counts is not self.counts:
+            views.append((self._child_counts, self._child_levels, self._add_child))
+        for counts, levels, add in views:
+            self._grant(counts, levels, add, name, 1)
+            if item is None or item.alias is None:
+                continue
+            key, count = item.alias
+            if item.tier:
+                level = self._level(counts, levels, key)
+                level[1] = max(level[1], count)
+                self._raise_level(counts, add, key, level)
+            else:
+                self._grant(counts, levels, add, key, count)
         self._dirty = True
+
+    def _grant(
+        self,
+        counts: dict[str, int],
+        levels: dict[str, list[int]],
+        add: Callable[[str, int], None],
+        name: str,
+        count: int,
+    ) -> None:
+        """Add ``count`` of ``name``; for a progressive item with fixed tiers, to its additive part only."""
+        if name in self._tiered:
+            level = self._level(counts, levels, name)
+            level[0] += count
+            self._raise_level(counts, add, name, level)
+        else:
+            add(name, count)
+
+    @staticmethod
+    def _level(counts: Mapping[str, int], levels: dict[str, list[int]], name: str) -> list[int]:
+        # Raw counts set directly (an inventory search's mandatory minima) are the additive part.
+        return levels.setdefault(name, [counts.get(name, 0), 0])
+
+    @staticmethod
+    def _raise_level(counts: Mapping[str, int], add: Callable[[str, int], None], name: str, level: list[int]) -> None:
+        missing = max(level) - counts.get(name, 0)
+        if missing > 0:
+            add(name, missing)
 
     # the search
 
@@ -115,6 +157,7 @@ class Search:
             return False
         previous = self._child_counts
         self._child_counts = self.counts
+        self._child_levels = self._levels
         self._return_open = True
         for name, count in self.counts.items():
             if count > previous.get(name, 0):
@@ -283,6 +326,7 @@ class Search:
         search = Search(self.world)
         search.counts = dict(counts)
         search._child_counts = dict(counts)
+        search._levels, search._child_levels = {}, {}
         search._starting_child = child
         search._adult_enabled = not child
         return search

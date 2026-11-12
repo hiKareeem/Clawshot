@@ -15,7 +15,11 @@ HINT_STONE = "HintStone"
 class Item:
     """An item the logic knows. ``progression`` items can unlock something; ``priority`` and normal items cannot
     (OoT Randomizer's advancement True/False/None). ``dungeon`` is set for a dungeon's own keys, maps and
-    compasses. ``alias`` adds a count of another item when collected (a Heart Container is four Pieces of Heart)."""
+    compasses. ``alias`` adds a count of another item when collected (a Heart Container is four Pieces of Heart).
+    ``tier``: the alias names a fixed tier of a progressive item instead (``alias = (progressive, n)``). Collecting
+    it raises that item's level to at least ``n`` rather than adding ``n``: the level is the highest fixed tier held,
+    or the number of genuine progressive copies if that is higher (Goron Bracelet plus Silver Gauntlets is 2, not 3).
+    """
 
     name: str
     type: str = "Item"
@@ -26,6 +30,7 @@ class Item:
     medallion: bool = False
     stone: bool = False
     alias: tuple[str, int] | None = None
+    tier: bool = False
 
 
 @dataclass(frozen=True)

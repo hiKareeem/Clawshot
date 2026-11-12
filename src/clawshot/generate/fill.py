@@ -237,8 +237,11 @@ def _in_dungeon_area(world: World, location: str, dungeon: str) -> bool:
 
 
 def allowed(world: World, settings: Settings, location: str, item: str) -> bool:
-    """Whether ``item`` may go to ``location`` at all, reachable or not."""
+    """Whether ``item`` may go to ``location`` at all, reachable or not. Inside :func:`fill`, the world also carries
+    the seed's tier screen (``tier_forbidden``, :func:`tier_forbidden`)."""
     if item in world.locations[location].excluded_items:
+        return False
+    if location in world.settings.get("tier_forbidden", {}).get(item, ()):
         return False
     if world.locations[location].type == "Shop":
         if item not in world.settings.get("native_shop_items", ()):
@@ -537,6 +540,72 @@ def _fill_bomb_ammo(
     locations[:] = [name for name in locations if name not in placements]
 
 
+def _tier_chains(world: World) -> dict[str, list[str]]:
+    """The fixed tiers, lowest first, of each progressive item in ``downgrade_tier_families``: the families whose
+    native grant overwrites the saved grade with the tier found (strength's LiftGrade, scales' DiveDepth), so a lower
+    tier found after a higher one takes the higher ability away."""
+    chains = {}
+    for family in world.settings.get("downgrade_tier_families", ()):
+        tiers = sorted(
+            (item.alias[1], name) for name, item in world.items.items() if item.tier and item.alias[0] == family
+        )
+        if tiers:
+            chains[family] = [name for _, name in tiers]
+    return chains
+
+
+def tier_forbidden(world: World, items: list[str], fixed: Mapping[str, str]) -> dict[str, frozenset[str]]:
+    """Locations each higher fixed tier may not take: reachable without a lower tier the seed holds.
+
+    Assume only the shuffled ``items``; collect ``fixed`` checks through their real rules. Pre-owning fixed
+    rewards would bypass prerequisites such as the Silver Scale needed for Ruto's Letter and time travel.
+    Exclude the lower tier, the target and later tiers, and genuine family copies from both sources, so a higher
+    tier cannot prove its own prerequisite. The completed placements are checked again by ``tier_order_violations``.
+    """
+    held = {*items, *fixed.values()}
+    forbidden: dict[str, set[str]] = {}
+    for family, tiers in _tier_chains(world).items():
+        for index, low in enumerate(tiers[:-1]):
+            if low not in held or low in world.start_items:
+                continue  # a tier the seed never gives, or always starts with, cannot downgrade anything
+            excluded = {family, *tiers[index:]}
+            without = Search(
+                replace(world, start_items=tuple(item for item in world.start_items if item not in excluded)),
+                (item for item in items if item not in excluded),
+            )
+            without.collect_spheres({name: item for name, item in fixed.items() if item not in excluded})
+            reachable = {name for name, location in world.locations.items() if without.can_access(location)}
+            for high in tiers[index + 1 :]:
+                forbidden.setdefault(high, set()).update(reachable)
+    return {item: frozenset(names) for item, names in forbidden.items()}
+
+
+def tier_order_violations(world: World, placements: Mapping[str, str]) -> list[tuple[str, str, str]]:
+    """``(lower tier, higher tier, its location)`` for a higher tier reachable without owning a lower tier.
+
+    Withhold every location giving that lower tier and collect the actual placements. Native pairs have the same
+    requirement as shuffled pairs; being available in an earlier sphere is not enough. A lower tier absent from
+    the seed, or owned from the start, cannot be picked up later to downgrade the higher tier.
+    """
+    chains = _tier_chains(world)
+    where: dict[str, list[str]] = {}
+    for name, item in placements.items():
+        where.setdefault(item, []).append(name)
+    violations = []
+    for tiers in chains.values():
+        for index, low in enumerate(tiers[:-1]):
+            lows = set(where.get(low, ()))
+            if not lows or low in world.start_items:
+                continue
+            higher = [(high, location) for high in tiers[index + 1 :] for location in where.get(high, ())]
+            if not higher:
+                continue
+            search = Search(world)
+            search.collect_spheres({name: item for name, item in placements.items() if name not in lows})
+            violations.extend((low, high, location) for high, location in higher if location in search.collected)
+    return violations
+
+
 def _fill_dungeon_items(
     world: World,
     settings: Settings,
@@ -673,6 +742,10 @@ def fill(
     }
     pool = [vanilla_item(name) for name in shuffled]
     rng.shuffle(pool)
+    # Strength and scales: a higher fixed tier goes only where every lower tier the seed holds is mandatory.
+    forbidden = tier_forbidden(world, pool, placements)
+    if forbidden:
+        world = replace(world, settings={**world.settings, "tier_forbidden": forbidden})
     locations = list(shuffled)
     held = settings.item_location_types
     shop_refills = sum(item.startswith("Buy ") and held.get(item) == ("Shop",) for item in pool)
@@ -718,7 +791,14 @@ def fill(
         raise FillError(f"items left unplaced: {sorted(priority + rest)}")
     if locations:
         raise FillError(f"locations left empty: {sorted(locations)}")
-    return {name: placements[name] for name in world.locations if name in placements}
+    result = {name: placements[name] for name in world.locations if name in placements}
+    violations = tier_order_violations(world, result)
+    if violations:
+        raise FillError(
+            f"tier order: a higher tier is reachable without a lower one (lower, higher, where): {violations[:4]}",
+            stage="tier order",
+        )
+    return result
 
 
 def check_beatable(world: World, placements: dict[str, str]) -> list[list[str]]:
