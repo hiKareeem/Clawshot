@@ -157,9 +157,10 @@ chest, named to the key's own dungeon; boss keys, maps and compasses always stay
 keysanity, progressive items, entrance shuffle and Archipelago are not supported for play. See the
 [README](../../README.md) and [settings reference](../settings.md) for exact limits.
 
-Known issues: after an age-unusable item pickup, Save and Continue before using other items.
-Child Bow jam/recovery was observed on Hookshot and Lichii; changing areas does not fix it.
-Ocarinas from chests have no model despite working; songs may use a stand-in. Hookshot 2.0.12+
+New games initialize an empty nut slot (0/20); child Bow first followed by Boomerang use without a
+reload passed Kareem's 2026-11-12 check. Saves started with older builds are unchanged: after an
+age-unusable pickup, Save and Continue before using other items; changing areas does not clear that jam.
+Known issues: ocarinas from chests have no model despite working; songs may use a stand-in. Hookshot 2.0.12+
 loads seeds as mods, not through the crashing overlay route; text uses the game's Switch icons.
 
 Full disclosure: Kareem directs AI coding agents building Clawshot. Automated checks test formats,

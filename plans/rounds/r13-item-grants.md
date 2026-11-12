@@ -95,8 +95,8 @@ Masks are **not** in the trade cell: native `PouchTable` puts ordinary masks in
 Mask merchant/guard flows test equipped `Armor_Child_Mask_*`, not a trade variant. An adult trade
 item does not directly replace a held mask; the unfinished Letter/guard interaction can delay
 the mask quest. External `trade/residual_order.py` independently prints these native cells,
-guard consumption, Anju gates and mask-equipment queries. The existing Save-and-Continue
-item-bar advice remains: that transient selection jam is a different mechanism.
+guard consumption, Anju gates and mask-equipment queries. Pre-fix saves retain the
+Save-and-Continue recovery advice; new-game prevention was accepted below.
 
 ## New-game-only item-bar initialization
 
@@ -129,8 +129,8 @@ plus 376, matching this native module; 107 of 108 native Sequence files have tha
 (one has 392). No unverified generic AINB formula. The NUP working-set catalogue includes this
 new input. All public seed paths register the transform, independently of intro/fast-start settings.
 
-**Built, not verified in game.** Keep the old reload warning until Kareem's acceptance; this
-does not establish that all age-locked families or existing saves are repaired.
+**Player-accepted for new games, 2026-11-12.** The Bow-first/Boomerang check below passed;
+this does not modify existing saves or individually certify every age-locked item family.
 
 ### Staged player check (Claude boot-checks; Kareem plays)
 
@@ -154,7 +154,19 @@ and the Kokiri placement loading line before player acceptance. No second launch
 bombs or capacity: native evidence settles the former policy/gates; castle's capacity PR is held.
 Claude reported **ib13 boot check passed**, 2026-11-12: 490 log lines, this mod's
 `SetPouchAndStatusForGameStart` loaded, no crash. He handed the check to Kareem with a save
-watcher on its isolated user. This is Claude's runtime loading proof, not yet Kareem's pickup/use result.
+watcher on its isolated user.
+
+**Kareem run 2 PASS, 2026-11-12, 08:47–08:52 (reported by Claude).** Runtime loaded
+`SetPouchAndStatusForGameStart` from this mod; child throughout, no crash. New save owns
+Nut Bag and Deku Nuts, capacity 20, stock 0. Bow was collected first with nuts still 0,
+then Boomerang: Kareem threw it immediately, before any reload, and said it "worked great".
+The native nut chest then gave 3 nuts; using one left 2. Snapshots:
+`save-backups/2026-11-12_08*-r13-itembar-run2-1..8`.
+Run 1 (`user-...-run1-nuts-first`) opened the nuts first and **does not count** as the
+first-Bow check. The played user folder is unchanged; no rename needed.
+Claude approved removing the new-seed item-bar known issue while retaining recovery advice
+for saves started with older builds. README, settings/UI/Discord docs, generated play note and
+packaged readme now make that distinction. Version unchanged; release version remains Claude's call.
 
 
 ## Bomb purchase and tier audit status

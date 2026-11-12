@@ -267,14 +267,12 @@ def play_note(seed: Seed, log: Mapping[str, Any] | None = None) -> str:
     lines = [f"# Clawshot seed {seed.seed}", ""]
     lines.extend(
         [
-            "## Age-locked items: Save and Continue",
+            "## Age-locked items",
             "",
-            "After obtaining an item Link's current age cannot use, Save and Continue before using other items.",
-            "Picking up the Fairy Bow as child has jammed the ZR item bar; changing areas did not fix it, but Save and"
-            " Continue did.",
-            "Other age-locked items below are precautions, not individually confirmed failures.",
-            "New games initialize an empty Deku Nut slot (0/20) to prevent first-pickup selection jams;"
-            " this prevention still awaits in-game verification and does not modify existing saves.",
+            "New games initialize an empty Deku Nut slot (0/20). Child Bow first followed by working Boomerang use"
+            " without a reload passed Kareem's 2026-11-12 check.",
+            "Existing saves are unchanged. In saves started with older builds, Save and Continue before using"
+            " other items after an age-unusable pickup; changing areas does not clear that older item-bar jam.",
             "",
         ]
     )
@@ -283,7 +281,7 @@ def play_note(seed: Seed, log: Mapping[str, Any] | None = None) -> str:
             [
                 "These shuffled rewards are reachable by the wrong age at their first search frontier.",
                 "Both ages in a row means a tie, not that the item is usable by both.",
-                "This is not a required play order; reload only if you take the item at an unusable age.",
+                "This is an age-usability reference, not a required play order.",
                 "",
                 "| Item | Usable age | First reachable as | Location | World / OoTR check | Where |",
                 "|---|---|---|---|---|---|",
@@ -302,7 +300,7 @@ def play_note(seed: Seed, log: Mapping[str, Any] | None = None) -> str:
             lines.append("| " + " | ".join(_markdown_cell(cell) for cell in cells) + " |")
     else:
         lines.append("No shuffled age-locked reward is reachable by the wrong age at its first search frontier.")
-    lines.extend(["", "Optional later wrong-age pickups still need the same Save and Continue precaution.", ""])
+    lines.append("")
     lines.extend(
         [
             "## Trade-slot order",

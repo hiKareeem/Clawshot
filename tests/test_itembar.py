@@ -106,4 +106,3 @@ def test_spoiler_and_rendered_note_expose_the_warning_at_the_actual_destination(
     warnings = [row for row in rows if row[1:3] == ["adult", "child"]]
     assert len(warnings) == 1
     assert warnings[0][3:] == [r"Crate \| chest", r"Crate \| chest", "Field"]
-    assert "Save and Continue" in note

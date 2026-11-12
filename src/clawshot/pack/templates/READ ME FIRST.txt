@@ -49,11 +49,11 @@ Back up your saves first: that route uses your main save folder.
 KNOWN ISSUES
 - While a seed is loaded, button icons in text show Switch buttons instead of
   your controller's. Controls are unchanged.
-- Getting an item your current age can't use (the Bow as child, for example) can
-  jam your item buttons. Save and Continue fixes it. play-note.md lists the places
-  in your seed where that can happen.
-  New games initialize an empty nut slot (0/20); its prevention of first-pickup
-  jams is built but not yet verified in game. Existing saves are unchanged.
+- New games initialize an empty nut slot (0/20). Child Bow first, then Boomerang
+  use without a reload passed Kareem's 2026-11-12 check.
+  Saves started with older builds are unchanged: after an age-unusable pickup,
+  Save and Continue before using other items. Changing areas does not clear
+  that older item-bar jam. play-note.md lists age-locked rewards.
 - Ocarinas from chests show no model, and songs from chests show an ocarina.
   Both work normally.
 - The Weird Egg, Zelda's Letter and the adult trading items are not shuffled.

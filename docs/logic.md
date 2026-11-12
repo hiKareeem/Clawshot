@@ -139,12 +139,14 @@ The JSON is local generated output: **do not upload or distribute it**. The prod
 | `placements` | World-location key → item for shuffled checks only, not a complete list of fixed rewards. |
 | `locations` | Descriptions keyed by those world keys, with catalogue fields and applicable shop/scrub metadata. Custom worlds can lack physical IDs. |
 | `opening_route` | An opening witness (`name`, `event`, `region`, `steps`), or null. Steps carry kind, location, requirements and alternatives. Not the entire game's route. |
-| `age_locked_pickups` | Wrong-age first-frontier warnings, including ties. Not proof that later optional pickup timing is safe. |
+| `age_locked_pickups` | Wrong-age first-frontier item information, including ties. Not a required play order or a complete pickup-timing analysis. |
 | `spheres` | World-keyed progression pickups grouped by search collection sphere; empty progression spheres omitted. Not every collected filler item. |
 | `hints` | Stone, where, message label, kind, rendered text, area, location and item; some target fields can be null. |
 
-Age-warning source: `src/clawshot/generate/itembar.py`, `plans/03-game-data.md`, Item-bar assignment;
-its observed child Bow failure/recovery: `plans/playtest/answers.md`, R8-SEED8-BOWLOCK/R9-LICHII.
+Age-usability source: `src/clawshot/generate/itembar.py`, `plans/03-game-data.md`, Item-bar assignment.
+Older-save child Bow failure/recovery: `plans/playtest/answers.md`, R8-SEED8-BOWLOCK/R9-LICHII.
+New-game prevention passed Kareem's Bow-first/Boomerang check on 2026-11-12
+(`plans/rounds/r13-item-grants.md`); existing saves are unchanged.
 Do not reconstruct the complete search using only the progression-filtered `spheres`: include fixed
 rewards and the actual world/settings instead (`plans/04-world-format.md`, Reachability).
 

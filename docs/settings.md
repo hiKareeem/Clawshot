@@ -189,12 +189,12 @@ reset were observed in game; that is not certification of every distribution. Bo
 Hookshot-direction lines are replaced with the seed's actual Hookshot location, or omit the tool if
 none exists in a partial world. This text is built/read-back-tested, not separately player-accepted.
 
-**Wrong-age pickups:** Save and Continue before using other items after taking an age-unusable
-reward. Child Bow jam/recovery is confirmed on Hookshot and Lichii; other families are precautionary.
-The note lists shuffled age-locked rewards reachable by the wrong age at their first search frontier,
-including ties. Optional later pickups can differ from that order. New games initialize the native
-small Nut Bag and zero Deku Nuts (0/20) to prevent an empty-slot first-pickup jam; this prevention
-is built but not yet verified in game. Existing saves are unchanged; keep the reload precaution.
+**Wrong-age pickups:** the note lists shuffled age-locked rewards reachable by the wrong age at their
+first search frontier, including ties. Optional later pickups can differ from that order.
+New games initialize the native small Nut Bag and zero Deku Nuts (0/20); Kareem verified a child
+Bow-first pickup followed by working Boomerang use without reloading on 2026-11-12.
+Existing saves are unchanged: in saves started with older builds, Save and Continue before using
+other items after an age-unusable reward. Changing areas does not clear that older item-bar jam.
 
 Changed rewards omit the old item's acquisition-only Navi reaction. Where that reaction
 shares a wrapper with room or quest progress, a source-bound clone removes only the stale

@@ -315,8 +315,9 @@ give the version, OS and whole UI error text (terminal error if it never opens).
   anywhere** a hand chest can hold a small key named to its own dungeon, so it is not lost.
 - Ocarinas from chests have no visible model, but you still receive them.
 - Dampé's digging prize and Bombchu Bowling prizes show the original prize but give the seed's item.
-- After picking up an item Link's age cannot use, **Save and Continue before using other items**:
-  the item bar can jam. The play note lists these pickups, but reveals item locations.
+- **Saves started with older builds:** Save and Continue after an age-unusable pickup before using other
+  items; changing areas does not clear the old item-bar jam. New games initialize an empty nut slot (0/20);
+  child Bow first followed by Boomerang use without a reload passed Kareem's 2026-11-12 check.
 - While a seed is loaded, ordinary text shows Switch button icons rather than your
   controller's; the ocarina note interface is drawn separately and keeps its own prompts.
 - Earlier seeds can also lose boss keys, maps and compasses moved to small chests inside their

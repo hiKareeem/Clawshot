@@ -109,10 +109,10 @@ and [playtest answers](https://github.com/hiKareeem/Clawshot/blob/main/plans/pla
 
 ### Known issues
 
-- **After receiving an item Link cannot use at his current age, Save and Continue before using
-  other items.** A child Fairy Bow pickup jammed the item bar on both Hookshot and Lichii; changing areas
-  did not fix it. Other item families carry precautionary warnings. This seed's `play-note.md` lists them but reveals item locations.
-  New-game-only empty nut-slot initialization is built; its first-pickup prevention is not yet verified in game.
+- **Saves started with older builds:** after an age-unusable item pickup, Save and Continue before using
+  other items; changing areas does not clear the old item-bar jam. Newly generated seeds initialize an empty
+  nut slot (0/20). Kareem verified child Bow first, then Boomerang use without a reload on 2026-11-12.
+  Existing saves are not modified. `play-note.md` lists age-locked rewards but reveals item locations.
 - **Trading items share one displayed slot.** An adult trade item can hide the child's Cucco; Save and Continue
   does not fix that. Wake Talon and show Zelda's Letter before taking Anju's adult Pocket Egg. Newly generated
   seeds keep trading items vanilla; older Gift seeds may contain shuffled adult trade items.
