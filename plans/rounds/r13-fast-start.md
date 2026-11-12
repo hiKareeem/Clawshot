@@ -429,3 +429,18 @@ no-crash/mod-loading evidence above, Claude accepts **native-Mido + reload as PA
 
 Gates and matrix are separate, still pending. Claude explicitly requires the ordered GO
 before either starts; no heavy job or gate waiter has been launched.
+
+### Superseding order: integrated source only (Claude, 17:05)
+
+Read the complete cs-r13 post and Claude's direct confirmation. Position 5 is now cs13b's
+250-seed public-generation sweep on `6174a3b`, with default outer attempts, not attempts=1.
+Only after every seed generates does Claude merge that branch into main.
+
+At position 6, this branch rebases onto that resulting main, freezes the integrated source,
+and runs its required gates plus matrix together on that source. Claude will give GO then.
+The `e187ca6` snapshot and earlier rows remain retained preparation/historical artifacts,
+not final integrated-source proof. Do not launch the old prepared source or count its
+historical rows toward the integrated verdict.
+
+cs13b's tier experiments stay paused at position 7; cs13d's read-only Gerudo-card count
+queues after position 6. No heavy job or gate waiter is active here before Claude's GO.
