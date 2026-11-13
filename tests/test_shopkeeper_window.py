@@ -97,7 +97,7 @@ def test_stale_story_dispatch_is_refused():
 @pytest.mark.parametrize("castle", [False, True])
 def test_shuffled_shopkeeper_logic_remains_reachable_after_story_completion(castle):
     _, world = prepare(gifts.shopkeeper_spec(load_spec()), Settings())
-    inventory = ["Kokiri Sword", "Deku Shield", "Slingshot"]
+    inventory = ["Kokiri Sword", "Deku Shield", "Progressive Slingshot"]
     if castle:
         inventory.append("Weird Egg")
     search = Search.child_only(world, inventory)

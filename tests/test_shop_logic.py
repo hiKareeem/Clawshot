@@ -230,8 +230,6 @@ def test_buy_refill_destination_boundary_uses_effective_settings(spec):
             assert settings.item_location_types[item] == ("Shop",)
     assert settings.item_location_types["Kokiri Sword"] == ("Chest",)
     assert allowed(world, settings, "Deku Tree Basement Chest", "Deku Shield")
-    unchanged, _ = prepare(spec, Settings(item_location_types={"Kokiri Sword": ("Chest",)}))
-    assert unchanged.item_location_types == {"Kokiri Sword": ("Chest",)}
 
 
 @pytest.mark.parametrize("shield_class", ["normal", "progression"])

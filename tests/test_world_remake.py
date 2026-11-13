@@ -172,18 +172,22 @@ def deku_slice():
 
 
 def test_deku_tree_slingshot_in_the_basement_is_not_beatable(deku_slice):
-    """Round 3 seed 3: the Slingshot is in the basement and no Boomerang is available before 3F."""
-    vanilla = {name: loc.vanilla for name, loc in deku_slice.locations.items() if loc.vanilla is not None}
+    """Gohma is unreachable when the only ranged-weapon copy is past the ranged gate."""
+    vanilla = {
+        name: "Progressive Slingshot" if loc.vanilla == "Slingshot" else loc.vanilla
+        for name, loc in deku_slice.locations.items()
+        if loc.vanilla is not None
+    }
     check_beatable(deku_slice, vanilla)
     swapped = vanilla | {
-        "Deku Tree Basement Chest": "Slingshot",
+        "Deku Tree Basement Chest": "Progressive Slingshot",
         "Deku Tree Slingshot Chest": vanilla["Deku Tree Basement Chest"],
     }
     with pytest.raises(FillError, match="the goal cannot be reached"):
         check_beatable(deku_slice, swapped)
 
 
-@pytest.mark.parametrize("weapon", ["Slingshot", "Boomerang"])
+@pytest.mark.parametrize("weapon", ["Progressive Slingshot", "Boomerang"])
 def test_deku_tree_top_floor_and_basement_need_a_verified_ranged_weapon(deku_slice, weapon):
     others = [
         loc.vanilla for loc in deku_slice.locations.values() if loc.vanilla not in (None, "Slingshot", "Boomerang")
