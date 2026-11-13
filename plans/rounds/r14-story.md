@@ -151,22 +151,28 @@ Kaepora regression before repair: **1 failed, 1 passed, 1 dump skip**, with writ
 
 No automated data check is presented as in-game proof. The combined checklist will identify saves by visible place/thumbnail and inventory/story state, include loading-log resources, and state a realistic play duration.
 
-## One combined Longshot acceptance session
+## Longshot acceptance checks
 
-**45–60 minutes** with Debug teleport/clock; allow up to75 if unfamiliar with castle guards/menus.
-Prepared staging recipe: `E:/OOTRemake/work/r14-story/stage_story.py`; master launcher
-`E:/OOTRemake/work/r14-story/ingame/Test - story combined.bat`. It runs three isolated
-profiles sequentially, waiting for each game to close. Staging/dry-run completion is recorded
-below when executed; **Claude must boot-check with `GAME=longshot` before handing it over**.
-No agent starts the game.
+**Two independent sessions:** music/Kaepora **10–15 minutes**; story **35–50 minutes**.
+Allow another15 for unfamiliar castle guards/Debug menus. Either can be done separately.
+Launch from `E:/OOTRemake/work/r14-story/ingame/`:
+- `Test - Music and Kaepora.bat`
+- `Test - Zelda Saria and escape.bat`
 
-All three profiles use the same actual public-generated Chest-only mod: seed7, forest open,
+Each starts its **own fresh new-game profile**. The story session then opens two isolated
+historical escape controls, waiting for each game to close. Follow the adjacent `CHECKLIST.md`.
+**Claude must boot-check with `GAME=longshot` before handing either over.** No agent starts
+the game. Recipe: `E:/OOTRemake/work/r14-story/stage_story.py`.
+
+All four profiles use the same public-generated Chest-only mod: seed7, forest open,
 closed door, intro/Saria/Deku/Kaepora skips. No chest needs opening, no spoiler needs reading.
 Launchers are copied from the current **Longshot** template, use exactly one real mod,
 `HOS_OOT_CHEATS=1`, no overlay, a separate `--user`, and `LONGSHOT_NO_UPDATE_CHECK=1`.
 Use **only teleport and the clock**; do not change inventory, age or quests during the test.
 
-1. **Fresh game / field music:** profile `story-music-next`, empty save source.
+### Music and Kaepora (10–15 minutes)
+
+Open `Test - Music and Kaepora.bat`; fresh profile `story-music-next`.
    - Start **New Game**, not Continue. Navi waking Link remains; intro movie and selected
      talks are skipped. Confirm ordinary music is audible in Kokiri first.
    - Walk out of the forest over Saria's bridge (forest open), then into Hyrule Field.
@@ -175,7 +181,16 @@ Use **only teleport and the clock**; do not change inventory, age or quests duri
    - Enter the Market and return to the field; listen again. Save, title, Continue; listen
      again. Optional clock check: night may stop the normal daytime theme; return to noon
      and walk to test resumption. Record each observation separately.
-   - **Saria before Darunia (same fresh profile):** follow the actual child castle route:
+   - Quit Longshot when finished. The story launcher uses a different fresh profile.
+
+### Zelda/Impa, Saria and escape (35–50 minutes)
+
+Open `Test - Zelda Saria and escape.bat`. Pause points separate its three profiles.
+
+1. **Fresh courtyard/Saria:** profile `story-courtyard-saria-next`.
+   - Start New Game and walk out of the forest normally to receive the Fairy Ocarina
+     at Saria's bridge; no chest needed. This session does not depend on the music save.
+   - **Saria before Darunia:** follow the actual child castle route:
      Malon's fixed Egg / Chicken, wake Talon, pass the guards, complete Zelda and Impa's
      lesson, and accept Impa's field send-off. Teleport only to area entrances during this
      sequence; do not teleport past Talon/guards or change quest steps.
@@ -219,3 +234,35 @@ The escape flow is intentionally native/unmodified (#22 is a logic fix), so do n
 `mods:` line for `DoorOfTime`. Claude can read the new positive save for Step04/05,
 escape history and actual Ocarina/song stock; never write to Kareem's original backups.
 If a result differs, stop and retain that profile/log/save: no unchanged rerun or live patch.
+
+## Immediate staging handoff (before matrix, per Claude)
+
+Code tree was checked against **57e12aa** (`git diff --quiet 57e12aa -- src`, exit0);
+later commits change only evidence/checklist docs. One actual public `app.jobs.generate_seed`
+run built seed7 after the fixes: **165 shuffled checks,28 spheres,91 resources** in58.23s.
+Read-back native GameData history: `_0000=true`, `_0005=false`, `_0010=true` (before:
+false/false/true). Proof: `E:/OOTRemake/work/r14-story/public-after/proof.json`.
+This one staging seed ran alongside D's authorized native gate as requested; it did not
+claim/remove D's lock. It was not the matrix or a many-seed run.
+
+`stage_story.py` then created **four physical one-mod copies**, each91 files, and two
+independent entry launchers. Actual `cmd.exe /d /c` with `CLAWSHOT_DRY_RUN=1`:
+**all four child launchers and both entry launchers exit0**. Runtime resolves to
+`LongshotLauncher-data/builds/v3.0.0-rc.2/bin/longshot.exe`; each uses its own user,
+only its own mod and no overlay. Both fresh users have no progress slots. **No game started**.
+
+Story controls: original child/Zora's Domain snapshot has Step03, completed castle,
+raised bridge, all stone stocks1 and no escape/throw/Time-ocarina/Time-song state.
+Negative differs in exactly the one enum word at offset93156, Step03 → Ready.
+Original progress/caption/account/options SHA256s unchanged. No authentic never-met-Zelda
+three-stone save is claimed. `ingame/staging-proof.json` records these checks.
+
+Ready paths posted to the round thread for Claude's boot-check/hand-off:
+- `E:/OOTRemake/work/r14-story/ingame/Test - Music and Kaepora.bat` —10–15min.
+- `E:/OOTRemake/work/r14-story/ingame/Test - Zelda Saria and escape.bat` —35–50min.
+- `E:/OOTRemake/work/r14-story/ingame/CHECKLIST.md` — player-only extract of the section above.
+
+Both sessions can be played separately; the second has its own new-game profile, not the
+first session's save. It includes the Saria-before-Darunia observation plus the two
+escape controls. **Boot and gameplay remain unplayed by cs14c**; Claude boot-checks and
+Kareem observes. Packet/profile files stay frozen while the player uses them.
