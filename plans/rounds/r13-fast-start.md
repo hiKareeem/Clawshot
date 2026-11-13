@@ -471,7 +471,27 @@ from the Mido/meeting repair. The always-on patch sets the new-game initial valu
 Exact observations: `E:/OOTRemake/work/r13-fast-start-cs13a/dpad-native-flag-observations.txt`.
 No save or installed game file was changed.
 
-A single fresh-user public-seed D-pad check is being staged; first-item and Save+Continue
-HUD acceptance are not yet claimed. Full integrated gates and matrix follow that staging,
-with stage-start Hookshot detection and the shared lock. cs13d may take the lock between
-stages when its synthetic run is ready.
+The single fresh-user check is staged at
+`E:/OOTRemake/work/r13-fast-start-cs13a/dpad-always/ingame/Test - fast-start-dpad-next.bat`,
+with its adjacent `CHECKLIST.md`: **3–5 minutes**, first pickup Boomerang in Mido's house
+middle-left chest, then Save+Continue without entering the Deku Tree/Navi guide.
+The real public `app.jobs.generate_seed` built seed 7, Chest-only, intro+Saria+Deku skips,
+165 checks / 29 spheres / 94 resources; written Navi initial value is true. The copied
+single-mod tree matches public output SHA256
+`9705fe6ef8bf0b4c4765b5cfd3d498d94d40a49f6e795c14884af42cc8d43347`.
+The current-template CRLF launcher's actual `cmd.exe` dry-run exited 0; the fresh isolated
+user has no saves and `SAVES` points to an empty new-game source. No game was launched.
+Build and dry-run proof live in `dpad-always/build-proof.json` and `launcher-dry-run.txt`.
+First-item and post-Continue HUD acceptance remain for Claude/Kareem, not inferred from flags.
+
+The final integrated after snapshot is `witness/after-e30e6f4-src/src` (tree
+`b98c372ab95540e917ba5f4cb314aa385bb04469`, archive SHA256
+`1cbac13251df171ba95856455dd305f23083081df0193fd5215d7d8b89ff3636`).
+Its before/control is merged main `witness/base-ac07355/src` (tree
+`163c24380d7dfb73bc94257bdccccbfa46c6d315`, archive SHA256
+`3307df0880605e07b662852be7640af541006f1e5348769ae9926ca47acf75bf`).
+Both use fresh integrated datasets; no old-source rows are counted toward this verdict.
+The source's fresh own fixture `E:/OOTRemake/work/rounds/r13/dump-fast-start-integrated`
+built successfully from the current NUP working set; old fixtures and `pr1-check/dump`
+remain untouched. Full integrated gates are starting, followed by the matrix, with
+stage-start Hookshot detection and the shared lock. cs13d may take between stages.
