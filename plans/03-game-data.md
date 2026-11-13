@@ -3489,7 +3489,7 @@ and Silver/Golden Scale pairs, with all four saved. The training bundle failed:
 inline copies reselected already-granted tiers and ended below the intended top
 tiers. Its serialized proof assumed immediate ownership visibility and is not
 timing proof. The production audit found no same-event double-selector path;
-replacement tier gameplay remains required before merge.
+the independent-chest tier retest subsequently passed in full.
 
 **Darunia-before-boulder guard PASSED**, independently of the bundle failure.
 Claude observed the modded `Dm_Goron_0030` load and saved completion flag;
@@ -3509,5 +3509,11 @@ production audit (no same-event double-selector route found), D staged one
 copied-profile launcher: six original, verified-closed Deku Tree chests, one
 production copy each, testing only four tier2→3 and Wallet/Magic tier1→2 grants.
 Native read-back, twelve serialized selector cases, four copied-file hashes and
-Longshot rc.2 cmd dry-run passed. Reward gameplay remains pending. Exact native
-ownership publication/flush latency is not proven by the log or serialized checks.
+Longshot rc.2 cmd dry-run passed. Kareem played the retest15:55–15:59: Claude
+confirmed all six new canonical top-tier flags, every lower tier retained, raw
+`PlayerStatus.MPMax`240→480, all required mod overrides loaded and no crash.
+Kareem confirmed every window/popup named the correct tier and amount and the
+chests stayed open after Continue: **FULL PASS; progressive in-game acceptance
+is complete.** Rising Quiver/Bow and Gauntlets/Bracelet models remained base
+items as expected; tier-correct rising models are an out-of-round follow-up.
+Exact native ownership publication/flush latency is not established.

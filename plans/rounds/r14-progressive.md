@@ -422,3 +422,37 @@ the memo11 check now holds fixed Serenade of Water. Evidence:
 Full synthetic, native gate and serialized300-row sweep need a new matching
 committed snapshot; the staged six-Deku runtime packet remains untouched.
 
+Claude accepted the production audit and boot-checked the bounded retest:
+`prog-tops` OK,13 files; handed to Kareem. No finer native publication timing
+claim is made. Remaining gameplay is only the six missing tier transitions.
+
+Admission correction checkpoint: `1e6cde0`. Claude approved the post-C-matrix
+order: D full synthetic on that head, D fresh fixture/native dump on that head,
+D serialized300-row sweep, A dump, then E full gates after D merges/E rebases.
+No source/test edit or rebase is allowed between D's matching-head stages.
+The C notification received so far was calibration completion, not lock release;
+D did not claim it and rearmed a strict RELEASED-only event watcher.
+
+Remaining-tops retest played15:55–15:59. Claude's read-only examination of the
+isolated `user-progressive-tops-18a04cb-next` saves confirmed all six new flags:
+BombBag_Large, Quiver_Large, BulletBag_Large, Armor_Adult_Gauntlet_Gold,
+Wallet_Large and FairyBless_MPDouble. Every lower tier remained owned; raw
+`PlayerStatus.MPMax`240→480. Required Deku Static/Dynamic, GetPouchContent,
+both chest flows, NaviChat and both event registries loaded from the mod.
+No crash. Kareem confirmed every reward window and later popup named the correct
+tier and amount; the chests stayed open after Continue. Quiver's rising Bow and
+Gauntlets' rising Bracelet were expected base models. **FULL PASS: Claude accepted
+progressive in-game acceptance as complete.** Only the `1e6cde0` gates remain.
+No additional replay requested.
+
+## Out-of-round follow-up
+
+Claude requested **tier-correct rising chest models** as a follow-up, not work
+for this round. Current rising models intentionally use the family's base actor;
+the played tier-correct window, popup and saved grant are the Round14 contract.
+
+The acceptance update is committed separately as docs only. To keep every
+remaining gate's actual HEAD exactly `1e6cde0`, D temporarily detaches there
+after saving this branch commit, makes no source/test edits during the gates,
+then restores `r14/progressive` before final evidence/handoff.
+
