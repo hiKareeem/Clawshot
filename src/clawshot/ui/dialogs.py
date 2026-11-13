@@ -8,13 +8,15 @@ import threading
 
 from clawshot.app.paths import absolute_path, default_output_root
 
-KINDS = {"dump-folder", "dump-file", "hookshot", "output", "seeds", "emulator_mods"}
+KINDS = {"dump-folder", "dump-file", "game", "output", "seeds", "emulator_mods"}
 CANCELLED = -128  # AppleScript's "User canceled." error number
 
 
 def _title(kind):
     if kind == "dump-file":
         return "Choose your game .nup"
+    if kind == "game":
+        return "Choose Hookshot or Longshot game / launcher folder"
     return "Choose output parent folder" if kind == "output" else "Choose " + kind.replace("-", " ") + " folder"
 
 

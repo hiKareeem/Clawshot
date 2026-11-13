@@ -47,7 +47,7 @@ def test_saved_seed_reopens_after_server_restart_without_original_files(made_ui_
         assert request(server, "result", {"file": "spoiler", "output": str(root)})[0] == 400
         spoiler = request(server, "result", {"file": "spoiler", "output": str(root), "confirmed": True})[2]
         assert json.loads(spoiler["text"])["seed"] == 7
-        assert request(server, "play", {"hookshot": str(hookshot), "output": str(root)})[0] == 400  # headless
+        assert request(server, "play", {"game": str(hookshot), "output": str(root)})[0] == 400  # headless
         assert request(server, "select-seed", {"output": None})[2]["status"] == "idle"
     plan = play_plan(entry, str(hookshot))
     assert plan["command"] == [str(hookshot / "bin/hookshot.exe"), "--user", str(root / "user")]

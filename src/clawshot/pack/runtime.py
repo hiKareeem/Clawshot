@@ -1,30 +1,32 @@
-"""Shared checked Hookshot launching and the extracted pack's Make/Play entry point."""
+"""Shared checked Hookshot and Longshot launching and the extracted pack's Make/Play entry point."""
 
 import argparse
 import csv
 import json
 import os
+import shutil
 import subprocess
 import sys
 from pathlib import Path
 
 from clawshot.pack import PackError, check_version, generate, tree_digest
-from clawshot.pack.hookshot import detect, native_game
+from clawshot.pack.hookshot import PROGRAMS, detect, game_folders, native_suffix
 
-RUNNING_GAME = "Hookshot is already running. Quit it, then press Play."
+RUNNING_GAME = "Hookshot or Longshot is already running. Quit it, then press Play."
 NO_PLAY = "Play needs Windows or Linux. Open the seed folder and load romfs as a mod in your emulator."
 OTHER_SYSTEM = (
-    "This Hookshot folder holds the game for another system. "
-    "Choose the Hookshot folder built on this computer, then press Play."
+    "This game folder holds the game for another system. "
+    "Choose a Hookshot or Longshot game built on this computer, then press Play."
 )
+NOT_CHECKED = "Clawshot could not check running programs. Close Hookshot or Longshot and try Play again."
 
 
 def play_refusal(exe: Path | str | None = None, platform: str | None = None) -> str:
-    """Why this computer cannot start the game, or "": no Hookshot build for it, or ``exe`` is another system's."""
-    native = native_game(platform)
+    """Why this computer cannot start the game, or "": no game build for it, or ``exe`` is another system's."""
+    native = native_suffix(platform)
     if native is None:
         return NO_PLAY
-    if exe is not None and Path(exe).name != Path(native).name:
+    if exe is not None and Path(exe).suffix.lower() != native:
         return OTHER_SYSTEM
     return ""
 
@@ -33,13 +35,13 @@ def _windows_process_names() -> tuple[str, ...]:
     tasklist = Path(os.environ.get("SYSTEMROOT", r"C:\Windows")) / "System32/tasklist.exe"
     try:
         result = subprocess.run(
-            [str(tasklist), "/FI", "IMAGENAME eq hookshot.exe", "/FO", "CSV", "/NH"],
+            [str(tasklist), "/FO", "CSV", "/NH"],
             capture_output=True,
             check=True,
             creationflags=subprocess.CREATE_NO_WINDOW,
         )
     except (OSError, subprocess.CalledProcessError) as error:
-        raise PackError("Clawshot could not check running programs. Close Hookshot and try Play again.") from error
+        raise PackError(NOT_CHECKED) from error
     rows = csv.reader(result.stdout.decode("utf-8", errors="replace").splitlines())
     return tuple(row[0] for row in rows if len(row) > 1)
 
@@ -49,7 +51,7 @@ def _linux_process_names(proc: Path = Path("/proc")) -> tuple[str, ...]:
     try:
         entries = sorted(entry for entry in proc.iterdir() if entry.name.isdigit())
     except OSError as error:
-        raise PackError("Clawshot could not check running programs. Close Hookshot and try Play again.") from error
+        raise PackError(NOT_CHECKED) from error
     names = []
     for entry in entries:
         try:
@@ -70,10 +72,11 @@ def running_process_names() -> tuple[str, ...]:
     return ()
 
 
-def hookshot_running(process_lister=None) -> bool:
+def game_running(process_lister=None) -> bool:
     lister = running_process_names if process_lister is None else process_lister
-    # Windows names are case-insensitive; a Linux program file is exactly "hookshot".
-    return any(name.casefold() == "hookshot.exe" or name == "hookshot" for name in lister())
+    # Windows names are case-insensitive; a Linux program file is exactly "hookshot" or "longshot".
+    windows = {f"{program}.exe" for program in PROGRAMS.values()}
+    return any(name.casefold() in windows or name in PROGRAMS.values() for name in lister())
 
 
 def configuration(root: Path) -> tuple[dict, Path, Path | None]:
@@ -81,15 +84,15 @@ def configuration(root: Path) -> tuple[dict, Path, Path | None]:
     config = json.loads((root / "folders.json").read_text(encoding="utf-8-sig"))
     romfs = Path(config["romfs"]).resolve()
     check_version(romfs)
-    hookshot = Path(config["hookshot"]).resolve() if config.get("hookshot") else None
-    for protected in (romfs, hookshot):
-        if protected is None:
-            continue
+    # A pack set up before Longshot support names the game folder "hookshot"; "game" wins when both are there.
+    chosen = config["game"] if "game" in config else config.get("hookshot")
+    game = Path(chosen).resolve() if chosen else None
+    for protected in (romfs, *(game_folders(game) if game else ())):
         if root.is_relative_to(protected) or protected.is_relative_to(root):
             raise PackError(f"extract the pack outside your game folders: {protected}")
     if manifest["format"] != 1:
         raise PackError(f"unsupported pack format: {manifest['format']}")
-    return manifest, romfs, hookshot
+    return manifest, romfs, game
 
 
 def verify(root: Path, manifest: dict) -> str:
@@ -107,11 +110,15 @@ def make(root: Path) -> None:
         generate(root, romfs, manifest["seed"], manifest["settings"], output)
     # Never rewrite an existing seed; it may be in use. A partial/modified one is a hard error.
     print(f"Verified seed {manifest['seed']}: {verify(root, manifest)}")
-    print("Read seed/play-note.md. Hookshot: Play seed.bat. Emulator: docs/seed-pack.md (Emulator / console loading).")
+    print(
+        "Read seed/play-note.md. Hookshot or Longshot: Play seed.bat. "
+        "Emulator: docs/seed-pack.md (Emulator / console loading)."
+    )
 
 
 def check_mod_layout(root: Path) -> None:
-    """Require exactly seed, using v2.0.13 discovery facts (host/mods.c), never linked folders."""
+    """Require exactly seed, using v2.0.13 discovery facts (host/mods.c), never linked folders. Longshot's readme (Mods)
+    describes the same discovery: <name>/romfs, deeper layouts, folders starting with - or _ off."""
     mods = []
 
     def walk(folder: Path, depth: int) -> None:
@@ -132,30 +139,41 @@ def check_mod_layout(root: Path) -> None:
         )
 
 
-def launch_plan(root: Path, hookshot: Path) -> dict:
-    """Read-only plan shared by pack Play and the UI; root contains exactly seed/romfs."""
+def launch_plan(root: Path, game: Path) -> dict:
+    """Read-only plan shared by pack Play and the UI; root contains exactly seed/romfs.
+
+    ``game`` is the chosen game folder, Longshot Launcher folder or folder of builds; the plan starts the build it
+    resolves to, in that build's folder, with this seed's own saves whichever game plays it.
+    """
     root = Path(root).absolute()
-    hookshot = Path(hookshot).resolve()
     if not root.is_dir():
         raise PackError("The seed folder is missing. Generate a new seed, then try Play again.")
     if root.resolve() != root:
         raise PackError("The seed folder must not be a link. Use its real folder and generate again.")
-    if root.is_relative_to(hookshot) or hookshot.is_relative_to(root):
-        raise PackError("Keep seed outputs outside Hookshot. Choose a new output folder and generate again.")
-    installation = detect(hookshot)
+    installation = detect(game)
+    for protected in installation.folders:
+        if root.is_relative_to(protected) or protected.is_relative_to(root):
+            raise PackError(
+                "Keep seed outputs outside your game and Longshot Launcher folders. "
+                "Choose a new output folder and generate again."
+            )
     if installation.reason:
-        if not installation.exe.is_file():
-            raise PackError(installation.reason + ". Choose the Hookshot folder containing bin, then try Play again.")
         raise PackError(installation.reason)
     check_mod_layout(root)
+    program = PROGRAMS[installation.game]
     user = root / "user"
-    log = root / "hookshot_log.txt"
+    log = root / f"{program}_log.txt"
     if any(path.resolve() != path for path in (user, log, root / "seed")):
         raise PackError("The seed, saves or log path is a link. Generate a new seed in a fresh output folder.")
     return {
+        "game": installation.game,
+        "version": installation.version,
         "command": [str(installation.exe), "--user", str(user)],
-        "cwd": str(hookshot),
-        "environment": {"HOOKSHOT_NO_UPDATE_CHECK": "1", "HOS_MODS": str(root)},
+        "cwd": str(installation.folder),
+        # The folder launcher of each game starts bin/<program> with <PROGRAM>_NO_UPDATE_CHECK=1: Hookshot's game reads
+        # it; Longshot's checks nothing at start (readme, "What Longshot connects to"), yet its v3.0.0-rc.2 launcher
+        # still passes it, so Play passes exactly what that game's own launcher does.
+        "environment": {f"{program.upper()}_NO_UPDATE_CHECK": "1", "HOS_MODS": str(root)},
         "unset_environment": ["HOS_FS_OVERLAY"],
         "mod": str(root / "seed"),
         "user": str(user),
@@ -163,34 +181,78 @@ def launch_plan(root: Path, hookshot: Path) -> dict:
     }
 
 
-def start_game(plan: dict, *, process_lister=None) -> subprocess.Popen:
-    """Execute a checked plan. Tests inspect launch_plan instead; never invoke this on a real game."""
-    if hookshot_running(process_lister):
+def prepare_user(plan: dict) -> dict:
+    """Initialize a fresh seed user with options/account only; never import progress or overwrite a seed file."""
+    user = Path(plan["user"])
+    try:
+        user.mkdir()
+    except FileExistsError:
+        if not user.is_dir():
+            raise PackError(f"The seed user path is not a folder: {user}") from None
+        return {"copied": [], "missing": [], "message": "Existing seed saves and game options kept."}
+    saves = Path(plan["cwd"]) / "user/save"
+    accounts = [folder for folder in saves.iterdir() if folder.is_dir()] if saves.is_dir() else []
+    source = max(accounts, key=lambda folder: (folder.stat().st_mtime_ns, folder.name), default=None)
+    copied, missing = [], []
+    for name in ("option.sav", "account.sav"):
+        if source is None or not (source / name).is_file():
+            missing.append(name)
+            continue
+        try:
+            incoming = (source / name).open("rb")
+        except FileNotFoundError:
+            missing.append(name)
+            continue
+        with incoming:
+            destination = user / "save" / source.name / name
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            try:
+                outgoing = destination.open("xb")
+            except FileExistsError:
+                continue
+            try:
+                with outgoing:
+                    shutil.copyfileobj(incoming, outgoing)
+            except BaseException:
+                destination.unlink()
+                raise
+        copied.append(name)
+    message = "Game options carried over: " + ", ".join(copied) + "." if copied else "No game options copied."
+    if missing:
+        message += " Source missing: " + ", ".join(missing) + "; skipped."
+    return {"copied": copied, "missing": missing, "message": message}
+
+
+def start_game(plan: dict, *, process_lister=None) -> tuple[subprocess.Popen, dict]:
+    """Execute a checked plan and return its process/options result; tests never invoke a real game."""
+    if game_running(process_lister):
         raise PackError(RUNNING_GAME)
     if refusal := play_refusal(plan["command"][0]):
         raise PackError(refusal)
-    Path(plan["user"]).mkdir(exist_ok=True)
+    options = prepare_user(plan)
     env = dict(os.environ, **plan["environment"])
     for key in plan["unset_environment"]:
         env.pop(key, None)
     with Path(plan["log"]).open("wb") as log:
-        return subprocess.Popen(plan["command"], cwd=plan["cwd"], env=env, stderr=log)
+        return subprocess.Popen(plan["command"], cwd=plan["cwd"], env=env, stderr=log), options
 
 
 def play(root: Path, *, dry_run: bool = False) -> int:
-    manifest, _, hookshot = configuration(root)
-    if hookshot is None:
+    manifest, _, game = configuration(root)
+    if game is None:
         raise PackError(
-            "no Hookshot folder configured; for emulator loading, follow docs/seed-pack.md "
+            "no Hookshot or Longshot folder configured; for emulator loading, follow docs/seed-pack.md "
             "(Emulator / console loading); do not run Play"
         )
     verify(root, manifest)
-    plan = launch_plan(root, hookshot)
+    plan = launch_plan(root, game)
     if dry_run:
         print(json.dumps(plan, indent=2))
         return 0
-    print(f"Seed {manifest['seed']}; isolated saves: {plan['user']}; log: {plan['log']}", flush=True)
-    return start_game(plan).wait()
+    print(f"Seed {manifest['seed']} in {plan['game']}; isolated saves: {plan['user']}; log: {plan['log']}", flush=True)
+    process, options = start_game(plan)
+    print(options["message"], flush=True)
+    return process.wait()
 
 
 def main(argv: list[str] | None = None) -> int:

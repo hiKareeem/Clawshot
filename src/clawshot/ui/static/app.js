@@ -24,7 +24,8 @@ let outputRoot = "",
   dialogsAvailable = false;
 let playAvailable = false,
   playUnavailableReason = "",
-  hookshotCanPlay = false,
+  gameCanPlay = false,
+  gameLabel = "",
   playState = { running: false },
   resultOutput = "";
 let openAvailable = false,
@@ -75,8 +76,8 @@ function describe(el) {
   let note = el.dataset.helpNote;
   if (el.dataset.interface === "dump")
     note = $("dump-status").textContent + ". " + note;
-  if (el.dataset.interface === "hookshot")
-    note = $("hookshot-status").textContent + ". " + note;
+  if (el.dataset.interface === "runtime")
+    note = $("game-status").textContent + ". " + note;
   $("description-note").textContent = note;
   $("description-note").hidden = !note;
 }
@@ -557,7 +558,7 @@ function updateLibraryActions() {
           playState.running ||
           !entry.playable ||
           !playAvailable ||
-          !hookshotCanPlay
+          !gameCanPlay
         : kind === "open"
           ? !openAvailable
           : kind === "note"
@@ -670,7 +671,7 @@ async function browse(kind) {
       return;
     }
     const field = kind.startsWith("dump-") ? "dump" : kind;
-    $(field).value = data.path;
+    $(field === "game" ? "game-folder" : field).value = data.path;
     if (field === "output") outputCustom = true;
     else await detect(field);
   } catch (e) {
@@ -682,25 +683,30 @@ async function browse(kind) {
   }
 }
 async function detect(kind, fillDump = true) {
-  if (kind === "hookshot") hookshotCanPlay = false;
-  const button = $(kind === "dump" ? "check-dump" : "check-hookshot"),
+  if (kind === "game") gameCanPlay = false;
+  const field = $(kind === "game" ? "game-folder" : kind),
+    checkedPath = field.value,
+    button = $(kind === "dump" ? "check-dump" : "check-game"),
     status = $(kind + "-status");
   button.disabled = true;
   status.textContent = "Checking…";
   status.className = "value-cell detection";
   try {
-    const data = await api("detect", { [kind]: $(kind).value }),
+    const data = await api("detect", { [kind]: checkedPath }),
       info = data[kind];
+    // Blur normalization may finish while Detect is in flight; it is still the same checked folder.
+    if (field.value !== checkedPath && field.value !== (info.selected_folder || info.path)) return;
     preferenceWarning(data.warning);
     status.className = "value-cell detection good";
     if (kind === "dump") {
       $("dump").value = info.path;
       status.textContent = "Verified " + info.kind + " · build " + info.build;
     } else {
-      hookshotCanPlay = info.supports_mods && !info.reason;
-      $("hookshot").value = info.folder;
+      gameCanPlay = info.supports_mods && !info.reason;
+      gameLabel = info.game;
+      field.value = info.selected_folder;
       status.textContent =
-        "Hookshot " +
+        gameLabel + " " +
         (info.version || "unknown version") +
         (info.reason ? " · " + info.reason : " · mods supported");
       if (info.reason) status.className = "value-cell detection bad";
@@ -715,7 +721,7 @@ async function detect(kind, fillDump = true) {
     status.textContent = e.message;
   } finally {
     button.disabled = false;
-    describe(document.querySelector(`[data-interface=${kind}]`));
+    describe(document.querySelector(`[data-interface=${kind === "game" ? "runtime" : kind}]`));
     renderPlay();
     updateLibraryActions();
   }
@@ -728,25 +734,25 @@ function renderEmulator() {
   $("use-eden").textContent = "Use Eden folder: " + edenFolder;
 }
 function renderPlay() {
-  const selected = Boolean($("hookshot").value.trim());
-  $("play-seed").hidden = !selected;
+  const selected = Boolean($("game-folder").value.trim());
   $("play-seed").disabled =
-    !playAvailable || !hookshotCanPlay || busy || playState.running;
+    !playAvailable || !gameCanPlay || busy || playState.running;
   $("save-isolation").hidden = !selected;
-  $("emulator-steps").hidden = playAvailable && hookshotCanPlay;
+  $("emulator-steps").hidden = playAvailable && gameCanPlay;
   $("copy-emulator").disabled = !copyAvailable || busy;
   $("play-status").textContent = playState.running
-    ? "A seed is running. Quit that Hookshot game before starting another."
+    ? "A seed is running. Quit that game before starting another."
     : !selected
-      ? "Using an emulator? Open the seed folder and follow these steps."
+      ? "Play needs a Hookshot or Longshot folder. Choose and Detect it on Game."
       : !playAvailable
         ? playUnavailableReason
-        : !hookshotCanPlay
-          ? "Choose Detect beside your Hookshot folder on Game to enable Play."
-          : "Ready to play in Hookshot with separate saves for this seed.";
+        : !gameCanPlay
+          ? "Choose Detect beside your Hookshot or Longshot folder on Game to enable Play."
+          : "Ready to play in " + gameLabel + " with separate saves for this seed.";
   $("play-paths").textContent =
     playState.output === resultOutput && playState.user
-      ? "Seed saves: " + playState.user + " · Log: " + playState.log
+      ? "Seed saves: " + playState.user + " · Log: " + playState.log +
+        (playState.options?.message ? " · " + playState.options.message : "")
       : "";
 }
 function renderJob(state) {
@@ -855,7 +861,9 @@ async function refreshJob() {
 async function normalizePath(input) {
   const original = input.value;
   if (!original) return;
-  const data = await api("normalize-path", { path: original, kind: input.id });
+  const data = await api("normalize-path", {
+    path: original, kind: input.id === "game-folder" ? "game" : input.id,
+  });
   if (input.value === original) input.value = data.path;
 }
 async function startJob() {
@@ -884,7 +892,7 @@ async function startJob() {
     renderJob(
       await api("generate", {
         dump: $("dump").value,
-        hookshot: $("hookshot").value,
+        game: $("game-folder").value,
         output: $("output").value,
         seed,
         settings: settingsString,
@@ -977,7 +985,7 @@ document
   .querySelectorAll("[data-next]")
   .forEach((el) => el.addEventListener("click", () => show(el.dataset.next)));
 $("check-dump").addEventListener("click", () => detect("dump"));
-$("check-hookshot").addEventListener("click", () => detect("hookshot"));
+$("check-game").addEventListener("click", () => detect("game"));
 $("browse-dump").addEventListener("click", () => openDialog("dump-dialog"));
 $("close-dump").addEventListener("click", () => closeDialog("dump-dialog"));
 document
@@ -995,7 +1003,7 @@ document.querySelectorAll("[data-path]").forEach((input) =>
   }),
 );
 for (const [id, action] of Object.entries({
-  "check-hookshot": "Detect",
+  "check-game": "Detect",
   "check-dump": "Check",
   "random-seed": "Randomize",
   "copy-string": "Copy",
@@ -1014,22 +1022,23 @@ function randomizeSeed() {
 }
 $("random-seed").addEventListener("click", randomizeSeed);
 $("apply-string").addEventListener("click", applyString);
-async function copyField(id, status) {
+async function copyField(id, status, discord = false) {
   const input = $(id);
   try {
-    await navigator.clipboard.writeText(input.value);
-    $(status).textContent = "Copied";
+    await navigator.clipboard.writeText(discord ? "`" + input.value + "`" : input.value);
+    $(status).textContent = discord ? "Copied for Discord (in backticks)" : "Copied";
   } catch {
     input.focus();
     input.select();
-    $(status).textContent = "Selected — press Ctrl+C or Command+C to copy";
+    $(status).textContent = "Selected — press Ctrl+C or Command+C to copy" +
+      (discord ? ", then wrap it in single backticks on Discord." : "");
   }
 }
 document
   .querySelectorAll("[data-copy]")
   .forEach((button) =>
     button.addEventListener("click", () =>
-      copyField(button.dataset.copy, "share-status"),
+      copyField(button.dataset.copy, "share-status", button.hasAttribute("data-discord")),
     ),
   );
 $("enter-shared").addEventListener("click", () => openDialog("shared-dialog"));
@@ -1066,6 +1075,9 @@ $("apply-shared").addEventListener("click", async () => {
 $("copy-string").addEventListener("click", () =>
   copyField("settings-string", "settings-state"),
 );
+$("copy-discord").addEventListener("click", () =>
+  copyField("settings-string", "settings-state", true),
+);
 $("settings-string").addEventListener("input", () => {
   clearTimeout(timer);
   ++revision;
@@ -1080,15 +1092,17 @@ $("play-seed").addEventListener("click", async () => {
   $("play-seed").disabled = true;
   error("");
   try {
-    playState = await api("play", { hookshot: $("hookshot").value });
+    playState = await api("play", { game: $("game-folder").value });
     await refreshJob();
   } catch (e) {
     error(e.message);
     renderPlay();
   }
 });
-$("hookshot").addEventListener("input", () => {
-  hookshotCanPlay = false;
+$("game-folder").addEventListener("input", () => {
+  gameCanPlay = false;
+  $("game-status").textContent = "Not checked · choose Detect";
+  $("game-status").className = "value-cell detection";
   renderPlay();
   updateLibraryActions();
 });
@@ -1176,7 +1190,7 @@ window.addEventListener("beforeunload", (event) => {
     $("open-folder").disabled = !openAvailable;
     preferenceWarning(data.preferences_warning);
     $("dump").value = data.paths.dump || "";
-    $("hookshot").value = data.paths.hookshot || "";
+    $("game-folder").value = data.paths.game || "";
     emulatorFolder = data.paths.emulator_mods || "";
     edenFolder = data.eden_folder || "";
     copyAvailable = data.copy_available;
@@ -1207,7 +1221,7 @@ window.addEventListener("beforeunload", (event) => {
     await refreshJob();
     await refreshSeeds();
     const hadDump = Boolean($("dump").value);
-    if ($("hookshot").value) await detect("hookshot", !hadDump);
+    if ($("game-folder").value) await detect("game", !hadDump);
     if (hadDump) await detect("dump");
     document.documentElement.dataset.ready = "true";
   } catch (e) {

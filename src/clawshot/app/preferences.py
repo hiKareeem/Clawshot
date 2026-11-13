@@ -9,7 +9,9 @@ from tempfile import NamedTemporaryFile
 
 from clawshot.app.paths import SOURCE_ROOT
 
-KEYS = {"dump", "hookshot", "emulator_mods"}
+KEYS = {"dump", "game", "emulator_mods"}
+# paths.json written before Longshot support: renamed on read, gone from the file at the next save; "game" wins.
+RENAMED = {"hookshot": "game"}
 
 
 def _valid_value(key, value):
@@ -50,7 +52,12 @@ class Preferences:
             try:
                 if self.path.exists():
                     data = json.loads(self.path.read_text(encoding="utf-8"))
-                    if not isinstance(data, dict) or any(not _valid_value(k, v) for k, v in data.items()):
+                    if not isinstance(data, dict):
+                        raise ValueError("invalid saved folders")
+                    for old, new in RENAMED.items():
+                        if old in data:
+                            data.setdefault(new, data.pop(old))
+                    if any(not _valid_value(k, v) for k, v in data.items()):
                         raise ValueError("invalid saved folders")
                     self.values = data
             except (OSError, ValueError, UnicodeError):

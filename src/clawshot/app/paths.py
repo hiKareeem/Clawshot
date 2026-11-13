@@ -5,7 +5,7 @@ from dataclasses import asdict
 from pathlib import Path
 
 from clawshot.pack import BUILD, VERSION_FILES, PackError, check_version
-from clawshot.pack.hookshot import detect as _detect_hookshot
+from clawshot.pack.hookshot import detect, game_folders
 
 SOURCE_ROOT = Path(__file__).resolve().parents[3]
 SUPPORTED_UPDATE = "Version 1.1.1 update (v131072)"
@@ -97,19 +97,25 @@ def detect_dump(value: str) -> dict:
     return {"path": str(path), "kind": "romfs" if path.is_dir() else "nup", "build": BUILD, "supported": True}
 
 
-def detect_hookshot(value: str) -> dict:
-    """JSON projection of the shared pack detector; never infer capability from a version."""
-    path = absolute_path(value, "Hookshot", allow_links=True)
+def detect_game(value: str) -> dict:
+    """JSON projection of the shared pack detector; never infer capability from a version.
+
+    ``selected_folder`` is the chosen folder to remember (it may be a Longshot Launcher folder); ``folder`` the build
+    Play starts; ``folders`` every folder the choice stands for, which outputs and copies stay outside.
+    """
+    path = absolute_path(value, "Game folder", allow_links=True)
     if not path.is_dir():
-        raise ValueError("Hookshot folder does not exist")
-    result = asdict(_detect_hookshot(path))
-    for key in ("folder", "exe", "romfs"):
+        raise ValueError("Hookshot or Longshot folder does not exist")
+    info = detect(path)
+    result = asdict(info)
+    for key in ("selected_folder", "launcher", "folder", "exe", "romfs"):
         result[key] = str(result[key]) if result[key] is not None else None
     result["nups"] = [str(file) for file in result["nups"]]
+    result["folders"] = [str(folder) for folder in info.folders]
     return result
 
 
-def output_path(value: str, source: Path, hookshot: Path | None = None) -> Path:
+def output_path(value: str, source: Path, game: Path | None = None) -> Path:
     out = absolute_path(value, "Output")
     if out.exists():
         raise ValueError(f"Output already exists; choose a new folder: {out}")
@@ -119,8 +125,8 @@ def output_path(value: str, source: Path, hookshot: Path | None = None) -> Path:
     protected = [source, SOURCE_ROOT]
     if source.is_file() or source.name.lower() == "romfs":
         protected.append(source.parent)
-    if hookshot is not None:
-        protected.append(hookshot)
+    if game is not None:  # the chosen folder, a Longshot Launcher home and the build it resolves to
+        protected.extend(game_folders(game))
     for root in protected:
         root = root.resolve()
         if out.is_relative_to(root) or root.is_relative_to(out):

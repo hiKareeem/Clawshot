@@ -7,7 +7,7 @@ body:
       value: |
         For problems with the UI, Generate or checking your game files, use **Clawshot itself** instead.
         Public test builds are unfinished. Read [the contribution rules](https://github.com/hiKareeem/Clawshot/blob/main/CONTRIBUTING.md).
-        Attach only the whole `hookshot_log.txt` file, not screenshots or other files.
+        Attach only the whole game log (`hookshot_log.txt` or `longshot_log.txt`), not screenshots or other files.
         The log contains your folder paths, including your user name, but no game data. Those paths will be public with your report.
         Never attach game files, seed folders, saves, keys, caches or spoiler files.
   - type: input
@@ -28,7 +28,7 @@ body:
     id: settings
     attributes:
       label: Whole settings string
-      description: "Copy the whole Settings string from the finished seed on Generate, including its Clawshot-<version>: start. Do not shorten it. For a seed pack, paste its settings from pack.json."
+      description: "Copy the whole Settings string from the finished seed on Generate, including its Clawshot-<version>: start. Do not shorten it. For a seed pack, paste its settings from pack.json. This box keeps it exact. Copying it from Discord? Ask for it inside single backticks or through Copy for Discord: Discord drops the _ characters of a plain string."
       render: text
     validations:
       required: true
@@ -42,8 +42,8 @@ body:
   - type: input
     id: runtime
     attributes:
-      label: Hookshot version (or emulator name and version)
-      description: Copy the first line of hookshot_log.txt for Hookshot. If using an emulator instead, give its name and version.
+      label: Hookshot or Longshot version (or emulator name and version)
+      description: "Hookshot: copy the first line of hookshot_log.txt. Longshot: copy the line with \"longshot v\" near the top of longshot_log.txt, or the version Detect shows on Game. If using an emulator instead, give its name and version."
     validations:
       required: true
   - type: input
@@ -76,8 +76,8 @@ body:
   - type: textarea
     id: log
     attributes:
-      label: Attach the whole hookshot_log.txt file here
-      description: "Drag the file here, rather than pasting an excerpt. Play writes it in your chosen output folder, beside user and seed (usually Documents/Clawshot/seed-<number>/hookshot_log.txt). Open seed folder opens the inner seed folder: go up one folder to find the log. For a seed pack, it is beside Play seed.bat. Emulator players: attach only the emulator's own log instead. If there is no log, explain why."
+      label: Attach the whole hookshot_log.txt or longshot_log.txt file here
+      description: "Drag the file here, rather than pasting an excerpt. Play writes hookshot_log.txt or longshot_log.txt in your chosen output folder, beside user and seed (usually Documents/Clawshot/seed-<number>/). Open seed folder opens the inner seed folder: go up one folder to find the log. For a seed pack, it is beside Play seed.bat. If Longshot's log there is empty, or you loaded the seed through Longshot's own launcher, attach longshot_log.txt from the Longshot game folder. Emulator players: attach only the emulator's own log instead. If there is no log, explain why."
     validations:
       required: true
   - type: checkboxes

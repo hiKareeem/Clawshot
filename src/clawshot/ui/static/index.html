@@ -29,8 +29,8 @@
           <div class="heading">
             <h1>Your game</h1>
             <p>
-              Your game dump is all you need to make a seed. Hookshot is only
-              for Play.
+              Your game dump is all you need to make a seed. Hookshot or Longshot
+              is only for Play.
             </p>
           </div>
           <h2 class="section-title">Game files</h2>
@@ -47,24 +47,28 @@
               ><button id="check-dump">Check</button>
             </div>
           </div>
-          <div class="menu-row path-row" data-interface="hookshot">
-            <label for="hookshot">Hookshot folder (optional)</label>
+          <div class="menu-row path-row" data-interface="runtime">
+            <label for="game-folder">Hookshot or Longshot (optional)</label>
             <div class="value-cell">
               <input
-                id="hookshot"
+                id="game-folder"
                 data-path
-                placeholder="Browse or paste a folder path"
+                placeholder="Game or Longshot Launcher folder"
                 autocomplete="off"
                 spellcheck="false"
-              /><button data-browse="hookshot">Browse…</button
-              ><button id="check-hookshot">Detect</button>
+              /><button data-browse="game">Browse…</button
+              ><button id="check-game">Detect</button>
             </div>
           </div>
+          <p class="help">
+            Get Longshot: longshot.magicbean.dev/download
+            (build it from your own game dump).
+          </p>
           <h2 class="section-title">Detected versions</h2>
-          <div class="menu-row" data-interface="hookshot">
-            <span class="row-label">Hookshot</span>
+          <div class="menu-row" data-interface="runtime">
+            <span class="row-label">Runtime</span>
             <div
-              id="hookshot-status"
+              id="game-status"
               class="value-cell detection"
               aria-live="polite"
             >
@@ -108,7 +112,8 @@
                 spellcheck="false"
                 autocomplete="off"
               /><button id="apply-string">Apply</button
-              ><button id="copy-string">Copy</button>
+              ><button id="copy-string">Copy</button
+              ><button id="copy-discord">Copy for Discord</button>
             </div>
           </div>
           <p class="help" id="settings-state" aria-live="polite">
@@ -189,10 +194,10 @@
         <section class="description-panel" aria-live="polite">
           <h2 id="description-title">Your game</h2>
           <p id="description-text">
-            Choose your game dump first. Hookshot is optional, only for Play.
+            Choose your game dump first. Hookshot or Longshot is optional, only for Play.
           </p>
           <p id="description-note" class="description-note">
-            Choose your game files. Only pressing Play starts Hookshot.
+            Choose your game files. Only pressing Play starts the chosen game.
           </p>
           <div id="result" hidden>
             <h3>Seed ready</h3>
@@ -212,6 +217,8 @@
                 data-copy="result-settings"
               >
                 Copy
+              </button><button data-copy="result-settings" data-discord>
+                Copy for Discord
               </button>
             </div>
             <div class="share-line">
@@ -224,7 +231,7 @@
             </div>
             <p id="share-status" class="help" role="status"></p>
             <div class="result-actions">
-              <button id="play-seed" data-interface="play" hidden>Play</button>
+              <button id="play-seed" data-interface="play" disabled>Play</button>
               <button id="open-folder">Open seed folder</button>
               <button id="copy-emulator" data-interface="emulator">
                 Copy to my emulator
@@ -235,7 +242,7 @@
             <p id="play-status" class="help" aria-live="polite"></p>
             <p id="play-paths" class="help"></p>
             <p id="save-isolation" class="help">
-              Hookshot Play keeps saves inside this seed's output folder. Your
+              Hookshot or Longshot Play keeps saves inside this seed's output folder. Your
               normal saves are never touched.
             </p>
             <div id="emulator-steps" class="help">

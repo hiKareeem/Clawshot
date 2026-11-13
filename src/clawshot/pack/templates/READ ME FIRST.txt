@@ -2,7 +2,9 @@ CLAWSHOT TEST SEED - read this first
 ====================================
 
 Clawshot is an item randomizer for The Legend of Zelda: Ocarina of Time on Switch 2.
-It runs on the Hookshot PC recomp, and on Switch 2 emulators (tested on Lichii).
+It runs on the Hookshot and Longshot PC versions, and on Switch 2 emulators (tested
+on Lichii). Longshot, Hookshot's continuation: https://longshot.magicbean.dev/download
+(project: https://git.magicbean.dev/MagicBeanDev/Longshot).
 This is an early test build: expect bugs, and please report them.
 
 This zip has NO game files. It builds the seed on your PC from your own copy of
@@ -18,37 +20,45 @@ WHAT'S SHUFFLED
 
 YOU NEED
 - Windows, and your own dump of the game at update v131072 (build e0f3ccfa), as a
-  .nup file OR an extracted romfs folder. With Hookshot, the extracted folder is
-  "romfs" inside your Hookshot folder. No extraction is needed for .nup input.
+  .nup file OR an extracted romfs folder. A Hookshot or Longshot game folder keeps
+  one called "romfs". No extraction is needed for .nup input.
 - uv, which runs Clawshot's Python code:
   https://docs.astral.sh/uv/getting-started/installation/
   (The first build needs internet to fetch Python and Clawshot's libraries.)
-- For Hookshot play, a Hookshot that can load mods (tested on 2.0.13).
+- For Play: a Hookshot that can load mods (tested on 2.0.13), or Longshot
+  (a community seed was played; this new app/pack Play path still awaits its in-game check).
 
 STEPS
-1. Unzip into its own new folder, outside your game and Hookshot folders.
+1. Unzip into its own new folder, outside your game, Hookshot and Longshot folders.
 2. Run "Make seed.bat". Give it the full .nup filename OR your romfs folder, and your
-   Hookshot folder (the one containing "bin"), or leave Hookshot empty for emulators.
+   Hookshot or Longshot game folder (the one containing "bin") or Longshot Launcher
+   folder, or leave that answer empty for emulators.
    It reads your dump without changing it, checks the game version first, then
    builds the seed into the "seed" folder. Wait for "Verified seed".
    NUP input may first install the locked reader dependencies through uv. Only after
    version verification does it make a small private .romfs-* cache in this pack;
    the cache is removed when generation ends. Never share that cache or "seed".
-3. Hookshot: run "Play seed.bat" and start a NEW GAME. It uses its own save folder,
-   so your normal saves are never touched. If Play says your Hookshot is too old,
-   update Hookshot.
+3. Hookshot or Longshot: quit the game, run "Play seed.bat" and start a NEW GAME.
+   It uses its own save folder. First Play copies only option.sav and account.sav
+   (your game options) from the chosen game's newest save-ID folder, never slot_NN
+   progress. Existing seed saves/options are never replaced. Missing files are
+   skipped and reported. If Play says your game cannot load mods, update it.
    Emulator: back up your saves for this game first (a new game overwrites them),
    then follow "Emulator / console loading" in docs\seed-pack.md.
 4. seed\play-note.md and seed\spoiler.json both hold spoilers: the play note's
    age-locked item table and opening route name item locations, and its full reward
    table lists every shuffled item. Open either file only if you want spoilers.
 
-Prefer Play. To load the seed from Hookshot's own launcher, see docs\seed-pack.md.
-Back up your saves first: that route uses your main save folder.
+Prefer Play. To load the seed from the game's own launcher instead, see
+docs\seed-pack.md. That route uses your normal saves: back them up first.
+Longshot: copy seed\romfs to <game folder>\mods\Clawshot-seed-<number>\romfs,
+start a New Game in an empty slot, and remove that folder before playing your
+normal saves (while it is there, the seed applies to every save slot).
 
 KNOWN ISSUES
-- While a seed is loaded, button icons in text show Switch buttons instead of
-  your controller's. Controls are unchanged.
+- Hookshot: while a seed is loaded, button icons in text show Switch buttons
+  instead of your controller's. Controls are unchanged. Longshot may keep your
+  controller's icons; that is not yet seen in play.
 - New games initialize an empty nut slot (0/20). Child Bow first, then Boomerang
   use without a reload passed Kareem's 2026-11-12 check.
   Saves started with older builds are unchanged: after an age-unusable pickup,
@@ -70,15 +80,19 @@ KNOWN ISSUES
   Dampe's digging prize give the seed's items. The shop gift skips the
   bug-catching lesson. Dampe's dig still shows a heart piece; you get the seed's
   item.
-- Hookshot can crash in the Castle Town guard house. That is a Hookshot bug
-  (github.com/NotRexed/Hookshot/issues/1112), not the seed: reload and carry on.
+- Hookshot can crash in the Castle Town guard house. That is Hookshot issue
+  #1112, not the seed (Hookshot's GitHub has been offline since 2026-11-13):
+  reload and carry on.
 
 REPORTS, QUESTIONS, NEW SEEDS
 Discord: https://discord.gg/7R5ZXPcJqn
 Please include the Clawshot version, seed number, whole settings string, hash,
-Hookshot or emulator version, OS, where you were and what happened. Attach only
-the whole log (Hookshot: hookshot_log.txt in this folder; emulator: its own log).
-The Hookshot log contains your folder paths and user name, but no game data.
+Hookshot, Longshot or emulator version, OS, where you were and what happened.
+On Discord, put the settings string inside single backticks (`like this`):
+otherwise Discord drops its _ characters and the string stops working.
+Attach only the whole log (Hookshot: hookshot_log.txt in this folder; Longshot:
+longshot_log.txt in this folder; emulator: its own log). The game log contains
+your folder paths and user name, but no game data.
 Nothing else attached: never game files, seed folders, saves, keys or spoilers.
 
 Share this zip, never the generated "seed" folder: that one contains game files.

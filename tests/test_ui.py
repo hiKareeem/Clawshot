@@ -115,7 +115,7 @@ def test_no_open_rejects_native_dialogs_and_has_no_completed_folder_to_open():
         assert not config["dialogs_available"] and not config["open_available"] and not config["play_available"]
         assert request(server, "browse", {"kind": "dump-folder"})[0] == 400
         assert request(server, "open", {"target": "folder"})[0] == 400
-        assert request(server, "play", {"hookshot": "not-a-game-path"})[0] == 400
+        assert request(server, "play", {"game": "not-a-game-path"})[0] == 400
         assert request(server, "job")[2]["status"] == "idle"
 
 
@@ -139,7 +139,7 @@ def test_enabled_browse_validates_selection_without_opening_a_dialog(tmp_path):
         assert status == 200 and Path(value["path"]) == tmp_path / "seed-11"
         assert not (tmp_path / "seed-11").exists()  # selecting is not generating/overwriting
         selected = "relative/path"
-        assert request(server, "browse", {"kind": "hookshot"})[0] == 400
+        assert request(server, "browse", {"kind": "game"})[0] == 400
         selected = tmp_path
         assert request(server, "browse", {"kind": "dump-file"})[0] == 400
         selected = tmp_path / "own.nup"

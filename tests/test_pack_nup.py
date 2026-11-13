@@ -211,7 +211,7 @@ def test_existing_nup_seed_is_verified_without_cache_or_hookshot(tmp_path, monke
     note = seed / "play-note.md"
     note.write_text("already generated")
     (root / "pack.json").write_text(json.dumps({"format": 1, "seed": 8, "output_sha256": tree_digest(seed)}))
-    (root / "folders.json").write_text(json.dumps({"romfs": str(path), "hookshot": ""}))
+    (root / "folders.json").write_text(json.dumps({"romfs": str(path), "game": ""}))
     before = note.stat().st_mtime_ns
     runtime.make(root.resolve())
     assert note.read_text() == "already generated"

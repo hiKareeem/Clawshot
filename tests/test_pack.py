@@ -68,7 +68,7 @@ def test_pack_inside_game_directory_is_rejected(tmp_path, monkeypatch):
     root = tmp_path / "game" / "pack"
     root.mkdir(parents=True)
     (root / "pack.json").write_text(json.dumps({"format": 1}))
-    (root / "folders.json").write_text(json.dumps({"romfs": str(tmp_path / "romfs"), "hookshot": str(root.parent)}))
+    (root / "folders.json").write_text(json.dumps({"romfs": str(tmp_path / "romfs"), "game": str(root.parent)}))
     monkeypatch.setattr(runtime, "check_version", lambda _: None)
     with pytest.raises(PackError, match="outside your game folders"):
         runtime.configuration(root.resolve())
@@ -91,12 +91,12 @@ def configured_pack(tmp_path, monkeypatch):
     return root, romfs
 
 
-@pytest.mark.parametrize("hookshot", [None, "", "not-installed"])
-def test_make_without_hookshot_installation(configured_pack, hookshot):
+@pytest.mark.parametrize("game", [None, "", "not-installed"])
+def test_make_without_game_installation(configured_pack, game):
     root, _ = configured_pack
-    if hookshot is not None:
+    if game is not None:
         config = json.loads((root / "folders.json").read_text())
-        config["hookshot"] = str(root.parent / hookshot) if hookshot else ""
+        config["game"] = str(root.parent / game) if game else ""
         (root / "folders.json").write_text(json.dumps(config))
     seed = root / "seed" / "note.md"
     before = seed.stat().st_mtime_ns
@@ -107,13 +107,13 @@ def test_make_without_hookshot_installation(configured_pack, hookshot):
     assert not (root / "hookshot_log.txt").exists()
 
 
-@pytest.mark.parametrize("hookshot", [None, ""])
-def test_emulator_only_play_points_to_loading_guide(configured_pack, hookshot):
+@pytest.mark.parametrize("folders", [{}, {"game": ""}, {"hookshot": ""}, {"game": "", "hookshot": "configured"}])
+def test_emulator_only_play_points_to_loading_guide(configured_pack, folders):
     root, _ = configured_pack
-    if hookshot is not None:
-        config = json.loads((root / "folders.json").read_text())
-        config["hookshot"] = hookshot
-        (root / "folders.json").write_text(json.dumps(config))
+    config = json.loads((root / "folders.json").read_text())
+    # A legacy "hookshot" folder never overrides the "game" the pack names, even an empty one.
+    config |= {key: str(root.parent / value) if value else "" for key, value in folders.items()}
+    (root / "folders.json").write_text(json.dumps(config))
     with pytest.raises(PackError, match="docs/seed-pack.md"):
         runtime.play(root)
     assert not (root / "user").exists()

@@ -32,7 +32,7 @@ class GenerationRequest:
     output: str
     seed: int
     settings: str
-    hookshot: str = ""
+    game: str = ""  # the chosen Hookshot or Longshot folder, kept outside the output; unused by generation
 
     def paths(self) -> tuple[Path, Path]:
         if type(self.seed) is not int or not -(2**53 - 1) <= self.seed <= 2**53 - 1:
@@ -40,8 +40,8 @@ class GenerationRequest:
         source = absolute_path(self.dump, "Dump", allow_links=True)
         if source.is_dir():  # base/romfs typed inside a dump folder: generate from, and protect, the whole dump
             source = dump_root(source)
-        hookshot = absolute_path(self.hookshot, "Hookshot", allow_links=True) if self.hookshot else None
-        return source, output_path(self.output, source, hookshot)
+        game = absolute_path(self.game, "Game folder", allow_links=True) if self.game else None
+        return source, output_path(self.output, source, game)
 
 
 def generate_seed(request: GenerationRequest, stage: Path, report) -> dict:

@@ -9,9 +9,9 @@ from pathlib import Path
 import pytest
 from test_app import app_source as app_source
 from test_app import synthetic_run, wait_job
-from test_pack_loader import hookshot_mods
+from test_pack_loader import hookshot_mods, longshot_launcher
 
-from clawshot.app import GenerationRequest, Jobs, detect_dump, detect_hookshot, play_plan
+from clawshot.app import GenerationRequest, Jobs, detect_dump, detect_game, play_plan
 from clawshot.app.library import MANIFEST
 from clawshot.app.paths import absolute_path, output_path
 from clawshot.pack import VERSION_FILES, version_digest
@@ -58,6 +58,23 @@ def test_ui_plan_has_one_mod_private_saves_and_unsets_overlay(made_ui_seed, tmp_
     assert not (root / "user").exists() and not (root / "hookshot_log.txt").exists()
     assert files_under(tmp_path) == before
     assert os.environ["HOS_FS_OVERLAY"] == "another-overlay"
+
+
+def test_switching_games_keeps_the_seeds_saves_and_plays_the_launchers_newest_build(made_ui_seed, tmp_path):
+    result, hookshot, _ = made_ui_seed
+    root = Path(result["output"])
+    launcher, exe = longshot_launcher(tmp_path)
+    before = files_under(tmp_path)
+    hookshot_plan = play_plan(result, str(hookshot))
+    longshot_plan = play_plan(result, str(launcher))
+    assert (hookshot_plan["game"], longshot_plan["game"]) == ("Hookshot", "Longshot")
+    assert hookshot_plan["user"] == longshot_plan["user"] == str(root / "user")
+    assert longshot_plan["command"] == [str(exe), "--user", str(root / "user")]
+    assert longshot_plan["cwd"] == str(exe.parents[1]) and longshot_plan["version"] == "v3.0.0-rc.10"
+    assert longshot_plan["environment"] == {"LONGSHOT_NO_UPDATE_CHECK": "1", "HOS_MODS": str(root)}
+    assert longshot_plan["log"] == str(root / "longshot_log.txt")
+    assert hookshot_mods(Path(longshot_plan["environment"]["HOS_MODS"])) == [root / "seed"]
+    assert files_under(tmp_path) == before
 
 
 @pytest.mark.parametrize("damage", ["seed", "extra-mod", "user-link", "log-link", "missing-manifest", "wrong-build"])
@@ -110,7 +127,7 @@ def test_read_only_inputs_resolve_links_but_outputs_refuse_them(made_ui_seed, tm
     dump_alias, game_alias = aliases
     before = files_under(source)
     assert Path(detect_dump(str(dump_alias))["path"]) == source
-    assert Path(detect_hookshot(str(game_alias))["folder"]) == hookshot
+    assert Path(detect_game(str(game_alias))["folder"]) == hookshot
     request = GenerationRequest(str(dump_alias), str(tmp_path / "fresh"), 8, "CS1", str(game_alias))
     assert request.paths()[0] == source
     with pytest.raises(ValueError):

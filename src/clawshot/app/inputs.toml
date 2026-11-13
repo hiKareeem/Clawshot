@@ -1,7 +1,7 @@
 [game]
 label = "Your game"
-help = "Only your game files are required. Choose an extracted romfs folder or a full .nup. Hookshot is optional and is used only by Play."
-note = "Checking game files never starts the game. Emulator players can skip Hookshot."
+help = "Only your game files are required. Choose an extracted romfs folder or a full .nup. Hookshot or Longshot is optional and is used only by Play."
+note = "Checking game files never starts the game. Emulator players can skip Hookshot and Longshot."
 [settings]
 label = "Settings"
 help = "Choose where rewards can move and which world options to use. Recommended gives you the standard test setup; Defaults restores the original generator options."
@@ -10,10 +10,10 @@ note = "Options that are not ready stay visible and explain why you cannot use t
 label = "Generate a seed"
 help = "Make a new seed while the menu stays usable. Cancel stops this seed without changing any earlier seed or your game files."
 note = "Keep the number, settings and Clawshot version if you want to make the same seed again."
-[hookshot]
-label = "Hookshot folder (optional)"
-help = "Only needed for the Play button. Emulator players can skip it."
-note = "Choose the folder containing bin (the game is bin/hookshot.exe on Windows, bin/hookshot on Linux). Play keeps saves inside this seed's folder and never touches your normal saves."
+[runtime]
+label = "Hookshot or Longshot folder (optional)"
+help = "Only needed for the Play button. Choose a Hookshot or Longshot game folder (the one containing bin), or your Longshot Launcher folder: Play uses its newest build. Emulator players can skip it."
+note = "The game is bin/hookshot.exe or bin/longshot.exe on Windows, bin/hookshot or bin/longshot on Linux. Play keeps saves inside this seed's folder, whichever game you choose, and never touches your normal saves."
 [dump]
 label = "Game dump"
 help = "Choose the extracted romfs folder or full .nup for your copy of the game. Clawshot checks that it is the supported game version."
@@ -49,9 +49,9 @@ help = "Write the changed game files, play note and spoiler into a temporary fol
 label = "Finish the new seed folder"
 help = "Move the finished seed into your new output folder. If another seed is already there, stop instead of replacing it."
 [play]
-label = "Play in Hookshot"
-help = "Start this seed in Hookshot with a save folder of its own inside the output. Your normal saves are never touched."
-note = "Quit a running Hookshot game before starting another seed. Play needs Windows or Linux and a Hookshot build that can load mods."
+label = "Play"
+help = "Start this seed in your chosen Hookshot or Longshot game with its own save folder. First Play carries over option.sav and account.sav if available, not your progress slots. Existing seed options stay unchanged."
+note = "Quit a running Hookshot or Longshot game before starting another seed. Play needs Windows or Linux and a game build that can load mods."
 [seeds]
 label = "My seeds"
 help = "Open a folder containing seeds you made earlier. Clawshot checks their files before allowing Play; your original game dump is not needed to play them."

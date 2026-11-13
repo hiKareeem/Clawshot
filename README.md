@@ -23,30 +23,41 @@ that output. Clawshot is not affiliated with or endorsed by Nintendo.
 ## Get started with the UI
 
 1. Download **Clawshot-\<version\>.zip** from a [UI test release](https://github.com/hiKareeem/Clawshot/releases),
-   not GitHub's generic source-code zip. Unzip the whole folder outside your game and Hookshot folders.
+   not GitHub's generic source-code zip. Unzip the whole folder outside your game, Hookshot and Longshot folders.
 2. **Windows:** double-click **Clawshot.bat**. **Linux:** run **clawshot.sh**.
    **macOS (untested):** right-click **Clawshot.command** and choose **Open** the first time
    because the download is unsigned; later, double-click it.
    The first start may download the checked app-local uv tool, Python and locked dependencies; no administrator access.
 3. On **Game**, Browse to your own supported **romfs folder or .nup** and Check it.
-   Hookshot is optional: it is only needed for the Play button.
+   Hookshot or Longshot is optional: one of them is only needed for the Play button.
 4. Go to **Generate**. Recommended settings, a random seed and a new Documents folder are ready;
    leave them alone for a first seed, then choose **Generate seed**. Wait for **Seed ready**.
    **Play note (spoilers)** is optional: it reveals item locations and all shuffled rewards; it does not open automatically.
-5. **Hookshot:** choose/check its folder on Game, quit any already running Hookshot, then press **Play**.
-   This seed has its own saves; normal Hookshot saves are not used.
+5. **Hookshot or Longshot:** on Game, choose its game folder (or your Longshot Launcher folder) and press
+   **Detect**, quit any running Hookshot or Longshot, then press **Play** and start a new game.
+   This seed has its own playthrough. First Play copies only `option.sav` and `account.sav` from the chosen
+   game's newest save-ID folder, keeping options such as Invert Jump; no progress slots are copied.
    **Emulator instead:** back up your normal saves, then **Copy to my emulator**, choose this game's
    mod folder and enable only that seed. Existing copies are never replaced.
 
+**Longshot** is the continuation of Hookshot, where its top maintainers moved (Longshot README, introduction);
+Hookshot's GitHub repository has been offline since 2026-11-13. Get Longshot's launcher from
+**<https://longshot.magicbean.dev/download>** (project: <https://git.magicbean.dev/MagicBeanDev/Longshot>); it builds
+the game on your PC from your own dump. Kareem played a Clawshot community seed on Longshot on
+2026-11-13 using an isolated launcher. The new app/pack Play integration still awaits its in-game check;
+historical Hookshot results below do not certify every Longshot behavior.
+
 Keep the terminal open. **My seeds** finds your earlier seeds after a restart. Copy the number,
-settings and short hash to share a seed recipe, never the generated game files.
+settings and short hash to share a seed recipe, never the generated game files. **On Discord, use
+Copy for Discord** or put the settings string inside single backticks (`` `Clawshot-…` ``): Discord
+otherwise reads text between two `_` as italics and drops them, and the string stops working.
 [The UI guide](docs/ui.md) covers loading, saves, shared seeds and troubleshooting.
 Keyboard/mouse only: **gamepad and Steam Deck controller input are not done**. The planned tracker
 will be a UI tab, not a separate tool; it is not in this release.
 
 <table>
   <tr>
-    <td width="33%" valign="top"><img src="docs/images/ui-game-check.png" width="100%" alt="The Game screen after a successful check: the game dump is a verified romfs of build e0f3ccfa and Hookshot v2.1.0 supports mods."><br><sub><b>Game:</b> your dump checked as the supported build; Hookshot is optional.</sub></td>
+    <td width="33%" valign="top"><img src="docs/images/ui-game-check.png" width="100%" alt="The Game screen after a successful check: the game dump is a verified romfs of build e0f3ccfa and Hookshot v2.1.0 supports mods."><br><sub><b>Game:</b> your dump checked as the supported build; Hookshot or Longshot is optional.</sub></td>
     <td width="33%" valign="top"><img src="docs/images/ui-settings.png" width="100%" alt="The Settings screen with the Defaults and Recommended presets, the item kinds to shuffle and dungeon item and song placement options."><br><sub><b>Settings:</b> choose what to shuffle, or replay a settings string.</sub></td>
     <td width="33%" valign="top"><img src="docs/images/ui-seeds.png" width="100%" alt="My seeds listing a saved seed with its number, hash and folder, and View seed, Play, Open folder and Play note buttons."><br><sub><b>My seeds:</b> earlier seeds, ready to view or play again.</sub></td>
   </tr>
@@ -128,38 +139,47 @@ and [playtest answers](https://github.com/hiKareeem/Clawshot/blob/main/plans/pla
 - **Hookshot 2.0.12 and later: use Clawshot's Play or a current pack's `Play seed.bat`,** which loads the seed as a
   Hookshot mod. Packs built before 2026-11-10 used Hookshot's older overlay loading
   (`HOS_FS_OVERLAY`), which now crashes at start-up; rebuild the pack from current source.
-  While a seed is loaded, button icons in ordinary text show Switch buttons instead of your
-  controller's; the ocarina note interface is drawn separately and keeps its own prompts.
-- A Market guard-house crash on Hookshot 2.0.11 matched the upstream
-  [Hookshot issue #1112](https://github.com/NotRexed/Hookshot/issues/1112); no fix is claimed here.
+- **Button icons in text depend on the game.** On Hookshot (including 2.1.0), while a seed is loaded, button
+  icons in ordinary text show Switch buttons instead of your controller's. Longshot merges the button prompts'
+  sizes into a mod's size table at start (Longshot README, *Mods*), and a headless Longshot v3.0.0-rc.2 boot of a
+  Clawshot seed logged that merge on 2026-11-13, so your controller's icons may stay; that is not yet seen in play.
+  The ocarina note interface is drawn separately and keeps its own prompts.
+- A Market guard-house crash on Hookshot 2.0.11 matched upstream Hookshot issue #1112 (Hookshot's GitHub
+  repository has been offline since 2026-11-13); no fix is claimed here.
 
 ## Play a seed pack
 
 1. Install [uv](https://docs.astral.sh/uv/getting-started/installation/).
-2. Unzip the seed pack into **its own new folder outside your game dump and Hookshot**.
+2. Unzip the seed pack into **its own new folder outside your game dump and your Hookshot or Longshot folders**.
    Do not extract over another pack.
 3. Run **`Make seed.bat`** and give it your own supported **`.nup` file or extracted RomFS folder**.
-   For Hookshot, also give its installation folder (the one containing `bin`); for an emulator,
-   leave that answer blank. Wait for **Verified seed** before playing.
-4. **Hookshot:** run **`Play seed.bat`** and start a **new game** the first time. Later plays
+   For Hookshot or Longshot, also give its game folder (the one containing `bin`) or your Longshot Launcher
+   folder; for an emulator, leave that answer blank. Wait for **Verified seed** before playing.
+4. **Hookshot or Longshot:** run **`Play seed.bat`** and start a **new game** the first time. Later plays
    continue this pack's isolated saves.
 5. **Emulator, instead of Play:** **back up this game's entire emulator save folder first**.
    Copy the generated `seed/romfs` into the emulator's per-game mod folder as `<mod name>/romfs`,
    enable the mod and start a new game. For Lichii, the destination is
    `%APPDATA%\eden\load\0400486024DEC000\<mod name>\romfs`; enable it in **Properties > Add-ons**.
 
-See the **[seed-pack guide](docs/seed-pack.md)** for detailed setup, version/digest checks and
-runtime troubleshooting. Packs contain the generator's source and settings, not a ready-made game
-mod; Make builds it locally from your dump.
+See the **[seed-pack guide](docs/seed-pack.md)** for detailed setup, version/digest checks, manual
+Hookshot and Longshot mod folders and runtime troubleshooting. Packs contain the generator's source and
+settings, not a ready-made game mod; Make builds it locally from your dump.
 
-Hookshot and Lichii have recorded loading/play results; other emulator and console layouts are
-**untested with Clawshot**. Use the current mod-loading instructions, not an older overlay launcher.
+**Longshot without Play:** back up your saves first (the `user` folder in the game folder on Windows,
+`~/.local/share/longshot` on Linux; Longshot README, *Where the files go*). Copy the made `seed/romfs` to
+`<game folder>/mods/Clawshot-seed-<number>/romfs` (Longshot README, *Mods*), then start a **New Game in an empty
+slot**. The mod applies to every save slot: remove that folder before playing your normal saves.
+
+Hookshot and Lichii have recorded loading/play results; Kareem also played a community seed on Longshot
+with an isolated launcher on 2026-11-13. The new Longshot app/pack Play path and other emulator/console
+layouts remain unverified in game. Use the current mod-loading instructions, not an older overlay launcher.
 Keep packs in separate new folders and preserve your saves. Emulator New Game replaces this game's
-save progress: back up the entire save folder first. The pack's isolated Hookshot saves do not
-isolate emulator saves, and manually installing a Hookshot mod uses its normal save folder.
+save progress: back up the entire save folder first. The pack's isolated saves do not isolate
+emulator saves, and manually installing a Hookshot or Longshot mod uses that game's normal saves.
 
-Questions, test packs and reports: **[Clawshot Discord](https://discord.gg/7R5ZXPcJqn)**.
-Never post a dump, generated mod, cache or save.
+Questions, test packs and reports: **[Clawshot Discord](https://discord.gg/7R5ZXPcJqn)**. Paste settings strings
+there inside single backticks (or with the UI's **Copy for Discord**). Never post a dump, generated mod, cache or save.
 
 ## Run from source
 

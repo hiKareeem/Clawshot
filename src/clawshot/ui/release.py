@@ -19,11 +19,11 @@ EXTRA = (
     "src/clawshot/ui/static/style.css",
 )
 READ_ME = (
-    "Unzip the whole folder outside your game and Hookshot folders.\n"
+    "Unzip the whole folder outside your game, Hookshot and Longshot folders.\n"
     "Windows: double-click Clawshot.bat. Linux: run clawshot.sh. "
     "macOS (untested): first right-click Clawshot.command and choose Open (unsigned download).\n"
-    "Choose your own supported romfs or .nup on Game; Hookshot is optional and only needed for Play.\n"
-    "Generate with Recommended; Play uses separate Hookshot saves, or Copy to my emulator after backing up saves.\n"
+    "Choose your own supported romfs or .nup on Game; Hookshot or Longshot is optional, only needed for Play.\n"
+    "Generate with Recommended; Play uses separate seed saves, or Copy to my emulator after backing up saves.\n"
     "Keep the terminal open. No game is included or downloaded; never share generated mods. See docs/ui.md.\n"
 )
 

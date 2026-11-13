@@ -9,7 +9,7 @@ try {
     } elseif ($Action -eq 'make') {
         $config = [pscustomobject]@{
             romfs = (Read-Host 'Your game .nup file or extracted romfs folder (no quotes)').Trim()
-            hookshot = (Read-Host 'Optional Hookshot folder containing bin (no quotes; empty = emulator)').Trim()
+            game = (Read-Host 'Optional Hookshot or Longshot game folder containing bin, or Longshot Launcher folder (no quotes; empty = emulator)').Trim()
         }
     } else {
         throw 'Run Make seed.bat first.'
@@ -45,26 +45,24 @@ try {
         & uv run --project $root --frozen --no-dev python -m clawshot.pack.source $config.romfs --expected $manifest.romfs_sha256
         if ($LASTEXITCODE -ne 0) { throw 'NUP version/integrity check failed. No seed or cache was created.' }
     }
-    if ($config.hookshot) {
-        $config.hookshot = [IO.Path]::GetFullPath($config.hookshot)
+    # Packs made before Longshot support saved this folder as "hookshot"; read it as the game folder.
+    $game = if ($config.PSObject.Properties['game']) { $config.game } else { $config.hookshot }
+    if ($game) {
+        $game = [IO.Path]::GetFullPath($game)
     }
-    foreach ($folder in @($config.romfs, $config.hookshot)) {
+    foreach ($folder in @($config.romfs, $game)) {
         if (-not $folder) { continue }
         $full = [IO.Path]::GetFullPath($folder).TrimEnd('\', '/')
         if ($root -eq $full -or $root.StartsWith($full + '\', [StringComparison]::OrdinalIgnoreCase) -or $full.StartsWith($root + '\', [StringComparison]::OrdinalIgnoreCase)) {
-            throw 'Extract the pack outside your RomFS and Hookshot folders.'
+            throw 'Extract the pack outside your RomFS, Hookshot and Longshot folders.'
         }
     }
-    if ($Action -eq 'play') {
-        if (-not $config.hookshot) {
-            throw 'No Hookshot folder configured. For emulator loading, follow docs/seed-pack.md (Emulator / console loading); do not run Play.'
-        }
-        $exe = Join-Path $config.hookshot 'bin/hookshot.exe'
-        if (-not (Test-Path -LiteralPath $exe -PathType Leaf)) {
-            throw "Missing $exe. Never use the folder-root launcher."
-        }
+    # Play's runtime finds the game in bin (or a Longshot Launcher's newest build) and refuses the folder-root launcher.
+    if ($Action -eq 'play' -and -not $game) {
+        throw 'No Hookshot or Longshot folder configured. For emulator loading, follow docs/seed-pack.md (Emulator / console loading); do not run Play.'
     }
     if (-not (Test-Path -LiteralPath $configPath)) {
+        $config.game = $game
         $config | ConvertTo-Json | Set-Content -LiteralPath $configPath -Encoding UTF8
     }
     Get-Command uv -ErrorAction Stop | Out-Null

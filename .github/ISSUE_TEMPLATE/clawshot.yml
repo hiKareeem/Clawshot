@@ -26,7 +26,7 @@ body:
     id: steps
     attributes:
       label: What were you trying to do?
-      description: Which tab and button, what you expected, and what happened instead. For a game check, say whether you chose a romfs folder, a .nup file or a dump folder with base and updates.
+      description: Which tab and button, what you expected, and what happened instead. For a game check, say whether you chose a romfs folder, a .nup file or a dump folder with base and updates. For Detect or Play, say whether you chose a Hookshot game folder, a Longshot game folder or a Longshot Launcher folder.
     validations:
       required: true
   - type: textarea

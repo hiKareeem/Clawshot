@@ -17,7 +17,7 @@ from clawshot.app import (
     Jobs,
     Player,
     detect_dump,
-    detect_hookshot,
+    detect_game,
     input_schema,
     presets,
     schema,
@@ -25,7 +25,7 @@ from clawshot.app import (
 )
 from clawshot.app.emulator import copy_to_emulator
 from clawshot.app.library import SeedLibrary
-from clawshot.app.paths import absolute_path, default_output_root
+from clawshot.app.paths import absolute_path, default_output_root, game_folders
 from clawshot.app.play import play_refusal
 from clawshot.app.preferences import Preferences, suggested_eden_folder
 from clawshot.app.sharing import import_settings, player_settings, share_settings
@@ -153,14 +153,14 @@ class Application:
             return payload | ({"seed": number} if route == "shared-seed" else {})
         if method == "POST" and route == "normalize-path":
             kind = body.get("kind", "output")
-            if kind not in ("dump", "hookshot", "output"):
-                raise ValueError("Choose a game, Hookshot or output path.")
+            if kind not in ("dump", "game", "output"):
+                raise ValueError("Choose a dump, Hookshot or Longshot game, or output path.")
             return {"path": str(absolute_path(body.get("path"), "Path", allow_links=kind != "output"))}
         if method == "POST" and route == "browse":
             if self.chooser is None:
                 raise ValueError("Path dialogs are disabled in --no-open and tests; paste a path instead")
             kind = body.get("kind")
-            if kind not in ("dump-folder", "dump-file", "hookshot", "output", "seeds", "emulator_mods"):
+            if kind not in ("dump-folder", "dump-file", "game", "output", "seeds", "emulator_mods"):
                 raise ValueError("Unknown path chooser")
             seed = body.get("seed", 0)
             if type(seed) is not int or not -(2**53 - 1) <= seed <= 2**53 - 1:
@@ -186,11 +186,11 @@ class Application:
             if body.get("dump"):
                 result["dump"] = detect_dump(body["dump"])
                 self.preferences.remember("dump", result["dump"]["path"])
-            if body.get("hookshot"):
-                result["hookshot"] = detect_hookshot(body["hookshot"])
-                self.preferences.remember("hookshot", result["hookshot"]["folder"])
+            if body.get("game"):
+                result["game"] = detect_game(body["game"])
+                self.preferences.remember("game", result["game"]["selected_folder"])
             if not result:
-                raise ValueError("Enter a dump or Hookshot path")
+                raise ValueError("Enter a dump, Hookshot or Longshot path")
             result["warning"] = self.preferences.warning
             return result
         if method == "POST" and route == "generate":
@@ -216,12 +216,16 @@ class Application:
             saved = self.preferences.snapshot()
             if not saved.get("emulator_mods"):
                 raise ValueError("Choose your emulator's mod folder for this game first.")
-            protected = (saved.get("dump"), saved.get("hookshot"), os.environ.get("OOT_ROMFS"))
+            protected = (
+                saved.get("dump"),
+                *(game_folders(saved["game"]) if saved.get("game") else ()),
+                os.environ.get("OOT_ROMFS"),
+            )
             return copy_to_emulator(self.result_for(body), saved["emulator_mods"], protected=protected)
         if method == "POST" and route == "play":
             if not self.allow_play:
                 raise ValueError("Play is disabled in --no-open. Open Clawshot normally to play.")
-            return self.player.start(self.result_for(body), body.get("hookshot"))
+            return self.player.start(self.result_for(body), body.get("game"))
         if method == "POST" and route in ("result", "open"):
             result = self.result_for(body)
             if result is None:

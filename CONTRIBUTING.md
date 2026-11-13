@@ -20,8 +20,9 @@ notices. Cite any ported work by project, file and commit in [NOTICE](NOTICE).
   OoT Randomizer's MIT portions are usable; its GPL folders are not.
 - Do not read or use NX2navi code or documentation for an AI-assisted contribution; its licence
   forbids AI use. No material from it is accepted here.
-- Hookshot is GPL-3.0. Facts may be researched with a file citation, but do not copy its code or
-  assets into Clawshot. Runtime loading/hooks belong upstream in Hookshot, not in a vendored fork.
+- Hookshot and Longshot are GPL-3.0. Facts may be researched with a file citation; do not copy their
+  code or assets into Clawshot. Runtime loading/hooks belong upstream, not in a vendored fork.
+  Hookshot's repository has been offline since 2026-11-13; Longshot is its active continuation.
 - Guides and walkthroughs may supply facts with a URL citation, never copied text.
 
 ## Never submit game data
@@ -36,10 +37,11 @@ data/safety rules and allowed location definitions, see [AGENTS.md](AGENTS.md), 
 
 For an in-game report, use the [in-game bug form](https://github.com/hiKareeem/Clawshot/issues/new?template=bug_report.yml):
 provide the Clawshot version, seed number, whole settings string, hash, runtime/version, OS, steps and
-expected/observed result. Attach only the whole `hookshot_log.txt` (or your emulator's log), nothing else.
-The Hookshot log contains your folder paths, including your user name, but no game data; those paths
-will be public. Play writes it in the chosen output folder, beside `seed` and `user`, one folder above
-the folder opened by **Open seed folder**. Never upload seed folders, saves, keys or `spoiler.json`.
+expected/observed result. Attach only the whole `hookshot_log.txt`, `longshot_log.txt` or emulator log.
+Game logs contain folder paths, including your user name, but no game data; those paths will be public.
+Play captures its game's log in the output folder beside `seed` and `user`, one folder above
+**Open seed folder**. If Longshot's capture is empty, use its game-folder log. Never upload seed folders,
+saves, keys or `spoiler.json`. On Discord, wrap the settings string in single backticks or use Copy for Discord.
 For UI, Generate or game-check errors, use [Clawshot itself](https://github.com/hiKareeem/Clawshot/issues/new?template=clawshot.yml)
 and paste the UI's error text without attachments. If uncertain, ask on Discord before posting.
 
