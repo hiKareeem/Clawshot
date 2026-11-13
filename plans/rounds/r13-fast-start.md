@@ -582,3 +582,37 @@ covering `test_world_tiers.py`, `test_age_fill.py` and `test_fast_start_route.py
 dump variables and this worktree's source. This includes the exact seed/default-attempt
 writer, age-separated Bracelet replay, retained adult pair/scales and independent return proof.
 Log: `release-blocker/validation-age-split-working/gates.txt`.
+
+Repaired code is committed as `a82af5d`, frozen at `witness/after-a82af5d-src` with the
+complete code and seven root packaging inputs (not the earlier src-only fixture).
+`src` tree: `3898ce60bf4fdb36e12af093da377a685364de72`; complete archive SHA256:
+`f36b92c6eea10f6e27fffd856df345a29ecab8fd52ecbb03c1d3354d1cfc47d7`.
+Fresh post-fix 30+30 is running, main/control `ac07355` versus fixed `a82af5d`;
+no product code changes after freezing.
+
+Matrix preparation is retargeted to that fixed source and fresh gate log
+`release-blocker/validation-a82af5d/gates.txt`. New datasets are
+`after-repaired-a82af5d.jsonl` and `baseline-repaired-ac07355.jsonl`.
+A pure coverage/CLI-argument smoke confirms **1344 unique cells per source**:
+the original 1152 plus 192 door-open Recommended small-keys-anywhere cells; the original
+192 door-open Recommended own-dungeon cells remain. No matrix generation has started;
+post-frequency, closed-door 30+20 and repaired-source full gates must pass first.
+
+**Post-fix early-door acceptance completed:** 60 fresh real-CLI runs, default attempts,
+three total processes, 775.18s wall. Main/control `ac07355` remains **0/30 successes** with
+the known kit conflict; fixed `a82af5d` is **30/30 successes**, including written mod output.
+Evidence: `release-blocker/frequency/after/{rows.jsonl,summary.json}`. Closed-door default
+Recommended 0–29 and small-keys-anywhere 0–19 are now running on the same fixed snapshot.
+
+Claude's merge gate is repaired-source format/lint, then full synthetic and full own dump;
+matrix follows, not vice versa. Report that gate as soon as it passes. Claude may merge
+while the matrix continues only if no unexpected repaired-source failure has been observed.
+
+**Pre-launch matrix estimate/cap (posted 21:48):** historical matrix slowest measured cell
+19.6s (not a current-`a82af5d` timing), three workers, plus five minutes startup allowance.
+Full 2688 cells estimate 297.7 minutes. Keep **seed 1 only**: 896 cells estimate 102.6 minutes.
+Drop seed-7/42 repetitions only (**1792 rows**); preserve all **448 declared settings
+combinations per source**, including 64 door-open Recommended and 64 door-open
+small-keys-anywhere cells per source. A pure keyset comparison proves settings coverage
+matches the uncapped plan. First 28 empty-skip cells per source form an included calibration
+batch after full gates; their measurements update the estimate and are not rerun in the remainder.
