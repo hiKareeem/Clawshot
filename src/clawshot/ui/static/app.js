@@ -694,8 +694,8 @@ async function detect(kind, fillDump = true) {
   try {
     const data = await api("detect", { [kind]: checkedPath }),
       info = data[kind];
-    // Blur normalization may finish while Detect is in flight; it is still the same checked folder.
-    if (field.value !== checkedPath && field.value !== (info.selected_folder || info.path)) return;
+    // Game blur normalization may finish in flight. Dump detection can also redirect a picked layer to its root.
+    if (kind === "game" && field.value !== checkedPath && field.value !== info.selected_folder) return;
     preferenceWarning(data.warning);
     status.className = "value-cell detection good";
     if (kind === "dump") {

@@ -72,6 +72,8 @@ def _missing_version_files(path: Path) -> list[str]:
 
 def detect_dump(value: str) -> dict:
     path = absolute_path(value, "Dump", allow_links=True)
+    if not path.exists():
+        raise ValueError(f"Not found: {path}. Choose your romfs folder or .nup again.")
     if not path.is_dir() and (not path.is_file() or path.suffix.lower() != ".nup"):
         raise ValueError("Choose an extracted romfs folder or a .nup file")
     if path.is_dir():
