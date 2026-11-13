@@ -296,3 +296,25 @@ the original reporter's exact save cause remain outside these controlled observa
 
 The matrix remains the only pending C verification stage, next after D's posted15:34
 native-stage release. D's own dump failures do not change C's57e12aa native139-pass result.
+
+## Completed public-path matrix
+
+Code **57e12aa**, unchanged executable/data tree throughout; later commits are docs-only.
+The cs13a public CLI/settings-validation/native `make_seed`/spoiler/play-note probe ran every
+combination: all16 offered skip subsets ×3 forest modes ×3 door modes ×2 presets ×seeds1/7/42.
+**864 expected,864 observed; all288 distinct settings preserved; no seeds/repeats cut.**
+
+- **576 generated successfully.**
+- **288 expected refusals:** pre-existing `song_only`/`open` + Chest-only adult-return-guarantee
+  validation messages (16subsets ×3forests ×2early doors ×3seeds). Not new failures, not
+  silently omitted combinations.
+- **0 unexpected outcomes.**
+- Included18 pilot cells took77.953s; full estimate3741.744s was below7200s, retaining
+  all three seeds. Actual matrix2925.20s; runner2925.92s, workers3/no game at stage start.
+- Owned gate lock released; exact counts accepted by Claude. D revalidation has the next slot.
+
+Evidence, outside the repository: `E:/OOTRemake/work/r14-story/matrix.jsonl`,
+`matrix-plan.json`, `matrix-summary.json`, `gate-matrix.log`, `gate-results.json`.
+All originally requested C gates and all four player checks are complete. Claude subsequently
+requested integration onto B's merged `main`58ba776, light checks, then a rebased full
+synthetic in the gap after D synthetic and before D dump; that integration evidence follows.
