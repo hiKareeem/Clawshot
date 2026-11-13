@@ -230,6 +230,18 @@ def test_buy_refill_destination_boundary_uses_effective_settings(spec):
             assert settings.item_location_types[item] == ("Shop",)
     assert settings.item_location_types["Kokiri Sword"] == ("Chest",)
     assert allowed(world, settings, "Deku Tree Basement Chest", "Deku Shield")
+    chest_settings, _ = prepare(spec, Settings(item_location_types={"Kokiri Sword": ("Chest",)}))
+    assert chest_settings.item_location_types == {
+        "Kokiri Sword": ("Chest",),
+        "Progressive Hookshot": ("Chest",),
+        "Progressive Strength": ("Chest",),
+        "Progressive Scale": ("Chest",),
+        "Progressive Wallet": ("Chest",),
+        "Progressive Bomb Bag": ("Chest",),
+        "Progressive Quiver": ("Chest",),
+        "Progressive Slingshot": ("Chest",),
+        "Progressive Magic": ("Chest",),
+    }
 
 
 @pytest.mark.parametrize("shield_class", ["normal", "progression"])
