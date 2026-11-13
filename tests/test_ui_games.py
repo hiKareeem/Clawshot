@@ -25,6 +25,14 @@ def test_http_migrates_game_selection_switches_and_rejects_changed_seed(made_ui_
     exe.parent.mkdir(parents=True)
     exe.write_bytes(b"synthetic, not executable: HOS_MODS\0")
     (build / "longshot_version.txt").write_text("version=v3.0.0-rc.2\n", encoding="utf-8")
+    newer = build.parent / "v3.1.0"
+    (newer / "bin").mkdir(parents=True)
+    (newer / "bin" / binary).write_bytes(b"synthetic newer HOS_MODS\0")
+    (newer / "longshot_version.txt").write_text("version=v3.1.0\n", encoding="utf-8")
+    (build.parents[1] / "builds.json").write_text(
+        json.dumps({"format": 1, "builds": [{"folder": str(build), "version": "v3.0.0-rc.2", "default": True}]}),
+        encoding="utf-8",
+    )
     config = tmp_path / "paths.json"
     config.write_text(json.dumps({"hookshot": str(hookshot)}), encoding="utf-8")
     preferences = Preferences(config)

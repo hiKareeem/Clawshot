@@ -57,7 +57,7 @@ try {
             throw 'Extract the pack outside your RomFS, Hookshot and Longshot folders.'
         }
     }
-    # Play's runtime finds the game in bin (or a Longshot Launcher's newest build) and refuses the folder-root launcher.
+    # Play finds bin/<game> (a Longshot Launcher's default build, otherwise newest), never the root launcher.
     if ($Action -eq 'play' -and -not $game) {
         throw 'No Hookshot or Longshot folder configured. For emulator loading, follow docs/seed-pack.md (Emulator / console loading); do not run Play.'
     }

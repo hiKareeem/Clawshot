@@ -19,6 +19,8 @@ PROGRAMS = {"Hookshot": "hookshot", "Longshot": "longshot"}
 # That home holds builds.json, whose builds name their folders; a portable launcher builds into builds/<version>
 # (a portable v1 launcher's home, read-only, 2026-11-13), an installed one into ~/Games/Longshot/<version> (readme,
 # Planned next).
+# Longshot Launcher README (What it does; Design decisions) says Play starts the default build. Its format-1
+# builds.json records that choice as builds[].default=true beside folder/version (portable v1, read-only, 2026-11-13).
 LAUNCHER_DATA = "LongshotLauncher-data"
 LINUX_LAUNCHER_DATA = ".local/share/longshot/launcher"
 REGISTRY = "builds.json"
@@ -104,8 +106,8 @@ def _subfolders(folder: Path) -> list[Path]:
     return sorted(child for child in folder.iterdir() if child.is_dir()) if folder.is_dir() else []
 
 
-def _launcher_builds(data: Path) -> dict[Path, str | None]:
-    """Build folders builds.json lists (with its version) and those in the home's builds folder."""
+def _launcher_builds(data: Path) -> dict[Path, tuple[str | None, bool]]:
+    """Listed/scanned build folders with version and the launcher's recorded default flag."""
     builds = {}
     try:
         registry = json.loads((data / REGISTRY).read_text(encoding="utf-8-sig"))
@@ -116,16 +118,19 @@ def _launcher_builds(data: Path) -> dict[Path, str | None]:
         folder = entry.get("folder") if isinstance(entry, dict) else None
         if isinstance(folder, str) and folder.strip():
             version = entry.get("version")
-            builds.setdefault((data / folder).resolve(), version if isinstance(version, str) else None)
+            builds.setdefault(
+                (data / folder).resolve(),
+                (version if isinstance(version, str) else None, entry.get("default") is True),
+            )
     for folder in _subfolders(data / "builds"):
-        builds.setdefault(folder.resolve(), None)
+        builds.setdefault(folder.resolve(), (None, False))
     return builds
 
 
-def _newest(builds: dict[Path, str | None]) -> tuple[Path, str | None] | None:
-    """The Longshot build with the highest version: its version file, else the launcher's label, else its folder's."""
+def _choose_build(builds: dict[Path, tuple[str | None, bool]]) -> tuple[Path, str | None] | None:
+    """Prefer an available recorded default, otherwise choose by numeric version."""
     found = []
-    for folder, listed in builds.items():
+    for folder, (listed, preferred) in builds.items():
         binary = _binary(folder)
         if binary is None or binary[0] != "Longshot":
             continue
@@ -133,7 +138,7 @@ def _newest(builds: dict[Path, str | None]) -> tuple[Path, str | None] | None:
             label = _version(folder, "Longshot") or listed
         except (OSError, UnicodeError):
             label = listed
-        found.append((version_key(label or folder.name), str(folder), folder, listed))
+        found.append((preferred, version_key(label or folder.name), str(folder), folder, listed))
     if not found:
         return None
     *_, folder, listed = max(found)
@@ -145,9 +150,9 @@ def _locate(selected: Path) -> tuple[Path | None, Path, str | None]:
     if _binary(selected):
         return None, selected, None
     data = _launcher_data(selected)
-    builds = _launcher_builds(data) if data else {folder: None for folder in _subfolders(selected)}
-    newest = _newest(builds)
-    return (data, *newest) if newest else (data, selected, None)
+    builds = _launcher_builds(data) if data else {folder: (None, False) for folder in _subfolders(selected)}
+    chosen = _choose_build(builds)
+    return (data, *chosen) if chosen else (data, selected, None)
 
 
 def game_folders(folder: Path | str) -> tuple[Path, ...]:
@@ -172,8 +177,8 @@ def detect(folder: Path | str) -> GameInfo:
     """Inspect a chosen folder. Empty reason means the binary can load a seed through HOS_MODS.
 
     The folder may be a Hookshot or Longshot game folder, a Longshot Launcher folder (portable, installed or its data
-    folder) or a folder of Longshot builds: the newest build by version is the game. Version is informational, not a
-    capability claim; the HOS_MODS marker indicates mod loading. No folder-root launcher or dump decoding.
+    folder) or a folder of Longshot builds. An available recorded default wins, otherwise the newest numeric version.
+    Version is informational, not a capability claim; HOS_MODS indicates mod loading. No root launcher or dump decoding.
     """
     selected = Path(folder).resolve()
     launcher, game_folder, listed = None, selected, None

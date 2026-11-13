@@ -23,9 +23,12 @@ def make_build(folder, version=None, binary="bin/longshot.exe", marker=True):
     return exe
 
 
-def write_registry(data, *builds):
+def write_registry(data, *builds, default=None):
     data.mkdir(parents=True, exist_ok=True)
-    rows = [{"id": str(n), "folder": str(folder), "version": version} for n, (folder, version) in enumerate(builds)]
+    rows = [
+        {"id": str(n), "folder": str(folder), "version": version, "default": folder == default}
+        for n, (folder, version) in enumerate(builds)
+    ]
     (data / "builds.json").write_text(json.dumps({"format": 1, "builds": rows}), encoding="utf-8")
 
 
@@ -185,3 +188,34 @@ def test_newest_build_without_mod_loading_is_refused_not_skipped(tmp_path):
     newest = make_build(games / "v3.0.0", "v3.0.0", marker=False)
     result = detect(games)
     assert result.exe == newest and not result.supports_mods and "cannot load mods" in result.reason
+
+
+@pytest.mark.parametrize("binary", ["bin/longshot.exe", "bin/longshot"])
+def test_recorded_launcher_default_wins_but_direct_build_selection_is_pinned(tmp_path, binary):
+    data = tmp_path / "LongshotLauncher-data"
+    selected = make_build(data / "builds/v3.0.0", "v3.0.0", binary).parents[1]
+    newer = make_build(data / "builds/v3.1.0-rc.2", "v3.1.0-rc.2", binary).parents[1]
+    write_registry(data, (selected, "v3.0.0"), (newer, "v3.1.0-rc.2"), default=selected)
+    before = snapshot(tmp_path)
+    result = detect(tmp_path)
+    assert result.folder == selected and result.version == "v3.0.0"
+    assert game_folders(tmp_path)[-1] == selected
+    assert detect(newer).folder == newer
+    assert snapshot(tmp_path) == before
+
+
+def test_missing_launcher_default_falls_back_to_newest_available_build(tmp_path):
+    data = tmp_path / "LongshotLauncher-data"
+    missing = data / "builds/v9.0.0"
+    available = make_build(data / "builds/v3.0.0", "v3.0.0").parents[1]
+    write_registry(data, (missing, "v9.0.0"), (available, "v3.0.0"), default=missing)
+    assert detect(tmp_path).folder == available
+
+
+def test_unsupported_recorded_default_is_refused_not_silently_replaced(tmp_path):
+    data = tmp_path / "LongshotLauncher-data"
+    selected = make_build(data / "builds/v3.0.0", "v3.0.0", marker=False).parents[1]
+    newer = make_build(data / "builds/v3.1.0", "v3.1.0").parents[1]
+    write_registry(data, (selected, "v3.0.0"), (newer, "v3.1.0"), default=selected)
+    result = detect(tmp_path)
+    assert result.folder == selected and not result.supports_mods and result.reason

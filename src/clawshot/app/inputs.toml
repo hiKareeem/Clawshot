@@ -12,7 +12,7 @@ help = "Make a new seed while the menu stays usable. Cancel stops this seed with
 note = "Keep the number, settings and Clawshot version if you want to make the same seed again."
 [runtime]
 label = "Hookshot or Longshot folder (optional)"
-help = "Only needed for the Play button. Choose a Hookshot or Longshot game folder (the one containing bin), or your Longshot Launcher folder: Play uses its newest build. Emulator players can skip it."
+help = "Only needed for Play. Choose a Hookshot or Longshot game folder (containing bin), or a Longshot Launcher folder: its recorded default build is preferred, otherwise the newest version. Emulator players can skip it."
 note = "The game is bin/hookshot.exe or bin/longshot.exe on Windows, bin/hookshot or bin/longshot on Linux. Play keeps saves inside this seed's folder, whichever game you choose, and never touches your normal saves."
 [dump]
 label = "Game dump"
