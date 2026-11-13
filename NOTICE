@@ -40,5 +40,13 @@ Commit a4840f06c94ddeb414eea5b33c9704ffe995f11c (branch meow).
 - Full upstream permission notice: src/clawshot/pack/_nup/LICENSE.txt, included in source packs.
   The PyPI package named "nup" is unrelated; no dependency on it is introduced.
 
+Optional tracker dependency: texture2ddecoder 1.0.6 (https://github.com/K0lb3/texture2ddecoder),
+MIT License, Copyright (c) 2020 K0lb3. Installed through the optional ui extra, not vendored.
+Its codecs include MIT-licensed AssetStudio/FP16 code and zlib-licensed Crunch code; upstream
+licences remain with the installed package. Required Crunch acknowledgement:
+Crunch Library Copyright (c) 2010-2016 Richard Geldreich, Jr.
+The BNTX reader and NVIDIA block-linear decoder in src/clawshot/tracker/bntx.py are original
+implementations from the format references cited there; no upstream decoder source is copied.
+
 The Legend of Zelda and Ocarina of Time are trademarks of Nintendo. Clawshot is an unofficial fan project, not
 affiliated with or endorsed by Nintendo, and contains no part of the game.

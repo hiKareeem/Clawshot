@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Clawshot — Seed generator</title>
     <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="tracker.css" />
     <script src="app.js" defer></script>
+    <script src="tracker.js" defer></script>
   </head>
   <body>
     <header class="top-band">
@@ -17,7 +19,8 @@
         ><button data-screen="game" class="selected" aria-current="page">
           Game</button
         ><button data-screen="settings">Settings</button
-        ><button data-screen="generate">Generate</button><kbd>E</kbd>
+        ><button data-screen="generate">Generate</button
+        ><button data-screen="tracker">Tracker</button><kbd>E</kbd>
       </nav>
       <span class="local-badge">Local · no game files shared</span>
     </header>
@@ -188,6 +191,12 @@
             <p id="seed-library-status" class="help" aria-live="polite"></p>
             <div id="seed-list"></div>
           </section>
+        </section>
+        <section id="tracker" class="screen" hidden
+          data-help-title="Tracker"
+          data-help="Read this seed’s saved inventory, dungeon keys and collection progress. No unvisited reward is shown unless you explicitly enable location spoilers."
+          data-help-note="Save in the game to update. Longshot and emulator players can choose another save folder. OBS uses the same tracker without controls.">
+          <div id="tracker-root"></div>
         </section>
       </main>
       <aside class="side-panel">

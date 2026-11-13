@@ -52,8 +52,8 @@ settings and short hash to share a seed recipe, never the generated game files. 
 Copy for Discord** or put the settings string inside single backticks (`` `Clawshot-…` ``): Discord
 otherwise reads text between two `_` as italics and drops them, and the string stops working.
 [The UI guide](docs/ui.md) covers loading, saves, shared seeds and troubleshooting.
-Keyboard/mouse only: **gamepad and Steam Deck controller input are not done**. The planned tracker
-will be a UI tab, not a separate tool; it is not in this release.
+Keyboard/mouse only: **gamepad and Steam Deck controller input are not done**.
+The [Tracker tab](docs/tracker.md) reads saved inventory and per-dungeon keys, with a compact OBS view.
 
 <table>
   <tr>

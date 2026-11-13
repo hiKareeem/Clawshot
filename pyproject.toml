@@ -10,7 +10,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-ui = ["pywebview>=6.1"]
+ui = ["pywebview>=6.1", "texture2ddecoder>=1.0.6"]
 
 [dependency-groups]
 dev = [

@@ -29,12 +29,16 @@ from clawshot.app.paths import absolute_path, default_output_root, game_folders
 from clawshot.app.play import play_refusal
 from clawshot.app.preferences import Preferences, suggested_eden_folder
 from clawshot.app.sharing import import_settings, player_settings, share_settings
+from clawshot.ui import tracker
 
 ASSETS = Path(__file__).with_name("static")
 STATIC = {
     "": ("index.html", "text/html"),
     "app.js": ("app.js", "text/javascript"),
     "style.css": ("style.css", "text/css"),
+    "tracker.html": ("tracker.html", "text/html"),
+    "tracker.js": ("tracker.js", "text/javascript"),
+    "tracker.css": ("tracker.css", "text/css"),
 }
 MAX_BODY = 65536
 WINDOW_KEYS = ("x", "y", "width", "height")
@@ -63,6 +67,7 @@ class Application:
         self.library = SeedLibrary(self.preferences)
         self.selected = None
         self.editing = False
+        self.tracker = tracker.TrackerController()
 
     def remember_completed(self):
         state = self.jobs.snapshot()
@@ -96,6 +101,8 @@ class Application:
         return self.selected if self.selected is not None else self.jobs.snapshot()["result"]
 
     def call(self, method, route, body):
+        if route.startswith("tracker"):
+            return tracker.call(self, method, route, body)
         if method == "GET" and route == "schema":
             choices = presets(spec=self.spec)
             recommended = next(p for p in choices if p["id"] == "recommended")
@@ -341,6 +348,20 @@ class Handler(BaseHTTPRequestHandler):
         if method == "GET" and route in STATIC:
             filename, content_type = STATIC[route]
             self.reply(200, (ASSETS / filename).read_bytes(), content_type)
+            return
+        if method == "GET" and route.startswith("tracker-icons/"):
+            actor = route.removeprefix("tracker-icons/").removesuffix(".png")
+            if not route.endswith(".png") or not actor.isascii() or not actor.replace("_", "").isalnum():
+                self.reply(404, {"error": "Unknown icon"})
+                return
+            try:
+                image = server.app.tracker.icon(actor)
+            except (OSError, ValueError, ImportError):
+                image = None
+            if image is None:
+                self.reply(404, {"error": "Local icon unavailable; use text label"})
+            else:
+                self.reply(200, image, "image/png")
             return
         if not route.startswith("api/"):
             self.reply(404, {"error": "Not found"})

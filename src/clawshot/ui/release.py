@@ -14,9 +14,13 @@ EXTRA = (
     "clawshot.sh",
     "scripts/start-windows.ps1",
     "docs/ui.md",
+    "docs/tracker.md",
     "src/clawshot/ui/static/index.html",
     "src/clawshot/ui/static/app.js",
     "src/clawshot/ui/static/style.css",
+    "src/clawshot/ui/static/tracker.html",
+    "src/clawshot/ui/static/tracker.js",
+    "src/clawshot/ui/static/tracker.css",
 )
 READ_ME = (
     "Unzip the whole folder outside your game, Hookshot and Longshot folders.\n"

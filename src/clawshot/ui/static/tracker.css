@@ -1,0 +1,55 @@
+/* Flat local UI; only runtime-decoded icons may contain game art. */
+#tracker-root { min-width: 0; font-family: var(--sans); }
+.tracker-controls { margin-bottom: 18px; }
+.tracker-path { display: grid; grid-template-columns: 95px minmax(0, 1fr) auto; gap: 8px; align-items: center; margin: 8px 0; }
+.tracker-path input, .tracker-obs-link input { width: 100%; min-width: 0; }
+.tracker-actions, .tracker-options { display: flex; gap: 10px 16px; flex-wrap: wrap; align-items: center; margin: 12px 0; }
+.tracker-options label { display: inline-flex; align-items: center; gap: 5px; }
+.tracker-options input { width: auto; }
+.tracker-obs-link { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 6px; }
+.tracker-obs-link label { grid-column: 1 / -1; font-size: 13px; color: var(--muted); }
+.tracker-obs-link input { font: 12px var(--sans); }
+.tracker-status { color: var(--muted); font-size: 13px; overflow-wrap: anywhere; }
+.tracker-warnings { color: var(--error); font-size: 13px; }
+.tracker-warnings p { margin: 5px 0; }
+.tracker-dungeons { width: 100%; border-collapse: collapse; font-size: 14px; font-variant-numeric: tabular-nums; }
+.tracker-dungeons th { color: var(--amber); text-align: left; font-weight: 600; }
+.tracker-dungeons td, .tracker-dungeons th { padding: 5px 7px; border-bottom: 1px solid var(--border); }
+.tracker-dungeons td:not(:first-child), .tracker-dungeons th:not(:first-child) { text-align: center; }
+.tracker-counts { margin: 8px 0; font-variant-numeric: tabular-nums; }
+.tracker-cells { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 5px; }
+.tracker-cell { position: relative; min-height: 62px; padding: 6px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; border: 1px solid var(--border); background: var(--value); line-height: 1.2; }
+.tracker-cell-label { font-size: 13px; }
+.tracker-cell small { font-size: 11px; color: var(--muted); margin-top: 3px; }
+.tracker-icon { object-fit: contain; margin-bottom: 3px; }
+.tracker-missing { opacity: .5; }
+.tracker-missing .tracker-icon { filter: grayscale(1); }
+.tracker-unknown { border-style: dashed; }
+.tracker-areas { display: grid; grid-template-columns: repeat(auto-fill, minmax(175px, 1fr)); gap: 8px; }
+.tracker-area { border-left: 2px solid var(--border); padding: 4px 8px; font-size: 13px; }
+.tracker-area > span { display: block; color: var(--muted); }
+.tracker-check { font-size: 12px; margin: 5px 0; }
+.tracker-explanation { color: var(--muted); font-size: 12px; }
+body[data-tracker="obs"] { overflow: auto; background: var(--panel); }
+body[data-tracker="obs"] #tracker-root { padding: 12px; }
+body[data-tracker="obs"] .heading { margin-bottom: 8px; }
+body[data-tracker="obs"] h1 { font-size: 20px; }
+body[data-tracker="obs"] .heading p, body[data-tracker="obs"] .tracker-status { font-size: 11px; margin: 3px 0; }
+body[data-tracker="obs"] .tracker-content { display: grid; grid-template-columns: minmax(300px, .9fr) minmax(300px, 1.1fr); gap: 8px 14px; align-items: start; }
+body[data-tracker="obs"] .tracker-group { min-width: 0; }
+body[data-tracker="obs"] .tracker-group:first-child { grid-row: span 2; }
+body[data-tracker="obs"] .tracker-group:nth-child(3) { grid-row: span 3; }
+body[data-tracker="obs"] .section-title { font-size: 16px; margin: 7px 0; }
+body[data-tracker="obs"] .tracker-dungeons { font-size: 12px; }
+body[data-tracker="obs"] .tracker-dungeons td, body[data-tracker="obs"] .tracker-dungeons th { padding: 4px; }
+body[data-tracker="obs"] .tracker-cells { grid-template-columns: repeat(auto-fill, minmax(74px, 1fr)); gap: 4px; }
+body[data-tracker="obs"] .tracker-cell { min-height: 51px; padding: 4px; }
+body[data-tracker="obs"] .tracker-cell-label { font-size: 11px; }
+body[data-tracker="obs"] .tracker-icon { width: 32px; height: 32px; }
+body[data-tracker="obs"] .tracker-areas { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 4px; }
+body.tracker-transparent, body.tracker-transparent .tracker-cell { background: transparent; }
+@media (max-width: 720px) {
+  .tracker-path { grid-template-columns: minmax(0, 1fr) auto; }
+  .tracker-path label { grid-column: 1 / -1; }
+  body[data-tracker="obs"] .tracker-content { display: block; }
+}

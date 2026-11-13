@@ -22,7 +22,8 @@ uv run --extra ui python -m clawshot.ui       # pywebview app window
 uv run python -m clawshot.ui --no-open        # print a local URL; no window, browser or native dialogs
 ```
 
-Python 3.12+, no JavaScript build step. The optional `ui` extra is pywebview (BSD-3-Clause).
+Python 3.12+, no JavaScript build step. The optional `ui` extra includes pywebview (BSD-3-Clause)
+and texture2ddecoder (MIT) for [local tracker icons](tracker.md#local-icons-and-fallback).
 The page, scripts and styles are local; the interface makes no external requests. A pywebview
 window needs its platform web engine (WebView2 on Windows; native WebKit on macOS; an appropriate
 system GTK/WebKit installation on Linux). The browser route needs no pywebview dependency.
@@ -95,6 +96,9 @@ The game folder is saved as `game`; a folder an older Clawshot saved as `hooksho
   Older seeds get a calm regeneration message. Newest information files appear first.
   Listing reads only the small information file; View and Play check the seed's actual digest.
   Changed files are refused then, without repairing them. Finished seeds do not need the old dump path.
+- **Tracker:** saved inventory, tiers and keys held/found per dungeon, with automatic save refresh
+  and a compact, control-free OBS view. Default mode hides unvisited location rewards.
+  [Tracker guide](tracker.md): Play saves, Longshot/emulator save folders, local icons and OBS.
 
 The new output layout is `output/seed/romfs` with the note and spoiler beside romfs. Play shares
 the pack's checked launch code: only the game in `bin` (`bin/hookshot.exe` or `bin/longshot.exe` on
@@ -222,7 +226,6 @@ on 2026-11-10. This does not confirm its NUP file picker or browser/Tk picker.
 
 Not implemented in the current checkout:
 - gamepad/Steam Deck controller navigation (keyboard/mouse only);
-- the planned Tracker tab (not a separate tracker application);
 - a bundled executable/installer or bundled fonts;
 - Linux/macOS UI runtime certification.
 
