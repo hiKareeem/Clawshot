@@ -626,6 +626,57 @@ Repaired-source format and lint both pass (rc 0/0). Full synthetic **PASSED: 119
 1200 deselected in 3978.55s**, three workers, same frozen `a82af5d` and own
 `OOT_DUMP=E:/OOTRemake/work/rounds/r13/dump-fast-start-integrated`.
 **Merge gate PASSED** and reported to Claude at 23:17, before matrix completion.
-The capped matrix's included 28-cell-per-source pilot is now running; no matrix verdict
-is claimed yet. Known early-door failures on unchanged main are baseline/control evidence,
+At the merge-gate report the included 28-cell-per-source pilot was running; final matrix
+results are recorded below. Known early-door failures on unchanged main are baseline/control evidence,
 not repaired-source regressions. No product source changes after the verified freeze.
+
+Claude merged/pushed this branch as main `a942418` (castle's `71130fa` authorship retained),
+then merged D39 as `62bc7af`. Matrix imports remain frozen after `a82af5d` / before `ac07355`;
+no rebase, product-code change or new gate run is part of this final handoff.
+
+**Included matrix pilot completed:** 28 cells/source in 192.17s wall, three workers.
+Fixed source: **20 generated, 8 expected Chest-only early-door validation refusals, zero
+unexpected failures**. Baseline: **8 generated, 20 failures**, all classified as the known
+return-kit failure. Measured mean cell times: fixed 10.346s, baseline 9.257s.
+Revised capped full-matrix estimate is **53.8 minutes** including five minutes startup;
+the 840 remaining rows estimate 45.7 minutes. All 56 pilot rows are reused, not rerun.
+Remaining coverage was launched at 23:22 but had not begun generation when Claude's
+final integrated-main gates on `62bc7af` acquired the shared lock (23:23).
+At 23:24 the matrix controller PID 15120 / sweep PID 37848 were confirmed waiting:
+`gate.lock held; waiting 30 s`, no matrix worker pool. Claude's pytest owned the active slot.
+The existing controller subsequently resumed only after atomic lock acquisition following
+release; no bypass or lock removal. The active-work estimate excluded this coordinator wait.
+
+### Final capped matrix: completed, no unexpected fixed-source failures
+
+The controller completed with exit 0 and verified **448 unique rows on each frozen source**
+against the complete expected settings keyset: **896 rows total**, no duplicates or omissions.
+Sources remain fixed `a82af5d` (`src` tree `3898ce60bf4fdb36e12af093da377a685364de72`)
+and baseline `ac07355`; D39/final-main changes were not mixed into either dataset.
+
+| Source | Generated | Expected validation refusals | Generation failures |
+|---|---:|---:|---:|
+| Fixed `a82af5d` | 320 | 128 | 0 |
+| Baseline `ac07355` | 128 | 0 | 320 |
+
+All fixed refusals are the expected Chest-only early-door conflict. Every baseline failure
+is the known return-kit class; there are **zero unexpected repaired-source failures**.
+The final assertion also confirms adult-first no-child opening explanations were exercised.
+Each successful settings/seed group has exactly one placement digest across fast-start masks.
+The checks cover both ordinary Recommended and small-keys-anywhere early doors:
+**64 door-open cells of each policy per source**.
+
+Cap retained **seed 1** for every declared forest/door/skip/preset/key-policy combination.
+Only seed-7/42 repetitions were dropped (**1792 rows**); all **448 declared settings
+combinations per source** remain. The 56 pilot rows were reused, not repeated.
+Summed rounded active-phase times are approximately **44.9 minutes**; the two controller
+wall times total **114.6 minutes**, including Claude's intervening final-gate lock wait.
+All phases acquired/released the shared gate; no generation ran outside it.
+
+Evidence under `E:/OOTRemake/work/r13-fast-start-cs13a/witness/`:
+- `after-repaired-a82af5d.jsonl` and `after-repaired-a82af5d-summary.txt`;
+- `baseline-repaired-ac07355.jsonl` and `baseline-repaired-ac07355-summary.txt`;
+- the six `*-repaired-*-remaining.log` pilot/coverage phase logs.
+
+Final result posted to `cs-r13`. Per Claude's merged-branch instruction, this final commit
+contains only this round record: no product code, rebase or new gate run. Handoff complete; stop.
