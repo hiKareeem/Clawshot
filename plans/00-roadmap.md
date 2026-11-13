@@ -1319,3 +1319,16 @@ text for them, `tests/test_progressive*.py`, section 47, `plans/rounds/r14-progr
    in every check kind that can carry them; others keep fixed items or are restricted, and say so.
 3. Logic and fill treat progressive copies as counted tiers; the fixed-tier placement rule stays for fixed items.
 4. Sweep and gates; one in-game check for Kareem.
+
+### Track E: quest-step audit (`r14/steps`, issue #25; added 2026-11-13 at Kareem's request)
+
+Owns section 48, `tests/test_story_steps*.py`, `plans/rounds/r14-steps.md`, and fixes only in world files no other track
+owns this round. Kareem: "do we need to go through the rest of the quests/Threads of Time to make sure no other steps
+are gating things we don't realize yet?" Three step gates were found by players (Mido, the Gerudo guards, Zelda's
+escape).
+1. A scripted census of every read and write of a quest step in the romfs (AI modules, event flows, GameData
+   expressions and where they are used), with what each gates.
+2. Each read classified against our logic and fast-start skips; flagged: logic granting access on an item where the
+   game asks for a step, and steps advanced only by a native hand-over the randomizer replaces.
+3. Section 48 and a full table; a failing test and a proposed fix for each confirmed mismatch. Track C keeps the
+   Zelda, Door of Time and Kaepora fixes.
