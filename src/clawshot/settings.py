@@ -14,12 +14,18 @@ DEFAULTS = CATALOG["defaults"]
 
 def validate_logic_overrides(spec: Mapping[str, Any], logic: Mapping[str, Any]) -> None:
     """Native seed policy; the settings codec and standalone logic models remain generic."""
-    defaults = {**spec.get("settings", {}), **spec.get("tricks", {}), **spec.get("flags", {})}
+    world_settings = spec.get("settings", {})
+    defaults = {**world_settings, **spec.get("tricks", {}), **spec.get("flags", {})}
     for name, value in logic.items():
+        source = CATALOG["logic_override_modes"].get(name)
+        if source and name in world_settings and "door_of_time" in world_settings and source in world_settings:
+            # prepare() always regenerates these fields from the selected door mode.
+            # Stored effective recipes cannot override the current world's return kit.
+            continue
         allowed = list(CATALOG["logic_overrides"].get(name, ()))
         if name in defaults:
             allowed.append(defaults[name])
-        if source := CATALOG["logic_override_modes"].get(name):
+        if source:
             allowed.extend(defaults.get(source, {}).values())
         # JSON comparison keeps Bool distinct from integer 0/1, including nested inventories.
         encoded = json.dumps(value, sort_keys=True, allow_nan=False)

@@ -68,8 +68,8 @@ open_forest = ["closed", "closed_deku", "open"]
 skip_mido = [false, true]
 door_of_time = ["closed", "song_only", "open"]
 
-# Effective spoiler/share settings contain these mode-derived return-kit values.
-# Read the supported values from the world, rather than duplicate its item tables.
+# Effective recipes contain these fields, but prepare() regenerates them from
+# the selected door mode. Stored values are not user-controlled access overrides.
 [logic_override_modes]
 age_return_fill_inventory = "age_return_door_inventory"
 age_return_fill_families = "age_return_door_families"

@@ -85,12 +85,23 @@ def test_supported_access_modes_still_compile_to_the_selected_world(values, name
 
 
 @pytest.mark.parametrize("mode", ["closed", "song_only", "open"])
-def test_effective_door_recipe_replays_its_native_return_kit(mode):
-    effective, first = prepare(load_spec(), Settings(door_of_time=mode, logic={"free_time_travel": True}))
-    selected = validate(text=effective.to_string())
-    _, replay = prepare(load_spec(), selected)
-    assert replay.settings["age_return_fill_inventory"] == first.settings["age_return_fill_inventory"]
-    assert replay.settings["age_return_fill_families"] == first.settings["age_return_fill_families"]
+def test_effective_door_recipe_rebuilds_the_current_worlds_return_kit(mode):
+    effective, _ = prepare(load_spec(), Settings(door_of_time=mode, logic={"free_time_travel": True}))
+    current = load_spec()
+    table = current["settings"]
+    inventory = dict(table["age_return_door_inventory"].get(mode, table["age_return_fill_inventory"]))
+    inventory["Bomb Bag"] = 1  # a newer world version requires an additional mandatory item
+    families = [*table["age_return_door_families"].get(mode, table["age_return_fill_families"]), "Bomb Bag"]
+    if mode == "closed":
+        table["age_return_fill_inventory"] = inventory
+        table["age_return_fill_families"] = families
+    else:
+        table["age_return_door_inventory"][mode] = inventory
+        table["age_return_door_families"][mode] = families
+    selected = validate(text=effective.to_string(), spec=current)
+    _, replay = prepare(current, selected)
+    assert replay.settings["age_return_fill_inventory"] == inventory
+    assert replay.settings["age_return_fill_families"] == families
 
 
 def test_unchanged_world_defaults_remain_valid_even_when_explicit():
@@ -111,3 +122,15 @@ def test_new_imported_oot_key_is_not_implicitly_supported():
 def test_integer_values_do_not_impersonate_supported_booleans(logic):
     with pytest.raises(ValueError, match="isn't supported"):
         validate_logic_overrides(load_spec(), logic)
+
+
+def test_mode_tables_cannot_be_overridden_through_a_replay_field():
+    with pytest.raises(ValueError, match="age_return_door_inventory"):
+        validate({"logic": {"age_return_door_inventory": {"open": {"Kokiri Sword": 99}}}})
+
+
+def test_kit_override_is_checked_when_the_compiler_cannot_regenerate_it():
+    spec = load_spec()
+    del spec["settings"]["age_return_door_inventory"]
+    with pytest.raises(ValueError, match="age_return_fill_inventory"):
+        validate({"logic": {"age_return_fill_inventory": {"Kokiri Sword": 99}}}, spec=spec)

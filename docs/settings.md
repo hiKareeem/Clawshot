@@ -22,7 +22,9 @@ Native seeds accept only supported `--logic` overrides. Unchanged world defaults
 remain valid; supported non-default values cover free time travel, the return
 guarantee, and the derived key/forest/Mido/door modes and return-kit tables.
 Prefer `--dungeon-items`, `--forest` and `--door-of-time` for those modes.
-Conflicting derived fields are still refused.
+Conflicting forest/door fields are still refused. Effective return-kit fields
+are regenerated from the selected mode; stored copies cannot override the world.
+Versioned share-prefix checks are unchanged; this adds no cross-version import support.
 
 OoT-only access overrides such as `open_kakariko=open`, `gerudo_fortress=open`,
 `scarecrow_behavior=free` and `skip_child_zelda=true` are refused: no native patch
