@@ -73,6 +73,17 @@ progressive upgrades. Starting items and event grants also participate in search
 free starting Fire Temple key. Sources: `plans/04-world-format.md`, Fixed or progressive items,
 Items/helpers/settings and Reachability; `src/clawshot/world/load.py`.
 
+Fixed strength levels **MAX-combine**, never add: Bracelet plus Silver is strength 2, not 3.
+**Played evidence (Kareem, 2026-11-12, 21:15):** switching ages with Silver/Golden Gauntlets
+does not replace child Link's Goron Bracelet; the child keeps it. The Bracelet is separate
+child equipment, not an adult downgrade predecessor. `downgrade_tier_exemptions` therefore
+excludes it from both the placement screen and finished-seed order replay.
+The conservative **adult Silver → Golden** and **Silver Scale → Golden Scale** restrictions
+remain; actual downgrade behavior within those pairs is not game-proven.
+[INFERENCE] Adult use of Bracelet strength follows vanilla's Forest-before-Spirit order;
+the played age-switch check did not test that ability directly.
+
+
 ## Identity: model names are not physical IDs
 
 A placement is identified by **source file and actor `Hash`**, never its array index, position or

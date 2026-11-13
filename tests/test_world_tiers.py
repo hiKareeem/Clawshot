@@ -1,5 +1,7 @@
-"""Fixed tiers of a progressive item give its highest tier, never a sum, and the downgrading families (strength,
-scales) put a higher tier only where every lower tier is mandatory. Synthetic worlds only."""
+"""Fixed logical tiers MAX-combine; native-slot order constraints exclude age-separated equipment.
+
+Adult Silver -> Golden and scale ordering remain conservative placement policies. Synthetic worlds only.
+"""
 
 import random
 
@@ -177,7 +179,12 @@ def strength_spec(*, families=(STRENGTH,), bracelet_shuffled=True) -> dict:
         "goal": "'Win'",
         "items": ITEMS,
         "progressive": PROGRESSIVE,
-        "settings": {"starting_age": "child", "progressive_items": False, "downgrade_tier_families": list(families)},
+        "settings": {
+            "starting_age": "child",
+            "progressive_items": False,
+            "downgrade_tier_families": list(families),
+            "downgrade_tier_exemptions": ["Goron Bracelet"],
+        },
         "regions": [
             {
                 "name": "Root",
@@ -198,8 +205,8 @@ def test_a_higher_tier_screen_forbids_every_spot_reachable_without_a_lower_tier(
     world = build_world(strength_spec())
     items = [loc.vanilla for loc in world.locations.values()]
     forbidden = tier_forbidden(world, items, {})
-    # The Bracelet is available from the start, but optional: that is not enough for the Silver Gauntlets.
-    assert forbidden["Silver Gauntlets"] == {"Open A", "Open B", "Bracelet Gift"}
+    # The child Bracelet is independent of adult gauntlets; only Silver -> Golden is constrained.
+    assert "Silver Gauntlets" not in forbidden
     assert forbidden["Golden Gauntlets"] == {"Open A", "Open B", "Bracelet Gift", "Rock Chest"}
     assert tier_forbidden(build_world(strength_spec(families=())), items, {}) == {}
 
@@ -209,34 +216,50 @@ def test_the_fill_puts_each_higher_tier_behind_every_lower_tier():
     for number in range(30):
         seed = generate(spec, number, Settings(shuffle=("Chest",)))
         assert seed.placements["Boulder Chest"] == "Golden Gauntlets", (number, seed.placements)
-        assert seed.placements["Rock Chest"] == "Silver Gauntlets", (number, seed.placements)
         assert tier_order_violations(seed.world, seed.placements) == []
 
 
 BYPASS = {
-    "Open A": "Silver Gauntlets",
+    "Open A": "Golden Gauntlets",
     "Open B": "Rupees (5)",
     "Bracelet Gift": "Goron Bracelet",
     "Rock Chest": "Rupees (5)",
-    "Boulder Chest": "Golden Gauntlets",
+    "Boulder Chest": "Silver Gauntlets",
 }
 
 
 def test_skipping_the_lower_tier_replay_catches_an_optional_earlier_bypass():
     world = build_world(strength_spec())
-    # Beatable, and the Bracelet is reachable before the gauntlets, yet a player may skip it and downgrade later.
+    # Beatable, but Golden can be taken before the same-age Silver tier.
     assert check_beatable(world, BYPASS)
     violations = tier_order_violations(world, BYPASS)
-    assert ("Goron Bracelet", "Silver Gauntlets", "Open A") in violations
-    assert ("Goron Bracelet", "Golden Gauntlets", "Boulder Chest") in violations
-    safe = {**BYPASS, "Open A": "Rupees (5)", "Rock Chest": "Silver Gauntlets"}
+    assert ("Silver Gauntlets", "Golden Gauntlets", "Open A") in violations
+    safe = {**BYPASS, "Open A": "Silver Gauntlets", "Boulder Chest": "Golden Gauntlets"}
     assert tier_order_violations(world, safe) == []
+
+
+def test_child_bracelet_is_not_a_required_predecessor_of_adult_gauntlets():
+    world = build_world(strength_spec())
+    silver_first = {
+        **BYPASS,
+        "Open A": "Silver Gauntlets",
+        "Bracelet Gift": "Rupees (5)",
+        "Rock Chest": "Goron Bracelet",
+        "Boulder Chest": "Golden Gauntlets",
+    }
+    assert check_beatable(world, silver_first)
+    assert tier_order_violations(world, silver_first) == []
 
 
 def test_every_copy_of_the_lower_tier_is_withheld():
     world = build_world(strength_spec())
-    two_bracelets = {**BYPASS, "Open A": "Goron Bracelet", "Rock Chest": "Silver Gauntlets"}
-    assert tier_order_violations(world, two_bracelets) == []
+    two_silvers = {
+        **BYPASS,
+        "Open A": "Silver Gauntlets",
+        "Open B": "Silver Gauntlets",
+        "Boulder Chest": "Golden Gauntlets",
+    }
+    assert tier_order_violations(world, two_silvers) == []
 
 
 def test_vanilla_tier_bypasses_are_rejected_when_nothing_is_shuffled():
@@ -252,7 +275,7 @@ def test_a_fill_with_no_spot_behind_the_lower_tier_fails():
     spec["regions"][0]["locations"]["Rock Chest"]["rule"] = "True"
     spec["regions"][0]["locations"]["Boulder Chest"]["rule"] = "True"
     spec["regions"][0]["events"]["Win"] = "True"
-    with pytest.raises(FillError, match="Silver Gauntlets|Golden Gauntlets"):
+    with pytest.raises(FillError, match="Golden Gauntlets"):
         fill(build_world(spec), Settings(shuffle=("Chest",)), random.Random(1))
 
 

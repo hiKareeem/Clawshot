@@ -622,13 +622,17 @@ def _fill_bomb_ammo(
 
 
 def _tier_chains(world: World) -> dict[str, list[str]]:
-    """The fixed tiers, lowest first, of each progressive item in ``downgrade_tier_families``: the families whose
-    native grant overwrites the saved grade with the tier found (strength's LiftGrade, scales' DiveDepth), so a lower
-    tier found after a higher one takes the higher ability away."""
+    """Conservatively ordered native-slot tiers, lowest first; age-separated items are exempt.
+
+    This is independent of the MAX-combined logical family level.
+    """
     chains = {}
+    exemptions = world.settings.get("downgrade_tier_exemptions", ())
     for family in world.settings.get("downgrade_tier_families", ()):
         tiers = sorted(
-            (item.alias[1], name) for name, item in world.items.items() if item.tier and item.alias[0] == family
+            (item.alias[1], name)
+            for name, item in world.items.items()
+            if item.tier and item.alias[0] == family and name not in exemptions
         )
         if tiers:
             chains[family] = [name for _, name in tiers]

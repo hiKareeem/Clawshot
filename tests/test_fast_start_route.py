@@ -13,8 +13,10 @@ import pytest
 
 from clawshot.app.schema import presets, validate
 from clawshot.generate import FillError, Settings, generate, play_note, spoiler
+from clawshot.generate.fill import tier_order_violations
 from clawshot.generate.route import NoChildOpening, OpeningRoute, opening
 from clawshot.patch import door, gifts, make_seed, write_seed
+from clawshot.world import Search
 from clawshot.world.load import load_spec
 
 GOHMA = "'Defeat Queen Gohma'"
@@ -127,12 +129,19 @@ def test_recommended_bridge_open_early_door_seed_writes_and_explains_its_opening
     settings = validate({**recommended["values"], "forest": "closed_deku", "door_of_time": "open"})
     spec, settings, step = gifts.seed_setup(romfs, load_spec(), settings)
     output = make_seed(romfs, RECOMMENDED_BRIDGE_OPEN_EARLY_DOOR, settings, spec, extra_steps=[step])
+    search = Search(output.seed.world)
+    search.collect_spheres(output.seed.placements)
+    assert search.return_safe(output.seed.placements)
+    assert tier_order_violations(output.seed.world, output.seed.placements) == []
     write_seed(output, romfs, tmp_path / "seed")
     log = json.loads((tmp_path / "seed" / "spoiler.json").read_text(encoding="utf-8"))
-    assert log["opening_route"] is None
-    unavailable = log["opening_route_unavailable"]
-    assert unavailable["event"] == "Defeat Queen Gohma" and "adult Link's help" in unavailable["reason"]
-    assert unavailable["reason"] in (tmp_path / "seed" / "play-note.md").read_text(encoding="utf-8")
+    if log["opening_route"] is None:
+        unavailable = log["opening_route_unavailable"]
+        assert unavailable["event"] == "Defeat Queen Gohma" and "adult Link's help" in unavailable["reason"]
+        assert unavailable["reason"] in (tmp_path / "seed" / "play-note.md").read_text(encoding="utf-8")
+    else:
+        assert log["opening_route"]["event"] == "Defeat Queen Gohma"
+        assert log["opening_route_unavailable"] is None
 
 
 @pytest.mark.dump

@@ -545,3 +545,40 @@ reused rather than rerun unchanged. No fill fix before that pre-frequency report
 Claude assigned this branch the invariant-preserving fix and exact seed/settings regression,
 then fresh post-fix 30+30, full gates and the matrix including early-door Recommended
 and small-keys-anywhere cells. Neither no-downgrade nor the adult-return witness may be relaxed.
+
+**Step 2 completed:** all seeds 0–29 failed at the return-kit stage on both main `ac07355`
+and integrated `e30e6f4` (0/30 successes each), using the real public CLI and default ten
+attempts, game closed and three total processes. Main seed 1 reused Step 1; the other 59
+cases were fresh. Full commands/imports/logs and summary: `release-blocker/frequency/before/`.
+The diagnostic observer delegates unchanged arguments/RNG and rethrows: all ten attempts
+have strength 0, four Forest keys and zero allowed adult candidates for either gauntlet.
+The Bracelet is fixed at child-only Darunia; sorting alone cannot create that prerequisite.
+
+### Played age-separated strength evidence (Kareem via Claude, 21:15)
+
+Kareem observed that switching ages with Silver/Golden Gauntlets does **not** replace child
+Link's Goron Bracelet: the child keeps it. This supersedes the earlier native-flow decision tree
+and the assumed Bracelet → adult-gauntlet downgrade chain. Claude directs removing Bracelet
+from all downgrade order checks, retaining the conservative adult Silver → Golden pair and
+MAX-combined logic levels. Adult use of Bracelet strength is **[INFERENCE]** from vanilla's
+Forest-before-Spirit progression, not established by this played age-switch check.
+
+The minimal fix adds data-defined `downgrade_tier_exemptions = ["Goron Bracelet"]` and filters
+the shared `_tier_chains` used by both `tier_forbidden` and `tier_order_violations`.
+Adult Silver → Golden and scales remain constrained; no return witness, MAX logic, native
+gift anchor or first-pull inventory changed. No kit ordering/filter change was needed for
+the reproduced seed. Actual public CLI seed 1, Recommended closed_deku/open, now exits 0:
+**293 shuffled locations, 19 spheres**, written/verified in 48.27s at default attempts.
+`release-blocker/smoke-age-split/` retains the command, output and result.
+The original adult-first no-child guide is still exercised and explained (sphere 16);
+the regression no longer pins incidental route layout, but checks safe tier order and
+the unchanged earliest-return witness.
+
+Next acceptance: fresh early-door 30+30 (fixed branch must succeed 30/30), then default
+closed-door Recommended 0–29 and small-keys-anywhere 0–19, full gates and expanded matrix.
+
+Focused repaired-source regression result: **35 passed in 72.43s**, three workers,
+covering `test_world_tiers.py`, `test_age_fill.py` and `test_fast_start_route.py` with native
+dump variables and this worktree's source. This includes the exact seed/default-attempt
+writer, age-separated Bracelet replay, retained adult pair/scales and independent return proof.
+Log: `release-blocker/validation-age-split-working/gates.txt`.

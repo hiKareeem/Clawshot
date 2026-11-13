@@ -144,13 +144,15 @@ add one each), so every OoT Randomizer rule (`Hookshot` = `Progressive_Hookshot`
 location whose vanilla item is progressive must say its tier (`vanilla_fixed`), or the world does not build.
 Ordinary `alias` entries (a Heart Container's four Pieces of Heart, a spell's Magic Meter, key rings) still add.
 
-`downgrade_tier_families` (world setting) names the progressive items whose native grant overwrites the saved grade
-with the tier found (strength, scales): the fill puts each higher fixed tier only where it cannot be reached without
-every lower tier the seed gives. The screen (`generate.fill.tier_forbidden`) assumes only shuffled pool items,
-never fixed rewards: it collects fixed checks through their real prerequisites. The tested lower tier, target,
-later tiers and genuine family copies are withheld from both sources. The completed seed is then replayed with
-every location giving each lower tier withheld (`tier_order_violations`). This applies to native and shuffled
-pairs alike; no native-source exemption or earlier-sphere shortcut is allowed.
+`downgrade_tier_families` names conservative native-slot order constraints (adult gauntlets, scales).
+`downgrade_tier_exemptions` excludes age-separated items: Kareem's played 2026-11-12 age-switch check
+preserved child Goron Bracelet alongside adult Silver/Golden Gauntlets. Bracelet is not an adult downgrade
+predecessor; MAX logical strength is unchanged. Silver → Golden and scale order remain conservative,
+not gameplay proof of a downgrade. Within each remaining chain, the fill makes every lower tier mandatory:
+the screen (`generate.fill.tier_forbidden`) assumes shuffled pool items and collects fixed rewards through
+their real prerequisites, withholding the tested lower tier, target, later tiers and genuine family copies.
+The finished seed is replayed with every location giving each lower tier withheld (`tier_order_violations`).
+Native and shuffled pairs follow the same rule; an earlier collection sphere is not enough.
 
 ### Items, helpers, settings
 
