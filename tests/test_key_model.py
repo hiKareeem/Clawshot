@@ -12,13 +12,14 @@ from clawshot.census.definitions import Definition
 from clawshot.census.scan import CHEST, Location
 from clawshot.formats import byml, rstb, zsdic
 from clawshot.formats.byml import F32, U32, U64
-from clawshot.generate import Seed, Settings, generate
+from clawshot.generate import Seed, Settings, generate, prepare
 from clawshot.generate.fill import SMALL_KEY, allowed, is_restricted
 from clawshot.patch import events as chest_events
 from clawshot.patch import items as item_actors
 from clawshot.patch.key_targets import TARGETS
-from clawshot.patch.plan import ChestChange, Links, PatchError, Plan, link, make_plan, restrict_key_openings
+from clawshot.patch.plan import ChestChange, Links, PatchError, Plan, link, make_plan, restrict_event_openings
 from clawshot.patch.write import patch_tree, write
+from clawshot.progressive import CHAINS
 from clawshot.world import Search, build_world, load_spec
 
 KF_CHILD = "Banc/KokiriForest/KokiriForest_Child_Static.bcett.byml.zs"
@@ -401,10 +402,34 @@ def test_native_heart_piece_chest_requires_a_played_named_key_opening(chest_kind
         gyaml=chest_kind,
     )
     links = Links({name: [chest]}, {chest.id: name}, [])
-    native = build_world(restrict_key_openings(spec, world, links, EVENTS))
+    native = build_world(restrict_event_openings(spec, world, links, EVENTS))
     settings = Settings(dungeon_items="anywhere")
     assert allowed(native, settings, name, FOREST_KEY) is eligible
     assert allowed(native, settings, name, "Rupees (5)")
+
+
+@pytest.mark.parametrize(
+    ("chest_kinds", "event", "eligible"),
+    [
+        (("Obj_TBox_A_01",), None, True),
+        (("Obj_TBox_A_01_memo11",), None, False),
+        (("Obj_TBox_A_01", "Obj_TBox_A_01_memo11"), None, False),
+        (("Obj_TBox_A_01_memo11",), "House_NaviChatOff", True),
+    ],
+)
+def test_progressive_copies_need_a_played_opening_in_every_physical_copy(chest_kinds, event, eligible):
+    spec = load_spec()
+    settings, world = prepare(spec, Settings())
+    name = "Hyrule Field Chest (Obj_Heart_Piece)"
+    chests = [
+        census_location(index, "HyruleField", (KF_CHILD,), "Obj_Heart_Piece", event, gyaml=kind)
+        for index, kind in enumerate(chest_kinds, 1)
+    ]
+    links = Links({name: chests}, {chest.id: name for chest in chests}, [])
+    _, restricted = prepare(restrict_event_openings(spec, world, links, EVENTS), settings)
+    for family in CHAINS:
+        assert allowed(restricted, settings, name, family) is eligible, family
+    assert allowed(restricted, settings, name, "Rupees (5)")
 
 
 def test_an_anywhere_seed_of_the_whole_world_keeps_the_contract():

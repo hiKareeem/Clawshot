@@ -279,10 +279,12 @@ def test_dump_gift_shuffle_moves_great_fairies_through_their_new_flags(romfs):
     spec, settings, step = gifts.seed_setup(romfs, load_spec(), Settings(shuffle=(gifts.SHUFFLE,)))
     fairies = {n: info for n, info in spec["locations"].items() if n.endswith("Great Fairy Reward")}
     moving = sorted(n for n, info in fairies.items() if not info.get("keep_vanilla"))
-    # the two Magic Meter fairies stay: their pool item is a tier (MP or MP double), not one actor
+    # All six sources shuffle; the two Magic Meter prizes donate copies to eligible chests.
     assert moving == [
         "Colossus Great Fairy Reward",
+        "DMC Great Fairy Reward",
         "DMT Great Fairy Reward",
+        "HC Great Fairy Reward",
         "OGC Great Fairy Reward",
         "ZF Great Fairy Reward",
     ]

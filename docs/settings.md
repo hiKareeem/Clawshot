@@ -67,6 +67,10 @@ off (Kareem, 2026-11-13):
 get window, so the window's name and text and the granted item are that tier; the model rising
 from the chest stays the family's first tier ([section 47](../plans/03-game-data.md)). Gifts,
 shops, scrubs and floor pickups cannot choose a tier, so the fill never places a copy there.
+Every physical chest linked to a check must have a supported source-bound opening.
+Unreviewed variants remain eligible for ordinary fixed rewards, but not progressive
+copies; the generator applies that exclusion before fill rather than failing at write time.
+
 
 **Native upgrades are bonuses.** Wherever a native check still gives a fixed upgrade (Darunia's
 Bracelet, a Great Fairy's magic, a Skulltula wallet, a minigame bag or scale), the chests also

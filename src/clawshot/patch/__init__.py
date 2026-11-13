@@ -22,7 +22,7 @@ from clawshot.generate.fill import shuffled_locations
 from clawshot.patch import bags, drops, freestanding, gamedata, scrubs, shops, text
 from clawshot.patch import events as chest_events
 from clawshot.patch import items as item_actors
-from clawshot.patch.plan import Links, PatchError, Plan, link, make_plan, remake_vanilla, restrict_key_openings
+from clawshot.patch.plan import Links, PatchError, Plan, link, make_plan, remake_vanilla, restrict_event_openings
 from clawshot.patch.write import FileChanges, WrittenFile, write
 from clawshot.settings import CATALOG
 from clawshot.world.load import load_spec
@@ -102,8 +102,7 @@ def make_seed(
     census = scan(romfs)
     links = link(world, chests, definitions, census)
     vanilla = remake_vanilla(world, links, table)
-    if settings.dungeon_items == "anywhere":
-        spec = restrict_key_openings(spec, world, links, chest_events.load())
+    spec = restrict_event_openings(spec, world, links, chest_events.load())
     if freestanding.SHUFFLE in settings.shuffle:
         settings, step = freestanding.seed_setup(world, settings, census, definitions, vanilla)
         extra_steps = (*extra_steps, step)

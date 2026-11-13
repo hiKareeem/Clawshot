@@ -229,3 +229,196 @@ Darunia held vanilla, child source retained, full20 copies including3 strength.
 These are logic/presentation corrections only; the active fa754f8 runtime packet
 and its user folder remain untouched while Kareem plays.
 
+
+## Gate order (Claude's revised queue)
+
+E's initial community regens and lexical census released at12:33/12:34.
+Claude accepted D's format/lint and synthetic slot, then revised the queue:
+E's two-regeneration rerun, A synthetic, D synthetic retry, C matrix,
+D fixture/dump, D300-row serialized sweep, A dump, then E full gates.
+Release/post before the next claim.
+D cancelled its earlier C-release auto-claim watcher before claiming anything;
+its replacement only reports E release notes and cannot take a lock.
+Workers are chosen at each actual stage start from exact `hookshot.exe` /
+`longshot.exe` processes; full suites have no supervisor deadline.
+
+
+## Required gate progress
+
+Format:344 files already formatted. Lint:all checks passed after four mechanical
+corrections (explicit truncating `zip`, import order, diagnostic wrapping and
+equivalent combined ownership condition). The initial four lint diagnostics and
+the formatter's combined-condition layout diagnostic are retained in external
+gate logs. Rechecks use distinct log names; the no-overwrite assertion prevented
+an attempted reuse of the original format log before any checker ran.
+
+Full synthetic suite started with1515 collected, workers3, no exact Hookshot or
+Longshot process, no supervisor deadline. Native fixture/dump and serialized
+300-row sweep remain queued; gameplay acceptance remains with Kareem.
+
+Claude required a committed verification snapshot. The four lint corrections are
+commit `3a48d44`, created while synthetic was already running those identical
+source bytes. The original native pin was that commit; subsequent test-contract
+corrections and the replacement pin are recorded below. The external runner checks
+HEAD and clean runtime/test files before acquisition and records the full commit
+in every subsequent stage report. Thread start/release posts name the commit.
+Documentation updates remain uncommitted until verification evidence is complete.
+
+Synthetic at `3a48d44`:5 failed,1369 passed,141 skipped in559.95s.
+Four failures supplied fixed Slingshot inventory/placements to prepared copy-only
+worlds; one asserted the entire pre-progressive default restriction dictionary.
+Test-only commit `0e585e5` supplies the first raw Slingshot copy while preserving
+the Gohma/merchant reachability and ranged-lockout assertions; the obsolete exact
+default assertion was deleted, not re-pinned. All six cause-directed cases passed
+in1.64s; changed test files passed format/lint. Runtime code is unchanged.
+
+D released the shared lock to E's two-regeneration rerun and requested a full
+synthetic retry slot. The pending native fixture/dump/sweep pin is superseded by
+`0e585e5`; no native stage runs before a passing synthetic at that same commit.
+
+Claude explicitly retained the shop boundary as decided policy, rather than
+dropping its exact assertion: Kokiri Sword and each of the eight named progressive
+families must be Chest-only. Commit `18a04cb` restores that literal expected map
+without deriving it from implementation constants. The case passed in0.95s and
+its file passed format/lint. Runtime source remains unchanged.
+
+Claude put D's synthetic retry immediately after A's synthetic release (A waited
+longest). Retry, native fixture/dump and serialized300-row sweep now pin
+`18a04cb`, with no intervening source/test edit or rebase. Native stages still
+wait for C's matrix release after the passing D retry.
+
+A's synthetic release notification1200 explicitly handed the next slot to D.
+Retry started at full commit
+`18a04cb49b1e0b8f90a0754157746fb5b5a840da`; runner assertions confirmed HEAD and
+clean runtime/test sources before every stage. Required format:344 files already
+formatted; lint:all checks passed. Full synthetic:1515 collected, workers3,
+exact game processes empty, no deadline. C's matrix remains next after release.
+
+Full synthetic retry at `18a04cb` passed:1374 passed,141 skipped in765.37s.
+The shared lock was released and posted to C's matrix. Log:
+`work/r14-progressive/gate-synthetic-18a04cb.log`. Fixture/dump and serialized
+300-row sweep remain on the same committed runtime/test snapshot after C releases.
+
+Claude moved D's fixture/dump ahead of C's matrix because C also awaits its
+45–60 minute player check. Latest remaining order: D fixture/dump, C matrix,
+D serialized300-row sweep, A dump, E full gates.
+
+At `18a04cb`, the owned fixture rebuilt successfully from the repaired v131072
+NUP:1248 working-set files, matching version digest
+`fc09c4af707a0ca092188cf014f6fdf3d40514def773f097b798f52f9f28bc93`.
+Output: `work/rounds/r14/dump-progressive-cs14d`; per-file hashes:
+`work/r14-progressive/fixture-proof.json`. Original game folders remain read-only.
+Dump suite started on the same clean committed source/test snapshot:
+139 selected,1376 deselected, workers3, exact game processes empty, no deadline.
+
+## Packet equivalence at the tested commit
+
+Claude requested a light rebuild while the dump suite continued untouched.
+The same diagnostic builder at clean `18a04cb49b1e0b8f90a0754157746fb5b5a840da`
+wrote a NEW `ingame/mods/progressive-chests-v2-18a04cb-rebuild-next/` packet.
+The staged fa754f8 packet and rebuild each contain exactly14 files, with every
+relative path and SHA-256 identical (including native bonus flows and the RSTB).
+Proofs: `work/r14-progressive/packet-18a04cb-rebuild-proof.json` and
+`packet-18a04cb-comparison.json`. Posted **packet identical at 18a04cb**.
+No new launcher/profile was needed; the active mod, profile and running dump
+remained untouched. Gameplay acceptance is still pending, not inferred from hashes.
+
+## Played bundle failure; merge held
+
+Kareem passed Mido Hookshot→Longshot and Silver→Golden Scale; all four were saved.
+The inline training bundle failed: Bomb20→20→40; Bow→Bow→40;
+Slingshot→Slingshot→40; Single Magic→Single; Bracelet→Bracelet→Silver;
+Adult Wallet→Adult. Claude's read-only save examination found Bracelet+Silver
+(no Gold), Medium Wallet only, Small+Medium Bomb Bag, Bow+Medium Quiver,
+Slingshot+Medium Bullet Bag and Single Magic only. These observations are ground
+truth; no unchanged gameplay retry was requested.
+
+Corrected baseline: `2026-11-13_144022-r14-progressive-v2-rebased-9`,
+saved14:40:15. Game closed14:53 without a later save; Darunia's movie and the
+modded `Dm_Goron_0030` had not loaded, so **no Darunia guard result exists**.
+Runtime log lines442–443 and3685 prove Small/GetPouch/Big overrides loaded,
+but contain no per-item ownership-write trace. `prove_packet_v2.py:24` assumed
+immediate ownership changes: that interpretation cannot prove native timing.
+
+Claude requires production-reachability evidence posted BEFORE any replacement
+staging. Two read-only audits investigate native commit timing and every supported
+production source. Budget: at most2 launchers/about15 minutes, only unproven
+top-tier transitions. The unused five-fresh-profile builder was not executed.
+Read-only `retest-targets-18a04cb.json` establishes all six original Deku Tree
+chests are explicitly closed in the corrected baseline (canonical named flags,
+not only raw actor hashes). One isolated copy can therefore test the six missing
+upgrades without new actors, inventory/quest/flag cheats or repeating lower tiers.
+
+## Production timing audit and bounded replacement
+
+Audit result was posted BEFORE staging. All supported Small/Big and kept wrapper
+routes reach at most one progressive selector on a path; native source alternatives
+are mutually exclusive. `progressive.py:clone_entry` selects once before the native
+window; each leaf calls one literal actor. The diagnostic alone appended consecutive
+selector calls in one event. Darunia Event127, Diving Event21 and Fishing
+Events579/822 call fixed native grants through the bonus guard, not selectors.
+Shop/scrub/merchant paths and the six tiered native capacity prizes do not call
+progressive entries; the latter choose using native pouch existence queries.
+No same-event production counterexample was found.
+
+Native flow order is window-target setup at GetPouchContent Event11, message,
+then Event0 pouch addition; the parent bundle immediately resumes its next
+ownership query. Played results establish that the previous ownership was not
+yet visible there, but do not distinguish deferred publication from read caching.
+`sloperina-FINDINGS.md:202–206` records native AddPouch `0x110d570` and notify
+`0x110d0b0`; it does not establish a flush boundary. Exact Bool-query wrapper/
+publish timing remains unproven. Separate full chest events are played-proven;
+no exact minimum-frame guarantee is claimed for rapid pickups.
+
+Replacement at unchanged `18a04cb`: one launcher,
+`work/r14-progressive/ingame/Test - progressive remaining tops.bat`; checklist
+`PROGRESSIVE-REMAINING-TOPS-CHECKLIST.md` in that folder, about10–15 minutes.
+One new isolated profile copies only the selected corrected rebased9 save.
+Six original Deku chests replace only the missing Large Bomb Bag, Quiver50,
+Bullet Bag50, Golden Gauntlets, Giant Wallet and Double Magic. Native placement
+read-back passed; all twelve emitted TreasureBox/ShowPickUpWindow selector cases
+returned the correct top actor against the baseline. All four copied files match
+their source hashes. Cmd dry-run passed on Longshot rc.2, one13-resource mod;
+no game was started. Proof: `staged-top-chests-18a04cb-proof.json`.
+
+## Darunia guard: played PASS
+
+Claude's later read-only examination on the same post-bundle profile found
+`HavePlayedEvent.Dm_Goron_0030=True` with the modded movie flow loaded.
+Bracelet+Silver remained; Gold stayed absent: no downgrade or extra tier.
+Fire raw step advanced `3742399030 → 503007925`; names are not established.
+No crash. Kareem confirmed the dance/gift scene looked correct and no gift
+repeated after Save & Quit → Continue. Claude accepted the before-boulder guard
+independently of the bundle failure. Do not replay it in the bounded tier retest.
+
+## Native gate admission correction
+
+Full dump at `18a04cb`:136 passed,3 failed,1376 deselected in7999.63s.
+The real production progressive event/registration test passed. One stale test
+expected only four movable Great Fairies; the approved magic support admits HC
+and DMC too. Updated the six-source contract; its native lifecycle/flag test
+passed in21.27s.
+
+The two cache-mode failures were also reproduced against full ROMFS:
+all-kind songs-anywhere/affordable-shop/fixed-scrub seed7 failed before writing.
+Native chest2967378296224661060 is `Obj_TBox_A_01_memo11`, with no override and
+no supported source. `Obj_Heart_Piece` is its vanilla reward in the location name,
+not its actor (correcting the initial shorthand). The physical-source exclusion
+previously ran only for named keys with `anywhere`; default progressive fill
+could therefore place a copy in that unsupported subtype.
+
+Generalized the existing helper to `restrict_event_openings`, migrated all
+callers without an alias, and apply it before every fill. An unsupported physical
+copy excludes the eight active progressive families for the whole logical check;
+fixed rewards remain eligible. Named-key criteria remain unchanged. No guessed
+memo11 lifecycle or selector/runtime modification was introduced.
+
+Regression before fix:2 failed/2 passed (unsupported singleton and mixed physical
+copies admitted a copy). After:all13 progressive/named-key admission cases passed
+in12.22s. Changed four Python files pass format/lint. The exact full-ROMFS seed7
+then generated271 shuffled locations/20 spheres and wrote161 resources, exit0;
+the memo11 check now holds fixed Serenade of Water. Evidence:
+`work/r14-progressive/songs-prices-full-after-opening-fix/`.
+Full synthetic, native gate and serialized300-row sweep need a new matching
+committed snapshot; the staged six-Deku runtime packet remains untouched.
+

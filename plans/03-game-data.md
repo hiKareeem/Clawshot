@@ -3416,6 +3416,12 @@ tier-model binding. Scrubs use those hand-overs inside successful-purchase paths
 Shop purchases require the supported shelf actor/display and payment contract.
 Freestanding/boss-heart checks use native pickup actors, not a generic chest
 grant. These paths are not admitted for a uniform progressive copy.
+Every physical copy of a linked chest must also have a supported source-bound
+opening. The native `Obj_TBox_A_01_memo11` has no admitted default opening;
+it keeps ordinary fixed-reward eligibility but receives no progressive copies.
+`restrict_event_openings` applies these exclusions before fill, alongside the
+existing off-area named-key restrictions, in every dungeon-item mode.
+
 
 Shuffled native upgrade gifts can contribute copies to the chest pool while
 receiving another supported fixed reward themselves. The native census proves
@@ -3478,7 +3484,30 @@ The rebased D-only v2 Longshot packet has corrected Mido Hookshot/Scale pairs an
 a training-chest diagnostic bundle (all eight chains, twenty copies total).
 It is not a generated seed. Emitted read-back, serialized dispatch and cmd dry-run
 passed. **Claude accepted its Longshot rc.2 boot: one mod, fourteen files, crash0,
-save mounted. Reward gameplay is not yet accepted.** Paths are in the round file.
-The active guard check receives Darunia's gift after three strength copies, BEFORE
-the DC boulder; it does not wait for E. E separately checks boulder-first on the
-combined build. Kareem supplies reward results and per-file runtime loading proof.
+save mounted.** Kareem subsequently passed the separate Mido Hookshot/Longshot
+and Silver/Golden Scale pairs, with all four saved. The training bundle failed:
+inline copies reselected already-granted tiers and ended below the intended top
+tiers. Its serialized proof assumed immediate ownership visibility and is not
+timing proof. The production audit found no same-event double-selector path;
+replacement tier gameplay remains required before merge.
+
+**Darunia-before-boulder guard PASSED**, independently of the bundle failure.
+Claude observed the modded `Dm_Goron_0030` load and saved completion flag;
+Bracelet+Silver remained owned, Gold remained absent, no crash or downgrade.
+Fire's raw step advanced `3742399030 → 503007925` (step names not established).
+Kareem confirmed the dance/gift scene looked correct and did not repeat after
+Save & Quit → Continue. This is not the separate boulder-first combined-build check.
+
+At `18a04cb`, an independent rebuild into a new folder produced fourteen files
+whose SHA-256 hashes all matched that staged fa754f8 packet, including both chest
+flows, GetPouchContent, native bonus guards, both registries and the resource-size
+table. `work/r14-progressive/packet-18a04cb-comparison.json` records every file.
+This establishes packet byte-equivalence, not reward gameplay acceptance.
+
+Claude limited the retest to two launchers/about15 minutes. After posting the
+production audit (no same-event double-selector route found), D staged one
+copied-profile launcher: six original, verified-closed Deku Tree chests, one
+production copy each, testing only four tier2→3 and Wallet/Magic tier1→2 grants.
+Native read-back, twelve serialized selector cases, four copied-file hashes and
+Longshot rc.2 cmd dry-run passed. Reward gameplay remains pending. Exact native
+ownership publication/flush latency is not proven by the log or serialized checks.

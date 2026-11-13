@@ -180,23 +180,24 @@ def link(world: World, shuffled: Sequence[str], definitions: Sequence[Definition
     return Links(chests, {d.id: d.name for d in definitions}, vanilla)
 
 
-def restrict_key_openings(spec: dict, world: World, links: Links, events: Mapping[str, ChestEvent]) -> dict:
-    """Add native per-target exclusions before fill; every physical copy must support its named opening."""
+def restrict_event_openings(spec: dict, world: World, links: Links, events: Mapping[str, ChestEvent]) -> dict:
+    """Exclude source-bound rewards before fill unless every physical copy supports their opening."""
     keys = [
         (name, TARGETS[info.dungeon].id)
         for name, info in world.items.items()
         if info.type == SMALL_KEY and info.dungeon in TARGETS
     ]
+    copies = [family for family in CHAINS if family in world.progressive]
     exclusions = {}
     for name, chests in links.chests.items():
         blocked = set(world.locations[name].excluded_items)
-        for item, target in keys:
-            for chest in chests:
-                event = events.get(chest.event)
-                kept = event.name if event is not None and event.patch != REMOVE else None
-                if chest.area != target and source_for(chest.actor, kept) is None:
-                    blocked.add(item)
-                    break
+        for chest in chests:
+            event = events.get(chest.event)
+            kept = event.name if event is not None and event.patch != REMOVE else None
+            if source_for(chest.actor, kept) is not None:
+                continue
+            blocked.update(copies)
+            blocked.update(item for item, target in keys if chest.area != target)
         if blocked != set(world.locations[name].excluded_items):
             exclusions[name] = sorted(blocked)
     if not exclusions:
