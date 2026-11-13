@@ -3,6 +3,7 @@
 import hashlib
 import json
 import os
+import shutil
 from dataclasses import replace
 from pathlib import Path
 
@@ -85,7 +86,7 @@ def test_nup_generator_working_set_matches_romfs(romfs, cached_romfs):
             assert member.read_bytes() == (romfs / relative).read_bytes(), relative
 
 
-def generate_and_write(source, output, settings, capsys):
+def generate_and_write(source, output, settings, capsys, seed=7):
     """Use the real CLI setup, census, fill, search and writer; never a fallback root."""
     try:
         result = generate_main(
@@ -93,7 +94,7 @@ def generate_and_write(source, output, settings, capsys):
                 "--romfs",
                 str(source),
                 "--seed",
-                "7",
+                str(seed),
                 "--settings",
                 settings.to_string(),
                 "--out",
@@ -118,10 +119,21 @@ def generate_and_write(source, output, settings, capsys):
 def test_cache_only_generates_and_writes_every_resource_mode(romfs, cached_romfs, tmp_path, capsys, mode, settings):
     # The cache run is passed ONLY the cache directory. The independent full-dump run
     # is the oracle, catching even silent missing glob members (e.g. a language archive).
-    actual = generate_and_write(cached_romfs, tmp_path / "cached", settings, capsys)
+    seed = 7
+    actual = generate_and_write(cached_romfs, tmp_path / "cached", settings, capsys, seed)
     if mode == "gift":
         # Prove that this real cache-only CLI build exercises both newly released patches,
-        # not merely that two builds silently omitted the same gift.
+        # not merely that two builds silently omitted the same gift. Which seed moves both gifts
+        # depends on the pool (D39 shifted seed 7), so take the first seed from a short list that does.
+        flows = [flow_path(cached_romfs, gifts.MARKET_BOTTLE_FLOW), flow_path(cached_romfs, "Npc_Hylia_Dampe_001")]
+        for seed in (7, 8, 9, 10, 11, 12, 13, 14, 15, 16):
+            if seed != 7:
+                shutil.rmtree(tmp_path / "cached")
+                actual = generate_and_write(cached_romfs, tmp_path / "cached", settings, capsys, seed)
+            if all(f"romfs/{path}" in actual for path in flows):
+                break
+        else:
+            pytest.fail("no gift seed in 7-16 moves both the Market Potion Shop Bottle and Dampe's tour")
         output = tmp_path / "cached"
         placements = json.loads((output / "spoiler.json").read_text(encoding="utf-8"))["placements"]
         dictionaries = zsdic.Dictionaries.from_romfs(cached_romfs)
@@ -137,7 +149,7 @@ def test_cache_only_generates_and_writes_every_resource_mode(romfs, cached_romfs
             chart = evfl.read(data).flowchart
             grant = next(node for node in chart.events if node.name == event)
             assert grant.params["ActorName"] == actors.actor(placements[check]), check
-    expected = generate_and_write(romfs, tmp_path / "reference", settings, capsys)
+    expected = generate_and_write(romfs, tmp_path / "reference", settings, capsys, seed)
     missing = sorted(expected.keys() - actual.keys())
     extra = sorted(actual.keys() - expected.keys())
     changed = sorted(name for name in actual.keys() & expected.keys() if actual[name] != expected[name])
