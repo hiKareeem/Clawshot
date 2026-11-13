@@ -352,6 +352,64 @@ def test_counts_magic_hearts_and_tokens():
     assert by_id(build_state(no_checks_seed(), parse()))["magic"]["held"] is None
 
 
+def test_ammunition_counts_are_independent_of_bag_ownership():
+    ints = {
+        "PouchData.Item_BulletBag_Small.StockNum": 1,
+        "PouchData.Item_Quiver_Small.StockNum": 1,
+        "PouchData.Item_StickBag_Small.StockNum": 1,
+        "PouchData.Item_NutBag_Small.StockNum": 1,
+        "PouchData.Item_DekuSeed.StockNum": 0,
+        "PouchData.Item_Arrow_Normal.StockNum": 11,
+        "PouchData.Item_DekuStick.StockNum": 7,
+        "PouchData.Item_DekuNut.StockNum": 2,
+        "PouchData.Item_MagicBean.StockNum": 0,
+    }
+    cells = by_id(build_state(no_checks_seed(), parse({"IsGet.Item_MagicBean": True}, ints)))
+    assert {name: cells[name]["count"] for name in ("bullet_bag", "quiver", "stick_bag", "nut_bag", "magic_beans")} == {
+        "bullet_bag": 0,
+        "quiver": 11,
+        "stick_bag": 7,
+        "nut_bag": 2,
+        "magic_beans": 0,
+    }
+    assert cells["bullet_bag"]["held"] is True  # Empty ammunition does not remove the bag.
+    assert (cells["magic_beans"]["held"], cells["magic_beans"]["ever"]) == (False, True)
+
+
+def test_tiers_use_highest_current_stock_not_sum_or_history():
+    stocks = {
+        "Item_Wallet_Small": 1,
+        "Item_Wallet_Medium": 1,
+        "Item_Wallet_Large": 1,
+        "Armor_Child_Gauntlet_Goron": 1,
+        "Armor_Adult_Gauntlet_Silver": 1,
+        "Armor_Adult_Gauntlet_Gold": 0,
+    }
+    cells = by_id(
+        build_state(
+            no_checks_seed(),
+            parse(
+                {"IsGet.Armor_Adult_Gauntlet_Gold": True},
+                {f"PouchData.{actor}.StockNum": n for actor, n in stocks.items()},
+            ),
+        )
+    )
+    assert cells["wallet"]["tier"] == 3  # Coexisting tiers must not add up to six.
+    assert (cells["strength"]["tier"], cells["strength"]["held"]) == (2, True)
+
+
+def test_spell_granted_magic_does_not_require_upgrade_pouch_history():
+    cells = by_id(
+        build_state(
+            no_checks_seed(),
+            parse(
+                {"IsGet.Item_FairyBless_MP": False, "IsGet.Item_FairyBless_MPDouble": False}, {"PlayerStatus.MPMax": 24}
+            ),
+        )
+    )
+    assert (cells["magic"]["tier"], cells["magic"]["held"], cells["magic"]["ever"]) == (1, True, False)
+
+
 def test_no_save_is_all_unknown(tmp_path, places):
     state = build_state(load_seed(make_seed(tmp_path)), None)
     assert state["identity"]["status"] == "unknown"

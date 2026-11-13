@@ -19,6 +19,8 @@ Base: `ffea543`, Clawshot 0.2.0. No version change. Proposed by cs14a (openai-co
   Magic reads saved meter capacity, including a meter granted by a spell rather than a separate upgrade item.
 - Bottle count/current contents come from the native five `BottleA`–`BottleE` Struct slots, not `IsGet` history.
   Native Struct/Enum links and copied-save values were independently traced in external `probe6.py`–`probe8.py`.
+  **[INFERENCE]** `IsValid` is interpreted as ownership from those native links and copied values;
+  current contents are the native Enum choices. No in-game bottle acceptance is claimed.
 - Heart-meter units are **[INFERENCE]** quarter hearts (early saves hold MaxLife 12 for three starting hearts).
   Heart-piece stock is reported raw; lifetime-total versus remainder semantics are not claimed.
 - Unset raw pickup flags stay unknown where replacement persistence is uncertified. Shops and unaudited
@@ -88,12 +90,19 @@ Automated status before full gates:
   Fixtures are synthetic; tests cover ownership/history, every mapped field, spent/found keys,
   collection contracts, spoiler consent/redaction, slot choice/change, partial writes, cache
   invalidation, NUP reads, both GOB layouts, malformed textures and actual synthetic BC1 pixels.
+- While waiting for the shared gate, added requested field-boundary coverage for all ammo counters,
+  empty ammo versus bag ownership, coexisting upgrades (highest tier, not sum/history), and spell-only
+  magic. `uv run pytest tests/test_tracker_state.py`: **15 passed**.
+  The first spell test correctly returned unknown history because MPDouble's Bool was absent;
+  the real copied-save audit confirms both native upgrade-history Bools exist and are false.
+  Included both in the synthetic input, preserving unknown semantics; targeted rerun passed.
 - Actual CLI `--no-open`, direct Playwright `headless=True` and Chrome `--headless=new`: **passed**.
   Save rewrite updated displayed keys without reloading (`performance.timeOrigin` unchanged);
   explicit spoiler consent worked; OBS stayed redacted while the tab's spoilers were on; OBS had
   no controls; transparent background was RGBA zero; 52 icons loaded from the local dump.
   All 130 page requests stayed on the loopback origin. No omp browser tool or visible window used.
-- Six tab/OBS screenshots (text and local icons) are under `work/r14-tracker/shots/`, never committed.
+- Six primary tab/OBS screenshots (text and local icons), plus an opaque alpha-control capture,
+  are under `work/r14-tracker/shots/`, never committed.
   Initial smoke failures were test-harness issues: string predicates conflicted with CSP, then
   same-document fragment navigation retained the first OBS options. Fixed the harness to use
   CSP-safe predicates and separate Browser Source documents; app CSP was never weakened.
@@ -101,6 +110,17 @@ Automated status before full gates:
   the Python CLI directly and leaves no listening server.
 - UI source-release command produced external `release-smoke/Clawshot-0.2.0.zip`: 233 files,
   required tracker code/assets/docs present, no PNG/BNTX/ZS/save/log payload. Version unchanged.
+- Additional actual CLI/HTTP smoke (`real_http_smoke.py`): copied transferred save, explicit slot_00,
+  repaired NUP selected through `api/detect`, and a real 127,960-byte Longshot-icon PNG served.
+  Asserted Forest 0/5/5, Fire 0/8/8, Water 0/4/4, Longshot tier 2, wallet tier 3, two bottles
+  (Blue Fire/Fairy), MaxLife 36/9 hearts, pieces 3, tokens 30; copied-save hash and mtime unchanged.
+  Selecting the audited old seed-8 pack copy with that save produced the expected explicit mismatch
+  warning (four added gift flags expected, zero present). Matching no-added-flag layouts remained
+  unverifiable, not falsely identified. No game, browser or original-save writes in this smoke.
+- Explicit transparent-canvas smoke (`alpha_smoke.py`, direct Chrome headless): rendered PNG
+  corner alpha was **255 with transparency off, 0 with it on**, with the same transparent browser
+  canvas. This tests actual compositing, not just the body's computed CSS. The transparent OBS
+  screenshot was replaced with this RGBA capture. No visible browser or game launched.
 
 Full synthetic and dump suites remain queued behind ready B/C/D stages at this point.
 Every heavy stage atomically claims `work/rounds/r14/gate.lock` and releases between stages.
