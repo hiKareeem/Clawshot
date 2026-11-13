@@ -30,6 +30,7 @@ from clawshot.pack.source import local_romfs
 from clawshot.patch import PatchError, gamedata, gifts, make_seed, write_seed
 from clawshot.patch.items import ItemActorError
 from clawshot.patch.write import check_output_folder, check_romfs
+from clawshot.settings import validate_logic_overrides
 from clawshot.world.load import WorldError, load_spec
 
 
@@ -160,6 +161,7 @@ def main(argv: list[str] | None = None) -> int:
             if "door_of_time" not in explicit_logic:
                 logic.pop("door_of_time", None)
         settings = replace(settings, **overrides, logic=logic)
+        validate_logic_overrides(load_spec(), settings.logic)
         if settings.areas and not settings.goal:
             parser.error("--areas needs --goal (the world's goal lies outside most slices)")
     except ValueError as e:

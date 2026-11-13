@@ -18,6 +18,18 @@ means defaults; replace it with the complete printed string to replay custom cho
 command-line options override its fields, and `--logic name=value` overrides individual logic values.
 The spoiler records both effective settings and their replay string. Use `--help` for the full CLI.
 
+Native seeds accept only supported `--logic` overrides. Unchanged world defaults
+remain valid; supported non-default values cover free time travel, the return
+guarantee, and the derived key/forest/Mido/door modes and return-kit tables.
+Prefer `--dungeon-items`, `--forest` and `--door-of-time` for those modes.
+Conflicting derived fields are still refused.
+
+OoT-only access overrides such as `open_kakariko=open`, `gerudo_fortress=open`,
+`scarecrow_behavior=free` and `skip_child_zelda=true` are refused: no native patch
+makes them true. The same policy applies to CLI settings strings, app validation
+and native seed generation; new imported OoT keys are not implicitly supported.
+The CS1 codec and standalone logic-model APIs remain generic for research.
+
 Reproduction needs the same seed, settings, generator source/version and world data. Generator
 defaults are in `src/clawshot/data/settings.toml`; logic defaults are in `src/clawshot/data/world/`.
 A version label alone does not identify the exact source. The generator reads an extracted RomFS;

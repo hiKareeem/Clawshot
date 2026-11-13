@@ -24,7 +24,7 @@ from clawshot.patch import events as chest_events
 from clawshot.patch import items as item_actors
 from clawshot.patch.plan import Links, PatchError, Plan, link, make_plan, remake_vanilla, restrict_event_openings
 from clawshot.patch.write import FileChanges, WrittenFile, write
-from clawshot.settings import CATALOG
+from clawshot.settings import CATALOG, validate_logic_overrides
 from clawshot.world.load import load_spec
 
 __all__ = ["PatchError", "PatchStep", "SeedOutput", "make_seed", "write_seed"]
@@ -66,6 +66,7 @@ def make_seed(
             "are unverified. The r7-drops native-token-boomerang experiment changes all tokens, not a seed."
         )
     spec = load_spec() if spec is None else spec
+    validate_logic_overrides(spec, settings.logic)
     definitions = census_definitions.load()
     if scrubs.SHUFFLE in settings.shuffle:
         spec, settings, step = scrubs.seed_setup(spec, settings)

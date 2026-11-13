@@ -7,7 +7,7 @@ from pathlib import Path
 from clawshot.generate import FillError, Settings, hints, prepare
 from clawshot.generate.fill import DUNGEON_ITEM_CHOICES, return_guarantee_conflict
 from clawshot.patch import gamedata, gifts
-from clawshot.settings import CATALOG
+from clawshot.settings import CATALOG, validate_logic_overrides
 from clawshot.world.load import WorldError, load_spec
 
 METADATA_PATH = Path(__file__).with_name("settings.toml")
@@ -106,7 +106,9 @@ def validate(values: dict | None = None, *, text: str | None = None, spec: dict 
     if settings.areas and not settings.goal:
         raise ValueError("Playtest areas require a goal")
     try:
-        effective, world = prepare(load_spec() if spec is None else spec, settings)
+        selected_spec = load_spec() if spec is None else spec
+        validate_logic_overrides(selected_spec, settings.logic)
+        effective, world = prepare(selected_spec, settings)
         if conflict := return_guarantee_conflict(world, effective):
             raise FillError(conflict)
     except (FillError, WorldError) as error:

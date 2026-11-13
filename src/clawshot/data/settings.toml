@@ -56,3 +56,20 @@ source = "Claude, Round 6 review, 2026-11-08: all twelve Item_Melody_* share the
 [hand_over]
 excluded_items = ["Fairy Ocarina", "Ocarina of Time"]
 source = "Kareem/Claude, R11 seed10 gallery crash reproduced in German and English, Hookshot 2.0.14; Fairy shares the equipment/show-item mismatch. Direct story grants and chests remain allowed; plans/rounds/r11-ocarina.md"
+
+# Claude, r14 Track E, 2026-11-13: public native seeds refuse unpaired
+# access overrides. Unchanged world defaults are always allowed.
+# These values have paired game transforms or change generation guarantees only.
+[logic_overrides]
+free_time_travel = [false, true]
+age_return_guarantee = [false, true]
+keysanity = [false, true]
+open_forest = ["closed", "closed_deku", "open"]
+skip_mido = [false, true]
+door_of_time = ["closed", "song_only", "open"]
+
+# Effective spoiler/share settings contain these mode-derived return-kit values.
+# Read the supported values from the world, rather than duplicate its item tables.
+[logic_override_modes]
+age_return_fill_inventory = "age_return_door_inventory"
+age_return_fill_families = "age_return_door_families"
