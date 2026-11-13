@@ -50,6 +50,14 @@ source = "D16; GatheringTokenGold gives Item_Wallet_Large at 30 tokens (03-game-
 vanilla_fixed = "Goron Bracelet"
 source = "D16; Darunia gives the Goron's Bracelet"
 
+[locations."GF HBA 1500 Points"]
+vanilla_fixed = "Quiver (40)"
+source = "plans/03-game-data.md section 47 (Round 14 native census, build e0f3ccfa): the 1500-point horseback archery prize is the medium quiver, the large one when the medium is held, never Item_Range_Bow; a capacity upgrade is not the Bow. OoT Randomizer's progressive Bow here would give a free Bow in logic"
+
+[locations."GC Rolling Goron as Child"]
+vanilla_fixed = "Bomb Bag (30)"
+source = "plans/03-game-data.md section 47 (Round 14 native census, build e0f3ccfa): the child rolling Goron gives the medium bomb bag, the large one when the medium is held, not the small first bag"
+
 [locations."Graveyard Dampe Race Hookshot Chest"]
 vanilla_fixed = "Hookshot"
 source = "D16; census 'Graveyard Dampe Race Hookshot Chest' holds Item_Hookshot"
@@ -87,9 +95,10 @@ source = "Kareem, in game, 2026-11-07: the Death Mountain Trail fountain gives D
 
 [locations."HC Great Fairy Reward"]
 vanilla = "Magic Meter"
+vanilla_fixed = "Magic Meter (Single)"
 rule = "can_play(Zeldas_Lullaby) and Dins_Fire"
 was = "can_play(Zeldas_Lullaby)"
-source = "Kareem, in game, 2026-11-07: the Hyrule Castle fountain gives the magic meter (03-game-data.md section 9). Rule: event flow TriForcePoint, entry Sub_PlayOcarinaSequence_FairyFountain: after the Lullaby, EventQueryFairyFountainSelectSpecialAbility sends every fountain but Din's (SpecialAbility 2) to a switch on IsGet.Item_DinFire; without it Navi says 'It doesn't seem like anything happened' (Dm_FairyFountain_Power Talk_00/Talk_02) and the fairy stays away. Fee: Dm_FairyFountain_Power asks EventQueryHasRuppe 50 and pays -50 (GreatFairy_Price2 = 50); the starting wallet holds 200 (Item_Wallet_Small)"
+source = "Kareem, in game, 2026-11-07: the Hyrule Castle fountain gives the magic meter (03-game-data.md section 9). Rule: event flow TriForcePoint, entry Sub_PlayOcarinaSequence_FairyFountain: after the Lullaby, EventQueryFairyFountainSelectSpecialAbility sends every fountain but Din's (SpecialAbility 2) to a switch on IsGet.Item_DinFire; without it Navi says 'It doesn't seem like anything happened' (Dm_FairyFountain_Power Talk_00/Talk_02) and the fairy stays away. Fee: Dm_FairyFountain_Power asks EventQueryHasRuppe 50 and pays -50 (GreatFairy_Price2 = 50); the starting wallet holds 200 (Item_Wallet_Small). Fixed tier: the single meter, Item_FairyBless_MP (Dm_FairyFountain_Power/Event141, section 47)"
 
 # The magic meter comes with every magic item (round 4 item 6, 03-game-data.md section 12). Each item's
 # PouchActorInfo row has `ExpansionAvility: MPMaxUP` with `MPMax: 24` (Item_FairyBless_MP, OoT Randomizer's

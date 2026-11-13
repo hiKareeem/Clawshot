@@ -8,4 +8,5 @@ source = "https://www.eurogamer.net/zelda-ocarina-of-time-death-mountain-crater 
 [locations."DMC Great Fairy Reward"]
 rule = "can_play(Zeldas_Lullaby) and Dins_Fire"
 was = "can_play(Zeldas_Lullaby)"
-source = "event flow TriForcePoint (Obj_TriForcePoint_A_04 in DeathMountainCrater runs Demo_FairyFountain_Wisdom, RSDB EventSetting), entry Sub_PlayOcarinaSequence_FairyFountain: every fountain but Din's needs IsGet.Item_DinFire before the fairy appears. Fee: Dm_FairyFountain_Wisdom asks EventQueryHasRuppe 200 and pays -200, fixed (GreatFairy_Price4); the starting wallet (Item_Wallet_Small) holds 200. Gift: Item_FairyBless_MPDouble (MPMax 48)"
+source = "event flow TriForcePoint (Obj_TriForcePoint_A_04 in DeathMountainCrater runs Demo_FairyFountain_Wisdom, RSDB EventSetting), entry Sub_PlayOcarinaSequence_FairyFountain: every fountain but Din's needs IsGet.Item_DinFire before the fairy appears. Fee: Dm_FairyFountain_Wisdom asks EventQueryHasRuppe 200 and pays -200, fixed (GreatFairy_Price4); the starting wallet (Item_Wallet_Small) holds 200. Gift: Item_FairyBless_MPDouble (MPMax 48); fixed tier: the double meter (Dm_FairyFountain_Wisdom/Event144, plans/03-game-data.md section 47)"
+vanilla_fixed = "Magic Meter (Double)"

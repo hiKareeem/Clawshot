@@ -20,6 +20,7 @@ from clawshot.patch.key_targets import DUNGEON_TARGETS, TARGETS, DungeonGrant
 from clawshot.patch.plan import PatchError, Plan
 from clawshot.patch.write import FileChanges
 from clawshot.save import key as save_key
+from clawshot.progressive import CHAINS
 
 SMALL = "Dm_SY_TreasureboxSmall"
 BIG = "Dm_SY_Treasurebox"
@@ -528,7 +529,11 @@ def changes(romfs: str | Path, plan: Plan, *, prior_changes: Sequence[FileChange
         for change in plan.changes
         if change.named_key is not None
         or change.dungeon_item is not None
-        or (change.kept_event is not None and change.kept_event.name in _COMMENTED_STORY_SOURCES)
+        or (
+            change.kept_event is not None
+            and change.kept_event.name in _COMMENTED_STORY_SOURCES
+            and change.item not in CHAINS
+        )
     ]
     if not routed:
         return plan, {}

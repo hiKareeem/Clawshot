@@ -12,7 +12,7 @@ OoT Randomizer). Data: `src/clawshot/data/world/`.
 
 | File | Holds | Written by |
 |---|---|---|
-| `world.toml` | `start` (region), `goal` (a rule), `files` (the region files to load), `overrides` (the overrides file); Clawshot's own `[settings]` and `[items]`, and `[progressive]` (tiers) | hand |
+| `world.toml` | `start` (region), `goal` (a rule), `files` (the region files to load), `overrides` (the overrides file); Clawshot's own `[settings]`, `[items]`, `[helpers]`, and `[progressive]` (tiers) | hand |
 | `<area>.toml` | `[[region]]` entries, then a `[locations]` table | `translate` (from `port.toml`), never by hand |
 | `remake.toml` | the remake's differences and Clawshot's per-location facts (below) | hand |
 | `helpers.toml` | `[helpers]`: named rules, some with parameters | `translate` (`LogicHelpers.json`) |
@@ -134,17 +134,62 @@ cutscene, song and boss-reward gifts (event flows).
 
 ### Fixed or progressive items
 
-`world.toml`'s `progressive_items` setting (default `false`, decision D16): with `false`
-each check gives one fixed item, as the remake does without a code hook; with `true`, OoT Randomizer's progressive
-items. `[progressive]` lists each progressive item's tiers (`"Progressive Hookshot" = ["Hookshot", "Longshot"]`);
-the loader makes each tier an item that raises the progressive item to at least that tier (the highest fixed tier
-held counts, never a sum: Goron Bracelet plus Silver Gauntlets is 2, not Golden's 3; genuine progressive copies still
-add one each), so every OoT Randomizer rule (`Hookshot` = `Progressive_Hookshot`, `Longshot` =
-`(Progressive_Hookshot, 2)`) reads both kinds unchanged, and a Longshot found first is a Longshot. With fixed items, a
-location whose vanilla item is progressive must say its tier (`vanilla_fixed`), or the world does not build.
+**Native progressive chains (Round 14, issue #13; decision Kareem, 2026-11-13; `03-game-data.md` section 47).**
+Every generated seed uses the eight chains of `clawshot.progressive.CHAINS`, always on, with no user setting:
+Progressive Hookshot (Hookshot, Longshot), Progressive Strength (Goron Bracelet, Silver Gauntlets, Golden
+Gauntlets), Progressive Scale (Silver, Golden), Progressive Wallet (Adult 500, Giant 1000; the 200-rupee wallet is
+starting equipment), Progressive Bomb Bag (Bomb Bag, 30, 40), Progressive Quiver (Bow, Quiver 40, 50), Progressive
+Slingshot (Slingshot, Bullet Bag 40, 50) and Progressive Magic (single, double meter). A shuffled check's own
+upgrade enters the pool as a raw copy of its family. Wherever a native fixed-tier source stays vanilla (Darunia's
+Bracelet, the bag, quiver, wallet, scale and magic gifts), the pool holds the full set instead: N copies for N
+tiers, each extra replacing one ordinary filler item. Copies are held to `Chest`: only a chest event can read owned
+tiers before the get window (`patch.progressive`), so gifts, shops, scrubs and floor pickups never receive one,
+through every fill stage, swap and filler step. `generate.progressive.normalize_pool` completes each chain the world
+gives deterministically: chest rupees first, then other plain junk, each in world order, never a key, shop or refill
+item, type-held item or progression item. A seed that shuffles no chests, or has too little such filler, is an
+error, never a short or fixed chain. The default Chest shuffle has seven chest sources and thirteen replaced chest
+rupees: twenty copies.
+
+Logic counts only the copies: the Nth copy is tier N. A native fixed reward is a bonus outside that count, so the
+fill assumes no order between it and the chests ("fixed baselines precede copies" is not a safeguard: players can
+open the chests first). The bonus never downgrades: where its native path would not keep a higher tier it is
+guarded to skip the grant when that tier or a higher one is owned. A copy that then finds no tier left is a
+harmless leftover; no tier becomes unobtainable. A copy grants `progressive.next_tier` of the saved canonical
+identities: the next tier above the highest owned (capped at the last), except that Progressive Strength gives the
+missing child Goron Bracelet first (adult gauntlets do not supersede it across time travel, Kareem 2026-11-12),
+Progressive Quiver and Slingshot give the missing weapon before capacity (a fixed bag upgrade is not the weapon),
+and Progressive Magic gives the double meter once a spell, the Lens or magic arrows (`MAGIC_SOURCES`) opened the
+native meter, never counting them as a copy.
+A seed's world gets this from `[native_progressive]` `copies_only`, which `prepare_spec` sets: the loader makes
+every fixed tier, and every other alias to a chain's logical item (Bomb Bag 30/40, a spell's Magic Meter), a plain
+item. Names still read (a spell is still the spell), but only copies count, so `tier_forbidden` finds no
+native-chain tiers to order there.
+
+**Deliberate child-strength exception (Claude, 2026-11-13):** the world-header helper
+`Progressive_Strength_Upgrade` reads native `Goron Bracelet` as child capability in seed worlds;
+the quoted counted form still reads raw copies. Child bombs likewise require that native source.
+Darunia's Lullaby/Saria/door route adds no copy tier, and all three copies remain. Adult strength
+stays copy-only. An early copy Bracelet physically works out of logic; logic never relies on it.
+The return-kit minimum uses native Bracelet, not an invented first adult copy. E's native
+post-boulder Darunia source-lock finding remains a dependency recorded in `rounds/r14-progressive.md`.
+
+
+Presentation keeps the family label everywhere (hints, `spoiler.json`, `play-note.md`, `patch.text.item_names`,
+which reads no actor pack for a family). The chest's rising model stays the family's first tier; the get window
+and grant are the selected tier. Concrete tiers are collection-order dependent, so the spoiler's
+`progressive_grants` lists each copy's ordered tiers, the tier given in one canonical sphere replay and whether it
+was a leftover (Generating a seed), explicitly not a promise for another route.
+
+The loader's own mechanism stays for direct `build_world` use: `world.toml`'s `progressive_items` (default `false`,
+D16) and `[progressive]` tiers (`"Progressive Hookshot" = ["Hookshot", "Longshot"]`) make each fixed tier an item
+that raises the logical family to at least that tier (the highest fixed tier held counts, never a sum: Goron
+Bracelet plus Silver Gauntlets is 2, not Golden's 3; genuine copies still add one each), so every OoT Randomizer
+rule (`Hookshot` = `Progressive_Hookshot`, `Longshot` = `(Progressive_Hookshot, 2)`) reads both kinds unchanged. A
+location whose vanilla item is progressive must say its native tier (`vanilla_fixed`), or the world does not build.
 Ordinary `alias` entries (a Heart Container's four Pieces of Heart, a spell's Magic Meter, key rings) still add.
 
-`downgrade_tier_families` names conservative native-slot order constraints (adult gauntlets, scales).
+`downgrade_tier_families` names conservative native-slot order constraints (adult gauntlets, scales) for items
+that remain fixed; progressive copies are not subject to it.
 `downgrade_tier_exemptions` excludes age-separated items: Kareem's played 2026-11-12 age-switch check
 preserved child Goron Bracelet alongside adult Silver/Golden Gauntlets. Bracelet is not an adult downgrade
 predecessor; MAX logical strength is unchanged. Silver → Golden and scale order remain conservative,
@@ -161,6 +206,11 @@ Native and shuffled pairs follow the same rule; an earlier collection sphere is 
 `stone`, `alias` (a Heart Container also counts as four Pieces of Heart) where they apply. A `Map`, `Compass`,
 `SmallKey`, `SmallKeyRing`, `BossKey` or `SilverRupee` named `... (<Dungeon>)` belongs to that dungeon.
 
+The world header may add `[helpers]` with the same sourced rule form as the translated table.
+As with its local settings/items, a duplicate generated name is rejected; existing translated
+helpers are changed only through the `remake` override with its `was` guard.
+
+
 `settings.toml` has three tables, merged into one namespace for rules:
 
 - `[settings]`: OoT Randomizer settings the rules name, at its defaults (`open_forest = "closed"`, ...). A seed's
@@ -174,8 +224,8 @@ Native and shuffled pairs follow the same rule; an earlier collection sphere is 
 
 **Usable bombs (D30).** `remake/bombs.toml` guards `Bombs` with the Bomb Bag and age-appropriate
 Low-or-higher lift strength: the actual fixed Goron Bracelet as child, any strength upgrade as adult.
-Progressive mode's first strength tier represents the Bracelet. `can_use(Bombs)` and the Octorok
-bomb shortcuts share that predicate; explosives/blast-or-smash and bomb-only tricks inherit it.
+In seed worlds the approved child-capability exception requires the native Darunia source, not a
+copy Bracelet; adult strength counts copies. `can_use(Bombs)` and the Octorok bomb shortcuts share that predicate.
 Bombchu supply and local strength-gated Bomb Flower routes are unchanged. This is logic matching
 native lift requirements, not a gameplay patch or an extra bag/strength grant (sections 30–31).
 
@@ -330,7 +380,13 @@ resources under `<dir>/romfs/` plus `<dir>/spoiler.json`:
    fails is never returned.
 4. The spoiler log, JSON: `generator` (with version), `seed`, `settings`, `settings_string`,
    `placements` (shuffled locations, world order), `spheres` (the progression items collected in each sphere;
-   spheres with none are left out).
+   spheres with none are left out), and `progressive_grants`: a route disclaimer `note` and, per location holding a
+   progressive family, `family`, `possible_tiers` (in order), `canonical_sphere`,
+   `given_in_canonical_sphere_replay` and `leftover_in_canonical_replay`. That replay walks the full search spheres
+   in order (each in world order), records native bonuses' canonical identities as owned and gives each copy
+   `progressive.next_tier`; no randomness.
+   The search's child view before return is an independent prefix, so the replay is a labelled witness, not a play
+   order or gameplay proof. `play-note.md` renders the same table.
 
 Same seed, settings, data and generator version give the same bytes: the generator is the only randomness, and the
 fill walks lists in world-file order, never a set (a test compares two interpreters with different hash seeds).

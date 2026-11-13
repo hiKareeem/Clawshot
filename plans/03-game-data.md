@@ -3323,3 +3323,162 @@ Saria without Darunia, missing-step and ready escape controls, and bridge-down/n
 Separate music night/day, Market-return and music-reload observations were not relayed and
 are not additionally claimed. Observations, Claude's save reads and loading-log proof are
 recorded in `rounds/r14-story.md`.
+
+## 47. Round 14: chest-bound progressive upgrades (cs14d, issue #13)
+
+Supported build e0f3ccfa/v131072. Commands, source citations, decisions, failures
+and player packet: `rounds/r14-progressive.md`. External probes/decoded data and
+generated output stay under `E:/OOTRemake/work/r14-progressive/`.
+No agent game run; native-data proof is not gameplay acceptance.
+
+**Kareem, via Claude, 2026-11-13:** all eight chains below are progressive,
+always on, with no setting. A check kind unable to grant the next tier gets no
+progressive copies. This replaces D16 for shuffled copies of these chains, not
+native rewards at checks the settings leave unshuffled.
+
+| Progressive item | Native grants, in order |
+|---|---|
+| Hookshot | Hookshot, Longshot |
+| Strength | child Goron Bracelet, adult Silver Gauntlets, adult Golden Gauntlets |
+| Scale | Silver Scale, Golden Scale |
+| Wallet | Medium/500 rupees, Large/1000; Small/200 is starting equipment |
+| Bomb Bag | Small/20, Medium/30, Large/40 |
+| Quiver | Bow with first Small/30 container, Medium/40, Large/50 |
+| Slingshot | Slingshot with first Small/30 container, Medium/40, Large/50 |
+| Magic | native MP/24, MPDouble/48; existing native spell/magic capacity is a floor |
+
+### Ownership, text and model are separate
+
+Real-dump probes read `RSDB/PouchActorInfo`, `GameDataList`, both native chest
+flows and `GetPouchContent`. Native small Event23 and big Event90 call
+`GetPouchContentByActorNameForTreasureBox`. GetPouchContent Event11 sets the
+get-window actor before the message; Event0 adds it afterwards. Selecting only
+at Event0 would leave the old item's text. Source-bound clones use saved
+`GameDataActor.EventQueryIsGameDataBool` on canonical `IsGet` names (case0 true,
+case1 false), choose a literal native actor, then call the unchanged native
+window/grant entry. Both `EventSetting` and `GameAnalyzedEventInfo` registrations
+preserve the native source lifecycle/preloads, as the played named-key route does.
+Named dungeon-key grants and unrelated native callers remain unchanged.
+
+The physical chest's `PouchContentGuestPerformer` still binds the **base actor's
+rising model**. The selected native tier supplies the get-window name/text and
+actual pouch grant. Hookshot/Longshot already share a mesh (section22); that
+visual equality is not evidence the guest followed selection. Scale and other
+chains may therefore show their base model while granting the next tier.
+Small Event17 and big Event25 can refuse the already-owned base content through
+`EventQueryCanAddToPorch` and take a display-only path. Progressive-only clones
+use that query's native success continuation so the old base cannot suppress
+the selected next-tier grant. Fixed native callers retain their original checks.
+
+The native small/big post-grant pickup popup still read physical `ContentName`.
+Progressive clones now select that popup and ActionGuide from the already-latched
+`UI_MessageTargetActorName` (grant actor or canonical owned identity), not from
+a fresh ownership query after grant, which would advance another tier.
+
+
+Canonical strength flags are `IsGet.Armor_Child_Gauntlet_Goron` and
+`IsGet.Armor_Adult_Gauntlet_Silver/Gold`, not `IsGet.Item_Gauntlet_*`.
+The latter acquisition actors have no matching saved IsGet fields.
+The child Bracelet is independent: Kareem played on2026-11-12 that adult
+Silver/Golden Gauntlets do not supersede it across time travel. A progressive
+strength copy supplies a missing Bracelet before advancing adult gauntlets.
+The fixed-tier Bracelet exemption remains; it is not proof adult gauntlets
+confer child strength. Quiver/bullet capacity is likewise independent of weapon
+ownership: a missing Bow/Slingshot is granted before upgrading its ammunition.
+
+Magic's native spells, Lens and magic arrows declare MPMaxUP24. An acquired MP
+item is not the only way to have magic. The progressive selector also queries
+`PlayerStatus.MPMax > 0`, then gives the native MPDouble actor; it never merely
+writes an upgrade number without its pouch item. Spell sources establish a
+fixed capacity floor, not extra progressive copies.
+
+**Across time travel:** Hookshot/Longshot and Bow remain adult-use, Slingshot
+child-use (native PouchTable age flags, section37). Their canonical acquired
+history is saved separately from the currently usable item bar. Child Bracelet
+versus adult gauntlets is the played exception above. Wallet, bomb/bullet/arrow
+capacities, DiveDepth and MPMax have single saved fields, not age-named copies;
+this is static schema evidence, **not** a played guarantee that live equipment
+and ability reapplication after an age flip follows every chain correctly.
+No new cross-age bag/scale/wallet/magic gameplay pass is claimed. The first
+Longshot packet checks saved ownership/reload as child, not time travel.
+
+Facts-only external lead: `E:/OOTRemake/work/refs/sloperina-FINDINGS.md`
+section5.7 (GPL documentation): upgrade screens/story checks need pouch items,
+not only capacity/depth numbers. No implementation copied. Kamil's r13 findings
+and the OOTNS2 issue draft were ideas only; the draft contains no wallet0.4.0
+implementation evidence. Neither lead substitutes for the native probes.
+
+### Supported destinations and source normalization
+
+Progressive copies are **Chest-only**. Gifts include direct pouch adds, ordinary
+GetPouchContent calls and actor-creating hand-overs; the latter need independent
+tier-model binding. Scrubs use those hand-overs inside successful-purchase paths.
+Shop purchases require the supported shelf actor/display and payment contract.
+Freestanding/boss-heart checks use native pickup actors, not a generic chest
+grant. These paths are not admitted for a uniform progressive copy.
+
+Shuffled native upgrade gifts can contribute copies to the chest pool while
+receiving another supported fixed reward themselves. The native census proves
+variable Medium/Large sources at Lost Woods target practice (bullet bag),
+HBA1500 (quiver, **not Bow**) and the child rolling Goron (Bomb Bag30/40).
+The existing tiered-gift normalization also covers both shooting galleries and
+Bombchu Bowling. The two native magic grants are HC Power/Event141 (MP) and
+DMC Wisdom/Event144 (MPDouble), with existing once-flag rewrites.
+
+
+Every represented chain gets **N chest copies for N tiers**, even when its native
+gift remains fixed. Missing copies replace ordinary chest filler deterministically,
+rupees first in world order. Default Chest has seven original chest sources plus
+thirteen donated rupee checks: twenty copies. Native bonuses never add copy tiers;
+a saturated copy harmlessly repeats the top tier.
+
+Native capacity grants are max-guarded (`r13-item-grants.md:258-266`,
+`0x0110f704..08`); lower bag/quiver/wallet grants cannot shrink a larger cap.
+Single Magic's native handler leaves nonzero MPMax intact except for the deliberate
+MPDouble upgrade (`:286-299`). Strength/scale writers instead directly overwrite
+lift/depth, so `patch.progressive_bonus` guards fixed Darunia/Diving/Fishing source
+calls on canonical equal/higher ownership. Its queries live in already-preloaded
+GetPouchContent, avoiding a new GameDataActor in Darunia's movie. Skipping only the
+grant returns to the original native quest/once continuation. Adult gauntlets do
+not suppress a missing child Bracelet; the valid copy sequence grants that first.
+
+**Claude's deliberate child-strength exception, 2026-11-13:** child logic requires
+Darunia's native Lullaby/Saria/door route, without adding a copy tier; adult strength
+stays copy-only and all three copies remain. An early copy Bracelet physically
+works out of logic, but logic never relies on it. The return-kit lower bound no
+longer invents its first adult copy from the gift. E's audit
+`work/r14-steps/ainb/FINDINGS.md:70-73` rules out a speculative DC quest gate.
+The gift route itself does not pass the DC boulder first.
+
+E found (static, unplayed) that opening the boulder first strands vanilla Darunia's
+Joy. Claude approved E's per-source `HavePlayedEvent.Dm_Goron_0030` gate and
+forward-only Event121 repair. **Integration order: E source/step patch first,
+D bonus guard second via `prior_changes`.** D changes only Event127's subflow,
+keeps its original continuation and grant parameters, and works without E too.
+E owns121 and the source gate/flag, rebases after D, and proves the combined real
+dump. All-orders gift collectibility and the late-gift game check require that
+combined build; the dependency remains until E's fix/proof.
+
+Actual tier at a progressive location depends on collection order. Spoilers
+must keep the progressive family and identify any concrete tier as a
+deterministic canonical replay result, not a promise for another route.
+Copies count as successive tiers in logic/fill; remaining fixed items keep their
+applicable fixed-tier safeguards. Keys and named keys retain their own contracts.
+
+### Verification and player boundary
+
+The real-dump production compiler/serialization test exercises every chain and
+validates saved ownership fields and both event registries. The initial native
+proof found an additional small-chest ShowPickUpWindow grant path that synthetic
+sources lacked; it was added rather than dismissed as a fixture issue.
+Native-data checks do not prove event startup, rendering, usable equipment or
+age transitions. Full gate/sweep results are recorded in the round file.
+
+The frozen D-only v2 Longshot packet has the corrected Mido Hookshot/Scale pairs,
+a diagnostic training-chest bundle of sixteen other production-selector copies
+(all eight chains, twenty total), and native-source guards. It is not a generated
+seed. Emitted read-back, serialized bundle dispatch and actual cmd dry-run passed;
+the old popup-bug packet is frozen/superseded. Paths/checklist are in the round file.
+**The late-native-gift check runs only on the combined D/E build after E rebases.**
+No game run or age-flip acceptance is claimed. Kareem supplies the result and
+runtime `mods: <file> <- <path>` proof.

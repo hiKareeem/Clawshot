@@ -25,6 +25,7 @@ from clawshot.generate.fill import (
     shuffled_locations,
 )
 from clawshot.generate.itembar import age_locked_pickups
+from clawshot.generate.progressive import normalize_pool, prepare_spec, restrict_settings
 from clawshot.generate.route import NoChildOpening, opening
 from clawshot.world.load import build_world
 from clawshot.world.model import World
@@ -72,6 +73,7 @@ def prepare(spec: Mapping[str, Any], settings: Settings) -> tuple[Settings, Worl
     Native setup also uses this compilation before its pool overrides are known. The UI checks return-kit
     construction against the spec; :func:`generate` checks it against the effective native pool before filling.
     """
+    spec = prepare_spec(spec)
     logic = dict(settings.logic)
     if "open_forest" in spec.get("settings", {}):
         if "open_forest" in logic and logic["open_forest"] != settings.forest:
@@ -105,7 +107,7 @@ def prepare(spec: Mapping[str, Any], settings: Settings) -> tuple[Settings, Worl
         held = {name: ("Shop",) for name in spec.get("items", {}) if name.startswith("Buy ")}
         settings = replace(settings, item_location_types={**settings.item_location_types, **held})
     world = build_world(world_spec(spec, settings), settings.logic)
-    return settings, world
+    return restrict_settings(world, settings), world
 
 
 def generate(
@@ -126,6 +128,7 @@ def generate(
     """
     settings, world = prepare(spec, settings)
     vanilla = dict(vanilla or {})
+    vanilla.update(normalize_pool(world, settings, vanilla))
     unknown = sorted(name for name in vanilla if name not in world.locations)
     if unknown:
         raise FillError(f"vanilla items given for locations the world does not have: {unknown}")
@@ -157,6 +160,57 @@ def _required_items(seed: Seed, sources: tuple[str, ...], visits: Mapping[str, d
     return [{"item": item, "count": len(names), "sources": names} for item, names in by_item.items()]
 
 
+PROGRESSIVE_REPLAY_NOTE = (
+    "A progressive copy gives the next native tier of its family when it is opened, so its concrete item depends on"
+    " collection order. The canonical replay walks this seed's full search spheres in order, fixed native rewards"
+    " included, and names the tier each copy gives there. It is one deterministic order: not a play order, not"
+    " gameplay proof and not a promise for another route. Before the return gate opens the search keeps child Link's"
+    " inventory as an independent prefix, and a player who opens the same chests in another order receives other"
+    " tiers."
+)
+
+
+def _progressive_grants(seed: Seed) -> dict[str, dict[str, Any]]:
+    """Each location holding a progressive family (``clawshot.progressive.CHAINS``), in world order: the family, its
+    native tiers in order, its canonical sphere, the tier the canonical sphere replay gives there and whether that tier
+    was already owned (a harmless leftover); those three are null where the search never collects the location.
+
+    The replay walks ``seed.spheres`` in order, each sphere in its world order, with no randomness. Start items and
+    fixed rewards (shuffled or native bonuses) record their tier's canonical pouch identity, never a copy; a fixed
+    native magic source (``clawshot.progressive.MAGIC_SOURCES``: a spell, the Lens, magic arrows) records its own
+    identity, which models its native one-meter floor and is not a Magic Meter ownership claim. Each progressive copy
+    takes :func:`clawshot.progressive.next_tier` of what is owned at that point and records the identity of the tier
+    it gives; a copy whose tier is already owned (the chain is complete, for example after a native bonus) is a
+    leftover."""
+    from clawshot.progressive import CHAINS, MAGIC_SOURCES, next_tier
+
+    families = {name: item for name, item in seed.placements.items() if item in CHAINS}
+    if not families:
+        return {}
+    fixed = {tier.item: tier.owned for tiers in CHAINS.values() for tier in tiers} | MAGIC_SOURCES
+    owned = {fixed[item] for item in seed.world.start_items if item in fixed}
+    given: dict[str, tuple[int, str, bool]] = {}
+    for index, sphere in enumerate(seed.spheres, 1):
+        for name in sphere:
+            item = seed.placements[name]
+            if item in CHAINS:
+                tier = next_tier(item, owned)
+                given[name] = (index, tier.item, tier.owned in owned)
+                owned.add(tier.owned)
+            elif item in fixed:
+                owned.add(fixed[item])
+    return {
+        name: {
+            "family": family,
+            "possible_tiers": [tier.item for tier in CHAINS[family]],
+            "canonical_sphere": given[name][0] if name in given else None,
+            "given_in_canonical_sphere_replay": given[name][1] if name in given else None,
+            "leftover_in_canonical_replay": given[name][2] if name in given else None,
+        }
+        for name, family in families.items()
+    }
+
+
 def spoiler(seed: Seed, item_names: Mapping[str, str] | None = None) -> dict[str, Any]:
     """Keep world-keyed placements/spheres and add physical descriptions, a replayed opening witness and the hints.
 
@@ -166,7 +220,12 @@ def spoiler(seed: Seed, item_names: Mapping[str, str] | None = None) -> dict[str
     Items keep their logic names everywhere; ``item_names`` in the log adds, for each placed item whose name differs,
     the name the player sees: the remake's (``clawshot.generate.names.item_names``), or the game's where the
     ``item_names`` argument (logic item -> the game's name) gives it. Hints word items with those same names, as the
-    stones say them."""
+    stones say them.
+
+    A progressive family keeps its own label ("Progressive Hookshot") in every placement, hint and name, never its
+    base tier's. ``progressive_grants`` adds, per location holding one, the family's tiers in order and the tier the
+    canonical sphere replay gives (:func:`_progressive_grants`), under :data:`PROGRESSIVE_REPLAY_NOTE`; ``item_names``
+    then also covers those tiers."""
     items = seed.world.items
     spheres = [
         {name: seed.placements[name] for name in sphere if items[seed.placements[name]].progression}
@@ -223,7 +282,11 @@ def spoiler(seed: Seed, item_names: Mapping[str, str] | None = None) -> dict[str
             "region": route.region,
             "steps": [describe_step(step) for step in route.steps],
         }
+    progressive = _progressive_grants(seed)
     display = {**location_names.item_names(), **(item_names or {})}
+    display.update((entry["family"], entry["family"]) for entry in progressive.values())
+    named = {tier for entry in progressive.values() for tier in entry["possible_tiers"]}
+    named.update(seed.placements.values())
 
     def item_name(item: str) -> str:
         return display.get(item, item)
@@ -250,12 +313,9 @@ def spoiler(seed: Seed, item_names: Mapping[str, str] | None = None) -> dict[str
         "settings": seed.settings.as_dict(),
         "settings_string": seed.settings.to_string(),
         "placements": {name: seed.placements[name] for name in seed.shuffled},
-        "item_names": {
-            item: display[item]
-            for item in sorted(display.keys() & set(seed.placements.values()))
-            if display[item] != item
-        },
+        "item_names": {item: display[item] for item in sorted(display.keys() & named) if display[item] != item},
         "locations": locations,
+        "progressive_grants": {"note": PROGRESSIVE_REPLAY_NOTE, "locations": progressive},
         "opening_route": opening_log,
         "opening_route_unavailable": opening_unavailable,
         "age_locked_pickups": [asdict(pickup) for pickup in age_locked_pickups(seed)],
@@ -274,7 +334,8 @@ def _markdown_cell(text: str) -> str:
 
 def play_note(seed: Seed, log: Mapping[str, Any] | None = None) -> str:
     """Render the logic-derived opening and every shuffled destination from one spoiler snapshot, naming items as the
-    player sees them (the log's ``item_names``)."""
+    player sees them (the log's ``item_names``), and each progressive copy's tiers with the tier the canonical sphere
+    replay gives (the log's ``progressive_grants``)."""
     log = spoiler(seed) if log is None else log
     descriptions = log["locations"]
     names = log["item_names"]
@@ -331,6 +392,67 @@ def play_note(seed: Seed, log: Mapping[str, Any] | None = None) -> str:
             "",
         ]
     )
+    progressive = log.get("progressive_grants") or {}
+    lines.extend(
+        [
+            "## Progressive items",
+            "",
+            "Hookshot, strength, scale, wallet, bomb bag, quiver, slingshot bag and magic upgrades are always"
+            " progressive (Kareem, 2026-11-13); no setting turns them back into fixed items.",
+            "Only chests hold progressive copies. Every other check kind (gifts, shops, scrubs, floor pickups) cannot"
+            " choose a tier, so it never carries one.",
+            "Where a native check still gives a fixed upgrade (Darunia's Bracelet, a Great Fairy's magic, a Skulltula"
+            " wallet, a minigame bag or scale), the chests also hold a full set of copies, one per tier, in place of"
+            " ordinary filler. Logic counts only copies toward upgrade tiers; native rewards are bonuses and never"
+            " downgrade what you own.",
+            "Child-strength exception: logic requires Darunia's native Bracelet route (his door, Zelda's Lullaby and"
+            " Saria's Song), without adding a copy tier. An early copy Bracelet can physically work out of logic,"
+            " but logic never relies on it. Adult strength remains copy-only.",
+            "The model rising from a progressive chest is always the family's first tier (the Hookshot, the Goron"
+            " Bracelet, ...). The get window and the item you receive are the next tier above the highest one you"
+            " own.",
+            "A copy opened when its family has no tier left for you (for example after such a native bonus) is a"
+            " harmless leftover: it gives the last tier again, and no tier becomes unobtainable.",
+            "Progressive Strength gives child Link's Goron Bracelet first while it is missing, even to adult Link;"
+            " the gauntlets follow. Progressive Quiver and Progressive Slingshot give their weapon first, then the"
+            " bigger bags. Progressive Magic gives the double meter once you have any magic, including the meter a"
+            " spell, the Lens or magic arrows open.",
+            "",
+        ]
+    )
+    if progressive.get("locations"):
+        lines.extend(
+            [
+                progressive["note"],
+                "",
+                "| Sphere | Location | World / OoTR check | Family | Tiers in order | Given in canonical replay |",
+                "|---|---|---|---|---|---|",
+            ]
+        )
+        grants = sorted(
+            progressive["locations"].items(),
+            key=lambda entry: entry[1]["canonical_sphere"] or len(seed.spheres) + 1,
+        )
+        for name, grant in grants:
+            given = grant["given_in_canonical_sphere_replay"]
+            if not given:
+                reward = "— (the search does not collect it)"
+            elif grant.get("leftover_in_canonical_replay"):
+                reward = f"{shown(given)} again (harmless leftover)"
+            else:
+                reward = shown(given)
+            cells = (
+                str(grant["canonical_sphere"] or "—"),
+                descriptions[name]["name"] if name in descriptions else name,
+                name,
+                shown(grant["family"]),
+                " → ".join(shown(tier) for tier in grant["possible_tiers"]),
+                reward,
+            )
+            lines.append("| " + " | ".join(_markdown_cell(cell) for cell in cells) + " |")
+    else:
+        lines.append("This seed places no progressive copy.")
+    lines.append("")
     unavailable = log["opening_route_unavailable"]
     if unavailable is not None:
         lines.extend(

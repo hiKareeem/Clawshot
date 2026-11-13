@@ -203,16 +203,30 @@ def gossip_flow_transform(data: bytes) -> bytes:
 
 def item_names(romfs: str | Path, items: Iterable[str], table: ItemActors) -> dict[str, str]:
     """Each logic item's name as :data:`NAME_LANGUAGE` writes it (its ``<key>_Name``, without grammar tags); an item
-    without an actor in ``table`` keeps its logic name."""
+    without an actor in ``table`` keeps its logic name.
+
+    A progressive family (``clawshot.progressive.CHAINS``) keeps its family label ("Progressive Hookshot"): its
+    native grant and get-window name depend on the tier owned when it is opened, so the base actor's name would be
+    wrong for every later copy. No actor pack is read for a family, and none at all when no item needs game text."""
+    from clawshot.progressive import CHAINS
+
+    names = {}
+    wanted = []
+    for item in sorted(set(items)):
+        actor = None if item in CHAINS else table.actors.get(item)
+        if actor is None:
+            names[item] = item
+        else:
+            wanted.append((item, actor))
+    if not wanted:
+        return names
     romfs = Path(romfs)
     dicts = zsdic.Dictionaries.from_romfs(romfs)
     archive = archive_path(NAME_LANGUAGE)
     pouch = msbt.read(sarc.read(dicts.decompress(archive, (romfs / archive).read_bytes()))[POUCH_TEXT])
-    names = {}
-    for item in sorted(set(items)):
-        actor = table.actors.get(item)
-        names[item] = item if actor is None else msbt.plain(item_name(pouch, read_text_key(romfs, actor, dicts)))
-    return names
+    for item, actor in wanted:
+        names[item] = msbt.plain(item_name(pouch, read_text_key(romfs, actor, dicts)))
+    return dict(sorted(names.items()))
 
 
 def _rows(text: str, width: int) -> list[str]:

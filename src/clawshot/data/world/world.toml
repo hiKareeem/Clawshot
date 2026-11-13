@@ -52,10 +52,9 @@ files = [
 overrides = "remake.toml"
 
 [settings]
-# false: each check gives one fixed item, as the remake does without code hooks (a chest holding the Longshot
-# gives the Longshot, found first or not); vanilla items are the tier a check gives (`vanilla_fixed`).
-# true: OoT Randomizer's progressive items (needs event-flow edits or a Hookshot hook). Default false: decision D16
-# (Kareem, round 2).
+# Read only by a world built directly (build_world, the oracle tests): false, each check gives the tier it gives in
+# the remake (`vanilla_fixed`, decision D16); true, OoT Randomizer's progressive vanilla items. Seeds never read it:
+# their world pins it to false and uses the native chains below (clawshot.generate.progressive.prepare_spec).
 progressive_items = false
 # Mido's child blocker only; the separate forest-exit gate is unchanged.
 skip_mido = false
@@ -78,13 +77,13 @@ age_pull_event = "Time Travel"
 free_time_travel = false
 
 # Return-kit fill constraint (reviewer, round 5): Forest's checked rules need Bow, strength, grapple and keys.
-# Fixed gauntlet tiers otherwise let child bypass Saria -> bracelet before the pull, stranding adult at Mido.
-# Put every shuffled strength-family source in an adult-only check, preserving that unshuffled child dependency.
+# Keep strength copies adult-only. Claude's Round 14 exception credits native Darunia's Bracelet as child
+# capability, not a copy tier: child DC still requires his Lullaby/Saria route, while adult strength needs copies.
 age_return_fill_families = ["Bow", "Progressive Hookshot", "Progressive Strength Upgrade", "Small Key (Forest Temple)", "Boss Key (Forest Temple)"]
 age_return_bypass_families = ["Progressive Strength Upgrade"]
-# Safe lower bound: closed Door of Time requires Ocarina 2 + Time + the completed courtyard/Impa story.
-# Child DC entrance needs strength, whose unshuffled gift requires Saria; no optional child loot is assumed.
-age_return_fill_inventory = { "Ocarina" = 2, "Song of Time" = 1, "Sarias Song" = 1, "Progressive Strength Upgrade" = 1, "Met Child Zelda" = 1 }
+# Safe lower bound: closed Door requires Ocarina 2 + Time + the completed courtyard/Impa story.
+# Native child Bracelet requires Saria but adds no adult copy tier; the kit places the first adult copy itself.
+age_return_fill_inventory = { "Ocarina" = 2, "Song of Time" = 1, "Sarias Song" = 1, "Goron Bracelet" = 1, "Met Child Zelda" = 1 }
 # Earlier doors cannot assume optional child strength/Saria/Time-ocarina pickups in that kit.
 # The proof remains independent; unshuffled child-only prerequisites can make early return impossible.
 age_return_door_inventory = { song_only = { "Ocarina" = 1, "Song of Time" = 1 }, open = {} }
@@ -94,21 +93,47 @@ age_return_door_families = { song_only = ["Bow", "Progressive Hookshot", "Progre
 # gauntlet and Silver -> Golden scale order. Actual downgrade behavior of those pairs is not game-proven.
 # Kareem played: switching ages preserves the child's Goron Bracelet alongside adult Silver/Golden Gauntlets.
 # The Bracelet is a separate child item, not a lower tier that can downgrade the adult gauntlets.
-# Logic levels still MAX-combine all three strength items; this exemption affects placement order only.
+# Fixed strength tiers still MAX-combine in a world built directly; this exemption affects placement order only. A
+# seed's world counts only progressive copies, so it has no native-chain tier to order ([native_progressive]).
 downgrade_tier_families = ["Progressive Strength Upgrade", "Progressive Scale"]
 downgrade_tier_exemptions = ["Goron Bracelet"]
 
 # Each progressive item's tiers, lowest first. Tier n is an item of its own that raises the progressive item to at
 # least n (`Item.tier`: the highest fixed tier held, never a sum), so OoT Randomizer's rules ("Hookshot" =
-# Progressive_Hookshot, "Longshot" = (Progressive_Hookshot, 2)) read fixed and progressive items alike. Finding a
-# higher tier first gives that tier's ability [inference: the remake granting a Longshot or Golden Gauntlets without
-# the lower tier is not checked in game yet].
+# Progressive_Hookshot, "Longshot" = (Progressive_Hookshot, 2)) read fixed and progressive items alike in a world built
+# directly; a seed's world counts only copies ([native_progressive]). The wallets stop at the remake's Giant Wallet
+# (1000 rupees, plans/03-game-data.md section 47; no rule asks for a third). The magic tiers are the remake's two
+# native meter grants (MP 24, MPDouble 48, section 47).
 [progressive]
 "Progressive Hookshot" = ["Hookshot", "Longshot"]
 "Progressive Strength Upgrade" = ["Goron Bracelet", "Silver Gauntlets", "Golden Gauntlets"]
 "Progressive Scale" = ["Silver Scale", "Golden Scale"]
-"Progressive Wallet" = ["Adult Wallet", "Giant Wallet", "Tycoon Wallet"]
+"Progressive Wallet" = ["Adult Wallet", "Giant Wallet"]
 "Ocarina" = ["Fairy Ocarina", "Ocarina of Time"]
+"Magic Meter" = ["Magic Meter (Single)", "Magic Meter (Double)"]
+
+# Round 14 (issue #13; Kareem, 2026-11-13; plans/03-game-data.md section 47): the remake's eight native upgrade
+# chains are progressive in every seed, always, with no setting (clawshot.progressive.CHAINS has their tiers). A
+# shuffled check's own upgrade enters the pool as its chain's raw copy, and ordinary chest filler makes up the rest:
+# N copies for N tiers (clawshot.generate.progressive). A seed's world counts only the copies, the Nth copy tier N
+# (`copies_only`, set by prepare_spec, never here): an unshuffled check keeps its fixed tier as a bonus in any order.
+# Copies go only to `destinations`: a chest event reads the owned tiers before the get window, gifts, shops, scrubs
+# and floor pick-ups cannot. `first`: a copy grants a missing first tier before the next one, the child Goron
+# Bracelet before adult gauntlets (Kareem played 2026-11-12: adult gauntlets do not supersede it), a weapon before
+# its capacity.
+[native_progressive]
+chains = [
+    "Progressive Hookshot",
+    "Progressive Strength",
+    "Progressive Scale",
+    "Progressive Wallet",
+    "Progressive Bomb Bag",
+    "Progressive Quiver",
+    "Progressive Slingshot",
+    "Progressive Magic",
+]
+first = ["Progressive Strength", "Progressive Quiver", "Progressive Slingshot"]
+destinations = ["Chest"]
 
 [items]
 # The Lost Woods target game's prize is a bigger bullet bag: OoT Randomizer gives a progressive Slingshot there.
@@ -118,3 +143,22 @@ downgrade_tier_exemptions = ["Goron Bracelet"]
 "Quiver (40)" = { class = "normal" }
 "Scrub Business Seed" = { class = "normal" } # D12: remake-only filler
 "Magic Jar" = { class = "normal" } # census Tbox_MagicJar_Large; no ability added
+# The remake's large native capacities (section 47): only a progressive copy or a native ownership-dependent prize
+# gives them. A bomb bag is usable bombs; a quiver or bullet bag alone is not the weapon.
+"Bomb Bag (40)" = { class = "progression", alias = ["Bomb Bag", 1] }
+"Quiver (50)" = { class = "normal" }
+"Bullet Bag (50)" = { class = "normal" }
+# Raw progressive copies (section 47; [native_progressive]). Progressive Hookshot, Scale and Wallet are OoT
+# Randomizer's own items. Strength's first copy physically grants a missing child Bracelet, but seed logic
+# deliberately takes child strength only from Darunia's native gift; adult tiers remain copy-only (section 47).
+# The first quiver/slingshot copy is the weapon, the first bomb bag copy a bag, the first magic copy a meter.
+"Progressive Strength" = { class = "progression", alias = ["Progressive Strength Upgrade", 1] }
+"Progressive Bomb Bag" = { class = "progression", alias = ["Bomb Bag", 1] }
+"Progressive Quiver" = { class = "progression", alias = ["Bow", 1] }
+"Progressive Slingshot" = { class = "progression", alias = ["Slingshot", 1] }
+"Progressive Magic" = { class = "progression", alias = ["Magic Meter", 1] }
+
+[helpers.Progressive_Strength_Upgrade]
+# The quoted counted form reads the raw counter, not this age-aware helper.
+rule = "(progressive_copies_only and is_child and 'Goron Bracelet') or ((not progressive_copies_only or not is_child) and ('Progressive Strength Upgrade', 1))"
+source = "Claude, 2026-11-13, Round 14 deliberate child-capability exception: native Darunia's Lullaby/Saria/door route supplies child lift but no copy tier; all three copies supply adult tiers. E native audit work/r14-steps/ainb/FINDINGS.md:70-73 confirms DC has no quest-step precondition. See plans/rounds/r14-progressive.md."

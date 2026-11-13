@@ -1,11 +1,11 @@
 """The fill: OoT Randomizer's assumed fill (``Fill.py``, ``distribute_items_restrictive``, MIT), for one world.
 
 Stages: own-dungeon items of the dungeons the return kit does not draw from, the return kit, the kit's own
-dungeons' items, native pick-up palettes, type-held items (songs, shop refills, gift items; retried on their own),
-bag-gated bomb ammo, progression, then filler. A stage puts an item only where it can be reached holding the items a
-later stage places by reachability, never junk; an item with nowhere left swaps into a location its stage filled
-(Archipelago). Priority filler respects its restriction; the rest can go anywhere, including unreachable junk
-locations in otherwise-beatable slices. ``plans/04-world-format.md`` has the reasons.
+dungeons' items, native pick-up palettes, type-held items (songs, shop refills, gift items, progressive copies;
+retried on their own), bag-gated bomb ammo, progression, then filler. A stage puts an item only where it can be
+reached holding the items a later stage places by reachability, never junk; an item with nowhere left swaps into a
+location its stage filled (Archipelago). Priority filler respects its restriction; the rest can go anywhere,
+including unreachable junk locations in otherwise-beatable slices. ``plans/04-world-format.md`` has the reasons.
 """
 
 import base64
@@ -252,6 +252,9 @@ def allowed(world: World, settings: Settings, location: str, item: str) -> bool:
     location_type = world.locations[location].type
     if location_type == "Missable" and world.items[item].progression:
         return False
+    # Only a supported kind of check can grant the next tier of a raw progressive copy (``World.progressive``).
+    if item in world.progressive and location_type not in world.progressive_destinations:
+        return False
     palette = settings.location_type_items.get(location_type)
     if palette is not None and item not in palette:
         return False
@@ -484,6 +487,9 @@ def return_guarantee_conflict(world: World, settings: Settings, vanilla: Mapping
     (hyrule_field.toml:18-19), unlike the configured Ocarina + Time-song bound. Do not call this physically impossible.
     None (undecided) for a missing gate/first pull (a slice), or a shuffle meta-kind absent from the world (Gift
     before seed setup expands it). The seed pipeline checks again after that setup.
+
+    The pool is the native progressive one: :func:`clawshot.generate.progressive.normalize_pool` is applied here too,
+    so a caller that gives no ``vanilla`` (the UI's settings check) sees the seed's raw copies.
     """
     families = world.settings.get("age_return_fill_families", ())
     if world.age_return is None or not world.settings.get("age_return_guarantee", False) or not families:
@@ -495,7 +501,10 @@ def return_guarantee_conflict(world: World, settings: Settings, vanilla: Mapping
     types = {loc.type for loc in world.locations.values()}
     if any(kind not in types for kind in settings.shuffle):
         return None
-    vanilla = vanilla or {}
+    from clawshot.generate.progressive import normalize_pool
+
+    vanilla = dict(vanilla or {})
+    vanilla.update(normalize_pool(world, settings, vanilla))
 
     def vanilla_item(name: str) -> str | None:
         return vanilla.get(name, world.locations[name].vanilla)

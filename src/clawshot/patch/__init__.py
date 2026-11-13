@@ -129,17 +129,19 @@ def make_seed(
     hookshot_locations = [
         catalog[name].name if name in catalog else name
         for name, item in sorted(out.placements.items())
-        if item == "Hookshot"
+        if item in ("Hookshot", "Progressive Hookshot")
     ]
     changes += (text.sheik_hint_changes(romfs, hookshot_locations),)
     fast_files = tuple(door.build(romfs, mode=settings.door_of_time))
     plan = make_plan(out, links, table, chest_events.load())
-    from clawshot.patch import keys
+    from clawshot.patch import keys, progressive, progressive_bonus
 
-    # Source-bound dungeon credit must see native pouch grants; bag gates compose afterwards.
+    # Bonus guards and source-bound selections precede bag guards; unrelated native callers stay unchanged.
+    changes += (progressive_bonus.changes(romfs, out, prior_changes=changes),)
     plan, key_changes = keys.changes(romfs, plan, prior_changes=changes)
     changes += (key_changes,)
-    changes += (bags.changes(romfs),)
+    plan, progressive_changes = progressive.changes(romfs, plan, prior_changes=changes)
+    changes += (progressive_changes, bags.changes(romfs))
     return SeedOutput(out, links, plan, changes, fast_files, item_names)
 
 

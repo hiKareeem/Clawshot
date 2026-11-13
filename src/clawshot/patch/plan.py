@@ -26,6 +26,7 @@ from clawshot.generate.fill import SMALL_KEY
 from clawshot.patch.events import REMOVE, ChestEvent
 from clawshot.patch.items import ItemActors
 from clawshot.patch.key_targets import BY_ID, DUNGEON_TARGETS, TARGETS, DungeonGrant
+from clawshot.progressive import CHAINS
 from clawshot.world.model import World
 
 DROP_KEY = "Drop__DropActor"
@@ -63,8 +64,15 @@ class ChestChange:
         if self.named_key is not None and self.named_key not in BY_ID:
             raise PatchError(f"{where}: {self.named_key!r} is not a small-key target")
         if self.key_event is not None:
-            if self.named_key is None and self.dungeon_item is None and self.kept_event is None:
-                raise PatchError(f"{where}: a key binding {self.key_event!r} needs a named key or dungeon item/source")
+            if (
+                self.named_key is None
+                and self.dungeon_item is None
+                and self.kept_event is None
+                and self.item not in CHAINS
+            ):
+                raise PatchError(
+                    f"{where}: a grant binding {self.key_event!r} needs a named key, dungeon item or progressive reward/source"
+                )
             if not isinstance(self.key_event, str) or not self.key_event:
                 raise PatchError(f"{where}: the key binding must be an event name, not {self.key_event!r}")
 
@@ -259,7 +267,7 @@ def make_plan(seed: Seed, links: Links, items: ItemActors, events: Mapping[str, 
         actor = items.actor(item)
         for chest in links.chests[name]:
             named_key = _named_key(seed, name, item, chest.area) if anywhere else None
-            if chest.vanilla_item == actor and named_key is None:
+            if chest.vanilla_item == actor and named_key is None and item not in CHAINS:
                 unchanged.append((name, chest.id))
                 continue
             event, kept_event = None, None

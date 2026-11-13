@@ -84,6 +84,9 @@ TIERED_GIFTS = {
     BOWLING_FIRST: ("Bomb Bag (30)", {"Item_BombBag_Medium", "Item_BombBag_Large"}),
     "Market Shooting Gallery Reward": ("Bullet Bag (40)", {"Item_BulletBag_Medium", "Item_BulletBag_Large"}),
     "Kak Shooting Gallery Reward": ("Quiver (40)", {"Item_Quiver_Medium", "Item_Quiver_Large"}),
+    "LW Target in Woods": ("Bullet Bag (40)", {"Item_BulletBag_Medium", "Item_BulletBag_Large"}),
+    "GF HBA 1500 Points": ("Quiver (40)", {"Item_Quiver_Medium", "Item_Quiver_Large"}),
+    "GC Rolling Goron as Child": ("Bomb Bag (30)", {"Item_BombBag_Medium", "Item_BombBag_Large"}),
 }
 
 DAMPE_CHECK = "Graveyard Dampe Gravedigging Tour"

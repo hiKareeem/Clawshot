@@ -12,6 +12,7 @@ from clawshot.patch import key_text, keys, text
 from clawshot.patch.key_targets import DungeonGrant
 from clawshot.patch.key_text import labels
 from clawshot.patch.plan import ChestChange, Plan
+from clawshot.progressive import CHAINS
 from clawshot.save import key as save_key
 
 GET_TEXT = ["EventFlowMsg/Dm_SY_Get:GetMessage", "EventFlowMsg/Dm_SY_Get:GetCaption"]
@@ -103,6 +104,7 @@ def key_sources():
             evfl.Actor(
                 "UISystemActor", actions=["EventTriggerSetDisplayBossKey", "EventTriggerRequestOpenPickUpWindow"]
             ),
+            evfl.Actor("GameDataActor"),
         ],
         [
             evfl.SwitchEvent("Event19", 1, 0, [(0, 1), (1, 1), (2, 1), (3, 1), (4, 8)], _content()),
@@ -213,6 +215,7 @@ class KeyRun:
         self.balloons = []
         self.trace = []
         self.windows = []  # the actors the get window was set for: its text names that item
+        self.pickups = []
         self.pouch = []  # generic pouch grants (their IsGet bit), never dungeon ownership for the three Bools
         self.stock = {}
         self.writes = []
@@ -270,6 +273,10 @@ class KeyRun:
                     result = 0 if self.state[params["GameDataName"]] == params["Value"] else 1
                 elif operation == "EventQueryIsExistInPouch":
                     result = 0 if self.stock.get(params["Actor"], 0) >= params["Num"] else 1
+                elif operation == "EventQueryCanAddToPorch":
+                    result = 2 if self.stock.get(params["Actor"], 0) else 0
+                elif operation == "EventQueryIsGameDataBool":
+                    result = 0 if self.state.get(params["GameDataName"], False) else 1
                 else:
                     assert operation == "EventQueryIsGameDataInt"
                     current = self.state[params["GameDataName"]]
@@ -295,10 +302,19 @@ class KeyRun:
                 self.state[params["GameDataName"]] = params["Value"]
             elif operation == "EventTriggerSetForGetWindow":
                 self.windows.append(params["Actor"])
+                if any(params["Actor"] in (tier.actor, tier.owned) for tiers in CHAINS.values() for tier in tiers):
+                    self.state["UI_MessageTargetActorName"] = params["Actor"]
+            elif operation == "EventTriggerRequestOpenPickUpWindow":
+                self.pickups.append(params["ActorName"])
             elif operation == "EventTriggerAddOrRemovePouchContent":
                 content = params["Actor"]
                 self.pouch.append(content)
                 self.stock[content] = self.stock.get(content, 0) + params["Num"]
+                canonical = next(
+                    (tier.owned for tiers in CHAINS.values() for tier in tiers if tier.actor == content), None
+                )
+                if canonical is not None and params["Num"] > 0:
+                    self.state[f"IsGet.{canonical}"] = True
                 # Only the small key has a pouch special deal; the other three are NotPushToPouch (r11-keys.md).
                 if content == ITEMS["SmallKey"]:
                     native_small_key(self.state, self.standing)

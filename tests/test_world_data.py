@@ -117,11 +117,16 @@ def test_remake_overrides(world):
     assert not ogc({}, ADULT, 1) and ogc({"Hookshot": 1, "Progressive Hookshot": 1}, ADULT, 1)
     # The swapped Great Fairies, and checks the remake does not have.
     assert world.locations["DMT Great Fairy Reward"].vanilla == "Dins Fire"
-    assert world.locations["HC Great Fairy Reward"].vanilla == "Magic Meter"
     assert world.locations["LLR GS Rain Shed"].n64_only
     assert world.locations["Ganons Castle Water Trial Left Chest"].n64_only
     assert world.locations["Spirit Temple Mirror Shield Chest"].area == "DesertColossus"
     assert world.locations["Market Treasure Chest Game Room 1 Top"].keep_vanilla
+
+
+@pytest.mark.parametrize("source,tier", [("HC Great Fairy Reward", 1), ("DMC Great Fairy Reward", 2)])
+def test_native_fairy_magic_sources_have_distinct_fixed_capacity_tiers(world, source, tier):
+    search = Search(world, [world.locations[source].vanilla])
+    assert search.counts["Magic Meter"] == tier
 
 
 @pytest.mark.parametrize("keys,expected", [(2, False), (3, True)])
@@ -143,12 +148,11 @@ def test_fixed_items_are_the_default(world):
     assert progressive.locations["LW Gift from Saria"].vanilla == "Ocarina"
 
 
-def _seed_failure(seed: int, progressive: bool) -> str | None:
-    """Generate one seed and run the beatability search again on its placements (in a worker process)."""
-    logic = {"progressive_items": progressive}
+def _seed_failure(seed: int) -> str | None:
+    """Generate one always-on progressive seed and independently recheck its actual world/placements."""
     try:
-        result = generate(load_spec(), seed, Settings(logic=logic))
-        check_beatable(load_world(logic), result.placements)
+        result = generate(load_spec(), seed, Settings())
+        check_beatable(result.world, result.placements)
     except FillError as e:
         return f"seed {seed}: {e}"
     return None
@@ -172,18 +176,14 @@ def _workers() -> int:
     return min(os.cpu_count() or 1, 3)
 
 
-def _failures(seeds: range, progressive: bool) -> list[str]:
+def _failures(seeds: range) -> list[str]:
     with ProcessPoolExecutor(_workers()) as pool:
-        results = pool.map(_seed_failure, seeds, [progressive] * len(seeds), chunksize=5)
+        results = pool.map(_seed_failure, seeds, chunksize=5)
         return [r for r in results if r]
 
 
 def test_seeds_with_the_default_settings_are_beatable():
-    assert _failures(range(SEEDS), progressive=False) == []
-
-
-def test_seeds_with_progressive_items_are_beatable():
-    assert _failures(range(20), progressive=True) == []
+    assert _failures(range(SEEDS)) == []
 
 
 def test_spoiler_is_the_same_in_another_process():

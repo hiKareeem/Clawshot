@@ -34,6 +34,9 @@
 "Bomb Bag (30)" = { actor = "Item_BombBag_Medium", source = "MiniGame_BombchuBowling Event304; fixed native medium tier, section40" }
 "Bullet Bag (40)" = { actor = "Item_BulletBag_Medium", source = "MiniGame_HitTarget Event241; fixed native medium tier, not Slingshot ownership" }
 "Quiver (40)" = { actor = "Item_Quiver_Medium", source = "MiniGame_HitTarget Event381; fixed native medium tier, not Bow ownership" }
+"Bomb Bag (40)" = { actor = "Item_BombBag_Large", source = "RSDB/PouchActorInfo native large tier, Round 14 section 47; progressive grant only" }
+"Bullet Bag (50)" = { actor = "Item_BulletBag_Large", source = "RSDB/PouchActorInfo native large tier, Round 14 section 47; capacity alone is not Slingshot" }
+"Quiver (50)" = { actor = "Item_Quiver_Large", source = "RSDB/PouchActorInfo native large tier, Round 14 section 47; capacity alone is not Bow" }
 "Piece of Heart" = { actor = "Obj_Heart_Piece", source = "GF Chest, Graveyard Heart Piece Grave Chest, Graveyard Dampe Race Freestanding PoH, ZD Chest" }
 
 "Rupee (1)" = { actor = "TBox_Rupee_Green", source = "KF Midos Bottom Left Chest" }
@@ -141,6 +144,8 @@
 "Giant Wallet" = { actor = "Item_Wallet_Large", source = "gift: Kak 30 Gold Skulltula Reward" }
 "Golden Scale" = { actor = "Item_Scale_Gold", source = "gift: LH Adult Fishing" }
 "Goron Bracelet" = { actor = "Item_Gauntlet_Goron", source = "gift: GC Darunias Joy" }
+"Magic Meter (Single)" = { actor = "Item_FairyBless_MP", source = "gift: HC Great Fairy Reward, Dm_FairyFountain_Power/Event141; Round 14 section 47" }
+"Magic Meter (Double)" = { actor = "Item_FairyBless_MPDouble", source = "gift: DMC Great Fairy Reward, Dm_FairyFountain_Wisdom/Event144; Round 14 section 47" }
 "Light Arrows" = { actor = "Item_Arrow_Light", source = "gift: ToT Light Arrows Cutscene" }
 "Minuet of Forest" = { actor = "Item_Melody_ForestMinuet", source = "gift: Sheik in Forest" }
 "Nayrus Love" = { actor = "Item_NayruLove", source = "gift: Colossus Great Fairy Reward" }

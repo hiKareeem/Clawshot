@@ -53,7 +53,9 @@ def test_dump_the_stones_say_the_spoiler_hints(output, romfs, tmp_path):
     log = output.spoiler()
     spoken = {hint["label"]: hint["text"] for hint in log["hints"]}
     hookshot_locations = [
-        log["locations"][name]["name"] for name in output.seed.shuffled if output.seed.placements[name] == "Hookshot"
+        log["locations"][name]["name"]
+        for name in output.seed.shuffled
+        if output.seed.placements[name] in ("Hookshot", "Progressive Hookshot")
     ]
     assert hookshot_locations
     for path in archives:

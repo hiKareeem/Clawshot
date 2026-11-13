@@ -27,9 +27,8 @@ the pack workflow additionally accepts `.nup` input. Output is changed files und
 ## What enters the shuffle
 
 `--shuffle` selects kinds; default is `Chest`. Checks excluded for unresolved access or unsafe
-grants stay unchanged even when their kind is selected. Items are fixed, not progressive:
-finding the Longshot first gives the Longshot. A later Hookshot did not replace it in the recorded
-frog experiment (R8-FROGS), not a guarantee about every upgrade family.
+grants stay unchanged even when their kind is selected. Upgrade chains are always progressive,
+in chests only; see [Progressive items](#progressive-items).
 
 | Kind | Scope and acceptance |
 |---|---|
@@ -47,6 +46,58 @@ reward. Completion and recovery are not solved by a destruction flag.
 
 The floor palette is **Heart Container, Piece of Heart, Deku Shield, Hylian Shield and red rupee**.
 Major items on the floor can crash. Heart Containers from chests have no recorded in-game acceptance.
+
+### Progressive items
+
+Every upgrade chain is progressive, OoT Randomizer style, and there is **no setting** to turn it
+off (Kareem, 2026-11-13):
+
+| Family | Tiers, in order |
+|---|---|
+| Progressive Hookshot | Hookshot, Longshot |
+| Progressive Strength | Goron Bracelet, Silver Gauntlets, Golden Gauntlets |
+| Progressive Scale | Silver Scale, Golden Scale |
+| Progressive Wallet | Adult Wallet (500), Giant Wallet (1000); the 200-rupee wallet is starting equipment |
+| Progressive Bomb Bag | Bomb Bag, Bomb Bag (30), Bomb Bag (40) |
+| Progressive Quiver | Bow, Quiver (40), Quiver (50) |
+| Progressive Slingshot | Slingshot, Bullet Bag (40), Bullet Bag (50) |
+| Progressive Magic | Magic Meter (Single), Magic Meter (Double) |
+
+**Chests only.** A copy's chest event reads what Link owns and chooses the next tier before the
+get window, so the window's name and text and the granted item are that tier; the model rising
+from the chest stays the family's first tier ([section 47](../plans/03-game-data.md)). Gifts,
+shops, scrubs and floor pickups cannot choose a tier, so the fill never places a copy there.
+
+**Native upgrades are bonuses.** Wherever a native check still gives a fixed upgrade (Darunia's
+Bracelet, a Great Fairy's magic, a Skulltula wallet, a minigame bag or scale), the chests also
+hold the full set of copies, one per tier, each replacing an ordinary filler item, and the logic
+counts only the copies. No play order between native rewards and chests is assumed or needed.
+A native reward never downgrades: where the native grant would not keep a higher tier, it is
+skipped when that tier or a higher one is already owned.
+
+**Child-strength exception.** Logic requires Darunia's native Bracelet route: his door, Zelda's
+Lullaby and Saria's Song. That gift adds no copy tier; all three strength copies remain in chests
+and adult strength stays copy-only. An early copy Bracelet physically works out of logic, but
+logic never relies on it for child strength.
+
+
+**Which tier.** The next tier above the highest one owned. A copy opened when its family has no
+tier left (for example after a native bonus) is a **harmless leftover**: it gives the last tier
+again and no tier becomes unobtainable. Progressive Strength gives child Link's Goron Bracelet
+first whenever it is missing, even to adult Link, because adult gauntlets do not supersede it
+across time travel (Kareem, 2026-11-12). Progressive Quiver and Slingshot give their weapon first,
+then capacity; a fixed bag upgrade alone is not the weapon. Progressive Magic gives the double
+meter once Link has any magic, including the meter a spell, the Lens of Truth or magic arrows
+open. Logic counts only copies: the Nth copy is tier N ([logic reference](logic.md)).
+
+**Names.** Hints, `spoiler.json` and `play-note.md` name the family ("Progressive Hookshot"),
+never a tier. The spoiler's `progressive_grants` and the note's Progressive items table list each
+copy's tiers in order and the tier it gives in one canonical replay of the seed's search spheres,
+marking leftovers. That depends on collection order: it is not a play order and not a promise for
+another route.
+
+Status: built, with synthetic selection and presentation tests and a trace of the native chest
+flows; **not yet played in game**. The in-game check runs on Longshot.
 
 ### Gifts: enabled versus held
 
@@ -255,11 +306,13 @@ Gossip Stones give English hints in all 16 language archives. `--hints always` i
 `--hints mask` restores the Mask of Truth requirement. The balanced distribution includes required-route,
 barren-area and item hints. Location hints never name junk. The no-mask lines and corrected highlight
 reset were observed in game; that is not certification of every distribution. Both native Sheik
-Hookshot-direction lines are replaced with the seed's actual Hookshot location, or omit the tool if
-none exists in a partial world. This text is built/read-back-tested, not separately player-accepted.
+Hookshot-direction lines are replaced with a seed location holding the Hookshot or a Progressive
+Hookshot (any copy is the Hookshot while none is owned), or omit the tool if none exists in a
+partial world. This text is built/read-back-tested, not separately player-accepted.
 
 **Wrong-age pickups:** the note lists shuffled age-locked rewards reachable by the wrong age at their
-first search frontier, including ties. Optional later pickups can differ from that order.
+first search frontier, including ties. Optional later pickups can differ from that order. Progressive
+Hookshot, Quiver and Slingshot warn like their weapon, which any copy can give.
 New games initialize the native small Nut Bag and zero Deku Nuts (0/20); Kareem verified a child
 Bow-first pickup followed by working Boomerang use without reloading on 2026-11-12.
 Existing saves are unchanged: in saves started with older builds, Save and Continue before using

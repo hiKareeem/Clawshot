@@ -167,8 +167,11 @@ The Door of Time's song-only and open modes passed a first check each.
 Tokens, cows, dungeon completion rewards, pots, crates and loose rupees are not shuffled. Small
 keys can leave their dungeon only through the opt-in **Small keys anywhere** choice (any shuffled
 chest, named to the key's own dungeon; boss keys, maps and compasses always stay home); wider
-keysanity, progressive items, entrance shuffle and Archipelago are not supported for play. See the
-[README](../../README.md) and [settings reference](../settings.md) for exact limits.
+keysanity, entrance shuffle and Archipelago are not supported for play. All eight upgrade chains
+are always progressive; copies are chest-only. Native tier name/text and grant follow ownership,
+while the rising model stays the base item. This progressive route is built and data-tested,
+not yet player-accepted; its staged check uses Longshot. See the [README](../../README.md) and
+[settings reference](../settings.md) for exact limits.
 
 New games initialize an empty nut slot (0/20); child Bow first followed by Boomerang use without a
 reload passed Kareem's 2026-11-12 check. Saves started with older builds are unchanged: after an

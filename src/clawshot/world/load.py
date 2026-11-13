@@ -15,10 +15,20 @@ A *spec* is the data as plain dicts, merged from the files (``load_spec``) or wr
     (default), ``priority`` or ``normal``.
 ``helpers``, ``settings``, ``tricks``, ``flags``
     helper rules by signature; logic settings; tricks (always off until verified in the remake); derived world flags.
+``progressive``
+    each progressive item's fixed tiers, lowest first (:func:`_progressive_tiers`).
+``native_progressive``
+    the remake's native progressive chains: ``chains`` (raw copy items), ``first`` (the chains whose copy grants a
+    missing first tier first: checked against the grant catalog by ``clawshot.generate.progressive``),
+    ``destinations`` (location types a copy may go to; see ``World.progressive``) and ``copies_only`` (a seed's
+    world, set by ``clawshot.generate.progressive.prepare_spec``: only copies count, ``World.progressive_copies_only``).
+``locked``
+    logic settings the world pins (``{name: value}``): a seed's logic may not change them.
 """
 
 import tomllib
 from collections.abc import Mapping, Sequence
+from dataclasses import replace
 from pathlib import Path
 from typing import Any
 
@@ -27,6 +37,8 @@ from clawshot.world.rules import ALL_TIMES, DAY, NIGHT, Compiler, ItemFacts, Rul
 from clawshot.world.shops import apply_shop_data
 
 DATA_DIR = Path(__file__).resolve().parents[1] / "data" / "world"
+COPIES_ONLY = "progressive_copies_only"
+"""The logic flag every world derives from ``native_progressive`` ``copies_only``: true in a seed's world."""
 
 # OoT Randomizer's TimeOfDay (Region.py) calls the night bit DAMPE: at_night and at_dampe_time both test it.
 _TIMES = {"day": DAY, "night": NIGHT, "dampe": NIGHT, "all": ALL_TIMES}
@@ -43,8 +55,8 @@ def _read(path: Path) -> dict[str, Any]:
 
 
 def load_spec(directory: Path = DATA_DIR) -> dict[str, Any]:
-    """Merge the data files named by ``<directory>/world.toml`` into one spec. ``world.toml``'s own ``[settings]``
-    and ``[items]`` (Clawshot's, not OoT Randomizer's) add to the generated tables; a name in both is an error.
+    """Merge the data files named by ``<directory>/world.toml`` into one spec. ``world.toml``'s own ``[settings]``,
+    ``[items]`` and ``[helpers]`` add to the generated tables; a name in both is an error.
     Its ``overrides`` file (the remake's differences, by hand) and then every ``*.toml`` in the folder of the same
     name (``remake.toml``, then ``remake/*.toml`` sorted by name) are applied last: :func:`apply_overrides`."""
     meta = _read(directory / "world.toml")
@@ -54,12 +66,13 @@ def load_spec(directory: Path = DATA_DIR) -> dict[str, Any]:
     settings = _read(directory / "settings.toml")
     for name in ("settings", "tricks", "flags"):
         spec[name] = settings.get(name, {})
-    for name in ("settings", "items"):
+    for name in ("settings", "items", "helpers"):
         both = sorted(spec[name].keys() & meta.get(name, {}).keys())
         if both:
             raise WorldError(f"world.toml [{name}] repeats generated entries: {both}")
         spec[name] = spec[name] | meta.get(name, {})
-    spec["progressive"] = meta.get("progressive", {})
+    for name in ("progressive", "native_progressive"):
+        spec[name] = meta.get(name, {})
     for file in meta["files"]:
         data = _read(directory / file)
         spec["regions"].extend(data.get("region", []))
@@ -304,11 +317,15 @@ def _item(name: str, info: Mapping[str, Any]) -> Item:
 
 
 def resolve_settings(spec: Mapping[str, Any], logic: Mapping[str, Any] | None = None) -> dict[str, Any]:
-    """The spec's settings, tricks and flags with ``logic`` applied on top."""
+    """The spec's settings, tricks, flags and locked settings with ``logic`` applied on top. A locked setting is the
+    world's own: logic naming it at all is an error."""
     settings = dict(spec.get("settings", {}))
     tricks = dict(spec.get("tricks", {}))
     flags = dict(spec.get("flags", {}))
+    locked = dict(spec.get("locked", {}))
     for name, value in (logic or {}).items():
+        if name in locked:
+            raise WorldError(f"logic setting {name!r} is fixed to {locked[name]!r} in this world")
         if name in tricks:
             if value:
                 raise WorldError(f"trick {name} stays off until it is verified in the remake (AGENTS.md rule 6)")
@@ -319,10 +336,11 @@ def resolve_settings(spec: Mapping[str, Any], logic: Mapping[str, Any] | None = 
             flags[name] = value
         else:
             raise WorldError(f"unknown logic setting {name!r}")
-    overlap = (settings.keys() & tricks.keys()) | (settings.keys() & flags.keys()) | (tricks.keys() & flags.keys())
+    tables = (settings, tricks, flags, locked)
+    overlap = {name for i, a in enumerate(tables) for b in tables[i + 1 :] for name in a.keys() & b.keys()}
     if overlap:
-        raise WorldError(f"defined twice among settings, tricks and flags: {sorted(overlap)}")
-    return settings | tricks | flags
+        raise WorldError(f"defined twice among settings, tricks, flags and locked settings: {sorted(overlap)}")
+    return settings | tricks | flags | locked
 
 
 def _rule_entry(value: Any, where: str) -> tuple[str, dict[str, Any]]:
@@ -360,11 +378,54 @@ def _fixed_vanilla(vanilla: str | None, fixed: str | None, progressive: Mapping[
     return vanilla
 
 
+def _native_chains(table: Mapping[str, Any], items: dict[str, Item]) -> tuple[dict[str, str], tuple[str, ...], bool]:
+    """The native progressive chains (``native_progressive``): each raw copy item to its logical family, the item its
+    ordinary alias of one names or the copy itself; the location types a copy may go to; and ``copies_only``. With
+    it, every other item that counts toward a family (a fixed tier, a spell's magic meter) becomes a plain item in
+    ``items``, so only the copies count (``World.progressive_copies_only``)."""
+    unknown = sorted(set(table) - {"chains", "first", "destinations", "copies_only"})
+    if unknown:
+        raise WorldError(f"[native_progressive]: unknown keys {unknown}")
+    copies_only = table.get("copies_only", False)
+    if not isinstance(copies_only, bool):
+        raise WorldError("[native_progressive]: copies_only must be true or false")
+    lists = {key: table.get(key, []) for key in ("chains", "first", "destinations")}
+    for key, value in lists.items():
+        if not isinstance(value, list) or not all(isinstance(name, str) for name in value):
+            raise WorldError(f"[native_progressive]: {key} must be a list of names")
+        if len(set(value)) < len(value):
+            raise WorldError(f"[native_progressive]: {key} names something twice")
+    names, first, destinations = lists["chains"], lists["first"], lists["destinations"]
+    stray = sorted(set(first) - set(names))
+    if stray:
+        raise WorldError(f"[native_progressive]: first names chains it lacks: {stray}")
+    if names and not destinations:
+        raise WorldError("[native_progressive]: chains need destinations")
+    chains = {}
+    for name in names:
+        item = items.get(name)
+        if item is None:
+            raise WorldError(f"[native_progressive]: copy {name!r} is not in the item table")
+        if item.tier or (item.alias is not None and item.alias[1] != 1):
+            raise WorldError(f"[native_progressive]: copy {name!r} must be its family or alias it once, not as a tier")
+        chains[name] = item.alias[0] if item.alias else name
+    if copies_only:
+        families = set(chains.values())
+        for name, item in items.items():
+            if name not in chains and item.alias is not None and item.alias[0] in families:
+                items[name] = replace(item, alias=None, tier=False)
+    return chains, tuple(destinations), copies_only
+
+
 def build_world(spec: Mapping[str, Any], logic: Mapping[str, Any] | None = None) -> World:
     """Compile every rule of ``spec`` under the logic settings ``logic`` (defaults from the spec)."""
     settings = resolve_settings(spec, logic)
     items = {name: _item(name, info) for name, info in spec.get("items", {}).items()}
     progressive = _progressive_tiers(spec.get("progressive", {}), items)
+    chains, destinations, copies_only = _native_chains(spec.get("native_progressive", {}), items)
+    if COPIES_ONLY in settings:
+        raise WorldError(f"{COPIES_ONLY!r} is derived from [native_progressive] copies_only, not a setting")
+    settings[COPIES_ONLY] = copies_only  # a rule can tell a seed's world from one built directly
     # Without the setting, a world reads OoT Randomizer's vanilla items as they are (progressive).
     fixed_items = not settings.get("progressive_items", True)
     facts = ItemFacts(
@@ -483,6 +544,9 @@ def build_world(spec: Mapping[str, Any], logic: Mapping[str, Any] | None = None)
         undefined_events=sorted(compiler.events_named - defined),
         missing_regions=sorted({e.region for e in events if e.region not in regions}),
         hint_stones=hint_stones,
+        progressive=chains,
+        progressive_destinations=destinations,
+        progressive_copies_only=copies_only,
     )
 
 

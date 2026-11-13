@@ -13,6 +13,7 @@ from collections.abc import Mapping
 from dataclasses import dataclass, field
 from pathlib import Path
 
+from clawshot.progressive import CHAINS
 from clawshot.world.model import Item
 
 ITEM_ACTORS_TOML = Path(__file__).resolve().parents[1] / "data" / "item_actors.toml"
@@ -32,6 +33,8 @@ class ItemActors:
     """Alternate vanilla chest actors -> canonical actor (backwards lookup only)."""
 
     def actor(self, item: str) -> str:
+        if item in CHAINS:
+            return CHAINS[item][0].actor
         try:
             return self.actors[item]
         except KeyError:

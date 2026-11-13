@@ -14,6 +14,9 @@
 "Weird Egg" = "Item_WeirdEgg"
 "Chicken" = "Item_AlarmCucco"
 "Zeldas Letter" = "Item_ZeldaLetter"
+# A progressive copy gives its family's weapon first whenever that is missing (clawshot.progressive.next_tier), so
+# the family warns as its weapon does; bag-capacity tiers alone are not item-bar items.
+"Progressive Slingshot" = "Weapon_Range_SlingShot"
 # Separate ocarina shortcut; conservatively include its native age restriction.
 "Fairy Ocarina" = "Item_Ocarina_Fairy"
 
@@ -26,6 +29,7 @@
 "Hookshot" = "Item_Hookshot"
 "Longshot" = "Item_Longshot"
 "Progressive Hookshot" = "Item_Hookshot"
+"Progressive Quiver" = "Weapon_Range_Bow"
 "Pocket Egg" = "Item_PocketEgg"
 "Pocket Cucco" = "Item_PocketCucco"
 "Cojiro" = "Item_CojiroCucco"

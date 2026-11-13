@@ -9,7 +9,7 @@ licences and exact upstream revisions are in [NOTICE](../NOTICE).
 
 | Path | Contract |
 |---|---|
-| `src/clawshot/data/world/world.toml` | Start region, goal, file list, overrides, local settings/items and progressive tiers. |
+| `src/clawshot/data/world/world.toml` | Start region, goal, file list, overrides, local settings/items/helpers and progressive tiers. |
 | `src/clawshot/data/world/port.toml` | Translation inputs, Banc area mapping and pinned OoT Randomizer commit. |
 | `src/clawshot/data/world/*.toml` region files named by `port.toml` | Translated regions, exits, events and location metadata. Do not hand-edit these generated files. |
 | `src/clawshot/data/world/helpers.toml` | Named and parameterized rule helpers, translated from OoT Randomizer. |
@@ -68,10 +68,30 @@ Items/helpers/settings sections of `plans/04-world-format.md`.
 
 Items have types and classes (progression, priority, normal), aliases and optional properties such
 as bottle/stone/medallion. Dungeon items belong to their declared dungeon. Fixed tiers count toward
-the progressive names read by imported rules, but ordinary seeds grant fixed items, not runtime
-progressive upgrades. Starting items and event grants also participate in search; the remake has no
-free starting Fire Temple key. Sources: `plans/04-world-format.md`, Fixed or progressive items,
-Items/helpers/settings and Reachability; `src/clawshot/world/load.py`.
+the progressive names read by imported rules. Starting items and event grants also participate in
+search; the remake has no free starting Fire Temple key. Sources: `plans/04-world-format.md`, Fixed
+or progressive items, Items/helpers/settings and Reachability; `src/clawshot/world/load.py`.
+
+**Progressive copies (Kareem, 2026-11-13; `plans/03-game-data.md` section 47).** Generated seeds
+always place the eight native chains of `src/clawshot/progressive.py` (`CHAINS`) as counted
+copies, with no setting: Progressive Hookshot, Strength, Scale, Wallet, Bomb Bag, Quiver,
+Slingshot and Magic. Only chests may hold a copy (other kinds cannot select a tier). Wherever a
+native fixed-tier source stays vanilla, the pool holds the full set of copies (N copies for N
+tiers, extras replacing ordinary filler) and **logic counts only the copies**: the Nth copy is
+tier N. The native reward is a bonus outside that count, so no order between it and the chests
+is assumed; it never downgrades, and a copy that finds no tier left is a harmless leftover. The
+fixed-tier placement rule applies only to items that stay fixed.
+
+**Deliberate child-strength exception (Claude, 2026-11-13):** child capability requires Darunia's
+native source via his door, Lullaby and Saria's Song, never a copy Bracelet. The gift adds no
+copy tier; all three copies remain, and adult strength stays copy-only. An early copy Bracelet
+can physically work out of logic. The first adult copy is not assumed in the return-kit lower
+bound; the kit must place it. See the [round dependency](../plans/rounds/r14-progressive.md)
+for E's unplayed post-boulder Darunia source-lock finding.
+Progressive Quiver and Slingshot establish the weapon before any capacity; a fixed bag upgrade is not the weapon.
+A spell, the Lens or magic arrows open the native meter; at run time that makes the first magic copy give the
+double meter, never an extra copy. A port must model these as counted chain items, not as their
+first tier's fixed item.
 
 Fixed strength levels **MAX-combine**, never add: Bracelet plus Silver is strength 2, not 3.
 **Played evidence (Kareem, 2026-11-12, 21:15):** switching ages with Silver/Golden Gauntlets
@@ -181,6 +201,8 @@ The JSON is local generated output: **do not upload or distribute it**. The prod
 | `age_locked_pickups` | Wrong-age first-frontier item information, including ties. Not a required play order or a complete pickup-timing analysis. |
 | `spheres` | World-keyed progression pickups grouped by search collection sphere; empty progression spheres omitted. Not every collected filler item. |
 | `hints` | Stone, where, message label, kind, rendered text, area, location and item; some target fields can be null. |
+| `item_names` | Logic item → the name the player sees, for placed items (and the tiers of placed progressive families) whose name differs. A progressive family always keeps its own label. |
+| `progressive_grants` | `note` (the route disclaimer) and `locations`: world key → `family`, `possible_tiers` (in order), `canonical_sphere`, `given_in_canonical_sphere_replay` and `leftover_in_canonical_replay` (that tier was already owned); the last three are null where the search never collects it. |
 
 Age-usability source: `src/clawshot/generate/itembar.py`, `plans/03-game-data.md`, Item-bar assignment.
 Older-save child Bow failure/recovery: `plans/playtest/answers.md`, R8-SEED8-BOWLOCK/R9-LICHII.
@@ -188,6 +210,12 @@ New-game prevention passed Kareem's Bow-first/Boomerang check on 2026-11-12
 (`plans/rounds/r13-item-grants.md`); existing saves are unchanged.
 Do not reconstruct the complete search using only the progression-filtered `spheres`: include fixed
 rewards and the actual world/settings instead (`plans/04-world-format.md`, Reachability).
+
+`progressive_grants` replays the full search spheres in order (native bonuses included as owned
+tiers, `clawshot.progressive.next_tier` for each copy, no randomness); `canonical_sphere` counts every
+full-search sphere, as the play note does, so it can exceed the length of `spheres`. The tier is
+**route dependent**: the child view before return is an independent search prefix, and another
+collection order gives other tiers. It is a labelled witness, not a play order or gameplay proof.
 
 ## What a multiworld port still needs
 

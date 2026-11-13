@@ -12,6 +12,7 @@ from clawshot.formats import byml, rstb, zsdic
 from clawshot.patch.getitem import member_growth as getitem_member_growth
 from clawshot.patch.plan import DROP_KEY, EVENT_KEY, SUBSTITUTE_KEY, PatchError, Plan
 from clawshot.patch.shops import member_growth
+from clawshot.progressive import CHAINS
 
 if TYPE_CHECKING:
     from clawshot.patch.gamedata import BuiltFile
@@ -68,8 +69,10 @@ def patch_tree(tree: dict, path: str, plan: Plan) -> None:
     if not isinstance(actors, list):
         raise PatchError(f"{path} has no Actors list")
     for change in changes:
-        if (change.named_key is not None or change.dungeon_item is not None) and change.key_event is None:
-            raise PatchError(f"{path}: actor {change.id} has a dungeon-item reward but no grant binding")
+        if (
+            change.named_key is not None or change.dungeon_item is not None or change.item in CHAINS
+        ) and change.key_event is None:
+            raise PatchError(f"{path}: actor {change.id} has a source-bound reward but no grant binding")
         found = [a for a in actors if isinstance(a, dict) and a.get("Hash") == change.id]
         if len(found) != 1:
             raise PatchError(f"{path}: {len(found)} actors have Hash {change.id}, expected one")

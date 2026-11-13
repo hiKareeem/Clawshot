@@ -1,10 +1,12 @@
 # D30: ordinary bombs need Low lift grade; Bombchus and local Bomb Flowers are separate capabilities.
-# Fixed child strength is the Bracelet itself, not adult-only gauntlets' progressive alias.
-# In progressive mode the first strength tier is the Bracelet (D16).
+# Child strength is the native Bracelet source, never adult gauntlets. Claude's Round 14 exception credits
+# Darunia's fixed gift as child capability without incrementing the copy counter. An early copy Bracelet can
+# physically work out of logic, but seed logic never relies on it. Direct legacy worlds retain their old
+# progressive-items behavior; adult seed strength counts only copies. See section 47 / r14-progressive.md.
 [helpers.Bombs]
-rule = "Bomb_Bag and ((is_child and ('Goron Bracelet' or (progressive_items and Progressive_Strength_Upgrade))) or (is_adult and Progressive_Strength_Upgrade))"
+rule = "Bomb_Bag and ((is_child and ('Goron Bracelet' or (not progressive_copies_only and (Progressive_Strength or (progressive_items and Progressive_Strength_Upgrade))))) or (is_adult and Progressive_Strength_Upgrade))"
 was = "Bomb_Bag"
-source = "D30; 03-game-data.md sections 30-31, build e0f3ccfa: Item_Bomb LiftableParam requires Low; Item_Gauntlet_Goron/Armor_Child_Gauntlet_Goron grants LiftGradeUP Low (GoronGauntlet), Silver/Gold grant Middle/High with AdultEquipment. Bracelet works as child; any strength tier as adult. Bomb Bag grants capacity only. Native pre-lift compares required <= PlayerStatus.LiftGrade; gameplay confirmation pending."
+source = "D30; 03-game-data.md sections 30-31, build e0f3ccfa: Item_Bomb LiftableParam requires Low; Bracelet works as child, any strength tier as adult; bag grants capacity only. Claude 2026-11-13 approved native Darunia child-capability exception to Round 14 copies-only logic: no copy tier from the gift, no child capability from copies. E FINDINGS.md:70-73 confirms the DC flower route has no quest-step precondition; early-copy use stays out of logic."
 
 # N64's two direct Bomb_Bag combat shortcuts must use the same usable-bomb capability.
 [helpers.can_kill_octorok_with_bombs]

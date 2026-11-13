@@ -19,6 +19,7 @@ class Item:
     ``tier``: the alias names a fixed tier of a progressive item instead (``alias = (progressive, n)``). Collecting
     it raises that item's level to at least ``n`` rather than adding ``n``: the level is the highest fixed tier held,
     or the number of genuine progressive copies if that is higher (Goron Bracelet plus Silver Gauntlets is 2, not 3).
+    A seed's world counts only copies toward its native chains (``World.progressive_copies_only``).
     """
 
     name: str
@@ -110,6 +111,16 @@ class World:
     hint_stones: dict[str, Location] = field(default_factory=dict)
     """Gossip Stones (OoT Randomizer type ``HintStone``): where a hint can be read, with the rule to reach it. Not
     checks: they hold no item, so they are kept out of ``locations`` and the fill never sees them."""
+    progressive: dict[str, str] = field(default_factory=dict)
+    """Native progressive chains (``world.toml`` ``[native_progressive]``): each raw copy, the pool item a shuffled
+    native upgrade becomes, to the logical item its copies count toward (the copy's alias, or the copy itself)."""
+    progressive_destinations: tuple[str, ...] = ()
+    """Location types a raw progressive copy may go to: the check kinds whose grant can read the owned tiers."""
+    progressive_copies_only: bool = False
+    """A seed's world (``native_progressive`` ``copies_only``, set by ``clawshot.generate.progressive.prepare_spec``):
+    only raw copies count toward the chains' logical items, the Nth copy tier N. Their fixed tiers, and every other
+    alias to those items (a spell's magic meter), are plain items: a native reward that stays is a bonus, whatever
+    the order of play. A world built directly keeps fixed tiers counting (``Item.tier``)."""
 
     @property
     def age_return(self) -> tuple[str, str] | None:
