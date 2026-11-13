@@ -7,8 +7,9 @@ Branch `r14/steps`; baseline main 0.2.0 (published 2026-11-13). No version chang
 Read-only audit of supported build `e0f3ccfa`: direct AINB/EVFL step reads and writes,
 GameData expression dependency closure, and resource consumers. Reproducers and full
 machine tables live under `E:/OOTRemake/work/r14-steps/`, never in this repository.
-GPL sources/decoders supply facts only; no code is copied into Clawshot. No game start,
-merge, push, hc/herdr, save modification, or writes to game/Longshot folders.
+GPL sources/decoders supply facts only; no code is copied into Clawshot. No agent
+game start, merge, push, hc/herdr, original-save modification, or writes to game/
+Longshot folders. Disclosed control-save copies stay under the external work folder.
 
 Track C retains Zelda/Door of Time/Kaepora and Hyrule Field/Market/Castle world files
 and `fast_start.toml`. Track D retains `world.toml`/`bombs.toml`. Findings in those areas
@@ -42,8 +43,8 @@ silently promoted to per-row safety proofs. The AINB report separately retains
 30 linked/blackboard parameters, 11 unmapped sink instances, 38 dead outputs and
 three decoder warnings. EVFL retains 11 unresolved non-step operand hashes.
 
-Existing played evidence is attributed to Kareem in the cited round files. Nothing in
-this audit has been played; static decoding does not establish engine behavior.
+Played evidence is attributed to Kareem via Claude. The river pair below has
+now been played; static decoding alone still does not establish engine behavior.
 
 ## Preliminary findings and rejected leads
 
@@ -147,19 +148,112 @@ bridge Saria remains ungated. Granny Blue Potion was a rejected polarity lead:
 `gift-step-cutoffs.json` retains per-case gift effects. Hash-only references,
 dynamic bindings and opaque binary payloads are not treated as proven reads.
 
-## River gate requiring a physical check
+## Confirmed mismatch: field-side Zora River entry
 
-`ZoraRiver_Common_08f0` creates seven player/navmesh air walls in each age while
-`Zorariver_BrokenRock_Broken` is false and `Get_StoneOfWater` is below Step03.
-The translated adult-only bypass (`ZR Front -> Zora River = is_adult or
-has_explosives`) does not test this state. This is a confirmed native state
-predicate, but an unavoidable adult traversal block is **[INFERENCE]** until
-the paired physical check rules out ordinary passage around/over it.
+**Paired Longshot result (Kareem via Claude, 2026-11-13; saves verified by Claude).**
+Both native probe resources loaded, with no crash:
+`Banc/ZoraRiver/ZoraRiver_Adult_Static.bcett.byml.zs` and
+`Logic/ZoraRiver_Common_08f0.logic.module.ainb`. No visible rocks in either control.
 
-Proposed rule if confirmed: explosives or a persistent cleared/child-Domain
-event, not adult age alone; preserve legitimate reverse/alternate entry.
-No speculative rule is implemented. A dedicated isolated Longshot check is
-being staged; no game has been started.
+| Control | `Step_Get_StoneOfWater` | `Zorariver_BrokenRock_Broken` | Observed result, also after reload |
+|---|---|---|---|
+| Negative | Ready (enum value `398436934`) | false | Large invisible wall at the Hyrule Field doorway, spanning the river to the other bank; no glitchless way around |
+| Positive | Step03 (enum value `1871805950`) | false | No invisible wall; passage open |
+
+The named values persisted across Claude's verified snapshots. The diagnostic
+copies changed only that enum and the rock Bool; neither control proves the
+rock-true branch in play. No agent launched the game.
+
+### Exact native predicate and rock branch
+
+`ZoraRiver_Common_08f0` has seven wall nodes, with two placed age variants each:
+nodes `1/3/4/10/11/12/13`, instance suffixes
+`a664/ce56/949e/d780/95d7/afa6/2c3b`. Every `Logic_Create` is node 8's
+`OperateOR.False` output:
+
+```text
+NOT(Zorariver_BrokenRock_Broken
+    OR Get_StoneOfWater == Step03
+    OR Get_StoneOfWater > Step03)
+```
+
+All seven `Logic_Delete` and `RespawnTrigger` inputs are unconnected false
+defaults. Node 5 reads the saved rock Bool; node 9 supplies equality/after.
+Nodes 0/2 bind entrance rocks `Obj_BrokenRock_A_01_71ea`/`_c155`;
+their `Dead`/`IsDeathProcedureComplete` outputs feed OR node 7, then node 6
+`TriggerGameDataSetBoolTrue(Zorariver_BrokenRock_Broken)`. No weapon-type
+condition qualifies that write. The walls are **not step-only**.
+
+The river rocks use `Obj_BrokenRock_A_01`, inheriting `WallCrack`. Its
+`CrackStoneObject` damage table accepts Hammer (`85358548`) at rate `100.0`,
+with finite life; `StaticCrackObject` supplies `ReactionForHammerAttack`.
+The `Weapon_Hammer` pack identifies that same Hammer enum. Hammer shockwave
+damage is disabled here: the supported alternative is direct strikes, not a
+ranged slam. Kareem confirms Hammer breaks rocks generally; the river Hammer
+alternative is actor-data evidence, not a newly played third control.
+Only those two actor packs were read for this follow-up, not a native sweep.
+
+### Step03 source and implemented rule
+
+The exact writer is `Dm_SY_BancChangeArrive:Goto_ZoraDomain`: Event48 plays
+`Dm_Zora_0000`, then Event46 reads `Get_StoneOfWater_MeetImpa`. False/case1
+goes to Event44 (`Step03`); true/case0 goes to Event45 (`Step03_Impa`, later
+than Step03). Both use `EventExecuteProgressChallengeStep` with
+`IsIgnoreCompletedChallenge=true`. No Water step has `ForceProgressGameData`.
+Both river-to-Domain entrance actors (`8680147983491088093` child,
+`4848284814404943915` adult) bind `InitEventName=Goto_ZoraDomain` and
+`InitEventFlag=HavePlayedEvent.Dm_Zora_0000`.
+
+cs14e proposed the source-bound event; Claude approved the rule conditional
+on confirming the rock predicate, then requested the Hammer alternative
+after Kareem's report. Both conditions were checked and posted before the
+implementation/commit. `child_zora_river.toml` now adds persistent event
+`Zora River Domain Arrival` at `ZR Behind Waterfall`, rule `True`: that
+region has the free transition into the Domain. The field-side edge is:
+
+```text
+can_blast_or_smash or 'Zora River Domain Arrival'
+```
+
+The existing helper means usable explosives or usable adult Hammer. This
+does not grant the event merely for owning a song, reaching the river or
+being adult. Lost Woods entry and reverse Domain/waterfall exits stay intact.
+A first-visit child can still break the rocks with usable explosives; a
+diving Lost Woods entry also remains available where its existing rule allows.
+
+### Affected model and fixture impact
+
+- Changed rules: only `ZR Front -> Zora River` plus the new source event.
+- River checks inheriting that route: Open Grotto Chest; both freestanding
+  Heart Pieces; all seven frog checks; Magic Bean Salesman; four Skulltulas.
+  Existing age, item, once-only and shuffle-policy restrictions remain.
+  The frogs' initial/retry grant definitions group to one Ocarina Game check.
+- Downstream Domain/Fountain/Ice access can occur later when the field route
+  was the only early-adult route. Their local rules are not changed; alternate
+  entry remains valid. No check IDs, pool contributions, native file edits,
+  GameData presets or new resource requirements are introduced.
+- Placements/spheres/spoilers and seed hashes can change, especially with
+  early pulls. Default closed-door prefixes already visit the Domain; no
+  universal hash-neutrality claim is made. Rebuild combined generated-output
+  fixtures after rebase; the unchanged native input working set can be reused.
+  No old golden hash is repinned. Release/version decisions remain Claude's.
+
+Focused consumer regressions: **8 failed / 6 passed before the rule**, with
+printed inventories/source state; **14 passed in 2.00s after**. Coverage:
+blocked early adult, insufficient Bomb Bag alone, usable bombs before the
+source, adult Hammer, child Hammer refusal, saved source without tools,
+both age variants, Lost Woods alternative and reverse Domain route.
+Compiled public-search smoke exercised six corresponding scenarios and
+the actual Open Grotto Chest access. Its initial harness incorrectly used
+`holds()` for an externally assumed saved event; the printed state showed
+the route open, and using the rule's public `counts` state fixed that harness.
+No product change was made to mask that diagnostic.
+
+Full format/lint/synthetic/dump gates remain scheduled only after D merges
+and E rebases. Research evidence and smoke output are external
+`river-rock-actor.json`, `river-rock-Weapon_Hammer.json`,
+`river-logic-smoke.json` and `river-stage-proof.json`; decoded data stays out
+of the repository.
 
 ## Decision: refuse unpaired advanced logic settings
 
@@ -254,8 +348,8 @@ forward-only Fire progress through the written shared-pouch guard.
 Latest maintainer queue: D fixture/dump on `18a04cb`, C matrix,
 D 300-row sweep, A dump, then E full gates. C stages its own in-game check
 meanwhile; its merge also awaits Kareem's result. D must merge and Claude
-authorize E's rebase before combined proof/staging. River packet is staged/
-dry-run only, never booted or played. No full-review or in-game pass claim.
+authorize E's rebase before combined proof/staging. The river pair is now
+played and confirmed above; Darunia remains unplayed. No full-gate pass claim.
 
 ## Topic commits before integration
 
@@ -268,8 +362,10 @@ authorized by that request. The topic commits are:
 - `8d934d4`: narrow settings allowlist replay follow-up; base allowlist commit
   `a153327` is preserved unchanged for the published-source neutrality proof.
 - `3c4e027`: section 48, census coverage and attributed OotrR cross-checks.
-- This final round-file commit records the handoff with `Fixes #25`; the
+- `4e3ed9c`: the then-final round-file handoff with `Fixes #25`; its
   preceding topic commits use `Refs #25`. Each has an Assisted-by trailer.
+  Claude subsequently authorized the river follow-up above as a separate
+  `Refs #25` commit, with full gates still deferred until authorized rebase.
 
 Combined D/E proof, staging, combined-share hashes and full gates retain the
 pending status above; committing the work does not claim those checks passed.

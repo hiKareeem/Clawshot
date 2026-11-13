@@ -3520,8 +3520,9 @@ Exact native ownership publication/flush latency is not established.
 
 ## 48. Round 14: quest-step read/write audit (cs14e, issue #25)
 
-Build `e0f3ccfa`; read-only native research, no game run. Full methods, commands,
-coverage limits and final gate results: `rounds/r14-steps.md`. Reproducers and
+Build `e0f3ccfa`; read-only native research, no agent game run. Kareem played
+the paired river check recorded below. Full methods, commands, coverage limits
+and final gate results: `rounds/r14-steps.md`. Reproducers and
 machine tables stay under `E:/OOTRemake/work/r14-steps/`; no decoded data is
 committed. Version remains 0.2.0; Claude owns release/version decisions.
 
@@ -3606,7 +3607,31 @@ event/quest continuation; it does not mean item ownership sets a quest.
 | `Get_StoneOfFire` | gift only while not past SariaMelodyPlay; boulder independently writes DungeonStart | Darunia's Joy can be skipped by early cavern opening | `DeathMountainTrail_Child_Prefab_ffa7` node8; `Get_StoneOfFire` Event39 → `Dm_Goron_0030` Event127 | D's child-strength route relies on the native source | a; confirmed missable check; approved source-once/forward-only native repair, not an added dance gate on the stone |
 | `Get_StoneOfFire` | BossBattle / EscapeDungeon / Complete | King Dodongo and Fire Stone continuation | Entry/defeat Event4/8; `Dm_SY_BancChange_EscapeDungeon` Event48/46; `Dm_DeathMtTrail_0025` Event26 | Native boss clear and fixed Fire Stone | a/b; no Saria-dance step prerequisite in this decoded chain |
 | `Get_StoneOfFire` | child mountain shutter uses Letter hand-over progress | Kakariko → Death Mountain | `KakarikoVillage_Child_OpenGate_Prefab_1fcc` / `_6b8b` | Letter remains native; no Open Kakariko patch | a/b; default source retained; unpaired `open_kakariko` override now refused |
-| `Get_StoneOfWater` | below Step03 AND rock-clear Bool false | Seven river-front player/navmesh air walls per age | `ZoraRiver_Common_08f0` | Translated adult-or-explosives bypass | a/b; native predicate confirmed, unavoidable adult traversal block is **[INFERENCE]**; isolated Longshot check required before changing the route |
+| `Get_StoneOfWater` | below Step03 AND rock-clear Bool false | Seven river-front player/navmesh air walls per age | `ZoraRiver_Common_08f0` | `can_blast_or_smash or 'Zora River Domain Arrival'` | a/b; paired Longshot block/open result confirmed by Kareem; native rock-state branch and Hammer damage verified; adult age alone is not a bypass |
+
+**River correction (cs14e; approved by Claude, 2026-11-13).** Kareem's paired
+Longshot controls, with saves verified by Claude: Water Ready /
+`Zorariver_BrokenRock_Broken=false` blocks the entire field-side passage;
+Step03 / false opens it. Both results persist after reload; both probe
+resources loaded, no crash, no visible rocks in either control.
+
+All seven walls share `Logic_Create = NOT(rock-broken OR Water==Step03 OR
+Water>Step03)`; `Logic_Delete` is an unconnected false default. Either
+entrance rock's death/completed death procedure sets the saved Bool, with no
+weapon qualifier. The `Obj_BrokenRock_A_01`/`WallCrack` actor data accepts
+direct Hammer damage; the existing `can_blast_or_smash` helper therefore
+preserves usable explosives and adult Hammer. The pair proves the quest-step
+branch in play, not a separate rock-true/Hammer gameplay control.
+
+The source is the river-to-Domain arrival: `Dm_SY_BancChangeArrive` entry
+`Goto_ZoraDomain`, Event48 plays `Dm_Zora_0000`, then Event46 selects
+Event44/Step03 or Event45/Step03_Impa according to `Get_StoneOfWater_MeetImpa`.
+Both age entrance actors bind that hook. Persistent event
+`Zora River Domain Arrival` at `ZR Behind Waterfall` represents taking the
+free transition into the Domain, not merely owning Lullaby or reaching the
+river. Only the field-side edge changes; Lost Woods and reverse routes stay.
+Exact seven-node wiring, save values, affected checks, seed/fixture impact
+and failing-before/passing-after regressions are in the round file.
 
 **Epona correction (cs14e; approved by Claude, 2026-11-13).** The child source
 event uses Song from Malon's existing instrument/day/Talon-wake route; it does
