@@ -15,3 +15,20 @@
 rule = "can_use(Boomerang) and ((at_night and 'Time Flows') or gold_skulls_ignore_daytime)"
 was = "can_use(Boomerang) and (at_night or gold_skulls_ignore_daytime)"
 source = "Eurogamer, 'all new changes': time does not flow until Link has met Princess Zelda; Eurogamer and Polygon Gold Skulltula guides: child, night only, Boomerang, on an upper window of the ranch house; data: Enemy_Skulltula_Gold 15889002414176907668 with Enemy_Skulltula_Gold_Nocturnal=True at (-63,156,212), Child_Static only"
+
+# The reward can move; Get_Epona's progress stays at Malon's child song source.
+# Reaching/clearing that source is independent of what shuffled item it gives.
+[events."Lon Lon Ranch"."Malon Song Source Cleared"]
+new = true
+rule = "is_child and Ocarina and at_day and at('Hyrule Castle Grounds', is_child and (Weird_Egg or Chicken))"
+source = "03-game-data.md section 48 (cs14e, build e0f3ccfa): the existing Song from Malon route reaches SubEvent_GetEponaSong -> Dm_MelodyGet_Epona; C07/Event82 is the sole AfterGetEponaSong write, after the source reward. A shuffled song elsewhere does not execute it. The source needs the child instrument/day/Talon-wake route (Overworld.json:2793); no Eponas Song ownership is required to clear it."
+
+[events."Lon Lon Ranch".Epona]
+rule = "can_play(Eponas_Song) and is_adult and at_day and 'Malon Song Source Cleared'"
+was = "can_play(Eponas_Song) and is_adult and at_day"
+source = "03-game-data.md section 48 (cs14e, build e0f3ccfa): Npc_Hylia_Ingo_002_Adult Event12/Event90 and Npc_Hylia_Malon_Adult Event178/Event86 require Get_Epona past ReadyForGetEponaSong. Only Malon's child source sets AfterGetEponaSong (Dm_MelodyGet_Epona C07/Event82). Retain the playable adult song and day requirements; completing the shuffled source does not itself grant Epona or its song."
+
+[events."Lon Lon Ranch"."Links Cow"]
+rule = "can_play(Eponas_Song) and is_adult and at_day and 'Malon Song Source Cleared'"
+was = "can_play(Eponas_Song) and is_adult and at_day"
+source = "03-game-data.md section 48 (cs14e, build e0f3ccfa): the native adult ranch/race chain first needs Get_Epona past ReadyForGetEponaSong, whose sole advancement is Malon's child song source. Keep the existing Epona/song/day route and additionally require that source; cows remain unshuffled."
