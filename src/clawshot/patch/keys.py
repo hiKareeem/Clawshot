@@ -19,8 +19,8 @@ from clawshot.patch import key_text
 from clawshot.patch.key_targets import DUNGEON_TARGETS, TARGETS, DungeonGrant
 from clawshot.patch.plan import PatchError, Plan
 from clawshot.patch.write import FileChanges
-from clawshot.save import key as save_key
 from clawshot.progressive import CHAINS
+from clawshot.save import key as save_key
 
 SMALL = "Dm_SY_TreasureboxSmall"
 BIG = "Dm_SY_Treasurebox"

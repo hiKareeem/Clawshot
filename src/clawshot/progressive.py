@@ -88,9 +88,11 @@ def next_tier(family: str, owned: set[str]) -> Tier:
     tiers = CHAINS[family]
     if family == "Progressive Magic" and owned.intersection(MAGIC_SOURCES.values()):
         return tiers[-1]
-    if family in {"Progressive Strength", "Progressive Quiver", "Progressive Slingshot"}:
-        if tiers[0].owned not in owned:
-            return tiers[0]
+    if (
+        family in {"Progressive Strength", "Progressive Quiver", "Progressive Slingshot"}
+        and tiers[0].owned not in owned
+    ):
+        return tiers[0]
     for index in range(len(tiers) - 1, -1, -1):
         if tiers[index].owned in owned:
             return tiers[min(index + 1, len(tiers) - 1)]

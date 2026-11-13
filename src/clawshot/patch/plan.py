@@ -71,7 +71,8 @@ class ChestChange:
                 and self.item not in CHAINS
             ):
                 raise PatchError(
-                    f"{where}: a grant binding {self.key_event!r} needs a named key, dungeon item or progressive reward/source"
+                    f"{where}: a grant binding {self.key_event!r} needs a named key, dungeon item "
+                    "or progressive reward/source"
                 )
             if not isinstance(self.key_event, str) or not self.key_event:
                 raise PatchError(f"{where}: the key binding must be an event name, not {self.key_event!r}")

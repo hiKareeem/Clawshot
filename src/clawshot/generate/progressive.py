@@ -139,7 +139,7 @@ def normalize_pool(world: World, settings: Settings, vanilla: Mapping[str, str] 
             f"progressive items need {len(missing)} more copies ({', '.join(f'{f} x{n}' for f, n in short.items())}) "
             f"in place of ordinary filler in shuffled {list(destinations)} checks, but the seed has {len(filler)}"
         )
-    overrides.update(zip(filler, missing))
+    overrides.update(zip(filler, missing, strict=False))
     return overrides
 
 
