@@ -515,9 +515,33 @@ if Hookshot is still absent at that stage's start, otherwise one worker.
 The initial full synthetic finished **1196 passed, 140 skipped, 1 failed** in 1104.77s.
 Its printed cause is harness input incompleteness: the packaging ZIP test resolves
 `pack.source_files()` relative to the frozen module, whose src-only archive lacked
-`pyproject.toml` and the other seven-file root packaging allowlist.
+`pyproject.toml` and the rest of the seven-file root packaging allowlist.
 The harness now contains all seven allowlisted root files from each snapshot's exact
 commit (`e30e6f4` after, `ac07355` before); neither frozen `src` tree changed.
-The corrected full synthetic is running under the shared gate; full dump and matrix
-remain pending. The original failed payload stays in the gate log; no unchanged rerun
-or product-code/test suppression was used.
+The corrected full synthetic **PASSED: 1197 passed, 140 skipped in 539.28s**, three
+workers. Full own-dump finished **137 passed, 1 failed, 1199 deselected in 4231.61s**,
+three workers: the Recommended closed_deku/open seed-1 route regression fails generation
+at the public default ten attempts. Matrix remains stopped; this is not an input-fixture error.
+The original failed payload stays in the gate log; no unchanged rerun or product-code/test
+suppression was used.
+
+### Early-door return-kit release blocker (Claude's ordered steer, 20:50)
+
+The dump failure's last unplaceable kit is Forest small key, Silver Gauntlets, Golden
+Gauntlets and Forest boss key. Claude's hypothesis is the tier rule merged from cs13b
+(`93c44d9`, on main `ac07355`) meeting the adult-return kit, not native-Mido/D-pad code.
+The previous 250-seed public sweep did not cover an early Door of Time.
+
+**Step 1: reproduced on main.** A fresh real `python -m clawshot` process, cwd and import
+root `witness/base-ac07355`, used that source's own Recommended CS1 preset, seed 1,
+`--forest closed_deku --door-of-time open`, native read-only romfs, and no attempt override.
+It exited 1 with the same default-ten-attempt kit failure. This confirms a release blocker
+already on main, not a regression introduced by this branch. Command/import/error evidence:
+`release-blocker/step1-main-seed1/{cli.txt,result.json}`.
+
+Next, measure seeds 0–29 on main and integrated `e30e6f4` through the public CLI, with
+three total processes, game closed and the shared lock. The main seed-1 observation is
+reused rather than rerun unchanged. No fill fix before that pre-frequency report.
+Claude assigned this branch the invariant-preserving fix and exact seed/settings regression,
+then fresh post-fix 30+30, full gates and the matrix including early-door Recommended
+and small-keys-anywhere cells. Neither no-downgrade nor the adult-return witness may be relaxed.
