@@ -334,8 +334,8 @@ class Search:
     def mandatory_pull_inventory(self, placements: Mapping[str, str]) -> dict[str, int]:
         """A conservative mandatory-count intersection, accounting for the actual seed's child routes.
 
-        Cap each logical item count in a child-only search of the actual placements. The least cap that still
-        reaches the pull is necessary on every route; taking only these minima never assumes optional loot.
+        Cap each acquired item and declared event count in a child-only search of the actual placements.
+        The least cap that still reaches the pull is necessary on every route; never assume optional history.
         Alternative requirements may have no individually mandatory item; rejecting such a proof is conservative.
         """
         event = self.world.age_pull_event
@@ -346,6 +346,13 @@ class Search:
             for name, item in self.world.items.items()
             if prefix.counts.get(name, 0) and item.type not in ("Event", "Drop")
         }
+        # Compulsory story history survives the pull even when its child source cannot be revisited as adult.
+        # The same cap proof excludes optional events; the pull itself is granted separately by return_safe.
+        inventory.update(
+            (source.name, prefix.counts[source.name])
+            for source in self.world.events
+            if source.name != event and prefix.counts.get(source.name, 0)
+        )
         mandatory = dict(self._initial_counts)
         for name, count in inventory.items():
             low, high = self._initial_counts.get(name, 0), count

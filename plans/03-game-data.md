@@ -3225,6 +3225,13 @@ Closed Door of Time retains the native altar/flow quest gates: altar at Step05,
 and once-only door checks. Song-only/open deliberately bypass those native quest gates
 (section41), so they do **not** inherit `Met Child Zelda`; the moat always does.
 
+The closed-door return-kit construction therefore includes the compulsory story event.
+The independent first-pull oracle also caps **declared acquired events**, not just item-table
+entries, to retain only history required on every child pull route. `Met Child Zelda` is not
+an item-table entry and cannot be reconstructed by revisiting its child source after pulling.
+Song-only/open bounds still assume no optional Zelda visit; optional events fail the same
+mandatory-count test and are not carried into the proof (r14-story full-gate diagnosis).
+
 **Saria's Song uses the same completed sequence.** Track E's native AINB census
 (`E:/OOTRemake/work/r14-steps/ainb/FINDINGS.md`, Track C evidence) identifies
 `SacredForestMeadow_Child_Prefab_3265` node0: Saria Create requires

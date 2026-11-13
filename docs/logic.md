@@ -142,6 +142,10 @@ shelves, as well as available night. Sources: `remake/child_hyrule_castle.toml`,
 [native trace](../plans/03-game-data.md#46-round-14-child-story-and-field-music).
 This is static-data evidence, not a new played escape result.
 
+The independent adult-return proof retains compulsory child story events using the same
+count-cap test as items; optional history is excluded. The closed-door construction bound
+includes `Met Child Zelda`, while early-door bounds do not assume that optional visit.
+
 The fill uses seeded assumed fill, placement restrictions and safe swaps, then an independent
 collection search on the completed placement. Item pool preparation uses actual remake identities,
 not the untranslated N64 vanilla pool. Shops, floor pickups and gifts have destination restrictions;

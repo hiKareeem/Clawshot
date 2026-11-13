@@ -63,7 +63,7 @@ shop-stock, reward or pool changes. Proposed by E, assigned by Claude, implement
 
 New regressions reproduced both old-rule mismatches (persistent story event not honored by
 Saria; night/TimeFlows alone opened the shop). Fixture corrections came from printed
-payloads: Search.collect does not inject derived events; default `at_night` folds to
+payloads: external counts do not populate Search.holds' derived-event set; default `at_night` folds to
 available-time true, so the clock boundary explicitly uses the supported
 `build_world(..., {"ensure_tod_access": True})` logic flag, not a duplicate setting.
 Final `uv run pytest -q tests/test_story.py`: **6 passed in2.10s**.
@@ -71,6 +71,35 @@ Consumer smoke additionally took the real field → Egg → courtyard → Saria 
 False/False → True/True for the story event/source; checked all eight shop releases and
 the entrance's pre-boss-night / post-boss-night / post-boss-day results **False/True/False**.
 The earlier broad focused run was81 passed/1 night-fixture failure, not a full gate.
+
+### Return-proof integration found by the first full gate
+
+Frozen `b5cd1a5` format/lint passed (336 files). Full synthetic then **failed11,
+passed1201, skipped141 in176.44s**; lock released and B's final synthetic given priority.
+Failure payloads reject even closed-door defaults; the native-world vanilla proof also fails.
+No unchanged rerun. The printed cause is twofold:
+
+- The construction's closed-door lower bound omitted the newly compulsory story event.
+  Added `Met Child Zelda=1` to **only the closed-door** `age_return_fill_inventory`;
+  song-only/open lower bounds remain unchanged.
+- `mandatory_pull_inventory` considered only non-Event/non-Drop items. Runtime metadata
+  confirms `Met Child Zelda` has a declared source but **no item-table entry**, so merely
+  admitting Event-typed items would still miss it. The independent post-pull proof lost a
+  native story flag that every closed-door pull must already have.
+
+The generic proof now subjects **declared acquired events** to the same child-only count-cap
+test as items (excluding the pull itself, already supplied separately). Optional history
+is excluded; no blanket precompletion or hard-coded Zelda branch is introduced. A synthetic
+regression printed `child_story_collected=1` while mandatory counts had only Song/Strength;
+after the fix it preserves the compulsory source, excludes Optional History and proves return.
+Its first fixture used an unavailable `is_child` helper; corrected to the fixture's existing
+`age == 'child'` rule after the printed unknown-name error.
+
+Focused after: `tests/test_age_fill.py tests/test_age_travel.py tests/test_story.py` —
+**23 passed in10.71s**, including an actual whole-world Chest+Shop seed and the independent
+return oracle. Exact former failure `test_world_data.py::test_vanilla_placement_is_beatable` —
+**1 passed in1.96s**. Source/test formatter left both files unchanged. Replacement full gate
+uses a separate attempt log so the first failure evidence is retained.
 
 ### Save inventory (read-only)
 

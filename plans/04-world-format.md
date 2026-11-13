@@ -246,8 +246,10 @@ the chosen first pull; already-collected checks can join it without granting the
 An adult start has no child prefix before return. A partial world's missing gate stays closed.
 
 `age_return_guarantee = true` (provisional default, reviewer, round 5) adds a separate acceptance proof:
-cap each pre-pull item count in child-only collection to find its mandatory minimum for `age_pull_event`
-(`Time Travel`), then prove adult can open return with only those counts, starting inventory and adult checks.
+cap each acquired item and declared event count in child-only collection to find mandatory minima
+for `age_pull_event` (`Time Travel`), then prove adult can open return with only those counts,
+starting inventory and adult checks. A compulsory child story flag persists across the pull even
+when its source cannot be revisited as adult; optional history is not assumed.
 This includes the pull route's child prerequisites, not optional errands. Alternative routes may yield a
 conservative intersection and rejection. Off retains temporal correctness but does not promise safety after
 an early pull. Child-only goals that never open travel need no return proof.

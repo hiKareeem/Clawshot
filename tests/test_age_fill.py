@@ -2,7 +2,7 @@
 
 from clawshot.generate import Settings, generate
 from clawshot.generate.fill import allowed
-from clawshot.world import CHILD, Search, load_spec
+from clawshot.world import CHILD, Search, build_world, load_spec
 
 
 def return_spec():
@@ -93,3 +93,30 @@ def test_chest_and_shop_seed_is_beatable_with_gated_return_guarantee():
     assert search.holds("Defeat Phantom Ganon")
     assert search.won()
     assert all(allowed(result.world, settings, name, result.placements[name]) for name in result.shuffled)
+
+
+def test_return_proof_keeps_compulsory_child_story_but_not_optional_history():
+    spec = return_spec()
+    field = next(region for region in spec["regions"] if region["name"] == "Field")
+    field["events"].update(
+        {
+            "Child Story": "age == 'child'",
+            "Optional History": "age == 'child'",
+            "Time Travel": "age == 'child' and Strength and 'Child Story'",
+        }
+    )
+    end = next(region for region in spec["regions"] if region["name"] == "End")
+    end["events"]["Forest Clear"] = "Weapon and Song and 'Child Story'"
+    world = build_world(spec)
+    placements = {name: location.vanilla for name, location in world.locations.items()}
+    placements["Shared A"], placements["Adult Chest"] = placements["Adult Chest"], placements["Shared A"]
+    search = Search(world)
+    search.collect_spheres(placements)
+    mandatory = search.mandatory_pull_inventory(placements)
+    assert mandatory.get("Child Story") == 1, {
+        "mandatory": mandatory,
+        "child_story_collected": search.counts.get("Child Story"),
+    }
+    assert "Optional History" not in mandatory
+    assert search.return_safe(placements)
+    assert search.won()
