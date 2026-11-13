@@ -19,7 +19,7 @@ player-facing summary (steps, known issues, the Discord link); this file has the
    extract over an old pack.
 4. Run `Make seed.bat`. It asks once for your **`.nup` file or extracted RomFS folder** and an
    **optional** Hookshot or Longshot folder: the game folder containing `bin`, or a Longshot Launcher
-   folder (Play then uses the launcher's newest build, as the [UI guide](ui.md) describes for **Game**).
+   folder (Play prefers its recorded default build, otherwise the newest; see [Game in the UI guide](ui.md)).
    Leave it **empty for emulator loading**; Make needs no Hookshot or Longshot installation or executable.
    Enter paths without enclosing quotes. It stores your answers in this pack's `folders.json` (`romfs` and
    `game`; a `folders.json` from an older pack, which named the folder `hookshot`, is still read).
@@ -30,9 +30,9 @@ player-facing summary (steps, known issues, the Discord link); this file has the
    only the game in `bin`, from its game folder: `bin\hookshot.exe` with `HOOKSHOT_NO_UPDATE_CHECK=1`, or
    `bin\longshot.exe` with `LONGSHOT_NO_UPDATE_CHECK=1`; always with `HOS_FS_OVERLAY` cleared,
    `HOS_MODS=<pack>` (only `seed` is a mod) and `--user <pack>\user`.
-   Hookshot needs a build that can load mods (tested on 2.0.13). Kareem played a community seed on
-   Longshot through an isolated launcher on 2026-11-13; this new app/pack Play path is not yet
-   accepted in game. If Play says your game cannot load mods, update it, then run Play again.
+   Hookshot needs a build that can load mods (tested on 2.0.13). Longshot v3.0.0-rc.2 passed
+   Kareem's Windows app Play check on 2026-11-13: isolated saves/options, shuffled reward and reload.
+   Packs share that checked starter. If Play says your game cannot load mods, update it and try again.
    Detection checks the game's binary for `HOS_MODS`, not version labels or log wording.
    No seed copy or link is made.
    Only Play requires the bin executable. If no game folder was saved, Play stops and points to the
@@ -99,12 +99,11 @@ Never replace files while the game is running, and do not set `HOS_FS_OVERLAY`. 
 `longshot_log.txt` holds the last run and names each mod and the files read from it: look for this seed's
 folder there, plus the in-game result.
 
-**Known cosmetic issue, by game:** on Hookshot (including 2.1.0), while a seed is loaded, button icons in
-text are the game's own Switch icons, not Hookshot's Xbox/PlayStation/Steam Deck replacements. Controls are
-unchanged. Hookshot currently falls back because every seed supplies its resource size table; do not
-delete that table or change seed bytes to restore icons. Longshot merges the button prompts' sizes into a
-mod's table at start (Longshot README, *Mods*); a headless v3.0.0-rc.2 boot of a Clawshot seed logged the
-merge on 2026-11-13, so controller icons may stay in text there. That is not yet seen in play.
+**Known cosmetic issue, by game:** on **Hookshot 2.1.0**, button icons in ordinary text show Switch
+buttons instead of your controller's while a seed is loaded. Controls are unchanged. Do not delete the
+seed's resource size table or change seed bytes to restore icons.
+**Longshot v3.0.0-rc.2 kept Xbox prompts correctly** in Kareem's 2026-11-13 seed-101 app check.
+It merges button-prompt sizes into the mod's table (Longshot README, *Mods*).
 
 ### NUP input
 

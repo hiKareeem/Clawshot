@@ -26,7 +26,7 @@ YOU NEED
   https://docs.astral.sh/uv/getting-started/installation/
   (The first build needs internet to fetch Python and Clawshot's libraries.)
 - For Play: a Hookshot that can load mods (tested on 2.0.13), or Longshot
-  (a community seed was played; this new app/pack Play path still awaits its in-game check).
+  (v3.0.0-rc.2 app Play passed a Windows check with options, shuffled reward and reload).
 
 STEPS
 1. Unzip into its own new folder, outside your game, Hookshot and Longshot folders.
@@ -56,9 +56,9 @@ start a New Game in an empty slot, and remove that folder before playing your
 normal saves (while it is there, the seed applies to every save slot).
 
 KNOWN ISSUES
-- Hookshot: while a seed is loaded, button icons in text show Switch buttons
-  instead of your controller's. Controls are unchanged. Longshot may keep your
-  controller's icons; that is not yet seen in play.
+- Hookshot 2.1.0: a loaded seed shows Switch icons in ordinary text instead of your
+  controller's. Longshot v3.0.0-rc.2 kept Xbox prompts correctly in Kareem's
+  2026-11-13 app check. Controls are unchanged.
 - New games initialize an empty nut slot (0/20). Child Bow first, then Boomerang
   use without a reload passed Kareem's 2026-11-12 check.
   Saves started with older builds are unchanged: after an age-unusable pickup,

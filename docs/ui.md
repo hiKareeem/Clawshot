@@ -51,8 +51,10 @@ The game folder is saved as `game`; a folder an older Clawshot saved as `hooksho
   - a Longshot Launcher folder: the portable program folder or its `LongshotLauncher-data`, the installed
     `%LOCALAPPDATA%\LongshotLauncher` (or its program folder `%LOCALAPPDATA%\Programs\LongshotLauncher`),
     `~/.local/share/longshot/launcher` on Linux, a portable AppImage's `<AppImage>.home`, or a folder of
-    builds such as `~/Games/Longshot`. Play uses the newest build the launcher lists, by version (a release
-    ranks above its release candidates), which may not be the build the launcher calls default.
+    builds such as `~/Games/Longshot`. Play prefers an available build marked `default: true` in
+    the launcher's `builds.json` (its README, *What it does* / *Design decisions*).
+    Without one it uses numeric version order: a release ranks above the same version's RCs;
+    unversioned nightlies rank below recognized releases. Picking a build folder pins that build.
 
   **Detect** shows which game, its version (from `hookshot_version.txt` or `longshot_version.txt`) and
   whether its program can load mods. It can fill an empty dump field from the game folder's romfs or an
@@ -134,8 +136,9 @@ line*: in a game folder, `longshot` is the launcher and the game itself is `bin/
 build without `bin` is refused like any folder-root launcher, and a folder holding the other system's game
 is refused before anything is written. Neither Hookshot nor Longshot has a macOS build (Longshot README,
 *What you need*: Windows 10/11 or Linux), so Play stays off there. Linux Play is **built, not accepted by
-the maintainers in game**; Linux Make verification does not certify the Linux UI. Longshot Play on any
-system is **built, not yet played** with Clawshot.
+the maintainers in game**; Linux Make verification does not certify the Linux UI.
+Windows app Play on **Longshot v3.0.0-rc.2** passed Kareem's 2026-11-13 seed-101 check:
+isolated saves, game options including Ocarina controls, shuffled rewards, Xbox prompts and reload.
 
 ## Keyboard and layout
 
@@ -275,13 +278,15 @@ Choose its updated `romfs`, full `.nup`, or dump folder with `base/romfs` and `u
 **Check** on Game compares four game files' contents with the supported build's fingerprints, not
 the folder name. It never starts or changes the game. A different update or incomplete dump is
 refused: check your own dump and update, rather than renaming files or bypassing the check.
+If Check says **Not found: …**, that path no longer exists (including a stale remembered dump).
+Choose your romfs folder or .nup again. An existing file of the wrong kind still gets the input-type advice.
 
 ### Which Hookshot or Longshot version do I need?
 
 Use a current Hookshot or Longshot with mod loading. Clawshot checks the program for that support
 (its `HOS_MODS` marker), not just its version number. On Hookshot, **2.0.14** has been played and seeds
-also start on **2.1.0**. Kareem played a community seed on Longshot through an isolated launcher on
-2026-11-13; the new app/pack Play integration still awaits its own in-game check.
+also start on **2.1.0**. Longshot **v3.0.0-rc.2** passed Kareem's Windows app Play check on
+2026-11-13, including isolated saves/options, a shuffled chest and reload persistence.
 
 - **Hookshot:** on Game, choose the Hookshot Builder game folder containing `bin/hookshot.exe` on Windows
   or `bin/hookshot` on Linux, then press **Detect**. Update or repair Hookshot if refused. A Linux
@@ -383,11 +388,10 @@ give the version, OS and whole UI error text (terminal error if it never opens).
 - **Saves started with older builds:** Save and Continue after an age-unusable pickup before using other
   items; changing areas does not clear the old item-bar jam. New games initialize an empty nut slot (0/20);
   child Bow first followed by Boomerang use without a reload passed Kareem's 2026-11-12 check.
-- On Hookshot (including 2.1.0), while a seed is loaded, ordinary text shows Switch button icons rather
-  than your controller's. Longshot merges the button prompts' sizes into a mod's size table at start
-  (Longshot README, *Mods*; a headless v3.0.0-rc.2 boot of a Clawshot seed logged the merge on 2026-11-13),
-  so your controller's icons may stay there; not yet seen in play. The ocarina note interface is drawn
-  separately and keeps its own prompts.
+- On **Hookshot 2.1.0**, ordinary text shows Switch button icons while a seed is loaded.
+  **Longshot v3.0.0-rc.2 showed Xbox prompts correctly** in Kareem's 2026-11-13 seed-101
+  app check. Longshot merges button-prompt sizes into the mod's size table (Longshot README, *Mods*).
+  The ocarina note interface is drawn separately.
 - Earlier seeds can also lose boss keys, maps and compasses moved to small chests inside their
   own dungeon; pickup text or an icon is not saved ownership. Repaired map/compass saves
   and menus, boss-key credit, pickup indicator and normal boss-door opening passed in-game.

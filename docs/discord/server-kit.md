@@ -89,12 +89,12 @@ Steps:
    `bin\hookshot.exe` or `bin\longshot.exe`, with that game's update check off, `HOS_FS_OVERLAY` cleared and
    the made seed loaded **as a mod through `HOS_MODS`**, using this pack's isolated `user` folder. Missing
    bin or missing mod-loader support must stop Play, never fall back to the root launcher or vanilla game.
-   Start a new game the first time; later plays continue this pack's saves. Kareem played a community
-   seed on Longshot through an isolated launcher; this new app/pack Play path still awaits its in-game check.
+   Start a new game the first time; later plays continue this pack's saves. Longshot v3.0.0-rc.2
+   passed Kareem's Windows app Play check on 2026-11-13: isolated saves/options, shuffled rewards and reload.
 4. **Old overlay launchers crash on Hookshot 2.0.12+.** Use a newly built pack and the
    [current seed-pack guide](../seed-pack.md), not a zip or launcher from before the loading change.
-   On Hookshot, button icons in text use the game's Switch icons while the seed is loaded; Longshot may
-   keep your controller's icons (not yet seen in play).
+   Hookshot 2.1.0 shows Switch icons in ordinary text while a seed is loaded.
+   Longshot v3.0.0-rc.2 kept Xbox prompts correctly in Kareem's app check.
 5. `seed/play-note.md` and `seed/spoiler.json` reveal item locations; open them only if you want spoilers,
    and keep them local. Ask in #help for one location if you want less of a spoiler.
    Reports need the seed/settings, hash, Clawshot version, runtime/version, OS, steps and the whole game log.
@@ -174,8 +174,9 @@ New games initialize an empty nut slot (0/20); child Bow first followed by Boome
 reload passed Kareem's 2026-11-12 check. Saves started with older builds are unchanged: after an
 age-unusable pickup, Save and Continue before using other items; changing areas does not clear that jam.
 Known issues: ocarinas from chests have no model despite working; songs may use a stand-in. Hookshot 2.0.12+
-loads seeds as mods, not through the crashing overlay route; on Hookshot, text uses the game's Switch icons.
-Play also supports Longshot (https://longshot.magicbean.dev/download), built but not yet played with Clawshot.
+loads seeds as mods, not through the crashing overlay route; Hookshot 2.1.0 text uses Switch icons.
+Play also supports Longshot (https://longshot.magicbean.dev/download). Its v3.0.0-rc.2 app check passed
+on 2026-11-13, including game options, Xbox prompts, shuffled rewards and save/reload.
 Paste settings strings inside single backticks (or use Copy for Discord): Discord drops their `_` otherwise.
 
 Full disclosure: Kareem directs AI coding agents building Clawshot. Automated checks test formats,

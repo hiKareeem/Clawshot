@@ -8,9 +8,10 @@ Base: `ffea543`, Clawshot 0.2.0. No version bump. Track owner: cs14b,
 - One optional `game` path across application preferences, generation protection and Play.
   Read migration from saved `hookshot` retains the chosen path; an existing `game` wins.
 - Detect Hookshot and Longshot game folders without executing binaries; preserve the
-  HOS_MODS capability probe. Longshot Launcher selection resolves the newest available
-  build, not the launcher's default. The chosen launcher path remains saved so a later
-  update can be detected. Explicitly choosing a build pins that build.
+  HOS_MODS capability probe. Per Kareem's followup, a launcher's available recorded
+  default wins; otherwise use numeric version order, release above same-version RCs,
+  unversioned nightlies below recognized releases. A directly picked build folder is pinned.
+  The chosen launcher path stays saved, not its transient resolved build.
 - UI Game tab names both runtimes; Longshot download address is plain text, not an
   application network request. A missing game keeps Play visible and disabled with a reason.
 - Copy for Discord wraps the same settings string in single backticks. No codec or
@@ -35,6 +36,12 @@ Read 2026-11-13:
   `%LOCALAPPDATA%/LongshotLauncher`; Linux data `~/.local/share/longshot/launcher`,
   portable AppImage `.home`. “Planned next” explicitly says current builds are
   `~/Games/Longshot/<version>`; `versions/<version>` is planned, not current.
+- Selection citation: `LongshotLauncher-data/builds.json`, format 1,
+  `builds[].default=true` next to `folder`/`version`, read-only on Kareem's install.
+  The launcher README's “What it does” and “Design decisions” say its Play starts that
+  default. settings.json stores channels, not the selected build. A missing default falls
+  back to available numeric versions; an available default lacking mod support refuses.
+  Kareem approved the mixed-channel fallback order on 2026-11-13.
 - Read-only local evidence: `E:/Games/LongshotLauncher` portable layout;
   `E:/OOTRemake/work/r20-release/play-keys-23/Play Clawshot 0.2.0 keys 23 on Longshot.bat`
   uses `bin/longshot.exe`, HOS_MODS only, empty/unset HOS_FS_OVERLAY,
@@ -45,8 +52,9 @@ Read 2026-11-13:
   The initially copied Hookshot template was replaced before execution.
 - Claude's supplied headless Longshot v3.0.0-rc.2 boot evidence with keys-23 only:
   `prompts: <mod>/romfs/System/Resource/ResourceSizeTable...rsizetable.zs: the button prompts' sizes merge`.
-  **[INFERENCE]** Controller icons may remain in ordinary text on Longshot. This is not
-  an in-game observation. Hookshot 2.1.0's recorded Switch-icon fallback stays documented separately.
+  The initial controller-icon inference is now superseded by Kareem's seed101 app check:
+  **Xbox prompts were observed on Longshot rc.2**. Hookshot 2.1.0's Switch-icon fallback
+  is a separate runtime-specific issue.
 
 ## Coordination
 
@@ -57,7 +65,7 @@ shell tilde-path lookup failed; PATH `bermuda` resolves the same executable.
 
 ## Verification
 
-- `uv run ruff format --check`: 335 files already formatted.
+- Final `uv run ruff format --check`: 336 files already formatted after #24.
 - `uv run ruff check`: all checks passed. Each ran under atomic gate.lock, workers=3,
   with neither game process present; lock released between stages.
 - Read-only real-install smoke used actual `detect_game` + verified `play_plan`:
@@ -87,9 +95,39 @@ shell tilde-path lookup failed; PATH `bermuda` resolves the same executable.
   with `--headless=new`, verified via actual PID 17704 command line, connected over CDP.
   Both UI and browser services were stopped; PID 17704 was then absent.
 - Seed101 fallback launcher: CLAWSHOT_DRY_RUN=1 printed the expected command only.
-  No boot, chest, controller-icon, save-persistence or Linux in-game result is claimed.
+  No agent boot, chest, controller-icon, save-persistence or Linux in-game result is claimed.
+- Claude reports boot check **ls101 passed**: Longshot rc.2, seed101 as the only mod,
+  92 files, crash=0, save mounted. This establishes headless loading, not the chest result.
+  Kareem's app check was handed off through
+  `E:/OOTRemake/work/r14-longshot/Start Clawshot (Longshot test).bat`.
+  Worktree edits were frozen during his app session. Kareem's later 09:35–09:39 app
+  result passed; the evidence is recorded below.
+- Pre-#24 full synthetic gate: **1262 passed, 140 skipped**, 606.37s, workers=3.
+  Repeating the full gate after the added feature rather than claiming that earlier run covers it.
 
-Full synthetic and native dump gate results follow after their serialized stages finish.
+Post-#24 full synthetic gate: **1269 passed, 140 skipped**, 583.79s, workers=3.
+The native dump stage is still running. Coverage inspection established that ZIP/source
+capsule tests are synthetic; the active native stage uses unchanged generator/resources/
+formats, not Play or dump UI detection. The later default-build and missing-path edits
+were therefore applied after the app closed, with synthetic proofs and focused checks.
+Final synthetic and native totals will be recorded when their stages finish.
+
+Followup focused command:
+`uv run pytest tests/test_pack_hookshot.py tests/test_app.py tests/test_app_play.py tests/test_ui_games.py tests/test_ui_first_run.py`
+→ **91 passed**, 13.61s. Covers recorded-default preference, unavailable-default fallback,
+unsupported-default refusal, directly pinned builds, missing versus wrong-kind paths and HTTP persistence.
+Final format/lint and JS syntax checks passed after removing one extra import-group separator reported by Ruff.
+
+Actual headless UI followup used invented fingerprint-only files and synthetic non-executable
+game binaries; no game files or execution. It displayed an older recorded default despite a
+newer available build, honored a directly picked newer build, and showed the exact Not found
+message versus the existing wrong-kind advice. `shots/game-not-found.png` and
+`shots/game-preferred-default.png` were reviewed; no horizontal overflow or external requests.
+The followup also reproduced an own guard regression: a picked base/romfs layer normalized
+while its successful dump detection redirected to the enclosing root. Scoping the stale-game
+guard to game selection restored the existing dump-root redirect. Delaying the synthetic HTTP
+response reproduced Checking before, then Verified/root after. `shots/game-layer-root.png`
+records this synthetic UI regression, not native-data validation. All smoke services were closed.
 
 ### Added #24 options preservation
 
@@ -112,8 +150,8 @@ No real account/options files were copied by the agent.
 
 ## Kareem check
 
-**Pending Kareem; estimate 8–12 minutes including startup.** Claude boot-checks first
-with `GAME=longshot tools/bootcheck.sh`; this track never boots a game.
+**PASSED — Kareem, Longshot v3.0.0-rc.2, 2026-11-13 09:35–09:39.**
+The staged checklist estimate was 8–12 minutes; Claude performed the boot check, never this agent.
 
 1. From this worktree, run `uv run python -m clawshot.ui` (or
    `uv run --extra ui python -m clawshot.ui` for the embedded window). No `--no-open`:
@@ -131,18 +169,39 @@ with `GAME=longshot tools/bootcheck.sh`; this track never boots a game.
    **Before opening the chest, confirm your game options carried over (e.g. Invert Jump,
    camera speed and Ocarina controls).** Compare with the selected Longshot build's normal
    options; Play's result names any missing option.sav/account.sav it skipped.
-5. Walk child Link to Mido's house; open the **top-left chest** only.
+5. Walk child Link to Mido's house; open the **far-right chest**.
    For this seed 101 expect **Rupees (50)**; confirm the rupee counter increases by 50,
    not only pickup text. No other chest contents belong in this checklist.
 6. Observe controller-button icons in ordinary item/dialogue text with the controller
    in use. Record actual icons (controller versus Switch), independently of ocarina prompts.
-   Controller icons are an inference from Claude's merge log until this observation.
+   Longshot rc.2 is expected to show the controller's icons; Xbox prompts passed this check.
 7. Save and Continue; verify this seed's progress persists. Quit. Confirm normal saves
    and `E:/Games/LongshotLauncher` were not changed by Clawshot.
 8. Attach only observed resource-loading evidence and result: in output/longshot_log.txt,
    `mods: <file> <- <path under this seed>` for
    `Banc/KokiriForest/KokiriForest_Child_Dynamic.bcett.byml.zs`, plus chest/inventory
    result, runtime version and icons seen. A mod mount alone is not gameplay proof.
+
+### Played result and loading proof
+
+Kareem: “Seed loads fine, settings do carry over including Ocarina controls. Button
+prompts are Xbox.” He also confirmed open chests, 60 rupees and the sword after reload.
+Claude verified the Mido rewards against the spoiler: the required **far-right chest**
+gave Rupees (50); all four opened chests matched. The player-facing position is far right,
+not the OoT Randomizer label used in the original draft.
+
+Claude's supplied runtime proof: `longshot v3.0.0-rc.2`, exactly one mod from seed101,
+`KokiriForest_Child_Dynamic` served from this seed, saves mounted under seed-101/user,
+zero crashes. Save observations: slot_01 held sword and 10 rupees; slots 02/03 held the
+sword and 60 rupees. `account.sav` was copied at 09:35. This proves actual app Play,
+option carryover, ordinary-text controller icons, shuffled reward and save persistence for this case.
+These are Kareem's play and Claude's supplied log/save observations, not an agent game run.
+No replay or decoded save copies were requested or performed to confirm their report.
+
+The app initially restored an old nonexistent NUP path. Its vague kind error was a
+pre-existing main behavior, now changed to `Not found: <path>. Choose your romfs folder or .nup again.`
+Existing wrong-kind files retain their old advice. Both cases have synthetic HTTP regressions.
+Linux, other runtime versions and every item/route combination are not certified by this one Windows result.
 
 Fallback launcher for Claude/Kareem:
 `E:/OOTRemake/work/r14-longshot/Longshot seed 101 check.bat`, copied from the new
