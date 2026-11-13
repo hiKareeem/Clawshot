@@ -1,7 +1,7 @@
 # Round 14 Track B — Longshot (#23), Discord copy (#18), game options (#24)
 
 Base: `ffea543`, Clawshot 0.2.0. No version bump. Track owner: cs14b,
-`openai-codex/gpt-6.1-sol`. Work in progress; Claude reviews/merges first.
+`openai-codex/gpt-6.1-sol`. Complete; ready for Claude's first review/merge. No merge or push.
 
 ## Scope and decisions
 
@@ -103,14 +103,19 @@ shell tilde-path lookup failed; PATH `bermuda` resolves the same executable.
   Worktree edits were frozen during his app session. Kareem's later 09:35–09:39 app
   result passed; the evidence is recorded below.
 - Pre-#24 full synthetic gate: **1262 passed, 140 skipped**, 606.37s, workers=3.
-  Repeating the full gate after the added feature rather than claiming that earlier run covers it.
+  Superseded by the post-#24 and final followup gates below.
 
 Post-#24 full synthetic gate: **1269 passed, 140 skipped**, 583.79s, workers=3.
-The native dump stage is still running. Coverage inspection established that ZIP/source
-capsule tests are synthetic; the active native stage uses unchanged generator/resources/
-formats, not Play or dump UI detection. The later default-build and missing-path edits
-were therefore applied after the app closed, with synthetic proofs and focused checks.
-Final synthetic and native totals will be recorded when their stages finish.
+Final native dump gate: **138 passed, 1271 deselected**, 4892.73s, workers=3,
+with the actual RomFS, repaired v131072 NUP and unchanged r13 integrated fixture.
+The runner released `gate.lock` in `finally`; release was posted immediately.
+Coverage inspection established that ZIP/source capsule tests are synthetic; this native
+stage uses unchanged generator/resources/formats, not Play or dump UI detection.
+The later default-build and missing-path edits were therefore applied after the app closed,
+with synthetic proofs and focused checks. Their final full synthetic gate then passed
+**1275 passed, 140 skipped**, 579.33s, workers=3, `OOT_*` unset and neither game running.
+It followed E's short census and C's synthetic stage in Claude's explicit order; the runner
+released the lock and B immediately posted release for C's dump stage.
 
 Followup focused command:
 `uv run pytest tests/test_pack_hookshot.py tests/test_app.py tests/test_app_play.py tests/test_ui_games.py tests/test_ui_first_run.py`
@@ -157,7 +162,7 @@ The staged checklist estimate was 8–12 minutes; Claude performed the boot chec
    `uv run --extra ui python -m clawshot.ui` for the embedded window). No `--no-open`:
    that mode deliberately disables Play.
 2. Game → Hookshot or Longshot → Browse `E:/Games/LongshotLauncher`, Detect.
-   Expect Longshot `v3.0.0-rc.2` (or the newest installed build), mods supported.
+   Expect Longshot `v3.0.0-rc.2` (or the launcher's available default; numeric fallback), mods supported.
 3. Generate → My seeds → Find seeds → `E:/OOTRemake/work/r14-longshot/ingame`.
    View seed 101; hash **52B614F085D9**, defaults (`CS1`), 165 shuffled rewards,
    92 resources, 31 search spheres. Never use either community seed 23 for this check.
@@ -225,3 +230,14 @@ manifest counter uses the CLI/search total, as the UI worker does.
 Full settings string is in `clawshot-seed.json`; no seeded files were edited.
 The initially empty `user` folder was removed after #24 arrived: app Play must create it
 to copy options once. Stage logs and generated files stay outside the repo.
+
+## Handoff
+
+- `6c753b3`: dual-game Play, Discord copy, per-seed options (#23/#18/#24).
+- `5689a79`: prefer the recorded launcher default; cite `builds.json`.
+- `39f99f4`: distinguish absent dump paths and preserve layered-root detection.
+- `e9f7a13`: played Longshot acceptance, Xbox prompts and player-facing checklist.
+- All requested behavior and gates complete. No seed working-set change, version bump,
+  game boot by this agent, game-folder writes by this agent, merge or push.
+- Temporary smoke prototypes, test profiles and gate-controller scripts were removed;
+  owner launchers, played seed/user, screenshots and gate logs remain outside the repo.
