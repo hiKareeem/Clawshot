@@ -525,9 +525,10 @@ room).
   deduction is data evidence, not a separate observed basement test. Gohma's rule adds Boomerang as a
   stun, **not damage**: jumpslash stays required. Fire and Deku Shield scrub gates stay. Adult vine-wall
   alternatives and save/game-over recovery with neither ranged weapon remain unanswered (DT01/DT02).
-- **Castle moat (HF01):** shallow; no Silver Scale needed for the Ocarina. Both moat checks already use
-  `is_child and has_all_stones`; retained, tested with no scale. Child Static places
-  `Obj_Ocarina_Time_A_01` Hash 2802436684568022035 at (16,145,43). No scale gate was removed elsewhere.
+- **Castle moat (HF01):** shallow; no Silver Scale needed for the Ocarina. Child Static places
+  `Obj_Ocarina_Time_A_01` Hash 2802436684568022035 at (16,145,43). **Round14 correction,
+  section46:** the old stones-only rules omitted the native courtyard/Impa story prerequisite;
+  that static correction does not invalidate Kareem's played no-scale finding.
 - **Free Kokiri Deku Shield (GIFT02):** child with Kokiri Sword/Hylian Shield, no Deku Shield, received one
   after Mido without buying it; the shelf still sold one at 40. `Npc_Kokiri_001_Shop_Child:Talk`
   Event23/21 take this branch only while `Goto_HyruleCastle` and `Get_StoneOfForest` are incomplete;
@@ -775,7 +776,7 @@ component list sets `SkipSetting` `DisableSkip`: `Dm_Kokiri_0000` (the opening m
 | Saria at the door, Saria meets Navi | `Dm_Kokiri_0045` → `_0050`; `Dm_Kokiri_0060` | module `..._Npc_Kokiri_Saria_Child_a766` | `KokiriForest_LinkHouseDoor_Open`; house door module also opens on `HavePlayedEvent.Dm_Kokiri_0050`; `_0045` Event7 opens the Kokiri area banner, setting `IsVisitLocation.KokiriForest` | `saria` (round 13 also preserves the visit flag) |
 | Mido's block | blocker AI | `KokiriForest_Npc_Kokiri_Mido_Child_Blocker` (default true) | flow `Npc_Kokiri_Mido_Child` clears it, `Meet_DekuTree` `Step02`/`Step03` | `mido` (logic: Mido no longer needs sword and shield) |
 | Deku Tree's talk | `KokiriForest_Meet_DekuTree_MeetDekuTree_01` → `Dm_Kokiri_0070`, `_0075` | module `..._All_02_a798`, until `Meet_DekuTree` past `Step03` | `KokiriForest_Meet_DekuTree_OpenDekuTreeMouth`; `Meet_DekuTree` `Complete`; `Get_StoneOfForest` `GoInside` | `deku_tree` |
-| Kaepora, Hyrule Field | `HyruleField_Goto_HyruleCastle_Kaepora` → `Dm_HrlField_0000`, `_0005`, `_0010` | module `HyruleField_Child_Prefab_de5f`: `Dm_HrlField_0010` not played, `Goto_HyruleCastle` not past `Step01` | `Goto_HyruleCastle` `Step02`; adds `Pouch_Amiibo` | `kaepora` |
+| Kaepora, Hyrule Field | `HyruleField_Goto_HyruleCastle_Kaepora` → `Dm_HrlField_0000`, `_0005`, `_0010` | module `HyruleField_Child_Prefab_de5f`: `Dm_HrlField_0010` not played, `Goto_HyruleCastle` not past `Step01` | `Goto_HyruleCastle` `Step02`; adds `Pouch_Amiibo`; `_0000` history ends the post-Saria scene-BGM mute interval (section46) | `kaepora` (round14 also preserves `_0000` history) |
 | Kaepora, Lost Woods | `Dm_LostWood_0010` | flow `Dm_SY_BancChangeArrive` Event213 | none found | `kaepora` |
 | Zelda's courtyard | `HyruleCastle_Goto_HyruleCastle_MeetZelda` → `Dm_HrlCastle_0030` ... `_0060` | module `HyruleCastle_Prefab_941f`: `Goto_HyruleCastle` exactly `Step04` | Zelda's Letter (`Dm_HrlCastle_0050`: `Dm_SY_GetInEvent:GetInEvent_Zeldaletter`), `Goto_HyruleCastle` `Complete`, `DoorOfTime` `Step01`; Impa then teaches Zelda's Lullaby (`DoorOfTime` → `Dm_MelodyGet_Zelda`) | not offered: it gives two checks (letter, song) |
 
@@ -3162,3 +3163,114 @@ custom-font and already-large-allocation cases, then Claude's isolated headless 
 Kareem's in-game icon/placement/save checks. None of this proposed Hookshot behavior was
 implemented, built, booted or submitted by this track. Exact pack smoke/gate results and
 remaining player acceptance are recorded in `plans/rounds/r11-loader.md`.
+
+## 46. Round 14: child story and field music
+
+Track C, issues #21/#22; supported build `e0f3ccfa`. Full trace, commands and Longshot
+acceptance checklist: `rounds/r14-story.md`. Research and decoded files:
+`E:/OOTRemake/work/r14-story/`; native dump read-only. No agent game run.
+
+### Zelda's escape and the moat checks
+
+The three Spiritual Stones in inventory are **not sufficient**. Native `RSDB/Challenge`
+row `DoorOfTime` depends on `Goto_HyruleCastle_IsCompleted_Exp`. The courtyard completes
+that quest and initializes `DoorOfTime=Step01` (`Goto_HyruleCastle` Event30/Event32);
+Impa's lesson/send-off continues it to Step02. Its stone-quest checks advance Step03.
+The missing visit cannot be replaced merely by finding a shuffled ocarina or song.
+
+`DoorOfTime_CheckStoneNum` is called by `Dm_SY_BancChange_EscapeDungeon` Event49
+(after Fire completion) and Event78 (after Water completion). Its Event38/Event39
+BoolExp switches use **case0=true**: both Fire and Water quests Complete lead to Event37
+(Step03), Event77 (`IsHyruleFieldBridgeClose=true`), then count0. One completed quest
+gives Step2_1/Step2_2 and count1; neither gives count2, without advancing. The count is
+**remaining** stones, not owned stones. Forest is not independently queried by this
+two-quest check; the existing all-three-stones logic is retained conservatively.
+
+The bridge's raised/lowered actors have opposite Presence predicates on
+`IsHyruleFieldBridgeClose` (Hashes `13633262183050288401` / `10233645194156655880`).
+This saved flag is distinct from the Step03 escape sensor. The escape flow clears it,
+sets noon and advances Step04. A raised bridge alone therefore does not establish the
+correct quest step or that the escape has run.
+
+At the field side of the Market drawbridge, native
+`HyruleField_Child_Prefab_0ce5` node3 tests **exactly DoorOfTime Step03**; its equality
+output creates Area Hash `5374506228817442823`, at approximately (-0.6,149.4,49.3).
+Player contact requests `HyruleField_DoorOfTime_Escape` through actor
+`7081083777168801859`. No clock/day/night predicate appears in this request graph.
+`HyruleField_Child_Prefab_9e35` separately enables the storm area at the same step.
+After escape, `_91f9` node0 requires **exactly Step04** to create the moat's
+`Obj_Ocarina_Time_A_01` (Hash `2802436684568022035`); its pickup requests
+`HyruleField_DoorOfTime_GetOcarinaOfTime`, leading to `Dm_MelodyGet_Time` and both rewards.
+`_32f7` is the distinct **AreaOut recovery**, not the initial escape: Step04, escape
+history played and outside the moat sensor areas.
+
+Fresh native AINB decoding with the external, unmodified GPL `ainb` research tool
+matched the historical `_0ce5` and `_91f9` JSON byte-for-byte. Only facts are used here;
+no GPL implementation or native decoded tree is included in Clawshot.
+
+**Logic cutover:** persistent `Met Child Zelda` at `HC Garden Skippable Locations`,
+child only, is shared by both moat checks and the **closed** Door of Time. `Time Flows`
+derives from that visit. The existing route remains: reach child castle grounds, receive
+Malon's fixed Weird Egg / hatch Chicken, wake Talon, pass the courtyard guards, meet Zelda
+and finish Impa's send-off. Zelda's Letter remains native (D31), not an extra shuffled
+inventory gate. OoT Randomizer at pinned commit
+`526b4c8d81b7c4023ef4573ffbaf39344e270d5b`, `Overworld.json:1379,1402–1403`,
+already gates HC Garden on Weird Egg or Chicken and puts Letter/Impa behind it;
+`Overworld.json:491–492` instead gives the moat only the stones. The overrides correct
+that remake difference without modifying translated source.
+
+Closed Door of Time retains the native altar/flow quest gates: altar at Step05,
+`DoorOfTime_OpenDoor` Event60 requires `DoorOfTime_IsAfter_Step04_Exp`, then the melody
+and once-only door checks. Song-only/open deliberately bypass those native quest gates
+(section41), so they do **not** inherit `Met Child Zelda`; the moat always does.
+
+This establishes a missing logic dependency, **not the cause of TheTerribleFairy's
+particular raised-bridge save**: version, seed, settings and story history remain unknown.
+Kareem has not yet played the staged before/after story control on Longshot.
+
+### Kaepora skip and field BGM
+
+Native source: `Pack/Bootup.Nin_Ounce_NVN2.pack.zs`, member
+`Sound/Bgm/Game/BGMGeneralParam/BGMGeneralParam_Default.game__sound__BGMGeneralParam.bgyml`,
+table `SequenceRangeDisableBgm`. Two pre-panorama suppression intervals end at
+GameData hash **3546103570 = `HavePlayedEvent.Dm_HrlField_0000`**:
+
+- Property 1651218793 begins at `HavePlayedEvent.Dm_Kokiri_0155` (forest-bridge farewell).
+- Property 17622586 begins at `Get_StoneOfForest_IsAfter_DefeatBoss_Exp`.
+
+The old skip marked only field `_0010` played and advanced the castle quest to Step02.
+That prevents the native owl request (and therefore its `_0000` panorama) while leaving
+the BGM interval's end flag false. The first panorama itself starts its cutscene BGM;
+`Goto_HyruleCastle` Event161 later requests the regular `BGM_HyruleField`. Scenery
+`Sound/Scenery/HyruleField.game__sound__SceneryParam.bgyml` in the same Bootup pack
+selects that regular theme. This is not a missing stone, song or castle quest requirement.
+
+The field theme's C1 start-condition reference header uses **Global15 = 1651218793**,
+alongside globals10/5/7 and local4; its stop header uses globals10/5/7. The separate
+interval starting at `_0000` (Global16, property3996766055, unresolved end Bool1517061892)
+is **not referenced by these field predicates**. A research-only header inventory checks
+length/alignment/property bounds for all **122** native root start/stop conditions;
+it is not a bytecode evaluator or engine run. Of 827 historical slots, 303 ordinary
+post-owl saves have `_0000=true`, `_0010=true`, **1517061892=false**; 524 have all three
+false. No anonymous flag is changed to “close” that unrelated interval.
+
+Repair: **only with `kaepora`, initialize `HavePlayedEvent.Dm_HrlField_0000=true`** as
+the skipped panorama normally would. Native metadata: saved Bool, default false,
+reset bits8, save-file0. Existing `_0010`, Lost Woods history, UI flag and Step02 remain.
+No `_0005` history, other story flag, inventory, audio resource or quest completion is
+added. The generic `patch/gamedata.py` writer already applies and validates this new
+TOML value; it needs no code change or new NUP working-set resource.
+
+**Recovery distinction:** the flag is saved, so reloading alone cannot release this
+interval. A Market visit does not play the suppressed first-field panorama; the native
+request remains disabled. Night is not a reliable “music fixed” check: the regular field
+theme's native stop condition explicitly includes Night. Those are static state/data
+deductions, not observed recovery tests of Zarcos's save. Kareem's Longshot checklist
+checks daytime first, Market return and Save/Continue separately. This new-game default
+does not migrate an existing save's false history flag.
+
+Before-fix regression printed `_0000=false` after the skip transform. After the repair,
+focused synthetic and native writer/exact GameData oracles: **4 passed**. The actual
+public before-fix app generation also wrote `_0000=false`, `_0005=false`, `_0010=true`.
+Full gate/matrix evidence and the public after output are recorded in the round file.
+**Built, not yet played in game.**

@@ -16,8 +16,13 @@
 # Time of day: the remake's clock starts only once Link has met Zelda. Rules in other areas ask for this event
 # with every child `at_night` / `at_dampe_time` (cross-area decision, Main, round 4).
 
-[events."HC Garden"."Time Flows"]
+[events."HC Garden Skippable Locations"."Met Child Zelda"]
 rule = "is_child"
+new = true
+source = "Section46, native HyruleCastle_Prefab_941f: courtyard request at Goto_HyruleCastle Step04. Goto_HyruleCastle Event30/32 completes that quest and initializes DoorOfTime Step01; Impa's native send-off continues it. Same courtyard route as fixed HC Zeldas Letter and Song from Impa; Hyrule Castle Grounds -> HC Garden requires Weird Egg or Chicken (OoTR Overworld.json:1379), representing Talon's wake-up."
+
+[events."HC Garden"."Time Flows"]
+rule = "is_child and 'Met Child Zelda'"
 new = true
 source = "Eurogamer, 'all new changes' (https://www.eurogamer.net/all-new-changes-zelda-ocarina-of-time-switch-2): time does not start to flow until Link has met Princess Zelda; she is met in the castle garden (Npc_Hylia_Zelda_Child 13027585550451396507 at (5,128,-257); Nintendo Life Hyrule Castle guide, steps 8-10)"
 

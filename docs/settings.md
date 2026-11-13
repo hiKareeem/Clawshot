@@ -142,6 +142,12 @@ restriction; Navi waking Link and normal new-game initialization still run. Movi
 **passed Kareem's new-game check on 2026-11-12**. `--skip intro saria deku_tree kaepora`
 selects fast-start skips; `--skip` alone disables them. These are separate from shuffled kinds.
 
+The Kaepora skip also marks the skipped first-field panorama complete, ending its native
+music-suppression window. The previous preset could leave Hyrule Field silent during the day.
+This changes **new games only**, not existing saves. The repaired state is native-data/writer
+verified; the combined Longshot music/escape check is still unplayed
+([section 46](../plans/03-game-data.md#46-round-14-child-story-and-field-music)).
+
 Every new seed enables the D-pad HUD shortcuts from the start, independently of fast-start
 choices (including `--skip` with no selections): **Navi, Ocarina, Boots and Masks**.
 This sets the saved `ActionGuide_IsEnd.Navi` initial value; it does not grant an item or
@@ -165,7 +171,7 @@ credit is a separate bug, not a failure of this map-access correction.
 
 | Option | Requirement / effect |
 |---|---|
-| `--door-of-time closed` | Default, native: three Spiritual Stones, Ocarina of Time and playable Song of Time. |
+| `--door-of-time closed` | Default, native: meet Zelda and Impa at the child castle, complete the three Spiritual Stones, then obtain the Ocarina of Time and playable Song of Time. |
 | `--door-of-time song_only` | Either child ocarina and the learned Song of Time. Passed a first in-game check with the Fairy Ocarina and two stones (R10-DOOR-SONG); the opening scene still shows all three stones. |
 | `--door-of-time open` | Opens the door and first-pull pedestal without items. Passed a first in-game check: open door, first pull and first-adult scenes (R10-DOOR-OPEN). |
 | `--logic free_time_travel=true` | Experimental, default off: adult return before Forest completion. |
@@ -175,6 +181,14 @@ unlock return from the minimum mandatory first-pull inventory and adult checks; 
 errands are not assumed. Early-door settings can be refused with unshuffled child-only prerequisites.
 There is no automatic free-travel override. Early Zelda escape/moat story timing with an open door
 still needs a player check.
+
+**The three stones alone do not trigger Zelda's escape.** Visit the child castle courtyard and
+finish Impa's send-off too: Malon's fixed Weird Egg / Chicken wakes Talon to reach that route.
+Both moat rewards and the closed Door of Time now require that story visit in logic, even if
+the ocarina or songs were shuffled elsewhere. Zelda's Letter stays at Zelda (D31); no child-Zelda
+skip or quest-precompletion patch is offered. The native-data trace is
+[section 46](../plans/03-game-data.md#46-round-14-child-story-and-field-music).
+This logic correction still needs its staged Longshot player check.
 
 With the return guarantee enabled, this generator cannot build Chest-only seeds with
 `song_only` or `open`: its return-kit bound needs movable ocarinas and Saria's Song, but those

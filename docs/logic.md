@@ -130,6 +130,16 @@ route that accepts Longshot where the game checks the Hookshot itself is a separ
 Sources: `src/clawshot/data/world/remake/gifts.toml`; D39 in `plans/decisions.md`;
 `plans/rounds/r13-gerudo-card.md` (static data trace, not a played route check).
 
+The child courtyard contributes the persistent `Met Child Zelda` event. Both Hyrule Field moat
+rewards and the **closed** Door of Time require it in addition to their inventory rules; shuffled
+ocarinas/songs do not advance native quest steps. Its route is the fixed Malon Egg / Chicken,
+Talon wake-up and castle courtyard, shared with Zelda's Letter and Impa's song. `Time Flows`
+derives from the same visit. Song-only/open doors intentionally bypass this story prerequisite,
+but the moat rewards do not. Sources: `remake/child_hyrule_castle.toml`,
+`remake/child_hyrule_field.toml`, `remake/child_temple_of_time.toml`;
+[native trace](../plans/03-game-data.md#46-round-14-child-story-and-field-music).
+This is static-data evidence, not a new played escape result.
+
 The fill uses seeded assumed fill, placement restrictions and safe swaps, then an independent
 collection search on the completed placement. Item pool preparation uses actual remake identities,
 not the untranslated N64 vanilla pool. Shops, floor pickups and gifts have destination restrictions;

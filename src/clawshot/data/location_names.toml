@@ -2399,7 +2399,7 @@ ids = ["Dm_MelodyGet_Sun_03/Event34"]
 [[location]]
 location = "Song from Ocarina of Time"
 name = "Zelda's Moat Lesson"
-where = "Hyrule Field at the Castle Town drawbridge (child): Zelda's lesson that follows taking the Ocarina from the moat"
+where = "Hyrule Field at the Castle Town drawbridge (child, after meeting Zelda and Impa at the castle and completing the three Spiritual Stones): Zelda's lesson follows taking the Ocarina from the moat"
 oot_randomizer_name = "Song from Ocarina of Time"
 source = "https://zeldacentral.com/games/ocarina-of-time-remake/walkthrough/temple-of-time/; https://www.ign.com/wikis/ocarina-of-time-remake/All_Song_Locations; data: census gift step(s) Dm_MelodyGet_Time/Event4 (src/clawshot/data/locations.toml; gift_rules.toml class rewrite; plans/03-game-data.md section 19)"
 ids = ["Dm_MelodyGet_Time/Event4"]
@@ -2407,7 +2407,7 @@ ids = ["Dm_MelodyGet_Time/Event4"]
 [[location]]
 location = "HF Ocarina of Time Item"
 name = "Ocarina in the Castle Moat"
-where = "Hyrule Field at the Castle Town drawbridge (child, all three Spiritual Stones): after Zelda's escape cutscene, pick the glint out of the moat"
+where = "Hyrule Field at the Castle Town drawbridge (child, after meeting Zelda and Impa at the castle and completing the three Spiritual Stones): approach from the field for Zelda's escape, then pick the glint out of the moat"
 oot_randomizer_name = "HF Ocarina of Time Item"
 source = "https://zeldacentral.com/games/ocarina-of-time-remake/walkthrough/temple-of-time/; https://vulkk.com/2026/11/08/how-to-get-the-ocarina-of-time-in-the-legend-of-zelda-ocarina-of-time/; data: census gift step(s) Dm_MelodyGet_Time/Event70 (src/clawshot/data/locations.toml; gift_rules.toml class swap; plans/03-game-data.md section 19)"
 ids = ["Dm_MelodyGet_Time/Event70"]

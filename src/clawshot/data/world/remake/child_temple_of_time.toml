@@ -13,6 +13,6 @@
 # ungated child pedestal. Adult return/Prelude remain independent. Native trace: section41.
 
 [exits."Temple of Time"."Beyond Door of Time"]
-rule = "door_of_time == 'open' or (can_play(Song_of_Time) and (door_of_time == 'song_only' or (has_all_stones and (Ocarina, 2))))"
+rule = "door_of_time == 'open' or (can_play(Song_of_Time) and (door_of_time == 'song_only' or (has_all_stones and (Ocarina, 2) and 'Met Child Zelda')))"
 was = "can_open_door_of_time"
-source = "D35 (Kareem, 2026-11-09); section41: patch.door pairs these modes with native altar/flow gates and the physical door/pedestal. Closed retains the three stones, Time ocarina and playable Time song; song_only permits either child ocarina; open has no inventory prerequisite. No Forest-return or Prelude gate is bypassed."
+source = "D35 (Kareem, 2026-11-09); sections41/46: closed retains the native courtyard/Impa story chain, three stones, Time ocarina and playable Time song. Native altar requires DoorOfTime Step05 and Event60 requires after-Step04; shuffled inventory alone does not advance them. song_only bypasses both quest gates and permits either child ocarina; open has no inventory/story prerequisite. Forest-return and Prelude gates remain."

@@ -30,10 +30,6 @@ source = "D16; Saria gives the Fairy Ocarina (round 2)"
 vanilla_fixed = "Bullet Bag (40)"
 source = "D16; the target game's prize is a bigger bullet bag (round 2)"
 
-[locations."HF Ocarina of Time Item"]
-vanilla_fixed = "Ocarina of Time"
-source = "D16; the Ocarina of Time from Zelda at the castle moat"
-
 [locations."LH Adult Fishing"]
 vanilla_fixed = "Golden Scale"
 source = "D16; the adult fishing prize is the Golden Scale"

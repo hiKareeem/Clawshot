@@ -144,10 +144,22 @@ def test_song_patch_refuses_changed_native_gate():
         ("song_only", {"Ocarina": 1, "Song of Time": 1}, True),
         ("closed", {"Ocarina": 2, "Song of Time": 1}, False),
         ("closed", {"Ocarina": 1, "Song of Time": 1, "Kokiri Emerald": 1, "Goron Ruby": 1, "Zora Sapphire": 1}, False),
-        ("closed", {"Ocarina": 2, "Song of Time": 1, "Kokiri Emerald": 1, "Goron Ruby": 1, "Zora Sapphire": 1}, True),
+        ("closed", {"Ocarina": 2, "Song of Time": 1, "Kokiri Emerald": 1, "Goron Ruby": 1, "Zora Sapphire": 1}, False),
+        (
+            "closed",
+            {
+                "Ocarina": 2,
+                "Song of Time": 1,
+                "Kokiri Emerald": 1,
+                "Goron Ruby": 1,
+                "Zora Sapphire": 1,
+                "Met Child Zelda": 1,
+            },
+            True,
+        ),
     ],
 )
-def test_world_door_modes_match_actual_inventory_requirements(mode, items, expected):
+def test_world_door_modes_match_inventory_and_story_requirements(mode, items, expected):
     settings, world = prepare(load_spec(), Settings(shuffle=GIFTS, door_of_time=mode))
     exit = next(exit for exit in world.regions["Temple of Time"].exits if exit.target == "Beyond Door of Time")
     assert exit.rule(items, CHILD, 3) is expected

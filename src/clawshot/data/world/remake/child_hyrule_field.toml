@@ -22,11 +22,20 @@
 # (-258,141,138), the Gold Skulltula in the southern wood (-156,144,338), the wetlands (40,145,342) and the east one
 # (180,157,190). The last two hold a Gossip Stone and no chest, fish, shrub or beehive.
 #
-# Confirmed unchanged: HF Ocarina of Time Item and Song from Ocarina of Time keep the translated
-# "is_child and has_all_stones" rule, without can_dive/Progressive_Scale. Source: Kareem in game via Claude,
-# 2026-11-08 (build e0f3ccfa): the castle moat is shallow and the Ocarina needs no Silver Scale (HF01).
+# The moat remains shallow (Kareem, 2026-11-08, HF01): no Scale is needed.
+# Round14 corrects the separate story prerequisite, not that played depth finding.
 # Child_Static places Obj_Ocarina_Time_A_01 Hash 2802436684568022035 at (16,145,43).
-# The item's fixed tier is owned by remake.toml; no duplicate location override is needed here.
+
+[locations."HF Ocarina of Time Item"]
+vanilla_fixed = "Ocarina of Time"
+rule = "is_child and has_all_stones and 'Met Child Zelda'"
+was = "is_child and has_all_stones"
+source = "D16 fixed Time ocarina; section46: native HyruleField_Child_Prefab_0ce5 creates the escape area only at DoorOfTime Step03; Goto_HyruleCastle courtyard initializes that quest, then Impa's send-off and stone-quest checks advance it. The moat actor _91f9 appears at Step04 after escape. No Scale gate (Kareem HF01)."
+
+[locations."Song from Ocarina of Time"]
+rule = "is_child and has_all_stones and 'Met Child Zelda'"
+was = "is_child and has_all_stones"
+source = "Section46: HyruleField_Child_Prefab_0ce5 requires DoorOfTime Step03; courtyard/Impa initialize its progression. _91f9's Step04 moat pickup runs DoorOfTime_GetOcarinaOfTime then Dm_MelodyGet_Time, so both rewards share the story prerequisite."
 
 # Grottos: every grotto entrance is visible in the remake and the Stone of Agony (now the Echo Gem) finds Gold
 # Skulltulas, not grottos (cross-area decision, Main, round 4). HyruleField's only two AgonyStoneReactArea actors
