@@ -622,5 +622,10 @@ game closed, three total processes: Recommended seeds 0–29 **30/30 passed**;
 small-keys-anywhere seeds 0–19 **20/20 passed**, including written mod verification.
 Wall time 995.91s; `release-blocker/closed-a82af5d/{rows.jsonl,summary.json}`.
 Repaired-source format and lint both pass (rc 0/0). Full synthetic **PASSED: 1198 passed,
-140 skipped in 542.01s**, three workers. Full own-dump is now running on the same frozen
-`a82af5d`; its pass completes the merge gate. The capped matrix has not started.
+140 skipped in 542.01s**, three workers. Full own-dump **PASSED: 138 passed,
+1200 deselected in 3978.55s**, three workers, same frozen `a82af5d` and own
+`OOT_DUMP=E:/OOTRemake/work/rounds/r13/dump-fast-start-integrated`.
+**Merge gate PASSED** and reported to Claude at 23:17, before matrix completion.
+The capped matrix's included 28-cell-per-source pilot is now running; no matrix verdict
+is claimed yet. Known early-door failures on unchanged main are baseline/control evidence,
+not repaired-source regressions. No product source changes after the verified freeze.
