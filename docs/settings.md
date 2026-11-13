@@ -132,12 +132,13 @@ restriction; Navi waking Link and normal new-game initialization still run. Movi
 **passed Kareem's new-game check on 2026-11-12**. `--skip intro saria deku_tree kaepora`
 selects fast-start skips; `--skip` alone disables them. These are separate from shuffled kinds.
 
-Every new seed enables the D-pad item bar from the start, independently of fast-start
-choices (including `--skip` with no selections). This sets the saved
-`ActionGuide_IsEnd.Navi` initial value; it does not grant an item or complete a story
-quest. Intro/Saria/Deku-talk skips alone do not set it. The always-on patch is built and
-synthetically checked; its short new-game and Save+Continue check is pending.
-Existing saves are not migrated; use a new game to check the initial-state change.
+Every new seed enables the D-pad HUD shortcuts from the start, independently of fast-start
+choices (including `--skip` with no selections): **Navi, Ocarina, Boots and Masks**.
+This sets the saved `ActionGuide_IsEnd.Navi` initial value; it does not grant an item or
+complete a story quest. Intro/Saria/Deku-talk skips alone do not set it. Kareem verified
+the HUD after the first Boomerang pickup, before entering the Deku Tree, and after
+Save → title → Continue on 2026-11-12. Boomerang and ordinary items use the right-bumper
+item menu, not these D-pad shortcuts. Existing saves are not migrated.
 
 Skipping the Deku Tree's talk does **not** bypass kept Mido: equip the Kokiri Sword and
 a shield, then talk to him. His early quest state, idle schedule, Talk initialization and

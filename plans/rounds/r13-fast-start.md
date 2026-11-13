@@ -480,9 +480,9 @@ The real public `app.jobs.generate_seed` built seed 7, Chest-only, intro+Saria+D
 single-mod tree matches public output SHA256
 `9705fe6ef8bf0b4c4765b5cfd3d498d94d40a49f6e795c14884af42cc8d43347`.
 The current-template CRLF launcher's actual `cmd.exe` dry-run exited 0; the fresh isolated
-user has no saves and `SAVES` points to an empty new-game source. No game was launched.
-Build and dry-run proof live in `dpad-always/build-proof.json` and `launcher-dry-run.txt`.
-First-item and post-Continue HUD acceptance remain for Claude/Kareem, not inferred from flags.
+user had no saves before boot and `SAVES` points to an empty new-game source. No game was
+launched by this agent. Build/dry-run proof: `dpad-always/build-proof.json` and
+`launcher-dry-run.txt`. Kareem's subsequent first-item/Continue acceptance is recorded below.
 
 The final integrated after snapshot is `witness/after-e30e6f4-src/src` (tree
 `b98c372ab95540e917ba5f4cb314aa385bb04469`, archive SHA256
@@ -495,3 +495,17 @@ The source's fresh own fixture `E:/OOTRemake/work/rounds/r13/dump-fast-start-int
 built successfully from the current NUP working set; old fixtures and `pr1-check/dump`
 remain untouched. Full integrated gates are starting, followed by the matrix, with
 stage-start Hookshot detection and the shared lock. cs13d may take between stages.
+
+### D-pad HUD acceptance: PASSED (Kareem via Claude, ~18:56–19:01)
+
+After the first item (Boomerang from Mido's house, **without entering the Deku Tree**),
+Kareem saw the D-pad HUD icon with **Navi/Ocarina/Boots/Masks shortcuts**. It remained
+after **Save → title → Continue**. Boomerang was in the **right-bumper item menu**;
+ordinary item assignment is not a function of those D-pad shortcuts. The checklist and
+settings documentation now use that distinction rather than the incorrect “D-pad item bar”.
+
+Claude's `check_dpad_save.py` on the newest slot 01 reports `ActionGuide_IsEnd.Navi=True`;
+the runtime log has no crash and loads GameDataList from this test's mod. This is combined
+player-visible, saved-state and loading acceptance, not an inference from initial values.
+Hookshot remains running: subsequent stages start with one worker unless it closes.
+Full synthetic is running; integrated full dump and matrix remain pending.
