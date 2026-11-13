@@ -456,3 +456,35 @@ remaining gate's actual HEAD exactly `1e6cde0`, D temporarily detaches there
 after saving this branch commit, makes no source/test edits during the gates,
 then restores `r14/progressive` before final evidence/handoff.
 
+## Story integration and final combined proof
+
+Pinned native proof at actual `1e6cde02931dbfcaf9b3ad14f931aa15089cc68c`:
+139 passed,1380 deselected in4507.25s; workers3, exact game processes empty,
+no supervisor deadline. The new owned fixture has1248 files and the same verified
+version digest. Logs/proofs: `gate-dump-1e6cde0.log`,
+`fixture-proof-1e6cde0.json` under the external work folder.
+Required format/lint passed there; full synthetic1378 passed/141 skipped in513.31s.
+
+Claude then merged story at main `e7e2bb1` and required a combined rebased sweep.
+Scratch trial replayed all8 D commits to `b6271e9`. Conflict resolution:
+preserve C's complete section46 plus D's47 (four documentation hunks across the
+series); union the world return inventory with **both native Goron Bracelet1 and
+Met Child Zelda1**, no invented adult copy (Claude explicitly approved).
+There were no other code conflicts. Auto-merged search retains C's compulsory
+declared events and D's copy-only guards.
+
+After the native process finished and released its lock, the real branch adopted
+that completed rebase, preserving all8 commits rather than repeating trial work.
+Compared with1e, native patch/format/pack code is unchanged; the only native-facing
+upstream data change is C's already-proven Kaepora panorama Bool. Native1e proof
+is expected to stand; new full synthetic and the serialized300-row sweep run on
+the rebased source as the combined proof.
+
+Requested merged-kit regression on the real rebased branch passed in3.14s:
+the closed-door kit contains both native Bracelet and Met Child Zelda, with no
+strength-copy credit; real seed0 reaches its first pull, while the independent
+count-cap oracle cannot reach it if either prerequisite is removed. This uses
+the same child-prefix cap mechanism as mandatory inventory, not a false adult
+construction assertion (Bracelet is required before pulling, not as adult credit).
+Rebased format347 files/lint passed. No game replay or rising-model implementation.
+

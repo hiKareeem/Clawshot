@@ -120,3 +120,27 @@ def test_return_proof_keeps_compulsory_child_story_but_not_optional_history():
     assert "Optional History" not in mandatory
     assert search.return_safe(placements)
     assert search.won()
+
+
+def test_closed_door_kit_keeps_both_compulsory_child_prerequisites():
+    result = generate(load_spec(), 0, Settings(door_of_time="closed"))
+    world = result.world
+    inventory = world.settings["age_return_fill_inventory"]
+    assert inventory["Goron Bracelet"] == 1
+    assert inventory["Met Child Zelda"] == 1
+    assert inventory.get("Progressive Strength Upgrade", 0) == 0
+
+    complete = Search.child_only(world)
+    complete.collect_spheres(result.placements)
+    assert complete.holds(world.age_pull_event)
+    for omitted in ("Goron Bracelet", "Met Child Zelda"):
+        # Use the same count-cap oracle as mandatory_pull_inventory: the omitted
+        # prerequisite cannot be reacquired elsewhere during the child prefix.
+        missing = Search.child_only(world)
+        missing._count_caps = {omitted: 0}
+        missing.collect_spheres(result.placements)
+        assert not missing.holds(world.age_pull_event), {
+            "omitted": omitted,
+            "kit": inventory,
+            "counts": {name: missing.counts.get(name, 0) for name in ("Goron Bracelet", "Met Child Zelda")},
+        }
