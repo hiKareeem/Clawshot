@@ -69,6 +69,18 @@ of the moved card does not disable this machinery. The placed actors' dynamic
 variants; `RSDB/EventSetting` resolves these to `SageOfSpirit` entries. Paired
 014/015 and 017/018 paths ultimately share that capture flow.
 
+This clearance result describes ordinary patrol detection, not blanket immunity
+to hostile interactions. `Npc_Gerudo_W_Normal_SecurityGuard` also binds
+`AlertMode.FoundPlayerWhenSmallHitGDName` to
+`SageOfSpirit_IsAfter_Step01_Exp`. The shared
+`NpcSecurityGuard.action.InterruptSmallHit.module` reads
+`IsFoundPlayerWhenInterruptSmallHit` (node33), security mode (node32), and
+`MiniGame_HorsebackArchery_IsPlaying_Exp` (node36); its reaction paths can set
+`ActorLogicOutputIsFoundPlayer` (node1). **[INFERENCE]** hitting/provoking a guard
+can therefore have distinct discovery behavior after clearance. The native
+binding of that reaction Bool is not a card read and is not proved by a played
+hostile-interaction test here.
+
 ### What the card read really does
 
 `GerudoFortress_Common_35d7` node2 reads `GerudoFortress_GoToPrison` to create two
