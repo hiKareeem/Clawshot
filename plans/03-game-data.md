@@ -3517,3 +3517,144 @@ chests stayed open after Continue: **FULL PASS; progressive in-game acceptance
 is complete.** Rising Quiver/Bow and Gauntlets/Bracelet models remained base
 items as expected; tier-correct rising models are an out-of-round follow-up.
 Exact native ownership publication/flush latency is not established.
+
+## 48. Round 14: quest-step read/write audit (cs14e, issue #25)
+
+Build `e0f3ccfa`; read-only native research, no game run. Full methods, commands,
+coverage limits and final gate results: `rounds/r14-steps.md`. Reproducers and
+machine tables stay under `E:/OOTRemake/work/r14-steps/`; no decoded data is
+committed. Version remains 0.2.0; Claude owns release/version decisions.
+
+### Method and interpretation
+
+Start from all 45 `RSDB/Challenge` rows and their saved `Step_<challenge>` enums,
+not a search for names containing `Step01`. The GameData postfix programs have
+329 direct quest expressions and 391 expressions in their transitive dependency
+closure. This includes composites such as Zora water/thaw, Kakariko burning and
+alternate-scene predicates. Recover names by native references and hash matching,
+retain original postfix programs, and follow expression dependencies to consumers.
+
+AINB coverage includes loose modules and packed actor/global/boot modules:
+11,707 occurrences, 5,036 distinct byte streams, zero decoder errors. Decode with
+unmodified dt-12345 `ainb` 0.2.17 outside the repository (GPL, facts only).
+Inventory every node name to catch queries beyond
+`HoldChallengeCurrentStepCheckOrder`: GameData enum/BoolExp queries,
+`QueryGetChallengeStep`, schedule-rail queries and mask-step queries. Follow
+output ports through Boolean operators, module arguments/returns and actor
+creation/deletion/event inputs. Join `AiGroups` and reference IDs back to placed
+actor Hashes; distinguish definitions, actual consumers, dynamic parameters,
+unused predicates and inactive/unbound modules. A string match is not a gate.
+
+EVFL inspection follows entries, switch cases, subflows and event transitions,
+including the active `.110` mapping. A quest write after a shuffled source grant
+stays at that source; remotely receiving its former item does not execute it.
+Skipped song-learning demonstrations require a separate side-effect audit.
+RSDB also has 182 per-step participant schedule bindings and eight
+`ForceProgressGameData` conditions: record those engine-managed conditions, but
+do not invent their transition semantics from the field name.
+
+Classes: **a**, shuffled check or its route; **b**, relied-on NPC/area/warp/song/
+event; **c**, no current logic effect (including dialogue/cosmetics/dead reads).
+The tables retain comparisons and their polarity; `IsAfter` is not `IsEqual`,
+and an exact-step trigger cannot safely be replaced with an arbitrary late
+quest value. Static reachability is not proof of a played route.
+
+The native EVFL pass decoded all 914 files (901 active versions), including
+502 schedules, with zero errors. The structured-resource pass decoded 149,463
+BYML resources across loose files and recursive SARCs, also with zero errors.
+Its research-only v4/v5 and binary/file-node support follows the observed
+payloads and [BYML layout facts](https://zeldamods.org/w_botw/index.php?title=BYML&oldid=11815);
+production format support is unchanged. Opaque payloads are retained and
+aligned literal-hash matches labelled candidates, not interpreted as execution.
+The supplementary remaining-surface lexical scan finished with zero errors:
+171 candidates remain separately labelled; its three resolved quest-expression
+strings are compression-dictionary contents, not executable consumers.
+
+`classified-all.json|csv` joins every inventoried consumer occurrence with its
+raw evidence. Classification is conservative topic/consumer triage, not a
+per-row safety proof: linked parameters, missing scene bindings and hash-only
+references retain review markers. The round file records exact counts and limits.
+
+Source lead only: `work/refs/sloperina-FINDINGS.md`, sections 1 and 7 (GPL facts:
+quest Enum fields, BoolExp fields not writable, inspect scripts before guessing).
+Every gate below is checked against native resources, not adopted from that
+document. The round-13 `ootns2-findings-issue.md` is an outbound summary of our
+existing findings, not independent confirmation.
+
+### Gate review
+
+Native paths below omit the common `Logic/` and `.logic.module.ainb` suffixes.
+“Source retained” means a reward swap does not remove the surrounding native
+event/quest continuation; it does not mean item ownership sets a quest.
+
+| Challenge | Step/comparison | Gate | Consumer | Our rule | Verdict |
+|---|---|---|---|---|---|
+| `Meet_DekuTree` | after Step02 | Full Kokiri shop stock and shopkeeper phase | Child shop Presence/ShopParam releases | `shops.toml`: corrected Mido event; slots 3/7/8 remain available early | a; already modeled; opposite-polarity short-stock copies are not missing shelves |
+| `Meet_DekuTree` | meeting progression / Complete | Mido clear and skipped tree talk | Mido flow/native clear tail, `..._a798` | `extra_fast_start.toml`, paired R13 tree skip | b; R13 repair preserves early schedule/equipment clear, then skipped talk state |
+| `Goto_HyruleCastle` | exactly Step02 / Step04 | Market arrival / Zelda courtyard chain | `Market_Child_Prefab_c061`, `HyruleCastle_Prefab_941f` | Child castle route and C's `Met Child Zelda` | a/b; C owns correction, not duplicated |
+| `Goto_HyruleCastle` | after Step03_02 | Malon/Talon relocation and ranch barrier | Child Field/Castle placements | Child Talon wake/ranch route | a/b; sent to C for its Field/Castle review |
+| `DoorOfTime` | Step01 onward, escape exactly Step03, pickup exactly Step04 | Zelda/Impa presence, escape and moat Ocarina | Castle Presence; Field `_0ce5`, `_91f9` | C's courtyard prerequisite on moat checks/closed door | a/b; C-owned confirmed mismatch, not a stones-only gate |
+| `DoorOfTime` | Step05 / Step06 | Altar reaction, door and first-pull attention | Section 41 native door consumers | Paired closed/song-only/open transforms | b; existing explicit patch/logic contract, not global quest precompletion |
+| `SageOfSpirit` | after Step01 | Friendly guards, desert/Training Ground/archery access | Fortress security modules and NPC schedules | D39 native carpenter/captain route; card fixed | a/b; known source-versus-item mismatch already contained by D39 |
+| `SageOfForest` | Complete | Return pedestal and Prelude | `Market_Adult_Prefab_89da`, `_edc2` | Defeat Phantom Ganon; isolated free-return patch | a/b; modeled as real completion, not shuffled medal/Prelude ownership |
+| `SageOfForest` | Step03 plus exact Hookshot flag writes Step04 | Quest phase / Kakariko NPC schedule | `UnderTheGrave_Prefab_6971`, `KakarikoVillage_Adult_Common_e17b` | No Minuet item prerequisite | c for the investigated Minuet claim; no song gate follows this write |
+| `SageOfForest` | after Step04 | Unused meadow predicate | `SacredForestMeadow_Common_751d` | No corresponding access condition | c; output has no consumer |
+| None at Minuet trigger | Player contact and song scene unplayed | Minuet source | `SacredForestMeadow_Adult_Prefab_03df` | Adult meadow access | a; no Forest-step/Hookshot prerequisite; rejected false positive |
+| `Get_StoneOfForest` | past DefeatBoss / Complete | Post-Gohma village Saria/Mido conversation | `..._e163`, `..._35ae` | Gohma event/native continuation | b; not the bridge Fairy Ocarina gift |
+| None at Saria gift trigger | Contact while `Dm_Kokiri_0150` unplayed | Bridge farewell and Fairy Ocarina gift | `KokiriForest_Child_Level_All_02_ddcd`, `Goto_HyruleCastle:KokiriForest_ArriveLostWood` → `Dm_Kokiri_0155` Event68 | `can_leave_forest` route to `LW Gift from Saria` | a; event creates its own distinct participant; no extra Gohma gate |
+| `Get_Epona` | past ReadyForGetEponaSong; AfterGetEponaSong written only at Malon's source | Adult Ingo/Malon acquisition chain and Link's Cow | `Npc_Hylia_Ingo_002_Adult` Event12/90, `Npc_Hylia_Malon_Adult` Event178/86; `Dm_MelodyGet_Epona` C07/Event82 | Child `Malon Song Source Cleared` plus playable adult Epona song/day | b; confirmed mismatch repaired in ranch overrides; remote song ownership alone no longer grants progression |
+| `Get_StoneOfFire` | gift only while not past SariaMelodyPlay; boulder independently writes DungeonStart | Darunia's Joy can be skipped by early cavern opening | `DeathMountainTrail_Child_Prefab_ffa7` node8; `Get_StoneOfFire` Event39 → `Dm_Goron_0030` Event127 | D's child-strength route relies on the native source | a; confirmed missable check; approved source-once/forward-only native repair, not an added dance gate on the stone |
+| `Get_StoneOfFire` | BossBattle / EscapeDungeon / Complete | King Dodongo and Fire Stone continuation | Entry/defeat Event4/8; `Dm_SY_BancChange_EscapeDungeon` Event48/46; `Dm_DeathMtTrail_0025` Event26 | Native boss clear and fixed Fire Stone | a/b; no Saria-dance step prerequisite in this decoded chain |
+| `Get_StoneOfFire` | child mountain shutter uses Letter hand-over progress | Kakariko → Death Mountain | `KakarikoVillage_Child_OpenGate_Prefab_1fcc` / `_6b8b` | Letter remains native; no Open Kakariko patch | a/b; default source retained; unpaired `open_kakariko` override now refused |
+| `Get_StoneOfWater` | below Step03 AND rock-clear Bool false | Seven river-front player/navmesh air walls per age | `ZoraRiver_Common_08f0` | Translated adult-or-explosives bypass | a/b; native predicate confirmed, unavoidable adult traversal block is **[INFERENCE]**; isolated Longshot check required before changing the route |
+
+**Epona correction (cs14e; approved by Claude, 2026-11-13).** The child source
+event uses Song from Malon's existing instrument/day/Talon-wake route; it does
+not require owning the song or grant an item. The adult Epona and Link's Cow
+events retain their playable-song/day requirements and additionally require
+that source. The shuffled source still advances native progress, because the
+song patch skips only its redundant shared pouch-add demonstration, not
+`Dm_MelodyGet_Epona` Event82. All twelve song demonstrations were audited:
+none contains a stranded quest-step write.
+
+**Darunia correction (cs14e; option 1 approved by Claude, 2026-11-13).**
+Event39 now tests saved source Bool `HavePlayedEvent.Dm_Goron_0030`, explicitly
+written after gift Event127. Event121 advances only from before
+`DodongoCavernOpne`; later Fire steps retain the native camera tail without
+rolling back. The normal song/dance requirement is unchanged. E's transform
+runs before D's `progressive_bonus`, whose Event127 wrapper preserves the
+post-gift continuation even when it skips a redundant lower-tier grant.
+Synthetic paths pass; combined real-dump proof and the isolated Longshot check
+remain pending. No game result is claimed.
+
+The wider audit checked all 37 active gift-bearing step reads and the AINB
+presence windows against alternative writers. No additional source-loss
+mismatch was confirmed. Trade retries cover both sides; Granny Blue Potion
+unlocks on the past-step branch rather than disappearing. These conclusions
+do not turn opaque references or unproven engine transitions into safe gates.
+
+**Advanced overrides (Claude's decision, 2026-11-13): refuse unpaired native
+access claims.** Public CLI, app/string and native-generation validation now
+uses an explicit supported-value allowlist, while unchanged world defaults
+remain valid. In particular, Open Kakariko, open/fast fortress, free scarecrow
+and Skip Child Zelda do not acquire nonexistent game-side patches. First-class
+forest/door/key modes, free travel and generator-written replay fields stay
+supported. See `docs/settings.md` and the round file for compatibility evidence.
+
+### OotrR cross-check (2026-11-13)
+
+Idea source: **OotrR (Mozencaz, MIT)**,
+[`src/oot_rando/logic/world/remake.json`](https://github.com/Mozencaz/OotrR/blob/fdc2b2f26ba146b60f565aa83892ccd8bb25acdc/src/oot_rando/logic/world/remake.json),
+commit `fdc2b2f26ba146b60f565aa83892ccd8bb25acdc`; local clone and MIT
+`LICENSE` read only. These are independently checked leads, not copied rules.
+Native trace and measurements: external `work/r14-steps/ootrr-crosscheck.json`.
+
+| OotrR claim | Verdict and our evidence | Clawshot consequence |
+|---|---|---|
+| Song from Saria needs the Fire quest's SariaMelodyGet step and a child visit to Darunia | **Rejected extra Fire gate.** SFM modules `3265`/`bbc3` require past DoorOfTime Step01; the area also requires the song scene unplayed. `SacredForestMeadow` Event0 plays `Dm_MelodyGet_Saria` before Event4 calls the Fire hook. That hook's Event83 conditionally writes SariaMelodyPlay at Event86; it does not gate the song grant (`Dm_MelodyGet_Saria` Event109). | C's Met Child Zelda prerequisite remains supported; do not add a Darunia/chamber prerequisite. |
+| The Lost Woods purple chest is on the bridge-scrub ledge, reached by an adult bean platform | **Identity and route lead confirmed; exclusivity unplayed.** It is our `Lost Wood Chest (TBox_Rupee_Purple)`, Hash `17479747339356189279`, not the excluded N64 grotto name. Adult plot `8765528183303847440` (`Obj_SmallFarm_A_03`, not childhood) links to soil `5234955674857122897` and destination `14904204956728923810`, 2.933 m from the chest. | `extra_lost_wood.toml` already has `rule = False` and `keep_vanilla`, not a free-access rule. Preserve that exclusion; XC19 still needs playable route/copy-identity acceptance, including Kokiri copy `4349272251343787229`. |
+| Links Pocket is Rauru's reward after the first Master Sword pull | **Confirmed, already modelled.** Native first-pull request `Market_Child_Prefab_e700` needs DoorOfTime Step06 plus pedestal action; `DoorOfTime` Event101 plays `Dm_SageRoom_0005`, whose Event48 grants Light Medallion. | Our `ToT Reward from Rauru` is behind Beyond Door of Time, not at Root. Gift class `more` keeps this reward vanilla; no shuffled sphere-zero reward bug follows. |
+| LW Gift from Saria requires Deku Tree clear | **Rejected.** The bridge's contact/unplayed-scene trigger is distinct from post-Gohma village Saria. Existing played counterexample: Kareem via Claude, 2026-11-08, Hookshot 2.0.1, `R6-CLOSEDDEKU`: the farewell/gift played before Gohma (section 21; `playtest/answers.md`). | Retain the source's `True` rule behind forest-exit access. `vanilla_fixed = Fairy Ocarina` specifies its canonical tier, not a shuffle hold: this gift remains class `swap`; `keep_vanilla` is the separate exclusion mechanism. |
+
+Required serialized gates, combined-build verification and unplayed staging
+status are recorded in the round file.
