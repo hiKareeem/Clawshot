@@ -318,3 +318,35 @@ Evidence, outside the repository: `E:/OOTRemake/work/r14-story/matrix.jsonl`,
 All originally requested C gates and all four player checks are complete. Claude subsequently
 requested integration onto B's merged `main`58ba776, light checks, then a rebased full
 synthetic in the gap after D synthetic and before D dump; that integration evidence follows.
+
+## Rebased integration ready for Claude review
+
+`git rebase 58ba776` completed without conflicts; **all eight C commits were replayed,
+not squashed**. Rebased/tested head: **b45b4cdbd490190ccec2a083a7f012d41153e0b2**.
+
+Unlocked light checks on that head:
+- `uv run ruff format --check`: **339 files already formatted**.
+- `uv run ruff check`: **all checks passed**.
+- Focused story/Kaepora/door/remake/age-return tests: **71 passed,1 native-dump skip
+  in25.49s**, with OOT_ROMFS/OOT_NUP/OOT_DUMP removed. The first attempted POSIX `env -u`
+  invocation could not execute the Windows UV shim, so ran no tests; the corrected native
+  subprocess supplied the filtered environment, without source changes or rerunning Ruff.
+
+After D's posted1e6cde0 synthetic release, C atomically took its authorized gap before D dump.
+Full synthetic on the same rebased head: **1283 passed,141 skipped in640.83s**;
+runner641.36s, exit0, workers3/no exact game process at stage start. Owned lock released,
+and D's fixture/native stage explicitly handed priority back. Log:
+`E:/OOTRemake/work/r14-story/gate-synthetic-attempt3.log`.
+
+Earlier **139-pass native gate,864-row matrix and four player PASS results** remain
+explicitly pinned to pre-rebase C code57e12aa / the staged mod. Claude accepted those;
+they were not rerun or mislabelled as rebased checks. The new full synthetic verifies
+integration with B's merged app/runtime/Longshot changes. This final addition is docs-only.
+
+**C complete; ready for Claude to review and merge.** No version bump, merge, push, game
+launch or unrelated game-folder write by cs14c. “Skip Child Zelda” remains the bold future
+product question above; no such option or quest-precompletion patch was added.
+
+**Review approved:** Claude independently verified the rebased1283-pass/141-skip synthetic
+result and completed code review. Only this final docs-only evidence commit follows; Claude
+will fast-forward main to its exact head. cs14c makes no source/test changes or merge.
