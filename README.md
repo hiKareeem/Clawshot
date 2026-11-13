@@ -113,7 +113,11 @@ every dungeon item home. A key found outside its dungeon names that dungeon in i
 played gates cover key chests in and out of dungeons, correct credit, door spending and reloads,
 plus presentation on a whole generated anywhere seed. Not every combination or a full
 playthrough has been played.
-Progressive items, entrance shuffle and Archipelago are not supported.
+All eight upgrade chains—Hookshot, strength, scale, wallet, bomb bag, quiver,
+slingshot bag and magic—are always progressive. Copies are chest-only; the get-item
+name/text and grant follow the selected tier, while the rising model stays the base.
+Built and native-data-tested; the Longshot check is unplayed.
+Entrance shuffle and Archipelago are not supported.
 See [settings and restrictions](https://github.com/hiKareeem/Clawshot/blob/main/docs/settings.md) for the detailed reference.
 Evidence: [recorded results](https://github.com/hiKareeem/Clawshot/blob/main/plans/00-roadmap.md)
 and [playtest answers](https://github.com/hiKareeem/Clawshot/blob/main/plans/playtest/answers.md).
