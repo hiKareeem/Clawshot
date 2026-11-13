@@ -494,7 +494,9 @@ Both use fresh integrated datasets; no old-source rows are counted toward this v
 The source's fresh own fixture `E:/OOTRemake/work/rounds/r13/dump-fast-start-integrated`
 built successfully from the current NUP working set; old fixtures and `pr1-check/dump`
 remain untouched. Full integrated gates are starting, followed by the matrix, with
-stage-start Hookshot detection and the shared lock. cs13d may take between stages.
+stage-start Hookshot detection and the shared lock. Claude cancelled cs13d's proposed
+100-seed audit gap at 19:16; dump and matrix now follow directly. cs13d's synthetic-only
+slot is after this run.
 
 ### D-pad HUD acceptance: PASSED (Kareem via Claude, ~18:56–19:01)
 
@@ -507,5 +509,15 @@ settings documentation now use that distinction rather than the incorrect “D-p
 Claude's `check_dpad_save.py` on the newest slot 01 reports `ActionGuide_IsEnd.Navi=True`;
 the runtime log has no crash and loads GameDataList from this test's mod. This is combined
 player-visible, saved-state and loading acceptance, not an inference from initial values.
-Hookshot remains running: subsequent stages start with one worker unless it closes.
-Full synthetic is running; integrated full dump and matrix remain pending.
+Claude reports Hookshot closed at 19:04. The running synthetic stage keeps its original
+one worker without restarting. Each later dump/matrix stage selects `CLAWSHOT_WORKERS=3`
+if Hookshot is still absent at that stage's start, otherwise one worker.
+The initial full synthetic finished **1196 passed, 140 skipped, 1 failed** in 1104.77s.
+Its printed cause is harness input incompleteness: the packaging ZIP test resolves
+`pack.source_files()` relative to the frozen module, whose src-only archive lacked
+`pyproject.toml` and the other seven-file root packaging allowlist.
+The harness now contains all seven allowlisted root files from each snapshot's exact
+commit (`e30e6f4` after, `ac07355` before); neither frozen `src` tree changed.
+The corrected full synthetic is running under the shared gate; full dump and matrix
+remain pending. The original failed payload stays in the gate log; no unchanged rerun
+or product-code/test suppression was used.
