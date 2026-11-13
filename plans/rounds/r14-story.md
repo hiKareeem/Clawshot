@@ -101,6 +101,36 @@ return oracle. Exact former failure `test_world_data.py::test_vanilla_placement_
 **1 passed in1.96s**. Source/test formatter left both files unchanged. Replacement full gate
 uses a separate attempt log so the first failure evidence is retained.
 
+### Rejected extra Saria/Darunia gate and added gameplay check
+
+Claude paused the matrix for the newly licensed OotrR (Mozencaz, MIT) lead. Track E's
+12:33 native verdict rejects it for this build: registered
+`SacredForestMeadow_Field_MelodyGet_Saria` runs Event0 → `Dm_MelodyGet_Saria` **first**,
+then Event3 resets pose and Event4 calls `Get_StoneOfFire_MelodyGet_Saria`.
+The movie's Event109 grants `Item_Melody_SariaSong`; its only query is TalkChoice2.
+The later hook's Event83 tests `Get_StoneOfFire_IsAfter_GoronCityDarniaTalk_Exp`; true
+advances the journal to `SariaMelodyPlay` (Event86), false ends without suppressing the
+already-given reward. The SFM AINB gates remain DoorOfTime-after-Step01/unplayed song.
+
+Claude accepted that ordering: **no extra rule/event, no code change or re-freeze**.
+A second source claims otherwise from play, so the combined fresh-game check now goes
+from actual Zelda/Impa send-off directly to Saria **without visiting Darunia/Goron City**.
+The existing song regression already accepts the Zelda event without any Fire event.
+This native trace does not substitute for that new player observation.
+
+## Completed merge gates on code commit57e12aa
+
+- Replacement `ruff format --check`: **336 already formatted**; `ruff check`: **all passed**.
+- Full synthetic: **1213 passed,141 skipped in643.09s**, runner643.64s.
+- Full dump: **139 passed,1215 deselected in4530.31s**, runner4530.81s.
+- Each used workers3 after exact-name checks found neither game process; each owned lock
+  released in finally. Native inputs: actual Hookshot RomFS, repairedv131072 NUP and
+  unchanged r13 integrated fixture. No working-set expansion.
+- Logs/results: `E:/OOTRemake/work/r14-story/gate-results.json`, `gate-*-attempt2.log`,
+  `gate-dump.log`. The failed first synthetic remains in `gate-synthetic.log`.
+- Current queue after dump: E short stages, D synthetic, A synthetic, then C matrix;
+  matrix/public-after staging have not run at this evidence point. No game started.
+
 ### Save inventory (read-only)
 
 `inventory_saves.py` examined 821 historical slots: no child slot has all three stone quests Complete with `Goto_HyruleCastle` incomplete. Six pre-escape child slots have all three quests Complete, Zelda met, `DoorOfTime=Step03`. Candidate `2026-11-09_0954-main-after-jabu/save/5a3c9e1f0b7d24680000000000000001/slot_01`: caption area `ZoraDomain/ZoraDomain_Child`; extracted thumbnail shows Link on the circular stone platform in the blue cavern, beside the waterfall and below King Zora. This source remains untouched.
@@ -123,7 +153,7 @@ No automated data check is presented as in-game proof. The combined checklist wi
 
 ## One combined Longshot acceptance session
 
-**20–30 minutes** with Debug teleport/clock; allow another 10 if unfamiliar with those menus.
+**45–60 minutes** with Debug teleport/clock; allow up to75 if unfamiliar with castle guards/menus.
 Prepared staging recipe: `E:/OOTRemake/work/r14-story/stage_story.py`; master launcher
 `E:/OOTRemake/work/r14-story/ingame/Test - story combined.bat`. It runs three isolated
 profiles sequentially, waiting for each game to close. Staging/dry-run completion is recorded
@@ -145,6 +175,16 @@ Use **only teleport and the clock**; do not change inventory, age or quests duri
    - Enter the Market and return to the field; listen again. Save, title, Continue; listen
      again. Optional clock check: night may stop the normal daytime theme; return to noon
      and walk to test resumption. Record each observation separately.
+   - **Saria before Darunia (same fresh profile):** follow the actual child castle route:
+     Malon's fixed Egg / Chicken, wake Talon, pass the guards, complete Zelda and Impa's
+     lesson, and accept Impa's field send-off. Teleport only to area entrances during this
+     sequence; do not teleport past Talon/guards or change quest steps.
+     **Do not visit Goron City or Darunia.** From Impa's send-off go straight to child
+     Sacred Forest Meadow. Expected: **Saria is present and teaches Saria's Song**;
+     confirm the learned song, not just dialogue. If unarmed, teleport to the north
+     clearing just south of Saria (approximately -2,114,-94), then walk toward her stump;
+     this avoids Wolfos combat without altering story state. Keep a save immediately
+     before approaching Saria and report the result even if it contradicts the trace.
    - Quit Longshot completely before continuing the master launcher.
 2. **Raised bridge without the exact story step:** profile `story-escape-missing-step-next`.
    - Continue the child save whose thumbnail shows **Link on the circular platform in

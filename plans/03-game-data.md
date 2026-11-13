@@ -3246,6 +3246,15 @@ available interaction is part of completing the courtyard route. `Song from Sari
 therefore requires `Met Child Zelda`, not a remote song or mere garden reach; translated
 OoTR files remain untouched, with the correction in `child_sacred_forest_meadow.toml`.
 
+The OotrR (Mozencaz, MIT) lead additionally claimed a Darunia visit first; E's native
+census rejects that **teaching gate**. Registered `SacredForestMeadow_Field_MelodyGet_Saria`
+Event0 runs the song movie **before** Event4 calls `Get_StoneOfFire_MelodyGet_Saria`.
+The movie grants the song at Event109. Only the later hook's Event83 tests
+`Get_StoneOfFire_IsAfter_GoronCityDarniaTalk_Exp` to optionally advance the journal to
+`SariaMelodyPlay` (Event86); false ends, without preventing the preceding grant.
+No extra Fire event is added. Claude requested a direct Zelda/Impa → Saria, **no Darunia
+visit**, player check because a second source claims otherwise from play; still unplayed.
+
 **Market Bombchu Shop entrance correction.** `_0c76` node1 tests
 `Get_StoneOfFire_IsCompleted_Exp`; node0 ANDs it with node2 Night and feeds door node3
 EnableOpen. EnableDo also requires completion. E's Banc census finds the shopkeeper
