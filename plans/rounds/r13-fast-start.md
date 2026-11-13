@@ -616,3 +616,11 @@ combinations per source**, including 64 door-open Recommended and 64 door-open
 small-keys-anywhere cells per source. A pure keyset comparison proves settings coverage
 matches the uncapped plan. First 28 empty-skip cells per source form an included calibration
 batch after full gates; their measurements update the estimate and are not rerun in the remainder.
+
+**Closed-door acceptance completed:** frozen `a82af5d`, real public CLI, default attempts,
+game closed, three total processes: Recommended seeds 0–29 **30/30 passed**;
+small-keys-anywhere seeds 0–19 **20/20 passed**, including written mod verification.
+Wall time 995.91s; `release-blocker/closed-a82af5d/{rows.jsonl,summary.json}`.
+Repaired-source format and lint both pass (rc 0/0). Full synthetic **PASSED: 1198 passed,
+140 skipped in 542.01s**, three workers. Full own-dump is now running on the same frozen
+`a82af5d`; its pass completes the merge gate. The capped matrix has not started.
