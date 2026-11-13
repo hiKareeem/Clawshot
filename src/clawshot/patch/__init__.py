@@ -19,7 +19,7 @@ from clawshot.generate import Seed, Settings, generate, play_note, prepare, spoi
 from clawshot.generate import hints as stone_hints
 from clawshot.generate import names as location_names
 from clawshot.generate.fill import shuffled_locations
-from clawshot.patch import bags, drops, freestanding, gamedata, scrubs, shops, text
+from clawshot.patch import bags, darunia, drops, freestanding, gamedata, scrubs, shops, text
 from clawshot.patch import events as chest_events
 from clawshot.patch import items as item_actors
 from clawshot.patch.plan import Links, PatchError, Plan, link, make_plan, remake_vanilla, restrict_event_openings
@@ -136,6 +136,8 @@ def make_seed(
     plan = make_plan(out, links, table, chest_events.load())
     from clawshot.patch import keys, progressive, progressive_bonus
 
+    # Darunia's source flag and forward-only Fire step precede Event127's bonus wrapper, which keeps its next.
+    changes += (darunia.changes(),)
     # Bonus guards and source-bound selections precede bag guards; unrelated native callers stay unchanged.
     changes += (progressive_bonus.changes(romfs, out, prior_changes=changes),)
     plan, key_changes = keys.changes(romfs, plan, prior_changes=changes)
