@@ -266,3 +266,33 @@ Both sessions can be played separately; the second has its own new-game profile,
 first session's save. It includes the Saria-before-Darunia observation plus the two
 escape controls. **Boot and gameplay remain unplayed by cs14c**; Claude boot-checks and
 Kareem observes. Packet/profile files stay frozen while the player uses them.
+
+## Played acceptance — Kareem, Longshot (reported/read by Claude)
+
+Claude relayed all four **PASS** results on2026-11-13. These are Kareem's actual observations
+and Claude's save reads, not another agent run or a rerun to confirm them:
+
+1. **Music/Kaepora PASS:** Hyrule Field music plays correctly with the skip enabled.
+2. **Courtyard/Saria PASS:** real Malon/Talon/courtyard/Impa sequence, then Sacred Forest
+   Meadow **without visiting Goron City/Darunia**. Teleport landed directly in Saria's
+   cutscene; Kareem also approached from the Lost Woods side, using noclip only for
+   movement past Wolfos. Song learned and in inventory. Claude read
+   `Goto_HyruleCastle=Complete`, `DoorOfTime=Step02`, and owned Zelda's Letter, Lullaby
+   and Saria's Song. This confirms the teaching route, not natural Wolfos combat.
+3. **Missing-step control PASS:** bridge up, no escape; saved DoorOfTime remains Ready.
+4. **Ready control PASS:** escape and Ocarina throw play; Ocarina of Time and Song of Time
+   obtained, saved DoorOfTime reaches Step05. Reload leaves the bridge down, without replay.
+
+Runtime loading proof independently read from each staged `longshot_log.txt`:
+`mods: GameData/GameDataList.Product.110.byml.zs <-` each profile's own staged mod
+(music line73; courtyard/Saria, missing-step and ready line58). The intro resource
+`Event/EventFlow/OpeningEvent.bfevfl.zs` also loads from those mods (lines450/455/451/452).
+All logs stay outside the repository under `E:/OOTRemake/work/r14-story/ingame/user-*`.
+
+The **in-game requirement is complete**. No agent started or played the game; packet/profile
+files are not rewritten after play. Separate music night/day, Market-return and music-reload
+observations were not relayed, so are not additionally claimed. Late-courtyard recovery and
+the original reporter's exact save cause remain outside these controlled observations.
+
+The matrix remains the only pending C verification stage, next after D's posted15:34
+native-stage release. D's own dump failures do not change C's57e12aa native139-pass result.
