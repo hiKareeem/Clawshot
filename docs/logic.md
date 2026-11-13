@@ -130,13 +130,15 @@ route that accepts Longshot where the game checks the Hookshot itself is a separ
 Sources: `src/clawshot/data/world/remake/gifts.toml`; D39 in `plans/decisions.md`;
 `plans/rounds/r13-gerudo-card.md` (static data trace, not a played route check).
 
-The child courtyard contributes the persistent `Met Child Zelda` event. Both Hyrule Field moat
-rewards and the **closed** Door of Time require it in addition to their inventory rules; shuffled
-ocarinas/songs do not advance native quest steps. Its route is the fixed Malon Egg / Chicken,
-Talon wake-up and castle courtyard, shared with Zelda's Letter and Impa's song. `Time Flows`
-derives from the same visit. Song-only/open doors intentionally bypass this story prerequisite,
-but the moat rewards do not. Sources: `remake/child_hyrule_castle.toml`,
-`remake/child_hyrule_field.toml`, `remake/child_temple_of_time.toml`;
+The persistent `Met Child Zelda` event models the **whole courtyard/Impa lesson and accepted
+send-off through DoorOfTime Step02**, not first courtyard contact. Both moat rewards, Saria's
+song source and the **closed** Door of Time require it; shuffled items do not advance native
+quests. Its route is Malon's fixed Egg / Chicken, Talon, the courtyard and Impa. `Time Flows`
+derives from it. Song-only/open doors bypass it, but the moat and Saria do not. The Market
+Bombchu Shop entrance also requires Dodongo's completion, matching its eight already-gated
+shelves, as well as available night. Sources: `remake/child_hyrule_castle.toml`,
+`remake/child_hyrule_field.toml`, `remake/child_sacred_forest_meadow.toml`,
+`remake/child_market.toml`, `remake/child_temple_of_time.toml`;
 [native trace](../plans/03-game-data.md#46-round-14-child-story-and-field-music).
 This is static-data evidence, not a new played escape result.
 

@@ -19,7 +19,7 @@
 [events."HC Garden Skippable Locations"."Met Child Zelda"]
 rule = "is_child"
 new = true
-source = "Section46, native HyruleCastle_Prefab_941f: courtyard request at Goto_HyruleCastle Step04. Goto_HyruleCastle Event30/32 completes that quest and initializes DoorOfTime Step01; Impa's native send-off continues it. Same courtyard route as fixed HC Zeldas Letter and Song from Impa; Hyrule Castle Grounds -> HC Garden requires Weird Egg or Chicken (OoTR Overworld.json:1379), representing Talon's wake-up."
+source = "Section46: Met Child Zelda models completion of the courtyard AND Impa lesson/accepted send-off through DoorOfTime Step02, not first courtyard contact. HyruleCastle_Prefab_941f requests the meeting at Goto_HyruleCastle Step04; Goto_HyruleCastle Event30/32 completes it and initializes DoorOfTime Step01. Step01 Impa talk starts Dm_MelodyGet_Zelda; the after-lesson talk Event124 reserves HyruleField_DoorOfTime_SendOff, whose Event7 writes Step02 without an additional inventory/stone test. Same route as HC Zeldas Letter and Song from Impa; Hyrule Castle Grounds -> HC Garden requires Weird Egg or Chicken (OoTR Overworld.json:1379), representing Talon's wake-up."
 
 [events."HC Garden"."Time Flows"]
 rule = "is_child and 'Met Child Zelda'"

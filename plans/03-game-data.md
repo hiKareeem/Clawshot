@@ -3209,11 +3209,12 @@ matched the historical `_0ce5` and `_91f9` JSON byte-for-byte. Only facts are us
 no GPL implementation or native decoded tree is included in Clawshot.
 
 **Logic cutover:** persistent `Met Child Zelda` at `HC Garden Skippable Locations`,
-child only, is shared by both moat checks and the **closed** Door of Time. `Time Flows`
-derives from that visit. The existing route remains: reach child castle grounds, receive
-Malon's fixed Weird Egg / hatch Chicken, wake Talon, pass the courtyard guards, meet Zelda
-and finish Impa's send-off. Zelda's Letter remains native (D31), not an extra shuffled
-inventory gate. OoT Randomizer at pinned commit
+child only, models the **complete courtyard/Impa lesson and accepted send-off through
+DoorOfTime Step02**, not first courtyard contact. Both moat checks and the **closed** Door
+of Time require it; `Time Flows` derives from that visit. The existing route remains:
+Malon's fixed Weird Egg / hatch Chicken, wake Talon, pass the guards, meet Zelda and finish
+Impa's send-off. Zelda's Letter remains native (D31), not an extra shuffled inventory gate.
+OoT Randomizer at pinned commit
 `526b4c8d81b7c4023ef4573ffbaf39344e270d5b`, `Overworld.json:1379,1402–1403`,
 already gates HC Garden on Weird Egg or Chicken and puts Letter/Impa behind it;
 `Overworld.json:491–492` instead gives the moat only the stones. The overrides correct
@@ -3223,6 +3224,29 @@ Closed Door of Time retains the native altar/flow quest gates: altar at Step05,
 `DoorOfTime_OpenDoor` Event60 requires `DoorOfTime_IsAfter_Step04_Exp`, then the melody
 and once-only door checks. Song-only/open deliberately bypass those native quest gates
 (section41), so they do **not** inherit `Met Child Zelda`; the moat always does.
+
+**Saria's Song uses the same completed sequence.** Track E's native AINB census
+(`E:/OOTRemake/work/r14-steps/ainb/FINDINGS.md`, Track C evidence) identifies
+`SacredForestMeadow_Child_Prefab_3265` node0: Saria Create requires
+`DoorOfTime_IsAfter_Step01_Exp`. `_bbc3` nodes3/5 require that predicate AND unplayed
+`Dm_MelodyGet_Saria` for the song-request area. Reprinting all three graphs confirmed
+the actual consumers. `Step01_Npc_Hylia_Impa_Child_Talk` unconditionally starts the lesson;
+its after-lesson talk Event124 accepts a field transfer with boot event
+`HyruleField_DoorOfTime_SendOff`. EventSetting binds that to `DoorOfTime_SendOff`:
+Event65 → Event10 (`Dm_HrlField_0020`) → Event91 → **Event7 (Step02)** → Event62.
+There is no additional stone/inventory check in this send-off chain. Accepting the
+available interaction is part of completing the courtyard route. `Song from Saria`
+therefore requires `Met Child Zelda`, not a remote song or mere garden reach; translated
+OoTR files remain untouched, with the correction in `child_sacred_forest_meadow.toml`.
+
+**Market Bombchu Shop entrance correction.** `_0c76` node1 tests
+`Get_StoneOfFire_IsCompleted_Exp`; node0 ANDs it with node2 Night and feeds door node3
+EnableOpen. EnableDo also requires completion. E's Banc census finds the shopkeeper
+Presence uses the same completion predicate. All eight native shop checks already
+require `Defeat King Dodongo` via `shops.toml` availability; the interior has no other
+checks/events and its only exit returns to the back alley. Thus no currently offered
+check bypassed the boss, but the region/route was falsely reachable. Its override now
+requires the same boss event **and** night/`Time Flows`; no shelf or pool change.
 
 This establishes a missing logic dependency, **not the cause of TheTerribleFairy's
 particular raised-bridge save**: version, seed, settings and story history remain unknown.

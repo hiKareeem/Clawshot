@@ -184,8 +184,9 @@ still needs a player check.
 
 **The three stones alone do not trigger Zelda's escape.** Visit the child castle courtyard and
 finish Impa's send-off too: Malon's fixed Weird Egg / Chicken wakes Talon to reach that route.
-Both moat rewards and the closed Door of Time now require that story visit in logic, even if
-the ocarina or songs were shuffled elsewhere. Zelda's Letter stays at Zelda (D31); no child-Zelda
+Both moat rewards, Saria's song source and the closed Door of Time require the completed
+courtyard/Impa sequence in logic, even if ocarinas or songs were shuffled elsewhere
+(`Met Child Zelda` models DoorOfTime Step02). Zelda's Letter stays at Zelda (D31); no child-Zelda
 skip or quest-precompletion patch is offered. The native-data trace is
 [section 46](../plans/03-game-data.md#46-round-14-child-story-and-field-music).
 This logic correction still needs its staged Longshot player check.

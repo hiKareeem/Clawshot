@@ -21,6 +21,11 @@
 # a Gossip Stone, Song of Time blocks and the remake-only Business Scrub Seed chest 1764383515296652106, and no scrub.
 # So the Wolfos grotto opens with the Song of Storms, and N64's storms grotto scrubs are gone.
 
+[locations."Song from Saria"]
+rule = "is_child and 'Met Child Zelda'"
+was = "is_child and at('HC Garden Skippable Locations', is_child)"
+source = "Section46 / r14-steps AINB census: SacredForestMeadow_Child_Prefab_3265 node0 creates Saria only after DoorOfTime Step01; _bbc3 nodes3/5 create the unplayed-song trigger under the same predicate. Met Child Zelda models the complete courtyard/Impa sequence through DoorOfTime_SendOff Event7 (Step02), not merely entry into the garden or remote song ownership."
+
 [exits."SFM Entryway"."SFM Wolfos Grotto"]
 rule = "can_play(Song_of_Storms)"
 was = "can_open_bomb_grotto"

@@ -37,6 +37,41 @@ Source-review corrections: one scout initially inverted `EventQueryIsGameDataBoo
 
 **Product question (Kareem/Claude): offer a future “Skip Child Zelda” option? It would need `Step_Goto_HyruleCastle=Complete`, the native courtyard/Impa history and post-send-off `Step_DoorOfTime=Step02` before the native stone-quest check, plus the actual Zelda's Letter and Impa reward grants (including a shuffled Impa reward), and their tutorial/time-flow side effects. Simply setting played cutscenes or giving Zelda's Lullaby does not initialize the quest. This round implements only the conservative logic prerequisite; no option or quest-precompletion patch is added. A skip needs its own complete side-effect and once-only grant audit before approval/implementation.**
 
+### Additional Zelda-dependent consumers (Claude steering, 09:45)
+
+Track E's 09:42 AINB findings were accepted for this track before gates. `Met Child Zelda`
+now explicitly means **the whole courtyard/Impa lesson and accepted send-off through
+DoorOfTime Step02**, not initial contact/Step01. Native Step01 Impa talk starts the lesson
+without an item/stone query; the after-lesson talk Event124 reserves the field boot event.
+EventSetting maps `HyruleField_DoorOfTime_SendOff` to `DoorOfTime_SendOff`; its printed
+reachable graph is Event65 → Event10 (`Dm_HrlField_0020`) → Event91 → **Event7 (Step02)**
+→ Event62. No extra inventory/stone gate is present. Completing that available interaction
+is modeled at the existing courtyard reward region, so no second story event is needed.
+
+Reprinted E's decoded `_3265` and `_bbc3`: child Saria Create and the unplayed-song trigger
+both consume `DoorOfTime_IsAfter_Step01_Exp`. Added the Song-from-Saria rule to
+`remake/child_sacred_forest_meadow.toml`, requiring the shared event; translated
+`sacred_forest_meadow.toml` stays untouched per the override convention.
+
+Reprinted `Market_Child_Prefab_0c76`: node3 EnableOpen is completion AND night; EnableDo
+also requires completion. E's native Banc census gives the same shopkeeper Presence flag.
+Runtime world smoke confirms **eight shelves, zero interior events, one return exit**;
+all shelves deny without `Defeat King Dodongo` and allow with it at adequate wallet capacity.
+Thus no existing check/alternate route bypassed the boss, but interior reach was wrong.
+Corrected the entrance to require the existing boss event plus night/`Time Flows`; no
+shop-stock, reward or pool changes. Proposed by E, assigned by Claude, implemented by cs14c.
+
+New regressions reproduced both old-rule mismatches (persistent story event not honored by
+Saria; night/TimeFlows alone opened the shop). Fixture corrections came from printed
+payloads: Search.collect does not inject derived events; default `at_night` folds to
+available-time true, so the clock boundary explicitly uses the supported
+`build_world(..., {"ensure_tod_access": True})` logic flag, not a duplicate setting.
+Final `uv run pytest -q tests/test_story.py`: **6 passed in2.10s**.
+Consumer smoke additionally took the real field → Egg → courtyard → Saria path and printed
+False/False → True/True for the story event/source; checked all eight shop releases and
+the entrance's pre-boss-night / post-boss-night / post-boss-day results **False/True/False**.
+The earlier broad focused run was81 passed/1 night-fixture failure, not a full gate.
+
 ### Save inventory (read-only)
 
 `inventory_saves.py` examined 821 historical slots: no child slot has all three stone quests Complete with `Goto_HyruleCastle` incomplete. Six pre-escape child slots have all three quests Complete, Zelda met, `DoorOfTime=Step03`. Candidate `2026-11-09_0954-main-after-jabu/save/5a3c9e1f0b7d24680000000000000001/slot_01`: caption area `ZoraDomain/ZoraDomain_Child`; extracted thumbnail shows Link on the circular stone platform in the blue cavern, beside the waterfall and below King Zora. This source remains untouched.

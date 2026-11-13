@@ -52,9 +52,9 @@ was = "is_child and at_night"
 source = "Eurogamer, 'all new changes': time does not flow until Link has met Zelda (event 'Time Flows'); Nintendo Life heart piece guide: the Treasure Chest shop opens at night; flow MiniGame_SequentialChoiceTreasure: closed from 06:00 to 21:00"
 
 [exits."Market Back Alley"."Market Bombchu Shop"]
-rule = "(at_night and 'Time Flows')"
+rule = "at_night and 'Time Flows' and 'Defeat King Dodongo'"
 was = "at_night"
-source = "Eurogamer, 'all new changes': time does not flow until Link has met Zelda (event 'Time Flows'); flow Npc_Hylia_021_Shop_Child, CheckRestrictedDoor: the Bombchu Shop door is closed from 06:00 to 21:00"
+source = "Section46 / r14-steps AINB census: Market_Child_Prefab_0c76 node3 door EnableOpen is Get_StoneOfFire_IsCompleted_Exp AND night; the shopkeeper has the same quest-completion Presence flag. Defeat King Dodongo already models this for all eight shelves (shops.toml). Time Flows models available child night after the courtyard/Impa sequence."
 
 [exits."Market Back Alley"."Market Man in Green House"]
 rule = "(at_night and 'Time Flows')"
