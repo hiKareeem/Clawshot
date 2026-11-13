@@ -30,6 +30,11 @@ class Search:
         # Progressive items with fixed tiers (Item.tier): per inventory view, [genuine copies + other additions,
         # highest fixed tier held]. The item's count is the larger of the two.
         self._tiered = frozenset(item.alias[0] for item in world.items.values() if item.tier and item.alias)
+        self._copy_only_counters = (
+            frozenset(world.progressive.values()).difference(world.progressive)
+            if world.progressive_copies_only
+            else frozenset()
+        )
         self._levels: dict[str, list[int]] = {}
         self._child_levels: dict[str, list[int]] = self._levels if self._return_open else {}
         self._child_collected: set[str] = set()
@@ -80,6 +85,11 @@ class Search:
         self._collect_item(name, child=True, global_item=True)
 
     def _collect_item(self, name: str, *, child: bool, global_item: bool) -> None:
+        # A few fixed base items share their name with the logical counter
+        # (Bow, Slingshot, Bomb Bag). In copy-only worlds that name is reserved
+        # for additions from raw-copy aliases, not native bonus acquisitions.
+        if name in self._copy_only_counters:
+            return
         item = self.world.items.get(name)
         views = []
         if global_item:

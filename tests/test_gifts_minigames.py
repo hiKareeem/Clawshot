@@ -9,6 +9,7 @@ from clawshot.census.gifts import Gift
 from clawshot.formats import evfl
 from clawshot.patch import gifts
 from clawshot.patch.items import load as actors
+from clawshot.progressive import TIERED_GIFTS
 
 FLOW = gifts.BOWLING_FLOW
 FIRST = "MiniGame_BombchuBowling_ClearFirstTime"
@@ -110,7 +111,7 @@ def test_fixed_tier_selection_does_not_require_an_owned_rental_weapon():
 
     _, world = prepare(load_spec(), Settings(shuffle=gifts.GIFT_TYPES))
     census, definitions = [], []
-    for check, (_, native) in gifts.TIERED_GIFTS.items():
+    for check, (_, native) in TIERED_GIFTS.items():
         for n, actor in enumerate(sorted(native)):
             step = Gift(
                 f"Synthetic{check}/Event{n}",
@@ -126,10 +127,7 @@ def test_fixed_tier_selection_does_not_require_an_owned_rental_weapon():
             )
             census.append(step)
             definitions.append(Definition(step.id, step.kind, "", step.id, actor, check))
-    assert set(gifts.seed_checks(world, census, definitions, gifts.load(), actors())) == set(gifts.TIERED_GIFTS)
-    assert world.items["Bomb Bag (30)"].alias == ("Bomb Bag", 1)
-    assert not world.items["Bullet Bag (40)"].progression
-    assert not world.items["Quiver (40)"].progression
+    assert set(gifts.seed_checks(world, census, definitions, gifts.load(), actors())) == set(TIERED_GIFTS)
 
 
 def test_stale_bowling_order_refuses():

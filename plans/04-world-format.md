@@ -164,11 +164,15 @@ A seed's world gets this from `[native_progressive]` `copies_only`, which `prepa
 every fixed tier, and every other alias to a chain's logical item (Bomb Bag 30/40, a spell's Magic Meter), a plain
 item. Names still read (a spell is still the spell), but only copies count, so `tier_forbidden` finds no
 native-chain tiers to order there.
+Fixed base items that share a logical counter name (`Bow`, `Slingshot`, `Bomb Bag`)
+do not add that reserved counter either; only their raw-copy aliases may add it.
+Native acquisition still appears in the collection/presentation record, not as a tier.
 
 **Deliberate child-strength exception (Claude, 2026-11-13):** the world-header helper
 `Progressive_Strength_Upgrade` reads native `Goron Bracelet` as child capability in seed worlds;
 the quoted counted form still reads raw copies. Child bombs likewise require that native source.
-Darunia's Lullaby/Saria/door route adds no copy tier, and all three copies remain. Adult strength
+Darunia's Lullaby/Saria/door route stays unshuffled even with free time travel, adds no copy tier,
+and all three copies remain. Adult strength
 stays copy-only. An early copy Bracelet physically works out of logic; logic never relies on it.
 The return-kit minimum uses native Bracelet, not an invented first adult copy. E's native
 post-boulder Darunia source-lock finding remains a dependency recorded in `rounds/r14-progressive.md`.
@@ -179,6 +183,8 @@ which reads no actor pack for a family). The chest's rising model stays the fami
 and grant are the selected tier. Concrete tiers are collection-order dependent, so the spoiler's
 `progressive_grants` lists each copy's ordered tiers, the tier given in one canonical sphere replay and whether it
 was a leftover (Generating a seed), explicitly not a promise for another route.
+Unshuffled capacity prizes use their native ownership-dependent Medium/Large reward in that replay;
+shuffled fixed rewards stay literal. `clawshot.progressive.TIERED_GIFTS` is shared with the gift patcher.
 
 The loader's own mechanism stays for direct `build_world` use: `world.toml`'s `progressive_items` (default `false`,
 D16) and `[progressive]` tiers (`"Progressive Hookshot" = ["Hookshot", "Longshot"]`) make each fixed tier an item

@@ -84,7 +84,8 @@ fixed-tier placement rule applies only to items that stay fixed.
 
 **Deliberate child-strength exception (Claude, 2026-11-13):** child capability requires Darunia's
 native source via his door, Lullaby and Saria's Song, never a copy Bracelet. The gift adds no
-copy tier; all three copies remain, and adult strength stays copy-only. An early copy Bracelet
+copy tier; all three copies remain, adult strength stays copy-only, and Darunia stays native even
+with free time travel. An early copy Bracelet
 can physically work out of logic. The first adult copy is not assumed in the return-kit lower
 bound; the kit must place it. See the [round dependency](../plans/rounds/r14-progressive.md)
 for E's unplayed post-boulder Darunia source-lock finding.
@@ -216,6 +217,8 @@ tiers, `clawshot.progressive.next_tier` for each copy, no randomness); `canonica
 full-search sphere, as the play note does, so it can exceed the length of `spheres`. The tier is
 **route dependent**: the child view before return is an independent search prefix, and another
 collection order gives other tiers. It is a labelled witness, not a play order or gameplay proof.
+Unshuffled ownership-dependent capacity prizes replay their native Medium/Large choice from
+that ownership state; a shuffled fixed reward remains its literal assignment.
 
 ## What a multiworld port still needs
 

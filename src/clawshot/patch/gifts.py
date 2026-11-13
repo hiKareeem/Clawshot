@@ -25,6 +25,7 @@ from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import Any
 
+from clawshot import progressive
 from clawshot.census import definitions as census_definitions
 from clawshot.census.definitions import Definition
 from clawshot.census.gifts import (
@@ -79,15 +80,6 @@ BOWLING_FLOW = "MiniGame_BombchuBowling"
 BOWLING_FIRST = "Market Bombchu Bowling First Prize"
 BOWLING_SECOND = "Market Bombchu Bowling Second Prize"
 BOWLING_CHECKS = (BOWLING_FIRST, BOWLING_SECOND)
-# Fix the native ownership-dependent upgrade tiers, not the weapon used by a rental minigame.
-TIERED_GIFTS = {
-    BOWLING_FIRST: ("Bomb Bag (30)", {"Item_BombBag_Medium", "Item_BombBag_Large"}),
-    "Market Shooting Gallery Reward": ("Bullet Bag (40)", {"Item_BulletBag_Medium", "Item_BulletBag_Large"}),
-    "Kak Shooting Gallery Reward": ("Quiver (40)", {"Item_Quiver_Medium", "Item_Quiver_Large"}),
-    "LW Target in Woods": ("Bullet Bag (40)", {"Item_BulletBag_Medium", "Item_BulletBag_Large"}),
-    "GF HBA 1500 Points": ("Quiver (40)", {"Item_Quiver_Medium", "Item_Quiver_Large"}),
-    "GC Rolling Goron as Child": ("Bomb Bag (30)", {"Item_BombBag_Medium", "Item_BombBag_Large"}),
-}
 
 DAMPE_CHECK = "Graveyard Dampe Gravedigging Tour"
 DAMPE_FLAG = "GraveYard_DiggingHoleTour_Drop_HeartPiece"
@@ -919,11 +911,10 @@ def skulltula_hint_changes(romfs: str | Path, placements: Mapping[str, str]) -> 
 GIFT_TYPES = ("NPC", "Song", "Cutscene", "Boss")
 SHUFFLE = "Gift"  # the --shuffle value
 SONG_TYPE = "Song"
-FREE_TIME_TRAVEL = "free_time_travel"  # the world setting that lifts the anchors
-# Gift checks a seed keeps vanilla while adult Link cannot go back freely: the adult-return guarantee (D20) relies on
-# them (Saria's Song -> Darunia's Joy gives the child the Goron Bracelet; shuffled strength upgrades are placed
-# adult-only).
-ANCHORS = {"GC Darunias Joy": "the child's Goron Bracelet anchors the adult-return guarantee (D20)"}
+FREE_TIME_TRAVEL = "free_time_travel"  # lifts legacy anchors, not the seed's native child-strength source
+# Copy-only seed logic always needs the native child Bracelet source, even with free return.
+# Direct legacy worlds lift this D20 anchor only when time travel is free.
+ANCHORS = {"GC Darunias Joy": "native Darunia supplies child strength (D20; section 47), never a copy tier"}
 
 
 def shopkeeper_spec(spec: Mapping[str, Any]) -> dict[str, Any]:
@@ -959,7 +950,7 @@ def seed_checks(
     whose vanilla logic item's actor (``item_actors.toml``) is what every one of its steps gives, so the pool item it
     adds is the one it gave. A Great Fairy, given once through a new GameDataList flag, is one of them (Kareem, in
     game, 2026-11-08: the game keeps the flag and an older save loads; 03-game-data.md section 19). The
-    :data:`ANCHORS` stay vanilla unless the world's ``free_time_travel`` setting is on."""
+    :data:`ANCHORS` stay vanilla in copy-only seed worlds; direct legacy worlds release them with free travel."""
     steps = check_steps(gifts, definitions)
     free = world.settings.get(FREE_TIME_TRAVEL) is True
     out = []
@@ -969,14 +960,14 @@ def seed_checks(
             continue
         if loc.vanilla is None or loc.n64_only is not None or loc.keep_vanilla is not None:
             continue
-        if name in ANCHORS and not free:
+        if name in ANCHORS and (world.progressive_copies_only or not free):
             continue
         # Accepted variable-rupee families contribute fixed20, and always specialize same-item assignments.
         if all(s.call in VARIABLE_RUPEE_CALLS for s in steps[name]) and loc.vanilla == "Rupees (20)":
             out.append(name)
             continue
-        if name in TIERED_GIFTS:
-            item, native = TIERED_GIFTS[name]
+        if name in progressive.TIERED_GIFTS:
+            item, native = progressive.TIERED_GIFTS[name]
             if loc.vanilla == item and {s.vanilla_item for s in steps[name]} == native:
                 out.append(name)
             continue
@@ -1042,7 +1033,7 @@ def seed_step(
             for name in shuffled
             if placements[name] != vanilla[name]
             or rules[name].once
-            or name in TIERED_GIFTS
+            or name in progressive.TIERED_GIFTS
             or name in BOWLING_CHECKS
             or any(s.call in VARIABLE_RUPEE_CALLS for s in steps[name])
         }

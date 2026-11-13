@@ -181,8 +181,9 @@ def _progressive_grants(seed: Seed) -> dict[str, dict[str, Any]]:
     identity, which models its native one-meter floor and is not a Magic Meter ownership claim. Each progressive copy
     takes :func:`clawshot.progressive.next_tier` of what is owned at that point and records the identity of the tier
     it gives; a copy whose tier is already owned (the chain is complete, for example after a native bonus) is a
-    leftover."""
-    from clawshot.progressive import CHAINS, MAGIC_SOURCES, next_tier
+    leftover. Unshuffled capacity prizes resolve their native Medium/Large choice before recording ownership;
+    shuffled fixed assignments do not inherit that native choice."""
+    from clawshot.progressive import CHAINS, FAMILY_BY_ITEM, MAGIC_SOURCES, TIERED_GIFTS, next_tier
 
     families = {name: item for name, item in seed.placements.items() if item in CHAINS}
     if not families:
@@ -198,6 +199,11 @@ def _progressive_grants(seed: Seed) -> dict[str, dict[str, Any]]:
                 given[name] = (index, tier.item, tier.owned in owned)
                 owned.add(tier.owned)
             elif item in fixed:
+                native = TIERED_GIFTS.get(name)
+                if native and item == native[0] and name not in seed.shuffled:
+                    tiers = CHAINS[FAMILY_BY_ITEM[item]]
+                    if tiers[1].owned in owned:
+                        item = tiers[2].item
                 owned.add(fixed[item])
     return {
         name: {
@@ -407,7 +413,8 @@ def play_note(seed: Seed, log: Mapping[str, Any] | None = None) -> str:
             " downgrade what you own.",
             "Child-strength exception: logic requires Darunia's native Bracelet route (his door, Zelda's Lullaby and"
             " Saria's Song), without adding a copy tier. An early copy Bracelet can physically work out of logic,"
-            " but logic never relies on it. Adult strength remains copy-only.",
+            " but logic never relies on it. Adult strength remains copy-only."
+            " Darunia stays native even with free time travel.",
             "The model rising from a progressive chest is always the family's first tier (the Hookshot, the Goron"
             " Bracelet, ...). The get window and the item you receive are the next tier above the highest one you"
             " own.",

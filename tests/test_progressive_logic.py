@@ -221,44 +221,14 @@ def native_world(native_spec):
     return build_world(native_spec)
 
 
-def wall_world(base: dict):
-    """``base``'s rules with one chest behind ``Bombs``."""
-    return build_world(
-        {
-            **base,
-            "start": "Start",
-            "goal": "True",
-            "regions": [{"name": "Start", "locations": {"Wall": "Bombs"}}],
-            "locations": {"Wall": {"type": "Chest"}},
-        }
-    )
-
-
-def test_bombs_read_raw_copies_never_fixed_tiers(native_spec):
-    world = wall_world(native_spec)
-    wall = world.locations["Wall"]
-    assert world.settings["progressive_copies_only"]
-    gauntlets = Search(world, ["Bomb Bag", "Silver Gauntlets"])
-    assert not gauntlets.can_access(wall, CHILD)
-    assert not gauntlets.can_access(wall, ADULT)  # a fixed tier counts nothing in a seed's world
-    assert not Search(world, ["Bomb Bag", "Goron Bracelet"]).can_access(wall, CHILD)  # Darunia's gift is a bonus
-    copy = Search(world, ["Progressive Bomb Bag", COPY])
-    assert copy.can_access(wall, CHILD)  # the first strength copy is the child Bracelet
-    assert copy.can_access(wall, ADULT)
-    direct = wall_world(load_spec())  # the oracle built directly still reads the fixed Bracelet, never gauntlets
-    assert not direct.settings["progressive_copies_only"]
-    assert Search(direct, ["Bomb Bag", "Goron Bracelet"]).can_access(direct.locations["Wall"], CHILD)
-    assert not Search(direct, ["Bomb Bag", "Silver Gauntlets"]).can_access(direct.locations["Wall"], CHILD)
-    with pytest.raises(WorldError, match="progressive_copies_only"):
-        build_world(native_spec, {"progressive_copies_only": False})  # derived, never a setting
-
-
 def test_seeds_count_only_copies_and_cannot_switch_to_legacy_progressive_items(native_spec, native_world):
     assert native_spec["native_progressive"]["copies_only"] and native_world.progressive_copies_only
     assert not build_world(load_spec()).progressive_copies_only  # the directly built oracle keeps fixed tiers
     for value in (True, False):
         with pytest.raises(WorldError, match="progressive_items"):
             build_world(native_spec, {"progressive_items": value})
+    with pytest.raises(WorldError, match="progressive_copies_only"):
+        build_world(native_spec, {"progressive_copies_only": False})
     custom = spec([{"name": "Root"}], native={})
     assert prepare_spec(custom) is custom  # a world without native chains is not touched
     with pytest.raises(WorldError, match="catalog"):
@@ -296,11 +266,14 @@ def test_the_default_pool_holds_every_chain_in_full(native_world):
 def test_every_native_chain_counts_only_its_copies(native_world, family):
     logic = native_world.progressive[family]
     tiers = [tier.item for tier in CHAINS[family]]
-    # Every fixed tier but the logical item itself (Bow, Slingshot, Bomb Bag: chest sources, so copies in a seed).
-    fixed = Search(native_world, [tier for tier in tiers if tier != logic])
+    fixed = Search(native_world, tiers)
     assert fixed.counts.get(logic, 0) == 0
     for n in range(1, len(tiers) + 1):
-        assert Search(native_world, [family] * n).counts[logic] == n
+        copies = Search(native_world, [family] * n)
+        assert copies.counts[logic] == n
+        for item in tiers:
+            copies.collect(item)
+        assert copies.counts[logic] == n
 
 
 def test_spells_keep_their_names_but_open_no_meter(native_world):

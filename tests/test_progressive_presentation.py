@@ -14,15 +14,18 @@ from clawshot.progressive import CHAINS
 from clawshot.world import Search, build_world
 
 
-def seed_of(placements, rules, *, shuffled=None, starting_age="child"):
+def seed_of(placements, rules, *, shuffled=None, starting_age="child", types=None):
     """A one-field world collected by the real search; ``shuffled`` defaults to every location."""
+    types = types or {}
     world = build_world(
         {
             "start": "Root",
             "goal": "True",
             "settings": {"starting_age": starting_age},
             "items": {item: {} for item in dict.fromkeys(placements.values())},
-            "locations": {name: {"type": "Chest", "vanilla": item} for name, item in placements.items()},
+            "locations": {
+                name: {"type": types.get(name, "Chest"), "vanilla": item} for name, item in placements.items()
+            },
             "regions": [
                 {"name": "Root", "exits": {"Field": "age == starting_age or 'Time Travel'"}},
                 {"name": "Field", "locations": rules},
@@ -155,3 +158,38 @@ def test_age_locked_base_families_warn_like_their_weapon(family, starting_age, u
     seed = seed_of({"Chest": family}, {"Chest": "True"}, starting_age=starting_age)
     [warning] = age_locked_pickups(seed)
     assert (warning.item, warning.usable_age, warning.first_ages) == (family, usable, (starting_age,))
+
+
+@pytest.mark.parametrize("native", [True, False])
+def test_native_gallery_replay_records_its_ownership_dependent_top_tier_before_a_copy(native):
+    family = "Progressive Slingshot"
+    source = "Market Shooting Gallery Reward"
+    placements = {
+        "Copy 1": family,
+        "Coin chest": "Coin",
+        "Copy 2": family,
+        "Key chest": "Key",
+        source: "Bullet Bag (40)",
+        "Token chest": "Token",
+        "Copy 3": family,
+    }
+    rules = {
+        "Copy 1": "True",
+        "Coin chest": "True",
+        "Copy 2": "Coin",
+        "Key chest": "Coin",
+        source: "Key",
+        "Token chest": "Key",
+        "Copy 3": "Token",
+    }
+    shuffled = [name for name in placements if not native or name != source]
+    seed = seed_of(placements, rules, shuffled=shuffled, types={source: "NPC"})
+    grants = spoiler(seed)["progressive_grants"]["locations"]
+    assert [grants[name]["given_in_canonical_sphere_replay"] for name in ("Copy 1", "Copy 2", "Copy 3")] == [
+        "Slingshot",
+        "Bullet Bag (40)",
+        "Bullet Bag (50)",
+    ]
+    # Native gallery upgrades an already-owned Medium to Large. A shuffled
+    # fixed reward stays exactly its assignment, even at that same source.
+    assert grants["Copy 3"]["leftover_in_canonical_replay"] is native

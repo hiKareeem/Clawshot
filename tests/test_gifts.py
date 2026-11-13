@@ -276,9 +276,10 @@ class _Loc:
 
 
 class _World:
-    def __init__(self, locations, settings=None):
+    def __init__(self, locations, settings=None, progressive_copies_only=False):
         self.locations = locations
         self.settings = settings or {}
+        self.progressive_copies_only = progressive_copies_only
 
 
 def test_seed_checks_take_changeable_gifts_whose_pool_item_is_what_they_give():
@@ -382,15 +383,17 @@ def test_chestless_actors_and_songs_respect_destination_and_missable_policies():
     assert allowed(world, settings, "Missable", "Heart")
 
 
-def test_anchors_stay_vanilla_unless_time_travel_is_free():
+@pytest.mark.parametrize("copies_only", [False, True])
+@pytest.mark.parametrize("free", [False, True])
+def test_darunia_child_source_stays_anchored_in_copy_only_worlds(copies_only, free):
     s = Gift("Dm_Goron/Event1", "event_gift", "Dm_Goron", "f", (), "Event1", "W:G", "ActorName", "Item_Bracelet", "")
     defs = [Definition(s.id, "event_gift", "", "n", s.vanilla_item, "GC Darunias Joy")]
     rules = {"GC Darunias Joy": Rule("GC Darunias Joy", "swap")}
     actors = item_actors.loads('[items]\nBracelet = { actor = "Item_Bracelet" }\n')
     locations = {"GC Darunias Joy": _Loc("Cutscene", "Bracelet")}
-    assert gifts.seed_checks(_World(locations), [s], defs, rules, actors) == []
-    free = _World(locations, {"free_time_travel": True})
-    assert gifts.seed_checks(free, [s], defs, rules, actors) == ["GC Darunias Joy"]
+    world = _World(locations, {"free_time_travel": free}, progressive_copies_only=copies_only)
+    expected = ["GC Darunias Joy"] if free and not copies_only else []
+    assert gifts.seed_checks(world, [s], defs, rules, actors) == expected
 
 
 @pytest.mark.parametrize(

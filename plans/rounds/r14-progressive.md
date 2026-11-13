@@ -169,10 +169,10 @@ native-gift matrix: copies alone never enable child DC/bombs, native source enab
 child but adds no adult tier. Actual default seed0 now generates with all20 copies,
 three strength. The six native-source/door/Saria regressions passed in2.24s.
 
-## Corrected D-only v2 packet; combined late-gift handoff
+## Corrected v2 packet and current rebased guard check
 
-`ingame/Test - progressive upgrades v2.bat`, mod/profile
-`progressive-chests-v2-next`; `PROGRESSIVE-V2-CHECKLIST.md`.
+The initial v2 (`progressive-chests-v2-next`) is frozen, superseded by the rebased
+packet below; Claude moved its launcher/checklist into `ingame/superseded/`.
 Four Mido copies plus sixteen diagnostic training-chest production-selector calls
 cover all eight chains. Support is normal chest-granted Sword, Time Ocarina,
 Saria, Lullaby and200 rupees, not a debug inventory or quest preset.
@@ -183,10 +183,49 @@ with all other movie actors/nodes unchanged, and source registry identities.
 Actual cmd dry-run exit0 selected Longshot rc.2, one mod, unset overlay and a fresh
 empty profile; no game started. The old packet/profile stay frozen, not reset.
 
-**The late-native-gift check must run on E's combined build, not this D-only v2.**
-E's combined checklist opens the DC boulder before Darunia, then exercises
-source-once, forward-only quest progress and D's lower-tier skip together.
-The v2 builder/bundle and checklist are available for E to reuse without touching
-the frozen profile. Combined late-gift estimate30–45 minutes; capacity/scale
-continuations and adult archery are separately labeled optional/unplayed.
+**Claude's latest steering: do not wait for E. D's guard check visits Darunia
+BEFORE the DC boulder, after all three strength copies; boulder-first is E's check.**
+The active rebased packet is `ingame/Test - progressive upgrades v2 rebased.bat`,
+`PROGRESSIVE-V2-REBASED-CHECKLIST.md`, mod/profile
+`progressive-chests-v2-rebased-next`. It was rebuilt from fa754f8 atop58ba776 into
+a new empty profile, without overwriting the older mods/profiles.
+`staged-chests-v2-rebased-proof.json` records its fourteen resources and hashes.
+Actual cmd dry-run passed exit0, Longshot rc.2, one mod, no overlay.
+**Claude accepted prog2 boot: Longshot rc.2, one mod, fourteen files, crash0,
+save mounted; handing it to Kareem. This reported pass was accepted, not rerun.**
+Allow25–35 minutes for the guard check. Reward gameplay results remain pending.
+The combined boulder-first proof/stage remains E's after rebase; that dependency
+is not a reason to hold this independent before-boulder test.
+The two superseded launchers/checklists were moved by Claude into
+`ingame/superseded/`; all mod and user folders were left untouched.
+
+## Reserved native-base counter correction
+
+`probe_native_base_counters.py` printed all20 fixed native tiers. Three leaked
+one copy tier: native Bomb Bag, Bow and Slingshot shared their logical counter's
+name even after aliases were removed. Generic copy-only collection now reserves
+such names for raw-copy alias additions, without special-casing those three items.
+All20 fixed tiers then printed zero. The eight-family regression no longer
+excludes those base items and also checks native gifts after copies.
+Fourteen counting/child-source cases passed in2.64s; actual default seed0 smoke
+still passed with all20 copies/three strength. No staged runtime bytes changed.
+
+
+## Read-only review corrections
+
+Runtime/source-binding review: no findings. Logic/presentation review found two
+consumer bugs; both reproduced before fixing (two failing/four passing cases).
+Free travel released Darunia's source despite native-only child strength, so
+copy-only seed worlds now keep the anchor regardless of free travel (direct
+legacy worlds retain their previous behavior). Native capacity prizes could give
+Large over owned Medium, while the canonical replay recorded only the Medium
+pool proxy. Their existing six-source catalog now lives in core `progressive`;
+the replay resolves unshuffled prizes against ownership and leaves shuffled
+fixed assignments literal. All catalog callers migrated, with no old re-export.
+
+Cause-directed anchor/presentation/minigame checks:31 passed in1.92s.
+`probe_free_anchor.py` exercised real-dump Gift setup plus free-travel seed17:
+Darunia held vanilla, child source retained, full20 copies including3 strength.
+These are logic/presentation corrections only; the active fa754f8 runtime packet
+and its user folder remain untouched while Kareem plays.
 

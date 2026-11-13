@@ -9,6 +9,7 @@ from clawshot.formats import evfl, zsdic
 from clawshot.generate import Settings, prepare
 from clawshot.generate.fill import shuffled_locations
 from clawshot.patch import gifts
+from clawshot.progressive import TIERED_GIFTS
 from clawshot.world.load import load_spec
 
 
@@ -17,7 +18,7 @@ def test_gift_setup_normalizes_both_bowling_prizes_and_both_normal_galleries(rom
     spec, settings, step = gifts.seed_setup(romfs, load_spec(), Settings(shuffle=("Chest", "Gift")))
     _, world = prepare(spec, settings)
     selected = shuffled_locations(world, settings)
-    assert set(gifts.BOWLING_CHECKS) | set(gifts.TIERED_GIFTS) <= set(selected)
+    assert set(gifts.BOWLING_CHECKS) | set(TIERED_GIFTS) <= set(selected)
     for name in ("Market Bombchu Bowling Bombchus", "Market Bombchu Bowling Bomb"):
         assert world.locations[name].n64_only
     placements = {name: loc.vanilla for name, loc in world.locations.items()}

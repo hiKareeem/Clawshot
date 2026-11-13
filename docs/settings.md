@@ -78,7 +78,7 @@ skipped when that tier or a higher one is already owned.
 **Child-strength exception.** Logic requires Darunia's native Bracelet route: his door, Zelda's
 Lullaby and Saria's Song. That gift adds no copy tier; all three strength copies remain in chests
 and adult strength stays copy-only. An early copy Bracelet physically works out of logic, but
-logic never relies on it for child strength.
+logic never relies on it for child strength. Darunia stays unshuffled even with free time travel.
 
 
 **Which tier.** The next tier above the highest one owned. A copy opened when its family has no

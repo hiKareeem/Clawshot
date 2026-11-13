@@ -3456,8 +3456,8 @@ forward-only Event121 repair. **Integration order: E source/step patch first,
 D bonus guard second via `prior_changes`.** D changes only Event127's subflow,
 keeps its original continuation and grant parameters, and works without E too.
 E owns121 and the source gate/flag, rebases after D, and proves the combined real
-dump. All-orders gift collectibility and the late-gift game check require that
-combined build; the dependency remains until E's fix/proof.
+dump. All-orders gift collectibility and the boulder-first check require that
+combined build. D's independent late-gift guard check visits Darunia before the boulder.
 
 Actual tier at a progressive location depends on collection order. Spoilers
 must keep the progressive family and identify any concrete tier as a
@@ -3474,11 +3474,11 @@ sources lacked; it was added rather than dismissed as a fixture issue.
 Native-data checks do not prove event startup, rendering, usable equipment or
 age transitions. Full gate/sweep results are recorded in the round file.
 
-The frozen D-only v2 Longshot packet has the corrected Mido Hookshot/Scale pairs,
-a diagnostic training-chest bundle of sixteen other production-selector copies
-(all eight chains, twenty total), and native-source guards. It is not a generated
-seed. Emitted read-back, serialized bundle dispatch and actual cmd dry-run passed;
-the old popup-bug packet is frozen/superseded. Paths/checklist are in the round file.
-**The late-native-gift check runs only on the combined D/E build after E rebases.**
-No game run or age-flip acceptance is claimed. Kareem supplies the result and
-runtime `mods: <file> <- <path>` proof.
+The rebased D-only v2 Longshot packet has corrected Mido Hookshot/Scale pairs and
+a training-chest diagnostic bundle (all eight chains, twenty copies total).
+It is not a generated seed. Emitted read-back, serialized dispatch and cmd dry-run
+passed. **Claude accepted its Longshot rc.2 boot: one mod, fourteen files, crash0,
+save mounted. Reward gameplay is not yet accepted.** Paths are in the round file.
+The active guard check receives Darunia's gift after three strength copies, BEFORE
+the DC boulder; it does not wait for E. E separately checks boulder-first on the
+combined build. Kareem supplies reward results and per-file runtime loading proof.

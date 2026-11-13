@@ -57,6 +57,19 @@ CHAINS: dict[str, tuple[Tier, ...]] = {
 
 FAMILY_BY_ITEM = {tier.item: family for family, tiers in CHAINS.items() for tier in tiers}
 
+# Ownership-dependent native capacity prizes. Unshuffled sources give Medium,
+# or Large when Medium is held; shuffled sources are specialized to their fixed
+# assignment. Native flow evidence: remake/child_market.toml and section 47.
+TIERED_GIFTS = {
+    "Market Bombchu Bowling First Prize": ("Bomb Bag (30)", {"Item_BombBag_Medium", "Item_BombBag_Large"}),
+    "Market Shooting Gallery Reward": ("Bullet Bag (40)", {"Item_BulletBag_Medium", "Item_BulletBag_Large"}),
+    "Kak Shooting Gallery Reward": ("Quiver (40)", {"Item_Quiver_Medium", "Item_Quiver_Large"}),
+    "LW Target in Woods": ("Bullet Bag (40)", {"Item_BulletBag_Medium", "Item_BulletBag_Large"}),
+    "GF HBA 1500 Points": ("Quiver (40)", {"Item_Quiver_Medium", "Item_Quiver_Large"}),
+    "GC Rolling Goron as Child": ("Bomb Bag (30)", {"Item_BombBag_Medium", "Item_BombBag_Large"}),
+}
+
+
 # Native MPMaxUP 24 sources (remake.toml item facts, PouchActorInfo), not extra
 # progressive copies. They establish a magic-capacity floor without the MP item.
 MAGIC_SOURCES = {
