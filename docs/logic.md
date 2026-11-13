@@ -140,7 +140,8 @@ shelves, as well as available night. Sources: `remake/child_hyrule_castle.toml`,
 `remake/child_hyrule_field.toml`, `remake/child_sacred_forest_meadow.toml`,
 `remake/child_market.toml`, `remake/child_temple_of_time.toml`;
 [native trace](../plans/03-game-data.md#46-round-14-child-story-and-field-music).
-This is static-data evidence, not a new played escape result.
+Kareem verified Saria before Darunia and the Step03 escape/reload controls on Longshot on
+2026-11-13; Bombchu Shop's entrance correction remains native-data evidence.
 
 The independent adult-return proof retains compulsory child story events using the same
 count-cap test as items; optional history is excluded. The closed-door construction bound

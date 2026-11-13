@@ -3253,7 +3253,9 @@ The movie grants the song at Event109. Only the later hook's Event83 tests
 `Get_StoneOfFire_IsAfter_GoronCityDarniaTalk_Exp` to optionally advance the journal to
 `SariaMelodyPlay` (Event86); false ends, without preventing the preceding grant.
 No extra Fire event is added. Claude requested a direct Zelda/Impa → Saria, **no Darunia
-visit**, player check because a second source claims otherwise from play; still unplayed.
+visit**, player check because a second source claimed otherwise from play. Kareem passed it
+on Longshot: native courtyard/Impa, DoorOfTime Step02, Saria present and song learned without
+visiting Goron City. Movement used teleport/noclip past Wolfos, not story/inventory edits.
 
 **Market Bombchu Shop entrance correction.** `_0c76` node1 tests
 `Get_StoneOfFire_IsCompleted_Exp`; node0 ANDs it with node2 Night and feeds door node3
@@ -3266,7 +3268,10 @@ requires the same boss event **and** night/`Time Flows`; no shelf or pool change
 
 This establishes a missing logic dependency, **not the cause of TheTerribleFairy's
 particular raised-bridge save**: version, seed, settings and story history remain unknown.
-Kareem has not yet played the staged before/after story control on Longshot.
+Kareem passed both staged Longshot controls: raised bridge + Ready does not trigger escape;
+the same source at Step03 plays escape and grants both Time rewards, reaching Step05.
+Reload keeps the bridge down without replay. Claude read the saves; runtime `mods:` lines
+confirm each profile's GameData mod loaded. This does not identify the reporter's exact cause.
 
 ### Kaepora skip and field BGM
 
@@ -3313,4 +3318,8 @@ Before-fix regression printed `_0000=false` after the skip transform. After the 
 focused synthetic and native writer/exact GameData oracles: **4 passed**. The actual
 public before-fix app generation also wrote `_0000=false`, `_0005=false`, `_0010=true`.
 Full gate/matrix evidence and the public after output are recorded in the round file.
-**Built, not yet played in game.**
+**Played acceptance passed on Longshot (Kareem, 2026-11-13): field music, courtyard/Impa →
+Saria without Darunia, missing-step and ready escape controls, and bridge-down/no-replay reload.**
+Separate music night/day, Market-return and music-reload observations were not relayed and
+are not additionally claimed. Observations, Claude's save reads and loading-log proof are
+recorded in `rounds/r14-story.md`.

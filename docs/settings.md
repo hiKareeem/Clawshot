@@ -144,8 +144,8 @@ selects fast-start skips; `--skip` alone disables them. These are separate from 
 
 The Kaepora skip also marks the skipped first-field panorama complete, ending its native
 music-suppression window. The previous preset could leave Hyrule Field silent during the day.
-This changes **new games only**, not existing saves. The repaired state is native-data/writer
-verified; the combined Longshot music/escape check is still unplayed
+This changes **new games only**, not existing saves. Kareem verified the repaired field
+music and the story/escape checks on Longshot on 2026-11-13
 ([section 46](../plans/03-game-data.md#46-round-14-child-story-and-field-music)).
 
 Every new seed enables the D-pad HUD shortcuts from the start, independently of fast-start
@@ -189,7 +189,7 @@ courtyard/Impa sequence in logic, even if ocarinas or songs were shuffled elsewh
 (`Met Child Zelda` models DoorOfTime Step02). Zelda's Letter stays at Zelda (D31); no child-Zelda
 skip or quest-precompletion patch is offered. The native-data trace is
 [section 46](../plans/03-game-data.md#46-round-14-child-story-and-field-music).
-This logic correction still needs its staged Longshot player check.
+Kareem passed the staged Longshot story controls on 2026-11-13, including Saria before Darunia and escape/reload.
 
 With the return guarantee enabled, this generator cannot build Chest-only seeds with
 `song_only` or `open`: its return-kit bound needs movable ocarinas and Saria's Song, but those
