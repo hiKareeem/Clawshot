@@ -73,6 +73,16 @@ adult items first (a child sees an owned adult item instead of the Cucco Talon m
 adult trade hand-in shows the item the previous native trade gave, as the logic assumes. Biggoron's
 final sword reward is still shuffled behind the native Claim Check.
 
+The Gerudo Membership Card stays at the captain under every preset and setting, never in the
+shuffled pool (D39). Free all four carpenters and receive it from her: the native hand-over advances
+Spirit Step02, which the guards and desert gate, Training Ground and horseback archery entry NPCs
+check. The logic's card rules stay unchanged. Evidence is the [static game-data trace](../plans/rounds/r13-gerudo-card.md),
+not a played D39 acceptance test.
+
+Older Gift seeds could move the card without clearing the guards. Finishing their carpenter/captain
+sequence still advances the quest even if its reward differs (same static trace). Existing seed
+folders and saves are not retroactively repaired.
+
 ### First ammo containers
 
 Newly generated seed mods add a missing small bag before the shared item grant: 10-stick capacity

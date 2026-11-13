@@ -1,10 +1,11 @@
 # Round 13: moved Gerudo card investigation (cs13d, issue #19)
 
-Branch `r13/gerudo-card`, baseline `fa6f4efd449ea3f801fb82103cee20aea8f8aedb`
-(0.2.0 plus dungeon-item repair, unpublished). Investigation only: no version,
-logic, gift rule, generator or patch changes. Proposed decisions below are cs13d's,
-not accepted product decisions. No merge, push, game start, hc/herdr command or
-write beneath `E:/Games/Hookshot`.
+Branch `r13/gerudo-card`. Investigation baseline
+`fa6f4efd449ea3f801fb82103cee20aea8f8aedb` (0.2.0 plus dungeon-item repair,
+unpublished); implementation rebased onto merged main `ac07355`.
+Kareem chose **B / D39** on 2026-11-12 at 17:20: keep the captain's check and
+Gerudo Membership Card vanilla in every setting. Logic and version unchanged.
+No merge, push, game start, hc/herdr command or write beneath `E:/Games/Hookshot`.
 
 ## Scope and evidence
 
@@ -24,10 +25,10 @@ library is research-only: 0.2.16 failed on a duplicate-string warning in complex
 AI expressions; isolated 0.2.17 fixes that parser defect and decoded those graphs.
 No library code was copied into Clawshot.
 
-**Existing plan discrepancy:** `03-game-data.md` section 19 (including the card
-row and its "guards send Link to the cell without it" claim) mistakes a stealth
+**Resolved plan discrepancy:** `03-game-data.md` section 19 mistook a stealth
 area sensor for the security-mode predicate. Actual data below contradict that
-claim. No implementation was attempted while this disagreement is unresolved.
+claim; the D39 documentation correction distinguishes the two. No implementation
+was attempted before Kareem selected the vanilla-card policy.
 
 The underlying saved state is Enum `Step_SageOfSpirit` (hash421043869,
 `SaveFileIndex=0`, Reset8), not a standalone saved "friendly guards" Bool.
@@ -138,9 +139,9 @@ schedules. This is a quest-state transition with consequences beyond guards.
 The hand-over does not explicitly grant Hookshot, set all carpenter flags, open
 the desert gate, or charge/open Training Ground. Those are separate sources.
 
-### Moved card
+### Moved card before D39
 
-**Current public generation does not put the card in a chest.**
+**The investigated baseline did not put the card in a chest.**
 `data/settings.toml:34-51` does not admit `Item_Token_Gerudo` to `chest_verified`,
 and no vanilla chest supplies it. `patch/gifts.py:1099-1114` therefore holds it
 to gift types (`Boss`, `Cutscene`, `NPC` under Recommended); defaults leave it
@@ -238,6 +239,33 @@ outside opening also allows `not IsInPrison`.
 Thus **past Step01 the cell door can be opened without Hookshot**, even if the
 player is jailed for a table reprimand.
 
+Escape wiring, traced through `Room_06_ade9` nodes16–23 into
+`RestrictedDoor_Single_GerudoFortress_385f` node0:
+
+- `EnableOpenIndoor` is node19's true output: node18's past-Step01 Bool OR
+  node20's inverted `GoToPrison` OR guard017's `IsKnockDown` output3.
+- `EnableOpen` is node22's true output: the same three conditions OR node23's
+  false output of `IsInPrison` (not in prison). The restricted-door module passes
+  those inputs directly to the shutter's corresponding attention/open conditions.
+- Before clearance, with the saved arrest Bool true and guard017 conscious, the
+  inside door is deliberately blocked. Guard knockdown enables it; the captured
+  player also has the exact Hookshot-acquisition flag tested before imprisonment.
+  Hookshot-window traversal remains a movement/geometry fact to verify in game.
+- After clearance, both permissions stay true even if an old saved `GoToPrison`
+  remains true, the player is inside, and guard017 is conscious. Neither
+  `GoToPrison_AfterClear` nor card ownership is an input to this door.
+- `Common_be48` uses an always-created prison area sensor: inside triggers
+  `IsInPrison=true`, outside triggers false. That Bool is unsaved, so it is
+  reconstructed from location rather than requiring a saved escape transaction.
+  The scanned native event flows write the two arrest flags true, not a required
+  false-reset on escape. Expulsion instead clears `RunFromFortress` at
+  `Dm_SY_BancChangeArrive/Event414`.
+
+The external `prison-proof.json` records **16 exercised graph cases** over quest
+clearance, saved arrest, guard knockdown and prison presence. Both post-clear
+permissions are true in all eight post-clear cases. This proves the data-level
+door condition, not collision traversal or save/reload behavior.
+
 **[INFERENCE]** No unavoidable card-specific jail softlock is established by
 these data: the pre-clear capture paths require the actual Hookshot-acquisition
 flag, and the post-clear cell has the quest-progress door escape. The Hookshot
@@ -247,9 +275,10 @@ expulsion is a separate fixed-tier predicate mismatch, not evidence that the
 Longshot itself is unusable. Do not claim "all jail states proven safe" from a
 static graph; modified/stale/debug flags are outside this proof.
 
-## 5. Proposed fixes (not implemented)
+## 5. Fix decision and considered alternatives
 
-**Claude/Kareem: choose A, B or C before any gameplay or logic implementation.**
+**Accepted: B / D39, Kareem, 2026-11-12 17:20.** The alternatives below preserve
+the investigation's tradeoffs; A and C are not implemented.
 
 - **A — source-bound moved-card side effects. High cost/risk.** Use the actual
   destination actor Hash or gift source identity, not a global actor-name hook,
@@ -296,6 +325,19 @@ static graph; modified/stale/debug flags are outside this proof.
   played stealth/rescue route evidence. Safer than A's quest forgery, less
   conservative than B for an immediate release.
 
+D39 implementation:
+
+- `data/world/remake/gifts.toml` marks `Hideout Gerudo Membership Card`
+  `keep_vanilla`, independently of preset, selected gift kinds or settings replay.
+  Its native item therefore never enters the fill pool, and the full unmodified
+  captain hand-over remains the sole card source.
+- `patch/gift_rules.toml` classifies that check as `more` with the D39 reason,
+  so gift setup cannot admit or patch it. No actor, grant helper, quest flag,
+  source rule or helper expression is changed.
+- Owning the card from that native sequence again implies the completed
+  carpenter/captain source and Spirit progress past Step01. Old seed folders and
+  already-played saves are not retroactively repaired.
+
 ## 6. World-rule audit
 
 Pinned OoT Randomizer source: MIT commit
@@ -304,9 +346,9 @@ and `data/LogicHelpers.json`, as recorded in the generated TOML headers.
 There are **33 direct card-reading rules**, all in
 `src/clawshot/data/world/gerudo_fortress.toml`; none is corrected by a remake
 override or a helper. The ledger lists every term, including currently
-unshuffled pots/crates/wonderitems. Their card-as-friendly-pass branch is wrong;
-this does not prove every physical route impossible when a guard can be
-avoided or incapacitated. Other item/stealth alternatives remain separate.
+unshuffled pots/crates/wonderitems. Their card-as-friendly-pass branch is wrong
+when the card moves independently of its source; D39 restores that implication
+by retaining the native source. Other item/stealth alternatives remain separate.
 
 All line numbers below are in `gerudo_fortress.toml` on the baseline:
 
@@ -352,8 +394,8 @@ fortress191/216/245/265; the original captain reward is fortress195. Those are
 the source-completion side of the mismatch, not extra card terms to delete.
 `gerudo_valley.toml:27,112` use carpenter completion for the bridge and should
 not be switched to remotely-held-card ownership. Fast/open fortress settings
-are inherited assumptions, not native fast-carpenter patch evidence; this
-investigation's Recommended measurement uses normal mode.
+are inherited assumptions, not native fast-carpenter patch evidence. The canceled
+Recommended sweep was configured for normal mode; no seed count was measured.
 
 **Separate fixed-tier jail mismatch:** fortress50–51 models asking a guard to
 jail Link as `can_use(Hookshot)`. `helpers.toml:10` aliases this to the progressive
@@ -362,12 +404,12 @@ The rest of `can_use(Hookshot)` must not be globally narrowed: Longshot really
 does serve ordinary hookshot targets. A future logic repair needs a local
 arrest predicate or a verified alternative entrance, not a global tier change.
 
-No translated TOML, remake overrides or helpers were edited. A future C repair
-belongs in sourced remake overrides, not manual edits to generated N64 files.
+No translated rule, remake rule expression or helper was changed. D39 adds only
+gift hold metadata; a future C repair would require sourced remake rule overrides.
 
 ## 7. Verification and measurement provenance
 
-Executed on this worktree, no game start:
+Initial investigation checks on the baseline worktree, no game start:
 
 - `uv run python E:/OOTRemake/work/rounds/r13/gerudo-card-cs13d/inspect_game.py logic '*GerudoFortress*'`
   and the analogous `MiniGame_HorsebackArchery*` decode: actual dump graphs read.
@@ -387,8 +429,57 @@ Executed on this worktree, no game start:
 - `uv run ruff format --check`: **PASS, 318 files**.
 - `uv run ruff check`: **PASS**.
 
-The 100-seed public CLI audit is queued after the ordered heavy jobs under
-`E:/OOTRemake/work/rounds/r13/gate.lock` (Claude's 17:05 order: cs13b public
-generation, then cs13a integrated gates/matrix). It remains pinned to this
-baseline and is not replaced with cs13b's newer-code API sweep. No count or
-full pytest result is claimed by this first evidence record.
+The 100-seed public CLI audit was **canceled by Kareem's D39 steer** before any
+seed generation or gate-lock acquisition. LogicSeedAudit and all its waiters
+were stopped; the dependent old gate waiter was also canceled. No 100-seed count
+is claimed or needed for the selected policy. Implementation verification below
+uses the rebased source; the scheduled synthetic suite follows Claude's queue.
+
+### D39 implementation smoke
+
+Before the data change, real `prepare(load_spec(), Settings(shuffle=("Chest",
+*GIFT_TYPES)))` selected the captain and included its card in the pool
+(`captain_shuffled=True`, source list containing the captain, rule class `swap`).
+Afterward the same probe prints `captain_shuffled=False`, an empty card-source
+list and rule class `more`.
+
+A temporary external script then used the actual captain metadata with the real
+`generate`/`check_beatable` APIs in a synthetic rescue-and-card-gate world, seed19,
+songs anywhere and small keys anywhere. **PASS:** the other gift gave Hookshot,
+the chest gave Rupees (5), the captain alone retained the card, and the gated
+goal was beatable. Its first attempt printed `KeyError: Hookshot`; raw item
+definitions showed `Progressive Hookshot`, so the fixture was corrected to use
+that item's metadata before the successful rerun. No game data fixture was used.
+
+### Remaining played acceptance (maintainer only)
+
+No game was started here. On a newly generated D39 seed, retain the runtime's
+`mods: <changed seed file> <- <seed path>` proof, then free the four carpenters
+and receive the captain's native pass. Expect ordinary guards to stop arresting
+Link and the gate/Training Ground/archery conversations to become available
+(their separate day, payment and minigame prerequisites still apply).
+
+For the still-unplayed reload boundary, trigger the post-clear table reprimand,
+then try the cell door with the guard conscious and without using an item.
+Expect it to open. If saving is permitted there, Save and Continue inside the
+cell and repeat: Spirit progress should still permit opening while the prison
+presence sensor rebuilds its unsaved state. Record blocked saving or any failure
+instead of forcing flags or claiming reload safety from the static truth table.
+
+### Rebased D39 focused checks
+
+On the branch rebased onto `ac07355`, with no logic/version changes:
+
+- `uv run ruff format --check`: **PASS, 325 files**.
+- `uv run ruff check`: **PASS**.
+- `uv run pytest tests/test_gerudo_card.py tests/test_gifts.py tests/test_gifts_release.py tests/test_generate.py`:
+  **62 passed in 8.98s**, dump variables cleared, `CLAWSHOT_WORKERS=1`.
+  The invocation used the resolved `uv.exe` path after Git Bash's `env` failed
+  to execute its hashed extension-less `uv` path.
+- New regressions cover all UI presets, custom and explicit gift kinds,
+  anywhere options, census admission/patch refusal, and 20 deterministic
+  synthetic fills. The card remains only at the captain; removing that source
+  makes the card-gated goal unbeatable.
+
+The full synthetic suite is ready for Claude's scheduled gate-lock slot; no
+dump suite is required from this track (the final main gates cover it).

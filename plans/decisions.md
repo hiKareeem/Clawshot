@@ -141,6 +141,11 @@
   are its first job. Defaults chosen by Claude, which Kareem can overturn: a small zip whose start script fetches a
   pinned uv on first run rather than a standalone executable; Play gives each seed a save folder of its own;
   published as a GitHub release once the repository is public.
+- **D39 The Gerudo Membership Card stays vanilla** (Kareem, 2026-11-12 17:20, option B).
+  No preset or setting shuffles `Hideout Gerudo Membership Card` or puts its card in the item pool.
+  Guards and Gerudo entry NPCs check Spirit progress past Step01, not card ownership; the captain's
+  native hand-over advances Step02 after the carpenter rescue, while a moved card does not.
+  Keep that sequence intact and logic unchanged. Evidence: `plans/rounds/r13-gerudo-card.md`.
 
 ## Open (only Kareem and his co-owner decide)
 

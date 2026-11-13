@@ -113,8 +113,9 @@ class = "swap"
 gate = "the cutscene plays once"
 
 [check."Hideout Gerudo Membership Card"]
-class = "swap"
+class = "more"
 gate = "the cutscene plays once"
+reason = "D39: always vanilla; guards and Gerudo entry NPCs check Spirit Step02, set by the captain continuation rather than by Item_Token_Gerudo (plans/rounds/r13-gerudo-card.md)"
 
 [check."Kak 10 Gold Skulltula Reward"]
 class = "swap"

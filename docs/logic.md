@@ -120,6 +120,16 @@ Sources: `plans/04-world-format.md`, Ages; `src/clawshot/world/search.py`;
 `src/clawshot/data/world/remake/sheik.toml`; `plans/playtest/answers.md`, R9-FREE-TRAVEL and
 R10-FIRST-PULL-FIXED. Non-default Door of Time modes passed first in-game checks; returning to child afterwards is untested. See [settings](settings.md).
 
+Imported Gerudo Fortress rules treat `Gerudo_Membership_Card` as friendly access. In the remake the guards,
+desert gate, Training Ground entrance and horseback archery check Spirit quest progress, which the
+captain's native hand-over writes after giving the card. D39 keeps `Hideout Gerudo Membership Card`
+`keep_vanilla` under every preset and setting, so the card is never in the pool and owning it implies all
+four carpenter rescues and that hand-over; the card rules stay unchanged. A port that moves the card
+must model completing the captain's source instead: a moved card writes no quest progress. The arrest
+route that accepts Longshot where the game checks the Hookshot itself is a separate open review.
+Sources: `src/clawshot/data/world/remake/gifts.toml`; D39 in `plans/decisions.md`;
+`plans/rounds/r13-gerudo-card.md` (static data trace, not a played route check).
+
 The fill uses seeded assumed fill, placement restrictions and safe swaps, then an independent
 collection search on the completed placement. Item pool preparation uses actual remake identities,
 not the untranslated N64 vanilla pool. Shops, floor pickups and gifts have destination restrictions;

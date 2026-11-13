@@ -61,6 +61,8 @@ KNOWN ISSUES
   item first. As a child, wake Talon with the Cucco (and show Zelda's Letter
   to the Kakariko guard) before taking the Pocket Egg as an adult.
   Save and Continue does not change what that slot shows.
+- The Gerudo Pass stays with the Gerudo captain in every preset and setting.
+  Free all four carpenters, then receive the pass from her to clear the fortress.
 - Bombchu Bowling: your first two wins give the seed's two prizes; later wins
   give the game's usual small prizes. The alley still shows its original prizes;
   you get the seed's.

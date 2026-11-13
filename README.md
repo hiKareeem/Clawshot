@@ -116,6 +116,10 @@ and [playtest answers](https://github.com/hiKareeem/Clawshot/blob/main/plans/pla
 - **Trading items share one displayed slot.** An adult trade item can hide the child's Cucco; Save and Continue
   does not fix that. Wake Talon and show Zelda's Letter before taking Anju's adult Pocket Egg. Newly generated
   seeds keep trading items vanilla; older Gift seeds may contain shuffled adult trade items.
+- **The Gerudo Pass stays at the captain in every newly generated seed.** Free all four carpenters and
+  receive it from her; that native hand-over clears the fortress, not merely finding the card.
+  Older Gift seeds could move it without clearing the guards; existing seeds and saves are not repaired.
+  This follows the [static game-data trace](plans/rounds/r13-gerudo-card.md), not a played D39 acceptance test.
 - Chest ocarinas show no model despite working; songs can show an ocarina stand-in rather than a
   normal item model. Only some songs have been individually played from chests.
 - Previously generated seeds can lose boss keys, maps and compasses placed in small chests,

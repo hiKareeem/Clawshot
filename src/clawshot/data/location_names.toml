@@ -2281,7 +2281,7 @@ location = "Hideout Gerudo Membership Card"
 name = "Gerudo Captain's Pass"
 where = "Gerudo Fortress cell halls (adult): free all four carpenters; the Gerudo captain appears at the last cell"
 oot_randomizer_name = "Hideout Gerudo Membership Card"
-source = "https://zeldacentral.com/games/ocarina-of-time-remake/walkthrough/gerudo-fortress/#gerudo-pass-item; https://zeldacentral.com/games/ocarina-of-time-remake/walkthrough/gerudo-fortress/#the-gerudo-captain; data: census gift step(s) Dm_Gerudo_0025/Event294 (src/clawshot/data/locations.toml; gift_rules.toml class swap; plans/03-game-data.md section 19)"
+source = "https://zeldacentral.com/games/ocarina-of-time-remake/walkthrough/gerudo-fortress/#gerudo-pass-item; https://zeldacentral.com/games/ocarina-of-time-remake/walkthrough/gerudo-fortress/#the-gerudo-captain; data: census gift step Dm_Gerudo_0025/Event294 (src/clawshot/data/locations.toml); D39 keeps the native card hand-over and Spirit Step02 continuation vanilla (plans/rounds/r13-gerudo-card.md)"
 ids = ["Dm_Gerudo_0025/Event294"]
 
 [[location]]

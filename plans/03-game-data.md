@@ -1142,10 +1142,19 @@ quest step) that the path reads before the step and sets after it, checked by re
 **Item gates elsewhere stay item reads**, because the logic models them as items: `TriForcePoint` Event8
 (`IsGet.Item_DinFire` before any other Great Fairy), `Npc_Kaepora_DeathMountainTrail` (Din's Fire), the castle-grounds
 soldier `Npc_Hylia_Soldier_009_Child` (`IsGet.Item_WeirdEgg` opens the gate, `Npc_Hylia_Soldier_009_Child_OpenTheGate`;
-OoT Randomizer's `HC Garden` asks `Weird_Egg or Chicken`), the Gerudo guards (`GerudoFortress_Common_35d7`,
-`IsGet.Item_Token_Gerudo`), the windmill's Song of Storms spot (`KakarikoVillage_Adult_Common_7d34`), Mido's blocker
-(`KokiriForest_Npc_Kokiri_Blocker_Surprised_BoolExp`: Kokiri Sword and Deku Shield). Lines that change with an item
-(Kokiri children on Saria's Song, Zoras on the scales, Navi's heat hint) are left as they are.
+OoT Randomizer's `HC Garden` asks `Weird_Egg or Chicken`), the Gerudo stealth area (`GerudoFortress_Common_35d7`,
+`IsGet.Item_Token_Gerudo`; not the guards, see the correction below), the windmill's Song of Storms spot
+(`KakarikoVillage_Adult_Common_7d34`), Mido's blocker (`KokiriForest_Npc_Kokiri_Blocker_Surprised_BoolExp`: Kokiri
+Sword and Deku Shield). Lines that change with an item (Kokiri children on Saria's Song, Zoras on the scales, Navi's
+heat hint) are left as they are.
+
+**Correction (round 13, `plans/rounds/r13-gerudo-card.md`).** This section first listed `GerudoFortress_Common_35d7`
+as the guards' gate ("guards send Link to the cell without it"). Its card read only deletes two stealth-area sensors
+once `IsGet.Item_Token_Gerudo` is set. Guard security, the desert gate guard, the Training Ground guard and horseback
+archery read Spirit quest progress past Step01, which `SageOfSpirit:Meet_FourCarpenter_ClearEvent` advances to Step02
+(Event146) after `Dm_Gerudo_0025` Event294 gives the card. A moved card writes no quest progress; Keanu's played
+report (2026-11-12) saw the guards stay hostile. D39 therefore holds this check vanilla (`gift_rules.toml` class
+`more`). The quest-step reads are a static data trace, not played acceptance of D39.
 
 **Classes.** 79 gift checks are linked to OoT Randomizer names (93 steps). Each check's steps all get the new item
 (where the game splits one check over two steps, a tier pick such as `IsExistInPouch(Item_BulletBag_Medium)` or two
@@ -1193,7 +1202,7 @@ code paths, both steps).
 | HC Malon Egg | `Goto_HyruleCastle` Event35 | `Item_WeirdEgg` | quest `Goto_HyruleCastle` step | item gates kept: `Npc_Hylia_Soldier_009_Child` | 1 |  |
 | HC Zeldas Letter | `Dm_HrlCastle_0050` Event59 | `Item_ZeldaLetter` | the cutscene plays once | none | 1 |  |
 | HF Ocarina of Time Item | `Dm_MelodyGet_Time` Event70 | `Item_Ocarina_Time` | the cutscene plays once | none | 1 |  |
-| Hideout Gerudo Membership Card | `Dm_Gerudo_0025` Event294 | `Item_Token_Gerudo` | the cutscene plays once | item gate kept: logic module `GerudoFortress_Common_35d7` (`IsGet.Item_Token_Gerudo`: guards send Link to the cell without it) | 1 |  |
+| Hideout Gerudo Membership Card | `Dm_Gerudo_0025` Event294 | `Item_Token_Gerudo` | the cutscene plays once | item read kept: logic module `GerudoFortress_Common_35d7` (`IsGet.Item_Token_Gerudo` deletes stealth-area sensors; the guards read Spirit quest progress, see the correction above) | 1 | none: held vanilla by D39 (round 13) |
 | Kak 10 Gold Skulltula Reward | `GatheringTokenGold` Event398 | `Item_Wallet_Medium` | `KakarikoVillage_GatheringTokenGold_GetReward10` | lines: 1 flow | 1 |  |
 | Kak 100 Gold Skulltula Reward | `GatheringTokenGold` Event215 | `Obj_Rupee_Gold` | `GatheringTokenGold` quest `Complete` | none | 1 |  |
 | Kak 20 Gold Skulltula Reward | `GatheringTokenGold` Event75 | `Item_AgonyStone` | `..._GetReward20` | none | 1 |  |

@@ -8,6 +8,10 @@ source = "Claude approved cs8d's conservative child-trade hold, 2026-11-09; plan
 keep_vanilla = "D31: an early shuffled Letter hides or replaces the Egg/Chicken needed to wake Talon"
 source = "Kareem's chest test lost the held Egg when Letter arrived; Claude approved keeping both native gifts, 2026-11-09, plans/decisions.md D31. No pool/chest admission; native Zelda courtyard grant follows Talon's wake-up."
 
+[locations."Hideout Gerudo Membership Card"]
+keep_vanilla = "D39: the captain's native hand-over advances Spirit Step02; a moved card does not clear the guards"
+source = "Kareem, 2026-11-12 17:20; plans/decisions.md D39 and plans/rounds/r13-gerudo-card.md. SageOfSpirit:Meet_FourCarpenter_ClearEvent grants Item_Token_Gerudo via Dm_Gerudo_0025/Event294, then Event146 advances Step02. Keep the check and item out of every shuffle; logic remains unchanged."
+
 # R13 (proposed by cs13b from native data, kept vanilla at the user's request, 2026-11-12): every adult trade
 # hand-in is a ShowItemReplaceEvent of its own item (SubEvent_GetSwordBigGoron Step03..Step11), and the shared
 # trade cell Pa_ItemIcon_23 shows only one owned variant, chosen in PouchTable order (native 0xa6ef20): an adult
