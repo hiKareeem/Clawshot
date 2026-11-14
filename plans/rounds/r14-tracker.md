@@ -1,6 +1,8 @@
 # Round 14 Track A — item tracker (#16)
 
-Base: `ffea543`, Clawshot 0.2.0. No version change. Proposed by cs14a (openai-codex/gpt-6.1-sol), 2026-11-13.
+Initial base: `ffea543`; final integration base: `cbc7f26`, Clawshot 0.2.0. No version change.
+Proposed by cs14a (openai-codex/gpt-6.1-sol), 2026-11-13. Assigned automated gates passed;
+ready for maintainer merge. The staged game comparison is not claimed played.
 
 ## Scope and contracts
 
@@ -8,7 +10,7 @@ Base: `ffea543`, Clawshot 0.2.0. No version change. Proposed by cs14a (openai-co
 - Dungeon keys first: remaining and acquired totals use the named `DungeonInfo` leaves (03-game-data section 44), not inferred chest counts.
 - Chest collection uses named `IsTreasureBoxOpen.<decimal Hash>` Bools. `Save.is_set` is restricted to audited placement families. Section 44 supersedes section 6's old blanket raw-Hash claim.
 - GPL reference `work/refs/sloperina-FINDINGS.md` supplies facts only (sections 1, 5.7, 5.8); no code copied. The Apache manual tracker supplies icon/cell ideas only, no assets or code copied.
-- No game starts, game-folder writes, network requests from the UI, version bump, merges or pushes. Research/save copies/screenshots stay in `E:/OOTRemake/work/r14-tracker/`.
+- No game starts, game-folder writes, outbound UI requests, version bump, merges or pushes. Research/save copies/screenshots stay in `E:/OOTRemake/work/r14-tracker/`.
 - Shared-file hooks in server.py/index.html/app.js; two folder-picker kinds in dialogs.py and explicit UI release-asset additions. Track B owns Game/Play. Claude requested A update README/docs/ui tracker mentions in the final integration commit, preserving B's Longshot prose.
 
 ## Provisional implementation choices
@@ -148,16 +150,44 @@ Post-rebase verification:
   External log: `work/r14-tracker/synthetic.log`. The owned lock was released and the
   handoff explicitly posted to D's synthetic retry, not C.
 
-### Serialized gate order (coordinator instruction)
+### Final main + D + A integration
 
-E's two-regen rerun completed with both hashes matching; A's full synthetic then passed.
-After C's and D's accepted gates, the coordinator merged progressive and posted **MAIN MOVED
-`cbc7f26`** (`e7e2bb1` plus nine progressive commits). The temporary A dump hold is cleared.
+Actual rebase onto `cbc7f26` replayed all three A commits cleanly, without stash. Runtime/test
+source is pinned to `22b016c` (`a68ed80` implementation, `66ee6c6` field boundaries).
 
-1. Rebase the actual A branch onto `cbc7f26`, preserving notes without stash.
-2. Run light focused/headless integration checks and format/lint.
-3. Claim the serialized lock for A dump, covering main + D + A.
-4. Release/post to E's full gates; E rebases and stages its own D/E proof separately.
+- Focused tracker/shared UI/Play/library/release checks: **153 passed in 35.15s**.
+- Format: **360 files already formatted**; lint: **all checks passed**.
+- Repeated strict headless tab/OBS smoke: **52 icons, 133 loopback-only requests**, live refresh,
+  spoiler redaction, no OBS controls and no page errors. Alpha compositing again returned **255/0**.
+  Tab and opaque OBS control captures were visually inspected.
+- Repeated real copied-save CLI/HTTP smoke: key totals, inventory, bottles and mismatch warnings
+  passed unchanged; repaired-NUP PNG served; copied save hash/mtime unchanged.
+- First combined native attempt: **122 passed, 18 setup errors, 1483 deselected in 2912.58s**.
+  Full error values remain in external `dump.log`; the lock was released and E notified.
+  The old r13 layered cache lacks five newly required progressive packs:
+  `Item_BombBag_Large`, `Item_BulletBag_Large`, `Item_FairyBless_MP`,
+  `Item_FairyBless_MPDouble`, `Item_Quiver_Large` (all `Pack/Actor/*.pack.zs`).
+  No tracker assertion failed; these errors arise while constructing the `OOT_DUMP` cache fixture.
+- Read-only preflight against the current catalogue: **1248 required files**; accepted D fixture
+  `work/rounds/r14/dump-progressive-cs14d-1e6cde0` has **zero missing**, matches D's proof inventory,
+  and has the same build digest as the repaired NUP. No extraction, game write or product edit.
+  The external retry runner selected this complete fixture and a fresh `dump-retry.log`,
+  retaining the original failure.
+- Coordinator-authorized **full 140-case retry passed: 140 passed, 1483 deselected in 5403.07s**,
+  exit 0, on unchanged `22b016c`. Three workers, no exact game processes, no supervisor deadline.
+  Accepted fixture build digest:
+  `fc09c4af707a0ca092188cf014f6fdf3d40514def773f097b798f52f9f28bc93`.
+  The lock was released and the pass posted. Subsequent edits are round-file evidence only;
+  runtime and tests remain exactly those verified.
+
+### Serialized handoff
+
+The coordinator merged C and D into `cbc7f26`, then authorized A's rebase, light checks and
+native gate. After accepting the printed stale-fixture cause, the coordinator authorized
+the complete cause-directed retry. That retry passed and A released the lock.
+
+The coordinator merges A's final evidence head before E's full gates. This track does not
+merge or push; E owns its own rebase, D/E proof and gameplay packet.
 
 The earlier detached trial onto `e7e2bb1` replayed both A commits with **zero conflicts**;
 the disposable worktree was removed without changing the original branch or notes.
@@ -166,7 +196,8 @@ Every heavy stage atomically claims `work/rounds/r14/gate.lock` and releases bet
 The external `gate.py` matches exact case-insensitive `hookshot.exe` / `longshot.exe` names
 to choose workers 3 or 1 at that stage's start; LongshotLauncher.exe is excluded. No suite deadline.
 No generator working-set file was added: icons read RomFS/NUP directly into user app-data cache.
-The requested r13 `dump-fast-start-integrated` fixture remains the input; no replacement needed.
+The initial unchanged r13 fixture is insufficient after D; the cause-directed retry uses D's
+already accepted 1248-file fixture. There is no tracker-specific working-set expansion.
 
 ### Icon implementation and dependency
 
