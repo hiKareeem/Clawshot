@@ -250,8 +250,8 @@ the actual Open Grotto Chest access. Its initial harness incorrectly used
 the route open, and using the rule's public `counts` state fixed that harness.
 No product change was made to mask that diagnostic.
 
-Full format/lint/synthetic/dump gates remain scheduled only after D merges
-and E rebases. Research evidence and smoke output are external
+At the river commit, full gates awaited D's merge and E's rebase; final
+acceptance is now recorded below. Research evidence and smoke output are external
 `river-rock-actor.json`, `river-rock-Weapon_Hammer.json`,
 `river-logic-smoke.json` and `river-stage-proof.json`; decoded data stays out
 of the repository.
@@ -340,11 +340,11 @@ message; the valid community keys share subsequently applies `anywhere`. The
 error banner is above the paste field (visible after scrolling); no UI code changed.
 Browser and isolated-preference server closed. No generation or game invoked there.
 
-Full serialized gates and combined-build community regenerations remain
-pending after A's dump. Claude authorized E's rebase onto `cbc7f26` (C story
-plus D progressive) and the focused native Darunia proof/staging beforehand.
-The river pair is played and confirmed above; Darunia remains unplayed.
-No full-gate pass claim.
+Full serialized gates and both combined-build community regenerations are
+now complete on final `bc9823c` atop tracker main `7223c5c`; results below.
+Earlier `cbc7f26` checks and the unchanged Darunia packet retain their own
+source snapshots. The river pair is played and confirmed above; no new
+Darunia game result is claimed.
 
 ## Topic commits before integration
 
@@ -452,5 +452,85 @@ the child Bracelet for ordinary bomb use. If A cannot use bombs/break the
 rock, stop and record it. B independently supplies the disclosed Bracelet,
 uses the native flower first, then tests D's duplicate-child grant bypass
 still completing E's source flag with no Fire rollback. No silent fallback
-or inventory/quest/age/collision cheat is authorized. Full gates and combined
-community regenerations remain queued after A's dump.
+or inventory/quest/age/collision cheat is authorized. Final full gates and
+community regenerations completed below; staged mods/users remain untouched.
+
+## Final A+D+E acceptance (2026-11-14)
+
+Claude merged tracker at `7223c5c` and authorized E's final rebase and lock
+sequence. All nine E commits replayed cleanly, no conflicts or squash.
+Actual tested runtime/test snapshot throughout all stages:
+`bc9823c296e510f8732b676df40b7e263d28ec58`. No source/test/doc edits between
+synthetic, dump and the two regenerations; this final acceptance update is
+docs only. No merge, push, game launch or staged-packet rewrite.
+
+| Check | Observed result |
+|---|---|
+| `uv run ruff format --check` | 367 files already formatted |
+| `uv run ruff check` | All checks passed |
+| Focused Epona/Darunia/river/native-settings | 822 passed, 89.53s |
+| Full `uv run pytest` | 2302 passed, 164 skipped, 686.33s |
+| Full `uv run pytest -m dump` | 161 passed, 2305 deselected, 5079.44s |
+| Both community CS1 recipes through actual UI Jobs | Validated and succeeded, 129.67s combined |
+
+Each full stage owned the atomic round `gate.lock`, posted acquisition/result/
+release, and released its own lock in `finally`. Fresh exact-image checks
+found no `hookshot.exe`/`longshot.exe`; each used 3 workers, no supervisor
+deadline. Synthetic cleared `OOT_ROMFS`, `OOT_NUP` and `OOT_DUMP`.
+All temporary roots/logs are outside the repository.
+
+Dump used the original read-only `E:/Games/Hookshot/romfs`, repaired v131072
+NUP, and **D's 1248-file fixture**, not r13:
+`E:/OOTRemake/work/rounds/r14/dump-progressive-cs14d-1e6cde0`.
+Its accepted inventory/build digest is
+`fc09c4af707a0ca092188cf014f6fdf3d40514def773f097b798f52f9f28bc93`.
+The 161 cases include all 21 combined Darunia cases and the full real-ROMFS/
+NUP/DUMP cache, formats, census, seed, price and native-mode checks.
+Evidence under `work/r14-steps/final-7223c5c/`: `head.txt`,
+`synthetic.log`, `dump.log`, `community.log` and each `*-result.json`.
+
+### Both community hashes change, with real placement/file differences
+
+Both original seed-23 shares validate unchanged. The real UI Jobs pipeline
+wrote new separate outputs under `community-regens/final-7223c5c/`; published
+0.2.0 metadata, original candidates and played outputs were not overwritten.
+
+| Recipe | Published hash | Final hash | Existing placements changed | Spheres | Romfs resources |
+|---|---|---|---|---|---|
+| Standard | `3EA5D532A06B` | `6A9897B05EEE` | 251 | 20 → 23 | 147 |
+| Keys anywhere | `14B0424D9E97` | `08600E274E13` | 274 | 19 → 22 | 152 |
+
+Each now has **297 placements instead of 292**, with five added checks and
+none removed: `DMC Great Fairy Reward`, `HC Great Fairy Reward`,
+`GC Rolling Goron as Child`, `GF HBA 1500 Points`, `LW Target in Woods`.
+Including additions, union placement differences are 256/279 respectively.
+The per-file comparison records standard +10/-9/131 changed files, keys
++9/-5/135 changed files (including spoiler/play-note metadata).
+
+Why byte identity is not expected:
+
+- The observed pool now uses all eight progressive copy families and admits
+  the five additional upgrade-reward checks above. This changes the fill
+  input versus the published 0.2.0 output, not just display names.
+- E's compiler-owned recipe replay regenerates the current closed-door kit.
+  Actual emitted settings replace legacy `Progressive Strength Upgrade=1`
+  with native `Goron Bracelet=1` and `Met Child Zelda=1`, retaining Ocarina,
+  Song of Time and Saria's Song. A published share cannot pin the obsolete kit.
+- River now requires a usable blast/smash route or the saved Domain arrival;
+  adult Epona/Link's Cow require Malon's child source. These are sourced
+  reachability constraints, not a claim that either alone caused every
+  observed placement change. This is original-0.2.0 versus final A+D+E,
+  **not an E-only rule ablation**.
+- Darunia changes native bytes independently of placement: both outputs add
+  `Get_StoneOfFire.bfevfl.zs` and `Dm_Goron_0030.bfevfl.zs` with the approved
+  source-once/forward-only changes. The former missable-source behavior is
+  not restored to preserve an old hash.
+
+Complete file differences and full SHA256s:
+`work/r14-steps/community-final-7223c5c-results.json`.
+Every placement delta, item-count changes and emitted-recipe differences:
+`work/r14-steps/community-final-comparison.json`.
+These are final-combination hashes, not replacement release metadata; release/
+version decisions remain Claude's. Full gates/regenerations have no remaining
+blocker. Boot/player acceptance of the unchanged diagnostic packet stays with
+Claude/Kareem; no additional game result is manufactured by these checks.

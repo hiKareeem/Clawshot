@@ -3649,8 +3649,9 @@ written after gift Event127. Event121 advances only from before
 rolling back. The normal song/dance requirement is unchanged. E's transform
 runs before D's `progressive_bonus`, whose Event127 wrapper preserves the
 post-gift continuation even when it skips a redundant lower-tier grant.
-Synthetic paths pass; combined real-dump proof and the isolated Longshot check
-remain pending. No game result is claimed.
+Combined written-native proof passes all 21 Darunia cases on the final
+`bc9823c` combination; its full dump gate passes 161 cases. The isolated
+Longshot packet is staged. No Darunia game result is claimed here.
 
 The wider audit checked all 37 active gift-bearing step reads and the AINB
 presence windows against alternative writers. No additional source-loss
