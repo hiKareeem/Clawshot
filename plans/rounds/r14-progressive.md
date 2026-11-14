@@ -488,3 +488,31 @@ the same child-prefix cap mechanism as mandatory inventory, not a false adult
 construction assertion (Bracelet is required before pulling, not as adult credit).
 Rebased format347 files/lint passed. No game replay or rising-model implementation.
 
+Final combined runtime/test snapshot: `160a279edb69b8f04826ba54ba096f24ab931cd0`.
+All stages started with source/test trees matching that actual HEAD, workers3,
+no exact Hookshot/Longshot process running, and no supervisor deadline.
+Focused checks:218 passed/1 skipped in29.68s; format347 files and lint passed.
+Full synthetic:1387 passed/142 skipped in561.97s.
+
+Serialized public sweep: seeds1–100 in each mode, every row passed its generation
+and output checks; no final failures. Attempts include each mode's seed1 replay.
+
+| Mode | Passed rows | Fill attempts | Retry causes | Identical seed1 folder files |
+| --- | ---: | ---: | --- | ---: |
+| Recommended | 100 | 104 | progression: Kokiri Sword2, Fairy Ocarina1 | 158 |
+| Chest-only | 100 | 101 | none | 99 |
+| Small keys anywhere | 100 | 105 | progression: Kokiri Sword4 | 97 |
+
+All three seed1 settings replays produced byte-identical actual output folders.
+The existing fill retries above succeeded; the sweep added no retry behavior.
+Sweep elapsed2547.47s. Evidence under the external work folder:
+`public-sweep-160a279.json`, `gate-focused-160a279.log`,
+`gate-format-160a279.log`, `gate-lint-160a279.log`,
+`gate-synthetic-160a279.log`, `gate-sweep-160a279.log` and `gate-report.json`.
+
+D released the gate and posted the complete result to `cs-r14`; A's dump is next,
+then E's full gates. This final evidence commit changes documentation only; the
+tested runtime/test snapshot remains160a279. Section47, README, player-facing
+documentation and round decisions are complete. No further gameplay is requested
+for D; E retains the separately assigned combined boulder-first proof.
+
