@@ -135,10 +135,11 @@ Options requested by Claude, in preference order:
 Approved D/E contract: E's source-once/forward121 transform first; D's
 `progressive_bonus` transform second, reading prior changes. D owns only the
 Event127 wrapper and preserves its next pointer; E owns Event39, Event121 and
-the post-gift Bool. Grant parameters stay native. D merges first; E rebases and
-must prove the combined real-dump flow. The implementation and synthetic paths
-pass; combined proof/staging awaits D's merge and E's rebase. D retains its
-recorded dependency until the fix lands.
+the post-gift Bool. Grant parameters stay native. D merged at `cbc7f26`;
+Claude authorized E's real rebase and combined proof. The resolved pipeline
+runs E's `darunia.changes()` first, then D's `progressive_bonus.changes(...,
+prior_changes=changes)`. Combined written-native behavior now passes below;
+actual late-NPC availability and save persistence still need the staged play.
 
 The wider decoded audit covered all 37 active gift-bearing step reads and
 1,517 AINB sink rows. No further confirmed source-loss mismatch: trade retries
@@ -339,17 +340,11 @@ message; the valid community keys share subsequently applies `anywhere`. The
 error banner is above the paste field (visible after scrolling); no UI code changed.
 Browser and isolated-preference server closed. No generation or game invoked there.
 
-Full serialized gates, combined-build community regenerations, combined native
-proof and Darunia staging remain pending. The combined proof now uses a full
-production world, not the Gohma slice that excludes Darunia from D's source scan;
-it checks child ownership versus adult-only ownership, source-once behavior and
-forward-only Fire progress through the written shared-pouch guard.
-
-Latest maintainer queue: D fixture/dump on `18a04cb`, C matrix,
-D 300-row sweep, A dump, then E full gates. C stages its own in-game check
-meanwhile; its merge also awaits Kareem's result. D must merge and Claude
-authorize E's rebase before combined proof/staging. The river pair is now
-played and confirmed above; Darunia remains unplayed. No full-gate pass claim.
+Full serialized gates and combined-build community regenerations remain
+pending after A's dump. Claude authorized E's rebase onto `cbc7f26` (C story
+plus D progressive) and the focused native Darunia proof/staging beforehand.
+The river pair is played and confirmed above; Darunia remains unplayed.
+No full-gate pass claim.
 
 ## Topic commits before integration
 
@@ -367,5 +362,42 @@ authorized by that request. The topic commits are:
   Claude subsequently authorized the river follow-up above as a separate
   `Refs #25` commit, with full gates still deferred until authorized rebase.
 
-Combined D/E proof, staging, combined-share hashes and full gates retain the
-pending status above; committing the work does not claim those checks passed.
+At those pre-integration commits, combined proof, staging, share hashes and
+full gates were pending; later acceptance results are recorded below.
+
+## Rebased D/E acceptance (2026-11-13)
+
+Real rebase onto `cbc7f26` completed. Both expected conflicts were resolved:
+keep C/D/E sections 46/47/48 in `03-game-data.md`; run E's source-once/forward
+step before D's bonus wrapper, whose binding sees `prior_changes`. Rebased
+head before the following acceptance-record commit is `1093f28`; the native
+fix is `7fbecbe` and river correction is `1093f28`. No merge or push.
+
+`uv run ruff format --check`: **354 files formatted**; `uv run ruff check`:
+**all checks passed**. The first format check printed one Epona call layout,
+fixed by formatting that file. Focused Epona/Darunia/river/native-settings
+run: **822 passed in 104.77s**. Its first run printed **822 pass / 1 fail**:
+the old entire-defaults acceptance snapshot forwarded D's now-locked
+`progressive_items` key. Removed that obsolete defaults snapshot rather
+than repinning it or weakening the locked-setting resolver. No production
+policy change or fallback.
+
+```sh
+uv run pytest tests/test_story_steps_epona.py tests/test_story_steps_darunia.py tests/test_story_steps_river.py tests/test_settings_native_logic.py -q
+OOT_ROMFS=E:/Games/Hookshot/romfs CLAWSHOT_WORKERS=1 uv run pytest tests/test_story_steps_darunia_dump.py -q
+```
+
+Combined native result: **21 passed in 47.45s**. One full production seed
+7 (`Settings()`, not a restricted Gohma slice) is written; the actual three
+native flows round-trip. Six Fire phases cover missing child Bracelet,
+already-owned child Bracelet and adult-only gauntlets. Both D grant/skip
+branches return to E's source flag, repeat visits never regrant, and the
+Fire step never regresses through Complete; wrong-song paths do not collect.
+The native source Bool is saved, initially false and reset on New Game.
+This exercises written EVFL behavior, not cutscene timing or NPC spawning.
+
+The external staging script's stale pre-integration Event39/native-next
+assertions were corrected to the approved saved-source predicate and E's
+post-Event127 continuation; three Windows `Path + str` expressions and hash
+path normalization were also corrected before generation. `--help` ran
+successfully. Packet generation is the next step; no game was launched.

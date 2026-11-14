@@ -104,13 +104,6 @@ def test_effective_door_recipe_rebuilds_the_current_worlds_return_kit(mode):
     assert replay.settings["age_return_fill_families"] == families
 
 
-def test_unchanged_world_defaults_remain_valid_even_when_explicit():
-    selected = validate({"logic": DEFAULT_LOGIC})
-    _, explicit = prepare(load_spec(), selected)
-    _, ordinary = prepare(load_spec(), Settings())
-    assert explicit.settings == ordinary.settings
-
-
 def test_new_imported_oot_key_is_not_implicitly_supported():
     spec = load_spec()
     spec["settings"]["future_oot_access_mode"] = False

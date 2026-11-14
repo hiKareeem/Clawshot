@@ -21,9 +21,7 @@ def test_remote_epona_song_does_not_replace_malons_source(ranch_world, event):
     adult.update()
     assert not adult.counts.get(event)
 
-    completed = Search.adult_after_pull(
-        ranch_world, ["Ocarina of Time", "Eponas Song", "Malon Song Source Cleared"]
-    )
+    completed = Search.adult_after_pull(ranch_world, ["Ocarina of Time", "Eponas Song", "Malon Song Source Cleared"])
     completed.update()
     assert completed.counts.get(event)
 
