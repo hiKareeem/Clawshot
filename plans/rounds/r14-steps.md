@@ -534,3 +534,144 @@ These are final-combination hashes, not replacement release metadata; release/
 version decisions remain Claude's. Full gates/regenerations have no remaining
 blocker. Boot/player acceptance of the unchanged diagnostic packet stays with
 Claude/Kareem; no additional game result is manufactured by these checks.
+
+## Issue 27: forward-only Fire callbacks (`r14/fire`)
+
+Claude requested this follow-up after merging `9069a28` and closing #25.
+`r14/steps` and `main` both resolved to that commit with a clean tree; the new
+branch was created with `git switch -c r14/fire main`. Implementation:
+`542d4ce` (`Refs #27`). No merge, push or version bump; release/version decisions
+remain the maintainers'.
+
+### Played finding and the narrower original proof
+
+Kareem via Claude, 2026-11-14: Bomb Bag without the child Bracelet could not use
+bombs, confirming the current strength prerequisite. In the strength-first case,
+the flower opened the boulder at `DungeonStart`, but entering Darunia's room
+ran Event169 and wrote `DarniaRoomKokiriTalk`. The dance then wrote
+`DodongoCavernOpne`. The source completed, the owned-Bracelet guard skipped the
+grant, no Silver Gauntlets appeared, and no crash occurred. The boulder stayed
+gone and Dodongo's Cavern remained enterable. Normal boss appearance advances
+to `BossBattle` without a `DungeonStart` prerequisite.
+
+The old native proof started at the dance, so it did not detect that preceding
+room write. The new proof starts with the Lullaby/door callback, then the first
+room meeting, then the dance, in one saved-state model.
+
+### Native writers and decisions
+
+Claude explicitly requested Event169/86; cs14e proposed guarding all three
+conditional candidates as well. These native entries have no Fire upper bound;
+first-use flags and external dispatch, not their target step, limit execution.
+
+| Writer | Target | Late-execution evidence and limit |
+|---|---|---|
+| `Get_StoneOfFire/Event169` | `DarniaRoomKokiriTalk` | Played regression. Room areas request the first meeting while `Dm_Goron_0020` is unplayed. Preserve Event146's player-warp tail and its continuation. |
+| `Get_StoneOfFire/Event86` | `SariaMelodyPlay` | Meadow area requires Door of Time past Step01 and `Dm_MelodyGet_Saria` unplayed, not an upper Fire bound. The callback's Event83 requires Fire past `GoronCityDarniaTalk`. |
+| `Get_StoneOfFire/Event156` | `DeathMtTrailNpc` | First Kakariko-to-mountain intro, with `InitEventFlag=HavePlayedEvent.Dm_DeathMtTrail_0000` on all three Kakariko entrance variants. GC-side access/early GC progression can leave that intro unspent after its target. Keep the preceding intro. |
+| `Get_StoneOfFire/Event152` | `DeathMtTrailIn` | Soldier `ShowItem_ZeldaLetter/Event129` calls it after the cutscene and Letter removal. No Fire bound in the called flow; late show-item availability is schedule/code-side and not proved impossible. Conservative guard, not a played late hand-in claim. |
+| `DoorOfTime/Event62` | `KakarikoVillageNpc` | Impa send-off after `Dm_HrlField_0020`; starter is code-side/BootEventName, with no Fire bound in the flow. Late boot timing is not established; conservative guard. |
+
+Each uses its existing native strict `Get_StoneOfFire_IsAfter_<target>_Exp`.
+The original event index/name becomes the query; the original action/payload is
+appended. Callers and entry/subflow registrations do not move. Only a strictly
+later step skips the write: equality and earlier steps retain the native action.
+All native continuations, including Event152's Event88 progress notice, remain.
+
+`DoorOfTime/Event7` still writes that quest's Step02: delayed first Zelda must
+advance that independent quest even if Fire already passed step2. Guarding both
+writes together by Fire would break that continuation. General Door of Time
+monotonicity and opaque late boot reachability are outside this Fire-only fix.
+The source-once transform still precedes D's bonus wrapper, preserving its next
+when the owned child Bracelet skips a duplicate grant.
+
+### Complete-to-meadow consequences, posted before editing
+
+This is not the previous flavor-only step16/17 boundary. Counterfactually lowering
+Fire from `Complete` to `SariaMelodyPlay` changes native completion predicates:
+Bombchu Shop door/open/night and goods release, Bowling operator availability,
+Door of Time stone counting/bridge state, and other story/NPC consumers.
+DC boss deletion/room predicates also change; persisted-dead semantics are opaque,
+so **actual boss respawn is not claimed**.
+
+All five actions have `IsIgnoreCompletedChallenge=False`. A Complete rollback
+was never played, and static payloads alone do not establish the native API's
+completed-quest behavior. The explicit query skips invoking it when already past
+the target, independently of any built-in protection.
+
+The actual song source is `SacredForestMeadow_Field_MelodyGet_Saria`:
+Event0 plays `Dm_MelodyGet_Saria` (Event109 grants the song), then Event4 calls
+the Fire hook, whose Event83 leads to Event86. The grant is before, not behind,
+the Fire callback. No new Darunia prerequisite is added to Saria's source.
+Corrected machine audit: external `work/r14-fire-gates/fire27-consequences.json`;
+the parent normalized enum hashes against the native GameDataList.
+
+### Exercised verification on `542d4ce`
+
+| Check | Observed result |
+|---|---|
+| `uv run ruff format --check` | 368 files already formatted |
+| `uv run ruff check` | All checks passed |
+| Focused Darunia/Fire synthetic and native files | 97 passed, 46.51s |
+| Full `uv run pytest` | 2326 passed, 188 skipped, 702.73s |
+| Full `uv run pytest -m dump` | 185 passed, 2329 deselected, 6482.63s |
+| Actual packet production API + written-file verifier | Succeeded, all five guards present, 98 romfs resources |
+| Actual launcher argument and interactive A/B dry-runs | Four exit-0 paths; correct isolated profiles/mod root; no game launched or profile created |
+| Read-only staged/unplayed save checker, both cases | Expected exit2, never a false played PASS |
+
+The 45 native cases include boulder/Complete → Lullaby door → first meeting →
+dance with the child Bracelet already owned, source completion without rollback
+or duplicate upgrade; the whole meadow lesson/grant/callback at Complete and in
+natural order; and before/equal/after/Complete boundaries for all five writers.
+Native ordered enum hashes/BoolExp operands are checked against GameDataList.
+Engine animation, input, persistence and completed-quest API semantics are not
+simulated as proof of play.
+
+Each full stage acquired/released its own atomic `work/rounds/r14/gate.lock`
+with cleanup in `finally`, no supervisor deadline. Both began with no exact
+`hookshot.exe`/`longshot.exe` and three workers; synthetic cleared the OOT vars.
+Dump used the original read-only ROMFS, repaired v131072 NUP and D's **1248-file**
+`dump-progressive-cs14d-1e6cde0` fixture, digest
+`fc09c4af707a0ca092188cf014f6fdf3d40514def773f097b798f52f9f28bc93`.
+No source/test/doc edits between full gates. Results/logs:
+`E:/OOTRemake/work/r14-fire-gates/{synthetic,dump}-result.json` and `*.log`.
+This changes native output bytes even for unchanged placements; no old hash or
+wording golden was repinned.
+
+### One short staged Longshot packet; human acceptance pending
+
+Root: `E:/OOTRemake/work/r14-fire/ingame/fire27/`.
+ONE `Test - fire27.bat` selects A or B (or accepts `a`/`b`); checklist estimates
+13 minutes total, teleport/clock only. ONE common production seed7 mod from
+`make_seed`/`write_seed`, `Settings(forest="open")`, Chest-only:
+`mods/fire27-guards/fire27-guards`. Darunia and Saria sources remain native;
+there are no diagnostic item/quest edits in the mod.
+
+| Case | Copied starting state and disclosures | Required result after play/save |
+|---|---|---|
+| A | Unedited Goron City checkpoint, Fire DungeonStart, first room/source unplayed, actual child Bracelet stock1/Low, both songs and Fairy Ocarina held. Prior diagnostic packet supplied those items/story state; this is not natural progression in the new seed. Progress SHA256 `4ad1cf06…88b7`. | First room meeting → talk → dance; source true, Fire at least DungeonStart, Bracelet still one, no Silver/Gold. |
+| B | Child after-Jabu checkpoint, Fire Complete, Door of Time Step03/Met Zelda, Fairy Ocarina held. Clear only `HavePlayedEvent.Dm_MelodyGet_Saria`, `HavePlayedGetEvent.Item_Melody_SariaSong`, `IsGet.Item_Melody_SariaSong`; precisely three value bytes differ, no pouch row exists for songs. Staged SHA256 `c04c08ee…33c0`. Other old meadow flags are not reverted. | Learn Saria's Song; source/item saved true, Fire remains Complete, Door of Time stays Step03. |
+
+Each staged folder has exactly one rolling save slot plus its own account/options.
+The launcher copies once to separate `user-fire27-a`/`user-fire27-b`; neither
+profile has been created by the agent. Account has two zero Bools and no visible
+slot pointer; actual Continue/save-list behavior is **unplayed**, for Claude's
+boot-check. Both checkpoint copies and source hashes were read back/verified;
+original snapshots and played outputs were not changed.
+
+The initial preflight refused because Longshot was running, before any output.
+That global refusal was overbroad for absent, disjoint destinations. Staging then
+recorded the running game and used **one worker**, still refusing every existing
+output/profile and never writing game files or originals. Real launches retain
+the concurrent-game refusal; dry-runs copy/start nothing. No game was stopped.
+The actual dry-runs resolve **Longshot v3.0.0-rc.3** `bin/longshot.exe`,
+empty `HOS_FS_OVERLAY` and exactly the one-mod `HOS_MODS` parent.
+
+Evidence: `fire27-manifest.json`, `cli-smoke-proof.json`, `menu-smoke-proof.json`,
+`CHECKLIST.md`, and read-only `check_fire27_save.py`. Case A requires mod-load
+proof for Get_StoneOfFire, Dm_Goron_0030 and GetPouchContent; B requires
+Get_StoneOfFire plus the observed native lesson and saved song/source flags.
+The unchanged meadow/movie files load from the game. Neither case exercises
+the guarded DoorOfTime send-off, so no load/play proof for it is claimed.
+**Claude boot-checks; Kareem plays and supplies loading log + observations +
+save checks. This packet is staged, not boot-checked or played.**

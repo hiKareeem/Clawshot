@@ -3649,9 +3649,32 @@ written after gift Event127. Event121 advances only from before
 rolling back. The normal song/dance requirement is unchanged. E's transform
 runs before D's `progressive_bonus`, whose Event127 wrapper preserves the
 post-gift continuation even when it skips a redundant lower-tier grant.
-Combined written-native proof passes all 21 Darunia cases on the final
-`bc9823c` combination; its full dump gate passes 161 cases. The isolated
-Longshot packet is staged. No Darunia game result is claimed here.
+The original combined proof covered the dance/gift tail, not the preceding room
+meeting. Kareem via Claude (2026-11-14) confirmed the source flag and D's duplicate
+Bracelet skip in game, but the first meeting wrote Fire from `DungeonStart` back
+to `DarniaRoomKokiriTalk`, then the dance advanced it only to `DodongoCavernOpne`.
+The boulder stayed gone and cavern entry worked; normal boss appearance writes
+`BossBattle` without requiring `DungeonStart`. This was a monotonicity gap, not
+evidence that the played cavern route was blocked.
+
+**Fire monotonicity follow-up (#27; Claude requested, cs14e implemented).**
+Native strict `IsAfter_<target>_Exp` guards now protect room Event169, meadow-song
+Event86, first mountain-arrival Event156, Letter Event152 and `DoorOfTime` Event62.
+Only the Fire writes are skipped; rewards, camera/story tails, progress notices
+and the independent `DoorOfTime` Step02 write remain native. Before/equal-target
+behavior is unchanged. Late ShowItem/send-off dispatch remains partly code-side,
+so the latter guards are conservative rather than claims of played late routes.
+
+Unlike the played step16/17 boundary, a counterfactual `Complete` → step15 changes
+native completion gates for Bombchu Shop/Bowling and Door of Time stone counting,
+among others. Boss deletion predicates also change, but actual respawn is not
+established. Every writer retains `IsIgnoreCompletedChallenge=False`; whether that
+API already protects a completed quest is unplayed. The explicit guards do not
+depend on it. Written-native proofs now include the full meadow lesson/grant/
+callback, door/room/talk/dance, and all five source boundaries: 45 native cases;
+full gates on `542d4ce`: 2326 synthetic passes and 185 dump passes.
+The single two-case Longshot packet is staged, **not boot-checked or played**.
+Exact conditions, gates, staged-state disclosures and handoff: the round file.
 
 The wider audit checked all 37 active gift-bearing step reads and the AINB
 presence windows against alternative writers. No additional source-loss
