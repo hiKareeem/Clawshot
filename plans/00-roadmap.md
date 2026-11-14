@@ -1332,3 +1332,13 @@ escape).
    game asks for a step, and steps advanced only by a native hand-over the randomizer replaces.
 3. Section 48 and a full table; a failing test and a proposed fix for each confirmed mismatch. Track C keeps the
    Zelda, Door of Time and Kaepora fixes.
+
+### After round 14
+
+Done 2026-11-14; released as 0.2.1 the same day (tag `v0.2.1`, `5e16847`). All five tracks merged: B (Longshot
+Detect and Play, carried-over game options; #18, #23, #24), C (Kaepora music, Met Child Zelda gating Zelda's escape,
+Saria and the closed Door; #21, #22), D (progressive items, always on, chest copies only, D40; #13), A (tracker and
+its OBS view; #16), E (quest-step audit: Zora's River walls, Epona, the Bombchu Shop, Darunia's gift, refused
+logic-only overrides; #25), plus the forward-only Fire quest writes (#27). Every in-game check ran on Longshot (D41).
+Not done here: the progressive chest's rising model still shows the base tier, and several copies granted inside one
+chest event read stale ownership (seeds place one copy per chest).
