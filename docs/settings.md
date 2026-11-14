@@ -114,8 +114,12 @@ copy's tiers in order and the tier it gives in one canonical replay of the seed'
 marking leftovers. That depends on collection order: it is not a play order and not a promise for
 another route.
 
-Status: built, with synthetic selection and presentation tests and a trace of the native chest
-flows; **not yet played in game**. The in-game check runs on Longshot.
+Status: played on Longshot (Kareem, 2026-11-13). Mido's chests gave Hookshot then Longshot and
+Silver then Golden Scale; separate chests gave every remaining top tier (Bomb Bag 40, Quiver 50,
+Bullet Bag 50, Golden Gauntlets, Giant Wallet, double magic); Darunia's dance with the Bracelet
+already held kept Silver Gauntlets and gave no duplicate. Get windows name the tier received;
+the rising chest model still shows the base item. A seed puts one copy in a chest; several copies
+granted inside one chest event read stale ownership, so that is not supported.
 
 ### Gifts: enabled versus held
 
