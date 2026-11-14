@@ -37,8 +37,9 @@ in your pull request or issue instead of deciding it.
    Archipelago are MIT (OoT Randomizer's GPLv2+ folders excepted): their code may be ported, credited in `NOTICE`
    with file and commit. zeldamods `oead`/`evfl`/`byml-v2` and dt-12345's AINB are GPL-2.0: never copy their code
    into the repo. A research script kept outside the repository may use them unmodified.
-8. **Changes to Hookshot go upstream.** Mod loading and code hooks are contributed to `NotRexed/Hookshot` as small,
-   single-issue PRs. Never vendor a patched Hookshot into this repo.
+8. **Changes to the game runtime go upstream.** Mod loading and code hooks are contributed to Longshot
+   (`git.magicbean.dev/MagicBeanDev/Longshot`, the continuation of Hookshot, whose repository has been offline since
+   2026-11-13) as small, single-issue PRs. Never vendor a patched runtime into this repo.
 9. **If a first attempt fails, print the values instead of trying again** (the parsed node, the offsets, the
    assertion payload), then fix the cause they show or stop and hand off. One rerun after a change aimed at a
    printed cause is fine; an unchanged rerun is not.
