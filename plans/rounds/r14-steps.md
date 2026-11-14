@@ -400,4 +400,57 @@ The external staging script's stale pre-integration Event39/native-next
 assertions were corrected to the approved saved-source predicate and E's
 post-Event127 continuation; three Windows `Path + str` expressions and hash
 path normalization were also corrected before generation. `--help` ran
-successfully. Packet generation is the next step; no game was launched.
+successfully. Packet generation and dry-run acceptance completed below; no game launch.
+
+## Combined Darunia packet staged (clean `2abd59e`, fixed seed 7)
+
+`CLAWSHOT_WORKERS=1 uv run python E:/OOTRemake/work/r14-steps/stage_darunia.py`
+produced both diagnostic mods under `work/r14-steps/ingame/darunia/`:
+
+- `Test - darunia bombs-first.bat`: four Mido-house supplies; no pre-owned strength.
+- `Test - darunia strength-first.bat`: the same plus a disclosed fixed native
+  Bracelet in Kokiri Sword Chest, not a progressive copy/counter.
+
+Each mod has 97 written romfs files. Both use the same full seed, Darunia
+flows, staged Fire `GoronCityDarniaTalk` and initially-false source Bool.
+The actor's boulder is not pre-broken. The native-to-D guard at Event127
+retains E's next index **188**, `ClawshotDaruniaSourceOnce`, and original
+`ActorName=Item_Gauntlet_Goron`; the forward-only Event121 path is unchanged
+from E's first transform. Saved source hash independently confirms `3901686110`.
+
+Two staging attempts stopped before mod writes, with causes printed:
+the launcher checker expected a literal mod name instead of its safe `%NAME%`
+expansion; then a blanket kept-event refusal rejected Mido's native
+`KokiriForest_TreasureBox_NaviChatOff`. The former checker now matches the
+actual launcher. For the latter, diagnostics restore the classified native
+KEEP opening instead of stripping its state: its EventSetting registration,
+`Success_MidoHouse` entry and reachable original nodes match native. Both
+compiled Quiver bindings in the top-left/bottom-left chests are removed;
+the written event/drop pair is checked for every child/adult placement.
+The sword diagnostic likewise uses the native content-driven grant.
+No seed search, production rule change or silent grant fallback.
+
+Actual variant differences are only child/adult Kokiri Dynamic Banc files
+and the corresponding size table. Native flow/GameData hashes match across
+variants. Final integrity smoke: **99 file hashes match per variant**, no
+missing required runtime file, exactly one mod in each `HOS_MODS` folder.
+The runtime manifest is child-only (five files plus the size-table loading
+line); adult placement copies are statically verified, not demanded in a
+child-only gameplay log.
+
+Both actual `cmd.exe` launcher dry-runs exit **0**, no stderr; resolve
+Longshot `v3.0.0-rc.2/bin/longshot.exe`, separate fresh test users and separate
+`HOS_MODS`, with the overlay cleared. They print “would start” and launch no game.
+Evidence: `darunia-stage-proof.json`, `launcher-dry-run-proof.json`,
+`CHECKLIST.md`, read-only `check-darunia-save.py` in that external folder.
+No original saves or game folders were modified. Claude owns boot-check;
+Kareem owns play and the before/after/reload source/Fire/ownership observations.
+
+**Primary diagnostic limitation, not a working-route claim:** Bag capacity
+alone does not establish usable child bombs; current remake logic requires
+the child Bracelet for ordinary bomb use. If A cannot use bombs/break the
+rock, stop and record it. B independently supplies the disclosed Bracelet,
+uses the native flower first, then tests D's duplicate-child grant bypass
+still completing E's source flag with no Fire rollback. No silent fallback
+or inventory/quest/age/collision cheat is authorized. Full gates and combined
+community regenerations remain queued after A's dump.
