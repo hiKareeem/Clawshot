@@ -108,7 +108,7 @@ Automated status before full gates:
   CSP-safe predicates and separate Browser Source documents; app CSP was never weakened.
   The first uv-launched child server was explicitly stopped; final smoke launches/terminates
   the Python CLI directly and leaves no listening server.
-- UI source-release command produced external `release-smoke/Clawshot-0.2.0.zip`: 233 files,
+- Pre-rebase UI source-release command produced external `release-smoke/Clawshot-0.2.0.zip`: 233 files,
   required tracker code/assets/docs present, no PNG/BNTX/ZS/save/log payload. Version unchanged.
 - Additional actual CLI/HTTP smoke (`real_http_smoke.py`): copied transferred save, explicit slot_00,
   repaired NUP selected through `api/detect`, and a real 127,960-byte Longshot-icon PNG served.
@@ -122,7 +122,46 @@ Automated status before full gates:
   canvas. This tests actual compositing, not just the body's computed CSS. The transparent OBS
   screenshot was replaced with this RGBA capture. No visible browser or game launched.
 
-Full synthetic and dump suites remain queued behind ready B/C/D stages at this point.
+### Main integration (requested by the coordinator, implemented by cs14a)
+
+Rebased `r14/tracker` onto main `58ba776` after B's merge, without stash. The only conflicts were
+the additive round-14 notes in `plans/05-ui.md` and `dialogs.KINDS`. Kept both plans and combined
+the tracker picker kinds with B's canonical `game` kind, not the obsolete `hookshot` kind.
+B's Game/Play implementation remains intact: `paths.game`, `game-folder`, `detect` with `game`,
+generation with `game`, and `play` with `game`. The tracker still reads saves independently of runtime names.
+
+Post-rebase verification:
+
+- `uv run ruff format --check`: **349 files already formatted**; `uv run ruff check`: **all checks passed**.
+- Tracker state/save/HTTP/icons, NUP, shared UI/game/dialogs, Play, library and source-release suites:
+  **153 passed in 26.77s**.
+- Repeated actual CLI plus direct Playwright Chrome `headless=True` / `--headless=new` smoke:
+  restored the Longshot selection via the saved `game` preference; live save refresh without reload,
+  spoiler-free OBS, no OBS controls, **52 loaded local icons**, **130 loopback-only requests**, no page errors.
+  Regenerated and visually inspected the tab and OBS captures without opening a visible browser.
+- Repeated transparent-canvas smoke: **opaque corner alpha 255; transparent corner alpha 0**.
+  The transparent source PNG also composites correctly; the tool preview showed opaque glyph blocks.
+  Reported that preview defect rather than changing the app or screenshot.
+- Authorized full synthetic on frozen `d17fa2d`: **1369 passed, 140 skipped in 866.22s**,
+  exit 0; 1509 collected. The stage removed `OOT_ROMFS`, `OOT_NUP` and `OOT_DUMP`, detected
+  no exact game processes, and used **3 workers** without a deadline.
+  External log: `work/r14-tracker/synthetic.log`. The owned lock was released and the
+  handoff explicitly posted to D's synthetic retry, not C.
+
+### Serialized gate order (coordinator instruction)
+
+E's two-regen rerun completed with both hashes matching; A's full synthetic then passed.
+After C's and D's accepted gates, the coordinator merged progressive and posted **MAIN MOVED
+`cbc7f26`** (`e7e2bb1` plus nine progressive commits). The temporary A dump hold is cleared.
+
+1. Rebase the actual A branch onto `cbc7f26`, preserving notes without stash.
+2. Run light focused/headless integration checks and format/lint.
+3. Claim the serialized lock for A dump, covering main + D + A.
+4. Release/post to E's full gates; E rebases and stages its own D/E proof separately.
+
+The earlier detached trial onto `e7e2bb1` replayed both A commits with **zero conflicts**;
+the disposable worktree was removed without changing the original branch or notes.
+
 Every heavy stage atomically claims `work/rounds/r14/gate.lock` and releases between stages.
 The external `gate.py` matches exact case-insensitive `hookshot.exe` / `longshot.exe` names
 to choose workers 3 or 1 at that stage's start; LongshotLauncher.exe is excluded. No suite deadline.
