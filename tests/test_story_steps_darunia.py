@@ -49,6 +49,13 @@ PRESENTATION = {
     ("NpcCommon", "NpcCommon_PlayOcarina_BeginningTalk"),
     ("InitTalk", "InitTalk_OnEvent"),
     ("Common_Camera_Pln", "CameraDoF_Default"),
+    ("Dm_SY_Ocarina", "PlayOcarinaSequence"),
+    ("Dm_SY_Ocarina", "PaletteRelease_ScreenCap"),
+    ("Common_Camera_Pln", "CameraDoF_Default_FrameSettings"),
+    ("NaviEventCommon", "Navi_followPlayer"),
+    ("Dm_SY_Ocarina", "LearningOcarinaPlayExample"),
+    ("Dm_SY_Ocarina", "LearningOcarinaFollowExample"),
+    ("Dm_SY_Ocarina", "LearningOcarinaPlayAuto"),
 }
 
 
@@ -138,13 +145,15 @@ class UnregisteredCall(AssertionError):
     pass
 
 
-def play(stone, movie, *, step, source=False, song=True, owned=(), pouch=None):
+def play(stone, movie, *, step, source=False, song=True, owned=(), pouch=None, entries=(), extra=()):
     """Play a song to Darunia and follow both flows' state-changing events.
 
     ``owned`` contains canonical saved IsGet suffixes, not acquisition-actor names. The engine's own
     HavePlayedEvent bookkeeping is not modeled; only the flows' writes count. A step write is applied as
-    written, so a backward write would step the quest back here."""
+    written, without assuming engine protection from IsIgnoreCompletedChallenge=False. ``entries``
+    runs successive source/door/talk/song callbacks in the same saved state."""
     flows = {"Get_StoneOfFire": stone.flowchart, "Dm_Goron_0030": movie.flowchart}
+    flows.update({document.flowchart.name: document.flowchart for document in extra})
     if pouch is not None:
         flows["GetPouchContent"] = pouch.flowchart
     state = {STEP: step, darunia.SOURCE: source, **{f"IsGet.{item}": True for item in owned}}
@@ -157,9 +166,14 @@ def play(stone, movie, *, step, source=False, song=True, owned=(), pouch=None):
             return 0 if song else 1
         if name == "EventQueryMelodyTypeForNormal":
             return 2 if song else 0  # Saria's Song is native MelodyType 2
+        if name == "EventQueryTalkChoice2":
+            assert fc.name == "Dm_MelodyGet_Saria", event
+            return 0  # accept the meadow lesson; its performance/presentation helpers are not modeled
         if name == darunia.READ_EXPRESSION:
-            assert params == {"GameDataName": darunia.CUTOFF}, event
-            return 0 if STEPS.index(state[STEP]) > STEPS.index("SariaMelodyPlay") else 1
+            expression = params["GameDataName"]
+            assert expression.startswith("Get_StoneOfFire_IsAfter_") and expression.endswith("_Exp"), event
+            cutoff = expression.removeprefix("Get_StoneOfFire_IsAfter_").removesuffix("_Exp")
+            return 0 if STEPS.index(state[STEP]) > STEPS.index(cutoff) else 1
         if name == darunia.READ_BOOL:
             assert params.get("Index") == -1, event
             return 0 if state.get(params["GameDataName"], False) else 1
@@ -188,7 +202,10 @@ def play(stone, movie, *, step, source=False, song=True, owned=(), pouch=None):
                 if not event.flowchart:
                     child = fc.entry_point(event.entry_point)
                     run(fc, child, child.main_event, arguments=params)
-                elif (event.flowchart, event.entry_point) == GET_IN:
+                elif (event.flowchart, event.entry_point) in (
+                    GET_IN,
+                    ("GetPouchContent", "GetPouchContentByActorName"),
+                ):
                     reward = params["ActorName"]
                     if isinstance(reward, evfl.Argument):
                         reward = arguments[str(reward)]
@@ -207,9 +224,11 @@ def play(stone, movie, *, step, source=False, song=True, owned=(), pouch=None):
                 if action == darunia.SET_BOOL:
                     state[params["GameDataName"]] = params["Value"]
                 elif action == "EventExecuteProgressChallengeStep":
-                    assert params["ChallengeName"] == "Get_StoneOfFire", event
-                    result["writes"].append((state[STEP], params["StepName"]))
-                    state[STEP] = params["StepName"]
+                    challenge = params["ChallengeName"]
+                    field = f"Step_{challenge}"
+                    if challenge == "Get_StoneOfFire":
+                        result["writes"].append((state[STEP], params["StepName"]))
+                    state[field] = params["StepName"]
                 elif action == "EventTriggerShowChallengeProgressUI":
                     result["notices"] += 1
                 elif action == "EventTransition":
@@ -223,8 +242,10 @@ def play(stone, movie, *, step, source=False, song=True, owned=(), pouch=None):
             else:
                 raise AssertionError(f"unmodeled event {event}")
 
-    start = stone.flowchart.entry_point(PLAY)
-    run(stone.flowchart, start, start.main_event)
+    for flow, name in entries or (("Get_StoneOfFire", PLAY),):
+        chart = flows[flow]
+        start = chart.entry_point(name)
+        run(chart, start, start.main_event)
     return state, result
 
 

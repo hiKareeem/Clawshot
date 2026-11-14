@@ -11,6 +11,10 @@ Event127, so any reward there (vanilla, shuffled, or a hand-over a later step by
 Event127's next) completes the source. Event121 and its progress notice run only while Fire is before
 ``DodongoCavernOpne``, so later steps are never written back. Event127's grant, every entry's
 registrations, the song requirement and the cutscene's tail stay native.
+
+Delayed room, meadow-song, mountain-arrival, Letter and Impa-sendoff callbacks also guard their Fire
+step writes with native strict IsAfter expressions. Only the writes are skipped: native story tails
+and other quests' progress remain untouched.
 """
 
 from clawshot.formats import evfl
@@ -19,9 +23,11 @@ from clawshot.patch.write import FileChanges
 
 STONE_FLOW = "Event/EventFlow/Get_StoneOfFire.bfevfl.zs"
 MOVIE_FLOW = "Event/EventFlow/Dm_Goron_0030.bfevfl.zs"
+DOOR_FLOW = "Event/EventFlow/DoorOfTime.bfevfl.zs"
 SOURCE = "HavePlayedEvent.Dm_Goron_0030"  # native saved Bool: default false, reset type 8, progress.sav
 CUTOFF = "Get_StoneOfFire_IsAfter_SariaMelodyPlay_Exp"  # true from DodongoCavernOpne on
 PREFIX = "ClawshotDarunia"
+FIRE_PREFIX = "ClawshotFire"
 
 GAME_DATA_ACTOR = "GameDataActor"
 SET_BOOL = "EventTriggerSetGameDataBool"
@@ -197,6 +203,62 @@ def source_once(data: bytes) -> bytes:
     return _written(document, MOVIE_FLOW)
 
 
+def _forward_steps(data: bytes, path: str, steps: tuple[tuple[str, str, str | None], ...]) -> bytes:
+    """Guard only the step actions; keep incoming references and every native continuation."""
+    document = evfl.read(data)
+    fc = document.flowchart
+    flow = path.rsplit("/", 1)[-1].removesuffix(".bfevfl.zs")
+    if fc is None or fc.name != flow:
+        raise PatchError(f"Fire: {path} holds no {flow} flowchart")
+    at = _find(fc, tuple(name for name, _, _ in steps))
+    if any(event.name.startswith(FIRE_PREFIX) for event in fc.events):
+        raise PatchError(f"Fire: {flow} is already patched")
+    actor = _game_data_actor(fc)
+    query = _slot(fc.actors[actor].queries, READ_EXPRESSION)
+    for name, target, tail in steps:
+        index = at[name]
+        step = fc.events[index]
+        next_name = fc.events[step.next].name if isinstance(step, evfl.ActionEvent) and step.next != evfl.NONE else None
+        if (
+            not isinstance(step, evfl.ActionEvent)
+            or _op(fc, step) != "ChallengeSystemActor.EventExecuteProgressChallengeStep"
+            or step.params != {**STEP_WRITE, "StepName": target}
+            or next_name != tail
+        ):
+            raise PatchError(f"Fire: changed native {flow}/{name}: {step!r}, next {next_name!r}")
+        # Reuse the original index for the query, so callers and entry registrations need no rewiring.
+        # True means strictly past the target; equality still takes the native action.
+        fc.events[index] = evfl.SwitchEvent(
+            name,
+            actor,
+            query,
+            [(0, step.next), (1, len(fc.events))],
+            {"GameDataName": f"Get_StoneOfFire_IsAfter_{target}_Exp"},
+        )
+        step.name = f"{FIRE_PREFIX}{name}Write"
+        fc.events.append(step)
+    return _written(document, path)
+
+
+def _stone_changes(data: bytes) -> bytes:
+    return gift_gate(
+        _forward_steps(
+            data,
+            STONE_FLOW,
+            (
+                ("Event169", "DarniaRoomKokiriTalk", "Event146"),
+                ("Event86", "SariaMelodyPlay", None),
+                ("Event156", "DeathMtTrailNpc", None),
+                ("Event152", "DeathMtTrailIn", "Event88"),
+            ),
+        )
+    )
+
+
+def _door_changes(data: bytes) -> bytes:
+    return _forward_steps(data, DOOR_FLOW, (("Event62", "KakarikoVillageNpc", None),))
+
+
 def changes() -> FileChanges:
     """Every seed's Darunia transforms. Compose after gift swaps of Event127 and before any guard that replaces it."""
-    return {STONE_FLOW: gift_gate, MOVIE_FLOW: source_once}
+    return {STONE_FLOW: _stone_changes, MOVIE_FLOW: source_once, DOOR_FLOW: _door_changes}
