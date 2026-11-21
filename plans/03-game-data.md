@@ -513,6 +513,12 @@ it (the Deku Shield at KF Shop Item 6, after Mido), but its play note named only
 Slingshot or Boomerang beat the scrub is untested (Kareem expects they do; both are inside that seed's Slingshot
 room).
 
+**In game (BBender, contributor, Longshot v3.0.0, Clawshot 0.2.2 seed 212067047, 2026-11-20 and 2026-11-21, child
+with a Hylian Shield, no Deku Shield):** the opposite of the note above: the Hylian Shield reflected the scrubs' nuts
+and beat the Kokiri Storms Grotto trio, the scrub before the Slingshot room and the Deku Tree's boss-door trio. The
+logic takes the Hylian Shield at those three places (`remake/child_kokiri_forest.toml`, `remake/child_deku_tree.toml`);
+the `has_shield` helper is unchanged. Awaiting a maintainer play check to settle the disagreement.
+
 ### Round 6 play findings (cs6f, Kareem via Claude, 2026-11-08)
 
 `seed-shop-7`, dump build `e0f3ccfa`, Hookshot 2.0.1. No agent game run. Exact data trace and checks:

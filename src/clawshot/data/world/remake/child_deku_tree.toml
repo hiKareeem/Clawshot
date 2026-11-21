@@ -61,14 +61,21 @@ source = "data: Enemy_Skulltula_Gold 13609975487234437568, room 3 at y 121; Nint
 # the drop (Slingshot chest y 112, side chest y 116). OoT Randomizer's room has no exit (it is a dead end there).
 
 [exits."Deku Tree Lobby"."Deku Tree Slingshot Room"]
-rule = "here(has_shield) and (can_use(Slingshot) or can_use(Boomerang) or can_use(Bow))"
+rule = "here(has_shield or Hylian_Shield) and (can_use(Slingshot) or can_use(Boomerang) or can_use(Bow))"
 was = "here(has_shield)"
-source = "Kareem in game, 2026-11-16, Longshot rc.4 (roadmap Round 16): no save warp, every room autosaves; entering without an exit tool traps Link. Require the existing eye-switch exit predicate before entry; retain the scrub's shield requirement. Neither chest may supply its own first escape tool"
+source = "Kareem in game, 2026-11-16, Longshot rc.4 (roadmap Round 16): no save warp, every room autosaves; entering without an exit tool traps Link. Require the existing eye-switch exit predicate before entry; retain the scrub's shield requirement. Neither chest may supply its own first escape tool. Verified in the remake: BBender (contributor) beat the room's Deku Scrub as child with the Hylian Shield, no Deku Shield, reflecting its nuts (Longshot v3.0.0, Clawshot 0.2.2 seed 212067047, 2026-11-21); so a child's Hylian Shield counts as the scrub's shield. This disagrees with Kareem's 2026-11-08 note (plans/03-game-data.md) that it does not reflect; awaiting a maintainer play check"
 
 [exits."Deku Tree Slingshot Room"."Deku Tree Lobby"]
 rule = "can_use(Slingshot) or can_use(Boomerang) or can_use(Bow)"
 new = true
 source = "Kareem in game via Claude, 2026-11-08, seed-shop-7 (build e0f3ccfa, Hookshot 2.0.1): the Boomerang hits the Slingshot-room exit switch. Static Banc room 2: Obj_EyeSwitch_A_02 Hash 9080063866993537303 drives event request and FallingLadder Hash 2096903280161003875 via module InsideTheDekuTree_Level_Room_C_Prefab_efa7. Bow is the retained OoT Randomizer eye-switch alternative, not newly verified"
+
+# The boss door's Deku Scrub trio (InsideTheDekuTree room 9, Scrub_Deku_Brothers_Manager 16939690382671270717): OoT
+# Randomizer asks has_shield (a child's Deku Shield) to reflect their nuts.
+[exits."Deku Tree Before Boss"."Queen Gohma Boss Room"]
+rule = "deku_tree_shortcuts or here(has_shield or Hylian_Shield)"
+was = "deku_tree_shortcuts or here(has_shield)"
+source = "OoT Randomizer Deku Tree.json:84, kept but for the shield. Verified in the remake: BBender (contributor) beat the boss-door trio as child with the Hylian Shield, no Deku Shield, reflecting their nuts (Longshot v3.0.0, Clawshot 0.2.2 seed 212067047, 2026-11-21); so a child's Hylian Shield counts here. This disagrees with Kareem's 2026-11-08 note (plans/03-game-data.md) that it does not reflect; awaiting a maintainer play check"
 
 [exits."Deku Tree Basement"."Deku Tree Basement Back Room"]
 rule = "here(has_fire_source_with_torch or can_use(Bow)) and here(can_use(Slingshot) or can_use(Boomerang) or can_use(Bow))"
