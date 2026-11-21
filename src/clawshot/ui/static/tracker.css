@@ -90,3 +90,4 @@ body.tracker-transparent, body.tracker-transparent .tracker-cell { background: t
 .tracker-check-marked { color: var(--muted); font-style: italic; }
 .tracker-mark { padding: 0 6px; font-size: 11px; margin-left: 4px; }
 .tracker-area[hidden], .tracker-check[hidden] { display: none; }
+.tracker-vanilla-tag { font-size: 10px; padding: 0 4px; border: 1px solid currentColor; border-radius: 3px; opacity: .7; }

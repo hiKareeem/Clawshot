@@ -91,7 +91,20 @@ marks** removes this seed and save folder's marks after asking. They live in
 `~/.config/clawshot`) on Linux. If that file cannot be read, the tracker warns, shows no marks and
 leaves the file alone until you change a mark.
 
-The OBS view shows none of this: no in-logic data and no marks.
+**Vanilla pick-ups.** Some places your seed does not shuffle still hold an item the logic needs.
+Ruto's Letter at the bottom of Lake Hylia is one: until you hold it, Jabu-Jabu's Belly stays out of
+logic. So the tracker also lists these places in their area, tagged **vanilla**, with their usual item
+shown even in spoiler-free mode (your settings decide it, not the seed). They get the same in-logic
+styling, and the area heading counts them separately ("vanilla 0 / 1 · 1 in logic"), leaving the
+seed's own counts unchanged. One counts as collected once the save shows you hold its item (or ever
+had it, for used-up items as above). If the save cannot tell, or a shuffled check could also give that
+item, it shows `?` and you can mark it done. Only items that come from that one place are listed: every
+song, the ocarinas, the trade items, Ruto's and Zelda's Letters, the Weird Egg, the Gerudo card, Great
+Fairy gifts, masks, and stones and medallions when they are not shuffled. Gold Skulltulas, silver rupees,
+Pieces of Heart and other repeated items are not. **Show vanilla pick-ups** turns them off; the choice
+is remembered in this browser. They need in-logic, so they are hidden when in-logic is unavailable.
+
+The OBS view shows none of this: no in-logic data, no vanilla pick-ups and no marks.
 
 ## Hookshot Play
 

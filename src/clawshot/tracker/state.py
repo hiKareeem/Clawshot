@@ -607,6 +607,11 @@ def areas(
     ]
 
 
+def every_check(state: dict[str, Any]) -> list[dict[str, Any]]:
+    """Every check entry of a built state: the seed's shuffled checks, then the vanilla rows (spec D19) if any."""
+    return [check for key in ("areas", "vanilla_areas") for area in state.get(key, ()) for check in area["checks"]]
+
+
 def build_state(
     seed: Seed,
     save: save_format.Save | None,

@@ -188,7 +188,7 @@ def test_check_names_without_spoilers_show_no_items(tmp_path):
 def test_obs_shows_no_checks_or_controls(tmp_path):
     rendered = render_tracker(tmp_path, snapshot(), obs=True)
     assert rendered["checks"] == [] and rendered["notes"] == []
-    assert rendered["controls"] == {"age": None, "only": None, "clear": None}
+    assert rendered["controls"] == {"age": None, "only": None, "vanilla": None, "clear": None}
 
 
 # 11.7 (P11.a): no new static file; the three tracker assets stay the served ones.
@@ -196,3 +196,79 @@ def test_no_new_static_files():
     tracker_files = sorted(name for name in STATIC if name.startswith("tracker"))
     assert tracker_files == ["tracker.css", "tracker.html", "tracker.js"]
     assert sorted(p.name for p in ASSETS.glob("tracker*")) == tracker_files
+
+
+# --- Task 16: vanilla pick-ups (D19, 8.6).
+VANILLA_KEY = "clawshot.tracker.vanilla"
+
+
+def with_vanilla(**options):
+    """The snapshot plus a vanilla row in Field (open, in logic for child) and a vanilla-only Fountain area."""
+    snap = snapshot(**options)
+    row = check("Letter Pickup", False, (True, False, True)) | {"vanilla": True, "item": "Rutos Letter"}
+    row["item_label"] = "Ruto's Letter"
+    far = check("Fountain Pickup", False, (False, False, False)) | {"vanilla": True, "item": "Silver Scale"}
+    snap["state"]["vanilla_areas"] = [
+        {
+            "name": "Field",
+            "collected": 0,
+            "total": 1,
+            "unknown": 0,
+            "marked": 0,
+            "checks": [row],
+            "in_logic": {"child": 1, "adult": 0, "either": 1},
+        },
+        {
+            "name": "Fountain",
+            "collected": 0,
+            "total": 1,
+            "unknown": 0,
+            "marked": 0,
+            "checks": [far],
+            "in_logic": {"child": 0, "adult": 0, "either": 0},
+        },
+    ]
+    return snap
+
+
+def test_vanilla_rows_show_in_their_area_by_default_with_a_tag(tmp_path):
+    rendered = tab(tmp_path, with_vanilla())
+    assert rendered["controls"]["vanilla"] == {"checked": True, "disabled": False}
+    letter = classes(rendered)["Letter Pickup"]
+    assert "tracker-check-vanilla" in letter["className"] and "vanilla" in letter["text"]
+    assert "Ruto's Letter" in letter["text"] and styled(rendered, "Letter Pickup") == "in"
+    assert styled(rendered, "Fountain Pickup") == "out"
+    heads = [head["text"] for head in rendered["areaHeads"]]
+    assert len(heads) == 3 and "vanilla 0 / 1" in heads[0] and heads[2].startswith("vanilla 0 / 1")
+    assert "1 in logic" in heads[0].split("vanilla")[1]
+
+
+def test_the_vanilla_toggle_hides_them_and_is_remembered(tmp_path):
+    hide = [{"id": "tracker-vanilla", "checked": False, "event": "change"}]
+    rendered = tab(tmp_path, with_vanilla(), actions=hide)
+    assert "Letter Pickup" not in classes(rendered) and len(rendered["areaHeads"]) == 2
+    assert rendered["storage"] == {VANILLA_KEY: "hidden"}
+    restored = tab(tmp_path, with_vanilla(), storage={VANILLA_KEY: "hidden"})
+    assert restored["controls"]["vanilla"]["checked"] is False
+    back = tab(
+        tmp_path,
+        with_vanilla(),
+        storage={VANILLA_KEY: "hidden"},
+        actions=[{"id": "tracker-vanilla", "checked": True, "event": "change"}],
+    )
+    assert back["storage"] == {} and "Letter Pickup" in classes(back)
+    private = tab(tmp_path, with_vanilla(), storage=None, actions=hide)
+    assert "Letter Pickup" not in classes(private)
+
+
+def test_show_only_in_logic_applies_to_vanilla_rows(tmp_path):
+    only = [{"id": "tracker-logic-only", "checked": True, "event": "change"}]
+    rendered = classes(tab(tmp_path, with_vanilla(), actions=only))
+    assert rendered["Letter Pickup"]["shown"] is True
+    assert rendered["Fountain Pickup"]["shown"] is False
+
+
+def test_vanilla_toggle_is_disabled_without_logic(tmp_path):
+    rendered = tab(tmp_path, with_vanilla(available=False, reason="old seed"))
+    assert rendered["controls"]["vanilla"]["disabled"] is True
+    assert "Letter Pickup" not in classes(rendered)

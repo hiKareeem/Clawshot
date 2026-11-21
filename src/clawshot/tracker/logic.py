@@ -18,6 +18,12 @@ State fields:
   either}``, the first two from ``Search.can_access(location, age)``, ``either`` from ``can_access(location)`` with
   no age. Collected and marked checks have none.
 - each area gains ``in_logic``: ``{child, adult, either}``, the number of its open checks in logic for each.
+- ``state["vanilla_areas"]`` (spec D19, section 8): the fixed vanilla pick-ups, grouped by area like ``areas``
+  (``name``, ``total``, ``collected``, ``unknown``, ``marked``, ``in_logic``, ``checks``). These are locations the
+  seed does not shuffle whose vanilla item is progression (:func:`vanilla_rows`, scope :data:`VANILLA_SCOPE`), so the
+  player sees a pick-up such as Ruto's Letter that gates an area. Each row has ``vanilla: true`` and always names its
+  item (the settings decide it, not the seed); ``collected`` comes from the logic inventory
+  (:func:`vanilla_collected`). Absent while logic is unavailable. ``areas`` and its counts are unchanged by them.
 
 Nothing is written anywhere: the seed's spoiler and the save are only read.
 """
@@ -35,9 +41,9 @@ from clawshot import save as save_format
 from clawshot.app.schema import validate
 from clawshot.generate import Settings
 from clawshot.patch.logic_world import logic_world
-from clawshot.tracker import state
-from clawshot.tracker.seeds import DUNGEON_INFO, Seed, installed_version
-from clawshot.world.model import World
+from clawshot.tracker import seeds, state
+from clawshot.tracker.seeds import DUNGEON_INFO, OTHER_AREA, Seed, installed_version
+from clawshot.world.model import Location, World
 from clawshot.world.rules import ADULT, CHILD
 from clawshot.world.search import Search
 
@@ -45,6 +51,12 @@ CHILDHOOD = "Sequence_IsChildhood"
 AGE_KEYS = ("child", "adult", "either")
 MAPPING_TOML = Path(__file__).resolve().parents[1] / "data" / "tracker_logic.toml"
 _FAMILY_PLURALS = {"small_key": "small keys", "boss_key": "boss keys", "map": "maps", "compass": "compasses"}
+VANILLA_SCOPE = "unique"
+"""Which fixed vanilla pick-ups get a row (spec D19, Q3): ``unique``, those whose vanilla item no other world location
+gives (proposed by Claude, awaiting the maintainer), or ``all``, every progression vanilla item."""
+VANILLA_SKIPPED_TYPES = frozenset({"Shop", "Event", "Drop"})
+"""Location types never listed as vanilla rows: shelves restock (no one-time check), events and drops are derived by
+the search itself."""
 
 
 @dataclass(frozen=True)
@@ -300,6 +312,106 @@ def search_items(inv: Inventory, world: World) -> list[str]:
     return [name for name, n in inv.counts.items() for _ in range(max(0, n - start[name]))]
 
 
+@dataclass(frozen=True)
+class VanillaRow:
+    """One fixed vanilla pick-up (spec D19). ``shared``: a shuffled check of the seed can also give the item, so
+    holding it does not say this location was taken (8.3)."""
+
+    location: str
+    label: str
+    where: str
+    area: str
+    dungeon: str | None
+    item: str
+    item_label: str
+    shared: bool
+
+
+def vanilla_rows(seed: Seed, world: World, scope: str | None = None) -> tuple[VanillaRow, ...]:
+    """The seed's fixed vanilla pick-ups in world order (8.1): world locations not in the spoiler's placements whose
+    vanilla item is progression, not N64-only, not of :data:`VANILLA_SKIPPED_TYPES`, and in ``scope``
+    (:data:`VANILLA_SCOPE` by default)."""
+    from clawshot.generate import names
+
+    scope = scope or VANILLA_SCOPE
+    if scope not in ("unique", "all"):
+        raise ValueError(f"unknown vanilla scope {scope!r}")
+    placed = {check.location for check in seed.checks}
+    placed_items = {check.item for check in seed.checks}
+    sources = Counter(loc.vanilla for loc in world.locations.values() if loc.vanilla is not None)
+    places = seeds.location_index()
+    catalog = seeds._catalog()
+    shown = names.item_names()
+    rows = []
+    for name, loc in world.locations.items():
+        item = world.items.get(loc.vanilla) if loc.vanilla is not None else None
+        if name in placed or item is None or not item.progression or loc.n64_only is not None:
+            continue
+        if loc.type in VANILLA_SKIPPED_TYPES or (scope == "unique" and sources[loc.vanilla] != 1):
+            continue
+        place = places.get(name)
+        described = catalog.get(name)
+        rows.append(
+            VanillaRow(
+                location=name,
+                label=described.name if described else name,
+                where=described.where if described else "",
+                area=place.area if place else OTHER_AREA,
+                dungeon=place.dungeon if place else world.regions[loc.region].dungeon,
+                item=loc.vanilla,
+                item_label=shown.get(loc.vanilla, loc.vanilla),
+                shared=loc.vanilla in placed_items,
+            )
+        )
+    return tuple(rows)
+
+
+def _unknown_sources(mapping: Mapping_) -> dict[str, set[str]]:
+    """Logic name -> the :class:`Inventory` ``unknown`` ids whose cells could grant it."""
+    out: dict[str, set[str]] = {}
+
+    def add(tag: str, names: set[str]) -> None:
+        for name in names:
+            out.setdefault(name, set()).add(tag)
+
+    for cell_id, cell_map in mapping.cells.items():
+        add(cell_id, cell_map.names())
+    for entry in mapping.stock.values():
+        add(entry["label"], {entry["item"]})
+    add("bottles", {mapping.bottles["bottle"], mapping.bottles["letter"]})
+    add("hearts", {mapping.hearts["item"]})
+    add("tokens", {mapping.tokens["item"]})
+    for family, template in mapping.dungeon_items.items():
+        for dungeon in DUNGEON_INFO:
+            add(f"{dungeon} {_FAMILY_PLURALS[family]}", {template.format(dungeon=dungeon)})
+    for name in mapping.story:
+        add(f"story: {name}", {name})
+    return out
+
+
+def vanilla_collected(
+    row: VanillaRow, inv: Inventory, world: World, mapping: Mapping_ | None = None
+) -> tuple[bool | None, str | None]:
+    """(collected, reason when unknown) for a vanilla row (8.3), from the logic inventory: True when it counts the
+    row's item (a fixed tier of a progressive item: the chain at that tier), False when every cell that could grant
+    it was read, None when one was not, the save has no cell for the item, or a shuffled check can also give it."""
+    mapping = mapping or load_mapping()
+    if row.shared:
+        return None, f"A shuffled check of this seed can also give {row.item_label}."
+    known = mapping.logic_names()
+    name, need = row.item, 1
+    if name not in known:
+        item = world.items[name]
+        if not (item.tier and item.alias and item.alias[0] in known):
+            return None, f"The tracker does not read {row.item_label} from the save."
+        name, need = item.alias
+    if inv.counts.get(name, 0) >= need:
+        return True, None
+    if _unknown_sources(mapping).get(name, set()) & set(inv.unknown):
+        return None, f"The save could not be read for {row.item_label}."
+    return False, None
+
+
 def save_age(save: save_format.Save | None) -> str | None:
     """The save's age from ``Sequence_IsChildhood`` (Bool, file 0, default true; plans/rounds/
     r18-master-sword-design.md): ``child`` when true, ``adult`` when false, None when unreadable. Natural play keeps it
@@ -316,6 +428,15 @@ class SeedLogic:
         self.loaded = loaded
         self._key: str | None = None
         self._search: Search | None = None
+        self._vanilla: tuple[VanillaRow, ...] | None = None
+
+    def vanilla(self, seed: Seed) -> tuple[VanillaRow, ...]:
+        """The seed's vanilla rows, built once per loaded seed (8.1); none while logic is unavailable."""
+        if not self.loaded.available:
+            return ()
+        if self._vanilla is None:
+            self._vanilla = vanilla_rows(seed, self.loaded.world)
+        return self._vanilla
 
     def search(self, inv: Inventory) -> Search:
         """The search for this inventory, fed as the generator feeds assumed items (D16)."""
@@ -336,24 +457,61 @@ class SeedLogic:
             "save_age": save_age(save),
         }
         state["logic"] = logic
-        if not self.loaded.available:
+        if not self.loaded.available:  # no vanilla rows either, and no other field added (1.3, 8.1)
             return
         world = self.loaded.world
         inv = inventory(seed, save, world)
         logic["unknown_items"] = list(inv.unknown)
         search = self.search(inv)
         for area in state["areas"]:
-            totals = dict.fromkeys(AGE_KEYS, 0)
-            for entry in area["checks"]:
-                if entry["collected"] is True or (entry["collected"] is None and entry["id"] in marked):
-                    continue
-                location = world.locations[entry["id"]]
-                flags = {
-                    "child": search.can_access(location, CHILD),
-                    "adult": search.can_access(location, ADULT),
-                    "either": search.can_access(location),
-                }
-                entry["in_logic"] = flags
-                for key, value in flags.items():
-                    totals[key] += value
-            area["in_logic"] = totals
+            area["in_logic"] = _flag_open(area["checks"], world, search, marked)
+        grouped: dict[str, list[dict[str, Any]]] = {}
+        for row in self.vanilla(seed):
+            collected, reason = vanilla_collected(row, inv, world)
+            entry: dict[str, Any] = {
+                "id": row.location,
+                "label": row.label,
+                "where": row.where,
+                "kind": "vanilla",
+                "dungeon": row.dungeon,
+                "collected": collected,
+                "basis": "inventory" if collected is not None else None,
+                "vanilla": True,
+                "item": row.item,
+                "item_label": row.item_label,
+            }
+            if collected is None:
+                entry["reason"] = reason
+                if row.location in marked:
+                    entry["marked"] = True
+            grouped.setdefault(row.area, []).append(entry)
+        state["vanilla_areas"] = [
+            {
+                "name": name,
+                "collected": sum(c["collected"] is True for c in checks),
+                "total": len(checks),
+                "unknown": sum(c["collected"] is None for c in checks),
+                "marked": sum(c.get("marked", False) for c in checks),
+                "in_logic": _flag_open(checks, world, search, marked),
+                "checks": checks,
+            }
+            for name, checks in grouped.items()
+        ]
+
+
+def _flag_open(checks: list[dict[str, Any]], world: World, search: Search, marked: frozenset[str]) -> dict[str, int]:
+    """Give each open check ``in_logic`` (3.1, 3.2) and return how many are in logic per age (3.4)."""
+    totals = dict.fromkeys(AGE_KEYS, 0)
+    for entry in checks:
+        if entry["collected"] is True or (entry["collected"] is None and entry["id"] in marked):
+            continue
+        location: Location = world.locations[entry["id"]]
+        flags = {
+            "child": search.can_access(location, CHILD),
+            "adult": search.can_access(location, ADULT),
+            "either": search.can_access(location),
+        }
+        entry["in_logic"] = flags
+        for key, value in flags.items():
+            totals[key] += value
+    return totals

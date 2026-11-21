@@ -173,7 +173,10 @@ const context = {
       text: el.textContent, shown: shown(el),
     })),
     notes: text('tracker-logic-note'),
-    controls: {age: control('tracker-age'), only: control('tracker-logic-only'), clear: control('tracker-clear-marks')},
+    controls: {
+      age: control('tracker-age'), only: control('tracker-logic-only'), vanilla: control('tracker-vanilla'),
+      clear: control('tracker-clear-marks'),
+    },
     posts,
     storage: stored,
     ready: documentElement.dataset.trackerReady === 'true',

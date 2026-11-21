@@ -249,8 +249,7 @@ class TrackerSession:
         if store is not None:
             confirmed = [
                 check["id"]
-                for area in state["areas"]
-                for check in area["checks"]
+                for check in tracker_state.every_check(state)
                 if check["id"] in marked and check["collected"] is not None
             ]
             if confirmed:
@@ -277,10 +276,7 @@ class TrackerSession:
         """Mark a check whose save state is unknown as done by hand, or unmark it (D8)."""
         with self._lock:
             slot = self._marks_target()
-            entry = next(
-                (c for area in self._state["areas"] for c in area["checks"] if c["id"] == check),
-                None,
-            )
+            entry = next((c for c in tracker_state.every_check(self._state) if c["id"] == check), None)
             if entry is None:
                 raise ValueError(f"No check {check!r} in this seed.")
             if entry["collected"] is not None:

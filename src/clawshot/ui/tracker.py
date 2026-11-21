@@ -82,6 +82,7 @@ class TrackerController:
                 if state is not None:
                     state["show_locations"] = False
                     state.pop("logic", None)  # in-logic and manual marks stay in the app tab (D13)
+                    state.pop("vanilla_areas", None)  # so do the vanilla pick-ups (D19, 8.7)
                 for area in (state or {}).get("areas", []):
                     area.pop("checks", None)
                     area.pop("marked", None)

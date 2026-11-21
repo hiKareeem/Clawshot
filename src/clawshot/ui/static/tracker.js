@@ -54,7 +54,7 @@ function parseTrackerSections(fragment) {
   const content = node("div", "tracker-content");
   root.append(heading);
   let controls, seedInput, saveInput, slotSelect, reveal, obsUrl, iconToggle, transparent, labelToggle, columnSelect;
-  let ageSelect, logicOnly, clearMarks, lastData = null;
+  let ageSelect, logicOnly, vanillaToggle, clearMarks, lastData = null;
   const sectionToggles = {};
   // The in-logic age is remembered in this browser only when it is not the default (Either); storage may be absent.
   const AGE_KEY = "clawshot.tracker.age", AGES = ["either", "save", "child", "adult"];
@@ -68,6 +68,20 @@ function parseTrackerSections(fragment) {
     try {
       if (value === "either") window.localStorage.removeItem(AGE_KEY);
       else window.localStorage.setItem(AGE_KEY, value);
+    } catch { /* storage unavailable: the choice lasts until the page closes */ }
+  }
+  // Vanilla pick-ups (spec D19): shown by default (Q4); only the non-default choice is remembered.
+  const VANILLA_KEY = "clawshot.tracker.vanilla", VANILLA_DEFAULT = true;
+  function storedVanilla() {
+    try {
+      const value = window.localStorage.getItem(VANILLA_KEY);
+      return value === "shown" ? true : value === "hidden" ? false : VANILLA_DEFAULT;
+    } catch { return VANILLA_DEFAULT; }
+  }
+  function storeVanilla(shown) {
+    try {
+      if (shown === VANILLA_DEFAULT) window.localStorage.removeItem(VANILLA_KEY);
+      else window.localStorage.setItem(VANILLA_KEY, shown ? "shown" : "hidden");
     } catch { /* storage unavailable: the choice lasts until the page closes */ }
   }
   function redraw() {
@@ -183,6 +197,14 @@ function parseTrackerSections(fragment) {
     logicOnly.checked = false;
     logicOnly.addEventListener("change", redraw);
     onlyLabel.append(logicOnly, document.createTextNode(" Show only in-logic"));
+    const vanillaLabel = node("label");
+    vanillaLabel.title = "Checks this seed does not shuffle that still hold an item the logic needs, such as Ruto's Letter";
+    vanillaToggle = node("input");
+    vanillaToggle.type = "checkbox";
+    vanillaToggle.id = "tracker-vanilla";
+    vanillaToggle.checked = storedVanilla();
+    vanillaToggle.addEventListener("change", () => { storeVanilla(vanillaToggle.checked); redraw(); });
+    vanillaLabel.append(vanillaToggle, document.createTextNode(" Show vanilla pick-ups"));
     clearMarks = node("button", "", "Clear manual marks");
     clearMarks.type = "button";
     clearMarks.id = "tracker-clear-marks";
@@ -192,7 +214,7 @@ function parseTrackerSections(fragment) {
       try { render(await request("tracker-clear-marks", {confirmed: true})); }
       catch (error) { status.textContent = error.message; }
     });
-    logicRow.append(ageLabel, onlyLabel, clearMarks);
+    logicRow.append(ageLabel, onlyLabel, vanillaLabel, clearMarks);
     controls.append(logicRow);
     const obs = node("div", "tracker-obs-link");
     const obsLabel = node("label", "", "OBS Browser Source URL (private; changes each app start)");
@@ -348,7 +370,7 @@ function parseTrackerSections(fragment) {
     const logic = state.logic || {};
     if (standalone) return {key: null, notes: []};
     const available = logic.available === true;
-    ageSelect.disabled = logicOnly.disabled = !available;
+    ageSelect.disabled = logicOnly.disabled = vanillaToggle.disabled = !available;
     if (!state.logic) return {key: null, notes: []};
     if (!available) return {key: null, notes: ["In logic unavailable: " + (logic.reason || "unknown reason")]};
     const notes = [];
@@ -372,6 +394,12 @@ function parseTrackerSections(fragment) {
     const line = node("p", "tracker-check" + style, mark + (check.label || check.name || check.id) +
       (check.marked ? " (marked done by you)" : "") + (check.item ? ": " + (check.item_label || check.item) : ""));
     line.dataset.check = check.id;
+    if (check.vanilla) {
+      line.classList.add("tracker-check-vanilla");
+      const tag = node("span", "tracker-vanilla-tag", "vanilla");
+      tag.title = "Not shuffled in this seed: this check keeps its usual item";
+      line.append(" ", tag);
+    }
     if (inLogic != null) line.title = inLogic ? "In logic" : "Out of logic";
     if (check.collected == null) {
       const toggle = node("button", "tracker-mark", check.marked ? "Unmark" : "Mark done");
@@ -457,14 +485,27 @@ function parseTrackerSections(fragment) {
       for (const note of view.notes) areas.append(node("p", "tracker-logic-note", note));
       const filtering = !standalone && view.key !== null && logicOnly.checked;
       const areaGrid = node("div", "tracker-areas");
-      for (const area of state.areas || []) {
+      // Vanilla rows join their area by name; an area with only vanilla rows follows the seed's areas.
+      const vanillaShown = !standalone && view.key !== null && vanillaToggle.checked;
+      const vanilla = new Map(vanillaShown ? (state.vanilla_areas || []).map((area) => [area.name, area]) : []);
+      const listed = [...(state.areas || []), ...[...vanilla.keys()].filter((name) => !(state.areas || []).some((area) => area.name === name)).map((name) => ({name, only: true}))];
+      for (const area of listed) {
         const item = node("div", "tracker-area");
-        const counts = show(area.collected) + " / " + show(area.total) + (area.unknown ? " · " + area.unknown + " unknown" : "") +
-          (!standalone && area.marked ? " · " + area.marked + " marked done" : "") +
-          (view.key && area.in_logic ? " · " + show(area.in_logic[view.key]) + " in logic" : "");
-        item.append(node("strong", "", area.name), node("span", "tracker-area-counts", counts));
+        const extra = vanilla.get(area.name);
+        const parts = [];
+        if (!area.only) {
+          parts.push(show(area.collected) + " / " + show(area.total) + (area.unknown ? " · " + area.unknown + " unknown" : "") +
+            (!standalone && area.marked ? " · " + area.marked + " marked done" : "") +
+            (view.key && area.in_logic ? " · " + show(area.in_logic[view.key]) + " in logic" : ""));
+        }
+        if (extra) {
+          parts.push("vanilla " + show(extra.collected) + " / " + show(extra.total) +
+            (extra.marked ? " · " + extra.marked + " marked done" : "") +
+            (extra.in_logic ? " · " + show(extra.in_logic[view.key]) + " in logic" : ""));
+        }
+        item.append(node("strong", "", area.name), node("span", "tracker-area-counts", parts.join(" · ")));
         if (!standalone) {
-          const lines = (area.checks || []).map((check) => checkLine(check, view.key, filtering));
+          const lines = [...(area.checks || []), ...(extra ? extra.checks || [] : [])].map((check) => checkLine(check, view.key, filtering));
           item.append(...lines);
           item.hidden = filtering && !lines.some((line) => !line.hidden);
         }
