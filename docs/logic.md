@@ -57,6 +57,12 @@ played that method on Longshot 3.2.0 (0.2.6), without Fire Arrows. Child Sticks 
 Its three candles open the room-8 door to the room-9 floor switch, which opens the staircase door;
 they do not directly open the latter. The adult's possible 3 m lobby ledge shortcut remains unplayed.
 
+**DMT cavern-roof Heart Piece:** adult Link must ride the bean sprout. The rule retains
+`here(can_plant_bean and (plant_beans or has_explosives or Progressive_Strength_Upgrade))`,
+including access to the planting spot; neither damage/backflips nor Hover Boots substitutes for it.
+This is Kareem's approved tightening (2026-11-27, Bender audit R10), not a new movement-trick
+admission or an extra play requirement. The child cannot collect it even with bean-plot access.
+
 **Deku Sticks and Nuts: pots are not a source.** A child has sticks in logic from held or bought
 Deku Sticks (`Buy Deku Stick (1)`/`(5)`, or a shuffled `Deku Stick (1)`) or from a child Kokiri Sword
 kill of a Deku Baba (`Deku Stick Drop` in KF Outside Deku Tree, the Deku Tree Lobby and the Forest Temple's
