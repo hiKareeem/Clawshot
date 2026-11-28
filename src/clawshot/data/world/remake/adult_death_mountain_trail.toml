@@ -1,0 +1,5 @@
+# DMT Freestanding PoH is above Dodongo's Cavern, not in Death Mountain Crater.
+[locations."DMT Freestanding PoH"]
+rule = "is_adult and here(can_plant_bean and (plant_beans or has_explosives or Progressive_Strength_Upgrade))"
+was = "can_take_damage or can_use(Hover_Boots) or (is_adult and here(can_plant_bean and (plant_beans or has_explosives or Progressive_Strength_Upgrade)))"
+source = "Kareem via Claude, 2026-11-27, Bender audit R10: the remake needs the bean sprout to the heart above Dodongo's Cavern. Hover Boots and the N64 damage/backflip route do not reach it without movement tricks. Approved tightening: keep only the existing adult bean clause, including its here(...) plot-access terms; no new play required."

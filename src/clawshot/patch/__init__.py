@@ -40,6 +40,7 @@ from clawshot.patch import (
 from clawshot.patch import events as chest_events
 from clawshot.patch import items as item_actors
 from clawshot.patch import receive_event as receive_event_patch
+from clawshot.patch._goggles import longshot_vines
 from clawshot.patch.custom_items import Foreign
 from clawshot.patch.plan import Links, PatchError, Plan, link, make_plan, remake_vanilla, restrict_event_openings
 from clawshot.patch.write import FileChanges, NewFile, WrittenFile, write
@@ -179,6 +180,7 @@ def make_seed(
         out = from_placements(spec, seed, settings, placements, vanilla=vanilla)
     custom = custom_step(romfs, out, links, table, foreign or {}, possessive_text=possessive_text)
     changes = tuple(step(out.placements) for step in extra_steps)
+    changes += (longshot_vines.changes(),)
     flags = list(custom.flags)
     new_files = dict(custom.new_files)
     token_rows: tuple[tokens.SourceChange, ...] = ()

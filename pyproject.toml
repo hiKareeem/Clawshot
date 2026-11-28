@@ -3,7 +3,8 @@ name = "clawshot"
 version = "0.2.9"
 description = "Item randomizer for The Legend of Zelda: Ocarina of Time on Nintendo Switch 2"
 readme = "README.md"
-license = "MIT"
+license = "MIT AND Apache-2.0"
+license-files = ["LICENSE", "NOTICE", "src/clawshot/patch/_goggles/LICENSE.txt"]
 requires-python = ">=3.12"
 dependencies = [
     "zstandard>=0.23",

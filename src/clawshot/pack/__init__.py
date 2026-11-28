@@ -78,6 +78,8 @@ def source_files(root: Path = ROOT) -> dict[str, bytes]:
     for vendored in ("_nup", "_nx"):  # the upstream permission notices NOTICE points to
         licence = f"src/clawshot/pack/{vendored}/LICENSE.txt"
         files[licence] = (root / licence).read_bytes()
+    licence = "src/clawshot/patch/_goggles/LICENSE.txt"
+    files[licence] = (root / licence).read_bytes()
     for path in sorted((root / "src/clawshot").rglob("*")):
         if path.is_file() and path.suffix in {".py", ".toml", ".bat", ".ps1"} and "__pycache__" not in path.parts:
             if path.is_symlink():

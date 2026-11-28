@@ -55,5 +55,14 @@ Commit 208b815dc21fd92e8bd1c596c708c908b467a457 (tag V1.0.3, branch main).
   conformance fixtures are not vendored.
 - Full upstream permission notice: src/clawshot/pack/_nx/LICENSE.txt, included in source packs.
 
+Goggles of Truth by AbyssDragonModding (https://github.com/AbyssDragonModding/Goggles-of-Truth),
+src/generator/longshot_vines.zig at 523487f37adf5637c28786c752d5124e5865d06e, Apache License 2.0.
+- src/clawshot/patch/_goggles/longshot_vines.py: translated the Lake Hylia hook-wall Presence
+  retargeting to Python; added strict source-Hash/polarity validation and checked BYML transforms
+  composed by Clawshot's common writer. WaterTemple_Room07_00 is not changed.
+- Full upstream Apache License 2.0: src/clawshot/patch/_goggles/LICENSE.txt, included in source packs,
+  UI releases and Python distribution notices. No upstream NOTICE or copyright line is present in
+  the selected source. No unrelated code or transitive third-party portions are ported.
+
 The Legend of Zelda and Ocarina of Time are trademarks of Nintendo. Clawshot is an unofficial fan project, not
 affiliated with or endorsed by Nintendo, and contains no part of the game.
