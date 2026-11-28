@@ -288,6 +288,10 @@ Story-dialogue skipping is not available yet; it is withdrawn for 0.2.3.
 
 ### Known issues
 
+- **Lake Hylia tree vines:** new overlays make the hook-blocking wall follow Longshot acquisition, wherever it
+  was obtained, instead of the Water Temple chest's room-progress flag. Always on; no Water Temple state is
+  pre-set. The patch is built and structurally checked, **not yet tested in game**.
+
 - **Older seed outputs can skip Dampé's first prize.** The former item-based selector always chose the second
   race with a Hookshot/Longshot owned. New seeds repair this, but do not rewrite an older seed's overlay.
   Seeds from 0.2.3 to 0.2.6 can need that missing item: look up `Graveyard Dampe Race Hookshot Chest` in their
@@ -419,7 +423,10 @@ its linked planning records describe each track's scope and observations.
 
 ## Credits and licence
 
-Clawshot is [MIT licensed](LICENSE). [NOTICE](NOTICE) lists the pinned sources and licences:
-OoT Randomizer's world, rule language, search and fill; Archipelago's safe fill swap; a55uka's
-NUP reader; and fab918's NX format specification, from which the NX reader was written. Their work is credited without implying endorsement. Nintendo owns the game and its
+Clawshot's original code is [MIT licensed](LICENSE); the Lake Hylia Longshot-vine adaptation from
+[Goggles of Truth by AbyssDragonModding](https://github.com/AbyssDragonModding/Goggles-of-Truth)
+is Apache-2.0, with its [full licence](src/clawshot/patch/_goggles/LICENSE.txt) included in distributions.
+[NOTICE](NOTICE) lists the pinned sources and licences: OoT Randomizer's world, rule language, search and fill;
+Archipelago's safe fill swap; a55uka's NUP reader; and fab918's NX format specification, from which the NX reader
+was written. Their work is credited without implying endorsement. Nintendo owns the game and its
 trademarks; no part of it is included here.

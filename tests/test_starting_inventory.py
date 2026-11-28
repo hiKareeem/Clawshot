@@ -99,6 +99,27 @@ def test_post_setup_sequence_runs_original_before_ordered_native_grants():
     assert not patched[0x8C + 6] & 4
 
 
+@pytest.mark.dump
+@pytest.mark.parametrize(
+    ("chosen", "granted"),
+    [
+        ("Hookshot", ["Item_NutBag_Small", "Item_DekuNut", "Item_Hookshot"]),
+        ("Longshot", ["Item_NutBag_Small", "Item_DekuNut", "Item_Hookshot", "Item_Longshot"]),
+    ],
+)
+def test_native_starting_hook_tiers_use_ordered_pouch_grants_after_setup(romfs, chosen, granted):
+    original = (romfs / start_items.PATH).read_bytes()
+    patched = start_items.changes(Settings(starting_items=(chosen,)))[start_items.PATH](original)
+    nodes = decode(patched)
+    root = struct.unpack_from("<I", patched, 0x88)[0]
+    assert nodes[root]["kind"] == 2
+    assert nodes[root]["children"] == [0, *range(root + 1, len(nodes))]
+    assert [node["name"] for node in nodes[root + 1 :]] == [start_items.PUSH] * len(granted)
+    assert [(node["params"]["ActorName"], node["params"]["Num"]) for node in nodes[root + 1 :]] == [
+        (f"Work/Actor/{actor}.engine__actor__ActorParam.gyml", 0 if actor == "Item_DekuNut" else 1) for actor in granted
+    ]
+
+
 def song_spec():
     return {
         "start": "Root",
