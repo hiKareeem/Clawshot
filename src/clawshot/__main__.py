@@ -185,6 +185,12 @@ def main(argv: list[str] | None = None) -> int:
         help="experimental: replace Saria's bridge farewell and gift animation with a plain item get (default off)",
     )
     parser.add_argument(
+        "--event-item-models",
+        action=argparse.BooleanOptionalAction,
+        default=None,
+        help="events show the shuffled item's model where they show the vanilla item (default on)",
+    )
+    parser.add_argument(
         "--starting-items",
         nargs="*",
         metavar="ITEM",
@@ -221,6 +227,7 @@ def main(argv: list[str] | None = None) -> int:
             ("skip", "fast_start"),
             ("skippable_story", "skippable_story"),
             ("skip_saria_farewell", "skip_saria_farewell"),
+            ("event_item_models", "event_item_models"),
             ("songs", "songs"),
             ("shop_prices", "shop_prices"),
             ("shop_slots", "shop_slots"),

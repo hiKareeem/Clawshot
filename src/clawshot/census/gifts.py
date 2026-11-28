@@ -305,12 +305,11 @@ def flow_areas(banc: Mapping[str, object], event_settings: Iterable[Mapping]) ->
     return {flow: areas.pop() for flow, areas in found.items() if len(areas) == 1}
 
 
-def scan_gifts(romfs: str | Path, banc: Mapping[str, object] | None = None) -> list[Gift]:
-    """Every gift in the dump at ``romfs`` (read only). ``banc`` (romfs path -> placement tree) saves reading the
-    placement files again when the caller has them."""
-
-    romfs = Path(romfs)
-    dicts = zsdic.Dictionaries.from_romfs(romfs)
+def load_flowcharts(
+    romfs: Path, dicts: zsdic.Dictionaries | None = None
+) -> tuple[dict[str, str], dict[str, evfl.Flowchart]]:
+    """(flow name -> romfs path of the file the game loads, flow name -> its flowchart) for the dump at ``romfs``."""
+    dicts = dicts or zsdic.Dictionaries.from_romfs(romfs)
     versions = {str(k): str(v) for k, v in read_romfs_byml(romfs, dicts, FLOW_VERSIONS)["Versions"].items()}
     files = flow_files(romfs, versions)
     flowcharts = {}
@@ -318,6 +317,16 @@ def scan_gifts(romfs: str | Path, banc: Mapping[str, object] | None = None) -> l
         tree = evfl.read(dicts.decompress(path, (romfs / path).read_bytes()))
         if tree.flowchart is not None:
             flowcharts[flow] = tree.flowchart
+    return files, flowcharts
+
+
+def scan_gifts(romfs: str | Path, banc: Mapping[str, object] | None = None) -> list[Gift]:
+    """Every gift in the dump at ``romfs`` (read only). ``banc`` (romfs path -> placement tree) saves reading the
+    placement files again when the caller has them."""
+
+    romfs = Path(romfs)
+    dicts = zsdic.Dictionaries.from_romfs(romfs)
+    files, flowcharts = load_flowcharts(romfs, dicts)
     if banc is None:
         paths = sorted(p.relative_to(romfs).as_posix() for p in romfs.glob(BANC_GLOB))
         banc = {path: read_romfs_byml(romfs, dicts, path) for path in paths}

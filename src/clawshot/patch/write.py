@@ -10,6 +10,7 @@ from typing import TYPE_CHECKING
 from clawshot.census.scan import DEFAULT_CHEST_DROP, GAME_DATA_LIST
 from clawshot.formats import byml, rstb, sarc, zsdic
 from clawshot.formats.rstb import RstbError
+from clawshot.patch import placed_models
 from clawshot.patch.getitem import member_growth as getitem_member_growth
 from clawshot.patch.plan import DROP_KEY, EVENT_KEY, SUBSTITUTE_KEY, PatchError, Plan
 from clawshot.patch.shops import member_growth
@@ -34,6 +35,8 @@ class NewFile:
     data: bytes
     members: Mapping[str, tuple[str, int]] = field(default_factory=dict)
     copied: Mapping[str, str] = field(default_factory=dict)
+    # A loose file with no size formula: (the native file whose entry it starts from, its growth) (event-items).
+    sized_like: tuple[str, int] | None = None
 
 
 NewFiles = Mapping[str, NewFile]
@@ -227,7 +230,13 @@ def _new_file(
                 new_members[name] = content
     elif file.copied or file.members:
         raise PatchError(f"{path}: only a pack has members to copy")
-    entry = _entry_for(path, file.data)
+    if file.sized_like is not None:
+        donor, growth = file.sized_like
+        if (donor_entry := table.get(donor)) is None:
+            raise PatchError(f"{path}: its size donor {donor} has no resource size table entry")
+        entry = donor_entry + growth
+    else:
+        entry = _entry_for(path, file.data)
     table.set(path, entry)
     compressed = dicts.compress(path, file.data) if path.endswith(".zs") else file.data
     if path.endswith(".zs") and dicts.decompress(path, compressed) != file.data:
@@ -278,12 +287,19 @@ def write(
                 new_data = transform(new_data)
         if path.startswith("Pack/Actor/") and path.endswith(".pack.zs"):
             growths = member_growth(data, new_data) | getitem_member_growth(data, new_data)
+            donor_sized = placed_models.added_member_sizes(data, new_data)  # no formula: a native entry + growth
             old_members, packed_members = sarc.read(data), sarc.read(new_data)
             written_packs[path] = packed_members
             for member, content in packed_members.items():
                 if member not in old_members and table.get(member) is None:
                     _absent(romfs, table, member, f"{path}: added pack member")
-                    table.set(member, _entry_for(member, content))
+                    if member in donor_sized:
+                        donor, growth = donor_sized[member]
+                        if (entry := table.get(donor)) is None:
+                            raise PatchError(f"{member}: its donor {donor} has no resource size table entry")
+                        table.set(member, entry + growth)
+                    else:
+                        table.set(member, _entry_for(member, content))
                     members_grew = True
                 elif member.endswith(rstb.ACTOR_PARAM) and old_members.get(member) != content:
                     required = _entry_for(member, content)

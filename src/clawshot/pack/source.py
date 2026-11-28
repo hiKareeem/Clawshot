@@ -301,7 +301,19 @@ def working_files(source: "NupRomfs | NxRomfs | StackedRomfs | FolderRomfs", spe
     from fnmatch import fnmatchcase
 
     from clawshot.generate import tokens as token_policy
-    from clawshot.patch import floor_keys, getitem, items, jail_keys, ocarina_pickup, shops, songs, tokens
+    from clawshot.patch import (
+        event_lines,
+        event_models,
+        floor_keys,
+        getitem,
+        items,
+        jail_keys,
+        ocarina_pickup,
+        saria_farewell,
+        shops,
+        songs,
+        tokens,
+    )
 
     actors = set(items.load().actors.values())
     slots = shops.load()
@@ -321,6 +333,14 @@ def working_files(source: "NupRomfs | NxRomfs | StackedRomfs | FolderRomfs", spe
     # read the same tables and their own packs.
     wanted.update(songs.native_inputs(pickups=True))
     wanted.update(ocarina_pickup.native_inputs())
+    # The event-items steps (plans/event-items.md), for any item a grant can give: event containers and placed
+    # objects (event_item_models on) read the container donor, each item's model pack and the placed objects' packs;
+    # prize lines read the given item's pack for its text key; every seed's Saria farewell reads Saria's pack and
+    # schedule. Their flows, placements and language archives are in the patterns below.
+    given = sorted(set(items.load().actors.values()))
+    wanted.update(event_models.native_inputs(given))
+    wanted.update(event_lines.native_inputs(given))
+    wanted.update(saria_farewell.native_inputs())
     wanted.update(path for path in source.files if any(fnmatchcase(path, pattern) for pattern in spec["patterns"]))
     return wanted
 

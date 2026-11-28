@@ -4,7 +4,7 @@ the effect clones, the song packs and rows, the floor pickups, and every native 
 import math
 
 import pytest
-from synthetic_effects import HEART_USERS, build_bffh, build_table
+from synthetic_effects import HEART_ACTION_USERS, HEART_USERS, build_bffh, build_table
 
 from clawshot.formats import byml, elink, sarc, vfx, zsdic
 from clawshot.patch import getitem, songs
@@ -683,3 +683,99 @@ def test_only_a_song_away_from_its_vanilla_place_asks_for_the_song_effects():
 )
 def test_song_effects_run_when_the_settings_let_songs_leave_their_places(shuffle, runs):
     assert songs.songs_can_move(shuffle) is runs
+
+
+# Event containers (event-items D18): the scene's own animation moves an event prop's Skl_Root (Zelda's throw,
+# Dm_HrlField_0060: Root has no curves), so a container's effect sits on Skl_Root; at rest the two bones are one
+# (Saria's presenting animation). The song actor's own get pose keeps Root (E6).
+EVENT_SONGS = ["Item_Melody_SunSong", "Item_Melody_FireBolero"]
+
+
+def _snapshot_but_bone(table, user):
+    """The user's calls with every Bone left out."""
+    return [
+        (
+            key,
+            asset,
+            flag,
+            condition,
+            {k: v for k, v in detail.items() if k != "Bone"} if isinstance(detail, dict) else detail,
+        )
+        for key, asset, flag, condition, detail in users_snapshot(table, [user])[user]
+    ]
+
+
+def test_event_users_are_the_song_users_with_their_effect_on_skl_root():
+    native = build_table(HEART_USERS)
+    shown = elink.decode(songs.patch_elink(native, effects=EFFECTS))
+    table = elink.decode(songs.patch_event_elink(native, songs=EVENT_SONGS, effects=EFFECTS))
+    before = elink.decode(native)
+    assert sorted(table.user_names()) == sorted(before.user_names() + [songs.event_user_name(s) for s in EVENT_SONGS])
+    assert users_snapshot(table, before.user_names()) == users_snapshot(before, before.user_names())
+    for song in EVENT_SONGS:
+        event, own = songs.event_user_name(song), songs.user_name(song)
+        assert event == own + "_Event"
+        assert [c.key for c in table.calls(event)] == [c.key for c in shown.calls(own)]
+        assert _snapshot_but_bone(table, event) == _snapshot_but_bone(shown, own)
+    get = table.call_params(songs.event_user_name("Item_Melody_SunSong"), "GetDemo")
+    assert get["Bone"] == songs.EVENT_BONE == "Skl_Root" and get["PositionY"] == 0.0
+    user = songs.event_user_name("Item_Melody_FireBolero")
+    kind, first, last = table.container(user, "GetDemo")
+    assert {table.call_params(user, k)["Bone"] for k in range(first, last + 1)} == {"Skl_Root"}
+
+
+def test_event_users_and_song_users_go_into_one_table_in_either_order():
+    native = build_table(HEART_USERS)
+    one = songs.patch_elink(songs.patch_event_elink(native, songs=EVENT_SONGS, effects=EFFECTS), effects=EFFECTS)
+    other = songs.patch_event_elink(songs.patch_elink(native, effects=EFFECTS), songs=EVENT_SONGS, effects=EFFECTS)
+    names = [*elink.decode(native).user_names(), *map(songs.user_name, getitem.SONG_MODELS)]
+    names += [songs.event_user_name(s) for s in EVENT_SONGS]
+    for out in (one, other):
+        assert sorted(elink.decode(out).user_names()) == sorted(names)
+
+
+def test_an_event_user_for_something_not_a_song_is_refused():
+    with pytest.raises(PatchError):
+        songs.patch_event_elink(build_table(HEART_USERS), songs=["Obj_Heart_Piece"], effects=EFFECTS)
+
+
+# Event-items D20 (pilot A, BBender, runs S12, S13): a scene animation played on a song container (the target's C02,
+# Darunia's C09-Gauntlet) starts the event user's get-pose effect, as Rotate_GetDemo does; the emitted key alone did
+# not show there (S3, S4, S11).
+SCENES = ["Dm_LostWood_0040_Item_BulletBag_Large/C02", "Dm_Goron_0030_Gauntlet_Goron/C09-Gauntlet"]
+
+
+def test_event_users_start_their_effect_from_each_scene_animation():
+    native = build_table(HEART_ACTION_USERS)
+    plain = elink.decode(songs.patch_event_elink(native, songs=EVENT_SONGS, effects=EFFECTS))
+    table = elink.decode(songs.patch_event_elink(native, songs=EVENT_SONGS, effects=EFFECTS, scene_actions=SCENES))
+    for song in EVENT_SONGS:
+        user = songs.event_user_name(song)
+        assert table.action_triggers(user) == [
+            ("AS[Lower]", "Dm_Goron_0030_Gauntlet_Goron/C09-Gauntlet", ["GetDemo"]),
+            ("AS[Lower]", "Dm_LostWood_0040_Item_BulletBag_Large/C02", ["GetDemo"]),
+            ("AS[Lower]", "Rotate_Obj", ["Wait"]),
+            ("Skl[Lower]", "Rotate_GetDemo", ["GetDemo"]),
+        ]
+        assert plain.action_triggers(user) == elink.decode(native).action_triggers("Obj_Heart_Container")
+        assert users_snapshot(table, [user]) == users_snapshot(plain, [user])  # the calls are the same
+    names = elink.decode(native).user_names()
+    assert {n: table.user_data(n) for n in names} == {n: plain.user_data(n) for n in names}
+
+
+def test_the_song_users_stay_byte_identical_when_event_users_answer_scene_animations():
+    native = songs.patch_elink(build_table(HEART_ACTION_USERS), effects=EFFECTS)
+    plain = elink.decode(songs.patch_event_elink(native, songs=EVENT_SONGS, effects=EFFECTS))
+    table = elink.decode(songs.patch_event_elink(native, songs=EVENT_SONGS, effects=EFFECTS, scene_actions=SCENES))
+    own = [songs.user_name(s) for s in getitem.SONG_MODELS]
+    assert {n: table.user_data(n) for n in own} == {n: plain.user_data(n) for n in own}
+    assert {n: table.user_data(n) for n in own} == {n: elink.decode(native).user_data(n) for n in own}
+    changed = [n for n in table.user_names() if table.user_data(n) != plain.user_data(n)]
+    assert sorted(changed) == sorted(songs.event_user_name(s) for s in EVENT_SONGS)
+
+
+def test_scene_actions_given_twice_or_in_another_order_give_the_same_table():
+    native = build_table(HEART_ACTION_USERS)
+    one = songs.patch_event_elink(native, songs=EVENT_SONGS, effects=EFFECTS, scene_actions=SCENES)
+    other = songs.patch_event_elink(native, songs=EVENT_SONGS, effects=EFFECTS, scene_actions=[*SCENES[::-1], *SCENES])
+    assert one == other

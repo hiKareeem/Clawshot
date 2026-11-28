@@ -497,12 +497,14 @@ _EVERY_RECIPE = _modules(
     "keys",
     "ocarina",
     "progressive_bonus",
+    "saria_farewell",  # event-items Q2/D9: the bridge Saria's own actor, every seed
     "scene_handoff",
     "scrubs",
 )
 _OPT_IN = _modules(
     "custom_items",
     "door",
+    "event_models",  # event-items: events show the given item (setting on by default) once a gift or reward moves
     "gifts",
     "master_sword",
     "mido",
@@ -625,8 +627,13 @@ def written_world(romfs: Path, output: SeedOutput) -> tuple[World, list[str]]:
         flow = PurePosixPath(path).name.removesuffix(FLOW_SUFFIX).partition(".")[0]
         if files.get(flow, path) != path:
             continue  # a copy the game does not load (patch.rewards edits the dormant base flow with the .110 one)
-        chart = evfl.read(content).flowchart
-        assert chart is not None and chart.name == flow, path
+        document = evfl.read(content)
+        chart = document.flowchart
+        if chart is None:
+            # A timeline-only file (event-items: Saria presenting her gift, Zelda's throw): no flowchart events.
+            assert document.timeline is not None, path
+            continue
+        assert chart.name == flow, path
         charts[flow] = chart
         written.append(flow)
     settings, analyzed = (

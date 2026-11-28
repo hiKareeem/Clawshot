@@ -27,6 +27,7 @@ from typing import Any
 
 from clawshot import progressive
 from clawshot.census import definitions as census_definitions
+from clawshot.census import event_items
 from clawshot.census.definitions import Definition
 from clawshot.census.gifts import (
     DIRECT,
@@ -161,7 +162,8 @@ class Rule:
     once: tuple[str, ...] = ()  # equipped-shield queries replaced by saved check-completion queries
     purchase: bool = False  # specialize a native sale and save completion only after its grant
     track: tuple[TrackEntry, ...] = ()  # tracker only; the patch ignores it (D1)
-    display: tuple[str, ...] = ()  # window-only GetPouchContent:DisplayGetByActorName calls paired with the grant
+    # "<flow>/<event>" display-only get windows and Zelda's Notes targets naming the check's item (event-items 1.1)
+    display: tuple[str, ...] = ()
 
 
 def _nonempty(value: object) -> bool:
@@ -258,6 +260,8 @@ def loads(text: str) -> dict[str, Rule]:
             raise GiftPatchError(f"{check}: no native purchase specialization")
         if rule.writes and (not isinstance(rule.flag, str) or not rule.flag.startswith("HavePlayedEvent.")):
             raise GiftPatchError(f"{check}: writes need an existing per-check event completion flag")
+        if cls == MORE and rule.display:
+            raise GiftPatchError(f"{check}: class {MORE!r} is never shuffled, so it has no display")
         if cls == MORE and not rule.reason:
             raise GiftPatchError(f"{check}: class {MORE!r} needs a reason")
         if rule.track:
@@ -509,22 +513,6 @@ def _set_item(fc: evfl.Flowchart, step: Gift, item: str) -> None:
     params[step.param] = item
 
 
-def _display_item(fc: evfl.Flowchart, flow: str, ref: str, vanilla: set[str], item: str) -> None:
-    event = fc.events[_index(fc, flow, ref.split("/")[1])]
-    actor = (getattr(event, "params", None) or {}).get("ActorName")
-    if (
-        not isinstance(event, evfl.SubFlowEvent)
-        or (event.flowchart, event.entry_point) != ("GetPouchContent", "DisplayGetByActorName")
-        or not isinstance(actor, str)
-        or isinstance(actor, evfl.Argument)
-        or actor not in vanilla
-    ):
-        raise GiftPatchError(
-            f"{ref}: expected DisplayGetByActorName with literal ActorName in {sorted(vanilla)}, got {event!r}"
-        )
-    event.params["ActorName"] = item
-
-
 def _set_flag_after(fc: evfl.Flowchart, step: Gift, flag: str) -> None:
     i = _index(fc, step.flow, step.event)
     event = fc.events[i]
@@ -628,6 +616,32 @@ def _shopkeeper_window(fc: evfl.Flowchart, flag: str) -> None:
         ]
     )
     dispatch.next = start
+
+
+def _set_display(fc: evfl.Flowchart, flow: str, ref: str, vanilla: set[str], item: str) -> None:
+    """Point the display-only get window or Zelda's Notes target ``ref`` at ``item`` (spec event-items 1.2). Its
+    native value must be the grant's vanilla item."""
+    event = fc.events[_index(fc, flow, ref.split("/")[1])]
+    if (
+        isinstance(event, evfl.SubFlowEvent)
+        and (event.flowchart or flow) == event_items.DISPLAY_FLOW
+        and event.entry_point == event_items.DISPLAY_ENTRY
+    ):
+        param = event_items.DISPLAY_PARAM
+    elif (
+        isinstance(event, evfl.ActionEvent) and fc.actors[event.actor].actions[event.action] == event_items.NOTES_ACTION
+    ):
+        param = event_items.NOTES_PARAM
+    else:
+        raise GiftPatchError(
+            f"{ref}: expected DisplayGetByActorName with literal ActorName or a Zelda's Notes step, got {event!r}"
+        )
+    native = (event.params or {}).get(param)
+    if isinstance(native, evfl.Argument) or native not in vanilla:
+        raise GiftPatchError(
+            f"{ref}: expected DisplayGetByActorName with literal ActorName in {sorted(vanilla)}: {param} is {native!r}"
+        )
+    event.params = {**event.params, param: item}
 
 
 def _skip(fc: evfl.Flowchart, flow: str, ref: str) -> None:
@@ -946,7 +960,7 @@ def patch_flowchart(fc: evfl.Flowchart, flow: str, changes: Sequence[GiftChange]
                     _dampe_reward(fc, step)
         for ref in change.rule.display:
             if ref.split("/")[0] == flow:
-                _display_item(fc, flow, ref, vanilla, change.item)
+                _set_display(fc, flow, ref, vanilla, change.item)
         for ref in change.rule.given:
             if ref.split("/")[0] == flow:
                 _read_flag(fc, flow, ref, vanilla, change.flag)

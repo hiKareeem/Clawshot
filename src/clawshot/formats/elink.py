@@ -24,12 +24,20 @@ u64 parameter record (relative to the records) or container record (relative to 
 condition}``), the container block (16-byte records ``{3, first child, last child, 0}``: type 3 plays every child),
 the trigger table (entries name calls by byte offset from the first call) and padding.
 
+A user's trigger table (counts in the user header: +0x14 slots, +0x18 actions, +0x1C action triggers, +0x20
+properties, +0x24 property triggers, +0x28 always triggers): slots ``{u64 name, u16 first action, u16 last action,
+u32}`` (``AS[Lower]``, ``Skl[Lower]``: animation slots), actions ``{u64 name, u32 first trigger, u32 last trigger}``
+(an animation node the slot plays, e.g. ``Rotate_GetDemo``, or a scene's ``<ASB root>/<node>``), then 0x28-byte
+triggers ``{u32 guid, u32, u64 call (byte offset from the first call), ...}``. Within a slot, native actions are
+sorted by name ignoring case (all but one of the native ASCII-named slots, dump 1.1.1; event-items D20).
+
 Edits only append (direct values, records, names, calls), so every native position stays valid; new users go after
 the native ones. :meth:`Elink.encode` lays the sections out again and fixes the header.
 """
 
 import struct
 import zlib
+from collections.abc import Sequence
 from dataclasses import dataclass
 
 MAGIC = b"XLNK"
@@ -40,6 +48,10 @@ NAME = 1  # value type: name-table offset
 DIRECT = 0  # value type: direct value index
 PLAY_ALL = 3
 NO_CONDITION = 0xFFFFFFFF
+TRIGGER_COUNTS = 0x14  # user header: u32 slot, action, trigger, property, property-trigger, always-trigger counts
+SLOT_ROW = struct.Struct("<QHHI")
+ACTION_ROW = struct.Struct("<QII")
+TRIGGER_ROW = 0x28
 
 
 class ElinkError(ValueError):
@@ -253,6 +265,44 @@ class Elink:
         u = self.user_data(name)
         return u[self._layout(u).trigger :]
 
+    def _action_table(self, name: str, u: bytes) -> tuple[list[tuple], list[tuple], list[bytes]]:
+        """``name``'s slots ``(name offset, first, last, rest)``, actions ``(name offset, first, last)`` and action
+        triggers (bytes). Refuses a user with property or always triggers, rows that do not cover their actions and
+        triggers in order, or non-zero bytes after the triggers (a user made a container keeps two paddings)."""
+        n_slot, n_action, n_trigger, *other = struct.unpack_from("<6I", u, TRIGGER_COUNTS)
+        if any(other):
+            raise ElinkError(f"{name}: property or always triggers {other}; only action triggers are handled")
+        at = self._layout(u).trigger
+        slots = [SLOT_ROW.unpack_from(u, at + SLOT_ROW.size * k) for k in range(n_slot)]
+        at += SLOT_ROW.size * n_slot
+        actions = [ACTION_ROW.unpack_from(u, at + ACTION_ROW.size * k) for k in range(n_action)]
+        at += ACTION_ROW.size * n_action
+        triggers = [bytes(u[at + TRIGGER_ROW * k : at + TRIGGER_ROW * (k + 1)]) for k in range(n_trigger)]
+        at += TRIGGER_ROW * n_trigger
+        if any(u[at:]):
+            raise ElinkError(f"{name}: data after the action triggers (padding only expected)")
+        for rows, total in ((slots, n_action), (actions, n_trigger)):
+            covered = 0
+            for row in rows:
+                if row[1] != covered or row[2] < row[1]:
+                    raise ElinkError(f"{name}: trigger table rows out of order at {row[1]}..{row[2]}")
+                covered = row[2] + 1
+            if covered != total:
+                raise ElinkError(f"{name}: trigger table rows cover {covered} of {total}")
+        return slots, actions, triggers
+
+    def action_triggers(self, name: str) -> list[tuple[str, str, list[str]]]:
+        """``name``'s action triggers in table order: (slot, action, the key of each trigger's call)."""
+        u = self.user_data(name)
+        slots, actions, triggers = self._action_table(name, u)
+        calls = self._calls(u)
+        out = []
+        for slot, first, last, _ in slots:
+            for action, a, b in actions[first : last + 1]:
+                keys = [calls[_u64(trigger, 8) // CALL.size].key for trigger in triggers[a : b + 1]]
+                out.append((self.name_at(slot), self.name_at(action), keys))
+        return out
+
     # ---------------------------------------------------------------------------------------------------------
     # Appending
 
@@ -392,6 +442,50 @@ class Elink:
         struct.pack_into("<Q", body, 0x30, len(body))
         body += u[lay.trigger :]
         self._set_user(name, bytes(body + bytes(-len(body) % 8)))
+
+    def add_action_triggers(self, name: str, slot: str, actions: Sequence[str], template: str) -> None:
+        """Give user ``name`` an action per name of ``actions`` in slot ``slot``, each with a copy of the one trigger
+        of its action ``template`` (so it starts the same call) under the guid CRC32(``<name>/<action>``). The
+        trigger table is laid out again: slots in their order, each slot's actions sorted by name ignoring case (as
+        native users), then the triggers in action order; the native rows keep their bytes, the header gets the new
+        action and trigger counts. New names are interned in that order. Refuses an action the slot has already,
+        a missing slot or template, a template without exactly one trigger, and what :meth:`_action_table`
+        refuses."""
+        u = self.user_data(name)
+        slots, rows, triggers = self._action_table(name, u)
+        names = [self.name_at(row[0]) for row in rows]
+        found = [k for k, row in enumerate(rows) if names[k] == template]
+        if len(found) != 1 or rows[found[0]][1] != rows[found[0]][2]:
+            raise ElinkError(f"{name}: needs one action {template!r} with one trigger")
+        copy = triggers[rows[found[0]][1]]
+        by_slot = [s for s in slots if self.name_at(s[0]) == slot]
+        if len(by_slot) != 1:
+            raise ElinkError(f"{name}: {len(by_slot)} slots {slot!r}, expected one")
+        if len(set(actions)) != len(actions):
+            raise ElinkError(f"{name}: actions named twice in {list(actions)}")
+        table, action_rows, trigger_rows = bytearray(), bytearray(), bytearray()
+        n_action = n_trigger = 0
+        for row in slots:
+            group = [(names[k], rows[k][0], triggers[rows[k][1] : rows[k][2] + 1]) for k in range(row[1], row[2] + 1)]
+            if row is by_slot[0]:
+                if have := sorted({g[0] for g in group} & set(actions)):
+                    raise ElinkError(f"{name}: slot {slot} has {have} already")
+                for action in actions:
+                    guid = struct.pack("<I", zlib.crc32(f"{name}/{action}".encode()))
+                    group.append((action, None, [guid + copy[4:]]))
+                group.sort(key=lambda g: g[0].lower().encode("utf-8"))
+            table += SLOT_ROW.pack(row[0], n_action, n_action + len(group) - 1, row[3])
+            for action, offset, trigs in group:
+                offset = self.intern(action) if offset is None else offset
+                action_rows += ACTION_ROW.pack(offset, n_trigger, n_trigger + len(trigs) - 1)
+                trigger_rows += b"".join(trigs)
+                n_action += 1
+                n_trigger += len(trigs)
+        at = self._layout(u).trigger
+        data = bytearray(u[:at]) + table + action_rows + trigger_rows
+        data += bytes(-len(data) % 8)
+        struct.pack_into("<II", data, TRIGGER_COUNTS + 4, n_action, n_trigger)
+        self._set_user(name, bytes(data))
 
     # ---------------------------------------------------------------------------------------------------------
     # Writing

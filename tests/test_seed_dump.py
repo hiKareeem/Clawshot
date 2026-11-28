@@ -14,7 +14,7 @@ from clawshot.census.scan import CHEST, scan
 from clawshot.formats import byml, rstb, sarc, zsdic
 from clawshot.generate import Settings, prepare
 from clawshot.patch import events as chest_events
-from clawshot.patch import getitem, make_seed, songs, write_seed
+from clawshot.patch import getitem, make_seed, placed_models, saria_farewell, songs, write_seed
 from clawshot.patch import items as item_actors
 from clawshot.patch.plan import DROP_KEY, EVENT_KEY, Plan
 from clawshot.world.load import load_spec
@@ -83,7 +83,10 @@ def test_written_files_differ_only_where_the_plan_says(romfs, tmp_path, seed_num
         f = written[path]
         original = byml.read(dicts.decompress(path, (romfs / path).read_bytes()))
         new_data = dicts.decompress(path, (out / "romfs" / path).read_bytes())
-        assert set(field_changes(original, byml.read(new_data))) == expected_changes(plan, path), path
+        expected = expected_changes(plan, path)
+        if path == saria_farewell.PLACEMENT_FILE:  # every seed (event-items D9): the bridge Saria's own actor
+            expected.add((saria_farewell.PLACEMENT_HASH, ("Gyaml",), saria_farewell.SARIA, saria_farewell.FAREWELL))
+        assert set(field_changes(original, byml.read(new_data))) == expected, path
         need = rstb.required_size(path, len(new_data))
         expected_table.set(path, max(table.get(path), need))
         print(
@@ -111,15 +114,28 @@ def test_written_files_differ_only_where_the_plan_says(romfs, tmp_path, seed_num
         assert native_entry is not None, path
         assert len((out / "romfs" / path).read_bytes()) <= (romfs / path).stat().st_size <= native_entry, path
     for path, generated in output.new_files.items():
-        data = dicts.decompress(path, (out / "romfs" / path).read_bytes())
+        data = (out / "romfs" / path).read_bytes()
+        if path.endswith(".zs"):  # a loose file (Saria's farewell schedule list, event-items) is written as it is
+            data = dicts.decompress(path, data)
         assert data == generated.data, path
         assert not (romfs / path).exists(), path
-        expected_table.set(path, rstb.required_size(path, len(data)))
+        if generated.sized_like is not None:  # no size formula: the native donor's entry plus the growth
+            donor, growth = generated.sized_like
+            expected_table.set(path, table.get(donor) + growth)
+        else:
+            expected_table.set(path, rstb.required_size(path, len(data)))
+        if path.endswith(".pack.zs"):  # its members: declared donors, copied natives, else their type's formula
+            for name, content in sarc.read(data).items():
+                if name in generated.members:
+                    donor, growth = generated.members[name]
+                    expected_table.set(name, table.get(donor) + growth)
+                elif name not in generated.copied and table.get(name) is None and not generated.members:
+                    expected_table.set(name, member_entry(name, content))
 
     raised = expected_table != table
     files = sorted(p.relative_to(out).as_posix() for p in out.rglob("*") if p.is_file())
     table_file = [f"romfs/{rstb.TABLE_PATH}"] if raised else []
-    planned = [*plan.files(), *extra, *raw, *output.new_files]
+    planned = sorted({*plan.files(), *extra, *raw, *output.new_files})  # a chest file a step also edits counts once
     assert files == sorted(["spoiler.json", "play-note.md", *(f"romfs/{p}" for p in planned), *table_file])
     if raised:
         new_table = rstb.read(dicts.decompress(rstb.TABLE_PATH, (out / "romfs" / rstb.TABLE_PATH).read_bytes()))
@@ -127,16 +143,30 @@ def test_written_files_differ_only_where_the_plan_says(romfs, tmp_path, seed_num
     print(f"  size table {'written' if raised else 'not written: every entry fits'}")
 
 
+def member_entry(name, content):
+    """A member new to the game: its type's formula (an actor parameter counts its own components, an animation
+    parameter its AnimationResources entries)."""
+    components = resources = None
+    if name.endswith(rstb.ACTOR_PARAM):
+        components = len(byml.read(content).get("Components", {}))
+    elif name.endswith(rstb.ANIMATION_PARAM):
+        resources = len(byml.read(content).get("AnimationResources", []))
+    return rstb.required_size(name, len(content), components, resources=resources)
+
+
 def expect_member_entries(expected_table, table, before, after):
-    """A changed actor pack's members: a new member with no entry gets its type's formula, a changed actor
-    parameter is raised to what its own components need (never lowered); copied native members keep theirs."""
+    """A changed actor pack's members: a new member with no entry gets its type's formula, or for a placed object's
+    own model member (event-items) its native ModelInfo entry plus growth; a changed actor parameter is raised to what
+    its own components need (never lowered); copied native members keep theirs."""
     old, new = sarc.read(before), sarc.read(after)
+    donor_sized = placed_models.added_member_sizes(before, after)
     for name, content in new.items():
         if name not in old and table.get(name) is None:
-            resources = None
-            if name.endswith(rstb.ANIMATION_PARAM):
-                resources = len(byml.read(content).get("AnimationResources", []))
-            expected_table.set(name, rstb.required_size(name, len(content), resources=resources))
+            if name in donor_sized:
+                donor, growth = donor_sized[name]
+                expected_table.set(name, table.get(donor) + growth)
+            else:
+                expected_table.set(name, member_entry(name, content))
         elif name.endswith(rstb.ACTOR_PARAM) and old.get(name) != content:
             need = rstb.required_size(name, len(content), len(byml.read(content).get("Components", {})))
             expected_table.set(name, max(table.get(name), need))

@@ -1,0 +1,267 @@
+# Event props: the actors an event shows as the item its check gives (spec event-items 2.1; inventory in
+# plans/event-items.md). Identifiers only (AGENTS.md rule 1). Read by clawshot.patch.event_props.
+#
+# Every item actor (Dm_Item_*, Item_*, Weapon_Sword_*) that an event flowchart or timeline binds, animates or brings on
+# stage (clawshot.census.event_items.scan_prop_actors) is either a [[prop]] here or covered by an [exclude.*] list;
+# tests/test_event_props_dump.py fails on a new, missing or stale entry.
+#
+#   check      the gift check (gift_rules.toml) or dungeon reward slot (data/dungeon_rewards.toml)
+#   item       the vanilla item actor the prop stands for (the check's grant; for a branch, that branch's grant)
+#   event      the flow file; part "flowchart", "timeline" or "placement"; actor and secondary name identify the actor
+#   grant      for a branch pair: the "<flow>/<event>" grant the branch belongs to (D13)
+#   banc, hash for a placed object: the placement file and the actor's Hash
+#   scene_as   for a flowchart prop the flow plays a scene animation on (EventPlayAS): the animation set its EventSetting
+#              row loads for it (ExtraResources.EventAS, Work/AS/Root/Event/<scene_as>.root.as), the one whose ASB
+#              holds the played nodes. A song container's event user gets a trigger on each "<scene_as>/<node>"
+#              (decision D20). Source: Claude, dump 1.1.1, 2026-11-27 (EventSetting rows, AS/<scene_as>.root.asb);
+#              played for the target and Darunia (pilot A, BBender, runs S12, S13).
+#
+# Source: Claude, dump 1.1.1, 2026-11-25 (scan_prop_actors, census gift steps).
+
+# --- flowchart props ----------------------------------------------------------------------------------------------
+
+[[prop]]
+check = "LW Gift from Saria"
+item = "Item_Ocarina_Fairy"
+event = "Dm_Kokiri_0155"
+part = "flowchart"
+actor = "Item_Ocarina_Fairy"  # Event93 binds it to Link's Weapon_L
+
+[[prop]]
+check = "LW Target in Woods"
+item = "Item_BulletBag_Large"
+event = "Dm_LostWood_0040"
+part = "flowchart"
+actor = "Item_BulletBag_Large"
+secondary = "LostWood"
+scene_as = "Dm_LostWood_0040_Item_BulletBag_Large"  # Event33 plays C02
+grant = "Dm_LostWood_0040/Event17"
+
+[[prop]]
+check = "LW Target in Woods"
+item = "Item_BulletBag_Medium"
+event = "Dm_LostWood_0040"
+part = "flowchart"
+actor = "Item_BulletBag_Medium"
+secondary = "LostWood"
+scene_as = "Dm_LostWood_0040_Item_BulletBag_Medium"  # Event32 plays C02
+grant = "Dm_LostWood_0040/Event30"
+
+[[prop]]
+check = "GC Darunias Joy"
+item = "Item_Gauntlet_Goron"
+event = "Dm_Goron_0030"
+part = "flowchart"
+actor = "Item_Gauntlet_Goron"
+scene_as = "Dm_Goron_0030_Gauntlet_Goron"  # Event4 plays C09-Gauntlet
+
+[[prop]]
+check = "HC Zeldas Letter"
+item = "Item_ZeldaLetter"
+event = "Dm_HrlCastle_0050"
+part = "flowchart"
+actor = "Item_ZeldaLetter"
+scene_as = "Dm_HrlCastle_0050_Item_ZeldaLetter"  # plays C14-0-st
+
+[[prop]]
+check = "ToT Light Arrows Cutscene"
+item = "Item_Arrow_Light"
+event = "Dm_TimeTemple_0130"
+part = "flowchart"
+actor = "Item_Arrow_Light"
+
+[[prop]]
+check = "DMT Trade Eyedrops"
+item = "Item_ClaimCheck"
+event = "Dm_DeathMtTrail_0050"
+part = "flowchart"
+actor = "Item_ClaimCheck"
+secondary = "daigoron"
+
+[[prop]]
+check = "DMT Biggoron"
+item = "Item_Sword_Biggoron"
+event = "Npc_Goron_Biggoron_Adult"
+part = "flowchart"
+actor = "Item_Sword_Biggoron"  # brought on stage only (Event8); no bind in the flow
+
+[[prop]]
+check = "Queen Gohma"
+item = "Item_Stone_Forest"
+event = "Dm_Kokiri_0130"
+part = "flowchart"
+actor = "Item_Stone_Forest"
+scene_as = "Dm_Kokiri_0130_Item_Stone_Forest"  # plays C01, C06, C07, C08
+
+[[prop]]
+check = "King Dodongo"
+item = "Item_Stone_Fire"
+event = "Dm_DeathMtTrail_0025"
+part = "flowchart"
+actor = "Item_Stone_Fire"
+scene_as = "Dm_DeathMtTrail_0025_Item_Stone_Fire"  # plays C11, C11-05, C11-07
+
+[[prop]]
+check = "Barinade"
+item = "Item_Stone_Water"
+event = "Dm_ZoraFountain_0030"
+part = "flowchart"
+actor = "Item_Stone_Water"
+scene_as = "Dm_ZoraFountain_0030_Item_Stone_Water"  # plays C01, C02, C03
+
+[[prop]]
+check = "Phantom Ganon"
+item = "Item_Medal_Forest"
+event = "Dm_Awake_Forest_Get"
+part = "flowchart"
+actor = "Item_Medal_Forest"
+
+[[prop]]
+check = "Volvagia"
+item = "Item_Medal_Fire"
+event = "Dm_Awake_Fire_Get"
+part = "flowchart"
+actor = "Item_Medal_Fire"
+
+[[prop]]
+check = "Morpha"
+item = "Item_Medal_Water"
+event = "Dm_Awake_Water_Get"
+part = "flowchart"
+actor = "Item_Medal_Water"
+
+[[prop]]
+check = "Bongo Bongo"
+item = "Item_Medal_Shadow"
+event = "Dm_Awake_Shadow_Get"
+part = "flowchart"
+actor = "Item_Medal_Shadow"
+
+[[prop]]
+check = "Twinrova"
+item = "Item_Medal_Spirit"
+event = "Dm_Awake_Spirit_Get"
+part = "flowchart"
+actor = "Item_Medal_Spirit"
+
+[[prop]]
+check = "ToT Reward from Rauru"
+item = "Item_Medal_Light"
+event = "Dm_SageRoom_0005"
+part = "flowchart"
+actor = "Item_Medal_Light"
+
+# --- timeline props -----------------------------------------------------------------------------------------------
+
+[[prop]]
+check = "LW Gift from Saria"
+item = "Item_Ocarina_Fairy"
+event = "Dm_Kokiri_0150"
+part = "timeline"
+actor = "Dm_Item_Ocarina_Fairy"  # Saria presents it
+secondary = "0"
+
+[[prop]]
+check = "HF Ocarina of Time Item"
+item = "Item_Ocarina_Time"
+event = "Dm_HrlField_0060"
+part = "timeline"
+actor = "Dm_Item_Ocarina_Time"  # Zelda throws it into the moat (D5)
+secondary = "0"
+
+# --- placed objects -----------------------------------------------------------------------------------------------
+
+[[prop]]
+check = "HF Ocarina of Time Item"
+item = "Item_Ocarina_Time"
+part = "placement"
+actor = "Obj_Ocarina_Time_A_01"  # the moat's object; it stays the pickup (D14 exception)
+banc = "Banc/HyruleField/HyruleField_Child_Static.bcett.byml.zs"
+hash = 2802436684568022035
+
+# Ruto's stone in Jabu-Jabu (Dm_InsideJabu_Jabu_0030 lifts it with Ruto): it shows Barinade's reward before he gives
+# it, so it follows the reward the seed places there, like the moat object (decision Q6, BBender 2026-11-25; plan
+# 10b). Its Notes target (Event252, Item_Stone_Water_Ruto, a Notes-only ID with no text) is left as it is until a
+# played look shows what Notes makes of it (10b.3).
+[[prop]]
+check = "Barinade"
+item = "Item_Stone_Water"
+part = "placement"
+actor = "Obj_InsideJabu_Jabu_Stone_Water_A_01"
+banc = "Banc/InsideJabuJabuBelly/InsideJabuJabuBelly_Static.bcett.byml.zs"
+hash = 15570932853683785298
+
+# --- hand binds (binds an event lacks) ----------------------------------------------------------------------------
+#
+#   template   a flowchart actor whose bind and offstage actions, and the parameters of its first such events, are copied
+#   target     the actor whose bone takes the container; bone the bone
+#   start/end  the cuts (entry points) before which the container is bound and sent offstage
+
+# Link's look in the moat scene (cuts C01-C04: he takes the item from the water and looks at it): his animation shows
+# his own equipped ocarina and the flow binds no item, so the given item's container is bound to his left hand as in
+# Saria's farewell (Dm_Kokiri_0155 Event93). Played run E10 and pilot arm A, BBender 2026-11-26: the Piece of Heart sits
+# sensibly in his hand; his own ocarina still shows beside it (known issue: pilot arm B, the scene's HoldOcarina key
+# renamed, did not hide it; plans/event-items.md).
+[[hand]]
+check = "HF Ocarina of Time Item"
+item = "Item_Ocarina_Time"
+event = "Dm_MelodyGet_Time"
+template = "Dm_Item_Ocarina_Time"  # Zelda's ocarina entry (played, excluded): its bind and offstage only
+target = "Player_Event"
+bone = "Weapon_L"
+start = "C01"
+end = "C05"
+
+# --- exclusions (spec 2.8) ----------------------------------------------------------------------------------------
+
+[exclude.played]
+reason = "an instrument someone plays in the event, not the item given; it keeps its look (D3)"
+actors = [
+  # Zelda's ocarina in the Song of Time lesson (Event35 binds it to her Weapon_L): a memory of her playing it. Listed
+  # before as Link's look (D5) until the played run E10 showed it in Zelda's hands (BBender, 2026-11-26).
+  "Dm_MelodyGet_Time/flowchart/Dm_Item_Ocarina_Time",
+  "Dm_Kokiri_0150/timeline/Dm_Item_Ocarina_Fairy_Saria@0",
+  "Dm_Kokiri_0155/flowchart/Dm_Item_Ocarina_Fairy_Saria@saria",
+  "Dm_MelodyGet_Fire/flowchart/Dm_Item_Sheik_Harp",
+  "Dm_MelodyGet_Forest/flowchart/Dm_Item_Sheik_Harp",
+  "Dm_MelodyGet_Shadow/flowchart/Dm_Item_Sheik_Harp",
+  "Dm_MelodyGet_Shine/flowchart/Dm_Item_Sheik_Harp",
+  "Dm_MelodyGet_Spilit/flowchart/Dm_Item_Sheik_Harp",
+  "Dm_MelodyGet_Water/flowchart/Dm_Item_Sheik_Harp",
+  "Dm_MelodyGet_Fire/flowchart/Item_Ocarina_Time_Holder",
+  "Dm_MelodyGet_Forest/flowchart/Item_Ocarina_Time_Holder",
+  "Dm_MelodyGet_Shadow/flowchart/Item_Ocarina_Time_Holder",
+  "Dm_MelodyGet_Shine/flowchart/Item_Ocarina_Time_Holder",
+  "Dm_MelodyGet_Storm/flowchart/Item_Ocarina_Time_Holder",
+]
+
+[exclude.hand_in]
+reason = "an item Link already owns and shows, hands over or uses in the event, not the item the check gives"
+actors = [
+  "Dm_DeathMtTrail_0050/flowchart/Item_EyeDrop@daigoron",
+  "Npc_Goron_Biggoron_Adult/flowchart/Item_Sword_BrokenGiant",
+  "Npc_Goron_Biggoron_Adult/flowchart/Item_Sword_Giant",
+  "Dm_Zora_0010/flowchart/Dm_Item_RutoLetter",
+  "Dm_Zora_0010/flowchart/Item_Bottle_Letter",
+  "Dm_Kakariko_0010/flowchart/Item_ZeldaLetter",
+  "Dm_HrlCastle_0020/flowchart/Item_AlarmCucco",
+  "Dm_SY_LetterBottle/flowchart/Dm_Item_RutoLetter",
+]
+
+[exclude.not_check]
+reason = "the event gives no check's item: story scenes, the ending, Sheik's knife, the six medallions together"
+events = [
+  "Dm_TimeTemple_0010",
+  "Dm_Kokiri_0030",
+  "Dm_FinalBattle_0010",
+  "Dm_WaterTemple_0000",
+  "Dm_InsideGanonCastle_0150",
+  "Dm_Ending_0000",
+  "Dm_FinalBattle_BossIn",
+  "Dm_FinalBattle_BossOut",
+  "Dm_InsideGanonCastle_0000",
+  "Dm_InsideGanonCastle_0110",
+  "Dm_InsideGanonCastle_BossOut",
+  "Dm_SageRoom_0000",
+  "Dm_Kakariko_0030",
+]

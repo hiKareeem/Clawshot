@@ -139,11 +139,13 @@ def changes(romfs: str | Path, *, prior_changes: Sequence[FileChanges] = ()) -> 
             if path in step:
                 data = step[path](data)
         document = evfl.read(data)
-        if document.flowchart is None:
+        if document.flowchart is None and path in native:
             raise PatchError(f"{path}: ocarina receipt source is not a flowchart")
         return document
 
-    originals = {path: read(path) for path in sorted(paths)}
+    native = {keys.flow_path(name) for name in _NATIVE_FLOWS}
+    # A changed timeline (an event prop shown through a container, event-items) holds no grant to bind.
+    originals = {path: doc for path in sorted(paths) if (doc := read(path)).flowchart is not None}
     pouch_path = keys.flow_path(keys.POUCH)
     changed = copy.deepcopy(originals[pouch_path])
     _add_helper(changed.flowchart)

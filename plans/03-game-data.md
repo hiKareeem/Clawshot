@@ -3898,3 +3898,38 @@ research script outside the repository; checked by `tests/test_rstb_dump.py`. Us
   predicts the extra 3872. `static` gets a formula of its own, rounded + 4136, which equals its native entry plus its
   rounded growth (BBender's call, proposed by Claude, 2026-11-23; `rstb.OWN_FORMULA`). Whether the grown `static`
   loads with it is in-game check 4.5 of the spec.
+
+## 52. Event props: how events find, animate and light their items (2026-11-26)
+
+Found by Claude with BBender playing, 2026-11-26, dump 1.1.1, Longshot 3.2.0, feature event-items (record
+`plans/event-items.md`, run log `qa/run-results.md` outside the repository). Each point names its evidence.
+
+- **One name, one actor.** Within a running event, actors of the same name and secondary name are one actor, across
+  the event's flowchart and the subflows it calls. `Dm_HrlCastle_0050` animates `Item_ZeldaLetter`; its grant calls
+  `Dm_SY_GetInEvent`/`GetInEvent_Zeldaletter`, whose own `Item_ZeldaLetter` goes offstage for the get pose (Event335):
+  natively the hand-over prop. Renamed apart, the subflow's letter stood still on the ground and the prop stayed
+  (runs r1-zelda2, r1-zelda3).
+- **A named actor nothing takes over stands still.** An item actor an event names that no stage actor answers to
+  appears without animation (the letter above; the Fairy Ocarina in Impa's courtyard lesson when Link owns only the
+  Ocarina of Time, walk seed, BBender 2026-11-25).
+- **Scene animations go by actor name.** An EventSetting row's `ExtraResources.EventAS` loads scene animation sets per
+  actor name (`Dm_HrlCastle_0050_Item_ZeldaLetter.root.as`), and flows play scene names on props (`C02`, `C09-Gauntlet`,
+  `C14-0-st`, Gohma's `C06`...). A prop with another name or another set simply does not play them (runs 04-06).
+- **Effect keys fire three ways.** An ELink user's call keys (`Wait`, `GetDemo` on `Obj_Heart_Container` and the
+  song users) fire from: (1) a running animation node: `AS/Item_Common.root.asb` `Rotate_GetDemo` fires `GetDemo`
+  (and spins the item); `Pose_GetDemo`, `GetDemo` and `Rotate_Stoped`, played by the flow or set as the ASInfo's
+  `AutoPlayASName`, fire nothing; (2) a flow event `EventTriggerEmitXLink {ELinkKey, SLinkKey}` on the actor (song
+  lessons emit `Dm_MelodyGet_*_Shine` on their ocarina, `Dm_SageRoom_0005` on the Master Sword; 87 item actors in the
+  dump); (3) a timeline clip of that action, held for the clip's duration (`Dm_FinalBattle_BossIn`,
+  `Dm_InsideGanonCastle_BossIn_Effect`). An emitted song key kept playing while the actor stayed (Saria's farewell,
+  pilot "emit"); the call's duration field is 1 there and on the heart container's idle glow.
+- **`Always` is not automatic for every user.** A copy of `Obj_Ocarina_Time_A_01`'s user (effects under a play-all
+  container `Always`, empty trigger table) given to an event prop showed nothing; the moat object's own glow is
+  presumably started by its own logic.
+- **Placed objects and colour variations.** A model's `ModelVariationAnims` in a placed object's own ModelInfo
+  member crashes the game while the area loads (thread `GeneralFormatAsync_`, write to guest 0x10), with or without
+  the model's `AnimationRef` and variation rows and whatever the heap (moat object and Ruto's stone with the Biggoron
+  Sword: runs 08, 11 and bisect arms none/noanim/norows). The bare model loads and looks normal. Event containers
+  (plain props) carry the same variation fine (Saria, Darunia, Zelda's Letter, Light Arrows).
+- **Timeline triggers.** Two per clip (enter 1, leave 2), ordered by time; at one time leaves come before enters,
+  then by clip index (`Dm_Kokiri_0150`).

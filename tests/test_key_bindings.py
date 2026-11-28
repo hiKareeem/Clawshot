@@ -619,6 +619,11 @@ def test_public_seed_preserves_named_key_credit_and_first_weapon_bag(tmp_path, z
     # The invented HP binding donor is not a native temple/Darunia quest graph.
     monkeypatch.setattr(patch_api.door, "changes", lambda *args, **kwargs: {})
     monkeypatch.setattr(patch_api.darunia, "changes", lambda: {})
+    # Saria's farewell actor (every seed, event-items Q2) reads her native pack, which this invented romfs does not
+    # hold; test_saria_farewell covers it.
+    from clawshot.patch import saria_farewell
+
+    monkeypatch.setattr(saria_farewell, "changes", lambda romfs: ({}, {}))
     # The real receipt compiler sees the same resource set this invented world's
     # writer applies below; unrelated native quest scenes are not part of it.
     compile_receipts = ocarina.changes

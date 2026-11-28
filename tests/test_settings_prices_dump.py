@@ -68,6 +68,10 @@ def test_affordable_full_seed_has_exact_prices_and_original_release_stock(romfs,
     assert count == 120  # all ordinary physical copies, masks excluded
     table_file = out / "romfs" / rstb.TABLE_PATH
     table = rstb.read(dictionaries.decompress(rstb.TABLE_PATH, table_file.read_bytes()))
+    sized_like = {path: file.sized_like for path, file in output.new_files.items() if file.sized_like is not None}
     for info in written:
-        if info.path != rstb.TABLE_PATH and info.path not in {file.path for file in output.fast_start_files}:
+        if info.path in sized_like:  # no size formula (event-items: Saria's schedule list): donor entry plus growth
+            donor, growth = sized_like[info.path]
+            assert table.get(info.path) == table.get(donor) + growth, info
+        elif info.path != rstb.TABLE_PATH and info.path not in {file.path for file in output.fast_start_files}:
             assert table.get(info.path) >= rstb.required_size(info.path, info.new_size), info

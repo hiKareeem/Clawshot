@@ -2,13 +2,20 @@
 
 import pytest
 
-from clawshot.census import definitions
+from clawshot.census import definitions, event_items
 from clawshot.census.gifts import FLOW_VERSIONS, flow_files, scan_gifts
 from clawshot.census.scan import read_romfs_byml
 from clawshot.formats import evfl, zsdic
 from clawshot.patch import gifts
 
 pytestmark = pytest.mark.dump
+
+
+def _display_param(fc, event):
+    """The parameter a declared display sets: a get window's ActorName or a Zelda's Notes step's target."""
+    if isinstance(event, evfl.ActionEvent) and fc.actors[event.actor].actions[event.action] == event_items.NOTES_ACTION:
+        return event_items.NOTES_PARAM
+    return event_items.DISPLAY_PARAM
 
 
 @pytest.fixture(scope="module")
@@ -37,7 +44,13 @@ def test_every_literal_display_in_a_gift_flow_is_declared(context):
             ):
                 found.add(f"{flow}/{event.name}")
     declared = [ref for rule in gifts.load().values() for ref in rule.display]
-    assert found == set(declared)
+    # The other declared displays are Zelda's Notes targets (event-items), which name the grant's item too.
+    notes = {ref for ref in declared if ref not in found}
+    for ref in sorted(notes):
+        flow, name = ref.split("/")
+        fc = evfl.read(charts[flow]).flowchart
+        assert _display_param(fc, next(e for e in fc.events if e.name == name)) == event_items.NOTES_PARAM, ref
+    assert found == set(declared) - notes
     assert len(declared) == len(set(declared)), "a display cannot belong to two grants"
 
 
@@ -57,7 +70,8 @@ def test_native_display_and_grant_change_together_and_vanilla_is_identical(conte
                 assert next(e for e in fc.events if e.name == step.event).params[step.param] == item
         for ref in change.rule.display:
             if ref.split("/")[0] == flow:
-                assert next(e for e in fc.events if e.name == ref.split("/")[1]).params["ActorName"] == item
+                event = next(e for e in fc.events if e.name == ref.split("/")[1])
+                assert event.params[_display_param(fc, event)] == item
         vanilla = change.steps[0].vanilla_item
         [unchanged] = gifts.plan({check: vanilla}, census, definitions.load(), rules)
         assert gifts.file_changes([unchanged], files)[files[flow]](data) == data

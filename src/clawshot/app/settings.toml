@@ -152,6 +152,12 @@ kind = "boolean"
 group = "World"
 # Played evidence: plans/rounds/r19-scenes.md, morning candidates (2026-11-20, Longshot 3.0.0 stable).
 help = "Off by default. Skip the bridge farewell movie and gift animation, giving that location's actual item through the normal item-get window. Source completion and story flags remain. Separate from Saria's opening scene. Played on Longshot 3.0.0: correct item text, then straight to Hyrule Field without the farewell movie."
+[event_item_models]
+label = "Show shuffled items in events"
+kind = "boolean"
+group = "World"
+# Played evidence: plans/event-items.md, pilot and task 14 runs (2026-11-25/26, Longshot 3.2.0, BBender).
+help = "On by default. Gift and reward scenes show the item the seed gives there instead of the vanilla one: Saria presents it at the forest bridge, Zelda throws it into the moat and Link holds it, and with dungeon reward shuffle the boss and sage scenes and Ruto's stone in Jabu-Jabu's Belly show the reward placed there. A song shows its ocarina with the song's effect. The item keeps the scene's native pose, so a big item can clip or look odd; in the moat scene Link's own ocarina still shows beside it. Off keeps every scene's native model; the item texts name the given item either way. Played on Longshot 3.2.0: Saria's farewell, the Deku Tree's farewell, the Lost Woods target, Ruto's stone, Barinade's, Bongo Bongo's and Twinrova's rewards, Rauru, the Light Arrows scene and the moat; Biggoron, the Eyedrops trade and Volvagia's and Morpha's rewards are checked against the written files only."
 [shop_prices]
 label = "Shop prices"
 kind = "choice"

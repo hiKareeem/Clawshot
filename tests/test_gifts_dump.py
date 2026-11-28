@@ -28,8 +28,8 @@ def context(romfs):
 
 
 def _intended(fc: evfl.Flowchart, flow: str, changes) -> set[int]:
-    """Indices of the game's events a change may touch in ``flow``: the steps, the given reads, and whatever led
-    to a skipped step."""
+    """Indices of the game's events a change may touch in ``flow``: the steps, the given reads, the display-only
+    windows and Notes targets, and whatever led to a skipped step."""
     index = {e.name: i for i, e in enumerate(fc.events)}
     out = set()
     for change in changes:
@@ -239,6 +239,10 @@ def test_dump_every_step_gives_the_new_item_and_given_reads_read_the_flag(romfs,
             expected = next(e for e in original.events if e.name == name)
             expected.params["GameDataName"] = change.flag
             assert event == expected  # Value stays true; a song acquired elsewhere is never cleared.
+        for ref in change.rule.display:  # event-items 5.7: the written flow names the given item
+            flow, name = ref.split("/")
+            event = next(e for e in trees[flow].events if e.name == name)
+            assert NEW_ITEM in (event.params.get("ActorName"), event.params.get("TargetID")), ref
         for ref in change.rule.skip:
             flow, name = ref.split("/")
             i = next(i for i, e in enumerate(trees[flow].events) if e.name == name)

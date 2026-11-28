@@ -29,6 +29,7 @@ trials_count = 6 # Round20: native default; 0..6 remaining trials, selected from
 fast_start = ["intro"]
 skippable_story = false # reserved for old off-valued settings; enabling it is refused
 skip_saria_farewell = false # Round 19, Kareem: bridge timeline and animated grant become a plain item get
+event_item_models = true # event-items D7 (BBender, 2026-11-25): events show the given item's model; Kareem to confirm (Q1)
 songs = "song"
 shop_prices = "vanilla"
 shop_slots = 8 # Round 8: first N native shelf indices per ordinary shop; 0 keeps all contents vanilla

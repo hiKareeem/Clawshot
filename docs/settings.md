@@ -567,6 +567,46 @@ The [Minuet play record](../plans/rounds/r19-scenes.md#minuet-v2-played-pass-and
 separates that inference from direct load evidence. Logic still conservatively requires **any**
 ocarina for lessons; general Great Fairy/Rauru/story skips and non-instrument prerequisites are unchanged.
 
+## Items shown in events
+
+`--event-item-models` (setting `event_item_models`, app: **Show shuffled items in events**) is **on** by default; `--no-event-item-models` turns
+it off. Gift and reward scenes that show the vanilla item show the item the seed gives there instead: Saria presents
+it at the forest bridge and hands it over, Zelda throws it into the moat and Link holds it when he takes it from the
+water, the scrub at the Lost Woods target, Biggoron and the Light Arrows scene hold it, and with dungeon reward shuffle
+the boss and sage scenes show the reward placed there, as does the stone Ruto finds in Jabu-Jabu's Belly. A song shows its ocarina with the song's own effect; Nothing and another player's item show Zelda's Letter, as
+Link's get pose does. The item takes the scene's native pose and place, so a big item can clip or sit oddly: that is
+intended. It spins only where the scene spins its item (the Light Arrows scene), never idles, and it cannot be picked
+up: the grant is unchanged. The moat's water
+object stays the pickup and only changes its look. Scenes whose item never moves (Darunia's Bracelet, Zelda's Letter,
+the Claim Check) and played instruments (Saria's own ocarina, Sheik's harp, Link's ocarina in song lessons) keep
+their models.
+
+Whatever the setting, the item texts name the given item: the get window and the Zelda's Notes screenshot of Saria's
+farewell and the moat, the Deku Tree's farewell and the Key Items screen after it, Ruto's line in Jabu-Jabu's Belly,
+and NPC prize lines such as the shooting galleries', bowling's, Talon's and Anju's. In each
+language only the words naming the vanilla item are replaced, even when the grammar around them is then wrong; a line
+that does not name the item in words the patch can find keeps its own text. Other lines that mention the vanilla item
+(trade-quest dialogue, song lessons, Great Fairy explanations) are not changed yet.
+
+Known issues:
+- In the moat scene Link holds the given item and, beside it, his own equipped ocarina: his animation shows it.
+  The item hangs from his hand by its model's origin (a heart piece by its tip), not centred as in his get pose.
+- Lines that describe an item without naming it keep their text (Darunia's line about what the bracelet lifts; his gift is never
+  shuffled today).
+- Ruto's line in Jabu-Jabu's Belly keeps its own words in Chinese, Japanese and Korean, which name the stone
+  differently from the quest log.
+- The Zelda's Notes targets are changed but cannot be checked: Longshot does not connect to the Nintendo Switch App.
+  Ruto's Notes screenshot in Jabu-Jabu's Belly keeps its own target.
+
+Played on Longshot 3.2.0 by BBender (2026-11-25/26): Saria's farewell (Biggoron Sword, Piece of Heart), the Deku Tree's
+farewell and Key Items screen (Light Medallion), the Lost Woods target (Rupees (20)), Anju's prize lines and gift
+(Hylian Shield), Ruto's stone and line in Jabu-Jabu's Belly and Ruto's thanks after Barinade (Spirit Medallion), and
+the moat (Piece of Heart: Zelda's throw, the moat object's glow and pickup, Link's hold, the get text), Rauru (Kokiri
+Emerald), Impa's and Nabooru's awakenings (Zora's Sapphire, Shadow Medallion) and the Light Arrows scene (Bolero of
+Fire: the ocarina spins with Bolero's effect); unchanged with their vanilla item: Darunia, Zelda's Letter, King Dodongo
+and Phantom Ganon's rewards. Not played: Biggoron, the Eyedrops trade, Volvagia's and Morpha's rewards with another
+item; they are checked against the written files only ([record](../plans/event-items.md)).
+
 ## Dungeon rewards and Ganon's Castle bridge
 
 `--dungeon-rewards` (app: **Dungeon reward shuffle**) is experimental and off by default.
@@ -588,8 +628,9 @@ follow the Shadow and Spirit awakening scenes, not their medallions. Logic match
 these separate ownership and completion predicates.
 Lesson logic conservatively requires either ocarina at either age; the physical zero-stock guard
 is described above. The moat item precedes its Time-song lesson, so that item check needs no instrument.
-The native animated emblem in each sage/stone scene remains its source symbol;
-the acquisition window, owned reward and Zelda Notes target follow the shuffled item.
+With **Show shuffled items in events** off, the native animated emblem in each sage/stone scene remains its source
+symbol; with it on (the default) the scene shows the shuffled reward. The acquisition window, owned reward and Zelda
+Notes target follow the shuffled item either way.
 
 `--bridge vanilla` is the default native story route. The experimental count modes
 `--bridge stones --bridge-count N`, `--bridge medallions --bridge-count N`, and

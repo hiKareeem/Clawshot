@@ -1,0 +1,3371 @@
+# BBender's hand-read marks: in each line a gift's NPC says, the words naming the item given, sold, handed over or
+# won (plans/event-items.md, "Hand-read marks", 2026-11-27). Read by clawshot.patch.event_lines; written by
+# `uv run python -m tools.event_marks.convert ROMFS final.tsv [extra.tsv]` from the reading sheets, which hold game
+# text and stay outside the repository (AGENTS.md rule 1). Read on dump 1.1.1.
+#
+#   check  the check whose item the marked words name (gift_rules.toml check, dungeon_rewards.toml slot, or the
+#          census name of a check not randomizable today: its marks wait)
+#   item   the vanilla item actor(s) the words name ("|" between a progressive pair); a record, not read
+#   file   the message file in each language archive; label the message
+#   marks.<language>  fingerprint: first 16 hex digits of the sha256 of the line's raw text (event_lines.raw_text:
+#          text parts, and a declined-forms tag 201/10 as its first form, other tags left out); at: [start, length]
+#          per mark in that raw text, in code points, a declined-forms tag counting as its form's length.
+#          A language with no marks keeps its line (it names the item in an earlier box, or nowhere).
+#
+# 166 lines, 2359 line-languages with 2381 marks; from 2403 sheet rows, of
+# which 60 name the item in an earlier box and 42 name it nowhere.
+
+[[line]]
+check = "DMT Great Fairy Reward"
+item = "Item_DinFire"
+file = "EventFlowMsg/Dm_FairyFountain_Din.msbt"
+label = "Dm_FairyFountain_Din_0006_01"
+marks.CNzh = { fingerprint = "f1d1af399f5b8a64", at = [[16, 4]] }
+marks.EUde = { fingerprint = "842ce16128871c33", at = [[44, 17]] }
+marks.EUen = { fingerprint = "2646e5a8f71e2452", at = [[68, 10]] }
+marks.EUes = { fingerprint = "7f54bd769ea768f5", at = [[62, 12]] }
+marks.EUfr = { fingerprint = "faa715e6bddba51a", at = [[53, 10]] }
+marks.EUit = { fingerprint = "e728fd1c7e8c18fc", at = [[64, 12]] }
+marks.EUnl = { fingerprint = "670f7f8e9657405c", at = [[48, 9]] }
+marks.EUpl = { fingerprint = "673e97598091aeb8", at = [[65, 11]] }
+marks.EUru = { fingerprint = "f49cd08726ab629d", at = [[64, 9]] }
+marks.JPja = { fingerprint = "a4069cbbb01a0ef1", at = [[20, 5]] }
+marks.KRko = { fingerprint = "45578a5cf9dc6904", at = [[18, 5]] }
+marks.TWzh = { fingerprint = "90255dbec28dffba", at = [[18, 4]] }
+marks.USen = { fingerprint = "2646e5a8f71e2452", at = [[68, 10]] }
+marks.USes = { fingerprint = "1d59c6befbf16f44", at = [[62, 12]] }
+marks.USfr = { fingerprint = "ba530344a7a0b826", at = [[52, 10]] }
+marks.USpt = { fingerprint = "5cb40720165181ed", at = [[74, 12]] }
+
+[[line]]
+check = "ZF Great Fairy Reward"
+item = "Item_FaroreWind"
+file = "EventFlowMsg/Dm_FairyFountain_Frore.msbt"
+label = "Dm_FairyFountain_Frore_0004_01"
+marks.CNzh = { fingerprint = "f20463f58d59d0d4", at = [[6, 4]] }
+marks.EUde = { fingerprint = "e6fc966444fe4de2", at = [[42, 19]] }
+marks.EUen = { fingerprint = "de350c60ab888705", at = [[12, 13]] }
+marks.EUes = { fingerprint = "c70e91a9bd4d94af", at = [[15, 16]] }
+marks.EUfr = { fingerprint = "29b6d1944f2f0224", at = [[20, 14]] }
+marks.EUit = { fingerprint = "bcb18f12302650bc", at = [[14, 15]] }
+marks.EUnl = { fingerprint = "867370f9b0418381", at = [[40, 12]] }
+marks.EUpl = { fingerprint = "bf635948a47b7c3d", at = [[0, 15]] }
+marks.EUru = { fingerprint = "be3060b381f9036a", at = [[23, 12]] }
+marks.JPja = { fingerprint = "3eba70192e1b36f6", at = [[0, 5]] }
+marks.KRko = { fingerprint = "d276959428e2efcc", at = [[0, 5]] }
+marks.TWzh = { fingerprint = "a3d53c71d094739c", at = [[13, 4]] }
+marks.USen = { fingerprint = "de350c60ab888705", at = [[12, 13]] }
+marks.USes = { fingerprint = "6a199b29121cba8b", at = [[15, 16]] }
+marks.USfr = { fingerprint = "29b6d1944f2f0224", at = [[20, 14]] }
+marks.USpt = { fingerprint = "c1dbc51dc8b540af", at = [[19, 15]] }
+
+[[line]]
+check = "Colossus Great Fairy Reward"
+item = "Item_NayruLove"
+file = "EventFlowMsg/Dm_FairyFountain_Nayru.msbt"
+label = "Dm_FairyFountain_Nayru_0004"
+marks.CNzh = { fingerprint = "377ce68070d26474", at = [[14, 4]] }
+marks.EUde = { fingerprint = "6a69070354da4ca3", at = [[34, 15]] }
+marks.EUen = { fingerprint = "af8f5db7b2b5be7b", at = [[34, 12]] }
+marks.EUes = { fingerprint = "1c1722aa874c9b02", at = [[41, 13]] }
+marks.EUfr = { fingerprint = "f55588522c87149d", at = [[64, 14]] }
+marks.EUit = { fingerprint = "92afd931348dd232", at = [[41, 14]] }
+marks.EUnl = { fingerprint = "b1232a4e5a8a1dc3", at = [[41, 14]] }
+marks.EUpl = { fingerprint = "06d58b90c3003657", at = [[38, 12]] }
+marks.EUru = { fingerprint = "352147eeb27c4155", at = [[39, 12]] }
+marks.JPja = { fingerprint = "3d83641a2e0b6286", at = [[11, 5]] }
+marks.KRko = { fingerprint = "54ad6fcf3332584c", at = [[10, 5]] }
+marks.TWzh = { fingerprint = "6089aa2d8c56eaed", at = [[16, 4]] }
+marks.USen = { fingerprint = "af8f5db7b2b5be7b", at = [[34, 12]] }
+marks.USes = { fingerprint = "c29583a1faa71688", at = [[42, 13]] }
+marks.USfr = { fingerprint = "7bc42285cac5f687", at = [[64, 14]] }
+marks.USpt = { fingerprint = "4bc3df20030f98c8", at = [[38, 13]] }
+
+[[line]]
+check = "DMC Great Fairy Reward"
+item = "Item_FairyBless_MPDouble"
+file = "EventFlowMsg/Dm_FairyFountain_Wisdom.msbt"
+label = "Dm_FairyFountain_Wisdom_0002_01"
+marks.CNzh = { fingerprint = "50eb5f5d8940c9b6", at = [[25, 4]] }
+marks.EUde = { fingerprint = "46ec6f4d498d6c2e", at = [[54, 10]] }
+marks.EUen = { fingerprint = "138c73d05a9f71ce", at = [[53, 9]] }
+marks.EUes = { fingerprint = "b6f30224c68059e2", at = [[49, 11]] }
+marks.EUfr = { fingerprint = "d1cbfe6cf21d77aa", at = [[48, 15]] }
+marks.EUit = { fingerprint = "b2b2163e791c2500", at = [[45, 12]] }
+marks.EUnl = { fingerprint = "889b3326290ac4b7", at = [[55, 13]] }
+marks.EUpl = { fingerprint = "276db4030ede0b8e", at = [[71, 10]] }
+marks.EUru = { fingerprint = "fcfcf0b1adb20aa0", at = [[65, 10]] }
+marks.JPja = { fingerprint = "f7478498db87ff76", at = [[21, 4]] }
+marks.KRko = { fingerprint = "8de668651130303b", at = [[23, 5]] }
+marks.TWzh = { fingerprint = "4aa98b04fad4c020", at = [[20, 4]] }
+marks.USen = { fingerprint = "138c73d05a9f71ce", at = [[53, 9]] }
+marks.USes = { fingerprint = "bcd1eba4a0ce110b", at = [[49, 11]] }
+marks.USfr = { fingerprint = "408025211327b07d", at = [[48, 15]] }
+marks.USpt = { fingerprint = "20da957405c366ea", at = [[64, 10]] }
+
+[[line]]
+check = "HC Zeldas Letter"
+item = "Item_ZeldaLetter"
+file = "EventFlowMsg/Dm_HrlCastle_0050.msbt"
+label = "Dm_HrlCastle_0050_0042"
+marks.CNzh = { fingerprint = "f1b15da5e8823505", at = [[12, 1]] }
+marks.EUde = { fingerprint = "9850fc87d35f682b", at = [[68, 5]] }
+marks.EUen = { fingerprint = "44bd786eaa78de12", at = [[50, 6]] }
+marks.EUes = { fingerprint = "585e6012404c928b", at = [[54, 6]] }
+marks.EUfr = { fingerprint = "d8b0e711b29400ce", at = [[62, 6]] }
+marks.EUit = { fingerprint = "ea3406f49ad51cb1", at = [[55, 7]] }
+marks.EUnl = { fingerprint = "90815091da017c55", at = [[48, 5]] }
+marks.EUpl = { fingerprint = "bbc7fa5a5fc50f52", at = [[60, 4]] }
+marks.EUru = { fingerprint = "b1cb3399e71c742f", at = [[46, 4]] }
+marks.JPja = { fingerprint = "07b42e3dd5625c92", at = [[14, 2]] }
+marks.KRko = { fingerprint = "4ff0a28fb1f08262", at = [[14, 2]] }
+marks.TWzh = { fingerprint = "f11bc25307a8804c", at = [[15, 1]] }
+marks.USen = { fingerprint = "44bd786eaa78de12", at = [[50, 6]] }
+marks.USes = { fingerprint = "214d5e7871db03e6", at = [[46, 6]] }
+marks.USfr = { fingerprint = "d8b0e711b29400ce", at = [[62, 6]] }
+marks.USpt = { fingerprint = "b0d8dc7e3b2af466", at = [[53, 5]] }
+
+[[line]]
+check = "HC Zeldas Letter"
+item = "Item_ZeldaLetter"
+file = "EventFlowMsg/Dm_HrlCastle_0050.msbt"
+label = "Dm_HrlCastle_0050_0044"
+marks.EUde = { fingerprint = "08f53354405e5984", at = [[26, 5]] }
+marks.TWzh = { fingerprint = "a4ae31313b76bfa9", at = [[2, 1]] }
+
+[[line]]
+check = "Barinade"
+item = "Item_Stone_Water"
+file = "EventFlowMsg/Dm_InsideJabu_Jabu_0030.msbt"
+label = "Dm_InsideJabu_Jabu_0030_0019"
+marks.EUde = { fingerprint = "dcb91d1191a3560e", at = [[12, 26]] }
+marks.EUen = { fingerprint = "1e36a0ac65f4d966", at = [[17, 24]] }
+marks.EUes = { fingerprint = "8eac9a21de5306ba", at = [[14, 29]] }
+marks.EUfr = { fingerprint = "7af172647d3a71c3", at = [[17, 29]] }
+marks.EUit = { fingerprint = "1c11ec3dc224da7f", at = [[12, 31]] }
+marks.EUnl = { fingerprint = "a8bef95c8d0ec7c2", at = [[8, 22]] }
+marks.EUpl = { fingerprint = "1bab641a24b7f377", at = [[9, 19]] }
+marks.EUru = { fingerprint = "447e8fe467370dcb", at = [[12, 17]] }
+marks.USen = { fingerprint = "1e36a0ac65f4d966", at = [[17, 24]] }
+marks.USes = { fingerprint = "51e35bcec7240369", at = [[11, 29]] }
+marks.USfr = { fingerprint = "8e6bfb04f6ef617e", at = [[17, 29]] }
+marks.USpt = { fingerprint = "34dffb5941ada713", at = [[12, 26]] }
+
+[[line]]
+check = "Queen Gohma"
+item = "Item_Stone_Forest"
+file = "EventFlowMsg/Dm_Kokiri_0130.msbt"
+label = "Dm_Kokiri_0130_0004"
+marks.CNzh = { fingerprint = "7de37a64b6afabd4", at = [[17, 5]] }
+marks.EUde = { fingerprint = "05b0c8343918c5dc", at = [[62, 14]] }
+marks.EUen = { fingerprint = "da99fe21712d4ed2", at = [[54, 14]] }
+marks.EUes = { fingerprint = "cb92c43a898c29cb", at = [[50, 23]] }
+marks.EUfr = { fingerprint = "6e11f90dc343800d", at = [[70, 15]] }
+marks.EUit = { fingerprint = "3175a3448a140e22", at = [[56, 19]] }
+marks.EUnl = { fingerprint = "96708966a4618dd0", at = [[63, 14]] }
+marks.EUpl = { fingerprint = "86c05fd1d6802b9e", at = [[60, 15]] }
+marks.EUru = { fingerprint = "11413b787f081e4e", at = [[50, 14]] }
+marks.JPja = { fingerprint = "30c653c4f41df14d", at = [[17, 7]] }
+marks.KRko = { fingerprint = "3dff5572973e206e", at = [[19, 6]] }
+marks.TWzh = { fingerprint = "cacf42c9eb23aefd", at = [[16, 5]] }
+marks.USen = { fingerprint = "da99fe21712d4ed2", at = [[54, 14]] }
+marks.USes = { fingerprint = "aa265acb8607a040", at = [[45, 16]] }
+marks.USfr = { fingerprint = "6e11f90dc343800d", at = [[70, 15]] }
+marks.USpt = { fingerprint = "a4f41f26baa84904", at = [[66, 16]] }
+
+[[line]]
+check = "Sheik in Crater"
+item = "Item_Melody_FireBolero"
+file = "EventFlowMsg/Dm_MelodyGet_Fire.msbt"
+label = "Dm_MelodyGet_Fire_0003"
+marks.CNzh = { fingerprint = "0c279f94e4a36e62", at = [[77, 7]] }
+marks.EUde = { fingerprint = "b09a554ec12ee7dc", at = [[291, 17]] }
+marks.EUen = { fingerprint = "0100596ad6151400", at = [[227, 14]] }
+marks.EUes = { fingerprint = "2654d179d3578594", at = [[265, 16]] }
+marks.EUfr = { fingerprint = "8acc86b9e059b40f", at = [[254, 13]] }
+marks.EUit = { fingerprint = "e8f4cf8444a022c0", at = [[254, 16]] }
+marks.EUnl = { fingerprint = "cbe8ae4ddab2f8de", at = [[242, 10]] }
+marks.EUpl = { fingerprint = "bad3a37163bb7bbc", at = [[248, 14]] }
+marks.EUru = { fingerprint = "f48923bf1049fc01", at = [[252, 15]] }
+marks.JPja = { fingerprint = "95c59041ec553e70", at = [[77, 5]] }
+marks.KRko = { fingerprint = "785a9fcab5dfeb3e", at = [[97, 7]] }
+marks.TWzh = { fingerprint = "8f349d4ee7a75a9e", at = [[83, 7]] }
+marks.USen = { fingerprint = "0100596ad6151400", at = [[227, 14]] }
+marks.USes = { fingerprint = "7563947f14a3261d", at = [[265, 16]] }
+marks.USfr = { fingerprint = "8acc86b9e059b40f", at = [[254, 13]] }
+marks.USpt = { fingerprint = "75d7976fa86e663b", at = [[262, 14]] }
+
+[[line]]
+check = "Sheik in Crater"
+item = "Item_Melody_FireBolero"
+file = "EventFlowMsg/Dm_MelodyGet_Fire.msbt"
+label = "Dm_MelodyGet_Fire_0004"
+marks.CNzh = { fingerprint = "b31c5636f6b181ac", at = [[2, 7]] }
+marks.EUde = { fingerprint = "3ee2ff62b1fd5268", at = [[11, 17]] }
+marks.EUen = { fingerprint = "865bbfcc2dcecf74", at = [[9, 14]] }
+marks.EUes = { fingerprint = "ce99e55c1696c7dc", at = [[8, 16]] }
+marks.EUfr = { fingerprint = "52cd4c1bf97d2626", at = [[10, 13]] }
+marks.EUit = { fingerprint = "7aa6766c79d1a99f", at = [[9, 16]] }
+marks.EUnl = { fingerprint = "158c3ca57aea4ab9", at = [[9, 10]] }
+marks.EUpl = { fingerprint = "2c4c0549eac6bc26", at = [[8, 14]] }
+marks.EUru = { fingerprint = "1abfed641af0f475", at = [[11, 15]] }
+marks.JPja = { fingerprint = "7435865253d71b0e", at = [[0, 5]] }
+marks.KRko = { fingerprint = "8179559860ec6255", at = [[0, 7]] }
+marks.TWzh = { fingerprint = "e6e9a845d4e825c7", at = [[2, 7]] }
+marks.USen = { fingerprint = "865bbfcc2dcecf74", at = [[9, 14]] }
+marks.USes = { fingerprint = "ce99e55c1696c7dc", at = [[8, 16]] }
+marks.USfr = { fingerprint = "52cd4c1bf97d2626", at = [[10, 13]] }
+marks.USpt = { fingerprint = "83d44a36b68afd70", at = [[8, 14]] }
+
+[[line]]
+check = "Sheik in Forest"
+item = "Item_Melody_ForestMinuet"
+file = "EventFlowMsg/Dm_MelodyGet_Forest.msbt"
+label = "Dm_MelodyGet_Forest_0008"
+marks.CNzh = { fingerprint = "78af8795c222a445", at = [[17, 6]] }
+marks.EUde = { fingerprint = "148e915272f8ab30", at = [[73, 18]] }
+marks.EUen = { fingerprint = "3e30c868e2f686b2", at = [[65, 20]] }
+marks.EUes = { fingerprint = "93f7006240c3d7af", at = [[69, 18]] }
+marks.EUfr = { fingerprint = "b97d2df5c117e116", at = [[70, 15]] }
+marks.EUit = { fingerprint = "9669b30c527a0f38", at = [[78, 22]] }
+marks.EUnl = { fingerprint = "41e7ded77616e4db", at = [[68, 8]] }
+marks.EUpl = { fingerprint = "0571d1e522a3001e", at = [[62, 12]] }
+marks.EUru = { fingerprint = "b013032ea0a3b327", at = [[55, 13]] }
+marks.JPja = { fingerprint = "b9bc85b143aebde0", at = [[14, 7]] }
+marks.KRko = { fingerprint = "8896de2b05a31de7", at = [[16, 7]] }
+marks.TWzh = { fingerprint = "be8e93f0cd1dcaa8", at = [[15, 6]] }
+marks.USen = { fingerprint = "3e30c868e2f686b2", at = [[65, 20]] }
+marks.USes = { fingerprint = "5bf9108072878893", at = [[55, 18]] }
+marks.USfr = { fingerprint = "cd24d582c2702ccf", at = [[70, 18]] }
+marks.USpt = { fingerprint = "e417eda9b81b8558", at = [[63, 19]] }
+
+[[line]]
+check = "Sheik in Forest"
+item = "Item_Melody_ForestMinuet"
+file = "EventFlowMsg/Dm_MelodyGet_Forest.msbt"
+label = "Dm_MelodyGet_Forest_0009"
+marks.CNzh = { fingerprint = "b9320ee2e17c6e50", at = [[2, 6]] }
+marks.EUde = { fingerprint = "854ff0391dd8c7b4", at = [[11, 18]] }
+marks.EUen = { fingerprint = "4000b6411e9eb263", at = [[9, 20]] }
+marks.EUes = { fingerprint = "aaaa0a2c3463ccee", at = [[8, 18]] }
+marks.EUfr = { fingerprint = "cde00ebfb837a3ba", at = [[10, 15]] }
+marks.EUit = { fingerprint = "66e765255717658f", at = [[9, 22]] }
+marks.EUnl = { fingerprint = "8aef776d5c77c4ad", at = [[9, 8]] }
+marks.EUpl = { fingerprint = "80482b3b7928e07e", at = [[8, 12]] }
+marks.EUru = { fingerprint = "726f113a8ab5bad3", at = [[11, 13]] }
+marks.JPja = { fingerprint = "8397d375316edebc", at = [[0, 7]] }
+marks.KRko = { fingerprint = "51a935b46c47645f", at = [[0, 7]] }
+marks.TWzh = { fingerprint = "487f90ef757b4f92", at = [[2, 6]] }
+marks.USen = { fingerprint = "4000b6411e9eb263", at = [[9, 20]] }
+marks.USes = { fingerprint = "aaaa0a2c3463ccee", at = [[8, 18]] }
+marks.USfr = { fingerprint = "2051e2f714b4cbba", at = [[10, 18]] }
+marks.USpt = { fingerprint = "a2c547e7b7add503", at = [[8, 19]] }
+
+[[line]]
+check = "Song from Saria"
+item = "Item_Melody_SariaSong"
+file = "EventFlowMsg/Dm_MelodyGet_Saria.msbt"
+label = "Dm_MelodyGet_Saria_0004"
+marks.CNzh = { fingerprint = "1bec14bd9873fc1b", at = [[9, 5]] }
+
+[[line]]
+check = "Song from Saria"
+item = "Item_Melody_SariaSong"
+file = "EventFlowMsg/Dm_MelodyGet_Saria.msbt"
+label = "Dm_MelodyGet_Saria_0005"
+marks.EUde = { fingerprint = "78b8e7bb9d8cbf0a", at = [[4, 15]] }
+marks.EUen = { fingerprint = "37d58d9f701dd3ab", at = [[18, 12]] }
+marks.EUes = { fingerprint = "124bdb3e58cf0113", at = [[7, 16]] }
+marks.EUfr = { fingerprint = "2e450a43563e4842", at = [[10, 21]] }
+marks.EUit = { fingerprint = "2aa7a7e744e42101", at = [[22, 16]] }
+marks.EUnl = { fingerprint = "0f0d6a4265f5e4e3", at = [[14, 15]] }
+marks.EUpl = { fingerprint = "0db4db7f56f16f32", at = [[26, 17]] }
+marks.EUru = { fingerprint = "04db0fb22972468b", at = [[20, 14]] }
+marks.JPja = { fingerprint = "932da989e8d94975", at = [[15, 7]] }
+marks.KRko = { fingerprint = "33b0fe8a5d91fd54", at = [[25, 6]] }
+marks.TWzh = { fingerprint = "1c050d3e2fb9e2f0", at = [[16, 4]] }
+marks.USen = { fingerprint = "37d58d9f701dd3ab", at = [[18, 12]] }
+marks.USes = { fingerprint = "f07efd9d1ad7f1a4", at = [[7, 16]] }
+marks.USfr = { fingerprint = "b6e8610fb835965b", at = [[10, 21]] }
+marks.USpt = { fingerprint = "35d58f1f30a305f0", at = [[18, 15]] }
+
+[[line]]
+check = "Song from Saria"
+item = "Item_Melody_SariaSong"
+file = "EventFlowMsg/Dm_MelodyGet_Saria.msbt"
+label = "Dm_MelodyGet_Saria_0009"
+marks.CNzh = { fingerprint = "126b08ae4bbec820", at = [[3, 5]] }
+marks.EUde = { fingerprint = "da38534263c21451", at = [[10, 11]] }
+marks.EUen = { fingerprint = "5ccc562ea788c0a9", at = [[12, 12]] }
+marks.EUes = { fingerprint = "6a7f5131a1511e8f", at = [[8, 16]] }
+marks.EUfr = { fingerprint = "1cdf3b61f337f99e", at = [[10, 14]] }
+marks.EUit = { fingerprint = "64222a78964de2a5", at = [[19, 16]] }
+marks.EUnl = { fingerprint = "989f46ed310b2ce4", at = [[8, 12]] }
+marks.EUpl = { fingerprint = "954a5df7de3a809a", at = [[8, 13]] }
+marks.EUru = { fingerprint = "792e01f1308d579a", at = [[22, 13]] }
+marks.JPja = { fingerprint = "ef7063cfb7cd657d", at = [[0, 5]] }
+marks.KRko = { fingerprint = "6f260cb5e13f5eff", at = [[0, 7]] }
+marks.TWzh = { fingerprint = "8faf73f3f2ed990e", at = [[4, 5]] }
+marks.USen = { fingerprint = "5ccc562ea788c0a9", at = [[12, 12]] }
+marks.USes = { fingerprint = "6a7f5131a1511e8f", at = [[8, 16]] }
+marks.USfr = { fingerprint = "1cdf3b61f337f99e", at = [[10, 14]] }
+marks.USpt = { fingerprint = "4a367ecb8005431b", at = [[14, 15]] }
+
+[[line]]
+check = "Song from Saria"
+item = "Item_Melody_SariaSong"
+file = "EventFlowMsg/Dm_MelodyGet_Saria.msbt"
+label = "Dm_MelodyGet_Saria_0011"
+marks.CNzh = { fingerprint = "10b4a49c229a0867", at = [[15, 2]] }
+marks.EUde = { fingerprint = "b3c64010ef67c024", at = [[19, 4]] }
+marks.EUen = { fingerprint = "543612b459f1ac0d", at = [[22, 4]] }
+marks.EUes = { fingerprint = "1fb32a7f9715c3cf", at = [[39, 7]] }
+marks.EUfr = { fingerprint = "3cb3c13491448d2e", at = [[25, 7]] }
+marks.EUit = { fingerprint = "5a595b8b8358048f", at = [[52, 7]] }
+marks.EUnl = { fingerprint = "fbbf6f7ba051f55f", at = [[28, 6]] }
+marks.EUpl = { fingerprint = "3ca9ab13b40a2cf6", at = [[45, 7]] }
+marks.EUru = { fingerprint = "54418e718e0f7075", at = [[20, 7]] }
+marks.JPja = { fingerprint = "4f94b0e818aa67d0", at = [[6, 1]] }
+marks.KRko = { fingerprint = "9156baf6a6dde920", at = [[6, 1]] }
+marks.TWzh = { fingerprint = "fae4810bcb5abcac", at = [[8, 2]] }
+marks.USen = { fingerprint = "543612b459f1ac0d", at = [[22, 4]] }
+marks.USes = { fingerprint = "1b95cd251af3d1ee", at = [[39, 7]] }
+marks.USfr = { fingerprint = "2911aa9939856582", at = [[25, 7]] }
+marks.USpt = { fingerprint = "dd63f3480e655ece", at = [[30, 6]] }
+
+[[line]]
+check = "Song from Saria"
+item = "Item_Melody_SariaSong"
+file = "EventFlowMsg/Dm_MelodyGet_Saria.msbt"
+label = "Dm_MelodyGet_Saria_0012"
+marks.CNzh = { fingerprint = "e9b729aea289f66f", at = [[14, 5]] }
+marks.EUde = { fingerprint = "e5f8e55eb7bc8af8", at = [[57, 11]] }
+marks.EUen = { fingerprint = "223cf003f8140eb8", at = [[68, 12]] }
+marks.EUes = { fingerprint = "0187cbb38a5d8aa1", at = [[39, 16]] }
+marks.EUfr = { fingerprint = "1a12803a24bece5f", at = [[42, 14]] }
+marks.EUit = { fingerprint = "1ce56b539c5b431b", at = [[39, 16]] }
+marks.EUnl = { fingerprint = "3d4a917495aaec86", at = [[50, 12]] }
+marks.EUpl = { fingerprint = "8eda6050fb2ae1d8", at = [[77, 13]] }
+marks.EUru = { fingerprint = "31b17231d6629ad0", at = [[55, 13]] }
+marks.JPja = { fingerprint = "74ab0e0557e5c464", at = [[15, 5]] }
+marks.KRko = { fingerprint = "af5e4caf6482333f", at = [[15, 7]] }
+marks.TWzh = { fingerprint = "023e752e69d2293b", at = [[13, 5]] }
+marks.USen = { fingerprint = "223cf003f8140eb8", at = [[68, 12]] }
+marks.USes = { fingerprint = "c5b3578588efca22", at = [[39, 16]] }
+marks.USfr = { fingerprint = "1a12803a24bece5f", at = [[42, 14]] }
+marks.USpt = { fingerprint = "56a162f1ddde3c99", at = [[78, 15]] }
+
+[[line]]
+check = "Sheik in Kakariko"
+item = "Item_Melody_ShadowNocturne"
+file = "EventFlowMsg/Dm_MelodyGet_Shadow.msbt"
+label = "Dm_MelodyGet_Shadow_0008"
+marks.CNzh = { fingerprint = "f4724332fe9f5a72", at = [[11, 5]] }
+marks.EUde = { fingerprint = "913d8371ecd7685f", at = [[50, 22]] }
+marks.EUen = { fingerprint = "c33a41a707ffe4c5", at = [[53, 18]] }
+marks.EUes = { fingerprint = "f19797990e875b9c", at = [[59, 21]] }
+marks.EUfr = { fingerprint = "b882678e3d737ae5", at = [[47, 19]] }
+marks.EUit = { fingerprint = "faa353874df0a557", at = [[59, 20]] }
+marks.EUnl = { fingerprint = "9a198791f569569a", at = [[59, 15]] }
+marks.EUpl = { fingerprint = "09e0269c0b6b425e", at = [[49, 14]] }
+marks.EUru = { fingerprint = "d83a6b9fae324133", at = [[62, 15]] }
+marks.JPja = { fingerprint = "651063e9b5c603eb", at = [[10, 7]] }
+marks.KRko = { fingerprint = "913f856d0a62a355", at = [[10, 6]] }
+marks.TWzh = { fingerprint = "7a92529cfac4378c", at = [[9, 5]] }
+marks.USen = { fingerprint = "c33a41a707ffe4c5", at = [[53, 18]] }
+marks.USes = { fingerprint = "9b3bd84aad6e8372", at = [[54, 21]] }
+marks.USfr = { fingerprint = "b882678e3d737ae5", at = [[47, 19]] }
+marks.USpt = { fingerprint = "fa63490a3c791f9a", at = [[50, 19]] }
+
+[[line]]
+check = "Sheik in Kakariko"
+item = "Item_Melody_ShadowNocturne"
+file = "EventFlowMsg/Dm_MelodyGet_Shadow.msbt"
+label = "Dm_MelodyGet_Shadow_0009"
+marks.CNzh = { fingerprint = "d6cf61b895199de8", at = [[2, 5]] }
+marks.EUde = { fingerprint = "86408a33b145e906", at = [[11, 22]] }
+marks.EUen = { fingerprint = "25bc9cf5b91b819a", at = [[9, 18]] }
+marks.EUes = { fingerprint = "2fef7773b24d0af8", at = [[8, 21]] }
+marks.EUfr = { fingerprint = "5ff58e8a3e22fdb4", at = [[10, 19]] }
+marks.EUit = { fingerprint = "2ca0aa21089ebb25", at = [[9, 20]] }
+marks.EUnl = { fingerprint = "355c3c46d30d1f0e", at = [[9, 15]] }
+marks.EUpl = { fingerprint = "f1ac168bc7f9f1f2", at = [[8, 14]] }
+marks.EUru = { fingerprint = "da87c51ace6b9254", at = [[11, 15]] }
+marks.JPja = { fingerprint = "b2cb4804bf0953a1", at = [[0, 7]] }
+marks.KRko = { fingerprint = "12e145e6f2336eb0", at = [[0, 6]] }
+marks.TWzh = { fingerprint = "cd17c493f902c943", at = [[2, 5]] }
+marks.USen = { fingerprint = "25bc9cf5b91b819a", at = [[9, 18]] }
+marks.USes = { fingerprint = "2fef7773b24d0af8", at = [[8, 21]] }
+marks.USfr = { fingerprint = "5ff58e8a3e22fdb4", at = [[10, 19]] }
+marks.USpt = { fingerprint = "50fcfa0084e49993", at = [[8, 19]] }
+
+[[line]]
+check = "Sheik in Kakariko"
+item = "Item_Melody_ShadowNocturne"
+file = "EventFlowMsg/Dm_MelodyGet_Shadow.msbt"
+label = "Dm_MelodyGet_Shadow_0010"
+marks.CNzh = { fingerprint = "cdbda2122eff849c", at = [[47, 5]] }
+marks.EUde = { fingerprint = "5e4f6ae1201fc845", at = [[158, 22]] }
+marks.EUen = { fingerprint = "457cc7530aeabc07", at = [[174, 18]] }
+marks.EUes = { fingerprint = "064b5919484be1ec", at = [[134, 21]] }
+marks.EUfr = { fingerprint = "26b2104770039a65", at = [[130, 19]] }
+marks.EUit = { fingerprint = "aa178a908f14c728", at = [[134, 20]] }
+marks.EUnl = { fingerprint = "ce43b94a7433a603", at = [[163, 15]] }
+marks.EUpl = { fingerprint = "213b20e02767a91b", at = [[1, 14]] }
+marks.EUru = { fingerprint = "8e6fc1aec6e5ef6d", at = [[155, 15]] }
+marks.JPja = { fingerprint = "e506a12ece2a8a38", at = [[44, 7]] }
+marks.KRko = { fingerprint = "0bf3102faa54cf2f", at = [[54, 6]] }
+marks.TWzh = { fingerprint = "a03232fb04b25ddc", at = [[47, 5]] }
+marks.USen = { fingerprint = "457cc7530aeabc07", at = [[174, 18]] }
+marks.USes = { fingerprint = "34d3f62949e4ffbb", at = [[136, 21]] }
+marks.USfr = { fingerprint = "b9547a78c7c51d2c", at = [[130, 19]] }
+marks.USpt = { fingerprint = "323d6a71afb2c54d", at = [[152, 19]] }
+
+[[line]]
+check = "Sheik at Temple"
+item = "Item_Melody_LightPrelude"
+file = "EventFlowMsg/Dm_MelodyGet_Shine.msbt"
+label = "Dm_MelodyGet_Shine_0014"
+marks.CNzh = { fingerprint = "b5a98f7bafe9e8dd", at = [[20, 5]] }
+marks.EUde = { fingerprint = "4abff71561c9ddad", at = [[88, 18]] }
+marks.EUen = { fingerprint = "b6da88052f47377c", at = [[69, 16]] }
+marks.EUes = { fingerprint = "0c97cd9b09c49219", at = [[63, 18]] }
+marks.EUfr = { fingerprint = "50061c8f023a9be3", at = [[80, 21]] }
+marks.EUit = { fingerprint = "cf925db786569549", at = [[86, 19]] }
+marks.EUnl = { fingerprint = "9804b1f6d319e79a", at = [[84, 12]] }
+marks.EUpl = { fingerprint = "629dedcf91cef743", at = [[1, 20]] }
+marks.EUru = { fingerprint = "095434025d65376c", at = [[62, 16]] }
+marks.JPja = { fingerprint = "a30ec31052d362f0", at = [[23, 8]] }
+marks.KRko = { fingerprint = "396d8bd834425318", at = [[28, 7]] }
+marks.TWzh = { fingerprint = "b00eb583cc0484c8", at = [[19, 5]] }
+marks.USen = { fingerprint = "b6da88052f47377c", at = [[69, 16]] }
+marks.USes = { fingerprint = "e0e1fa86bee2b513", at = [[62, 18]] }
+marks.USfr = { fingerprint = "50061c8f023a9be3", at = [[80, 21]] }
+marks.USpt = { fingerprint = "7a24001c2f646892", at = [[57, 15]] }
+
+[[line]]
+check = "Sheik at Temple"
+item = "Item_Melody_LightPrelude"
+file = "EventFlowMsg/Dm_MelodyGet_Shine.msbt"
+label = "Dm_MelodyGet_Shine_0015"
+marks.CNzh = { fingerprint = "bb35610b17f3c93c", at = [[2, 5]] }
+marks.EUde = { fingerprint = "6b59dd3a74ef6f45", at = [[11, 18]] }
+marks.EUen = { fingerprint = "877fb71dd17faec5", at = [[9, 16]] }
+marks.EUes = { fingerprint = "5b118c9d3b1d537d", at = [[8, 18]] }
+marks.EUfr = { fingerprint = "47e4e337de7b43b9", at = [[10, 21]] }
+marks.EUit = { fingerprint = "96e7ffbb1513af4d", at = [[9, 19]] }
+marks.EUnl = { fingerprint = "910a026557a9ed67", at = [[9, 12]] }
+marks.EUpl = { fingerprint = "1aae6016db6a3ce4", at = [[8, 20]] }
+marks.EUru = { fingerprint = "d1900cec3b5dc2fa", at = [[11, 16]] }
+marks.JPja = { fingerprint = "58c664d61136ad28", at = [[0, 8]] }
+marks.KRko = { fingerprint = "996c18424ce712d8", at = [[0, 7]] }
+marks.TWzh = { fingerprint = "7fcd7d1bcb15fc28", at = [[2, 5]] }
+marks.USen = { fingerprint = "877fb71dd17faec5", at = [[9, 16]] }
+marks.USes = { fingerprint = "5b118c9d3b1d537d", at = [[8, 18]] }
+marks.USfr = { fingerprint = "47e4e337de7b43b9", at = [[10, 21]] }
+marks.USpt = { fingerprint = "69482a69ee2b4a9f", at = [[8, 15]] }
+
+[[line]]
+check = "Sheik at Colossus"
+item = "Item_Melody_SpiritRequiem"
+file = "EventFlowMsg/Dm_MelodyGet_Spilit.msbt"
+label = "Dm_MelodyGet_Spilit_0004"
+marks.CNzh = { fingerprint = "5c13967cc495c5ba", at = [[19, 5]] }
+marks.EUde = { fingerprint = "9f0083a911805ce9", at = [[26, 19]] }
+marks.EUen = { fingerprint = "87d6686ac9f8bfbc", at = [[29, 17]] }
+marks.EUes = { fingerprint = "23000fe471ba56df", at = [[24, 20]] }
+marks.EUfr = { fingerprint = "f27b70e2bc5b4609", at = [[56, 19]] }
+marks.EUit = { fingerprint = "1ecb25b65e487bf8", at = [[25, 21]] }
+marks.EUnl = { fingerprint = "74017ad84446b4ea", at = [[28, 11]] }
+marks.EUpl = { fingerprint = "fcf9a8719eea0fb7", at = [[25, 12]] }
+marks.EUru = { fingerprint = "b80b2e77227cde3a", at = [[26, 16]] }
+marks.JPja = { fingerprint = "f6b4ba715d80b8ce", at = [[18, 7]] }
+marks.KRko = { fingerprint = "8b455547c3342ced", at = [[18, 7]] }
+marks.TWzh = { fingerprint = "2480dfec526c54f9", at = [[14, 5]] }
+marks.USen = { fingerprint = "87d6686ac9f8bfbc", at = [[29, 17]] }
+marks.USes = { fingerprint = "070a9151e68b7102", at = [[24, 20]] }
+marks.USfr = { fingerprint = "f27b70e2bc5b4609", at = [[56, 19]] }
+marks.USpt = { fingerprint = "fcb18d79c09c9ea5", at = [[27, 21]] }
+
+[[line]]
+check = "Sheik at Colossus"
+item = "Item_Melody_SpiritRequiem"
+file = "EventFlowMsg/Dm_MelodyGet_Spilit.msbt"
+label = "Dm_MelodyGet_Spilit_0005"
+marks.CNzh = { fingerprint = "cc079ab640628fa9", at = [[2, 5]] }
+marks.EUde = { fingerprint = "9e95cf26e94581f6", at = [[11, 19]] }
+marks.EUen = { fingerprint = "259559cce68e2cee", at = [[9, 17]] }
+marks.EUes = { fingerprint = "aec6d6d50434519b", at = [[8, 20]] }
+marks.EUfr = { fingerprint = "299f78c72bbde124", at = [[10, 19]] }
+marks.EUit = { fingerprint = "b4acd7db2a52c510", at = [[9, 21]] }
+marks.EUnl = { fingerprint = "254566c60ac8284c", at = [[10, 11]] }
+marks.EUpl = { fingerprint = "95f19fe42eed7d07", at = [[8, 12]] }
+marks.EUru = { fingerprint = "c5e49a0d9c1bbc0c", at = [[11, 16]] }
+marks.JPja = { fingerprint = "cf36b0de58a4a54b", at = [[0, 7]] }
+marks.KRko = { fingerprint = "fba70bc445be9fbd", at = [[0, 7]] }
+marks.TWzh = { fingerprint = "bc24db10303011b5", at = [[2, 5]] }
+marks.USen = { fingerprint = "259559cce68e2cee", at = [[9, 17]] }
+marks.USes = { fingerprint = "aec6d6d50434519b", at = [[8, 20]] }
+marks.USfr = { fingerprint = "299f78c72bbde124", at = [[10, 19]] }
+marks.USpt = { fingerprint = "9653dbd45dd7b66f", at = [[8, 21]] }
+
+[[line]]
+check = "Sheik at Colossus"
+item = "Item_Melody_SpiritRequiem"
+file = "EventFlowMsg/Dm_MelodyGet_Spilit.msbt"
+label = "Dm_MelodyGet_Spilit_0006"
+marks.CNzh = { fingerprint = "94e468c5c7d08059", at = [[7, 5]] }
+marks.EUde = { fingerprint = "73de22bc5064ab1e", at = [[66, 19]] }
+marks.EUen = { fingerprint = "1b7a0ac6269e56ce", at = [[68, 17]] }
+marks.EUes = { fingerprint = "2aef60eecc50d9ca", at = [[18, 20]] }
+marks.EUfr = { fingerprint = "bf125b9b26532c4a", at = [[31, 19]] }
+marks.EUit = { fingerprint = "1886030e4c1db821", at = [[71, 21]] }
+marks.EUnl = { fingerprint = "143bdb01937abb06", at = [[78, 11]] }
+marks.EUpl = { fingerprint = "5b98f0630dcfe15d", at = [[52, 12]] }
+marks.EUru = { fingerprint = "c7ad717332c734f4", at = [[72, 16]] }
+marks.JPja = { fingerprint = "8d86bb491df9b373", at = [[7, 7]] }
+marks.KRko = { fingerprint = "f4cd5bd62f811682", at = [[6, 7]] }
+marks.TWzh = { fingerprint = "7dea60281b280f67", at = [[8, 5]] }
+marks.USen = { fingerprint = "1b7a0ac6269e56ce", at = [[68, 17]] }
+marks.USes = { fingerprint = "2aef60eecc50d9ca", at = [[18, 20]] }
+marks.USfr = { fingerprint = "bf125b9b26532c4a", at = [[31, 19]] }
+marks.USpt = { fingerprint = "d6e5f115cf2c3181", at = [[63, 21]] }
+
+[[line]]
+check = "Song from Royal Familys Tomb"
+item = "Item_Melody_SunSong"
+file = "EventFlowMsg/Dm_MelodyGet_Sun.msbt"
+label = "Dm_MelodyGet_Sun_0014"
+marks.CNzh = { fingerprint = "acb8296a858932b1", at = [[1, 4]] }
+marks.EUde = { fingerprint = "1f20df6c74ce745b", at = [[12, 15]] }
+marks.EUen = { fingerprint = "e1b540ff2bb49c32", at = [[9, 10]] }
+marks.EUes = { fingerprint = "6d08809a7ae3d07e", at = [[10, 15]] }
+marks.EUfr = { fingerprint = "7411be55878a4e5b", at = [[7, 15]] }
+marks.EUit = { fingerprint = "e78edaf0252c7b62", at = [[9, 14]] }
+marks.EUnl = { fingerprint = "502ce67c9218dc56", at = [[9, 9]] }
+marks.EUpl = { fingerprint = "47f41cf87d72592a", at = [[18, 14]] }
+marks.EUru = { fingerprint = "aeff17c01b41bb0c", at = [[7, 12]] }
+marks.JPja = { fingerprint = "dcaf0e856d0a828f", at = [[0, 4]] }
+marks.KRko = { fingerprint = "965f48753b5f7a7d", at = [[0, 6]] }
+marks.TWzh = { fingerprint = "503929a1c7363a8e", at = [[1, 4]] }
+marks.USen = { fingerprint = "e1b540ff2bb49c32", at = [[9, 10]] }
+marks.USes = { fingerprint = "1787b16c1ab7953d", at = [[10, 15]] }
+marks.USfr = { fingerprint = "7411be55878a4e5b", at = [[7, 15]] }
+marks.USpt = { fingerprint = "38387188438d6fe0", at = [[9, 13]] }
+
+[[line]]
+check = "HF Ocarina of Time Item"
+item = "Item_Ocarina_Time"
+file = "EventFlowMsg/Dm_MelodyGet_Time.msbt"
+label = "Dm_MelodyGet_Time_Text_003_b"
+marks.CNzh = { fingerprint = "e4ac8eb2e85c5b94", at = [[9, 2]] }
+marks.EUde = { fingerprint = "335a8debe68a5617", at = [[14, 7]] }
+marks.EUen = { fingerprint = "5a501bcac12f2111", at = [[29, 7]] }
+marks.EUes = { fingerprint = "8173f456dc5f0f95", at = [[24, 7]] }
+marks.EUfr = { fingerprint = "daf23c3c788551fb", at = [[26, 7]] }
+marks.EUit = { fingerprint = "cac21b212c33a128", at = [[29, 7]] }
+marks.EUnl = { fingerprint = "24806d0e7d3a4493", at = [[26, 7]] }
+marks.EUpl = { fingerprint = "877c7144f05f15cf", at = [[18, 7]] }
+marks.EUru = { fingerprint = "4414c3866c068c39", at = [[22, 7]] }
+marks.JPja = { fingerprint = "f2050c7cafe9ed5d", at = [[7, 4]] }
+marks.KRko = { fingerprint = "2c9beb70a5e98fe2", at = [[6, 4]] }
+marks.TWzh = { fingerprint = "41666016df0326f1", at = [[9, 2]] }
+marks.USen = { fingerprint = "5a501bcac12f2111", at = [[29, 7]] }
+marks.USes = { fingerprint = "8173f456dc5f0f95", at = [[24, 7]] }
+marks.USfr = { fingerprint = "daf23c3c788551fb", at = [[26, 7]] }
+marks.USpt = { fingerprint = "4a90ab83aca4aab3", at = [[12, 7]] }
+
+[[line]]
+check = "HF Ocarina of Time Item"
+item = "Item_Ocarina_Time"
+file = "EventFlowMsg/Dm_MelodyGet_Time.msbt"
+label = "Dm_MelodyGet_Time_Text_005_b"
+marks.CNzh = { fingerprint = "0e6ace2ad0b60131", at = [[11, 2]] }
+marks.EUde = { fingerprint = "99472d7a7cc53b7b", at = [[28, 7]] }
+marks.EUen = { fingerprint = "870bc36ebf9a6355", at = [[38, 7]] }
+marks.EUes = { fingerprint = "ddf1ccd5944b3adc", at = [[25, 7]] }
+marks.EUfr = { fingerprint = "cf7d833362167faf", at = [[56, 7]] }
+marks.EUit = { fingerprint = "68b90e0a95403f72", at = [[57, 7]] }
+marks.EUnl = { fingerprint = "c320e18bc46e9350", at = [[28, 7]] }
+marks.EUpl = { fingerprint = "0b4f4d9204eb3ee8", at = [[43, 10]] }
+marks.EUru = { fingerprint = "8e392764dee572ea", at = [[22, 7]] }
+marks.JPja = { fingerprint = "36a0405ce5aead18", at = [[11, 4]] }
+marks.KRko = { fingerprint = "a8e9973d7059340c", at = [[14, 4]] }
+marks.TWzh = { fingerprint = "e078782000dd8bdb", at = [[11, 2]] }
+marks.USen = { fingerprint = "870bc36ebf9a6355", at = [[38, 7]] }
+marks.USes = { fingerprint = "98da9f70d3c1bca6", at = [[21, 7]] }
+marks.USfr = { fingerprint = "cf7d833362167faf", at = [[56, 7]] }
+marks.USpt = { fingerprint = "6f1047d75e28f700", at = [[27, 7]] }
+
+[[line]]
+check = "Song from Ocarina of Time"
+item = "Item_Melody_TimeSong"
+file = "EventFlowMsg/Dm_MelodyGet_Time.msbt"
+label = "Dm_MelodyGet_Time_Text_005_b"
+marks.CNzh = { fingerprint = "0e6ace2ad0b60131", at = [[7, 2]] }
+marks.EUde = { fingerprint = "99472d7a7cc53b7b", at = [[50, 18]] }
+marks.EUen = { fingerprint = "870bc36ebf9a6355", at = [[52, 14]] }
+marks.EUes = { fingerprint = "ddf1ccd5944b3adc", at = [[39, 16]] }
+marks.EUfr = { fingerprint = "cf7d833362167faf", at = [[38, 5]] }
+marks.EUit = { fingerprint = "68b90e0a95403f72", at = [[27, 7]] }
+marks.EUnl = { fingerprint = "c320e18bc46e9350", at = [[52, 16]] }
+marks.EUpl = { fingerprint = "0b4f4d9204eb3ee8", at = [[70, 7]] }
+marks.EUru = { fingerprint = "8e392764dee572ea", at = [[37, 17]] }
+marks.JPja = { fingerprint = "36a0405ce5aead18", at = [[5, 4]] }
+marks.KRko = { fingerprint = "a8e9973d7059340c", at = [[6, 3]] }
+marks.TWzh = { fingerprint = "e078782000dd8bdb", at = [[7, 2]] }
+marks.USen = { fingerprint = "870bc36ebf9a6355", at = [[52, 14]] }
+marks.USes = { fingerprint = "98da9f70d3c1bca6", at = [[35, 16]] }
+marks.USfr = { fingerprint = "cf7d833362167faf", at = [[38, 5]] }
+marks.USpt = { fingerprint = "6f1047d75e28f700", at = [[42, 16]] }
+
+[[line]]
+check = "Sheik in Ice Cavern"
+item = "Item_Melody_WaterSerenade"
+file = "EventFlowMsg/Dm_MelodyGet_Water.msbt"
+label = "Dm_MelodyGet_Water_0010"
+marks.CNzh = { fingerprint = "14b2a5c91a9ff8ab", at = [[17, 5]] }
+marks.EUde = { fingerprint = "f1e52869f7919d07", at = [[63, 20]] }
+marks.EUen = { fingerprint = "37178bde76fa363f", at = [[68, 17]] }
+marks.EUes = { fingerprint = "b674fa54e489fca5", at = [[73, 17]] }
+marks.EUfr = { fingerprint = "d0174ec388395f7f", at = [[55, 17]] }
+marks.EUit = { fingerprint = "394ca979e8e394bb", at = [[73, 19]] }
+marks.EUnl = { fingerprint = "fc2299951acc27be", at = [[52, 13]] }
+marks.EUpl = { fingerprint = "bad4b12019be009e", at = [[52, 14]] }
+marks.EUru = { fingerprint = "eba733194334e214", at = [[50, 15]] }
+marks.JPja = { fingerprint = "5bdaee5600373b20", at = [[15, 7]] }
+marks.KRko = { fingerprint = "66944afdc97a4527", at = [[20, 7]] }
+marks.TWzh = { fingerprint = "19a08279edb73964", at = [[18, 5]] }
+marks.USen = { fingerprint = "37178bde76fa363f", at = [[68, 17]] }
+marks.USes = { fingerprint = "edac7dc895ca86f0", at = [[52, 17]] }
+marks.USfr = { fingerprint = "d0174ec388395f7f", at = [[55, 17]] }
+marks.USpt = { fingerprint = "05cc9de7ec7af7a8", at = [[57, 18]] }
+
+[[line]]
+check = "Sheik in Ice Cavern"
+item = "Item_Melody_WaterSerenade"
+file = "EventFlowMsg/Dm_MelodyGet_Water.msbt"
+label = "Dm_MelodyGet_Water_0011"
+marks.CNzh = { fingerprint = "8973468cec33850b", at = [[2, 5]] }
+marks.EUde = { fingerprint = "94b1bb5835e09d04", at = [[11, 20]] }
+marks.EUen = { fingerprint = "6d9296f9853a246b", at = [[9, 17]] }
+marks.EUes = { fingerprint = "7e855cc57a465ce4", at = [[8, 17]] }
+marks.EUfr = { fingerprint = "2e72576468617fba", at = [[10, 17]] }
+marks.EUit = { fingerprint = "016da6b6b9666b34", at = [[9, 19]] }
+marks.EUnl = { fingerprint = "0e46efbc36020819", at = [[9, 13]] }
+marks.EUpl = { fingerprint = "61680a92c37f5923", at = [[8, 14]] }
+marks.EUru = { fingerprint = "df1acae18e66dd50", at = [[11, 15]] }
+marks.JPja = { fingerprint = "63ad8e2acf3cdeb3", at = [[0, 7]] }
+marks.KRko = { fingerprint = "ca176ca9ede60efc", at = [[0, 7]] }
+marks.TWzh = { fingerprint = "08260b5fa38f3b76", at = [[2, 5]] }
+marks.USen = { fingerprint = "6d9296f9853a246b", at = [[9, 17]] }
+marks.USes = { fingerprint = "7e855cc57a465ce4", at = [[8, 17]] }
+marks.USfr = { fingerprint = "2e72576468617fba", at = [[10, 17]] }
+marks.USpt = { fingerprint = "0ca72fd6f1ff14ea", at = [[8, 18]] }
+
+[[line]]
+check = "Song from Impa"
+item = "Item_Melody_ZeldaLullaby"
+file = "EventFlowMsg/Dm_MelodyGet_Zelda.msbt"
+label = "Dm_MelodyGet_Zelda_0003"
+marks.CNzh = { fingerprint = "cd92857eafabb5a3", at = [[24, 5]] }
+marks.EUde = { fingerprint = "ada4619294d79fd5", at = [[96, 7]] }
+marks.EUen = { fingerprint = "211d189d2ec07462", at = [[90, 12]] }
+marks.EUes = { fingerprint = "8c25669c0e7a0c9f", at = [[70, 16]] }
+marks.EUfr = { fingerprint = "bc6b89ae4ff05db1", at = [[97, 7]] }
+marks.EUit = { fingerprint = "eb210923ed9c4666", at = [[89, 16]] }
+marks.EUnl = { fingerprint = "544cddd2fcadc4bd", at = [[68, 13]] }
+marks.EUpl = { fingerprint = "f86595675c38109e", at = [[66, 18]] }
+marks.EUru = { fingerprint = "e67618838839a5f0", at = [[78, 14]] }
+marks.JPja = { fingerprint = "6b0bd6b33652a88d", at = [[22, 4]] }
+marks.KRko = { fingerprint = "3a72b163d6ca680c", at = [[21, 6]] }
+marks.TWzh = { fingerprint = "06d29732fd0fc471", at = [[27, 5]] }
+marks.USen = { fingerprint = "211d189d2ec07462", at = [[90, 12]] }
+marks.USes = { fingerprint = "fa2f63bce5fa67bb", at = [[77, 16]] }
+marks.USfr = { fingerprint = "bc6b89ae4ff05db1", at = [[97, 7]] }
+marks.USpt = { fingerprint = "cdb40d3e25372a39", at = [[88, 6]] }
+
+[[line]]
+check = "Song from Impa"
+item = "Item_Melody_ZeldaLullaby"
+file = "EventFlowMsg/Dm_MelodyGet_Zelda.msbt"
+label = "Dm_MelodyGet_Zelda_0012"
+marks.CNzh = { fingerprint = "e9803de06bd3a54b", at = [[4, 2]] }
+marks.EUde = { fingerprint = "8586fabee453e12a", at = [[17, 4]] }
+marks.EUen = { fingerprint = "0d18a9f402eae6a3", at = [[33, 4]] }
+marks.EUes = { fingerprint = "5b88d6081737b16f", at = [[14, 7]] }
+marks.EUfr = { fingerprint = "6587091433cbe6c6", at = [[13, 7]] }
+marks.EUit = { fingerprint = "31951e748f972bda", at = [[17, 7]] }
+marks.EUnl = { fingerprint = "7ce9b769506e847f", at = [[12, 4]] }
+marks.EUpl = { fingerprint = "2792796f0fecfbcd", at = [[14, 7]] }
+marks.EUru = { fingerprint = "bea534a9dbc2ae96", at = [[14, 7]] }
+marks.JPja = { fingerprint = "f2f44f512d79bd12", at = [[2, 1]] }
+marks.KRko = { fingerprint = "cc6e94d188179762", at = [[2, 2]] }
+marks.TWzh = { fingerprint = "a06e7a0e55ae3da4", at = [[4, 2]] }
+marks.USen = { fingerprint = "0d18a9f402eae6a3", at = [[33, 4]] }
+marks.USes = { fingerprint = "5b88d6081737b16f", at = [[14, 7]] }
+marks.USfr = { fingerprint = "6587091433cbe6c6", at = [[13, 7]] }
+marks.USpt = { fingerprint = "544a6dd8dcca36e7", at = [[14, 6]] }
+
+[[line]]
+check = "ZD Diving Minigame"
+item = "Item_Scale_Silver"
+file = "EventFlowMsg/MiniGame_Diving.msbt"
+label = "Talk_30_2"
+marks.EUit = { fingerprint = "d2e57295435da878", at = [[85, 6]] }
+marks.USpt = { fingerprint = "fc4872c01cadf31d", at = [[64, 7]] }
+
+[[line]]
+check = "MiniGame_Diving Event15 (Obj_Rupee_Red)"
+item = "Obj_Rupee_Red"
+file = "EventFlowMsg/MiniGame_Diving.msbt"
+label = "Talk_50"
+marks.CNzh = { fingerprint = "d2e413f1023e1fbc", at = [[27, 4]] }
+marks.EUde = { fingerprint = "ad41f833257c24da", at = [[108, 9]] }
+marks.EUen = { fingerprint = "91c51c9e5d49cac8", at = [[132, 9]] }
+marks.EUes = { fingerprint = "db33db0c7e372b13", at = [[164, 9]] }
+marks.EUfr = { fingerprint = "9b5875ced4340742", at = [[108, 8]] }
+marks.EUit = { fingerprint = "72744148efd695c9", at = [[109, 8]] }
+marks.EUnl = { fingerprint = "c018583071f50667", at = [[118, 9]] }
+marks.EUpl = { fingerprint = "d409f0a83d0c2ae5", at = [[128, 8]] }
+marks.EUru = { fingerprint = "48eb3b0277e73c50", at = [[128, 8]] }
+marks.JPja = { fingerprint = "cfebaea2a2c20ae8", at = [[29, 5]] }
+marks.KRko = { fingerprint = "ad246b45996ca12f", at = [[28, 4]] }
+marks.TWzh = { fingerprint = "e7aacc7ec9ed3b9b", at = [[29, 4]] }
+marks.USen = { fingerprint = "91c51c9e5d49cac8", at = [[132, 9]] }
+marks.USes = { fingerprint = "db33db0c7e372b13", at = [[164, 9]] }
+marks.USfr = { fingerprint = "e526104198bb2909", at = [[108, 8]] }
+marks.USpt = { fingerprint = "ab83a735cfc0ae58", at = [[104, 9]] }
+
+[[line]]
+check = "LH Child Fishing"
+item = "Obj_Heart_Piece"
+file = "EventFlowMsg/MiniGame_Fishing.msbt"
+label = "Talk_153"
+marks.CNzh = { fingerprint = "353b30abd241506b", at = [[28, 9]] }
+marks.EUde = { fingerprint = "83a4e833d4db4822", at = [[92, 18]] }
+marks.EUen = { fingerprint = "c234c09d1b543862", at = [[73, 18]] }
+marks.EUes = { fingerprint = "ea74aacf8a34a87c", at = [[55, 27]] }
+marks.EUfr = { fingerprint = "93412b10f21e005f", at = [[70, 27]] }
+marks.EUit = { fingerprint = "1a20a2a65dd6cd65", at = [[53, 27]] }
+marks.EUnl = { fingerprint = "4897ed47bdc442f8", at = [[76, 17]] }
+marks.EUpl = { fingerprint = "506192399f739363", at = [[56, 25]] }
+marks.EUru = { fingerprint = "f7b26419772a7ff0", at = [[70, 19]] }
+marks.JPja = { fingerprint = "dc06d959bce07a52", at = [[26, 13]] }
+marks.KRko = { fingerprint = "440b236cdf76784e", at = [[29, 16]] }
+marks.TWzh = { fingerprint = "28ed012d39fa768b", at = [[25, 9]] }
+marks.USen = { fingerprint = "c234c09d1b543862", at = [[73, 18]] }
+marks.USes = { fingerprint = "ea74aacf8a34a87c", at = [[55, 27]] }
+marks.USfr = { fingerprint = "31f08b758513cc85", at = [[70, 27]] }
+marks.USpt = { fingerprint = "5947cc99e1eb652a", at = [[65, 26]] }
+
+[[line]]
+check = "LH Adult Fishing"
+item = "Item_Scale_Gold"
+file = "EventFlowMsg/MiniGame_Fishing.msbt"
+label = "Talk_154"
+marks.CNzh = { fingerprint = "867af66a932f2d10", at = [[28, 8]] }
+marks.EUde = { fingerprint = "9e4f24538f2cc175", at = [[92, 14]] }
+marks.EUen = { fingerprint = "dbeca729597f8d0d", at = [[74, 12]] }
+marks.EUes = { fingerprint = "5f253700dde23eae", at = [[56, 13]] }
+marks.EUfr = { fingerprint = "28431b980b7373af", at = [[66, 22]] }
+marks.EUit = { fingerprint = "2c719bfc1d19c133", at = [[53, 17]] }
+marks.EUnl = { fingerprint = "a1c607fc7f6fd46c", at = [[79, 12]] }
+marks.EUpl = { fingerprint = "6b30138b77df18ef", at = [[58, 13]] }
+marks.EUru = { fingerprint = "8fa20dfeec6f6959", at = [[56, 12]] }
+marks.JPja = { fingerprint = "1a46a302a7fb4959", at = [[26, 10]] }
+marks.KRko = { fingerprint = "9a19ff527a5d6e72", at = [[29, 16]] }
+marks.TWzh = { fingerprint = "3cae65d72c12fc19", at = [[25, 9]] }
+marks.USen = { fingerprint = "dbeca729597f8d0d", at = [[74, 12]] }
+marks.USes = { fingerprint = "5f253700dde23eae", at = [[56, 13]] }
+marks.USfr = { fingerprint = "1e3454fb4f7fb4de", at = [[66, 22]] }
+marks.USpt = { fingerprint = "09537556288eb5d3", at = [[65, 14]] }
+
+[[line]]
+check = "ZR Frogs Ocarina Game"
+item = "Obj_Heart_Piece"
+file = "EventFlowMsg/MiniGame_FrogTenors.msbt"
+label = "Talk_19"
+marks.CNzh = { fingerprint = "20a5b8d00df4f1ee", at = [[64, 5]] }
+marks.EUde = { fingerprint = "07c27ca2bec5c844", at = [[180, 8]] }
+marks.EUen = { fingerprint = "b41d2b81c0e3154f", at = [[154, 14]] }
+marks.EUes = { fingerprint = "1801461f7f5c9081", at = [[224, 16]] }
+marks.EUfr = { fingerprint = "bc88f4b91ff605dd", at = [[175, 16]] }
+marks.EUit = { fingerprint = "82ef019ace9cffcf", at = [[186, 18]] }
+marks.EUnl = { fingerprint = "3789b361375ad7f6", at = [[174, 10]] }
+marks.EUpl = { fingerprint = "a6e4eb2128f6e2bc", at = [[197, 18]] }
+marks.EUru = { fingerprint = "b7d6b5de4cc22861", at = [[215, 15]] }
+marks.JPja = { fingerprint = "bccafd162318915e", at = [[70, 7]] }
+marks.KRko = { fingerprint = "28dbd73a23f3805c", at = [[69, 5]] }
+marks.TWzh = { fingerprint = "b852a4a98620d270", at = [[63, 5]] }
+marks.USen = { fingerprint = "b41d2b81c0e3154f", at = [[154, 14]] }
+marks.USes = { fingerprint = "791bd7cb6f9167df", at = [[198, 16]] }
+marks.USfr = { fingerprint = "9e1a119341aa13a1", at = [[174, 16]] }
+marks.USpt = { fingerprint = "f50ec4405ce23101", at = [[235, 20]] }
+
+[[line]]
+check = "MiniGame_FrogTenors Event162 (Obj_Rupee_Blue)"
+item = "Obj_Rupee_Blue"
+file = "EventFlowMsg/MiniGame_FrogTenors.msbt"
+label = "Talk_29"
+marks.CNzh = { fingerprint = "7debcf4059a6c96d", at = [[19, 3]] }
+marks.EUde = { fingerprint = "d5605dfe6aece5ee", at = [[64, 8]] }
+marks.EUen = { fingerprint = "67d7aa52bc987039", at = [[52, 11]] }
+marks.EUes = { fingerprint = "f5546b35ec3bd0e6", at = [[84, 8]] }
+marks.EUfr = { fingerprint = "cc27c4d109f9ccc0", at = [[85, 7]] }
+marks.EUit = { fingerprint = "d768069fb7904af0", at = [[72, 7]] }
+marks.EUnl = { fingerprint = "0b1aa235190656dd", at = [[71, 8]] }
+marks.EUpl = { fingerprint = "f991eac1cd3a69d3", at = [[79, 7]] }
+marks.EUru = { fingerprint = "c322585d0336fcbf", at = [[64, 7]] }
+marks.JPja = { fingerprint = "dad5b2b8432809c6", at = [[17, 4]] }
+marks.KRko = { fingerprint = "652081ed75545aff", at = [[16, 3]] }
+marks.TWzh = { fingerprint = "bb089710c6263104", at = [[21, 3]] }
+marks.USen = { fingerprint = "67d7aa52bc987039", at = [[52, 11]] }
+marks.USes = { fingerprint = "5e5e15d56ffa933c", at = [[54, 8]] }
+marks.USfr = { fingerprint = "53123de17488f6b9", at = [[85, 7]] }
+marks.USpt = { fingerprint = "a1eb112d5ca10205", at = [[67, 8]] }
+
+[[line]]
+check = "MiniGame_FrogTenors Event76 (Obj_Rupee_Blue)"
+item = "Obj_Rupee_Blue"
+file = "EventFlowMsg/MiniGame_FrogTenors.msbt"
+label = "Talk_29"
+marks.CNzh = { fingerprint = "7debcf4059a6c96d", at = [[19, 3]] }
+marks.EUde = { fingerprint = "d5605dfe6aece5ee", at = [[64, 8]] }
+marks.EUen = { fingerprint = "67d7aa52bc987039", at = [[52, 11]] }
+marks.EUes = { fingerprint = "f5546b35ec3bd0e6", at = [[84, 8]] }
+marks.EUfr = { fingerprint = "cc27c4d109f9ccc0", at = [[85, 7]] }
+marks.EUit = { fingerprint = "d768069fb7904af0", at = [[72, 7]] }
+marks.EUnl = { fingerprint = "0b1aa235190656dd", at = [[71, 8]] }
+marks.EUpl = { fingerprint = "f991eac1cd3a69d3", at = [[79, 7]] }
+marks.EUru = { fingerprint = "c322585d0336fcbf", at = [[64, 7]] }
+marks.JPja = { fingerprint = "dad5b2b8432809c6", at = [[17, 4]] }
+marks.KRko = { fingerprint = "652081ed75545aff", at = [[16, 3]] }
+marks.TWzh = { fingerprint = "bb089710c6263104", at = [[21, 3]] }
+marks.USen = { fingerprint = "67d7aa52bc987039", at = [[52, 11]] }
+marks.USes = { fingerprint = "5e5e15d56ffa933c", at = [[54, 8]] }
+marks.USfr = { fingerprint = "53123de17488f6b9", at = [[85, 7]] }
+marks.USpt = { fingerprint = "a1eb112d5ca10205", at = [[67, 8]] }
+
+[[line]]
+check = "MiniGame_FrogTenors Event162 (Obj_Rupee_Blue)"
+item = "Obj_Rupee_Blue"
+file = "EventFlowMsg/MiniGame_FrogTenors.msbt"
+label = "Talk_31"
+marks.CNzh = { fingerprint = "3d4f4074bd9c47f9", at = [[64, 3]] }
+marks.EUde = { fingerprint = "e8f6d45b115c08cb", at = [[176, 8]] }
+marks.EUen = { fingerprint = "21ca53820902e5e8", at = [[152, 11]] }
+marks.EUes = { fingerprint = "09c5177590434aa7", at = [[220, 8]] }
+marks.EUfr = { fingerprint = "719e9bee2856bad7", at = [[172, 7]] }
+marks.EUit = { fingerprint = "e0bf7825d8dbba92", at = [[187, 7]] }
+marks.EUnl = { fingerprint = "3fd9feb22d500ee9", at = [[170, 8]] }
+marks.EUpl = { fingerprint = "f9459393ce96c0b4", at = [[200, 7]] }
+marks.EUru = { fingerprint = "e16ac9455dd9a1ef", at = [[215, 13]] }
+marks.JPja = { fingerprint = "b3beb18665303f0e", at = [[70, 4]] }
+marks.KRko = { fingerprint = "d504d381bc33970b", at = [[69, 3]] }
+marks.TWzh = { fingerprint = "7d3aee16196a859d", at = [[63, 3]] }
+marks.USen = { fingerprint = "21ca53820902e5e8", at = [[152, 11]] }
+marks.USes = { fingerprint = "e5156aa3b38062a0", at = [[200, 8]] }
+marks.USfr = { fingerprint = "cf54614c95f278de", at = [[171, 7]] }
+marks.USpt = { fingerprint = "782bb1331126935e", at = [[223, 8]] }
+
+[[line]]
+check = "MiniGame_FrogTenors Event76 (Obj_Rupee_Blue)"
+item = "Obj_Rupee_Blue"
+file = "EventFlowMsg/MiniGame_FrogTenors.msbt"
+label = "Talk_31"
+marks.CNzh = { fingerprint = "3d4f4074bd9c47f9", at = [[64, 3]] }
+marks.EUde = { fingerprint = "e8f6d45b115c08cb", at = [[176, 8]] }
+marks.EUen = { fingerprint = "21ca53820902e5e8", at = [[152, 11]] }
+marks.EUes = { fingerprint = "09c5177590434aa7", at = [[220, 8]] }
+marks.EUfr = { fingerprint = "719e9bee2856bad7", at = [[172, 7]] }
+marks.EUit = { fingerprint = "e0bf7825d8dbba92", at = [[187, 7]] }
+marks.EUnl = { fingerprint = "3fd9feb22d500ee9", at = [[170, 8]] }
+marks.EUpl = { fingerprint = "f9459393ce96c0b4", at = [[200, 7]] }
+marks.EUru = { fingerprint = "e16ac9455dd9a1ef", at = [[215, 13]] }
+marks.JPja = { fingerprint = "b3beb18665303f0e", at = [[70, 4]] }
+marks.KRko = { fingerprint = "d504d381bc33970b", at = [[69, 3]] }
+marks.TWzh = { fingerprint = "7d3aee16196a859d", at = [[63, 3]] }
+marks.USen = { fingerprint = "21ca53820902e5e8", at = [[152, 11]] }
+marks.USes = { fingerprint = "e5156aa3b38062a0", at = [[200, 8]] }
+marks.USfr = { fingerprint = "cf54614c95f278de", at = [[171, 7]] }
+marks.USpt = { fingerprint = "782bb1331126935e", at = [[223, 8]] }
+
+[[line]]
+check = "MiniGame_FrogTenors Event162 (Obj_Rupee_Blue)"
+item = "Obj_Rupee_Blue"
+file = "EventFlowMsg/MiniGame_FrogTenors.msbt"
+label = "Talk_39"
+marks.CNzh = { fingerprint = "da5940eb6edbe32f", at = [[19, 3]] }
+marks.EUde = { fingerprint = "d5605dfe6aece5ee", at = [[64, 8]] }
+marks.EUen = { fingerprint = "43ee6fd16da5868e", at = [[52, 11]] }
+marks.EUes = { fingerprint = "f5546b35ec3bd0e6", at = [[84, 8]] }
+marks.EUfr = { fingerprint = "cc27c4d109f9ccc0", at = [[85, 7]] }
+marks.EUit = { fingerprint = "d768069fb7904af0", at = [[72, 7]] }
+marks.EUnl = { fingerprint = "0b1aa235190656dd", at = [[71, 8]] }
+marks.EUpl = { fingerprint = "f991eac1cd3a69d3", at = [[79, 7]] }
+marks.EUru = { fingerprint = "c322585d0336fcbf", at = [[64, 7]] }
+marks.JPja = { fingerprint = "023911ac6d357a90", at = [[18, 4]] }
+marks.KRko = { fingerprint = "652081ed75545aff", at = [[16, 3]] }
+marks.TWzh = { fingerprint = "7bfbb02ece6e9ce4", at = [[19, 3]] }
+marks.USen = { fingerprint = "43ee6fd16da5868e", at = [[52, 11]] }
+marks.USes = { fingerprint = "5e5e15d56ffa933c", at = [[54, 8]] }
+marks.USfr = { fingerprint = "53123de17488f6b9", at = [[85, 7]] }
+marks.USpt = { fingerprint = "a1eb112d5ca10205", at = [[67, 8]] }
+
+[[line]]
+check = "MiniGame_FrogTenors Event76 (Obj_Rupee_Blue)"
+item = "Obj_Rupee_Blue"
+file = "EventFlowMsg/MiniGame_FrogTenors.msbt"
+label = "Talk_39"
+marks.CNzh = { fingerprint = "da5940eb6edbe32f", at = [[19, 3]] }
+marks.EUde = { fingerprint = "d5605dfe6aece5ee", at = [[64, 8]] }
+marks.EUen = { fingerprint = "43ee6fd16da5868e", at = [[52, 11]] }
+marks.EUes = { fingerprint = "f5546b35ec3bd0e6", at = [[84, 8]] }
+marks.EUfr = { fingerprint = "cc27c4d109f9ccc0", at = [[85, 7]] }
+marks.EUit = { fingerprint = "d768069fb7904af0", at = [[72, 7]] }
+marks.EUnl = { fingerprint = "0b1aa235190656dd", at = [[71, 8]] }
+marks.EUpl = { fingerprint = "f991eac1cd3a69d3", at = [[79, 7]] }
+marks.EUru = { fingerprint = "c322585d0336fcbf", at = [[64, 7]] }
+marks.JPja = { fingerprint = "023911ac6d357a90", at = [[18, 4]] }
+marks.KRko = { fingerprint = "652081ed75545aff", at = [[16, 3]] }
+marks.TWzh = { fingerprint = "7bfbb02ece6e9ce4", at = [[19, 3]] }
+marks.USen = { fingerprint = "43ee6fd16da5868e", at = [[52, 11]] }
+marks.USes = { fingerprint = "5e5e15d56ffa933c", at = [[54, 8]] }
+marks.USfr = { fingerprint = "53123de17488f6b9", at = [[85, 7]] }
+marks.USpt = { fingerprint = "a1eb112d5ca10205", at = [[67, 8]] }
+
+[[line]]
+check = "MiniGame_FrogTenors Event162 (Obj_Rupee_Blue)"
+item = "Obj_Rupee_Blue"
+file = "EventFlowMsg/MiniGame_FrogTenors.msbt"
+label = "Talk_41"
+marks.CNzh = { fingerprint = "39ac328f139433ac", at = [[17, 3]] }
+marks.EUde = { fingerprint = "78e50c44901ca585", at = [[67, 8]] }
+marks.EUen = { fingerprint = "6010522a1f338b6a", at = [[50, 11]] }
+marks.EUes = { fingerprint = "6dadc680dce406f5", at = [[44, 8]] }
+marks.EUfr = { fingerprint = "cc27c4d109f9ccc0", at = [[85, 7]] }
+marks.EUit = { fingerprint = "ff9df92ce5c4214c", at = [[74, 7]] }
+marks.EUnl = { fingerprint = "dc10e074a1bbbcf5", at = [[72, 8]] }
+marks.EUpl = { fingerprint = "707c789a0ffb9a47", at = [[79, 7]] }
+marks.EUru = { fingerprint = "193a967b5c815ab2", at = [[68, 7]] }
+marks.JPja = { fingerprint = "ac4bb290fccde878", at = [[19, 4]] }
+marks.KRko = { fingerprint = "9a98760cc5f0fb9b", at = [[19, 3]] }
+marks.TWzh = { fingerprint = "5780feb4671b8c65", at = [[19, 3]] }
+marks.USen = { fingerprint = "6010522a1f338b6a", at = [[50, 11]] }
+marks.USes = { fingerprint = "4665939fef9cb7f8", at = [[44, 8]] }
+marks.USfr = { fingerprint = "53123de17488f6b9", at = [[85, 7]] }
+marks.USpt = { fingerprint = "18fcccc97fc3208f", at = [[71, 8]] }
+
+[[line]]
+check = "MiniGame_FrogTenors Event76 (Obj_Rupee_Blue)"
+item = "Obj_Rupee_Blue"
+file = "EventFlowMsg/MiniGame_FrogTenors.msbt"
+label = "Talk_41"
+marks.CNzh = { fingerprint = "39ac328f139433ac", at = [[17, 3]] }
+marks.EUde = { fingerprint = "78e50c44901ca585", at = [[67, 8]] }
+marks.EUen = { fingerprint = "6010522a1f338b6a", at = [[50, 11]] }
+marks.EUes = { fingerprint = "6dadc680dce406f5", at = [[44, 8]] }
+marks.EUfr = { fingerprint = "cc27c4d109f9ccc0", at = [[85, 7]] }
+marks.EUit = { fingerprint = "ff9df92ce5c4214c", at = [[74, 7]] }
+marks.EUnl = { fingerprint = "dc10e074a1bbbcf5", at = [[72, 8]] }
+marks.EUpl = { fingerprint = "707c789a0ffb9a47", at = [[79, 7]] }
+marks.EUru = { fingerprint = "193a967b5c815ab2", at = [[68, 7]] }
+marks.JPja = { fingerprint = "ac4bb290fccde878", at = [[19, 4]] }
+marks.KRko = { fingerprint = "9a98760cc5f0fb9b", at = [[19, 3]] }
+marks.TWzh = { fingerprint = "5780feb4671b8c65", at = [[19, 3]] }
+marks.USen = { fingerprint = "6010522a1f338b6a", at = [[50, 11]] }
+marks.USes = { fingerprint = "4665939fef9cb7f8", at = [[44, 8]] }
+marks.USfr = { fingerprint = "53123de17488f6b9", at = [[85, 7]] }
+marks.USpt = { fingerprint = "18fcccc97fc3208f", at = [[71, 8]] }
+
+[[line]]
+check = "MiniGame_FrogTenors Event162 (Obj_Rupee_Blue)"
+item = "Obj_Rupee_Blue"
+file = "EventFlowMsg/MiniGame_FrogTenors.msbt"
+label = "Talk_42"
+marks.CNzh = { fingerprint = "e1b9bc031d728d41", at = [[7, 3]] }
+marks.EUde = { fingerprint = "bd50f092fc6c4f8f", at = [[24, 8]] }
+marks.EUen = { fingerprint = "f6b7c5aafe1b2a7b", at = [[8, 11]] }
+marks.EUes = { fingerprint = "09812db93ff81abc", at = [[12, 8]] }
+marks.EUfr = { fingerprint = "0c84350ab91b037f", at = [[39, 7]] }
+marks.EUit = { fingerprint = "6d50b780234fb2ce", at = [[26, 7]] }
+marks.EUnl = { fingerprint = "edbe6989a1ecad74", at = [[26, 8]] }
+marks.EUpl = { fingerprint = "ea2ee68d52b15838", at = [[34, 7]] }
+marks.EUru = { fingerprint = "1da7c6842cd61a88", at = [[33, 7]] }
+marks.JPja = { fingerprint = "570d1d5cf83fbd71", at = [[6, 4]] }
+marks.KRko = { fingerprint = "ab9ab3d3498e21f7", at = [[5, 3]] }
+marks.TWzh = { fingerprint = "5fa9d87920416489", at = [[8, 3]] }
+marks.USen = { fingerprint = "f6b7c5aafe1b2a7b", at = [[8, 11]] }
+marks.USes = { fingerprint = "2d8a0059e80ae9f8", at = [[12, 8]] }
+marks.USfr = { fingerprint = "748654085c848f43", at = [[39, 7]] }
+marks.USpt = { fingerprint = "ee90526dc9f61419", at = [[33, 8]] }
+
+[[line]]
+check = "MiniGame_FrogTenors Event76 (Obj_Rupee_Blue)"
+item = "Obj_Rupee_Blue"
+file = "EventFlowMsg/MiniGame_FrogTenors.msbt"
+label = "Talk_42"
+marks.CNzh = { fingerprint = "e1b9bc031d728d41", at = [[7, 3]] }
+marks.EUde = { fingerprint = "bd50f092fc6c4f8f", at = [[24, 8]] }
+marks.EUen = { fingerprint = "f6b7c5aafe1b2a7b", at = [[8, 11]] }
+marks.EUes = { fingerprint = "09812db93ff81abc", at = [[12, 8]] }
+marks.EUfr = { fingerprint = "0c84350ab91b037f", at = [[39, 7]] }
+marks.EUit = { fingerprint = "6d50b780234fb2ce", at = [[26, 7]] }
+marks.EUnl = { fingerprint = "edbe6989a1ecad74", at = [[26, 8]] }
+marks.EUpl = { fingerprint = "ea2ee68d52b15838", at = [[34, 7]] }
+marks.EUru = { fingerprint = "1da7c6842cd61a88", at = [[33, 7]] }
+marks.JPja = { fingerprint = "570d1d5cf83fbd71", at = [[6, 4]] }
+marks.KRko = { fingerprint = "ab9ab3d3498e21f7", at = [[5, 3]] }
+marks.TWzh = { fingerprint = "5fa9d87920416489", at = [[8, 3]] }
+marks.USen = { fingerprint = "f6b7c5aafe1b2a7b", at = [[8, 11]] }
+marks.USes = { fingerprint = "2d8a0059e80ae9f8", at = [[12, 8]] }
+marks.USfr = { fingerprint = "748654085c848f43", at = [[39, 7]] }
+marks.USpt = { fingerprint = "ee90526dc9f61419", at = [[33, 8]] }
+
+[[line]]
+check = "GF HBA 1500 Points"
+item = "Item_Quiver_Large|Item_Quiver_Medium"
+file = "EventFlowMsg/Npc_Gerudo_008.msbt"
+label = "Talk_07_3"
+marks.CNzh = { fingerprint = "edb5a14c206a53ba", at = [[20, 2]] }
+marks.EUde = { fingerprint = "a9905644846343f8", at = [[61, 20]] }
+marks.EUen = { fingerprint = "38f4d9de4966ab5e", at = [[61, 13]] }
+marks.EUes = { fingerprint = "fbfb03c4ab72ea08", at = [[58, 24]] }
+marks.EUfr = { fingerprint = "b039933b75345d46", at = [[71, 19]] }
+marks.EUit = { fingerprint = "45ca4f749caec0fb", at = [[28, 20]] }
+marks.EUnl = { fingerprint = "2f0f9d423d4d956b", at = [[56, 17]] }
+marks.EUpl = { fingerprint = "6e7a7518ab8c9e5b", at = [[56, 15]] }
+marks.EUru = { fingerprint = "70ffe6fbc9001034", at = [[56, 14]] }
+marks.JPja = { fingerprint = "7170d995f1327296", at = [[12, 2]] }
+marks.KRko = { fingerprint = "9ea9a2fe0ac9b091", at = [[16, 3]] }
+marks.TWzh = { fingerprint = "111f889b6bdc501f", at = [[16, 5]] }
+marks.USen = { fingerprint = "38f4d9de4966ab5e", at = [[61, 13]] }
+marks.USes = { fingerprint = "87fe15cc55fc7d8f", at = [[58, 24]] }
+marks.USfr = { fingerprint = "a2c2a7466f6ffcbd", at = [[74, 19]] }
+marks.USpt = { fingerprint = "0a93073297676b44", at = [[58, 6]] }
+
+[[line]]
+check = "GF HBA 1000 Points"
+item = "Obj_Heart_Piece"
+file = "EventFlowMsg/Npc_Gerudo_008.msbt"
+label = "Talk_16"
+marks.CNzh = { fingerprint = "13bb5401a761d697", at = [[20, 4]] }
+marks.EUde = { fingerprint = "dab21db47902c7bb", at = [[77, 8]] }
+marks.EUen = { fingerprint = "6d9fc7c2c65f95fe", at = [[55, 14]] }
+marks.EUes = { fingerprint = "930f89d8c6b21e71", at = [[68, 16]] }
+marks.EUfr = { fingerprint = "a242ed148815649b", at = [[72, 16]] }
+marks.EUit = { fingerprint = "8fed9e5f103e61f6", at = [[64, 18]] }
+marks.EUnl = { fingerprint = "8b54df4784f1a9b7", at = [[62, 10]] }
+marks.EUpl = { fingerprint = "4caac720ccaeec40", at = [[60, 18]] }
+marks.EUru = { fingerprint = "cd688cb7f53abbe8", at = [[61, 14]] }
+marks.JPja = { fingerprint = "5c643ab7b9a6269a", at = [[25, 7]] }
+marks.KRko = { fingerprint = "8145d97508527df8", at = [[27, 5]] }
+marks.TWzh = { fingerprint = "9f5ceecc0c876bea", at = [[24, 4]] }
+marks.USen = { fingerprint = "6d9fc7c2c65f95fe", at = [[55, 14]] }
+marks.USes = { fingerprint = "c7a085b2a2a81805", at = [[68, 16]] }
+marks.USfr = { fingerprint = "e50fd41d84336990", at = [[71, 16]] }
+marks.USpt = { fingerprint = "814a1caeb420fb58", at = [[76, 20]] }
+
+[[line]]
+check = "GF HBA 1500 Points"
+item = "Item_Quiver_Large|Item_Quiver_Medium"
+file = "EventFlowMsg/Npc_Gerudo_008.msbt"
+label = "Talk_16"
+marks.CNzh = { fingerprint = "13bb5401a761d697", at = [[41, 2]] }
+marks.EUde = { fingerprint = "dab21db47902c7bb", at = [[142, 15]] }
+marks.EUen = { fingerprint = "6d9fc7c2c65f95fe", at = [[109, 13]] }
+marks.EUes = { fingerprint = "930f89d8c6b21e71", at = [[139, 25]] }
+marks.EUfr = { fingerprint = "a242ed148815649b", at = [[131, 19]] }
+marks.EUit = { fingerprint = "8fed9e5f103e61f6", at = [[120, 20]] }
+marks.EUnl = { fingerprint = "8b54df4784f1a9b7", at = [[133, 17]] }
+marks.EUpl = { fingerprint = "4caac720ccaeec40", at = [[111, 15]] }
+marks.EUru = { fingerprint = "cd688cb7f53abbe8", at = [[105, 20]] }
+marks.JPja = { fingerprint = "5c643ab7b9a6269a", at = [[43, 2]] }
+marks.KRko = { fingerprint = "8145d97508527df8", at = [[45, 3]] }
+marks.TWzh = { fingerprint = "9f5ceecc0c876bea", at = [[45, 5]] }
+marks.USen = { fingerprint = "6d9fc7c2c65f95fe", at = [[109, 13]] }
+marks.USes = { fingerprint = "c7a085b2a2a81805", at = [[139, 22]] }
+marks.USfr = { fingerprint = "e50fd41d84336990", at = [[128, 19]] }
+marks.USpt = { fingerprint = "814a1caeb420fb58", at = [[138, 6]] }
+
+[[line]]
+check = "GF HBA 1500 Points"
+item = "Item_Quiver_Large|Item_Quiver_Medium"
+file = "EventFlowMsg/Npc_Gerudo_008.msbt"
+label = "Talk_17"
+marks.CNzh = { fingerprint = "c27194000694d4d9", at = [[19, 2]] }
+marks.EUde = { fingerprint = "0ff333c8c6af0073", at = [[44, 15]] }
+marks.EUen = { fingerprint = "913969e5eadc80c7", at = [[47, 13]] }
+marks.EUes = { fingerprint = "aedce69e74839147", at = [[48, 25]] }
+marks.EUfr = { fingerprint = "6a35c06d3d08724d", at = [[49, 19]] }
+marks.EUit = { fingerprint = "b04250f46e3f549e", at = [[44, 20]] }
+marks.EUnl = { fingerprint = "3a1ef134572b5e6f", at = [[42, 17]] }
+marks.EUpl = { fingerprint = "edf361ed8d285b25", at = [[47, 15]] }
+marks.EUru = { fingerprint = "4e75632f3830b738", at = [[43, 20]] }
+marks.JPja = { fingerprint = "bb16c19463637a37", at = [[9, 2]] }
+marks.KRko = { fingerprint = "42001792705da340", at = [[15, 3]] }
+marks.TWzh = { fingerprint = "d0cac94cf645aa6a", at = [[18, 5]] }
+marks.USen = { fingerprint = "913969e5eadc80c7", at = [[47, 13]] }
+marks.USes = { fingerprint = "aedce69e74839147", at = [[48, 25]] }
+marks.USfr = { fingerprint = "51dd1f017d6840b6", at = [[48, 19]] }
+marks.USpt = { fingerprint = "3af910c97e3c77df", at = [[49, 6]] }
+
+[[line]]
+check = "Minigame_HorsebackArchery Event317 (Obj_Rupee_Purple)"
+item = "Obj_Rupee_Purple"
+file = "EventFlowMsg/Npc_Gerudo_008.msbt"
+label = "Talk_35"
+marks.CNzh = { fingerprint = "c8f9a4337eaff56a", at = [[37, 4]] }
+marks.EUde = { fingerprint = "4d154c89b203c5e1", at = [[80, 9]] }
+marks.EUen = { fingerprint = "5dd8805c27290c28", at = [[74, 9]] }
+marks.EUes = { fingerprint = "1a3dac4b367e8d2c", at = [[89, 9]] }
+marks.EUfr = { fingerprint = "055c0cb372b1f559", at = [[83, 8]] }
+marks.EUit = { fingerprint = "133255a3df0cda34", at = [[57, 8]] }
+marks.EUnl = { fingerprint = "e4a7dd78c4a0439b", at = [[95, 9]] }
+marks.EUpl = { fingerprint = "8141047fb54ed51c", at = [[84, 8]] }
+marks.EUru = { fingerprint = "20b6f798ac3f2af6", at = [[66, 8]] }
+marks.JPja = { fingerprint = "32364ee02cdd4216", at = [[19, 5]] }
+marks.KRko = { fingerprint = "5f692b904899d048", at = [[26, 4]] }
+marks.TWzh = { fingerprint = "6bdc471da35785ec", at = [[32, 4]] }
+marks.USen = { fingerprint = "5dd8805c27290c28", at = [[74, 9]] }
+marks.USes = { fingerprint = "1a3dac4b367e8d2c", at = [[89, 9]] }
+marks.USfr = { fingerprint = "715067cd5544866f", at = [[82, 8]] }
+marks.USpt = { fingerprint = "7ed0cc9615c46118", at = [[68, 9]] }
+
+[[line]]
+check = "Minigame_HorsebackArchery Event317 (Obj_Rupee_Purple)"
+item = "Obj_Rupee_Purple"
+file = "EventFlowMsg/Npc_Gerudo_008.msbt"
+label = "Talk_39"
+marks.CNzh = { fingerprint = "29a688b9025b6e6d", at = [[70, 4]] }
+marks.EUde = { fingerprint = "87cfe8a9eccd7444", at = [[184, 9]] }
+marks.EUen = { fingerprint = "fb670b83fc93326c", at = [[162, 9]] }
+marks.EUes = { fingerprint = "4e3a294e93d94b62", at = [[172, 9]] }
+marks.EUfr = { fingerprint = "f43697b266be28dc", at = [[173, 8]] }
+marks.EUit = { fingerprint = "88fbab8213c02160", at = [[125, 8]] }
+marks.EUnl = { fingerprint = "be7a5ee300f6cc2d", at = [[204, 9]] }
+marks.EUpl = { fingerprint = "16cfe7c85156bdf7", at = [[155, 8]] }
+marks.EUru = { fingerprint = "a59503ebe5894857", at = [[142, 8]] }
+marks.JPja = { fingerprint = "08a94c557a1eb752", at = [[62, 5]] }
+marks.KRko = { fingerprint = "eeaac2044e2493cb", at = [[67, 4]] }
+marks.TWzh = { fingerprint = "3fb8973e782f6a45", at = [[65, 4]] }
+marks.USen = { fingerprint = "fb670b83fc93326c", at = [[162, 9]] }
+marks.USes = { fingerprint = "7351153a9f0b45e5", at = [[149, 9]] }
+marks.USfr = { fingerprint = "9c70acbeb5785d65", at = [[172, 8]] }
+marks.USpt = { fingerprint = "0b9cf709c3418c24", at = [[205, 9]] }
+
+[[line]]
+check = "Minigame_HorsebackArchery Event317 (Obj_Rupee_Purple)"
+item = "Obj_Rupee_Purple"
+file = "EventFlowMsg/Npc_Gerudo_008.msbt"
+label = "Talk_98"
+marks.CNzh = { fingerprint = "e8ffbd258ef2df51", at = [[7, 4]] }
+marks.EUde = { fingerprint = "ccce859f8caff30d", at = [[16, 9]] }
+marks.EUen = { fingerprint = "0e79afd250c9f137", at = [[11, 9]] }
+marks.EUes = { fingerprint = "729c9310f3351a77", at = [[15, 9]] }
+marks.EUfr = { fingerprint = "f1745a95eeb1e0c5", at = [[24, 8]] }
+marks.EUit = { fingerprint = "62457902c88ac6c1", at = [[10, 8]] }
+marks.EUnl = { fingerprint = "ead368c5c76f6bd2", at = [[26, 9]] }
+marks.EUpl = { fingerprint = "8f5de8edbb8adb76", at = [[19, 8]] }
+marks.EUru = { fingerprint = "f49557413bdeda01", at = [[4, 8]] }
+marks.JPja = { fingerprint = "2a764875b0d33692", at = [[6, 5]] }
+marks.KRko = { fingerprint = "b1bdee5b56a1f8d2", at = [[4, 4]] }
+marks.TWzh = { fingerprint = "64dcb43591a06737", at = [[7, 4]] }
+marks.USen = { fingerprint = "0e79afd250c9f137", at = [[11, 9]] }
+marks.USes = { fingerprint = "415b0cd31b09cdf3", at = [[15, 9]] }
+marks.USfr = { fingerprint = "4ef73cf640e6a387", at = [[24, 8]] }
+marks.USpt = { fingerprint = "d1f96b3a407db4fd", at = [[19, 9]] }
+
+[[line]]
+check = "DMT Biggoron"
+item = "Item_Sword_Biggoron"
+file = "EventFlowMsg/Npc_Goron_Biggoron_Adult.msbt"
+label = "Talk_11"
+marks.CNzh = { fingerprint = "cea734713b09c4f2", at = [[15, 5]] }
+marks.EUde = { fingerprint = "ad71bba45a949483", at = [[85, 16]] }
+marks.EUen = { fingerprint = "69c7171f3d205454", at = [[20, 14]] }
+marks.EUes = { fingerprint = "77cf36b005f35f21", at = [[32, 18]] }
+marks.EUfr = { fingerprint = "3fe169cfdd27d410", at = [[23, 16]] }
+marks.EUit = { fingerprint = "b065b7251c355ba8", at = [[20, 25]] }
+marks.EUnl = { fingerprint = "7f47e8962999d689", at = [[12, 16]] }
+marks.EUpl = { fingerprint = "4979b5312a67ef40", at = [[18, 18]] }
+marks.EUru = { fingerprint = "93fe6a786d1f7f64", at = [[26, 13]] }
+marks.JPja = { fingerprint = "a0517fb2abb8efc4", at = [[5, 6]] }
+marks.KRko = { fingerprint = "ff9b5b4e6013f368", at = [[4, 4]] }
+marks.TWzh = { fingerprint = "7c8729bfccce5485", at = [[8, 5]] }
+marks.USen = { fingerprint = "69c7171f3d205454", at = [[20, 14]] }
+marks.USes = { fingerprint = "77cf36b005f35f21", at = [[32, 18]] }
+marks.USfr = { fingerprint = "d7f45494cf9dbcbc", at = [[23, 16]] }
+marks.USpt = { fingerprint = "01584f62042a9532", at = [[22, 20]] }
+
+[[line]]
+check = "DMT Trade Eyedrops"
+item = "Item_ClaimCheck"
+file = "EventFlowMsg/Npc_Goron_Biggoron_Adult.msbt"
+label = "Talk_210"
+marks.EUde = { fingerprint = "123075e7b5642fef", at = [[24, 11]] }
+marks.EUen = { fingerprint = "c3be651f30576d60", at = [[10, 9]] }
+marks.EUes = { fingerprint = "b2cafa53d8a5ad39", at = [[11, 7]] }
+marks.EUfr = { fingerprint = "bb7a59711d1aad25", at = [[10, 12]] }
+marks.EUit = { fingerprint = "0c18ed1201cfafc5", at = [[16, 8]] }
+marks.EUnl = { fingerprint = "ed3bb1011545ef94", at = [[10, 10]] }
+marks.EUpl = { fingerprint = "719908e3b7231355", at = [[8, 8]] }
+marks.EUru = { fingerprint = "322cb5f0c202994f", at = [[18, 9]] }
+marks.USen = { fingerprint = "c3be651f30576d60", at = [[10, 9]] }
+marks.USes = { fingerprint = "de4a4932f04d5d1b", at = [[11, 8]] }
+marks.USfr = { fingerprint = "bb7a59711d1aad25", at = [[10, 12]] }
+marks.USpt = { fingerprint = "7c5f09b6ab9d5b9e", at = [[15, 8]] }
+
+[[line]]
+check = "GC Medigoron"
+item = "Shop_Sword_Giant"
+file = "EventFlowMsg/Npc_Goron_Medigoron_Adult.msbt"
+label = "Mask_05"
+marks.CNzh = { fingerprint = "ae9e5f58206048d0", at = [[10, 2]] }
+marks.EUde = { fingerprint = "171511d0a9c525bd", at = [[23, 7]] }
+marks.EUen = { fingerprint = "49805bcb62b75159", at = [[47, 5]] }
+marks.EUes = { fingerprint = "992ff19de8392696", at = [[36, 5]] }
+marks.EUfr = { fingerprint = "ca27962803f006d9", at = [[44, 8]] }
+marks.EUit = { fingerprint = "6de5f7a551bd5b07", at = [[38, 5]] }
+marks.EUnl = { fingerprint = "879fdb57148358a3", at = [[49, 6]] }
+marks.EUpl = { fingerprint = "e02e8796f980db80", at = [[45, 4]] }
+marks.EUru = { fingerprint = "0b63cc7361fae8da", at = [[27, 8]] }
+marks.USen = { fingerprint = "49805bcb62b75159", at = [[47, 5]] }
+marks.USes = { fingerprint = "992ff19de8392696", at = [[36, 5]] }
+marks.USfr = { fingerprint = "71fefad6e807722c", at = [[44, 8]] }
+marks.USpt = { fingerprint = "204d5a3cf8eb759a", at = [[50, 5]] }
+
+[[line]]
+check = "GC Medigoron"
+item = "Shop_Sword_Giant"
+file = "EventFlowMsg/Npc_Goron_Medigoron_Adult.msbt"
+label = "Talk_01"
+marks.CNzh = { fingerprint = "92d4f069b0043b24", at = [[6, 2]] }
+marks.EUde = { fingerprint = "3df112f52bf2d3cc", at = [[26, 12]] }
+marks.EUen = { fingerprint = "14187fe1695af22a", at = [[24, 11]] }
+marks.EUes = { fingerprint = "b2646688dea34bc1", at = [[31, 5]] }
+marks.EUfr = { fingerprint = "c61702580728775f", at = [[11, 6]] }
+marks.EUit = { fingerprint = "08e7345204cc77ae", at = [[28, 12]] }
+marks.EUnl = { fingerprint = "2728f8c685e6f833", at = [[38, 13]] }
+marks.EUpl = { fingerprint = "b6d0d4e786fcd169", at = [[29, 14]] }
+marks.EUru = { fingerprint = "85a6c5b99489cd3d", at = [[20, 9]] }
+marks.JPja = { fingerprint = "4d4eb3592cadcb81", at = [[8, 2]] }
+marks.KRko = { fingerprint = "8cf031cf12f4f755", at = [[6, 2]] }
+marks.TWzh = { fingerprint = "3706747d1984bc41", at = [[5, 4]] }
+marks.USen = { fingerprint = "14187fe1695af22a", at = [[24, 11]] }
+marks.USes = { fingerprint = "18072342e0f885c2", at = [[31, 5]] }
+marks.USfr = { fingerprint = "7f193cdde1ed1ed2", at = [[11, 6]] }
+marks.USpt = { fingerprint = "15393fbc74f97908", at = [[31, 12]] }
+
+[[line]]
+check = "GC Medigoron"
+item = "Shop_Sword_Giant"
+file = "EventFlowMsg/Npc_Goron_Medigoron_Adult.msbt"
+label = "Talk_02"
+marks.CNzh = { fingerprint = "194fefb7fea51c85", at = [[14, 2]] }
+marks.EUfr = { fingerprint = "c8432d23c81b0c4a", at = [[27, 5]] }
+marks.EUit = { fingerprint = "d3569d83b44de732", at = [[32, 5]] }
+marks.EUpl = { fingerprint = "e4f9a950d0340966", at = [[50, 4]] }
+marks.JPja = { fingerprint = "d2ce9b882e356675", at = [[8, 3]] }
+marks.KRko = { fingerprint = "87f3dcdf9acc43fb", at = [[12, 1]] }
+marks.TWzh = { fingerprint = "e9d8f29dab18d28d", at = [[2, 2]] }
+marks.USfr = { fingerprint = "83ba011ad693f1bc", at = [[27, 5]] }
+marks.USpt = { fingerprint = "f5a9d03a777bfcb5", at = [[27, 6]] }
+
+[[line]]
+check = "GC Medigoron"
+item = "Shop_Sword_Giant"
+file = "EventFlowMsg/Npc_Goron_Medigoron_Adult.msbt"
+label = "Talk_09"
+marks.CNzh = { fingerprint = "ee7912c61529a97f", at = [[5, 2]] }
+marks.EUde = { fingerprint = "6f9a4b6eadc94893", at = [[26, 12]] }
+marks.EUen = { fingerprint = "7a3d83883c20c453", at = [[24, 11]] }
+marks.EUes = { fingerprint = "79ed47a4fa196df0", at = [[25, 18]] }
+marks.EUfr = { fingerprint = "73466e3df268e039", at = [[13, 7]] }
+marks.EUit = { fingerprint = "08e7345204cc77ae", at = [[28, 12]] }
+marks.EUnl = { fingerprint = "0ec867aeff6c56d9", at = [[38, 13]] }
+marks.EUpl = { fingerprint = "8651ab5cf55acb5c", at = [[18, 13]] }
+marks.EUru = { fingerprint = "c8ef0c40822f357a", at = [[31, 8]] }
+marks.JPja = { fingerprint = "22c0720f20e90861", at = [[3, 2]] }
+marks.KRko = { fingerprint = "adab04930cd51f88", at = [[2, 2]] }
+marks.TWzh = { fingerprint = "4115f77e60212bae", at = [[6, 4]] }
+marks.USen = { fingerprint = "7a3d83883c20c453", at = [[24, 11]] }
+marks.USes = { fingerprint = "921bf3abde4533a1", at = [[23, 18]] }
+marks.USfr = { fingerprint = "a39f9257743cf08e", at = [[13, 7]] }
+marks.USpt = { fingerprint = "8c5c6508aeb6fafb", at = [[28, 12]] }
+
+[[line]]
+check = "GC Medigoron"
+item = "Shop_Sword_Giant"
+file = "EventFlowMsg/Npc_Goron_Medigoron_Adult.msbt"
+label = "Talk_17"
+marks.CNzh = { fingerprint = "4574ad7cb045dc60", at = [[20, 2]] }
+marks.EUde = { fingerprint = "5de3868cc097ceb9", at = [[85, 21]] }
+marks.EUen = { fingerprint = "4f65d3537980630c", at = [[55, 11]] }
+marks.EUes = { fingerprint = "9e0e7fc054a53330", at = [[60, 4]] }
+marks.EUfr = { fingerprint = "779d5cffa018d2ed", at = [[54, 5]] }
+marks.EUit = { fingerprint = "4e089842b2e15557", at = [[66, 16]] }
+marks.EUnl = { fingerprint = "fe204394d753eaa7", at = [[65, 6]] }
+marks.EUpl = { fingerprint = "d650edc30b26eb0f", at = [[51, 6]] }
+marks.EUru = { fingerprint = "0fdb9cf94f3288e9", at = [[48, 24]] }
+marks.JPja = { fingerprint = "39ded0430d11ac48", at = [[18, 2]] }
+marks.KRko = { fingerprint = "14c1dfc09fb29b32", at = [[18, 2]] }
+marks.TWzh = { fingerprint = "0ceb53701a1e174d", at = [[16, 4]] }
+marks.USen = { fingerprint = "4f65d3537980630c", at = [[55, 11]] }
+marks.USes = { fingerprint = "49373b21a9c99ad9", at = [[60, 4]] }
+marks.USfr = { fingerprint = "bb44918698a7e90c", at = [[54, 5]] }
+marks.USpt = { fingerprint = "a8ec6319557f2e9e", at = [[52, 13]] }
+
+[[line]]
+check = "Song from Windmill"
+item = "Item_Melody_StormSong"
+file = "EventFlowMsg/Npc_Hylia_009_Adult.msbt"
+label = "Talk_03"
+marks.CNzh = { fingerprint = "774934ada0d4c4c6", at = [[4, 2]] }
+marks.EUde = { fingerprint = "a4d53246332748e9", at = [[18, 7]] }
+marks.EUen = { fingerprint = "a05c9bfc1576d1e1", at = [[5, 4]] }
+marks.EUes = { fingerprint = "33f29a2bb6f85055", at = [[24, 7]] }
+marks.EUfr = { fingerprint = "42d17f009cfd3412", at = [[16, 7]] }
+marks.EUit = { fingerprint = "744ba970ce1e04a8", at = [[30, 7]] }
+marks.EUnl = { fingerprint = "fd718591c33f761d", at = [[23, 4]] }
+marks.EUpl = { fingerprint = "07a750315cf59615", at = [[3, 6]] }
+marks.EUru = { fingerprint = "2cc1e9c16ebd8da0", at = [[4, 7]] }
+marks.JPja = { fingerprint = "e38c61dbdf4b34a3", at = [[9, 1]] }
+marks.KRko = { fingerprint = "0ca764add2a6d559", at = [[15, 2]] }
+marks.TWzh = { fingerprint = "1f18e7990eef9274", at = [[9, 2]] }
+marks.USen = { fingerprint = "a05c9bfc1576d1e1", at = [[5, 4]] }
+marks.USes = { fingerprint = "33f29a2bb6f85055", at = [[24, 7]] }
+marks.USfr = { fingerprint = "8f3b176e2ce7fa1e", at = [[16, 7]] }
+marks.USpt = { fingerprint = "9ca67e0e071cbd27", at = [[23, 6]] }
+
+[[line]]
+check = "Kak Shooting Gallery Reward"
+item = "Item_Quiver_Large|Item_Quiver_Medium"
+file = "EventFlowMsg/Npc_Hylia_019_Shop_Adult.msbt"
+label = "Talk_04"
+marks.CNzh = { fingerprint = "b1ac6c7223ec029e", at = [[7, 5]] }
+marks.EUde = { fingerprint = "5821041ba5e05398", at = [[26, 15]] }
+marks.EUen = { fingerprint = "ebd06064f0822921", at = [[16, 13]] }
+marks.EUes = { fingerprint = "37cf16d549eae3c4", at = [[12, 17]] }
+marks.EUfr = { fingerprint = "eb6210aeade28a7d", at = [[18, 19]] }
+marks.EUit = { fingerprint = "347470d0108f1880", at = [[12, 18]] }
+marks.EUnl = { fingerprint = "8310d07bb5dfeaee", at = [[24, 17]] }
+marks.EUpl = { fingerprint = "1b68b25d6da6be69", at = [[7, 12]] }
+marks.EUru = { fingerprint = "5aff3cb88819aa12", at = [[11, 6]] }
+marks.JPja = { fingerprint = "b76941fd897a0bed", at = [[0, 2]] }
+marks.KRko = { fingerprint = "c74490ca628e2a55", at = [[0, 3]] }
+marks.TWzh = { fingerprint = "ed0b5287169983d4", at = [[6, 5]] }
+marks.USen = { fingerprint = "ebd06064f0822921", at = [[16, 13]] }
+marks.USes = { fingerprint = "37cf16d549eae3c4", at = [[12, 17]] }
+marks.USfr = { fingerprint = "bcf72447dc944522", at = [[18, 19]] }
+marks.USpt = { fingerprint = "8f524a60bb7e2ca7", at = [[14, 12]] }
+
+[[line]]
+check = "Kak Shooting Gallery Reward"
+item = "Item_Quiver_Large|Item_Quiver_Medium"
+file = "EventFlowMsg/Npc_Hylia_019_Shop_Adult.msbt"
+label = "Talk_05"
+marks.CNzh = { fingerprint = "3a0dbac6301edfe0", at = [[4, 2]] }
+marks.EUde = { fingerprint = "af1f8a4e04349380", at = [[52, 6]] }
+marks.EUen = { fingerprint = "2f14c598e2d1309c", at = [[56, 6]] }
+marks.EUes = { fingerprint = "69ce01166415d980", at = [[71, 6]] }
+marks.EUfr = { fingerprint = "71f6af34099295c3", at = [[58, 8]] }
+marks.EUit = { fingerprint = "57cc7c00498341d1", at = [[79, 7]] }
+marks.EUnl = { fingerprint = "1b04b4f1eebdef45", at = [[76, 9]] }
+marks.EUpl = { fingerprint = "88bbd84ecc0a85dd", at = [[58, 7]] }
+marks.EUru = { fingerprint = "79b4df6203022f0c", at = [[62, 6]] }
+marks.JPja = { fingerprint = "17b0bdaab21cd121", at = [[8, 2]] }
+marks.KRko = { fingerprint = "3e4307f9b89ac700", at = [[9, 3]] }
+marks.TWzh = { fingerprint = "3e685d5c1dc0c123", at = [[14, 2]] }
+marks.USen = { fingerprint = "2f14c598e2d1309c", at = [[56, 6]] }
+marks.USes = { fingerprint = "3342db5b656afe32", at = [[73, 6]] }
+marks.USfr = { fingerprint = "e6727391f9445e17", at = [[57, 8]] }
+marks.USpt = { fingerprint = "eeb97801af5a68e6", at = [[52, 6]] }
+
+[[line]]
+check = "Market Shooting Gallery Reward"
+item = "Item_BulletBag_Medium"
+file = "EventFlowMsg/Npc_Hylia_019_Shop_Child.msbt"
+label = "Talk_04"
+marks.CNzh = { fingerprint = "984bb3c12a8df845", at = [[7, 6]] }
+marks.EUde = { fingerprint = "3c51824abb5fb475", at = [[25, 24]] }
+marks.EUen = { fingerprint = "0c7b13e53294fbdf", at = [[16, 20]] }
+marks.EUes = { fingerprint = "8fe69d3ff60ea1f2", at = [[13, 37]] }
+marks.EUfr = { fingerprint = "8477d8b188035478", at = [[18, 31]] }
+marks.EUit = { fingerprint = "29b90bc871722776", at = [[11, 25]] }
+marks.EUnl = { fingerprint = "975ec0e909267c6e", at = [[24, 18]] }
+marks.EUpl = { fingerprint = "1241c25b1c9b3134", at = [[23, 28]] }
+marks.EUru = { fingerprint = "948cff031720b06b", at = [[11, 20]] }
+marks.JPja = { fingerprint = "933b7e82ec7e643c", at = [[0, 3]] }
+marks.KRko = { fingerprint = "64fb40bb3e8eff6c", at = [[0, 5]] }
+marks.TWzh = { fingerprint = "6c97fa1d59ba88ac", at = [[6, 6]] }
+marks.USen = { fingerprint = "0c7b13e53294fbdf", at = [[16, 20]] }
+marks.USes = { fingerprint = "8fe69d3ff60ea1f2", at = [[13, 37]] }
+marks.USfr = { fingerprint = "8477d8b188035478", at = [[18, 31]] }
+marks.USpt = { fingerprint = "e280633f516fa1c9", at = [[14, 23]] }
+
+[[line]]
+check = "MiniGame_HitTarget Event8 (Obj_Rupee_Red)"
+item = "Obj_Rupee_Red"
+file = "EventFlowMsg/Npc_Hylia_019_Shop_Child.msbt"
+label = "Talk_05"
+marks.CNzh = { fingerprint = "fab53aaa5b817bb1", at = [[9, 4]] }
+marks.EUde = { fingerprint = "a4a798453469b555", at = [[40, 9]] }
+marks.EUen = { fingerprint = "fd32cf06828148df", at = [[15, 9]] }
+marks.EUes = { fingerprint = "8b2e78754a7836c0", at = [[45, 9]] }
+marks.EUfr = { fingerprint = "e187817a26624be2", at = [[16, 8]] }
+marks.EUit = { fingerprint = "68a06d5ce6015403", at = [[18, 8]] }
+marks.EUnl = { fingerprint = "2923f4d27c54cd67", at = [[31, 9]] }
+marks.EUpl = { fingerprint = "709e48b09b7cf907", at = [[11, 8]] }
+marks.EUru = { fingerprint = "a64c488c4990b589", at = [[9, 8]] }
+marks.JPja = { fingerprint = "d0a6ffb6d9df1064", at = [[14, 5]] }
+marks.KRko = { fingerprint = "5323e05ad4bb4807", at = [[14, 4]] }
+marks.TWzh = { fingerprint = "9caa5f4c8034553a", at = [[13, 4]] }
+marks.USen = { fingerprint = "fd32cf06828148df", at = [[15, 9]] }
+marks.USes = { fingerprint = "8b2e78754a7836c0", at = [[45, 9]] }
+marks.USfr = { fingerprint = "d1cc9fb826fb089e", at = [[16, 8]] }
+marks.USpt = { fingerprint = "1ca637a379e34719", at = [[11, 9]] }
+
+[[line]]
+check = "Market Shooting Gallery Reward"
+item = "Item_BulletBag_Medium"
+file = "EventFlowMsg/Npc_Hylia_019_Shop_Child.msbt"
+label = "Talk_23"
+marks.CNzh = { fingerprint = "6fa7b588f5f5c77e", at = [[4, 3]] }
+marks.EUde = { fingerprint = "426c3bc06289b1e2", at = [[53, 16]] }
+marks.EUen = { fingerprint = "05df33eb0c0b07ed", at = [[56, 13]] }
+marks.EUes = { fingerprint = "0916cddcf62d63f5", at = [[65, 22]] }
+marks.EUfr = { fingerprint = "bcafccff2ccc2be7", at = [[17, 20]] }
+marks.EUit = { fingerprint = "ce29ba2f897fd191", at = [[77, 14]] }
+marks.EUnl = { fingerprint = "b5b8f8d722919416", at = [[76, 10]] }
+marks.EUpl = { fingerprint = "41bdc5ec6c77a6dd", at = [[45, 20]] }
+marks.EUru = { fingerprint = "e75413fe23180ea0", at = [[62, 20]] }
+marks.JPja = { fingerprint = "db1bf18bf2745454", at = [[8, 3]] }
+marks.KRko = { fingerprint = "8c17e7c179070bd1", at = [[9, 5]] }
+marks.TWzh = { fingerprint = "530e2a5fa42b1bcd", at = [[14, 3]] }
+marks.USen = { fingerprint = "05df33eb0c0b07ed", at = [[56, 13]] }
+marks.USes = { fingerprint = "78a10957536c10ec", at = [[44, 22]] }
+marks.USfr = { fingerprint = "c90c74a341ee375a", at = [[17, 20]] }
+marks.USpt = { fingerprint = "d51b5c096c949bd4", at = [[52, 17]] }
+
+[[line]]
+check = "MiniGame_HitTarget Event382 (Obj_Rupee_Purple)"
+item = "Obj_Rupee_Purple"
+file = "EventFlowMsg/Npc_Hylia_019_Shop_Child.msbt"
+label = "Talk_55"
+marks.CNzh = { fingerprint = "40a9c108433d2c4e", at = [[9, 4]] }
+marks.EUde = { fingerprint = "27ef5f96996c6c32", at = [[34, 9]] }
+marks.EUen = { fingerprint = "d0ced3e0587726d1", at = [[15, 9]] }
+marks.EUes = { fingerprint = "51839829dc0fbb6c", at = [[61, 9]] }
+marks.EUfr = { fingerprint = "4ad551fa08746bab", at = [[16, 8]] }
+marks.EUit = { fingerprint = "785fcceb97c2058d", at = [[18, 8]] }
+marks.EUnl = { fingerprint = "344632c23f9792a7", at = [[31, 9]] }
+marks.EUpl = { fingerprint = "7bf32ba420211bfa", at = [[11, 8]] }
+marks.EUru = { fingerprint = "e1560b51612ff9d3", at = [[9, 8]] }
+marks.JPja = { fingerprint = "609fd9459968f296", at = [[14, 5]] }
+marks.KRko = { fingerprint = "fd817d7da6011360", at = [[14, 4]] }
+marks.TWzh = { fingerprint = "d35e1cdbac3f2175", at = [[13, 4]] }
+marks.USen = { fingerprint = "d0ced3e0587726d1", at = [[15, 9]] }
+marks.USes = { fingerprint = "ac382931bc6b414f", at = [[61, 9]] }
+marks.USfr = { fingerprint = "48f6f89037ca55db", at = [[16, 8]] }
+marks.USpt = { fingerprint = "7e10e784feb1230b", at = [[11, 9]] }
+
+[[line]]
+check = "Market Potion Shop Bottle"
+item = "Item_Bottle"
+file = "EventFlowMsg/Npc_Hylia_020_Shop_Child.msbt"
+label = "Talk_110"
+marks.CNzh = { fingerprint = "b9802371c793ff00", at = [[18, 3]] }
+marks.EUde = { fingerprint = "e576682da2568780", at = [[102, 13]] }
+marks.EUen = { fingerprint = "35560cfa33295f8a", at = [[64, 12]] }
+marks.EUes = { fingerprint = "b8dd8db0442e22ef", at = [[120, 13]] }
+marks.EUfr = { fingerprint = "3184e1b2b6b515c6", at = [[71, 11]] }
+marks.EUit = { fingerprint = "94002882d16b6865", at = [[83, 13]] }
+marks.EUnl = { fingerprint = "6b674cd21e1133f5", at = [[81, 4]] }
+marks.EUpl = { fingerprint = "372e2fc46022ea83", at = [[54, 10]] }
+marks.EUru = { fingerprint = "3107aae88ec6e31b", at = [[76, 14]] }
+marks.JPja = { fingerprint = "d35cd6616dc60dd8", at = [[21, 4]] }
+marks.KRko = { fingerprint = "66d627479e0b61c7", at = [[20, 3]] }
+marks.TWzh = { fingerprint = "638be65fb3204d60", at = [[18, 3]] }
+marks.USen = { fingerprint = "35560cfa33295f8a", at = [[64, 12]] }
+marks.USes = { fingerprint = "c7d00468aacb2591", at = [[121, 13]] }
+marks.USfr = { fingerprint = "a3c2467e8784eee9", at = [[69, 11]] }
+marks.USpt = { fingerprint = "10f0b12b4f562723", at = [[91, 13]] }
+
+[[line]]
+check = "Npc_Hylia_023_Shop_Child Event51 (Item_Mask_Truth)"
+item = "Item_Mask_Truth"
+file = "EventFlowMsg/Npc_Hylia_023_Shop_Child.msbt"
+label = "Talk_09"
+marks.CNzh = { fingerprint = "0bbfd04d9aad2938", at = [[2, 4]] }
+marks.EUde = { fingerprint = "4b876ded90e4f1ec", at = [[12, 18]] }
+marks.EUen = { fingerprint = "dbb62c8f4f06fe5e", at = [[12, 13]] }
+marks.EUes = { fingerprint = "4f151b4d56836e43", at = [[3, 20]] }
+marks.EUfr = { fingerprint = "89004f23607fc2aa", at = [[13, 16]] }
+marks.EUit = { fingerprint = "63a10a210359ccef", at = [[12, 21]] }
+marks.EUnl = { fingerprint = "e6437c6474026d87", at = [[11, 15]] }
+marks.EUpl = { fingerprint = "ecc3438f874366b7", at = [[4, 12]] }
+marks.EUru = { fingerprint = "ac88e7a8d40593e8", at = [[4, 12]] }
+marks.JPja = { fingerprint = "da824a2416417cb2", at = [[4, 6]] }
+marks.KRko = { fingerprint = "cfd33ce272085d46", at = [[3, 6]] }
+marks.TWzh = { fingerprint = "5255f2c9fdaf2947", at = [[2, 4]] }
+marks.USen = { fingerprint = "dbb62c8f4f06fe5e", at = [[12, 13]] }
+marks.USes = { fingerprint = "4f151b4d56836e43", at = [[3, 20]] }
+marks.USfr = { fingerprint = "89004f23607fc2aa", at = [[13, 16]] }
+marks.USpt = { fingerprint = "ccfe752fd3bdd6e1", at = [[9, 18]] }
+
+[[line]]
+check = "Wasteland Bombchu Salesman"
+item = "Shop_BombchuBundle_01"
+file = "EventFlowMsg/Npc_Hylia_044_Adult.msbt"
+label = "Talk_03"
+marks.CNzh = { fingerprint = "8f6897869caf4cd3", at = [[11, 3]] }
+marks.EUde = { fingerprint = "ab7d6a6760cb13d2", at = [[114, 12]] }
+marks.EUen = { fingerprint = "6b10121526b41895", at = [[132, 8]] }
+marks.EUes = { fingerprint = "b33d5b721548032e", at = [[99, 9]] }
+marks.EUfr = { fingerprint = "5d45e227ea7be518", at = [[99, 17]] }
+marks.EUit = { fingerprint = "bffe88a091909cbe", at = [[37, 9]] }
+marks.EUnl = { fingerprint = "667f65a89c715568", at = [[116, 9]] }
+marks.EUpl = { fingerprint = "22a7929ea034af3d", at = [[96, 10]] }
+marks.EUru = { fingerprint = "a88bdbf4aec5164c", at = [[91, 8]] }
+marks.JPja = { fingerprint = "4d875b8f76fb5216", at = [[13, 5]] }
+marks.KRko = { fingerprint = "fd26fd51edd0b3f3", at = [[12, 3]] }
+marks.TWzh = { fingerprint = "5a796a1380096dc4", at = [[11, 3]] }
+marks.USen = { fingerprint = "6b10121526b41895", at = [[132, 8]] }
+marks.USes = { fingerprint = "42d63a01954d6007", at = [[93, 8]] }
+marks.USfr = { fingerprint = "52f46b84fc80d1e6", at = [[98, 17]] }
+marks.USpt = { fingerprint = "d6a89c723f99e69b", at = [[48, 9]] }
+
+[[line]]
+check = "LH Trade Eyeball Frog"
+item = "Item_EyeDrop"
+file = "EventFlowMsg/Npc_Hylia_045_Adult.msbt"
+label = "Talk_123"
+marks.CNzh = { fingerprint = "d070be566fb12484", at = [[6, 7]] }
+marks.EUde = { fingerprint = "c4669b09960e5345", at = [[25, 12]] }
+marks.EUen = { fingerprint = "0ff4c2e975d12c2b", at = [[24, 19]] }
+marks.EUes = { fingerprint = "ae5ead9446b608d0", at = [[52, 19]] }
+marks.EUfr = { fingerprint = "5dd2b75cc6f7ffa0", at = [[37, 13]] }
+marks.EUnl = { fingerprint = "2ed49bfa211040a9", at = [[20, 11]] }
+marks.EUpl = { fingerprint = "68f0b9a5c87a148d", at = [[32, 20]] }
+marks.EUru = { fingerprint = "24a1df8aeb3b52ae", at = [[17, 21]] }
+marks.JPja = { fingerprint = "7447671e9038ab52", at = [[9, 6]] }
+marks.KRko = { fingerprint = "1e5a39c7e4976097", at = [[7, 5]] }
+marks.TWzh = { fingerprint = "406d4b95cd0244d1", at = [[6, 7]] }
+marks.USen = { fingerprint = "0ff4c2e975d12c2b", at = [[24, 19]] }
+marks.USes = { fingerprint = "7e4f796846c7f130", at = [[56, 19]] }
+marks.USfr = { fingerprint = "27246cda529dd37d", at = [[36, 13]] }
+marks.USpt = { fingerprint = "598b37b99d6fc669", at = [[29, 12]] }
+
+[[line]]
+check = "LH Trade Eyeball Frog"
+item = "Item_EyeDrop"
+file = "EventFlowMsg/Npc_Hylia_045_Adult.msbt"
+label = "Talk_125"
+marks.CNzh = { fingerprint = "ed83f9fa4aadc15d", at = [[4, 3]] }
+marks.EUde = { fingerprint = "d165fee1cee33036", at = [[62, 12]] }
+marks.EUen = { fingerprint = "a075588de3ae10fe", at = [[48, 9]] }
+marks.EUes = { fingerprint = "577b384f2c751e47", at = [[35, 14]] }
+marks.EUfr = { fingerprint = "4b53f5b6a6a19744", at = [[33, 7]] }
+marks.EUit = { fingerprint = "d945fd1a71a727c4", at = [[29, 8]] }
+marks.EUnl = { fingerprint = "b7a5713a68c8500e", at = [[31, 11]] }
+marks.EUpl = { fingerprint = "9e6c6b35079628b1", at = [[38, 6]] }
+marks.EUru = { fingerprint = "e23e4d9563f37e66", at = [[17, 13]] }
+marks.JPja = { fingerprint = "ac06db7d270c1408", at = [[11, 2]] }
+marks.KRko = { fingerprint = "c520880205695529", at = [[9, 2]] }
+marks.TWzh = { fingerprint = "ff259c0177a81986", at = [[4, 3]] }
+marks.USen = { fingerprint = "a075588de3ae10fe", at = [[48, 9]] }
+marks.USes = { fingerprint = "c6881081d842759d", at = [[35, 14]] }
+marks.USfr = { fingerprint = "f0c8aeb3f1da79ef", at = [[33, 7]] }
+marks.USpt = { fingerprint = "a3cec479b2a4559c", at = [[33, 7]] }
+
+[[line]]
+check = "LH Trade Eyeball Frog"
+item = "Item_EyeDrop"
+file = "EventFlowMsg/Npc_Hylia_045_Adult.msbt"
+label = "Talk_126"
+marks.EUde = { fingerprint = "8c3956e45c5ea627", at = [[19, 12]] }
+marks.EUen = { fingerprint = "004b131b14dd7b63", at = [[18, 9]] }
+marks.EUes = { fingerprint = "30f39a49542f6859", at = [[21, 14]] }
+marks.EUfr = { fingerprint = "b9864e2bf2abbc99", at = [[23, 7]] }
+marks.EUnl = { fingerprint = "9da2c5ab7ce7981b", at = [[26, 11]] }
+marks.EUpl = { fingerprint = "9f5c4bc5dee3cb8b", at = [[16, 6]] }
+marks.EUru = { fingerprint = "ea39b304d0cf4e7d", at = [[17, 14]] }
+marks.USen = { fingerprint = "004b131b14dd7b63", at = [[18, 9]] }
+marks.USes = { fingerprint = "30f39a49542f6859", at = [[21, 14]] }
+marks.USfr = { fingerprint = "8c214600d056812a", at = [[22, 7]] }
+marks.USpt = { fingerprint = "ad2d1c22d1558da3", at = [[19, 7]] }
+
+[[line]]
+check = "ZR Magic Bean Salesman"
+item = "Item_MagicBean"
+file = "EventFlowMsg/Npc_Hylia_047_Child.msbt"
+label = "0000"
+marks.CNzh = { fingerprint = "441629796b34b611", at = [[0, 2]] }
+marks.EUde = { fingerprint = "a69f491a5f28c54f", at = [[0, 12]] }
+marks.EUen = { fingerprint = "7148c1083955a597", at = [[0, 11]] }
+marks.EUes = { fingerprint = "46e2b9d3d79bf871", at = [[1, 14]] }
+marks.EUfr = { fingerprint = "fb0d879f10907040", at = [[4, 8]] }
+marks.EUit = { fingerprint = "181e3dc31b45c3ce", at = [[0, 14]] }
+marks.EUnl = { fingerprint = "115764124c104d7e", at = [[0, 10]] }
+marks.EUpl = { fingerprint = "9b795ca5902610ce", at = [[0, 16]] }
+marks.EUru = { fingerprint = "0a5494a677b32b55", at = [[0, 14]] }
+marks.JPja = { fingerprint = "8cc4ba3e7c93d16d", at = [[0, 5]] }
+marks.KRko = { fingerprint = "7862a529ecd3a302", at = [[0, 5]] }
+marks.TWzh = { fingerprint = "679c5243fca3bb7c", at = [[0, 2]] }
+marks.USen = { fingerprint = "7148c1083955a597", at = [[0, 11]] }
+marks.USes = { fingerprint = "97b355231bd469d7", at = [[1, 19]] }
+marks.USfr = { fingerprint = "b56d4dfa0e713563", at = [[4, 8]] }
+marks.USpt = { fingerprint = "21094681997b825b", at = [[0, 15]] }
+
+[[line]]
+check = "ZR Magic Bean Salesman"
+item = "Item_MagicBean"
+file = "EventFlowMsg/Npc_Hylia_047_Child.msbt"
+label = "0001"
+marks.CNzh = { fingerprint = "5594b963eb13a89c", at = [[1, 2]] }
+marks.EUen = { fingerprint = "fec50dbd9a219094", at = [[14, 5]] }
+marks.EUes = { fingerprint = "93ca3658ed3ddb56", at = [[15, 5]] }
+marks.EUpl = { fingerprint = "5a6cfac2155897ac", at = [[6, 7]] }
+marks.EUru = { fingerprint = "f8d2426d4dee4923", at = [[6, 14]] }
+marks.JPja = { fingerprint = "758c5554c00a283a", at = [[0, 5]] }
+marks.KRko = { fingerprint = "fd67abd1d5d2c45d", at = [[0, 5]] }
+marks.TWzh = { fingerprint = "6de2f76627272c78", at = [[2, 2]] }
+marks.USen = { fingerprint = "fec50dbd9a219094", at = [[14, 5]] }
+marks.USes = { fingerprint = "895ccef12b475226", at = [[15, 10]] }
+marks.USpt = { fingerprint = "d7bc68c4a7c9df21", at = [[14, 7]] }
+
+[[line]]
+check = "ZR Magic Bean Salesman"
+item = "Item_MagicBean"
+file = "EventFlowMsg/Npc_Hylia_047_Child.msbt"
+label = "Balloon_00"
+marks.EUde = { fingerprint = "3334b820f2dfc89d", at = [[14, 6]] }
+marks.EUen = { fingerprint = "a191b36b0f9fae0f", at = [[15, 5]] }
+marks.EUes = { fingerprint = "4c9d060bc6269abd", at = [[9, 6]] }
+marks.EUfr = { fingerprint = "e7e15eb5ae0a009c", at = [[4, 8]] }
+marks.EUit = { fingerprint = "3df4227fed9a571c", at = [[9, 14]] }
+marks.EUnl = { fingerprint = "bb2e7a2d999c37b0", at = [[11, 10]] }
+marks.EUpl = { fingerprint = "df31d4a482ad9c92", at = [[5, 7]] }
+marks.EUru = { fingerprint = "e33aa9b19f7d5d99", at = [[14, 4]] }
+marks.USen = { fingerprint = "a191b36b0f9fae0f", at = [[15, 5]] }
+marks.USes = { fingerprint = "5580e51956740e6d", at = [[9, 11]] }
+marks.USfr = { fingerprint = "b69de186498d0974", at = [[4, 8]] }
+marks.USpt = { fingerprint = "8f80ec7fe979d978", at = [[15, 7]] }
+
+[[line]]
+check = "ZR Magic Bean Salesman"
+item = "Item_MagicBean"
+file = "EventFlowMsg/Npc_Hylia_047_Child.msbt"
+label = "Talk_00"
+marks.CNzh = { fingerprint = "d7741dac717b58a4", at = [[4, 2]] }
+marks.EUde = { fingerprint = "eb5b4aaf8ecfcbab", at = [[25, 12]] }
+marks.EUen = { fingerprint = "38db9b24f51db8aa", at = [[15, 11]] }
+marks.EUes = { fingerprint = "116d7e3e8411ab23", at = [[22, 14]] }
+marks.EUfr = { fingerprint = "2a1696a086a4d253", at = [[12, 17]] }
+marks.EUit = { fingerprint = "1836021ab50c18f2", at = [[19, 14]] }
+marks.EUnl = { fingerprint = "bb2e7a2d999c37b0", at = [[11, 10]] }
+marks.EUpl = { fingerprint = "f20d2be809b3b7e7", at = [[13, 17]] }
+marks.EUru = { fingerprint = "07a8708c0f0fdd34", at = [[11, 15]] }
+marks.JPja = { fingerprint = "1b7cf044567c1e76", at = [[0, 5]] }
+marks.KRko = { fingerprint = "56ca98e0b61fe637", at = [[0, 5]] }
+marks.TWzh = { fingerprint = "2787919e08aeca32", at = [[2, 2]] }
+marks.USen = { fingerprint = "38db9b24f51db8aa", at = [[15, 11]] }
+marks.USes = { fingerprint = "316592595b86f6b2", at = [[22, 19]] }
+marks.USfr = { fingerprint = "1c1ddd5d76c4e4bc", at = [[12, 17]] }
+marks.USpt = { fingerprint = "b9a45cb48bf084ea", at = [[15, 15]] }
+
+[[line]]
+check = "ZR Magic Bean Salesman"
+item = "Item_MagicBean"
+file = "EventFlowMsg/Npc_Hylia_047_Child.msbt"
+label = "Talk_00_01"
+marks.EUde = { fingerprint = "20c2a99d4a6771c2", at = [[59, 6]] }
+marks.USpt = { fingerprint = "a5f887187db3ee98", at = [[61, 5]] }
+
+[[line]]
+check = "ZR Magic Bean Salesman"
+item = "Item_MagicBean"
+file = "EventFlowMsg/Npc_Hylia_047_Child.msbt"
+label = "Talk_00_02"
+marks.EUde = { fingerprint = "b3bf430378c49829", at = [[59, 6]] }
+marks.USpt = { fingerprint = "8aec722db4853e75", at = [[60, 5]] }
+
+[[line]]
+check = "ZR Magic Bean Salesman"
+item = "Item_MagicBean"
+file = "EventFlowMsg/Npc_Hylia_047_Child.msbt"
+label = "Talk_00_02_01"
+marks.CNzh = { fingerprint = "f332b6bf97d23952", at = [[0, 2]] }
+marks.EUde = { fingerprint = "9374ce863a6338fe", at = [[59, 19]] }
+marks.EUen = { fingerprint = "15443c960834c263", at = [[53, 11]] }
+marks.EUes = { fingerprint = "464313e8220c167a", at = [[55, 12]] }
+marks.EUit = { fingerprint = "109f26a619204b37", at = [[60, 14]] }
+marks.EUnl = { fingerprint = "76c721380eed1274", at = [[71, 10]] }
+marks.EUpl = { fingerprint = "2cfcf07d930696c5", at = [[45, 16]] }
+marks.EUru = { fingerprint = "f3bc6b9e0c3b6441", at = [[73, 23]] }
+marks.JPja = { fingerprint = "6a50dfa71cda4252", at = [[13, 5]] }
+marks.KRko = { fingerprint = "3383e0db62515dd9", at = [[15, 5]] }
+marks.TWzh = { fingerprint = "1d8bd05d019235ef", at = [[14, 2]] }
+marks.USen = { fingerprint = "15443c960834c263", at = [[53, 11]] }
+marks.USes = { fingerprint = "71a08db580a5e3f9", at = [[51, 17]] }
+marks.USpt = { fingerprint = "ba2e0db769f6a198", at = [[60, 24]] }
+
+[[line]]
+check = "ZR Magic Bean Salesman"
+item = "Item_MagicBean"
+file = "EventFlowMsg/Npc_Hylia_047_Child.msbt"
+label = "Talk_00_03"
+marks.EUde = { fingerprint = "d087ba321f2c7ad6", at = [[69, 6]] }
+marks.EUit = { fingerprint = "ac7a7c5c5a9f770b", at = [[67, 7]] }
+marks.EUru = { fingerprint = "c8a31d13e2e71bdd", at = [[9, 4], [72, 7]] }
+marks.USpt = { fingerprint = "7f73b45bf0acb03c", at = [[53, 5]] }
+
+[[line]]
+check = "ZR Magic Bean Salesman"
+item = "Item_MagicBean"
+file = "EventFlowMsg/Npc_Hylia_047_Child.msbt"
+label = "Talk_00_03_01"
+marks.CNzh = { fingerprint = "498c33c3a00bf121", at = [[0, 2]] }
+marks.EUde = { fingerprint = "0fce9dff2170ee05", at = [[69, 19]] }
+marks.EUen = { fingerprint = "1e405114071cf1c9", at = [[54, 11]] }
+marks.EUes = { fingerprint = "d76f6f82dcb255ee", at = [[60, 12]] }
+marks.EUfr = { fingerprint = "96182e264e6d25b4", at = [[46, 15]] }
+marks.EUit = { fingerprint = "18188a0b3bd01097", at = [[53, 14]] }
+marks.EUnl = { fingerprint = "6ad7f7d1c96973f2", at = [[52, 10]] }
+marks.EUpl = { fingerprint = "b07e92ba5561e0cf", at = [[43, 16]] }
+marks.EUru = { fingerprint = "f65a82866b1ff0eb", at = [[71, 23]] }
+marks.JPja = { fingerprint = "b15bae7392e46dc4", at = [[13, 5]] }
+marks.KRko = { fingerprint = "03422dcf5fe48d18", at = [[17, 5]] }
+marks.TWzh = { fingerprint = "950805eb36efaabe", at = [[12, 2]] }
+marks.USen = { fingerprint = "1e405114071cf1c9", at = [[54, 11]] }
+marks.USes = { fingerprint = "b533eb0ca9dcb70b", at = [[60, 17]] }
+marks.USfr = { fingerprint = "bee4127948bf5b10", at = [[46, 15]] }
+marks.USpt = { fingerprint = "6b247f9d600d6326", at = [[53, 24]] }
+
+[[line]]
+check = "ZR Magic Bean Salesman"
+item = "Item_MagicBean"
+file = "EventFlowMsg/Npc_Hylia_047_Child.msbt"
+label = "Talk_00_04"
+marks.EUde = { fingerprint = "4f7639ca7276f57c", at = [[55, 6]] }
+marks.EUru = { fingerprint = "2d5732c7881b47cd", at = [[7, 4], [74, 7]] }
+marks.USpt = { fingerprint = "d0a2e6601bb80b34", at = [[54, 5]] }
+
+[[line]]
+check = "ZR Magic Bean Salesman"
+item = "Item_MagicBean"
+file = "EventFlowMsg/Npc_Hylia_047_Child.msbt"
+label = "Talk_00_04_01"
+marks.CNzh = { fingerprint = "9a47ae7b77ab9842", at = [[0, 2]] }
+marks.EUde = { fingerprint = "999cce7a2ce89e9e", at = [[55, 19]] }
+marks.EUen = { fingerprint = "78fd7cd6b643c9e1", at = [[55, 11]] }
+marks.EUes = { fingerprint = "b605f6d04bc88974", at = [[14, 14]] }
+marks.EUfr = { fingerprint = "41cf7da2efc6c73e", at = [[4, 17]] }
+marks.EUit = { fingerprint = "37e0c84c73e36f34", at = [[52, 14]] }
+marks.EUnl = { fingerprint = "57e731ac236bfa40", at = [[61, 10]] }
+marks.EUpl = { fingerprint = "3ba6f881137329f7", at = [[38, 16]] }
+marks.EUru = { fingerprint = "998051d15d0f506f", at = [[73, 23]] }
+marks.JPja = { fingerprint = "a2bf89518629a281", at = [[10, 5]] }
+marks.KRko = { fingerprint = "2a5bbe7e379941ad", at = [[13, 5]] }
+marks.TWzh = { fingerprint = "f68f53dbdfac8577", at = [[13, 2]] }
+marks.USen = { fingerprint = "78fd7cd6b643c9e1", at = [[55, 11]] }
+marks.USes = { fingerprint = "618f87d09a30ba8b", at = [[19, 19]] }
+marks.USfr = { fingerprint = "1458d48403e66ac6", at = [[4, 17]] }
+marks.USpt = { fingerprint = "a01aa3bcddc6fd95", at = [[54, 24]] }
+
+[[line]]
+check = "ZR Magic Bean Salesman"
+item = "Item_MagicBean"
+file = "EventFlowMsg/Npc_Hylia_047_Child.msbt"
+label = "Talk_04"
+marks.CNzh = { fingerprint = "38a3cd563ba33e8b", at = [[13, 2]] }
+marks.EUde = { fingerprint = "3f4ab43a5e0a8cbf", at = [[43, 12]] }
+marks.EUen = { fingerprint = "ce65ec9395dadee8", at = [[31, 11]] }
+marks.EUes = { fingerprint = "32a4e64bbf5b365c", at = [[7, 14]] }
+marks.EUfr = { fingerprint = "5d84ee19f1215ea9", at = [[45, 15]] }
+marks.EUit = { fingerprint = "aa2d85aac2fadcbb", at = [[32, 14]] }
+marks.EUnl = { fingerprint = "dca243843e39cb97", at = [[56, 10]] }
+marks.EUpl = { fingerprint = "fa6d9d9b35b57f00", at = [[26, 16]] }
+marks.EUru = { fingerprint = "e6bc62a6148185d4", at = [[53, 14]] }
+marks.JPja = { fingerprint = "286c5cfe681291f3", at = [[5, 5]] }
+marks.KRko = { fingerprint = "4bb6163044e18412", at = [[6, 5]] }
+marks.TWzh = { fingerprint = "2414137431df6111", at = [[8, 2]] }
+marks.USen = { fingerprint = "ce65ec9395dadee8", at = [[31, 11]] }
+marks.USes = { fingerprint = "e461519f2d0f6433", at = [[7, 19]] }
+marks.USfr = { fingerprint = "718a0d4c39ab77c5", at = [[45, 15]] }
+marks.USpt = { fingerprint = "93806c4e49e5ebb2", at = [[24, 15]] }
+
+[[line]]
+check = "ZR Magic Bean Salesman"
+item = "Item_MagicBean"
+file = "EventFlowMsg/Npc_Hylia_047_Child.msbt"
+label = "Talk_04_01"
+marks.USpt = { fingerprint = "19543194c0e2a6bf", at = [[47, 5]] }
+
+[[line]]
+check = "ZR Magic Bean Salesman"
+item = "Item_MagicBean"
+file = "EventFlowMsg/Npc_Hylia_047_Child.msbt"
+label = "Talk_04_02"
+marks.CNzh = { fingerprint = "c7f591a51bd9c327", at = [[8, 2]] }
+marks.EUde = { fingerprint = "3723538f8b31d9c7", at = [[18, 12]] }
+marks.EUen = { fingerprint = "9f59736361264815", at = [[48, 11]] }
+marks.EUes = { fingerprint = "a3e118d962ded7ee", at = [[49, 12]] }
+marks.EUfr = { fingerprint = "e76de40f65521107", at = [[45, 15]] }
+marks.EUit = { fingerprint = "022d603d1361ce45", at = [[35, 14]] }
+marks.EUnl = { fingerprint = "f334feaba20977b5", at = [[18, 10]] }
+marks.EUpl = { fingerprint = "db1fa787c410c2fb", at = [[45, 17]] }
+marks.EUru = { fingerprint = "b0114902a6849799", at = [[54, 15]] }
+marks.JPja = { fingerprint = "6731415f3f9fefc3", at = [[13, 5]] }
+marks.KRko = { fingerprint = "d74991f9f17ed33d", at = [[22, 5]] }
+marks.TWzh = { fingerprint = "b7c130159dfec883", at = [[18, 2]] }
+marks.USen = { fingerprint = "9f59736361264815", at = [[48, 11]] }
+marks.USes = { fingerprint = "8df1d519d4750fbc", at = [[47, 17]] }
+marks.USfr = { fingerprint = "74092d4fd220d654", at = [[44, 15]] }
+marks.USpt = { fingerprint = "428c2bd45c895a79", at = [[47, 24]] }
+
+[[line]]
+check = "ZR Magic Bean Salesman"
+item = "Item_MagicBean"
+file = "EventFlowMsg/Npc_Hylia_047_Child.msbt"
+label = "Talk_05"
+marks.CNzh = { fingerprint = "2ef7128032f6da0f", at = [[11, 2]] }
+marks.EUde = { fingerprint = "2175380cf2d3e7db", at = [[6, 12]] }
+marks.EUen = { fingerprint = "a2410ade9ba1d72b", at = [[28, 11]] }
+marks.EUes = { fingerprint = "57493e7b3940fc44", at = [[26, 14]] }
+marks.EUfr = { fingerprint = "905461cb189145a6", at = [[4, 17]] }
+marks.EUit = { fingerprint = "ebfb02a0fef9c801", at = [[18, 14]] }
+marks.EUnl = { fingerprint = "03fd937c2b84a62d", at = [[20, 11]] }
+marks.EUpl = { fingerprint = "5cbfacff1e9cbdf9", at = [[0, 16]] }
+marks.EUru = { fingerprint = "c97598cbc7cb185b", at = [[21, 14]] }
+marks.JPja = { fingerprint = "d88611285b22c048", at = [[6, 5]] }
+marks.KRko = { fingerprint = "a767fe9bc54fd1ce", at = [[9, 5]] }
+marks.TWzh = { fingerprint = "0997d2070fe80962", at = [[10, 2]] }
+marks.USen = { fingerprint = "a2410ade9ba1d72b", at = [[28, 11]] }
+marks.USes = { fingerprint = "74219bfa133e0ef6", at = [[26, 19]] }
+marks.USfr = { fingerprint = "aad61b5a979ad812", at = [[4, 17]] }
+marks.USpt = { fingerprint = "83d79ae62d776a53", at = [[21, 15]] }
+
+[[line]]
+check = "ZR Magic Bean Salesman"
+item = "Item_MagicBean"
+file = "EventFlowMsg/Npc_Hylia_047_Child.msbt"
+label = "Talk_05_01"
+marks.EUit = { fingerprint = "a02a1a057189f3d4", at = [[73, 7]] }
+marks.USpt = { fingerprint = "692704f36ccafe9b", at = [[64, 5]] }
+
+[[line]]
+check = "ZR Magic Bean Salesman"
+item = "Item_MagicBean"
+file = "EventFlowMsg/Npc_Hylia_047_Child.msbt"
+label = "Talk_05_02"
+marks.CNzh = { fingerprint = "8902dd81d4ca04b6", at = [[13, 2]] }
+marks.EUde = { fingerprint = "640b103559597304", at = [[67, 12]] }
+marks.EUen = { fingerprint = "cc4bf4cb6e4d8c25", at = [[4, 11]] }
+marks.EUes = { fingerprint = "1dd4c0f2b8fb9d36", at = [[72, 12]] }
+marks.EUfr = { fingerprint = "2ef30be8e7e5edfb", at = [[4, 8]] }
+marks.EUit = { fingerprint = "2e8ce1327faef75c", at = [[2, 14]] }
+marks.EUnl = { fingerprint = "77a8289eaf9244ae", at = [[66, 10]] }
+marks.EUpl = { fingerprint = "b3ca5bba82d1a280", at = [[0, 16]] }
+marks.EUru = { fingerprint = "7dc429b5389df9e1", at = [[0, 14]] }
+marks.JPja = { fingerprint = "709379f83da5ab5a", at = [[17, 5]] }
+marks.KRko = { fingerprint = "ed7ea62604373d8e", at = [[25, 5]] }
+marks.TWzh = { fingerprint = "f3cb9a1b2882a417", at = [[12, 2]] }
+marks.USen = { fingerprint = "cc4bf4cb6e4d8c25", at = [[4, 11]] }
+marks.USes = { fingerprint = "de2beaf8b38d9f5a", at = [[71, 17]] }
+marks.USfr = { fingerprint = "7955f72ec52ce4d4", at = [[4, 8]] }
+marks.USpt = { fingerprint = "a073eae8a6b6fb30", at = [[3, 15]] }
+
+[[line]]
+check = "ZR Magic Bean Salesman"
+item = "Item_MagicBean"
+file = "EventFlowMsg/Npc_Hylia_047_Child.msbt"
+label = "Talk_06"
+marks.CNzh = { fingerprint = "6b36d2b1fb1bd765", at = [[9, 2]] }
+marks.EUde = { fingerprint = "fe31c1d63ad06428", at = [[31, 12]] }
+marks.EUen = { fingerprint = "0fd848027a08656a", at = [[21, 11]] }
+marks.EUes = { fingerprint = "9ab6c33f8c61b5ce", at = [[25, 14]] }
+marks.EUfr = { fingerprint = "e77ca4f0cb8dcf7d", at = [[9, 17]] }
+marks.EUit = { fingerprint = "9ea175c570c4c2de", at = [[20, 14]] }
+marks.EUnl = { fingerprint = "65bcfa1f671a25f3", at = [[31, 11]] }
+marks.EUpl = { fingerprint = "4bf5857cdf4d8117", at = [[24, 16]] }
+marks.EUru = { fingerprint = "a0098f872971acf6", at = [[40, 14]] }
+marks.JPja = { fingerprint = "a7b32006453e2c2b", at = [[5, 5]] }
+marks.KRko = { fingerprint = "f6022dcde68eb056", at = [[7, 5]] }
+marks.TWzh = { fingerprint = "e81e0bc8a7a832d8", at = [[8, 2]] }
+marks.USen = { fingerprint = "0fd848027a08656a", at = [[21, 11]] }
+marks.USes = { fingerprint = "ffa21c1dd5b3bdba", at = [[25, 19]] }
+marks.USfr = { fingerprint = "ecaf5d1f747fcd3f", at = [[9, 17]] }
+marks.USpt = { fingerprint = "6d48339221cc0d08", at = [[20, 15]] }
+
+[[line]]
+check = "ZR Magic Bean Salesman"
+item = "Item_MagicBean"
+file = "EventFlowMsg/Npc_Hylia_047_Child.msbt"
+label = "Talk_06_01"
+marks.EUde = { fingerprint = "9136f14de5ecf2dd", at = [[60, 6]] }
+marks.EUpl = { fingerprint = "c0217de6089965f2", at = [[66, 7]] }
+marks.EUru = { fingerprint = "ffc3e2a5231c2bd4", at = [[48, 7]] }
+
+[[line]]
+check = "ZR Magic Bean Salesman"
+item = "Item_MagicBean"
+file = "EventFlowMsg/Npc_Hylia_047_Child.msbt"
+label = "Talk_06_02"
+marks.CNzh = { fingerprint = "aa7f33943dd42753", at = [[13, 2]] }
+marks.EUde = { fingerprint = "a0ab5916409e7374", at = [[55, 12]] }
+marks.EUen = { fingerprint = "9ea129bdf9b74876", at = [[41, 11]] }
+marks.EUes = { fingerprint = "994e16d66e177d55", at = [[51, 12]] }
+marks.EUfr = { fingerprint = "f84f199b581cf61e", at = [[3, 15]] }
+marks.EUit = { fingerprint = "4ca68352371abfb5", at = [[32, 14]] }
+marks.EUnl = { fingerprint = "cbae532c5348642a", at = [[63, 10]] }
+marks.EUpl = { fingerprint = "42c4121e3b15834c", at = [[66, 7]] }
+marks.EUru = { fingerprint = "b735956d58a1b395", at = [[41, 14]] }
+marks.JPja = { fingerprint = "c1c9d3b8f093309e", at = [[15, 5]] }
+marks.KRko = { fingerprint = "e6db2d0177c279d4", at = [[25, 5]] }
+marks.TWzh = { fingerprint = "dfa3bd7e9f8e07cd", at = [[14, 2]] }
+marks.USen = { fingerprint = "9ea129bdf9b74876", at = [[41, 11]] }
+marks.USes = { fingerprint = "d374a6672aaa3df5", at = [[51, 17]] }
+marks.USfr = { fingerprint = "fb27281501737492", at = [[3, 15]] }
+marks.USpt = { fingerprint = "22399b14e34894f9", at = [[46, 24]] }
+
+[[line]]
+check = "ZR Magic Bean Salesman"
+item = "Item_MagicBean"
+file = "EventFlowMsg/Npc_Hylia_047_Child.msbt"
+label = "Talk_07"
+marks.CNzh = { fingerprint = "f36193e1ebd883e2", at = [[6, 2]] }
+marks.EUde = { fingerprint = "2b24d9d965b7c3cc", at = [[40, 12]] }
+marks.EUen = { fingerprint = "ae7c9ccdffbb1c61", at = [[24, 11]] }
+marks.EUes = { fingerprint = "129f5f8732de5bbe", at = [[23, 14]] }
+marks.EUfr = { fingerprint = "4ca7287da2d923e7", at = [[24, 17]] }
+marks.EUit = { fingerprint = "68670ae361771e7f", at = [[18, 14]] }
+marks.EUnl = { fingerprint = "1985aa224c2519a6", at = [[27, 11]] }
+marks.EUpl = { fingerprint = "0a6e8a32a49d81e8", at = [[27, 16]] }
+marks.EUru = { fingerprint = "1f66dbabbc654b43", at = [[16, 14]] }
+marks.JPja = { fingerprint = "32fe9117d69edc2b", at = [[6, 5]] }
+marks.KRko = { fingerprint = "c72a458aef8a6341", at = [[7, 5]] }
+marks.TWzh = { fingerprint = "65402a7c6a3d2a78", at = [[10, 2]] }
+marks.USen = { fingerprint = "ae7c9ccdffbb1c61", at = [[24, 11]] }
+marks.USes = { fingerprint = "ffdce05550e1d307", at = [[23, 19]] }
+marks.USfr = { fingerprint = "99a4d4f8c42e3224", at = [[24, 17]] }
+marks.USpt = { fingerprint = "82c60c6e564fc1f1", at = [[23, 15]] }
+
+[[line]]
+check = "ZR Magic Bean Salesman"
+item = "Item_MagicBean"
+file = "EventFlowMsg/Npc_Hylia_047_Child.msbt"
+label = "Talk_07_01"
+marks.EUde = { fingerprint = "60f8a2c089d03420", at = [[40, 6]] }
+marks.EUfr = { fingerprint = "ce54e53627d464a5", at = [[30, 7]] }
+marks.EUru = { fingerprint = "98d7136d86631b09", at = [[42, 23]] }
+marks.USfr = { fingerprint = "e231698239d863a6", at = [[30, 7]] }
+
+[[line]]
+check = "ZR Magic Bean Salesman"
+item = "Item_MagicBean"
+file = "EventFlowMsg/Npc_Hylia_047_Child.msbt"
+label = "Talk_07_02"
+marks.CNzh = { fingerprint = "9ff8a72e10a1f843", at = [[7, 2]] }
+marks.EUde = { fingerprint = "efc960b11368199a", at = [[40, 19]] }
+marks.EUen = { fingerprint = "870de51aad9e1aa0", at = [[48, 11]] }
+marks.EUes = { fingerprint = "8d44ef867a0e4448", at = [[32, 12]] }
+marks.EUfr = { fingerprint = "267ca522a54a8c56", at = [[14, 15]] }
+marks.EUit = { fingerprint = "81e01760e6b8552c", at = [[40, 7]] }
+marks.EUnl = { fingerprint = "e6fcd39d377a29f7", at = [[43, 10]] }
+marks.EUpl = { fingerprint = "a8f7e6eb45dbe728", at = [[55, 16]] }
+marks.EUru = { fingerprint = "60d9c7e758ab08d5", at = [[50, 15]] }
+marks.JPja = { fingerprint = "6ecbdd8a26a19d01", at = [[16, 5]] }
+marks.KRko = { fingerprint = "db481bcc79c4abf6", at = [[23, 5]] }
+marks.TWzh = { fingerprint = "094289817a56094b", at = [[15, 2]] }
+marks.USen = { fingerprint = "870de51aad9e1aa0", at = [[48, 11]] }
+marks.USes = { fingerprint = "8f1acfd6fecf2b7a", at = [[32, 17]] }
+marks.USfr = { fingerprint = "ff75bb29d2dcb1db", at = [[14, 15]] }
+marks.USpt = { fingerprint = "21675d41650dd269", at = [[41, 15]] }
+
+[[line]]
+check = "ZR Magic Bean Salesman"
+item = "Item_MagicBean"
+file = "EventFlowMsg/Npc_Hylia_047_Child.msbt"
+label = "Talk_08"
+marks.CNzh = { fingerprint = "92dd9b9cb094d589", at = [[0, 2]] }
+marks.EUde = { fingerprint = "43ed8b1f3d7c0527", at = [[20, 12]] }
+marks.EUen = { fingerprint = "58b87f5be78cdaeb", at = [[16, 11]] }
+marks.EUes = { fingerprint = "3673b44b4352cea6", at = [[28, 14]] }
+marks.EUfr = { fingerprint = "f6a2f1addfc02689", at = [[15, 17]] }
+marks.EUit = { fingerprint = "69a4470d72a6c45f", at = [[22, 14]] }
+marks.EUnl = { fingerprint = "3656a996245cf288", at = [[14, 10]] }
+marks.EUpl = { fingerprint = "1bbc636c2a6bf557", at = [[16, 16]] }
+marks.EUru = { fingerprint = "3445dc792c81b399", at = [[20, 14]] }
+marks.JPja = { fingerprint = "48a9b60bc55ecf51", at = [[0, 5]] }
+marks.KRko = { fingerprint = "25e3f734239c9851", at = [[0, 5]] }
+marks.TWzh = { fingerprint = "592ff045accc755b", at = [[5, 2]] }
+marks.USen = { fingerprint = "58b87f5be78cdaeb", at = [[16, 11]] }
+marks.USes = { fingerprint = "a6f8cc7889b28ac8", at = [[28, 19]] }
+marks.USfr = { fingerprint = "0fad0fcf08a86fc2", at = [[15, 17]] }
+marks.USpt = { fingerprint = "41480b892d3a2e26", at = [[20, 15]] }
+
+[[line]]
+check = "ZR Magic Bean Salesman"
+item = "Item_MagicBean"
+file = "EventFlowMsg/Npc_Hylia_047_Child.msbt"
+label = "Talk_08_01"
+marks.EUde = { fingerprint = "5d6d02c37369716d", at = [[82, 6]] }
+marks.EUit = { fingerprint = "df93c7619f98eac4", at = [[39, 7]] }
+marks.USpt = { fingerprint = "16c30f9f31a75941", at = [[51, 5]] }
+
+[[line]]
+check = "ZR Magic Bean Salesman"
+item = "Item_MagicBean"
+file = "EventFlowMsg/Npc_Hylia_047_Child.msbt"
+label = "Talk_08_02"
+marks.CNzh = { fingerprint = "b3862578d4abc8d7", at = [[0, 2]] }
+marks.EUde = { fingerprint = "be2fda07829a5aeb", at = [[77, 19]] }
+marks.EUen = { fingerprint = "3aebc17493ec9191", at = [[52, 11]] }
+marks.EUes = { fingerprint = "cc59a48826e21570", at = [[41, 12]] }
+marks.EUit = { fingerprint = "2ac9cfec0065a699", at = [[35, 14]] }
+marks.EUnl = { fingerprint = "4ce4ae9c92b858eb", at = [[46, 10]] }
+marks.EUpl = { fingerprint = "6e47ee46b6226e47", at = [[31, 16]] }
+marks.JPja = { fingerprint = "6c746f55018be928", at = [[17, 5]] }
+marks.KRko = { fingerprint = "a4cb20e2306579bf", at = [[21, 5]] }
+marks.TWzh = { fingerprint = "7ff87f92dcb1f65e", at = [[15, 2]] }
+marks.USen = { fingerprint = "3aebc17493ec9191", at = [[52, 11]] }
+marks.USes = { fingerprint = "1bed5691a7db49d3", at = [[41, 17]] }
+marks.USpt = { fingerprint = "1a66d34bd91bdaac", at = [[51, 24]] }
+
+[[line]]
+check = "ZR Magic Bean Salesman"
+item = "Item_MagicBean"
+file = "EventFlowMsg/Npc_Hylia_047_Child.msbt"
+label = "Talk_09"
+marks.CNzh = { fingerprint = "2dc8bb8f610deb3f", at = [[0, 2]] }
+marks.EUde = { fingerprint = "66535c617c2774d1", at = [[25, 12]] }
+marks.EUen = { fingerprint = "b2cef7fe6a3cbb47", at = [[13, 11]] }
+marks.EUes = { fingerprint = "b18ddf6d48dd2bd4", at = [[6, 14]] }
+marks.EUfr = { fingerprint = "419ad9e5aac32fa1", at = [[17, 17]] }
+marks.EUit = { fingerprint = "31583f9cbd35c60b", at = [[18, 14]] }
+marks.EUnl = { fingerprint = "7ed49a74d1ecb844", at = [[15, 11]] }
+marks.EUpl = { fingerprint = "f7f8bde61e5f074f", at = [[23, 16]] }
+marks.EUru = { fingerprint = "7592c76676956efd", at = [[28, 14]] }
+marks.JPja = { fingerprint = "c83bd0260dd2fd24", at = [[0, 5]] }
+marks.KRko = { fingerprint = "9038f96acf0e9ab1", at = [[0, 5]] }
+marks.TWzh = { fingerprint = "11e4da27485b3a2a", at = [[0, 2]] }
+marks.USen = { fingerprint = "b2cef7fe6a3cbb47", at = [[13, 11]] }
+marks.USes = { fingerprint = "c4b812b90bb57bd7", at = [[6, 19]] }
+marks.USfr = { fingerprint = "419ad9e5aac32fa1", at = [[17, 17]] }
+marks.USpt = { fingerprint = "062225795330b838", at = [[15, 15]] }
+
+[[line]]
+check = "ZR Magic Bean Salesman"
+item = "Item_MagicBean"
+file = "EventFlowMsg/Npc_Hylia_047_Child.msbt"
+label = "Talk_09_01"
+marks.EUen = { fingerprint = "9245b9d0c11ce906", at = [[10, 5]] }
+marks.EUru = { fingerprint = "14b65a2835a3b576", at = [[14, 4]] }
+marks.USen = { fingerprint = "9245b9d0c11ce906", at = [[10, 5]] }
+
+[[line]]
+check = "ZR Magic Bean Salesman"
+item = "Item_MagicBean"
+file = "EventFlowMsg/Npc_Hylia_047_Child.msbt"
+label = "Talk_09_02"
+marks.CNzh = { fingerprint = "acef77ac2f3ea69b", at = [[6, 2]] }
+marks.EUde = { fingerprint = "c4c468d341287e8b", at = [[52, 19]] }
+marks.EUen = { fingerprint = "54742f2b26bcb3bf", at = [[10, 11]] }
+marks.EUes = { fingerprint = "adfcd70b03cab5e3", at = [[60, 12]] }
+marks.EUfr = { fingerprint = "936686950d196c17", at = [[35, 15]] }
+marks.EUit = { fingerprint = "401347f3d058949f", at = [[8, 14]] }
+marks.EUnl = { fingerprint = "20a3881768ed950f", at = [[39, 10]] }
+marks.EUpl = { fingerprint = "020a066f24f1b883", at = [[35, 16]] }
+marks.JPja = { fingerprint = "42ae3dbbf24b8fa0", at = [[16, 5]] }
+marks.KRko = { fingerprint = "77ee731ede46c3c1", at = [[16, 5]] }
+marks.TWzh = { fingerprint = "e500c2dfb3a2be1d", at = [[15, 2]] }
+marks.USen = { fingerprint = "54742f2b26bcb3bf", at = [[10, 11]] }
+marks.USes = { fingerprint = "2551722742cfd80c", at = [[60, 17]] }
+marks.USfr = { fingerprint = "9e89a097276c4a66", at = [[33, 15]] }
+marks.USpt = { fingerprint = "c8a4fb9463e29c2a", at = [[39, 24]] }
+
+[[line]]
+check = "ZR Magic Bean Salesman"
+item = "Item_MagicBean"
+file = "EventFlowMsg/Npc_Hylia_047_Child.msbt"
+label = "Talk_101"
+marks.CNzh = { fingerprint = "a9772b72d451fa52", at = [[0, 2]] }
+marks.EUde = { fingerprint = "74ffaa33254d66ab", at = [[31, 12]] }
+marks.EUen = { fingerprint = "d39041f17173a93a", at = [[25, 11]] }
+marks.EUes = { fingerprint = "92ff90c31b02f979", at = [[28, 14]] }
+marks.EUfr = { fingerprint = "ea05415c6c17c839", at = [[22, 17]] }
+marks.EUit = { fingerprint = "f361eddfe8e47493", at = [[24, 14]] }
+marks.EUnl = { fingerprint = "326cab97bcccd001", at = [[22, 11]] }
+marks.EUpl = { fingerprint = "249cd7ffe76e6545", at = [[21, 18]] }
+marks.EUru = { fingerprint = "8d2865b522a48d5d", at = [[20, 14]] }
+marks.JPja = { fingerprint = "a8028fc9f06d6ce1", at = [[0, 5]] }
+marks.KRko = { fingerprint = "a849fc94b2b0c774", at = [[0, 5]] }
+marks.TWzh = { fingerprint = "80823237d4e80839", at = [[5, 2]] }
+marks.USen = { fingerprint = "d39041f17173a93a", at = [[25, 11]] }
+marks.USes = { fingerprint = "b2a5bd0dba4a030b", at = [[28, 19]] }
+marks.USfr = { fingerprint = "ea05415c6c17c839", at = [[22, 17]] }
+marks.USpt = { fingerprint = "75ac5afc7ae8c93c", at = [[19, 15]] }
+
+[[line]]
+check = "ZR Magic Bean Salesman"
+item = "Item_MagicBean"
+file = "EventFlowMsg/Npc_Hylia_047_Child.msbt"
+label = "Talk_102"
+marks.CNzh = { fingerprint = "fab215514876a8a0", at = [[17, 2]] }
+marks.EUde = { fingerprint = "2750f260aee9095c", at = [[90, 12]] }
+marks.EUen = { fingerprint = "a51521e0c9e89a81", at = [[35, 5]] }
+marks.EUes = { fingerprint = "38fbf7bed6959207", at = [[37, 6]] }
+marks.EUfr = { fingerprint = "10fac2c4aa3e05e9", at = [[35, 8]] }
+marks.EUit = { fingerprint = "1e196463af70b909", at = [[27, 7]] }
+marks.EUnl = { fingerprint = "6660321be662bfbe", at = [[33, 5]] }
+marks.EUpl = { fingerprint = "076df707046141ae", at = [[21, 7]] }
+marks.EUru = { fingerprint = "a5dd69636617715e", at = [[35, 4]] }
+marks.JPja = { fingerprint = "5fa57404e396a5c8", at = [[16, 2]] }
+marks.KRko = { fingerprint = "5515decd078548ed", at = [[16, 1]] }
+marks.TWzh = { fingerprint = "84c8d43034255675", at = [[20, 2]] }
+marks.USen = { fingerprint = "a51521e0c9e89a81", at = [[35, 5]] }
+marks.USes = { fingerprint = "0b888d52bbf2b371", at = [[37, 11]] }
+marks.USfr = { fingerprint = "22bc8ed78fd579a8", at = [[35, 8]] }
+marks.USpt = { fingerprint = "5d9b3916beaa3621", at = [[30, 7]] }
+
+[[line]]
+check = "ZR Magic Bean Salesman"
+item = "Item_MagicBean"
+file = "EventFlowMsg/Npc_Hylia_047_Child.msbt"
+label = "Talk_103"
+marks.CNzh = { fingerprint = "1d1c6310d6e132dc", at = [[0, 2]] }
+marks.EUde = { fingerprint = "74e6dbee6dbcd68b", at = [[4, 12]] }
+marks.EUen = { fingerprint = "d63ca4941b45a72f", at = [[19, 11]] }
+marks.EUes = { fingerprint = "f2938b37b4f9efb8", at = [[26, 14]] }
+marks.EUfr = { fingerprint = "f755b7f0a95da315", at = [[29, 17]] }
+marks.EUit = { fingerprint = "87017e4d8d585636", at = [[34, 14]] }
+marks.EUnl = { fingerprint = "a08def92d482a9db", at = [[25, 11]] }
+marks.EUpl = { fingerprint = "80c4f99712cb0eac", at = [[24, 16]] }
+marks.EUru = { fingerprint = "fc243969da911b86", at = [[24, 14]] }
+marks.JPja = { fingerprint = "c320107019c02eba", at = [[0, 5]] }
+marks.KRko = { fingerprint = "1b4cd3fac7c655be", at = [[0, 5]] }
+marks.TWzh = { fingerprint = "4acf1bbed285d93a", at = [[8, 2]] }
+marks.USen = { fingerprint = "d63ca4941b45a72f", at = [[19, 11]] }
+marks.USes = { fingerprint = "59523c9d609c1dbd", at = [[26, 19]] }
+marks.USfr = { fingerprint = "f755b7f0a95da315", at = [[29, 17]] }
+marks.USpt = { fingerprint = "5f40654c7e3bf419", at = [[17, 15]] }
+
+[[line]]
+check = "ZR Magic Bean Salesman"
+item = "Item_MagicBean"
+file = "EventFlowMsg/Npc_Hylia_047_Child.msbt"
+label = "Talk_104"
+marks.CNzh = { fingerprint = "ab8a03f0c5a01db7", at = [[0, 2]] }
+marks.EUde = { fingerprint = "caaa84c9975b71a9", at = [[15, 12]] }
+marks.EUen = { fingerprint = "c0982a3bdbf9ad00", at = [[18, 5]] }
+marks.EUes = { fingerprint = "5c15f5d13f30b49e", at = [[21, 6]] }
+marks.EUit = { fingerprint = "0b5065278584ba63", at = [[18, 14]] }
+marks.EUnl = { fingerprint = "c7a91835c63f1c4f", at = [[23, 5]] }
+marks.EUpl = { fingerprint = "d5e0b2abb595a8fb", at = [[30, 18]] }
+marks.EUru = { fingerprint = "723e34ad829d3a5d", at = [[25, 4]] }
+marks.JPja = { fingerprint = "156587df9676ad89", at = [[0, 2]] }
+marks.KRko = { fingerprint = "ad208e2ead5ba5d4", at = [[0, 1]] }
+marks.TWzh = { fingerprint = "bd1e97a578f6fba2", at = [[0, 2]] }
+marks.USen = { fingerprint = "c0982a3bdbf9ad00", at = [[18, 5]] }
+marks.USes = { fingerprint = "4d340404b45cc500", at = [[21, 11]] }
+marks.USpt = { fingerprint = "37936da7b6b9b9e3", at = [[19, 15]] }
+
+[[line]]
+check = "ZR Magic Bean Salesman"
+item = "Item_MagicBean"
+file = "EventFlowMsg/Npc_Hylia_047_Child.msbt"
+label = "Talk_28"
+marks.EUde = { fingerprint = "65cf719a1c117b4a", at = [[30, 6]] }
+marks.EUen = { fingerprint = "22b7c50ebe214a92", at = [[33, 5]] }
+marks.EUfr = { fingerprint = "ca558e5118081f2d", at = [[23, 7]] }
+marks.EUnl = { fingerprint = "98a110a559a23c5b", at = [[20, 4]] }
+marks.EUpl = { fingerprint = "1a89085f7563935c", at = [[30, 7]] }
+marks.EUru = { fingerprint = "c5ba85f57c59b650", at = [[25, 4]] }
+marks.TWzh = { fingerprint = "38ab839465c7cb19", at = [[12, 2]] }
+marks.USen = { fingerprint = "22b7c50ebe214a92", at = [[33, 5]] }
+marks.USfr = { fingerprint = "ca558e5118081f2d", at = [[23, 7]] }
+marks.USpt = { fingerprint = "a600e0cfec19d1cc", at = [[39, 7]] }
+
+[[line]]
+check = "Npc_Hylia_048_BottleShop Event330 (Obj_Rupee_Gold)"
+item = "Obj_Rupee_Gold"
+file = "EventFlowMsg/Npc_Hylia_048_BottleShop.msbt"
+label = "Talk_07"
+marks.CNzh = { fingerprint = "e0e18eaa0dab306d", at = [[16, 5]] }
+marks.EUde = { fingerprint = "da61d6be23573fec", at = [[54, 22]] }
+marks.EUen = { fingerprint = "c4218b49b18ff8dd", at = [[48, 16]] }
+marks.EUes = { fingerprint = "19a7f7c4dcf8c445", at = [[38, 11]] }
+marks.EUfr = { fingerprint = "3f6b4aa746d52a4f", at = [[51, 21]] }
+marks.EUit = { fingerprint = "1b18b3c16e54297b", at = [[57, 18]] }
+marks.EUnl = { fingerprint = "a953bf10524ff410", at = [[46, 13]] }
+marks.EUpl = { fingerprint = "c5407e3bdef86bb5", at = [[37, 11]] }
+marks.EUru = { fingerprint = "4b52cfd3643c6ccf", at = [[36, 14]] }
+marks.JPja = { fingerprint = "30df9a3524e8d040", at = [[13, 5]] }
+marks.KRko = { fingerprint = "57adcc5ea0a7646d", at = [[13, 6]] }
+marks.TWzh = { fingerprint = "29f00999ae3c0e67", at = [[16, 5]] }
+marks.USen = { fingerprint = "c4218b49b18ff8dd", at = [[48, 16]] }
+marks.USes = { fingerprint = "19a7f7c4dcf8c445", at = [[38, 11]] }
+marks.USfr = { fingerprint = "2a5a5a1889310284", at = [[50, 21]] }
+marks.USpt = { fingerprint = "9f4526294093fdd1", at = [[42, 12]] }
+
+[[line]]
+check = "Npc_Hylia_048_BottleShop Event330 (Obj_Rupee_Gold)"
+item = "Obj_Rupee_Gold"
+file = "EventFlowMsg/Npc_Hylia_048_BottleShop.msbt"
+label = "Talk_102"
+marks.CNzh = { fingerprint = "21b81b6b88e81d9d", at = [[22, 5]] }
+marks.EUde = { fingerprint = "b18d06f6123a6c7d", at = [[86, 22]] }
+marks.EUen = { fingerprint = "7ec79a40213ff1dc", at = [[70, 13]] }
+marks.EUes = { fingerprint = "71b41fd0a9ae1444", at = [[82, 17]] }
+marks.EUfr = { fingerprint = "57f56238442869c1", at = [[58, 16]] }
+marks.EUit = { fingerprint = "77dfa27bf5c7e81e", at = [[69, 17]] }
+marks.EUnl = { fingerprint = "1d04dbcccf53e3c7", at = [[73, 15]] }
+marks.EUpl = { fingerprint = "d5e02cb64b77f106", at = [[89, 13]] }
+marks.EUru = { fingerprint = "0d86fde1d6b1cc3d", at = [[69, 14]] }
+marks.JPja = { fingerprint = "b7fe6c75ebef4775", at = [[26, 5]] }
+marks.KRko = { fingerprint = "1b94436805a7738c", at = [[21, 6]] }
+marks.TWzh = { fingerprint = "3dfb0d2ba0a303a0", at = [[23, 5]] }
+marks.USen = { fingerprint = "7ec79a40213ff1dc", at = [[70, 13]] }
+marks.USes = { fingerprint = "71b41fd0a9ae1444", at = [[82, 17]] }
+marks.USfr = { fingerprint = "8340ac2c5614f31f", at = [[64, 16]] }
+marks.USpt = { fingerprint = "d70adc33a2822121", at = [[90, 18]] }
+
+[[line]]
+check = "Npc_Hylia_048_BottleShop Event330 (Obj_Rupee_Gold)"
+item = "Obj_Rupee_Gold"
+file = "EventFlowMsg/Npc_Hylia_048_BottleShop.msbt"
+label = "Talk_104"
+marks.CNzh = { fingerprint = "8ccd3355cdc08aee", at = [[30, 5]] }
+marks.EUde = { fingerprint = "6014cab6db0c8a12", at = [[102, 21]] }
+marks.EUen = { fingerprint = "c0a3f18fed6a7ec6", at = [[60, 13]] }
+marks.EUes = { fingerprint = "2f6237c8af90f89d", at = [[67, 17]] }
+marks.EUfr = { fingerprint = "3a58e69d4d270d3a", at = [[58, 16]] }
+marks.EUit = { fingerprint = "6b3999335bb9372a", at = [[64, 17]] }
+marks.EUnl = { fingerprint = "9ee785d414332540", at = [[57, 15]] }
+marks.EUpl = { fingerprint = "ffa8b4ea0f7f3aaf", at = [[56, 13]] }
+marks.EUru = { fingerprint = "73c12b41ebc9f41d", at = [[70, 14]] }
+marks.JPja = { fingerprint = "c5e2dda705baaeec", at = [[36, 5]] }
+marks.KRko = { fingerprint = "68dba135ddf37daf", at = [[36, 6]] }
+marks.TWzh = { fingerprint = "63057ba1c20692ff", at = [[33, 5]] }
+marks.USen = { fingerprint = "c0a3f18fed6a7ec6", at = [[60, 13]] }
+marks.USes = { fingerprint = "a79ccd6ee531fd76", at = [[67, 17]] }
+marks.USfr = { fingerprint = "2dec391fd0d6185a", at = [[63, 16]] }
+marks.USpt = { fingerprint = "cabccd2fffe8843b", at = [[61, 18]] }
+
+[[line]]
+check = "Npc_Hylia_048_BottleShop Event330 (Obj_Rupee_Gold)"
+item = "Obj_Rupee_Gold"
+file = "EventFlowMsg/Npc_Hylia_048_BottleShop.msbt"
+label = "Talk_105"
+marks.CNzh = { fingerprint = "951c23436f549f7b", at = [[37, 5]] }
+marks.EUde = { fingerprint = "9d4f06cbfbf6a050", at = [[102, 22]] }
+marks.EUen = { fingerprint = "7a587eaf3422f61a", at = [[95, 15]] }
+marks.EUes = { fingerprint = "24d2b833103f4b7e", at = [[91, 17]] }
+marks.EUfr = { fingerprint = "a8df9769442470b8", at = [[86, 16]] }
+marks.EUit = { fingerprint = "0537b1daf40c82ef", at = [[83, 17]] }
+marks.EUnl = { fingerprint = "5092128f6ab4baaf", at = [[105, 12]] }
+marks.EUpl = { fingerprint = "afb4c101eab0733a", at = [[119, 11]] }
+marks.EUru = { fingerprint = "dab0c9b2ae63b015", at = [[108, 15]] }
+marks.JPja = { fingerprint = "a9f57e30a7363c26", at = [[34, 5]] }
+marks.KRko = { fingerprint = "3b47ac1ec2c25121", at = [[34, 6]] }
+marks.TWzh = { fingerprint = "5219fbbdf12bf466", at = [[34, 5]] }
+marks.USen = { fingerprint = "7a587eaf3422f61a", at = [[95, 15]] }
+marks.USes = { fingerprint = "24d2b833103f4b7e", at = [[91, 17]] }
+marks.USfr = { fingerprint = "2b2e595a92c87f87", at = [[84, 16]] }
+marks.USpt = { fingerprint = "5f75c03408cc84f5", at = [[98, 15]] }
+
+[[line]]
+check = "Npc_Hylia_048_BottleShop Event330 (Obj_Rupee_Gold)"
+item = "Obj_Rupee_Gold"
+file = "EventFlowMsg/Npc_Hylia_048_BottleShop.msbt"
+label = "Talk_106"
+marks.CNzh = { fingerprint = "3a7cb63f55794925", at = [[14, 5]] }
+marks.EUde = { fingerprint = "37c67bae75cfd992", at = [[107, 21]] }
+marks.EUen = { fingerprint = "1e8e93b6967ac7e7", at = [[66, 13]] }
+marks.EUes = { fingerprint = "33268d145d1da4cf", at = [[112, 17]] }
+marks.EUfr = { fingerprint = "acae559f6e088d41", at = [[50, 16]] }
+marks.EUit = { fingerprint = "73df5fc5564a7781", at = [[88, 17]] }
+marks.EUnl = { fingerprint = "3b909fcd27a58c8f", at = [[71, 15]] }
+marks.EUpl = { fingerprint = "93338f4618bdcccb", at = [[86, 13]] }
+marks.EUru = { fingerprint = "7be1746001afa7a4", at = [[87, 15]] }
+marks.JPja = { fingerprint = "5c3bb01062f5c1ce", at = [[17, 5]] }
+marks.KRko = { fingerprint = "494a8bd86b1ae62b", at = [[18, 6]] }
+marks.TWzh = { fingerprint = "184c1da4ebdd6f1a", at = [[14, 5]] }
+marks.USen = { fingerprint = "1e8e93b6967ac7e7", at = [[66, 13]] }
+marks.USes = { fingerprint = "7491f255e92864e7", at = [[65, 17]] }
+marks.USfr = { fingerprint = "3286874b50779af8", at = [[50, 16]] }
+marks.USpt = { fingerprint = "4845502115865663", at = [[90, 15]] }
+
+[[line]]
+check = "Npc_Hylia_048_BottleShop Event330 (Obj_Rupee_Gold)"
+item = "Obj_Rupee_Gold"
+file = "EventFlowMsg/Npc_Hylia_048_BottleShop.msbt"
+label = "Talk_57"
+marks.CNzh = { fingerprint = "144407fd5d4cf2fa", at = [[37, 5]] }
+marks.EUde = { fingerprint = "d9613202ac3875f1", at = [[137, 22]] }
+marks.EUen = { fingerprint = "1c6835d415f3938a", at = [[95, 16]] }
+marks.EUes = { fingerprint = "109e352b205e580e", at = [[101, 11]] }
+marks.EUfr = { fingerprint = "b214f562a9aa77d4", at = [[116, 21]] }
+marks.EUit = { fingerprint = "ebe41932edd8ed49", at = [[87, 18]] }
+marks.EUnl = { fingerprint = "34a6e4ffb21e419c", at = [[113, 13]] }
+marks.EUpl = { fingerprint = "d9b5d8e576aa33d9", at = [[99, 11]] }
+marks.EUru = { fingerprint = "16f10dba1e9c2864", at = [[110, 14]] }
+marks.JPja = { fingerprint = "a38a822bcac4daef", at = [[37, 5]] }
+marks.KRko = { fingerprint = "2d954c270d59eae8", at = [[35, 6]] }
+marks.TWzh = { fingerprint = "530bdf076cff01eb", at = [[40, 5]] }
+marks.USen = { fingerprint = "1c6835d415f3938a", at = [[95, 16]] }
+marks.USes = { fingerprint = "2028a919474d9382", at = [[94, 11]] }
+marks.USfr = { fingerprint = "910c57ccd8c9cc78", at = [[119, 21]] }
+marks.USpt = { fingerprint = "2ccd76d9acecaf60", at = [[102, 12]] }
+
+[[line]]
+check = "Npc_Hylia_048_BottleShop Event330 (Obj_Rupee_Gold)"
+item = "Obj_Rupee_Gold"
+file = "EventFlowMsg/Npc_Hylia_048_BottleShop.msbt"
+label = "Talk_58"
+marks.CNzh = { fingerprint = "924d91c1fd3011d3", at = [[39, 5]] }
+marks.EUde = { fingerprint = "f028d60b61278251", at = [[160, 22]] }
+marks.EUen = { fingerprint = "9f0a07e1f9302d56", at = [[87, 13]] }
+marks.EUes = { fingerprint = "1ef53e0b7fb7f342", at = [[100, 17]] }
+marks.EUfr = { fingerprint = "4f08b26674a5efc2", at = [[100, 16]] }
+marks.EUit = { fingerprint = "bf1161fa4e631237", at = [[95, 17]] }
+marks.EUnl = { fingerprint = "b8432526259a2ccd", at = [[106, 15]] }
+marks.EUpl = { fingerprint = "157d3918ae434158", at = [[83, 13]] }
+marks.EUru = { fingerprint = "a50770aab92e27ac", at = [[115, 15]] }
+marks.JPja = { fingerprint = "b5e8a2a673a64e53", at = [[42, 5]] }
+marks.KRko = { fingerprint = "e2762ca6f81f39e1", at = [[37, 6]] }
+marks.TWzh = { fingerprint = "5c5a8aeaf4943184", at = [[40, 5]] }
+marks.USen = { fingerprint = "9f0a07e1f9302d56", at = [[87, 13]] }
+marks.USes = { fingerprint = "78e443bb02a8516b", at = [[98, 17]] }
+marks.USfr = { fingerprint = "e3cd07970472e387", at = [[104, 16]] }
+marks.USpt = { fingerprint = "68773be355e2f385", at = [[107, 18]] }
+
+[[line]]
+check = "Market 10 Big Poes"
+item = "Item_Bottle"
+file = "EventFlowMsg/Npc_Hylia_048_BottleShop.msbt"
+label = "Talk_63"
+marks.CNzh = { fingerprint = "5ccf3c17050c14c0", at = [[16, 5]] }
+marks.EUde = { fingerprint = "4fbc181d35d3e4ed", at = [[49, 51]] }
+marks.EUen = { fingerprint = "b84af9b2c5a9550b", at = [[36, 41]] }
+marks.EUes = { fingerprint = "88fb735271ce2044", at = [[37, 30]] }
+marks.EUfr = { fingerprint = "90d08dcc85665e4a", at = [[53, 48]] }
+marks.EUit = { fingerprint = "2a59ded8f9c3d969", at = [[59, 32]] }
+marks.EUnl = { fingerprint = "472d7723ea6ce918", at = [[45, 35]] }
+marks.EUpl = { fingerprint = "3e66ef40303b3c79", at = [[36, 33]] }
+marks.EUru = { fingerprint = "ec41ef32c70df6c2", at = [[34, 30]] }
+marks.JPja = { fingerprint = "9048d11ed50ba706", at = [[12, 15]] }
+marks.KRko = { fingerprint = "399bd13c8bd1c07c", at = [[12, 13]] }
+marks.TWzh = { fingerprint = "266ef36db550d690", at = [[15, 5]] }
+marks.USen = { fingerprint = "b84af9b2c5a9550b", at = [[36, 41]] }
+marks.USes = { fingerprint = "88fb735271ce2044", at = [[37, 30]] }
+marks.USfr = { fingerprint = "65c62bae39ac71f0", at = [[53, 48]] }
+marks.USpt = { fingerprint = "65e16d17f252a1b9", at = [[44, 40]] }
+
+[[line]]
+check = "Npc_Hylia_048_BottleShop Event330 (Obj_Rupee_Gold)"
+item = "Obj_Rupee_Gold"
+file = "EventFlowMsg/Npc_Hylia_048_BottleShop.msbt"
+label = "Talk_66"
+marks.CNzh = { fingerprint = "bf3e4f31b8de35b6", at = [[43, 5]] }
+marks.EUde = { fingerprint = "38e6b8b7d5f03fc9", at = [[220, 22]] }
+marks.EUen = { fingerprint = "64e97da6fa2b4ea7", at = [[140, 16]] }
+marks.EUes = { fingerprint = "b1508c79b859d6f6", at = [[145, 11]] }
+marks.EUfr = { fingerprint = "ac1a0f3d4ae7f3b0", at = [[165, 21]] }
+marks.EUit = { fingerprint = "ca79d29cfc0a0bc9", at = [[139, 18]] }
+marks.EUnl = { fingerprint = "fae17cd3092ad60b", at = [[148, 13]] }
+marks.EUpl = { fingerprint = "21f0c3958d7801d7", at = [[152, 12]] }
+marks.EUru = { fingerprint = "8c8b1dec2032d0e2", at = [[113, 14]] }
+marks.JPja = { fingerprint = "a147acd82427249e", at = [[49, 5]] }
+marks.KRko = { fingerprint = "128640624a34b26a", at = [[51, 6]] }
+marks.TWzh = { fingerprint = "148cbfeb55e0a228", at = [[40, 5]] }
+marks.USen = { fingerprint = "64e97da6fa2b4ea7", at = [[140, 16]] }
+marks.USes = { fingerprint = "8b4e1d244ee65ba6", at = [[143, 11]] }
+marks.USfr = { fingerprint = "f29f7503c4568395", at = [[172, 21]] }
+marks.USpt = { fingerprint = "c597ec845ff2653e", at = [[138, 12]] }
+
+[[line]]
+check = "Kak Anju Trade Pocket Cucco"
+item = "Item_CojiroCucco"
+file = "EventFlowMsg/Npc_Hylia_049_Adult.msbt"
+label = "Talk_201"
+marks.CNzh = { fingerprint = "379ea2e4b4291bef", at = [[25, 3], [86, 3]] }
+marks.EUde = { fingerprint = "a46bd6d1fd88203d", at = [[36, 5], [289, 5]] }
+marks.EUen = { fingerprint = "fd78fdd868df2cf3", at = [[41, 6], [297, 6]] }
+marks.EUes = { fingerprint = "ab2f5b81f134d76c", at = [[44, 6], [306, 6]] }
+marks.EUfr = { fingerprint = "1d5b0e53709e5ae8", at = [[44, 12], [270, 12]] }
+marks.EUit = { fingerprint = "4f3d08c9539eb928", at = [[48, 5], [257, 5]] }
+marks.EUnl = { fingerprint = "2a407cf4e543b9bc", at = [[36, 6], [233, 6], [298, 6]] }
+marks.EUpl = { fingerprint = "47811e17d68d124a", at = [[56, 10], [298, 10]] }
+marks.EUru = { fingerprint = "132f2ffcd0ec5fb3", at = [[51, 7], [285, 7]] }
+marks.JPja = { fingerprint = "8baac1095598ae92", at = [[33, 4], [78, 4]] }
+marks.KRko = { fingerprint = "893f4c78d2f1ec43", at = [[20, 2], [90, 2]] }
+marks.TWzh = { fingerprint = "53b94b5dec9c4562", at = [[23, 3], [78, 3]] }
+marks.USen = { fingerprint = "fd78fdd868df2cf3", at = [[41, 6], [297, 6]] }
+marks.USes = { fingerprint = "a24d239b369ea2fe", at = [[41, 6], [302, 6]] }
+marks.USfr = { fingerprint = "faf1f19f78f3fed5", at = [[43, 12], [268, 12]] }
+marks.USpt = { fingerprint = "b76b7564eda31ca3", at = [[34, 7], [299, 7]] }
+
+[[line]]
+check = "Kak Anju Trade Pocket Cucco"
+item = "Item_CojiroCucco"
+file = "EventFlowMsg/Npc_Hylia_049_Adult.msbt"
+label = "Talk_206"
+marks.CNzh = { fingerprint = "fb85c343ab1fc102", at = [[23, 3]] }
+marks.EUde = { fingerprint = "5152ce6ab1de2356", at = [[73, 5]] }
+marks.EUen = { fingerprint = "3dc3777b1720d818", at = [[63, 6]] }
+marks.EUes = { fingerprint = "0fdf95f816d67fe1", at = [[70, 6]] }
+marks.EUfr = { fingerprint = "d9dd186da79e0902", at = [[74, 12]] }
+marks.EUit = { fingerprint = "2ef5f707d9ca7e2b", at = [[64, 5]] }
+marks.EUnl = { fingerprint = "d89ce3d85ce4509e", at = [[115, 6]] }
+marks.EUpl = { fingerprint = "ca5f9640dfe7a0ef", at = [[79, 10]] }
+marks.EUru = { fingerprint = "d84b332929ad5459", at = [[51, 7]] }
+marks.JPja = { fingerprint = "470c0f8500ce032a", at = [[15, 4]] }
+marks.KRko = { fingerprint = "ba8e77ebaba932a6", at = [[13, 2]] }
+marks.TWzh = { fingerprint = "9d2856e4b34f6030", at = [[16, 3]] }
+marks.USen = { fingerprint = "3dc3777b1720d818", at = [[63, 6]] }
+marks.USes = { fingerprint = "0fdf95f816d67fe1", at = [[70, 6]] }
+marks.USfr = { fingerprint = "4a472e49f5c6723e", at = [[73, 12]] }
+marks.USpt = { fingerprint = "979ece7cab9b2354", at = [[80, 7]] }
+
+[[line]]
+check = "Kak Anju Trade Pocket Cucco"
+item = "Item_CojiroCucco"
+file = "EventFlowMsg/Npc_Hylia_049_Adult.msbt"
+label = "Talk_208"
+marks.CNzh = { fingerprint = "81bad3899ad0598c", at = [[25, 6]] }
+marks.EUde = { fingerprint = "4cb0b522dc4f0bb7", at = [[54, 4]] }
+marks.EUen = { fingerprint = "9d495276be0c25e8", at = [[54, 5], [76, 5]] }
+marks.EUes = { fingerprint = "aaf840093525cbc5", at = [[75, 4]] }
+marks.EUfr = { fingerprint = "d3e2534b9ad7ee9c", at = [[52, 7]] }
+marks.EUit = { fingerprint = "e3a7bca4f2b3c02d", at = [[58, 5]] }
+marks.EUnl = { fingerprint = "223dcbb974862ade", at = [[70, 5]] }
+marks.EUpl = { fingerprint = "1ab0bc01abc52efa", at = [[42, 10]] }
+marks.EUru = { fingerprint = "c20c8d128f6c832f", at = [[64, 5]] }
+marks.JPja = { fingerprint = "7c4073458e98d77b", at = [[16, 6]] }
+marks.KRko = { fingerprint = "a9b14d16eb7e7f82", at = [[11, 6]] }
+marks.TWzh = { fingerprint = "34b14d43808dafc7", at = [[21, 6]] }
+marks.USen = { fingerprint = "9d495276be0c25e8", at = [[54, 5], [76, 5]] }
+marks.USes = { fingerprint = "2a7b69e797d70b28", at = [[76, 4]] }
+marks.USfr = { fingerprint = "d0ccd29f6ecf3063", at = [[52, 7]] }
+marks.USpt = { fingerprint = "f7d7d7cfab0e7720", at = [[54, 6]] }
+
+[[line]]
+check = "Kak Anju Trade Pocket Cucco"
+item = "Item_CojiroCucco"
+file = "EventFlowMsg/Npc_Hylia_049_Adult.msbt"
+label = "Talk_210"
+marks.CNzh = { fingerprint = "9c66a5e12ed7d79f", at = [[43, 3]] }
+marks.EUde = { fingerprint = "c8b8327940f38731", at = [[113, 5]] }
+marks.EUen = { fingerprint = "ff1c36bb8dc85985", at = [[140, 6]] }
+marks.EUes = { fingerprint = "61302180d6113c94", at = [[132, 6]] }
+marks.EUfr = { fingerprint = "1315a973ef0fe517", at = [[141, 12]] }
+marks.EUit = { fingerprint = "fa969608207f1d3c", at = [[143, 5]] }
+marks.EUnl = { fingerprint = "ad4933b8a301524c", at = [[153, 6]] }
+marks.EUpl = { fingerprint = "2cc7b27808fa1416", at = [[124, 10]] }
+marks.EUru = { fingerprint = "addf6bbd924b1da1", at = [[114, 7]] }
+marks.JPja = { fingerprint = "d5bc2e8581094a57", at = [[48, 4]] }
+marks.KRko = { fingerprint = "35335e9842592a00", at = [[52, 2]] }
+marks.TWzh = { fingerprint = "9573095fe2eb11c6", at = [[38, 3]] }
+marks.USen = { fingerprint = "ff1c36bb8dc85985", at = [[140, 6]] }
+marks.USes = { fingerprint = "61302180d6113c94", at = [[132, 6]] }
+marks.USfr = { fingerprint = "51ee8d7e991acf3c", at = [[140, 12]] }
+marks.USpt = { fingerprint = "60a3d7f99f80b104", at = [[152, 7]] }
+
+[[line]]
+check = "Kak Anju Trade Pocket Cucco"
+item = "Item_CojiroCucco"
+file = "EventFlowMsg/Npc_Hylia_049_Adult.msbt"
+label = "Talk_211"
+marks.CNzh = { fingerprint = "f4c5acba199b4510", at = [[4, 3]] }
+marks.EUde = { fingerprint = "b7e8842033f1f7b9", at = [[25, 5]] }
+marks.EUen = { fingerprint = "4679fb070f95ba62", at = [[20, 6]] }
+marks.EUes = { fingerprint = "552d8d1de066bfa2", at = [[31, 6]] }
+marks.EUfr = { fingerprint = "883f66b9edf6b0b4", at = [[15, 12]] }
+marks.EUit = { fingerprint = "517204480ced3c2a", at = [[14, 5]] }
+marks.EUnl = { fingerprint = "226553bed8725b05", at = [[29, 6]] }
+marks.EUpl = { fingerprint = "b13caa363d5c1c29", at = [[8, 9]] }
+marks.EUru = { fingerprint = "0b078dbca2fa9f3f", at = [[26, 7]] }
+marks.JPja = { fingerprint = "52e4e6c7c89ec9d8", at = [[4, 4]] }
+marks.KRko = { fingerprint = "5d6c3cb19be2370c", at = [[3, 2]] }
+marks.TWzh = { fingerprint = "e392f25672102ed6", at = [[3, 3]] }
+marks.USen = { fingerprint = "4679fb070f95ba62", at = [[20, 6]] }
+marks.USes = { fingerprint = "552d8d1de066bfa2", at = [[31, 6]] }
+marks.USfr = { fingerprint = "33451516cbfc02ec", at = [[15, 12]] }
+marks.USpt = { fingerprint = "bc776813d480e8a0", at = [[22, 7]] }
+
+[[line]]
+check = "Kak Anju Trade Pocket Cucco"
+item = "Item_CojiroCucco"
+file = "EventFlowMsg/Npc_Hylia_049_Adult.msbt"
+label = "Talk_219"
+marks.CNzh = { fingerprint = "a04f2b1037f79df7", at = [[6, 3]] }
+marks.EUde = { fingerprint = "4652faca38204556", at = [[48, 5], [107, 5]] }
+marks.EUen = { fingerprint = "48d673cbb80cba13", at = [[39, 6]] }
+marks.EUes = { fingerprint = "7780259ea03ababd", at = [[58, 6]] }
+marks.EUfr = { fingerprint = "9fb8198f4b9bfd4f", at = [[49, 12]] }
+marks.EUit = { fingerprint = "5a1df753729e0b3e", at = [[54, 5]] }
+marks.EUnl = { fingerprint = "477d0513e94c8d0d", at = [[12, 6]] }
+marks.EUpl = { fingerprint = "87d6fc0636288896", at = [[25, 10]] }
+marks.EUru = { fingerprint = "09be21fb400fbe4c", at = [[31, 7]] }
+marks.JPja = { fingerprint = "94de9032b4a540c1", at = [[6, 4]] }
+marks.KRko = { fingerprint = "ff1f9eedcf4fe0a9", at = [[10, 2]] }
+marks.TWzh = { fingerprint = "2a19b522985f0858", at = [[7, 3]] }
+marks.USen = { fingerprint = "48d673cbb80cba13", at = [[39, 6]] }
+marks.USes = { fingerprint = "7780259ea03ababd", at = [[58, 6]] }
+marks.USfr = { fingerprint = "8c4d3edf06b6ff64", at = [[49, 12]] }
+marks.USpt = { fingerprint = "94a46de33122888b", at = [[44, 7]] }
+
+[[line]]
+check = "Kak Anju as Adult"
+item = "Item_PocketEgg"
+file = "EventFlowMsg/Npc_Hylia_049_Adult.msbt"
+label = "Talk_52"
+marks.CNzh = { fingerprint = "7ac16df23853951e", at = [[12, 7]] }
+marks.EUde = { fingerprint = "d2d55e3d5cfcbbc9", at = [[60, 4]] }
+marks.EUen = { fingerprint = "0866c2472f136da5", at = [[66, 12]] }
+marks.EUes = { fingerprint = "e88b5ea072e003a7", at = [[40, 16]] }
+marks.EUfr = { fingerprint = "90d7dcd98127b0ed", at = [[47, 16]] }
+marks.EUit = { fingerprint = "c9b33c6cbe43f7e8", at = [[53, 15]] }
+marks.EUnl = { fingerprint = "1c4a361c4c5ef5b6", at = [[78, 10]] }
+marks.EUpl = { fingerprint = "28e9549ef96dbf6e", at = [[35, 23]] }
+marks.EUru = { fingerprint = "c48f564c4b3685e9", at = [[42, 16]] }
+marks.JPja = { fingerprint = "93af61491683e958", at = [[5, 10]] }
+marks.KRko = { fingerprint = "6b55c928915f08ef", at = [[4, 8]] }
+marks.TWzh = { fingerprint = "31dab5d2e8b949b8", at = [[12, 7]] }
+marks.USen = { fingerprint = "0866c2472f136da5", at = [[66, 12]] }
+marks.USes = { fingerprint = "113160ad6bf4dfdc", at = [[33, 16]] }
+marks.USfr = { fingerprint = "afbb815bb4e3984f", at = [[46, 16]] }
+marks.USpt = { fingerprint = "4a54cbdf84573b9d", at = [[62, 15]] }
+
+[[line]]
+check = "Kak Anju as Adult"
+item = "Item_PocketEgg"
+file = "EventFlowMsg/Npc_Hylia_049_Adult.msbt"
+label = "Talk_53"
+marks.CNzh = { fingerprint = "56f96913ad7e13ed", at = [[5, 1]] }
+marks.EUde = { fingerprint = "aa1a383d24372f47", at = [[52, 2]] }
+marks.EUen = { fingerprint = "0cdcb83ecf096ddc", at = [[41, 3]] }
+marks.EUfr = { fingerprint = "1c80729c3e73721a", at = [[31, 3]] }
+marks.EUit = { fingerprint = "a9e9d36a3ba96221", at = [[17, 4]] }
+marks.EUnl = { fingerprint = "9ed9ce1da1f1029c", at = [[37, 2]] }
+marks.EUpl = { fingerprint = "1f7c759612b31df7", at = [[40, 4]] }
+marks.EUru = { fingerprint = "6a5f689bbf9d0c7c", at = [[37, 4]] }
+marks.JPja = { fingerprint = "7cbb31e8267fa021", at = [[5, 3]] }
+marks.KRko = { fingerprint = "574929d40a7898c9", at = [[5, 1]] }
+marks.TWzh = { fingerprint = "8be2bede9b388e29", at = [[5, 1]] }
+marks.USen = { fingerprint = "0cdcb83ecf096ddc", at = [[41, 3]] }
+marks.USfr = { fingerprint = "f03ea0880102d669", at = [[30, 3]] }
+marks.USpt = { fingerprint = "e372cb8227272fc9", at = [[55, 3]] }
+
+[[line]]
+check = "Kak Anju as Adult"
+item = "Item_PocketEgg"
+file = "EventFlowMsg/Npc_Hylia_049_Adult.msbt"
+label = "Talk_56"
+marks.CNzh = { fingerprint = "451ae6d61d8335af", at = [[7, 5]] }
+marks.EUde = { fingerprint = "92cb78619963cfc4", at = [[56, 4]] }
+marks.EUen = { fingerprint = "5d49c1cf7ceb55eb", at = [[39, 12]] }
+marks.EUes = { fingerprint = "59c7739ae9862154", at = [[53, 16]] }
+marks.EUfr = { fingerprint = "a95e083215ba7b8b", at = [[73, 16]] }
+marks.EUit = { fingerprint = "5b79d8542a411a66", at = [[43, 23]] }
+marks.EUnl = { fingerprint = "be510d582ef6f574", at = [[41, 11]] }
+marks.EUpl = { fingerprint = "c8d1963e164ed156", at = [[53, 22]] }
+marks.EUru = { fingerprint = "1dc84e26ec29b107", at = [[50, 17]] }
+marks.JPja = { fingerprint = "4440f78a3951e447", at = [[0, 6]] }
+marks.KRko = { fingerprint = "a86a0f4ec3cb7ec6", at = [[0, 5]] }
+marks.TWzh = { fingerprint = "c0c7b23af275c537", at = [[9, 5]] }
+marks.USen = { fingerprint = "5d49c1cf7ceb55eb", at = [[39, 12]] }
+marks.USes = { fingerprint = "c3b9071db32c1fee", at = [[46, 16]] }
+marks.USfr = { fingerprint = "59a43cb1088a5af5", at = [[73, 16]] }
+marks.USpt = { fingerprint = "bb26692a8a839680", at = [[53, 15]] }
+
+[[line]]
+check = "Kak Anju as Child"
+item = "Item_Bottle"
+file = "EventFlowMsg/Npc_Hylia_049_Child.msbt"
+label = "Talk_07"
+marks.CNzh = { fingerprint = "45db1fa427dd72cb", at = [[22, 3]] }
+marks.EUde = { fingerprint = "ec281dec6a5cb5ec", at = [[77, 13]] }
+marks.EUen = { fingerprint = "405af641efbffe09", at = [[77, 12]] }
+marks.EUes = { fingerprint = "25a384e91dfc77aa", at = [[95, 13]] }
+marks.EUfr = { fingerprint = "afc9522f617ad098", at = [[83, 11]] }
+marks.EUit = { fingerprint = "0d046ac21bdd4304", at = [[55, 13]] }
+marks.EUnl = { fingerprint = "0fe31b027ff9bc24", at = [[94, 9]] }
+marks.EUpl = { fingerprint = "226d163346086281", at = [[94, 13]] }
+marks.EUru = { fingerprint = "7c48a0cfda5484d3", at = [[109, 14]] }
+marks.JPja = { fingerprint = "9abcb79619b9c3d1", at = [[26, 4]] }
+marks.KRko = { fingerprint = "11b4ce99dd304e38", at = [[30, 3]] }
+marks.TWzh = { fingerprint = "dc5d859476fa2d03", at = [[20, 3]] }
+marks.USen = { fingerprint = "405af641efbffe09", at = [[77, 12]] }
+marks.USes = { fingerprint = "07e70e2b7a313996", at = [[78, 13]] }
+marks.USfr = { fingerprint = "03a55fbd45f3bc5a", at = [[82, 11]] }
+marks.USpt = { fingerprint = "72f9e924d9918714", at = [[109, 13]] }
+
+[[line]]
+check = "Kak Anju as Child"
+item = "Item_Bottle"
+file = "EventFlowMsg/Npc_Hylia_049_Child.msbt"
+label = "Talk_12"
+marks.CNzh = { fingerprint = "6633e8cfc1b2d0cc", at = [[52, 3]] }
+marks.EUde = { fingerprint = "f537208dcb265519", at = [[201, 14]] }
+marks.EUen = { fingerprint = "38646ea13a526053", at = [[183, 12]] }
+marks.EUes = { fingerprint = "87d62b194ea17e20", at = [[156, 13]] }
+marks.EUfr = { fingerprint = "ade00c5c0fb32874", at = [[180, 11]] }
+marks.EUit = { fingerprint = "8d4612512969e406", at = [[131, 13]] }
+marks.EUnl = { fingerprint = "911c6cf953b2b2a7", at = [[185, 4]] }
+marks.EUpl = { fingerprint = "bc17e9666672ddbe", at = [[173, 10]] }
+marks.EUru = { fingerprint = "8d8f62f3b8230b59", at = [[156, 15]] }
+marks.JPja = { fingerprint = "7493e5991493070b", at = [[58, 4]] }
+marks.KRko = { fingerprint = "5a04126fab81bb5e", at = [[67, 3]] }
+marks.TWzh = { fingerprint = "bdc04ee8bbdaea84", at = [[57, 3]] }
+marks.USen = { fingerprint = "38646ea13a526053", at = [[183, 12]] }
+marks.USes = { fingerprint = "8e405285bcd393b7", at = [[157, 13]] }
+marks.USfr = { fingerprint = "8a9bed82484b50a9", at = [[179, 11]] }
+marks.USpt = { fingerprint = "1c5a0c573953e7d5", at = [[188, 13]] }
+
+[[line]]
+check = "Minigame_CatchCucco Event62 (Obj_Rupee_Red)"
+item = "Obj_Rupee_Red"
+file = "EventFlowMsg/Npc_Hylia_049_Child.msbt"
+label = "Talk_12_1"
+marks.CNzh = { fingerprint = "f8fc2a299f393e29", at = [[52, 3]] }
+marks.EUde = { fingerprint = "a65ecf93395416bf", at = [[195, 17]] }
+marks.EUen = { fingerprint = "f73f1eefa0cd310d", at = [[182, 21]] }
+marks.EUes = { fingerprint = "a78b9238aebde8da", at = [[152, 17]] }
+marks.EUfr = { fingerprint = "a09cc71071979310", at = [[177, 14]] }
+marks.EUit = { fingerprint = "1ca6677da0026134", at = [[128, 11]] }
+marks.EUnl = { fingerprint = "5073106f77802a09", at = [[181, 11]] }
+marks.EUpl = { fingerprint = "31abbb8e13104688", at = [[173, 16]] }
+marks.EUru = { fingerprint = "92721cfbca39de45", at = [[164, 7]] }
+marks.JPja = { fingerprint = "6cdc0ad4d7ec87ef", at = [[58, 4]] }
+marks.KRko = { fingerprint = "d31b514aecb565ce", at = [[67, 2]] }
+marks.TWzh = { fingerprint = "fa7b514624e9c881", at = [[59, 3]] }
+marks.USen = { fingerprint = "f73f1eefa0cd310d", at = [[182, 21]] }
+marks.USes = { fingerprint = "34ce5b5bfcf30fdb", at = [[153, 14]] }
+marks.USfr = { fingerprint = "4f3a189873eefea4", at = [[176, 14]] }
+marks.USpt = { fingerprint = "12464cf10b50f64f", at = [[187, 23]] }
+
+[[line]]
+check = "Kak Anju as Child"
+item = "Item_Bottle"
+file = "EventFlowMsg/Npc_Hylia_049_Child.msbt"
+label = "Talk_21"
+marks.CNzh = { fingerprint = "761dd44e7f6c91f6", at = [[26, 3]] }
+marks.EUde = { fingerprint = "b953f051c2e0bb69", at = [[159, 13]] }
+marks.EUen = { fingerprint = "ac14b9f7bb027ada", at = [[125, 12]] }
+marks.EUes = { fingerprint = "5a45b26b56ee3e6d", at = [[296, 13]] }
+marks.EUfr = { fingerprint = "0b984b7152eb74b5", at = [[124, 11]] }
+marks.EUit = { fingerprint = "d165a59a7703652d", at = [[127, 13]] }
+marks.EUnl = { fingerprint = "9c624294ddae4e26", at = [[122, 9]] }
+marks.EUpl = { fingerprint = "ccf740d06b001829", at = [[298, 10]] }
+marks.EUru = { fingerprint = "4df6615a2906ef02", at = [[120, 14]] }
+marks.JPja = { fingerprint = "633644b9fde24b9d", at = [[36, 4]] }
+marks.KRko = { fingerprint = "0c63794924f68745", at = [[35, 3]] }
+marks.TWzh = { fingerprint = "e52132470a168464", at = [[36, 3]] }
+marks.USen = { fingerprint = "ac14b9f7bb027ada", at = [[125, 12]] }
+marks.USes = { fingerprint = "17f1149b33dd20f3", at = [[301, 13]] }
+marks.USfr = { fingerprint = "61ccf10bda6cdd35", at = [[121, 11]] }
+marks.USpt = { fingerprint = "cc6a8d2672aadaa9", at = [[138, 13]] }
+
+[[line]]
+check = "Kak Granny Trade Odd Mushroom"
+item = "Item_OddPowder"
+file = "EventFlowMsg/Npc_Hylia_053_Adult.msbt"
+label = "Talk_1004"
+marks.EUit = { fingerprint = "4d8058b1f8342de6", at = [[3, 8]] }
+
+[[line]]
+check = "Kak Granny Trade Odd Mushroom"
+item = "Item_OddPowder"
+file = "EventFlowMsg/Npc_Hylia_053_Adult.msbt"
+label = "Talk_1004_2"
+marks.CNzh = { fingerprint = "9d22ffdeaa578a78", at = [[5, 3]] }
+marks.EUde = { fingerprint = "26fa2d45d258542c", at = [[37, 17]] }
+marks.EUen = { fingerprint = "0446003c1ded127e", at = [[39, 8]] }
+marks.EUes = { fingerprint = "99d44696130d2c7b", at = [[27, 7]] }
+marks.EUfr = { fingerprint = "036417a9d6cdf53d", at = [[34, 17]] }
+marks.EUnl = { fingerprint = "c2363945edbf95af", at = [[35, 8]] }
+marks.EUpl = { fingerprint = "177c18c75568a1ce", at = [[37, 9]] }
+marks.EUru = { fingerprint = "3a1765a186ccc759", at = [[52, 24]] }
+marks.JPja = { fingerprint = "2ac17db20f65da38", at = [[17, 3]] }
+marks.KRko = { fingerprint = "b1e88e5d9e10f3be", at = [[23, 3]] }
+marks.TWzh = { fingerprint = "d33d77a960925517", at = [[5, 3]] }
+marks.USen = { fingerprint = "0446003c1ded127e", at = [[39, 8]] }
+marks.USes = { fingerprint = "857d482bde35c8f5", at = [[27, 7]] }
+marks.USfr = { fingerprint = "036417a9d6cdf53d", at = [[34, 17]] }
+marks.USpt = { fingerprint = "e66573ee43200239", at = [[32, 10]] }
+
+[[line]]
+check = "Kak Granny Buy Blue Potion"
+item = "Item_Bottle_BluePotion"
+file = "EventFlowMsg/Npc_Hylia_053_Adult.msbt"
+label = "Talk_101"
+marks.CNzh = { fingerprint = "41c3139770679dbb", at = [[0, 4]] }
+marks.EUde = { fingerprint = "e222d7e18dbda454", at = [[4, 18]] }
+marks.EUen = { fingerprint = "2e1902602b6794b9", at = [[4, 15]] }
+marks.EUes = { fingerprint = "430cc5e1aa1c9306", at = [[4, 16]] }
+marks.EUfr = { fingerprint = "e64f0dbb835d69c8", at = [[3, 13]] }
+marks.EUit = { fingerprint = "6aecdbd9e5b6ff7f", at = [[12, 16]] }
+marks.EUnl = { fingerprint = "1c3b3701dcf7c74e", at = [[4, 15]] }
+marks.EUpl = { fingerprint = "8e5b0a0fd32ba6da", at = [[0, 20]] }
+marks.EUru = { fingerprint = "e933520b1563d172", at = [[0, 19]] }
+marks.JPja = { fingerprint = "2e8e1dcb5a785344", at = [[0, 6]] }
+marks.KRko = { fingerprint = "9384b5d33c2845ce", at = [[0, 5]] }
+marks.TWzh = { fingerprint = "b779728456cc9141", at = [[0, 4]] }
+marks.USen = { fingerprint = "2e1902602b6794b9", at = [[4, 15]] }
+marks.USes = { fingerprint = "430cc5e1aa1c9306", at = [[4, 16]] }
+marks.USfr = { fingerprint = "d391867291a72437", at = [[3, 13]] }
+marks.USpt = { fingerprint = "a94eb0c00b1a1ecf", at = [[2, 13]] }
+
+[[line]]
+check = "Kak Granny Buy Blue Potion"
+item = "Item_Bottle_BluePotion"
+file = "EventFlowMsg/Npc_Hylia_053_Adult.msbt"
+label = "Talk_1011"
+marks.CNzh = { fingerprint = "37c80b71b1233cb8", at = [[24, 1]] }
+marks.EUde = { fingerprint = "b698d1ae224abbe6", at = [[85, 8]] }
+marks.EUen = { fingerprint = "9e1cbe3511814075", at = [[86, 7]] }
+marks.EUes = { fingerprint = "5a1d5afa6d5f05f5", at = [[92, 8]] }
+marks.EUfr = { fingerprint = "796e59f468796b10", at = [[107, 6]] }
+marks.EUit = { fingerprint = "fa573268e1006449", at = [[117, 7]] }
+marks.EUnl = { fingerprint = "743fcefa0115de32", at = [[100, 8]] }
+marks.EUpl = { fingerprint = "e9087fb7d72cde66", at = [[104, 8]] }
+marks.EUru = { fingerprint = "b942eaaf22e1b17e", at = [[118, 5]] }
+marks.JPja = { fingerprint = "55ea2d95f75ae545", at = [[27, 3]] }
+marks.KRko = { fingerprint = "630942a8a71ff5ef", at = [[29, 2]] }
+marks.TWzh = { fingerprint = "d786214881650ae8", at = [[25, 2]] }
+marks.USen = { fingerprint = "9e1cbe3511814075", at = [[86, 7]] }
+marks.USes = { fingerprint = "07c486dfe00d269e", at = [[90, 8]] }
+marks.USfr = { fingerprint = "092b852bc97bf7d6", at = [[107, 6]] }
+marks.USpt = { fingerprint = "a061903f1b9aa3b9", at = [[96, 6]] }
+
+[[line]]
+check = "Kak Granny Buy Blue Potion"
+item = "Item_Bottle_BluePotion"
+file = "EventFlowMsg/Npc_Hylia_053_Adult.msbt"
+label = "Talk_1012"
+marks.CNzh = { fingerprint = "847e0fbc9aac9c96", at = [[6, 4]] }
+marks.EUde = { fingerprint = "c4a88f3db81349d7", at = [[23, 18]] }
+marks.EUen = { fingerprint = "64dc06fb6132a1ac", at = [[16, 14]] }
+marks.EUes = { fingerprint = "0cb7fa9c632efda7", at = [[15, 15]] }
+marks.EUfr = { fingerprint = "d5eda0bb221bee73", at = [[18, 15]] }
+marks.EUit = { fingerprint = "1496f2c5f2af2ed9", at = [[15, 16]] }
+marks.EUnl = { fingerprint = "2a2445cb9349f6a6", at = [[11, 16]] }
+marks.EUpl = { fingerprint = "53c232fa4ac34ca0", at = [[12, 17]] }
+marks.EUru = { fingerprint = "4b37980eb27ba340", at = [[14, 12]] }
+marks.JPja = { fingerprint = "81f2c8bd51f559bf", at = [[6, 6]] }
+marks.KRko = { fingerprint = "e3e2a53b5196544c", at = [[3, 6]] }
+marks.TWzh = { fingerprint = "391dc3dcd89e7910", at = [[4, 4]] }
+marks.USen = { fingerprint = "64dc06fb6132a1ac", at = [[16, 14]] }
+marks.USes = { fingerprint = "e5e8aa930e8609b5", at = [[15, 15]] }
+marks.USfr = { fingerprint = "45748e0926bf980d", at = [[18, 15]] }
+marks.USpt = { fingerprint = "51b706dcb76dc0bc", at = [[10, 14]] }
+
+[[line]]
+check = "Kak Granny Buy Blue Potion"
+item = "Item_Bottle_BluePotion"
+file = "EventFlowMsg/Npc_Hylia_053_Adult.msbt"
+label = "Talk_1013"
+marks.CNzh = { fingerprint = "449297dcfbd06ea8", at = [[8, 1]] }
+marks.EUde = { fingerprint = "f4bd865865b3ce0a", at = [[15, 8]] }
+marks.EUen = { fingerprint = "b0152e8767e99e73", at = [[25, 7]] }
+marks.EUes = { fingerprint = "a751d0ac16f37463", at = [[34, 8]] }
+marks.EUfr = { fingerprint = "97e231cf2f91890e", at = [[23, 6]] }
+marks.EUit = { fingerprint = "98d55176aa404f8b", at = [[18, 7]] }
+marks.EUnl = { fingerprint = "4448c8753581ac73", at = [[11, 8]] }
+marks.EUpl = { fingerprint = "906dc2f8c58ee642", at = [[26, 9]] }
+marks.EUru = { fingerprint = "1a002c2040ff29cf", at = [[27, 5]] }
+marks.JPja = { fingerprint = "e6de76c808b42475", at = [[6, 3]] }
+marks.KRko = { fingerprint = "a0f82cc08cdfe95a", at = [[5, 2]] }
+marks.TWzh = { fingerprint = "fc58a2ede208ddc7", at = [[6, 2]] }
+marks.USen = { fingerprint = "b0152e8767e99e73", at = [[25, 7]] }
+marks.USes = { fingerprint = "96266468098fafea", at = [[34, 8]] }
+marks.USfr = { fingerprint = "db3b3545baa63655", at = [[23, 6]] }
+marks.USpt = { fingerprint = "99e8fa4a3eb3cb31", at = [[20, 6]] }
+
+[[line]]
+check = "Market Bombchu Bowling Second Prize"
+item = "Obj_Heart_Piece"
+file = "EventFlowMsg/Npc_Hylia_067_Shop_Child.msbt"
+label = "Talk_05"
+marks.CNzh = { fingerprint = "111290548c6afeee", at = [[14, 4]] }
+marks.EUde = { fingerprint = "2f265504c45f5a3f", at = [[54, 8]] }
+marks.EUen = { fingerprint = "9e4edb452a66b5f6", at = [[61, 14]] }
+marks.EUes = { fingerprint = "f7ca2488a3c163d8", at = [[44, 16]] }
+marks.EUfr = { fingerprint = "da693bf19505be6c", at = [[50, 16]] }
+marks.EUit = { fingerprint = "002189f76d762943", at = [[49, 18]] }
+marks.EUnl = { fingerprint = "934389a7cd46258f", at = [[48, 10]] }
+marks.EUpl = { fingerprint = "7858b9df664a5e9e", at = [[57, 18]] }
+marks.EUru = { fingerprint = "f71709dc7cc19f49", at = [[43, 14]] }
+marks.JPja = { fingerprint = "84102997a01857c7", at = [[14, 7]] }
+marks.KRko = { fingerprint = "e1502216dacad4f9", at = [[14, 5]] }
+marks.TWzh = { fingerprint = "cf9b607fad9257d7", at = [[12, 4]] }
+marks.USen = { fingerprint = "9e4edb452a66b5f6", at = [[61, 14]] }
+marks.USes = { fingerprint = "f7ca2488a3c163d8", at = [[44, 16]] }
+marks.USfr = { fingerprint = "da693bf19505be6c", at = [[50, 16]] }
+marks.USpt = { fingerprint = "25f102b45cc12215", at = [[51, 20]] }
+
+[[line]]
+check = "Market Bombchu Bowling First Prize"
+item = "Item_BombBag_Medium"
+file = "EventFlowMsg/Npc_Hylia_067_Shop_Child.msbt"
+label = "Talk_06"
+marks.CNzh = { fingerprint = "132be1713fbc9541", at = [[20, 4]] }
+marks.EUde = { fingerprint = "687732c121c93d90", at = [[38, 18]] }
+marks.EUen = { fingerprint = "de790f27a9dee754", at = [[45, 15]] }
+marks.EUes = { fingerprint = "0902848c9f785807", at = [[58, 21]] }
+marks.EUfr = { fingerprint = "8a2a9be32b89ba1d", at = [[50, 19]] }
+marks.EUit = { fingerprint = "54e9adbf3edb78fa", at = [[39, 17]] }
+marks.EUnl = { fingerprint = "a9365eb383554b62", at = [[29, 15]] }
+marks.EUpl = { fingerprint = "4207fdbb11a0fbdc", at = [[37, 19]] }
+marks.EUru = { fingerprint = "0c9349d5f6854178", at = [[30, 22]] }
+marks.JPja = { fingerprint = "2e0a54e79c76f561", at = [[21, 8]] }
+marks.KRko = { fingerprint = "24a71e8228b7d61d", at = [[22, 7]] }
+marks.TWzh = { fingerprint = "9d3f6aba263a6e0c", at = [[18, 4]] }
+marks.USen = { fingerprint = "de790f27a9dee754", at = [[45, 15]] }
+marks.USes = { fingerprint = "0902848c9f785807", at = [[58, 21]] }
+marks.USfr = { fingerprint = "75bdc0a6fa5a836d", at = [[50, 19]] }
+marks.USpt = { fingerprint = "7fe29905db4633d1", at = [[42, 22]] }
+
+[[line]]
+check = "MiniGame_BombchuBowling Event81 (Obj_Rupee_Red)"
+item = "Obj_Rupee_Red"
+file = "EventFlowMsg/Npc_Hylia_067_Shop_Child.msbt"
+label = "Talk_12"
+marks.CNzh = { fingerprint = "96018f5e971487c8", at = [[7, 3]] }
+marks.EUde = { fingerprint = "e666fd8404eac0b6", at = [[25, 11]] }
+marks.EUen = { fingerprint = "b4c4b163a045c824", at = [[47, 9]] }
+marks.EUes = { fingerprint = "bd8c27ca62eeb490", at = [[38, 10]] }
+marks.EUfr = { fingerprint = "b83fa5d867a25bb1", at = [[60, 11]] }
+marks.EUit = { fingerprint = "1266efa5f8350426", at = [[40, 11]] }
+marks.EUnl = { fingerprint = "24b97f6fdac2f643", at = [[37, 10]] }
+marks.EUpl = { fingerprint = "d1bf8977126d617d", at = [[41, 14]] }
+marks.EUru = { fingerprint = "757d7f33f460bf87", at = [[31, 13]] }
+marks.JPja = { fingerprint = "b1c4faf2076b2f6a", at = [[9, 4]] }
+marks.KRko = { fingerprint = "f5d0870b0fc58de5", at = [[8, 5]] }
+marks.TWzh = { fingerprint = "2c3093dc510f70b5", at = [[6, 3]] }
+marks.USen = { fingerprint = "b4c4b163a045c824", at = [[47, 9]] }
+marks.USes = { fingerprint = "bd8c27ca62eeb490", at = [[38, 10]] }
+marks.USfr = { fingerprint = "9c5bef1582bd264e", at = [[60, 11]] }
+marks.USpt = { fingerprint = "c668909f0cfdb21a", at = [[41, 14]] }
+
+[[line]]
+check = "Market Bombchu Bowling First Prize"
+item = "Item_BombBag_Large"
+file = "EventFlowMsg/Npc_Hylia_067_Shop_Child.msbt"
+label = "Talk_22"
+marks.CNzh = { fingerprint = "9209cda869c67a1b", at = [[20, 5]] }
+marks.EUde = { fingerprint = "a15e0752ae93e34c", at = [[44, 17]] }
+marks.EUen = { fingerprint = "5a2b05a809f51173", at = [[47, 16]] }
+marks.EUes = { fingerprint = "d879e0431da26fee", at = [[58, 22]] }
+marks.EUfr = { fingerprint = "9dba78d3368fa4a6", at = [[50, 20]] }
+marks.EUit = { fingerprint = "74d64c7a79323ee4", at = [[39, 15]] }
+marks.EUnl = { fingerprint = "fee24adeebb299ef", at = [[28, 15]] }
+marks.EUpl = { fingerprint = "f7c05b20fc487154", at = [[37, 21]] }
+marks.EUru = { fingerprint = "c19c0977006e6565", at = [[30, 23]] }
+marks.JPja = { fingerprint = "2ffb00e313505290", at = [[21, 8]] }
+marks.KRko = { fingerprint = "45dcf803f613117b", at = [[20, 8]] }
+marks.TWzh = { fingerprint = "929d8fbd95a4dbd6", at = [[18, 5]] }
+marks.USen = { fingerprint = "5a2b05a809f51173", at = [[47, 16]] }
+marks.USes = { fingerprint = "d879e0431da26fee", at = [[58, 22]] }
+marks.USfr = { fingerprint = "1b821d81fd212944", at = [[50, 20]] }
+marks.USpt = { fingerprint = "8b4829908f3c6fee", at = [[42, 22]] }
+
+[[line]]
+check = "Market Bombchu Bowling Second Prize"
+item = "Obj_Heart_Piece"
+file = "EventFlowMsg/Npc_Hylia_067_Shop_Child.msbt"
+label = "Talk_30"
+marks.CNzh = { fingerprint = "66e12117525199f1", at = [[11, 4]] }
+marks.EUde = { fingerprint = "da924e29346a704f", at = [[46, 8]] }
+marks.EUen = { fingerprint = "62f03b98ba0c64c0", at = [[62, 14]] }
+marks.EUes = { fingerprint = "475eb1c82886fb6c", at = [[42, 16]] }
+marks.EUfr = { fingerprint = "55764d88e23e9fb0", at = [[77, 16]] }
+marks.EUit = { fingerprint = "4a285f0b340b03e3", at = [[43, 18]] }
+marks.EUnl = { fingerprint = "04bd311b3561bb86", at = [[34, 10]] }
+marks.EUpl = { fingerprint = "b306cfbbfed2c28a", at = [[59, 18]] }
+marks.EUru = { fingerprint = "59813bd8ddd53634", at = [[69, 14]] }
+marks.JPja = { fingerprint = "34caf4839fc1d7f9", at = [[19, 7]] }
+marks.KRko = { fingerprint = "3ef0b3e07acc1b3f", at = [[19, 5]] }
+marks.TWzh = { fingerprint = "acf916c22cda2911", at = [[16, 4]] }
+marks.USen = { fingerprint = "62f03b98ba0c64c0", at = [[62, 14]] }
+marks.USes = { fingerprint = "0d6d4a62e2ba7559", at = [[39, 16]] }
+marks.USfr = { fingerprint = "5abb2974f969e026", at = [[76, 16]] }
+marks.USpt = { fingerprint = "72e5820f0ac910bd", at = [[24, 20]] }
+
+[[line]]
+check = "Market Bombchu Bowling First Prize"
+item = "Item_BombBag_Large|Item_BombBag_Medium"
+file = "EventFlowMsg/Npc_Hylia_067_Shop_Child.msbt"
+label = "Talk_31"
+marks.CNzh = { fingerprint = "2927f59aa176bb54", at = [[11, 3]] }
+marks.EUde = { fingerprint = "a37226668272cd37", at = [[46, 12]] }
+marks.EUen = { fingerprint = "d1233c91f05bed56", at = [[60, 8]] }
+marks.EUes = { fingerprint = "c6408f9e684a619b", at = [[53, 14]] }
+marks.EUfr = { fingerprint = "c65924b687ef3a14", at = [[77, 13]] }
+marks.EUit = { fingerprint = "4dc9b5631a927386", at = [[73, 10]] }
+marks.EUnl = { fingerprint = "8c0b4fcbc1c6558a", at = [[33, 9]] }
+marks.EUpl = { fingerprint = "3f1d1b4cba65e56d", at = [[59, 14]] }
+marks.EUru = { fingerprint = "a70bfdaaefb3c394", at = [[71, 14]] }
+marks.JPja = { fingerprint = "e3e36efd34a3e80d", at = [[19, 5]] }
+marks.KRko = { fingerprint = "e40499639b75ae3f", at = [[19, 5]] }
+marks.TWzh = { fingerprint = "5871ee4788910f7a", at = [[16, 3]] }
+marks.USen = { fingerprint = "d1233c91f05bed56", at = [[60, 8]] }
+marks.USes = { fingerprint = "248e6ce72b46f5c0", at = [[51, 14]] }
+marks.USfr = { fingerprint = "d24ec10cbe837cd7", at = [[76, 13]] }
+marks.USpt = { fingerprint = "ae982e7461fa8a02", at = [[71, 15]] }
+
+[[line]]
+check = "Market Bombchu Bowling Bombchus"
+item = "Item_BombchuBundle_Medium"
+file = "EventFlowMsg/Npc_Hylia_067_Shop_Child.msbt"
+label = "Talk_36"
+marks.CNzh = { fingerprint = "3ad89216b95e467c", at = [[11, 3]] }
+marks.EUde = { fingerprint = "9c82169e7ec25f74", at = [[48, 12]] }
+marks.EUen = { fingerprint = "a9822b18e3112d1d", at = [[59, 7]] }
+marks.EUes = { fingerprint = "b3cf56559b1bfa97", at = [[52, 9]] }
+marks.EUfr = { fingerprint = "69a5ea33d7b8d6f7", at = [[51, 17]] }
+marks.EUit = { fingerprint = "272d3c8615f4a454", at = [[30, 9]] }
+marks.EUnl = { fingerprint = "5ba69bf82250a1d9", at = [[35, 9]] }
+marks.EUpl = { fingerprint = "2fc88d9a4f99e19b", at = [[63, 10]] }
+marks.EUru = { fingerprint = "e9205a97c34e6e57", at = [[40, 7]] }
+marks.JPja = { fingerprint = "aebc0dd6dfa521a4", at = [[19, 5]] }
+marks.KRko = { fingerprint = "0810448132aef763", at = [[19, 3]] }
+marks.TWzh = { fingerprint = "c935ac2bf2c4ff37", at = [[16, 3]] }
+marks.USen = { fingerprint = "a9822b18e3112d1d", at = [[59, 7]] }
+marks.USes = { fingerprint = "b9bd5859a17d3cf5", at = [[48, 8]] }
+marks.USfr = { fingerprint = "b8ecce71cb0c2576", at = [[50, 17]] }
+marks.USpt = { fingerprint = "68df9d24097d1417", at = [[73, 8]] }
+
+[[line]]
+check = "Market Bombchu Bowling Bombchus"
+item = "Item_BombchuBundle_Medium"
+file = "EventFlowMsg/Npc_Hylia_067_Shop_Child.msbt"
+label = "Talk_37"
+marks.CNzh = { fingerprint = "799923acb79f5d12", at = [[14, 3]] }
+marks.EUde = { fingerprint = "657c9da16dec387c", at = [[34, 12]] }
+marks.EUen = { fingerprint = "eacb437b20de3d82", at = [[78, 8]] }
+marks.EUes = { fingerprint = "b99fd063f2419d20", at = [[71, 9]] }
+marks.EUfr = { fingerprint = "805993256322683c", at = [[45, 17]] }
+marks.EUit = { fingerprint = "d2f2aa7edbd64fa4", at = [[92, 9]] }
+marks.EUnl = { fingerprint = "777ecdd01bb62013", at = [[80, 9]] }
+marks.EUpl = { fingerprint = "0f86fc461cf17f1b", at = [[67, 9]] }
+marks.EUru = { fingerprint = "17e01a1f996a9bcf", at = [[90, 7]] }
+marks.JPja = { fingerprint = "41df23bd9184f74e", at = [[15, 5]] }
+marks.KRko = { fingerprint = "ec402c79c750fed0", at = [[14, 3]] }
+marks.TWzh = { fingerprint = "6b33b306eefff7e5", at = [[11, 3]] }
+marks.USen = { fingerprint = "eacb437b20de3d82", at = [[78, 8]] }
+marks.USes = { fingerprint = "382f61e6704daea2", at = [[65, 8]] }
+marks.USfr = { fingerprint = "5e9d1d54d87855c5", at = [[45, 17]] }
+marks.USpt = { fingerprint = "c8073d2256181304", at = [[41, 9]] }
+
+[[line]]
+check = "Market Bombchu Bowling Second Prize"
+item = "Obj_Heart_Piece"
+file = "EventFlowMsg/Npc_Hylia_067_Shop_Child.msbt"
+label = "Talk_72"
+marks.CNzh = { fingerprint = "4a7e6693458ad5ab", at = [[21, 4]] }
+marks.EUde = { fingerprint = "ef83ff9cbc4faa5d", at = [[69, 8]] }
+marks.EUen = { fingerprint = "a71e98bcaa5c5250", at = [[79, 14]] }
+marks.EUes = { fingerprint = "3d1f07637ff4a92c", at = [[99, 16]] }
+marks.EUfr = { fingerprint = "35aee433cb86f2bc", at = [[77, 16]] }
+marks.EUit = { fingerprint = "3ae7953f0588df6d", at = [[57, 18]] }
+marks.EUnl = { fingerprint = "8c7c6f46fae311e9", at = [[87, 10]] }
+marks.EUpl = { fingerprint = "b306cfbbfed2c28a", at = [[59, 18]] }
+marks.EUru = { fingerprint = "057d9836d265ee05", at = [[61, 14]] }
+marks.JPja = { fingerprint = "65385fe63de7a4dc", at = [[21, 7]] }
+marks.KRko = { fingerprint = "4e36aa54d9201c68", at = [[24, 5]] }
+marks.TWzh = { fingerprint = "f516733cbc374a9f", at = [[21, 4]] }
+marks.USen = { fingerprint = "a71e98bcaa5c5250", at = [[79, 14]] }
+marks.USes = { fingerprint = "ee37d550ce475d15", at = [[84, 16]] }
+marks.USfr = { fingerprint = "0c96bb435baa9509", at = [[76, 16]] }
+marks.USpt = { fingerprint = "e801a5f6e9337f4c", at = [[100, 20]] }
+
+[[line]]
+check = "Market Bombchu Bowling Bombchus"
+item = "Item_BombchuBundle_Medium"
+file = "EventFlowMsg/Npc_Hylia_067_Shop_Child.msbt"
+label = "Talk_73"
+marks.CNzh = { fingerprint = "23396febe8afe9d2", at = [[21, 3]] }
+marks.EUde = { fingerprint = "24a66c9dc716403f", at = [[69, 12]] }
+marks.EUen = { fingerprint = "eb6296d8de2ae4c2", at = [[79, 7]] }
+marks.EUes = { fingerprint = "6bd7dd239c1ebbae", at = [[105, 9]] }
+marks.EUfr = { fingerprint = "eae4db2c96cdc3c7", at = [[78, 17]] }
+marks.EUit = { fingerprint = "5c153ca392f22c92", at = [[59, 9]] }
+marks.EUnl = { fingerprint = "972089c00837ef83", at = [[87, 13]] }
+marks.EUpl = { fingerprint = "2fc88d9a4f99e19b", at = [[63, 10]] }
+marks.EUru = { fingerprint = "0b2a3e831364f656", at = [[70, 7]] }
+marks.JPja = { fingerprint = "4bddb4c7a38eedf3", at = [[21, 5]] }
+marks.KRko = { fingerprint = "d757d2b02ecf1f2e", at = [[24, 3]] }
+marks.TWzh = { fingerprint = "e349c79d079b214e", at = [[21, 3]] }
+marks.USen = { fingerprint = "eb6296d8de2ae4c2", at = [[79, 7]] }
+marks.USes = { fingerprint = "fffdfb0e3fad8c98", at = [[96, 8]] }
+marks.USfr = { fingerprint = "b906cc632c645382", at = [[77, 17]] }
+marks.USpt = { fingerprint = "ed1a6a2349d6577d", at = [[106, 9]] }
+
+[[line]]
+check = "Market Bombchu Bowling First Prize"
+item = "Item_BombBag_Large|Item_BombBag_Medium"
+file = "EventFlowMsg/Npc_Hylia_067_Shop_Child.msbt"
+label = "Talk_74"
+marks.CNzh = { fingerprint = "69019b98369907bd", at = [[21, 3]] }
+marks.EUde = { fingerprint = "34bc2103909fd1c0", at = [[69, 12]] }
+marks.EUen = { fingerprint = "c9499c6928711a17", at = [[79, 8]] }
+marks.EUes = { fingerprint = "f508b164ee0d696e", at = [[92, 14]] }
+marks.EUfr = { fingerprint = "564e5f9eb6c476b2", at = [[77, 13]] }
+marks.EUit = { fingerprint = "5736db1eeccb3864", at = [[57, 10]] }
+marks.EUnl = { fingerprint = "b47b5a80464b638f", at = [[87, 9]] }
+marks.EUpl = { fingerprint = "3f1d1b4cba65e56d", at = [[59, 14]] }
+marks.EUru = { fingerprint = "ee35c978066506c1", at = [[61, 14]] }
+marks.JPja = { fingerprint = "00e29bf912c46022", at = [[21, 5]] }
+marks.KRko = { fingerprint = "262fe1ce885f08e8", at = [[24, 5]] }
+marks.TWzh = { fingerprint = "55cd39ff41376f0f", at = [[21, 3]] }
+marks.USen = { fingerprint = "c9499c6928711a17", at = [[79, 8]] }
+marks.USes = { fingerprint = "55c3337ef0eeaf4d", at = [[87, 14]] }
+marks.USfr = { fingerprint = "72952a58ee4d8323", at = [[76, 13]] }
+marks.USpt = { fingerprint = "5cc7920f4d9e83e5", at = [[95, 15]] }
+
+[[line]]
+check = "Graveyard Dampe Gravedigging Tour"
+item = "Obj_Heart_Piece"
+file = "EventFlowMsg/Npc_Hylia_Dampe_001.msbt"
+label = "Talk_26"
+marks.CNzh = { fingerprint = "48d04ad1ecad236a", at = [[29, 7]] }
+marks.EUde = { fingerprint = "bf7d2cd8cb329384", at = [[69, 14]] }
+marks.EUen = { fingerprint = "286f7e8e30a5633f", at = [[67, 10]] }
+marks.EUes = { fingerprint = "30f3a2e60419fa55", at = [[69, 14]] }
+marks.EUfr = { fingerprint = "4a8ab2db0eef002e", at = [[69, 17]] }
+marks.EUit = { fingerprint = "e3ccd310e719e14a", at = [[61, 17]] }
+marks.EUnl = { fingerprint = "39b2867d6aaf9a31", at = [[64, 18]] }
+marks.EUpl = { fingerprint = "059c988f25518bd4", at = [[60, 16]] }
+marks.EUru = { fingerprint = "7453bc014dec9e39", at = [[77, 16]] }
+marks.JPja = { fingerprint = "b7c376b1dde9877c", at = [[30, 7]] }
+marks.KRko = { fingerprint = "c5a5148b89f08971", at = [[32, 6]] }
+marks.TWzh = { fingerprint = "815fb63f828e78ec", at = [[24, 5]] }
+marks.USen = { fingerprint = "286f7e8e30a5633f", at = [[67, 10]] }
+marks.USes = { fingerprint = "de609bda3a5a97a2", at = [[69, 14]] }
+marks.USfr = { fingerprint = "d0ce412ce9a9a678", at = [[68, 17]] }
+marks.USpt = { fingerprint = "4055612cc65c4ee7", at = [[68, 15]] }
+
+[[line]]
+check = "SubEvent_MaskSalesman Event365 (Obj_Rupee_Gold)"
+item = "Obj_Rupee_Gold"
+file = "EventFlowMsg/Npc_Hylia_RunningMan_Child.msbt"
+label = "Talk_03"
+marks.EUde = { fingerprint = "a6730fc53e4d7d02", at = [[60, 7]] }
+marks.EUen = { fingerprint = "7648b3e65a6be3ba", at = [[43, 6]] }
+marks.EUnl = { fingerprint = "640d68f192452078", at = [[69, 6]] }
+marks.USen = { fingerprint = "7648b3e65a6be3ba", at = [[43, 6]] }
+
+[[line]]
+check = "SubEvent_MaskSalesman Event365 (Obj_Rupee_Gold)"
+item = "Obj_Rupee_Gold"
+file = "EventFlowMsg/Npc_Hylia_RunningMan_Child.msbt"
+label = "Talk_16"
+marks.CNzh = { fingerprint = "d35bd5d598357fc4", at = [[8, 1]] }
+marks.EUit = { fingerprint = "9cc6c303a83aae84", at = [[34, 5]] }
+
+[[line]]
+check = "SubEvent_MaskSalesman Event365 (Obj_Rupee_Gold)"
+item = "Obj_Rupee_Gold"
+file = "EventFlowMsg/Npc_Hylia_Soldier_003.msbt"
+label = "Talk_116"
+marks.EUnl = { fingerprint = "4460fa22be470ee6", at = [[64, 6]] }
+
+[[line]]
+check = "LLR Talons Chickens"
+item = "Item_Bottle_Milk"
+file = "EventFlowMsg/Npc_Hylia_Talon_Child.msbt"
+label = "Talk_09_2"
+marks.CNzh = { fingerprint = "11204bdd89b1984a", at = [[6, 4]] }
+marks.EUde = { fingerprint = "4db524d0f5b9c665", at = [[5, 21]] }
+marks.EUen = { fingerprint = "3d11802ae5d58648", at = [[4, 22]] }
+marks.EUes = { fingerprint = "72fbe03502aae053", at = [[18, 24]] }
+marks.EUfr = { fingerprint = "d9debc1101ebb918", at = [[27, 12]] }
+marks.EUit = { fingerprint = "5bc0677b6897aeb9", at = [[7, 24]] }
+marks.EUnl = { fingerprint = "803103a7355de976", at = [[7, 17]] }
+marks.EUpl = { fingerprint = "01560049456806b0", at = [[57, 13]] }
+marks.EUru = { fingerprint = "702fef13d1d86a2b", at = [[9, 22]] }
+marks.JPja = { fingerprint = "e22627bada5fba63", at = [[0, 6]] }
+marks.KRko = { fingerprint = "f1aa2ddf2c366995", at = [[0, 5]] }
+marks.TWzh = { fingerprint = "57a3ed68f015d2c8", at = [[7, 4]] }
+marks.USen = { fingerprint = "3d11802ae5d58648", at = [[4, 22]] }
+marks.USes = { fingerprint = "a05e444f14cc86b4", at = [[11, 24]] }
+marks.USfr = { fingerprint = "113648aae408216b", at = [[27, 12]] }
+marks.USpt = { fingerprint = "0713ab5d4a8af899", at = [[4, 24]] }
+
+[[line]]
+check = "LLR Talons Chickens"
+item = "Item_Bottle_Milk"
+file = "EventFlowMsg/Npc_Hylia_Talon_Child.msbt"
+label = "Talk_11"
+marks.CNzh = { fingerprint = "58b29d7817f09c06", at = [[9, 4]] }
+marks.EUde = { fingerprint = "037c0138d568d324", at = [[11, 13]] }
+marks.EUen = { fingerprint = "44bf49c066a59c2f", at = [[10, 12]] }
+marks.EUes = { fingerprint = "83c1c08fa712ae07", at = [[44, 13]] }
+marks.EUfr = { fingerprint = "ef29460e73381217", at = [[19, 12]] }
+marks.EUit = { fingerprint = "4f6d4f5721e68792", at = [[11, 13]] }
+marks.EUnl = { fingerprint = "c17d87898bd2d219", at = [[15, 12]] }
+marks.EUpl = { fingerprint = "b419c5a1b4fbe04e", at = [[11, 13]] }
+marks.EUru = { fingerprint = "61fb656d22d63274", at = [[9, 14]] }
+marks.JPja = { fingerprint = "7ee07f04ee8739cd", at = [[8, 6]] }
+marks.KRko = { fingerprint = "e74805d941fe8e0d", at = [[8, 5]] }
+marks.TWzh = { fingerprint = "229a1cb3576434c1", at = [[10, 4]] }
+marks.USen = { fingerprint = "44bf49c066a59c2f", at = [[10, 12]] }
+marks.USes = { fingerprint = "d12eee08021ba1c2", at = [[41, 13]] }
+marks.USfr = { fingerprint = "e1d2bbffab3b2fd3", at = [[19, 12]] }
+marks.USpt = { fingerprint = "6f7eee812be86087", at = [[10, 13]] }
+
+[[line]]
+check = "LLR Talons Chickens"
+item = "Item_Bottle_Milk"
+file = "EventFlowMsg/Npc_Hylia_Talon_Child.msbt"
+label = "Talk_29"
+marks.CNzh = { fingerprint = "8047bbcd03d6d3cf", at = [[18, 4]] }
+marks.EUde = { fingerprint = "2148f040277673b5", at = [[57, 13]] }
+marks.EUen = { fingerprint = "c9f13b428dfbbbd3", at = [[80, 12]] }
+marks.EUes = { fingerprint = "256ca4f35980860c", at = [[85, 13]] }
+marks.EUfr = { fingerprint = "bcd9e6889f87793d", at = [[83, 12]] }
+marks.EUit = { fingerprint = "3e3e7238346fa9ba", at = [[64, 13]] }
+marks.EUnl = { fingerprint = "aa7c8f28d1c84ff6", at = [[78, 12]] }
+marks.EUpl = { fingerprint = "df5e0b88b8b17295", at = [[90, 13]] }
+marks.EUru = { fingerprint = "2f646b703802ebdf", at = [[76, 14]] }
+marks.JPja = { fingerprint = "67ead70891d669b3", at = [[17, 6]] }
+marks.KRko = { fingerprint = "692b9ca18f23ec5a", at = [[21, 5]] }
+marks.TWzh = { fingerprint = "612f16f20ddbad2a", at = [[19, 4]] }
+marks.USen = { fingerprint = "c9f13b428dfbbbd3", at = [[80, 12]] }
+marks.USes = { fingerprint = "8808be747fad72ac", at = [[63, 13]] }
+marks.USfr = { fingerprint = "47c4f2f7e3307aa4", at = [[83, 12]] }
+marks.USpt = { fingerprint = "0a0b5b2c5340d3d1", at = [[93, 13]] }
+
+[[line]]
+check = "LLR Talons Chickens"
+item = "Item_Bottle_Milk"
+file = "EventFlowMsg/Npc_Hylia_Talon_Child.msbt"
+label = "Talk_56"
+marks.CNzh = { fingerprint = "96b58f10a1c7c6f9", at = [[6, 4]] }
+marks.EUde = { fingerprint = "dcd45602195f32f7", at = [[26, 21]] }
+marks.EUen = { fingerprint = "798391ec31e5b110", at = [[22, 22]] }
+marks.EUes = { fingerprint = "d7c8d3c252d01e11", at = [[39, 13]] }
+marks.EUfr = { fingerprint = "0ddaeced2a75501a", at = [[25, 22]] }
+marks.EUit = { fingerprint = "c3169928ffd6c956", at = [[24, 24]] }
+marks.EUnl = { fingerprint = "745392aedb7c35e8", at = [[33, 12]] }
+marks.EUpl = { fingerprint = "6965ef37ed12641d", at = [[19, 18]] }
+marks.EUru = { fingerprint = "e88d00b9ddcbd911", at = [[19, 22]] }
+marks.JPja = { fingerprint = "b055be2d8963e345", at = [[8, 6]] }
+marks.KRko = { fingerprint = "1b8a5a05d005e825", at = [[8, 5]] }
+marks.TWzh = { fingerprint = "cfea00ccc34463c7", at = [[9, 4]] }
+marks.USen = { fingerprint = "798391ec31e5b110", at = [[22, 22]] }
+marks.USes = { fingerprint = "d7c8d3c252d01e11", at = [[39, 13]] }
+marks.USfr = { fingerprint = "183cd54867f8a7df", at = [[25, 22]] }
+marks.USpt = { fingerprint = "5ee4586f106bb42d", at = [[26, 13]] }
+
+[[line]]
+check = "LLR Talons Chickens"
+item = "Item_Bottle_Milk"
+file = "EventFlowMsg/Npc_Hylia_Talon_Child.msbt"
+label = "Talk_57"
+marks.CNzh = { fingerprint = "7bd4daf9ae92d99b", at = [[6, 4]] }
+marks.EUde = { fingerprint = "c72a850808bcfbcd", at = [[27, 13]] }
+marks.EUen = { fingerprint = "844b5bb217f41c0a", at = [[13, 22]] }
+marks.EUes = { fingerprint = "e44c509d398f0858", at = [[34, 13]] }
+marks.EUfr = { fingerprint = "cc659f3944748690", at = [[14, 22]] }
+marks.EUit = { fingerprint = "ec02ba802d7b1356", at = [[11, 13]] }
+marks.EUnl = { fingerprint = "0ba3b4c83e38189e", at = [[33, 12]] }
+marks.EUpl = { fingerprint = "0e506409e5cadf8a", at = [[22, 12]] }
+marks.EUru = { fingerprint = "732cc94d08c907e0", at = [[19, 14]] }
+marks.JPja = { fingerprint = "b9ee144bebe5c34a", at = [[5, 6]] }
+marks.KRko = { fingerprint = "9a9953c0818897c5", at = [[6, 5]] }
+marks.TWzh = { fingerprint = "a2d07cba7354e86c", at = [[9, 4]] }
+marks.USen = { fingerprint = "844b5bb217f41c0a", at = [[13, 22]] }
+marks.USes = { fingerprint = "cac2da22a576a089", at = [[34, 13]] }
+marks.USfr = { fingerprint = "3f3ec3cdca234729", at = [[14, 22]] }
+marks.USpt = { fingerprint = "5a432dc3dade97ca", at = [[27, 13]] }
+
+[[line]]
+check = "ZD Trade Prescription"
+item = "Item_EyeballFrog"
+file = "EventFlowMsg/Npc_Zora_KingZora_adult.msbt"
+label = "Talk_102"
+marks.CNzh = { fingerprint = "004871be8875ec6f", at = [[24, 2]] }
+marks.EUde = { fingerprint = "77b7b12345029ad9", at = [[101, 10]] }
+marks.EUen = { fingerprint = "d666824ca2481e96", at = [[107, 14]] }
+marks.EUes = { fingerprint = "dec393f60269458e", at = [[93, 21]] }
+marks.EUfr = { fingerprint = "97a41b48bdc50854", at = [[106, 10]] }
+marks.EUit = { fingerprint = "37ab1f806fec7408", at = [[93, 11]] }
+marks.EUnl = { fingerprint = "d88d02e945b7a2e0", at = [[101, 15]] }
+marks.EUpl = { fingerprint = "f04a90a4b38ab996", at = [[116, 8]] }
+marks.EUru = { fingerprint = "8594dcbde0002dbe", at = [[90, 18]] }
+marks.JPja = { fingerprint = "ba491ce2aeb8e944", at = [[26, 2]] }
+marks.KRko = { fingerprint = "3e0374736dc1067f", at = [[28, 2]] }
+marks.TWzh = { fingerprint = "d1a8856487fde2c0", at = [[25, 2]] }
+marks.USen = { fingerprint = "d666824ca2481e96", at = [[107, 14]] }
+marks.USes = { fingerprint = "d28ab25dbf6e833c", at = [[92, 21]] }
+marks.USfr = { fingerprint = "b55a20b70c929594", at = [[108, 10]] }
+marks.USpt = { fingerprint = "6f99cf02ef902184", at = [[90, 21]] }
+
+[[line]]
+check = "ZD Trade Prescription"
+item = "Item_EyeballFrog"
+file = "EventFlowMsg/Npc_Zora_KingZora_adult.msbt"
+label = "Talk_110"
+marks.CNzh = { fingerprint = "73141ae6398f7986", at = [[17, 4]] }
+marks.EUde = { fingerprint = "6c20a1c8f3e45c84", at = [[54, 11]] }
+marks.EUen = { fingerprint = "723e4e5fd97801dd", at = [[53, 12]] }
+marks.EUes = { fingerprint = "9d1e3c3380b3b618", at = [[56, 21]] }
+marks.EUfr = { fingerprint = "91ffd22370eacfdb", at = [[40, 18]] }
+marks.EUit = { fingerprint = "6abce983c9583bdf", at = [[28, 13]] }
+marks.EUnl = { fingerprint = "7d982377241292e4", at = [[44, 11]] }
+marks.EUpl = { fingerprint = "7a56487e11de955c", at = [[51, 7]] }
+marks.EUru = { fingerprint = "b3e7e9078335cf81", at = [[40, 18]] }
+marks.JPja = { fingerprint = "d5dce22950640ee7", at = [[9, 6]] }
+marks.KRko = { fingerprint = "02d70b6f86e21406", at = [[12, 6]] }
+marks.TWzh = { fingerprint = "84f7ae7fc7e34bee", at = [[12, 4]] }
+marks.USen = { fingerprint = "723e4e5fd97801dd", at = [[53, 12]] }
+marks.USes = { fingerprint = "b3e3c1ab757a1bf9", at = [[42, 21]] }
+marks.USfr = { fingerprint = "91ffd22370eacfdb", at = [[40, 18]] }
+marks.USpt = { fingerprint = "7398579dbdd44e9e", at = [[58, 16]] }
+
+[[line]]
+check = "ZD Trade Prescription"
+item = "Item_EyeballFrog"
+file = "EventFlowMsg/Npc_Zora_KingZora_adult.msbt"
+label = "Talk_115"
+marks.CNzh = { fingerprint = "d3482953732b756d", at = [[8, 4]] }
+marks.EUde = { fingerprint = "2ffd2fe577f7986f", at = [[27, 11]] }
+marks.EUen = { fingerprint = "52879e3006bb32f2", at = [[23, 12]] }
+marks.EUes = { fingerprint = "769b39f1e45bb36a", at = [[10, 21]] }
+marks.EUfr = { fingerprint = "1ef5af712f41a125", at = [[16, 18]] }
+marks.EUit = { fingerprint = "fb523b6c24a8e332", at = [[11, 13]] }
+marks.EUnl = { fingerprint = "e1bd6c25140083af", at = [[20, 11]] }
+marks.EUpl = { fingerprint = "b615c99e0cd545d3", at = [[23, 7]] }
+marks.EUru = { fingerprint = "b26fadba04c6230d", at = [[11, 18]] }
+marks.JPja = { fingerprint = "056fc1f2694bb252", at = [[3, 6]] }
+marks.KRko = { fingerprint = "ecc7f87797040d36", at = [[3, 6]] }
+marks.TWzh = { fingerprint = "bb6064c7dfb8b19f", at = [[3, 4]] }
+marks.USen = { fingerprint = "52879e3006bb32f2", at = [[23, 12]] }
+marks.USes = { fingerprint = "ac27eef2498cd0b4", at = [[17, 21]] }
+marks.USfr = { fingerprint = "1ef5af712f41a125", at = [[16, 18]] }
+marks.USpt = { fingerprint = "d7a1315aea6aae6f", at = [[11, 16]] }
+
+[[line]]
+check = "ZD Trade Prescription"
+item = "Item_EyeballFrog"
+file = "EventFlowMsg/Npc_Zora_KingZora_adult.msbt"
+label = "Talk_122"
+marks.EUde = { fingerprint = "da43af194ad0057f", at = [[18, 10]] }
+marks.EUnl = { fingerprint = "360e19e3b54249bd", at = [[12, 10]] }
+
+[[line]]
+check = "ZD Trade Prescription"
+item = "Item_EyeballFrog"
+file = "EventFlowMsg/Npc_Zora_KingZora_adult.msbt"
+label = "Talk_123"
+marks.CNzh = { fingerprint = "6da37b99aa435278", at = [[14, 2]] }
+marks.EUde = { fingerprint = "361f0f3288486fb6", at = [[59, 10]] }
+marks.EUen = { fingerprint = "261d7889f8453ecb", at = [[55, 14]] }
+marks.EUes = { fingerprint = "9f9c5c12cd891d89", at = [[52, 21]] }
+marks.EUfr = { fingerprint = "bafac1cb0b6c8c3b", at = [[56, 21]] }
+marks.EUit = { fingerprint = "b1598e4fae364b12", at = [[40, 22]] }
+marks.EUnl = { fingerprint = "8607fbf475f34bb1", at = [[53, 15]] }
+marks.EUpl = { fingerprint = "185fe66d6482de2c", at = [[59, 22]] }
+marks.EUru = { fingerprint = "4cf17e5e84807820", at = [[55, 18]] }
+marks.JPja = { fingerprint = "c59e77b8dce4623b", at = [[12, 6]] }
+marks.KRko = { fingerprint = "bb0e9bf292244016", at = [[15, 5]] }
+marks.TWzh = { fingerprint = "3c43ef6995acd145", at = [[13, 6]] }
+marks.USen = { fingerprint = "261d7889f8453ecb", at = [[55, 14]] }
+marks.USes = { fingerprint = "dcc12e049b5263a7", at = [[39, 21]] }
+marks.USfr = { fingerprint = "057691d557820a74", at = [[56, 21]] }
+marks.USpt = { fingerprint = "252dcb59f09995e3", at = [[47, 21]] }
+
+[[line]]
+check = "GC Rolling Goron as Adult"
+item = "Obj_Armor_Goron"
+file = "EventFlowMsg/SageOfFire.msbt"
+label = "Talk_0028_2"
+marks.CNzh = { fingerprint = "62f0ce1a47e067cf", at = [[4, 3]] }
+marks.EUde = { fingerprint = "1c3fc23ba4c106ee", at = [[18, 13]] }
+marks.EUen = { fingerprint = "f6cc627a408cd4d3", at = [[17, 11]] }
+marks.EUes = { fingerprint = "e65e105c8473f7a3", at = [[17, 10]] }
+marks.EUfr = { fingerprint = "9a2ec0c66c7ede89", at = [[14, 13]] }
+marks.EUit = { fingerprint = "2be7b78803bcfdaf", at = [[15, 15]] }
+marks.EUnl = { fingerprint = "d55bea842fa84329", at = [[16, 12]] }
+marks.EUpl = { fingerprint = "ceb863deebed21c1", at = [[14, 15]] }
+marks.EUru = { fingerprint = "a600e1ef7e7175df", at = [[19, 16]] }
+marks.JPja = { fingerprint = "539d4bc839088ff0", at = [[8, 5]] }
+marks.KRko = { fingerprint = "94b2b131135a578c", at = [[6, 5]] }
+marks.TWzh = { fingerprint = "5d72d993e1de2e81", at = [[2, 3]] }
+marks.USen = { fingerprint = "f6cc627a408cd4d3", at = [[17, 11]] }
+marks.USes = { fingerprint = "867c60aba9e7f2bf", at = [[17, 10]] }
+marks.USfr = { fingerprint = "9c9926db89bec039", at = [[14, 13]] }
+marks.USpt = { fingerprint = "14680537e677624a", at = [[22, 12]] }
+
+[[line]]
+check = "Deku Theater Skull Mask"
+item = "Item_StickBag_Large|Item_StickBag_Medium"
+file = "EventFlowMsg/SubEvent_ForestStage.msbt"
+label = "Talk_01"
+marks.CNzh = { fingerprint = "8c3fea8383672d96", at = [[22, 11]] }
+marks.EUde = { fingerprint = "b20b8e947fbfdbbd", at = [[106, 41]] }
+marks.EUen = { fingerprint = "35cdece0fe3191c8", at = [[93, 41]] }
+marks.EUes = { fingerprint = "9ea735458702407a", at = [[82, 58]] }
+marks.EUfr = { fingerprint = "58cc2192e33a89a0", at = [[91, 40]] }
+marks.EUit = { fingerprint = "1d6c9cc878f0f742", at = [[114, 39]] }
+marks.EUnl = { fingerprint = "8e68411c8e8bc5f6", at = [[91, 48]] }
+marks.EUpl = { fingerprint = "f39c299abc339f25", at = [[84, 40]] }
+marks.EUru = { fingerprint = "640406e2b3bc05da", at = [[75, 33]] }
+marks.JPja = { fingerprint = "3a0ed4614721d5cf", at = [[35, 13]] }
+marks.KRko = { fingerprint = "994a59e3281f3b1f", at = [[36, 25]] }
+marks.TWzh = { fingerprint = "b8f0bf7373400435", at = [[26, 2]] }
+marks.USen = { fingerprint = "35cdece0fe3191c8", at = [[93, 41]] }
+marks.USes = { fingerprint = "9ea735458702407a", at = [[82, 58]] }
+marks.USfr = { fingerprint = "4d67cb805b7dcf16", at = [[90, 40]] }
+marks.USpt = { fingerprint = "86d876b0a2ed827d", at = [[83, 58]] }
+
+[[line]]
+check = "Deku Theater Mask of Truth"
+item = "Item_NutBag_Large|Item_NutBag_Medium"
+file = "EventFlowMsg/SubEvent_ForestStage.msbt"
+label = "Talk_02"
+marks.CNzh = { fingerprint = "89b7d34aa38566fd", at = [[25, 11]] }
+marks.EUde = { fingerprint = "b10c0cf76aca6535", at = [[147, 42]] }
+marks.EUen = { fingerprint = "88cfd3314c8587a8", at = [[75, 3]] }
+marks.EUes = { fingerprint = "1adc47353420f0f1", at = [[70, 59]] }
+marks.EUfr = { fingerprint = "f15c79ccfb51f40b", at = [[94, 37]] }
+marks.EUit = { fingerprint = "67137f3222396290", at = [[88, 45]] }
+marks.EUnl = { fingerprint = "4ccc86013abd53ce", at = [[71, 3]] }
+marks.EUpl = { fingerprint = "be79fdea8b901e4b", at = [[89, 40]] }
+marks.EUru = { fingerprint = "a9666c25d80cfd8f", at = [[77, 34]] }
+marks.JPja = { fingerprint = "337b7d526f146da0", at = [[30, 13]] }
+marks.KRko = { fingerprint = "2dca71a8284797e5", at = [[32, 25]] }
+marks.TWzh = { fingerprint = "a5881cce30baee04", at = [[28, 13]] }
+marks.USen = { fingerprint = "88cfd3314c8587a8", at = [[75, 3]] }
+marks.USes = { fingerprint = "1adc47353420f0f1", at = [[70, 59]] }
+marks.USfr = { fingerprint = "0e05c65ed71e458f", at = [[93, 37]] }
+marks.USpt = { fingerprint = "6497f17732e33141", at = [[57, 5]] }
+
+[[line]]
+check = "Queen Gohma"
+item = "Item_Stone_Forest"
+file = "LayoutMsg/ImportantMenu_01.msbt"
+label = "T_Message_00"
+marks.CNzh = { fingerprint = "550a5e92fba01585", at = [[0, 5]] }
+marks.EUde = { fingerprint = "09ca1680c576c5ce", at = [[4, 14]] }
+marks.EUen = { fingerprint = "259ce86cbdf40af6", at = [[0, 14]] }
+marks.EUes = { fingerprint = "71ed5bd4af5dd591", at = [[17, 23]] }
+marks.EUfr = { fingerprint = "102c7940d4b126dd", at = [[2, 15]] }
+marks.EUit = { fingerprint = "1526b4744bc0032a", at = [[3, 19]] }
+marks.EUnl = { fingerprint = "ab0e8feb3683b571", at = [[3, 14]] }
+marks.EUpl = { fingerprint = "fff251cb75f08035", at = [[30, 15]] }
+marks.EUru = { fingerprint = "527587a04d5c7949", at = [[0, 14]] }
+marks.JPja = { fingerprint = "651f369d99a8ce7d", at = [[0, 7]] }
+marks.KRko = { fingerprint = "58faca3110102127", at = [[0, 6]] }
+marks.TWzh = { fingerprint = "9a0caed58276b290", at = [[0, 5]] }
+marks.USen = { fingerprint = "259ce86cbdf40af6", at = [[0, 14]] }
+marks.USes = { fingerprint = "a8b85490b115c5a2", at = [[13, 16]] }
+marks.USfr = { fingerprint = "102c7940d4b126dd", at = [[2, 15]] }
+marks.USpt = { fingerprint = "80e572360536931b", at = [[2, 16]] }

@@ -57,6 +57,19 @@ def pack_path(actor: str) -> str:
     return f"Pack/Actor/{actor}.pack.zs"
 
 
+def model_actor(actor: str) -> str:
+    """The actor whose model Link's get pose shows for ``actor`` (spec event-items D4), which events show too: a song
+    its ocarina (:data:`SONG_MODELS`), Nothing and another player's item Zelda's Letter (``custom_items.DONOR``), any
+    other item its own actor's model."""
+    from clawshot.patch import custom_items  # custom_items -> write -> getitem
+
+    if actor in SONG_MODELS:
+        return SONG_MODELS[actor]
+    if actor == custom_items.NOTHING or actor.startswith(custom_items.FOREIGN.split("{", 1)[0]):
+        return custom_items.DONOR
+    return actor
+
+
 def _dump(document: byml.Document) -> bytes:
     result = byml.dump(document)
     if difference := byml.difference(document.root, byml.read(result)):

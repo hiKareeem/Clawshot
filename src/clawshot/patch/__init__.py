@@ -10,7 +10,7 @@ beatability search are ``clawshot.generate``'s.
 """
 
 import json
-from collections.abc import Callable, Mapping, Sequence
+from collections.abc import Callable, Collection, Mapping, Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
@@ -99,6 +99,7 @@ def make_seed(
     foreign: Mapping[str, Foreign] | None = None,
     possessive_text: bool = False,
     receive_event: bool = False,
+    event_models: Collection[str] | None = None,
 ) -> SeedOutput:
     """Fill a seed; kind-specific steps turn placements into decompressed file transforms.
 
@@ -284,6 +285,41 @@ def make_seed(
     scrub_previews = {name: out.placements[name] for name in out.shuffled if name in scrubs.SALES}
     changes += (text.scrub_hint_changes(romfs, scrub_previews, table, scrubs.sale_prices(settings)),)
     changes += (text.static_hint_changes(romfs, out, table),)
+    # Prize lines name a moved gift's item (event-items 1.4), whatever event_item_models says (1.5).
+    from clawshot.patch import event_lines
+
+    moved_lines = event_lines.moved_lines(
+        event_lines.load(),
+        shuffled_placements,
+        {name: out.world.locations[name].vanilla for name in out.shuffled},
+        table.actor,
+    )
+    changes += (event_lines.changes(romfs, moved_lines),)
+    if settings.event_item_models or event_models is not None:
+        # Events show the given item through containers (event-items, setting event_item_models); the pilot's
+        # event_models keyword limits it to the events named.
+        from clawshot.patch import event_models as models_step
+        from clawshot.patch import event_props as props_data
+
+        prop_checks = {prop.check for prop in props_data.load().props}
+        moved_props = {
+            name: table.actor(item)
+            for name, item in shuffled_placements.items()
+            if name in prop_checks and item != out.world.locations[name].vanilla
+        }
+        model_changes, model_files = models_step.seed_changes(romfs, moved_props, events=event_models)
+        changes += (model_changes,)
+        if overlap := sorted(new_files.keys() & model_files.keys()):
+            raise PatchError(f"event containers and another step both create {overlap}")
+        new_files.update(model_files)
+    # Every seed (event-items Q2/D9): the bridge Saria has an actor of her own, so her farewell shows one ocarina.
+    from clawshot.patch import saria_farewell
+
+    farewell_changes, farewell_files = saria_farewell.changes(romfs)
+    changes += (farewell_changes,)
+    if overlap := sorted(new_files.keys() & farewell_files.keys()):
+        raise PatchError(f"Saria's farewell actor and another step both create {overlap}")
+    new_files.update(farewell_files)
     item_names: dict[str, str] = {}
     if out.hints:
         item_names, hint_changes = hint_step(romfs, out, table)

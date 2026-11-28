@@ -192,3 +192,21 @@ def test_a_new_pack_may_copy_a_member_of_a_pack_this_write_changes(romfs, tmp_pa
 def test_a_copy_of_a_changed_pack_must_match_what_this_write_holds(romfs, tmp_path):
     with pytest.raises(PatchError, match="not byte-identical"):
         write(Plan([], [], []), romfs, tmp_path / "out", extra_changes=(changed_native(2),), new_files={NEW: created()})
+
+
+LOOSE = "Component/AIScheduleParam/Created.game__component__AIScheduleParam.bgyml"
+
+
+def test_a_new_loose_file_without_a_size_formula_is_sized_from_its_native_donor_plus_growth(romfs, tmp_path):
+    data = byml.write({"ConditionalSchedule": [], "DefaultSchedule": {}})
+    write(Plan([], [], []), romfs, tmp_path / "out", new_files={LOOSE: NewFile(data, sized_like=(SHARED, 64))})
+    table = rstb.read(decompressed(romfs, tmp_path / "out", rstb.TABLE_PATH))
+    assert table.get(LOOSE) == SHARED_ENTRY + 64
+    assert (tmp_path / "out/romfs" / LOOSE).read_bytes() == data
+
+
+def test_a_loose_file_sized_from_a_donor_without_an_entry_is_refused(romfs, tmp_path):
+    files = {LOOSE: NewFile(b"x", sized_like=("Component/Missing.bgyml", 0))}
+    with pytest.raises(PatchError, match="Missing"):
+        write(Plan([], [], []), romfs, tmp_path / "out", new_files=files)
+    assert not (tmp_path / "out").exists()

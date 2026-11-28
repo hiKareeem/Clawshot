@@ -3,6 +3,7 @@
 
 import struct
 import zlib
+from dataclasses import dataclass
 
 USER_PARAMS = ["UP0", "UP1", "UP2", "UP3"]
 ASSET_PARAMS = [
@@ -25,6 +26,41 @@ BIT = {name: i for i, name in enumerate(ASSET_PARAMS)}
 CONDITIONS = bytes(range(64))
 TRIGGERS = bytes(range(100, 132))  # a user's trigger table, opaque to the module
 NAME = 1 << 24
+
+
+@dataclass(frozen=True)
+class ActionTable:
+    """A user's trigger table of action triggers, laid out as the game's (slots, actions, 0x28-byte triggers; counts in
+    the user header): ``slots`` = ((slot, ((action, (call index, ...)), ...)), ...). ``always`` only sets the header's
+    always-trigger count (no rows), for refusals."""
+
+    slots: tuple[tuple[str, tuple[tuple[str, tuple[int, ...]], ...]], ...]
+    always: int = 0
+
+
+# Obj_Heart_Container's action triggers (dump 1.1.1): AS[Lower] Rotate_Obj -> Wait, Skl[Lower] Rotate_GetDemo -> GetDemo
+HEART_ACTIONS = ActionTable((("AS[Lower]", (("Rotate_Obj", (0,)),)), ("Skl[Lower]", (("Rotate_GetDemo", (1,)),))))
+
+
+def action_table(table: ActionTable, user: str, names) -> tuple[bytes, tuple[int, ...]]:
+    """The trigger table bytes and the six header counts (slots, actions, triggers, properties, property triggers,
+    always triggers)."""
+    slot_rows, action_rows, trigger_rows = bytearray(), bytearray(), bytearray()
+    n_action = n_trigger = 0
+    for slot, actions in table.slots:
+        slot_rows += struct.pack("<QHHI", names(slot), n_action, n_action + len(actions) - 1, 0)
+        for action, calls in actions:
+            action_rows += struct.pack("<QII", names(action), n_trigger, n_trigger + len(calls) - 1)
+            for call in calls:
+                guid = zlib.crc32(f"{user}#{action}#{call}".encode())
+                trigger_rows += struct.pack(
+                    "<IIQIIIHHII", guid, 0, 0x30 * call, 0, 0, 0x7FFFFFFF, 5, 0x4C8D, 0xFFFFFFFF, 0
+                )
+            n_action += 1
+            n_trigger += len(calls)
+    counts = (len(table.slots), n_action, n_trigger, 0, 0, table.always)
+    return bytes(slot_rows + action_rows + trigger_rows), counts
+
 
 # user -> calls (key, parameters: str = a name, int = a raw value, condition), trigger table
 Calls = list[tuple[str, dict[str, str | int], int]]
@@ -50,6 +86,11 @@ HEART_USERS: dict[str, tuple[Calls, bytes]] = {
         TRIGGERS,
     ),
     "Obj_Rupee_Red": ([("Wait", {"AssetName": "Wait", "Bone": "Root"}, 0x10)], b""),
+}
+# The same with the heart container's real action triggers (event-items D20).
+HEART_ACTION_USERS: dict[str, tuple[Calls, bytes | ActionTable]] = {
+    "Obj_Heart_Container": (HEART_USERS["Obj_Heart_Container"][0], HEART_ACTIONS),
+    "Obj_Rupee_Red": HEART_USERS["Obj_Rupee_Red"],
 }
 
 
@@ -78,11 +119,15 @@ def define_table() -> bytes:
     return bytes(body)
 
 
-def user(name: str, calls: list[tuple], names: Names, triggers: bytes = b"") -> bytes:
-    """calls: (key, asset id, flag, parent, record position, condition)."""
+def user(name: str, calls: list[tuple], names: Names, triggers: "bytes | ActionTable" = b"") -> bytes:
+    """calls: (key, asset id, flag, parent, record position, condition); triggers: opaque bytes or an
+    :class:`ActionTable`."""
     n_asset = sum(1 for c in calls if c[2] == 0)
     head = bytearray(0x38)
     struct.pack_into("<IIII", head, 4, 1, len(calls), n_asset, 0)  # one local property
+    if isinstance(triggers, ActionTable):
+        triggers, counts = action_table(triggers, name, names)
+        struct.pack_into("<6I", head, 0x14, *counts)
     local = struct.pack("<Q", names("LocalProp"))
     params = bytes(16)
     order = sorted(range(len(calls)), key=lambda i: calls[i][0].encode())
@@ -109,7 +154,7 @@ def user(name: str, calls: list[tuple], names: Names, triggers: bytes = b"") -> 
     return bytes(out + bytes(-len(out) % 8))
 
 
-def build_table(users: dict[str, tuple[Calls, bytes]] = DEFAULT_USERS) -> bytes:
+def build_table(users: dict[str, tuple[Calls, "bytes | ActionTable"]] = DEFAULT_USERS) -> bytes:
     """An XLNK 36 table holding ``users``; equal parameter sets share one record, as in the game's tables."""
     names = Names()
     for text in ("Root", "Fx_A", "Fx_B"):

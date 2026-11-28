@@ -36,6 +36,9 @@ CHESTS = {"KF Midos Top Left Chest": "Fairy Ocarina", "KF Midos Top Right Chest"
 HAND_OVERS = {"Market Shooting Gallery Reward": "Fairy Ocarina", "LW Skull Kid": "Ocarina of Time"}
 # Steps allowed to change ActorInfo rows besides the ocarina step: they add rows of their own.
 ROW_STEPS = {
+    "clawshot.patch.event_models",  # event-items: container and placed-object rows (models in events)
+    "clawshot.patch.containers",  # event-items: the container actors' own rows (models in events)
+    "clawshot.patch.saria_farewell",  # event-items D9: the bridge Saria's own actor row, every seed
     "clawshot.patch.tokens",
     "clawshot.patch.custom_items",
     "clawshot.patch.floor_keys",

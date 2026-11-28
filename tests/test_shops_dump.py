@@ -94,8 +94,13 @@ def test_seed_shop_copies_share_the_placement_and_keep_slot_prices(romfs, tmp_pa
     table = rstb.read(resource(rstb.TABLE_PATH))
     original_table = rstb.read(dictionaries.decompress(rstb.TABLE_PATH, (romfs / rstb.TABLE_PATH).read_bytes()))
     fast_start_paths = {file.path for file in output.fast_start_files}
+    sized_like = {path: file.sized_like for path, file in output.new_files.items() if file.sized_like is not None}
     for info in written:
         if info.path == rstb.TABLE_PATH:
+            continue
+        if info.path in sized_like:  # no size formula (event-items: Saria's schedule list): donor entry plus growth
+            donor, growth = sized_like[info.path]
+            assert table.get(info.path) == original_table.get(donor) + growth
             continue
         if info.path in fast_start_paths:
             # Fast-start edits retain their original allocation: fixed-layout values or a shrinking intro tree.

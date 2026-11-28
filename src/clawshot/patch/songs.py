@@ -21,7 +21,7 @@ import bisect
 import copy
 import math
 import tomllib
-from collections.abc import Iterable, Mapping
+from collections.abc import Callable, Iterable, Mapping, Sequence
 from dataclasses import dataclass
 from functools import partial
 from pathlib import Path
@@ -38,6 +38,10 @@ ACTOR_INFO = getitem.ACTOR_INFO
 GAME_ACTOR_INFO = "RSDB/GameActorInfo.Product.111.rstbl.byml.zs"
 POUCH_ACTOR_INFO = "RSDB/PouchActorInfo.Product.111.rstbl.byml.zs"
 EFFECT_DONOR = "Obj_Heart_Container"  # its ELink user and ASInfo (S5)
+EVENT_BONE = "Skl_Root"  # the bone event containers show the effect on (event-items D18)
+# event-items D20: an event user starts its get-pose effect from these scene animations too (slot, template action)
+SCENE_SLOT = "AS[Lower]"  # as Obj_Heart_Piece's Dm_Goron_0040_Obj_Heart_Piece/C01
+SCENE_TEMPLATE = "Rotate_GetDemo"  # its trigger starts GetDemo
 PICKUP_DONOR = "Obj_Arrow_Fire"  # a native free-standing item pickup
 CHARGE = "Ply_ChargeLv3_Loop_02"  # the player's sword-charge effect, in static
 SPARK, AURA, LIGHT = "Clawshot_ChargeSpark", "Clawshot_ChargeAura", "Clawshot_ChargeLight"
@@ -182,6 +186,11 @@ def user_name(song: str) -> str:
     return "Clawshot_Song_" + song.removeprefix("Item_Melody_")
 
 
+def event_user_name(song: str) -> str:
+    """A song's event containers' effect user (event-items D18)."""
+    return user_name(song) + "_Event"
+
+
 def pickup_name(song: str) -> str:
     return "Obj_Clawshot_Melody_" + song.removeprefix("Item_Melody_")
 
@@ -230,29 +239,41 @@ def warp_children(effect: WarpEffect, place: Place) -> list[dict[str, str | floa
     return children
 
 
-def patch_elink(data: bytes, *, effects: SongEffects) -> bytes:
-    """The ``.110`` table with the twelve song users (plans/song-get-effects.md, "The effect table"). Every native
-    user decodes as before: the edits only append."""
+def _add_users(
+    data: bytes,
+    songs: Sequence[str],
+    name: Callable[[str], str],
+    bone: str,
+    effects: SongEffects,
+    scene_actions: Sequence[str] = (),
+) -> bytes:
+    """``data`` with a user ``name(song)`` per song of ``songs`` (in :func:`_ordered` order), a copy of the effect
+    donor's showing the song's effect, its get-pose effect (``GetDemo``, and a warp song's children) on ``bone``, and
+    a trigger starting it from each of ``scene_actions`` (:data:`SCENE_SLOT`, a copy of :data:`SCENE_TEMPLATE`'s)."""
     try:
         table = elink.decode(data)
-        order = _ordered(effects)
+        order = [song for song in _ordered(effects) if song in songs]
         for song in order:
-            table.add_user_copy(EFFECT_DONOR, user_name(song))
+            table.add_user_copy(EFFECT_DONOR, name(song))
         for song in order:
-            effect, user = effects.songs[song], user_name(song)
+            effect, user = effects.songs[song], name(song)
             if isinstance(effect, WarpEffect):
-                for key in ("Wait", "GetDemo"):  # the children copy these records: bone Root
-                    table.set_call_params(user, key, {"RuntimeAssetName": CHARGE, "Bone": "Root"})
+                table.set_call_params(user, "Wait", {"RuntimeAssetName": CHARGE, "Bone": "Root"})
+                # the children copy these records
+                table.set_call_params(user, "GetDemo", {"RuntimeAssetName": CHARGE, "Bone": bone})
             else:
                 values = {"RuntimeAssetName": effect.effect, "Scale": effect.scale}
                 table.set_call_params(user, "Wait", values)
-                table.set_call_params(user, "GetDemo", {**values, "Bone": "Root", "PositionY": 0.0})
+                table.set_call_params(user, "GetDemo", {**values, "Bone": bone, "PositionY": 0.0})
         for song in order:
-            effect, user = effects.songs[song], user_name(song)
+            effect, user = effects.songs[song], name(song)
             if isinstance(effect, WarpEffect):
                 get_pose = warp_children(effect, effect.get_pose)
                 table.make_container(user, "GetDemo", get_pose, effects.get_pose_condition)
                 table.make_container(user, "Wait", warp_children(effect, effect.floor), effects.floor_condition)
+        if scene_actions:
+            for song in order:
+                table.add_action_triggers(name(song), SCENE_SLOT, sorted(set(scene_actions)), SCENE_TEMPLATE)
         out = table.encode()
         again = elink.decode(out)
     except elink.ElinkError as error:
@@ -260,6 +281,27 @@ def patch_elink(data: bytes, *, effects: SongEffects) -> bytes:
     if again.encode() != out or sorted(again.user_names()) != sorted(table.user_names()):
         raise PatchError(f"{ELINK}: the song users do not read back")
     return out
+
+
+def patch_elink(data: bytes, *, effects: SongEffects) -> bytes:
+    """The ``.110`` table with the twelve song users (plans/song-get-effects.md, "The effect table"). Every native
+    user decodes as before: the edits only append."""
+    return _add_users(data, list(effects.songs), user_name, "Root", effects)
+
+
+def patch_event_elink(
+    data: bytes, *, songs: Sequence[str], effects: SongEffects, scene_actions: Sequence[str] = ()
+) -> bytes:
+    """The table with an event user per song of ``songs`` (event-items D18): the song's user with its get-pose effect
+    on :data:`EVENT_BONE`, which a scene's own animation moves (Zelda's throw) and which is ``Root`` at rest.
+
+    ``scene_actions`` (D20, ``<ASB root>/<node>``: the scene animations a seed's events play on song containers) each
+    start the get-pose effect too, as ``Rotate_GetDemo`` does: an emitted key does not show while a scene animation
+    plays on the prop (runs S3, S4, S11), a trigger on the scene animation does (pilot A, runs S12, S13). The songs'
+    own users (:func:`patch_elink`) get none."""
+    if unknown := sorted(set(songs) - set(effects.songs)):
+        raise PatchError(f"{ELINK}: {unknown} are not songs")
+    return _add_users(data, songs, event_user_name, EVENT_BONE, effects, scene_actions)
 
 
 # ---------------------------------------------------------------------------------------------------------------
@@ -385,6 +427,23 @@ def _insert(document: byml.Document, path: str, new: list[dict]) -> bytes:
     return out
 
 
+def shown_row(row: Mapping, ocarina: Mapping, song: str) -> dict:
+    """The fields that make a song's native ActorInfo ``row`` show its ocarina with the effect user: the ocarina's
+    model fields, ``ELinkUserName``, ``InstanceHeapSize`` plus the ocarina's and the larger
+    ``PreActorRenderInfoHeapSize`` (as the gallery confirmed in game). Shared with the song's event container
+    (``containers``). Raises :class:`PatchError` for a row that is not the native one."""
+    if (row.get("FmdbName"), row.get("ModelProjectName")) != ("Obj_Rupee", "Obj_Rupee"):
+        raise PatchError(f"{ACTOR_INFO}: {song} shows {row.get('FmdbName')!r}, not the native Obj_Rupee")
+    if "ELinkUserName" in row:
+        raise PatchError(f"{ACTOR_INFO}: {song} already has ELinkUserName {row['ELinkUserName']!r}")
+    out = {field: copy.deepcopy(ocarina[field]) for field in getitem.MODEL_FIELDS}
+    heap, render = "InstanceHeapSize", "PreActorRenderInfoHeapSize"
+    out[heap] = type(row[heap])(int(row[heap]) + int(ocarina[heap]))
+    out[render] = type(row[render])(max(int(row[render]), int(ocarina[render])))
+    out["ELinkUserName"] = user_name(song)
+    return out
+
+
 def patch_actor_info(data: bytes, *, pickups: bool = False) -> bytes:
     """Song rows get the ocarina's model fields, ``ELinkUserName`` and heaps (``InstanceHeapSize`` plus the
     ocarina's, ``PreActorRenderInfoHeapSize`` the larger: as the gallery confirmed in game); with ``pickups`` the
@@ -392,19 +451,10 @@ def patch_actor_info(data: bytes, *, pickups: bool = False) -> bytes:
     document, rows = _rows(data, ACTOR_INFO)
     _need(rows, ACTOR_INFO, *getitem.SONG_MODELS, *getitem.OCARINAS, *([PICKUP_DONOR] if pickups else []))
     new = []
-    for song, ocarina in getitem.SONG_MODELS.items():
+    for song in getitem.SONG_MODELS:
+        ocarina = getitem.model_actor(song)  # the get pose's model
         row, donor = rows[song], rows[ocarina]
-        if (row.get("FmdbName"), row.get("ModelProjectName")) != ("Obj_Rupee", "Obj_Rupee"):
-            raise PatchError(f"{ACTOR_INFO}: {song} shows {row.get('FmdbName')!r}, not the native Obj_Rupee")
-        if "ELinkUserName" in row:
-            raise PatchError(f"{ACTOR_INFO}: {song} already has ELinkUserName {row['ELinkUserName']!r}")
-        for field in getitem.MODEL_FIELDS:
-            row[field] = copy.deepcopy(donor[field])
-        heap = "InstanceHeapSize"
-        row[heap] = type(row[heap])(int(row[heap]) + int(donor[heap]))
-        render = "PreActorRenderInfoHeapSize"
-        row[render] = type(row[render])(max(int(row[render]), int(donor[render])))
-        row["ELinkUserName"] = user_name(song)
+        row.update(shown_row(row, donor, song))
         if not pickups:
             continue
         pickup = copy.deepcopy(rows[PICKUP_DONOR])

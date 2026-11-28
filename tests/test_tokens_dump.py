@@ -4,6 +4,7 @@ core delivery and a production Token seed written by the common writer, each com
 a patched fixture. Data and structure evidence only; gameplay is Kareem's Longshot packets."""
 
 import copy
+import functools
 from pathlib import PurePosixPath
 
 import pytest
@@ -12,7 +13,17 @@ from clawshot.census.scan import GAME_DATA_LIST, GOLD_SKULLTULA, scan
 from clawshot.formats import byml, rstb, sarc, zsdic
 from clawshot.generate import Settings
 from clawshot.generate import tokens as token_policy
-from clawshot.patch import actor_packs, getitem, items, make_seed, tokens, write_seed
+from clawshot.patch import (
+    actor_packs,
+    containers,
+    event_props,
+    getitem,
+    items,
+    make_seed,
+    saria_farewell,
+    tokens,
+    write_seed,
+)
 from clawshot.patch.plan import PatchError, Plan
 from clawshot.patch.write import write
 from clawshot.save import murmur3_32
@@ -349,12 +360,24 @@ def test_production_token_seed_writes_only_source_selectors_and_pickups(
     assert {name for name in ids if name.startswith(tokens.PICKUP_PREFIX)} == expected
 
 
+def _module(transform) -> str:
+    """The module a transform comes from (a partial counts as its function)."""
+    while isinstance(transform, functools.partial):
+        transform = transform.func
+    return transform.__module__
+
+
 def test_token_off_seed_has_no_token_output(romfs):
     output = make_seed(romfs, 7, Settings())
     assert output.token_sources == ()
     assert not any(PurePosixPath(path).name.startswith(tokens.PICKUP_PREFIX) for path in output.new_files)
     assert "tokens" not in output.spoiler()["patch"]
-    assert not any(tokens.GAME_ACTOR_INFO in changes for changes in output.extra_changes)
+    # Other steps edit GameActorInfo too (event-items: event containers, Saria's farewell actor); none of them is the
+    # token step.
+    touching = [
+        changes[tokens.GAME_ACTOR_INFO] for changes in output.extra_changes if tokens.GAME_ACTOR_INFO in changes
+    ]
+    assert not any(_module(transform) == tokens.__name__ for transform in touching)
     assert token_policy.SHUFFLE not in {location.type for location in output.seed.world.locations.values()}
 
 
@@ -389,7 +412,14 @@ def test_custom_chest_items_and_token_pickups_write_one_valid_set_of_tables(romf
     )
     generated = {row.drop_actor for row in output.token_sources} - {None}
     expected = {NOTHING, "Item_Clawshot_AP_000"} | generated
-    actor_packs = {path for path in output.new_files if path.startswith("Pack/Actor/")}
+    event_items = {saria_farewell.pack_path(saria_farewell.FAREWELL)}  # every seed (event-items D9)
+    actor_packs = {
+        path
+        for path in output.new_files
+        if path.startswith("Pack/Actor/")
+        and path not in event_items
+        and not path.startswith(f"Pack/Actor/{containers.PREFIX}")  # event containers (event-items)
+    }
     assert generated and actor_packs == {tokens.pack_path(actor) for actor in expected}
     before = {path: original(path) for path in TABLES}
     out = tmp_path / "combined"
@@ -408,18 +438,29 @@ def test_custom_chest_items_and_token_pickups_write_one_valid_set_of_tables(romf
         rows = byml.read(original(path, out / "romfs"))
         ids = [row["__RowId"] for row in rows]
         assert ids == sorted(set(ids))
-        assert set(ids) == native.keys() | expected
+        # event-items: the bridge Saria's own actor (every seed) and the event containers of moved gifts add rows;
+        # the placed objects (moat, Ruto's stone) take their shown model's fields in their own native rows.
+        event_rows = {saria_farewell.FAREWELL} | {i for i in ids if i.startswith(containers.PREFIX)}
+        placed = {prop.actor for prop in event_props.load().props if prop.part == event_props.PLACEMENT}
+        assert set(ids) == native.keys() | expected | (event_rows & set(ids))
+        assert saria_farewell.FAREWELL in ids or path not in (getitem.ACTOR_INFO, tokens.GAME_ACTOR_INFO), path
         actual = {row["__RowId"]: row for row in rows}
-        assert all(byml.same(row, actual[name]) for name, row in native.items()), path
+        assert all(byml.same(row, actual[name]) for name, row in native.items() if name not in placed), path
         assert original(path) == before[path]
     old_sizes = rstb.read(original(rstb.TABLE_PATH))
     sizes = rstb.read(original(rstb.TABLE_PATH, out / "romfs"))
     assert rstb.read(rstb.write(sizes)) == sizes
     dictionaries = zsdic.Dictionaries.from_romfs(romfs)
     for path, file in output.new_files.items():
-        content = dictionaries.decompress(path, (out / "romfs" / path).read_bytes())
+        content = (out / "romfs" / path).read_bytes()
+        if path.endswith(".zs"):  # a loose file (event-items: Saria's schedule list) is written as it is
+            content = dictionaries.decompress(path, content)
         assert content == file.data
-        assert sizes.get(path) == rstb.required_size(path, len(content))
+        if file.sized_like is not None:  # no size formula: its native donor's entry plus the growth
+            donor, growth = file.sized_like
+            assert sizes.get(path) == old_sizes.get(donor) + growth, path
+        else:
+            assert sizes.get(path) == rstb.required_size(path, len(content))
         assert not (romfs / path).exists()
         if not path.endswith(".pack.zs"):
             continue  # non-pack resources still receive the byte, native-absence and allocation checks above
