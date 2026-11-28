@@ -29,10 +29,11 @@ Dump: romfs 1.1.1. Builds on `plans/chest-ocarina-model.md` (PR #40; Saria farew
   lines and the display test above; after the fixes the affected files rerun green (90 passed, then the one ActorInfo
   test, 4 passed). After the rebase onto `69dfe92`: synthetic 5184 passed, 967 skipped; tunic, gift, display and
   event-line dump tests 35 passed.
-- Next: rerun the fairies whose lines changed (J, K): castle (`child-castle-great-fairy`), summit
-  (`child-death-mountain-great-fairy` or the mislabelled `adult-death-mountain-crater-great-fairy`), desert
-  (`adult-desert-colossus-great-fairy-500r`), Zora's Fountain (`child-zoras-fountain-great-fairy`, needs rupees);
-  the older handoff below is history.
+- Fairy reruns for J and K (BBender, 2026-11-28, Longshot 3.2.0, seed from the rebased branch, `fairy/seed`,
+  base 7100), all pass: castle (Iron Boots) the spin attack line vanilla (J); summit (Bomb Bag), Zora's Fountain
+  (Megaton Hammer, `child-zoras-fountain-great-fairy-500r`) and desert (Hylian Shield, `...-500r`) name the given
+  item in the spell's explanation line, and the get window names it (K). Not played: the crater fairy (no save).
+  The older handoff below is history.
 
 ## Handoff 2026-11-26 (Claude, for the next session)
 
