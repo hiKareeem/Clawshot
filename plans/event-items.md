@@ -32,7 +32,8 @@ Dump: romfs 1.1.1. Builds on `plans/chest-ocarina-model.md` (PR #40; Saria farew
 - Fairy reruns for J and K (BBender, 2026-11-28, Longshot 3.2.0, seed from the rebased branch, `fairy/seed`,
   base 7100), all pass: castle (Iron Boots) the spin attack line vanilla (J); summit (Bomb Bag), Zora's Fountain
   (Megaton Hammer, `child-zoras-fountain-great-fairy-500r`) and desert (Hylian Shield, `...-500r`) name the given
-  item in the spell's explanation line, and the get window names it (K). Not played: the crater fairy (no save).
+  item in the spell's explanation line, and the get window names it (K). The crater fairy (Din's Fire) passes too.
+  Biggoron and the Eyedrops trade stay unplayed for now (BBender).
   The older handoff below is history.
 
 ## Handoff 2026-11-26 (Claude, for the next session)
